@@ -73,7 +73,7 @@ no se listan aquí para no duplicar y desincronizar dos copias del mismo esquema
 import { getSupabase } from "./server/db/core.js";
 
 const sb = getSupabase();
-const bandId = "band-bakandeya";
+const bandId = "band-demo";
 
 // Ejemplo: Consultar canciones de una banda específica
 const { data: songs, error } = await sb
@@ -91,7 +91,7 @@ Los campos como `audio_ideas` (en canciones), `gastos_detalle` (en conciertos) o
 // Guardar o actualizar un concierto con desglose de gastos en JSONB
 await sb.from("concerts").upsert({
   id: "cnc-madrid-1",
-  band_id: "band-bakandeya",
+  band_id: "band-demo",
   sala: "Sala Caracol",
   fecha: "2026-11-20",
   gastos_detalle: {

@@ -1,8 +1,9 @@
 import { api } from '../services/api';
 import { User } from '../types';
+import { leerTokenDeSesion, leerUsuarioDeSesion } from '../services/sesionLocal';
 
-export const CALENDAR_DEFAULT_MONTHS_KEY = 'bakandeya_calendar_default_months';
-export const CALENDAR_DEVICE_KEY_PREFIX = 'bakandeya_calendar_months_';
+export const CALENDAR_DEFAULT_MONTHS_KEY = 'bandmanager_calendar_default_months';
+export const CALENDAR_DEVICE_KEY_PREFIX = 'bandmanager_calendar_months_';
 
 export type DeviceType = 'mobile' | 'desktop';
 export type CalendarMonthsView = '1' | '2';
@@ -38,10 +39,10 @@ export function getCalendarDefaultMonths(deviceType?: DeviceType): CalendarMonth
     }
 
     // 2. Comprobar en el usuario guardado en localStorage (proveniente de Supabase)
-    const storedUserStr = localStorage.getItem('bakandeya_user');
-    if (storedUserStr) {
+    const storedUser = leerUsuarioDeSesion();
+    if (storedUser) {
       try {
-        const user = JSON.parse(storedUserStr);
+        const user = storedUser;
         const cloudPref = user?.ui_preferences?.calendar_default_months?.[targetDevice];
         if (cloudPref === '1' || cloudPref === '2') {
           // Cachear en localStorage para siguientes consultas síncronas
@@ -88,10 +89,10 @@ export async function setCalendarDefaultMonths(
       }
 
       // Actualizar optimísticamente el usuario en caché local
-      const storedUserStr = localStorage.getItem('bakandeya_user');
-      if (storedUserStr) {
+      const storedUser = leerUsuarioDeSesion();
+      if (storedUser) {
         try {
-          const user = JSON.parse(storedUserStr);
+          const user = storedUser;
           const currentUiPrefs = user.ui_preferences || {};
           const currentMonthsPrefs = currentUiPrefs.calendar_default_months || {};
           user.ui_preferences = {
@@ -101,7 +102,7 @@ export async function setCalendarDefaultMonths(
               [targetDevice]: mode,
             },
           };
-          localStorage.setItem('bakandeya_user', JSON.stringify(user));
+          localStorage.setItem('bandmanager_user', JSON.stringify(user));
         } catch {
           // Error no bloqueante
         }
@@ -114,7 +115,7 @@ export async function setCalendarDefaultMonths(
   // Sincronizar en Supabase si hay sesión y está habilitado
   if (syncToSupabase) {
     try {
-      const token = typeof localStorage !== 'undefined' ? localStorage.getItem('bakandeya_token') || localStorage.getItem('token') : null;
+      const token = leerTokenDeSesion();
 
       if (token) {
         const response = await api.saveUiPreferences({
@@ -123,7 +124,7 @@ export async function setCalendarDefaultMonths(
           },
         });
         if (response?.user && typeof localStorage !== 'undefined') {
-          localStorage.setItem('bakandeya_user', JSON.stringify(response.user));
+          localStorage.setItem('bandmanager_user', JSON.stringify(response.user));
         }
         return true;
       }
@@ -138,7 +139,7 @@ export async function setCalendarDefaultMonths(
 /**
  * Hidrata las preferencias locales desde los datos del usuario procedentes de Supabase.
  */
-export function syncCalendarPreferencesFromUser(user?: User | null): void {
+export function syncCalendarPreferencesFromUser(user?: Pick<User, 'ui_preferences'> | null): void {
   if (!user || !user.ui_preferences?.calendar_default_months || typeof localStorage === 'undefined') return;
 
   const prefs = user.ui_preferences.calendar_default_months;

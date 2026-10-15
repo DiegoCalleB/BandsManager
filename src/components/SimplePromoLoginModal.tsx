@@ -98,13 +98,13 @@ const LoginBrandVideo: React.FC = () => {
     const el = ref.current;
     if (!el) return;
     el.muted = true;
-    el.play().catch(() => {});
+    el.play().catch(() => { /* autoplay bloqueado sin gesto del usuario: queda en pausa y se reproduce al pulsar */ });
   }, []);
   const handleReplay = () => {
     const el = ref.current;
     if (!el) return;
     el.currentTime = 0;
-    el.play().catch(() => {});
+    el.play().catch(() => { /* autoplay bloqueado sin gesto del usuario: queda en pausa y se reproduce al pulsar */ });
   };
   if (failed || skipVideo) {
     return (
@@ -187,7 +187,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
 
         const data = await response.json().catch(() => ({}));
         if (response.ok && data.token) {
-          localStorage.setItem('bakandeya_token', data.token);
+          localStorage.setItem('bandmanager_token', data.token);
           guardarCookieDeSesion(data.token);
           onLoginSuccess(data.user, data.token, data.availableBands);
           return;
@@ -234,7 +234,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
         throw new Error(data.error || 'Fallo en la autenticación');
       }
       if (data.token) {
-        localStorage.setItem('bakandeya_token', data.token);
+        localStorage.setItem('bandmanager_token', data.token);
         guardarCookieDeSesion(data.token);
       }
       onLoginSuccess(data.user, data.token, data.availableBands);
@@ -270,7 +270,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
         throw new Error(data.error || 'Fallo en la creación de cuenta');
       }
       if (data.token) {
-        localStorage.setItem('bakandeya_token', data.token);
+        localStorage.setItem('bandmanager_token', data.token);
         guardarCookieDeSesion(data.token);
       }
       onLoginSuccess(data.user, data.token, data.availableBands);

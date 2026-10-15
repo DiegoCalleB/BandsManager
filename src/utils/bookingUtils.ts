@@ -10,7 +10,7 @@ export interface BookingMetrics {
 }
 
 // Helper to normalize status strings from UI / DB to Option A canonical states
-export const normalizeStatus = (s: any): LeadStatus => {
+export const normalizeStatus = (s: unknown): LeadStatus => {
   if (!s) return 'nuevo';
   const str = String(s).trim().toLowerCase();
   if (str.includes('confirm') || str.includes('cerrad') || str === 'concierto_confirmado' || str === 'bolo_cerrado') return 'confirmado';
@@ -39,7 +39,7 @@ export const normalizeStatus = (s: any): LeadStatus => {
 };
 
 // Helper to normalize lead types
-export const normalizeType = (t: any): LeadType => {
+export const normalizeType = (t: unknown): LeadType => {
   if (!t) return 'sala';
   const s = String(t).trim().toLowerCase();
   if (s.includes('festiv') || s === 'festival') return 'festival';
@@ -100,7 +100,7 @@ export const VENUE_ADDRESS_DATABASE: Record<string, string> = {
   'fundación don juan de borbón': 'Plaza de San Martín, 4, 40001 Segovia',
 };
 
-export function autoDetectVenueAddress(nombreSala: string, ciudad: string): string {
+export function autoDetectVenueAddress(nombreSala: string, _ciudad: string): string {
   if (!nombreSala) return '';
   const cleanName = nombreSala.toLowerCase().trim();
   for (const [key, addr] of Object.entries(VENUE_ADDRESS_DATABASE)) {

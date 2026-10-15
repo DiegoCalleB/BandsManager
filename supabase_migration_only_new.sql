@@ -5,7 +5,7 @@
 -- 1. TABLAS NUEVAS
 CREATE TABLE IF NOT EXISTS public.social_content_items (
     id TEXT PRIMARY KEY,
-    band_id TEXT NOT NULL DEFAULT 'band-bakandeya',
+    band_id TEXT NOT NULL,
     platform TEXT NOT NULL,
     external_id TEXT NOT NULL,
     title TEXT DEFAULT '',
@@ -24,7 +24,7 @@ CREATE INDEX IF NOT EXISTS idx_social_content_band_platform ON public.social_con
 
 CREATE TABLE IF NOT EXISTS public.tours (
     id TEXT PRIMARY KEY,
-    band_id TEXT NOT NULL DEFAULT 'band-bakandeya',
+    band_id TEXT NOT NULL,
     nombre TEXT NOT NULL,
     fecha_inicio TEXT NOT NULL,
     fecha_fin TEXT NOT NULL,
@@ -48,7 +48,7 @@ CREATE INDEX IF NOT EXISTS idx_tours_band_id ON public.tours(band_id);
 
 CREATE TABLE IF NOT EXISTS public.run_of_show (
     id TEXT PRIMARY KEY,
-    band_id TEXT NOT NULL DEFAULT 'band-bakandeya',
+    band_id TEXT NOT NULL,
     fecha TEXT NOT NULL,
     time TEXT NOT NULL,
     activity TEXT NOT NULL,
@@ -60,7 +60,7 @@ CREATE INDEX IF NOT EXISTS idx_run_of_show_band_fecha ON public.run_of_show(band
 
 CREATE TABLE IF NOT EXISTS public.gear_checklists (
     id TEXT PRIMARY KEY,
-    band_id TEXT NOT NULL DEFAULT 'band-bakandeya',
+    band_id TEXT NOT NULL,
     fecha TEXT NOT NULL,
     label TEXT NOT NULL,
     checked BOOLEAN DEFAULT FALSE,
@@ -108,7 +108,7 @@ ALTER TABLE public.registered_bands
     ADD COLUMN IF NOT EXISTS dna_expresion JSONB DEFAULT NULL;
 
 ALTER TABLE public.users 
-    ADD COLUMN IF NOT EXISTS main_band_id TEXT DEFAULT 'band-bakandeya',
+    ADD COLUMN IF NOT EXISTS main_band_id TEXT,
     ADD COLUMN IF NOT EXISTS band_order JSONB DEFAULT '[]'::jsonb,
     ADD COLUMN IF NOT EXISTS google_oauth JSONB DEFAULT NULL;
 

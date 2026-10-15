@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import dns from 'dns/promises';
 
 const upsert = vi.fn(async (l: any, _b: string, _o?: any) => ({ ...l }));
 vi.mock('../db.js', () => ({
@@ -29,6 +30,17 @@ vi.mock('../services/jinaReaderService.js', () => ({
 }));
 
 vi.stubGlobal('fetch', vi.fn(async () => { throw new Error('sin red en tests'); }));
+
+// Sin red de verdad: fetchUrlExternaSegura resuelve por DNS el dominio del lead (aquí sala-real.es, que es real)
+// antes de pedir la web. En un ejecutor con internet eso a veces tarda más que los 5 s del test, que por eso
+// fallaba de forma intermitente. Se sustituye por un fallo inmediato y se vigila que no haya DNS (último test).
+vi.mock('../utils/ssrfGuard.js', async (importarOriginal) => ({
+  ...(await importarOriginal<typeof import('../utils/ssrfGuard.js')>()),
+  fetchUrlExternaSegura: async () => {
+    throw new Error('sin red en tests');
+  },
+}));
+const espiaDns = vi.spyOn(dns, 'lookup');
 
 import { autoEnrichLead } from '../auto_enrichment.js';
 
@@ -65,5 +77,9 @@ describe('autoEnrichLead: respeta lo que el usuario ha vaciado a propósito', ()
     // y se guarda permitiendo vaciar, para que el '' llegue a la BD
     expect(upsert).toHaveBeenCalled();
     expect(upsert.mock.calls[0][2]).toEqual({ permitirVaciar: true });
+  });
+
+  it('es hermético: no resuelve ningún dominio por DNS (sin red, sin intermitencias)', () => {
+    expect(espiaDns).not.toHaveBeenCalled();
   });
 });

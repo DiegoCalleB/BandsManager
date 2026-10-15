@@ -1,23 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import {
-  Mic,
-  Square,
-  Play,
-  Pause,
-  Trash2,
-  Sparkles,
-  Share2,
-  Copy,
-  Check,
-  Upload,
-  FileAudio,
-  Music,
-  ListChecks,
-  MessageSquare,
-  AlertCircle,
-  RefreshCw,
-  Send,
-} from "lucide-react";
+import { Mic, Square, Trash2, Sparkles, Copy, Check, Upload, FileAudio, RefreshCw } from "lucide-react";
 import {
   Rehearsal,
   RehearsalRecording,
@@ -25,11 +7,14 @@ import {
   Song,
   ThemeColors,
 } from "../../types";
-import { formatTime } from "./EnsayoCronometro";
+import { formatTime } from "./formatTime";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, Select } from '../ui';
 import { uploadFileToServer } from '../../utils/audioStorage';
+
+/** Tipo de toma que se etiqueta al grabar (el mismo que guarda {@link RehearsalRecording}). */
+type EtiquetaGrabacion = RehearsalRecording["tipo"];
 
 interface GrabacionActaTabProps {
   rehearsal: Rehearsal;
@@ -40,9 +25,7 @@ interface GrabacionActaTabProps {
 
 export function GrabacionActaTab({
   rehearsal,
-  onUpdateRehearsal,
-  songs = [],
-  colors,
+  onUpdateRehearsal
 }: GrabacionActaTabProps) {
   const recordings = rehearsal.grabaciones || [];
   const acta = rehearsal.acta || null;
@@ -55,9 +38,7 @@ export function GrabacionActaTab({
   // hay que subir el archivo y guardar la URL del servidor.
   const recordingBlobRef = useRef<Blob | null>(null);
   const [subiendoAudio, setSubiendoAudio] = useState(false);
-  const [recordingTag, setRecordingTag] = useState<
-    "toma_completa" | "idea_riff" | "nota_voz_debate" | "fragmento"
-  >("toma_completa");
+  const [recordingTag, setRecordingTag] = useState<EtiquetaGrabacion>("toma_completa");
   const [recordingTitle, setRecordingTitle] = useState("");
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -70,7 +51,6 @@ export function GrabacionActaTab({
   // AI Generation State
   const [isGeneratingActa, setIsGeneratingActa] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [deberesInput, setDeberesInput] = useState("");
 
   // Clean up recording timer
   useEffect(() => {
@@ -150,7 +130,7 @@ export function GrabacionActaTab({
     setSubiendoAudio(true);
     try {
       const archivo = new File([blob], nombre, { type: blob.type || "audio/webm" });
-      const url = await uploadFileToServer(archivo, { bandId: (rehearsal as any).band_id, category: "ensayos" });
+      const url = await uploadFileToServer(archivo, { bandId: rehearsal.band_id, category: "ensayos" });
       if (!url || url.startsWith("blob:")) throw new Error("El servidor no devolvió una URL");
       return url;
     } catch (err) {
@@ -221,7 +201,6 @@ export function GrabacionActaTab({
     // Synthesize data from the rehearsal
     setTimeout(() => {
       const agenda = rehearsal.agenda || [];
-      const objetivos = rehearsal.objetivos || [];
 
       const bordadas = agenda
         .filter((a) => a.evaluacion === "bordada")
@@ -383,7 +362,7 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                   <Select
                     size="sm"
                     value={recordingTag}
-                    onChange={(e) => setRecordingTag(e.target.value as any)}
+                    onChange={(e) => setRecordingTag(e.target.value as EtiquetaGrabacion)}
                   >
                     <option value="toma_completa">Toma completa</option>
                     <option value="riff">Riff / idea nueva</option>

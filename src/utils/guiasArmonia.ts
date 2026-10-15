@@ -12,7 +12,26 @@ export interface GuiaProfesor {
   texto: string;
   /** «dato»: sale del análisis. «idea»: sugerencia de arreglo (opinable). */
   tipo: 'dato' | 'idea';
+  /** Escala para dibujar debajo del texto (pitch classes absolutos 0-11). */
+  diagrama?: DiagramaEscalaDatos;
 }
+
+export interface DiagramaEscalaDatos {
+  raiz: number;
+  notas: number[];
+  /** La nota que distingue el modo o la «nota azul»: se pinta con otro color. */
+  distintiva?: number;
+}
+
+const INTERVALOS_MODO: Record<ModoId, number[]> = {
+  jonico: [0, 2, 4, 5, 7, 9, 11],
+  mixolidio: [0, 2, 4, 5, 7, 9, 10],
+  lidio: [0, 2, 4, 6, 7, 9, 11],
+  eolico: [0, 2, 3, 5, 7, 8, 10],
+  dorico: [0, 2, 3, 5, 7, 9, 10],
+  frigio: [0, 1, 3, 5, 7, 8, 10],
+};
+const NOTA_DISTINTIVA: Partial<Record<ModoId, number>> = { mixolidio: 10, lidio: 6, dorico: 9, frigio: 1 };
 
 const N = (pc: number) => `{n:${((pc % 12) + 12) % 12}}`;
 
@@ -30,7 +49,14 @@ export function guiasDelProfesor(a: AnalisisArmonico, opciones: { yaModula?: boo
   const guias: GuiaProfesor[] = [];
   const t = a.tonalidad.tonica;
 
-  guias.push({ id: 'escala-base', titulo: 'La escala de la canción', texto: ESCALA_BASE[a.modo.id](t), tipo: 'dato' });
+  const dist = NOTA_DISTINTIVA[a.modo.id];
+  guias.push({
+    id: 'escala-base',
+    titulo: 'La escala de la canción',
+    texto: ESCALA_BASE[a.modo.id](t),
+    tipo: 'dato',
+    diagrama: { raiz: t, notas: INTERVALOS_MODO[a.modo.id].map((i) => (t + i) % 12), distintiva: dist === undefined ? undefined : (t + dist) % 12 },
+  });
 
   // Notas guía en los cambios del bucle: la 3.ª del acorde al que se llega es la nota que mejor marca el cambio.
   if (a.bucle) {
@@ -64,6 +90,7 @@ export function guiasDelProfesor(a: AnalisisArmonico, opciones: { yaModula?: boo
       titulo: `${r.acorde} (${G(r.grado)}) es un acorde de color`,
       texto: `No es de la escala mayor de la tonalidad: viene de otro modo y por eso suena «distinto». Sobre él, toca ${esc ? esc.nombre.replace('{R}', N(esc.raiz)) : 'su propia escala'}; si dudas, la pentatónica de ${N(esc?.raiz ?? t)} es seguro.`,
       tipo: 'dato',
+      diagrama: esc ? { raiz: esc.raiz, notas: esc.notas } : undefined,
     });
   }
 

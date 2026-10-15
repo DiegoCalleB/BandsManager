@@ -1,8 +1,9 @@
+import { Check, Loader2, Music, Sparkles, Upload, X } from 'lucide-react';
 import React from 'react';
-import { Music, X, Sparkles, Loader2, Upload, Check } from 'lucide-react';
-import { BandRelationshipStatus, BandContact } from '../../types';
-import { ShowIcon } from '../ui/ShowIcon';
+import { BandContact, BandRelationshipStatus } from '../../types';
 import { Button, IconButton, Input, LinkButton, Select, Textarea } from '../ui';
+import type { BandAiProposal } from './bandCrmTypes';
+import { ShowIcon } from '../ui/ShowIcon';
 
 export interface AddEditBandModalProps {
   isOpen: boolean;
@@ -40,8 +41,8 @@ export interface AddEditBandModalProps {
   setFormImageUrl: (val: string) => void;
   handleAiLookup: () => void;
   isAiSearching: boolean;
-  aiProposal: any | null;
-  setAiProposal: (val: any) => void;
+  aiProposal: BandAiProposal | null;
+  setAiProposal: (val: BandAiProposal | null) => void;
   aiError: string | null;
   setAiError: (val: string | null) => void;
   handleApplyAllAiData: () => void;
@@ -52,7 +53,6 @@ export interface AddEditBandModalProps {
 export const AddEditBandModal: React.FC<AddEditBandModalProps> = ({
   isOpen,
   onClose,
-  isStitchLight,
   editingBand,
   handleSaveBand,
   formName,

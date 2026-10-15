@@ -1,5 +1,5 @@
 import { EPKConfig, Lead } from '../types';
-import { EpkLanguage, DEFAULT_EPK_LANGUAGE, idiomaEpkParaLead } from '../i18n/epkTranslations';
+import { EpkLanguage, DEFAULT_EPK_LANGUAGE } from '../i18n/epkTranslations';
 
 export interface EmailAttachment {
   filename: string;
@@ -15,7 +15,6 @@ export interface FormattedEmailResult {
 
 export interface SignatureDataParams {
   epkConfig?: Partial<EPKConfig> | null;
-  isBakandeya?: boolean;
   bandName?: string;
   senderName?: string;
   bandId?: string;
@@ -70,7 +69,6 @@ export const SOCIAL_ICONS_BADGES_MAP: Record<string, { badgeUrl: string; label: 
  */
 export function buildEmailSignatureData(params: SignatureDataParams) {
   const resolvedBandName = params.bandName || params.epkConfig?.contactoBooking?.nombre || 'la banda';
-  const isBakandeya = params.isBakandeya ?? false;
   const defaultEmail = `${resolvedBandName.toLowerCase().replace(/[^a-z0-9]/g, '') || 'contacto'}@booking.com`;
   const defaultPhone = '+34 600 000 000';
 
@@ -89,7 +87,6 @@ export function buildEmailSignatureData(params: SignatureDataParams) {
   const email = firma?.email || booking?.email || defaultEmail;
 
   const origin = typeof window !== 'undefined' ? window.location.origin : 'https://bandmanager.io';
-  const cleanBandId = (params.bandId || '').replace(/^(band|reg)-/, '').toLowerCase();
   const fallbackOnlineEpk = params.bandId ? `${origin}/epk?band=${encodeURIComponent(params.bandId)}` : `${origin}/epk`;
   const dossierPdfUrl = params.epkConfig?.dossierPdfUrl || params.epkConfig?.dossierDocumentUrl || '';
   const dossierPdfName = params.epkConfig?.dossierPdfName || 'Dossier Oficial & Kit de Prensa';
@@ -139,7 +136,6 @@ export function buildEmailSignatureData(params: SignatureDataParams) {
 
   return {
     resolvedBandName,
-    isBakandeya,
     remitenteNombre,
     cargo,
     textoPie,
@@ -270,11 +266,11 @@ export async function copyRichSignatureToClipboard(params: SignatureDataParams):
 
   // Modern Clipboard API with rich text/html
   try {
-    if (typeof navigator !== 'undefined' && navigator.clipboard && typeof window !== 'undefined' && (window as any).ClipboardItem) {
+    if (typeof navigator !== 'undefined' && navigator.clipboard && typeof window !== 'undefined' && window.ClipboardItem) {
       const htmlBlob = new Blob([html], { type: 'text/html' });
       const textBlob = new Blob([plainText], { type: 'text/plain' });
       await navigator.clipboard.write([
-        new (window as any).ClipboardItem({
+        new window.ClipboardItem({
           'text/html': htmlBlob,
           'text/plain': textBlob,
         }),
@@ -323,7 +319,7 @@ export async function copyRichSignatureToClipboard(params: SignatureDataParams):
 /**
  * Builds a valid binary PDF 1.4 base64 encoded document for the active band's Dossier & EPK
  */
-export function buildBakandeyaDossierPdfBase64(params?: {
+export function buildDossierPdfBase64(params?: {
   bandName?: string;
   contactEmail?: string;
   phone?: string;
@@ -334,8 +330,8 @@ export function buildBakandeyaDossierPdfBase64(params?: {
   const email = params?.contactEmail || '';
   const phone = params?.phone || '';
   // Mismo criterio que en la firma del email: el enlace al EPK siempre lleva su band_id. Antes,
-  // sin bandId explícito, caía en'band-bakandeya': el dossier PDF adjunto en el email de
-  // CUALQUIER banda enlazaba al EPK público real de Bakandeya en vez del propio.
+  // sin bandId explícito, caía en una banda por defecto: el dossier PDF adjunto en el email de
+  // CUALQUIER banda enlazaba al EPK público de otra banda en vez del propio.
   const bandIdPdf = params?.bandId || '';
   // El idioma viaja con el enlace: el EPK abre directamente en la versión que le toca al
   // destinatario en vez de obligarle a buscar el selector.
@@ -454,8 +450,8 @@ export function formatEmailWithSignatureAndDossier(params: {
 }): FormattedEmailResult {
   const { pitchText, lead, epkConfig, senderName, bandName, bandId } = params;
 
-  // Sin bandName ni contactoBooking.nombre, esto firmaba el email como Bakandeya y usaba su
-  // email/teléfono reales (ver isBakandeya/defaultEmail/defaultPhone más abajo) para CUALQUIER
+  // Sin bandName ni contactoBooking.nombre, esto firmaba el email con el nombre de otra banda y usaba su
+  // email/teléfono reales (ver defaultEmail/defaultPhone más abajo) para CUALQUIER
   // banda. Los llamantes actuales ya evitan pasar undefined (ver bandDisplayName en
   // Chatbot.tsx), pero la función no debe depender de eso para no filtrar datos reales.
   const resolvedBandName = bandName || epkConfig?.contactoBooking?.nombre || 'la banda';
@@ -705,7 +701,7 @@ ${linksTextArray.length > 0 ? linksTextArray.join(' | ') : ''}
 `.trim();
 
   // 5. Generate REAL PDF attachment
-  const dossierPdfBase64 = buildBakandeyaDossierPdfBase64({
+  const dossierPdfBase64 = buildDossierPdfBase64({
     bandName: resolvedBandName,
     contactEmail: email,
     phone: telefono,

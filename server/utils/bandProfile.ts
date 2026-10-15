@@ -1,7 +1,7 @@
 /**
  * Perfil de banda para los prompts de IA.
  *
- * Antes, las rutas de Reels escribían "Bakandeya" a pelo en el prompt, junto con su
+ * Antes, las rutas de Reels escribían el nombre de una banda a pelo en el prompt, junto con su
  * instrumentación concreta y su regla de "no tiene vientos". En una app multi-banda eso
  * significaba que a CUALQUIER banda la IA le generaba copies hablando del violín y la
  * percusión reciclada de otra banda. Aquí se arma el bloque de contexto a partir de los
@@ -11,6 +11,40 @@
  */
 
 import { formatGlobalReelFeedbackForPrompt, type ReelFeedbackLogEntry } from "./reelFeedback.js";
+import type { AdnExpresion } from "../db/tiposAdn.js";
+import type { EPKConfig } from "../../src/types.js";
+
+/** Banda (registrada o contacto) de la que se lee el nombre, el estilo y el ADN de voz. */
+export interface BandaParaPerfil {
+  band_id?: string;
+  id?: string;
+  nombre_banda?: string;
+  nombreBanda?: string;
+  bandName?: string;
+  estilo_musical?: string;
+  estiloMusical?: string;
+  localizacion?: string;
+  instagram?: string;
+  tiktok?: string;
+  spotify_youtube?: string;
+  dna_expresion?: AdnExpresion;
+}
+
+/** Usuario del estado local del que se saca el equipo de la banda. */
+export interface UsuarioParaPerfil {
+  band_id?: string;
+  name?: string;
+  username?: string;
+  instrument?: string;
+  bandName?: string;
+  band_name?: string;
+}
+
+/** Lo que `loadBandProfile` lee del estado local. */
+export interface EstadoParaPerfil {
+  users?: UsuarioParaPerfil[];
+  bands?: BandaParaPerfil[];
+}
 
 export interface BandMemberInfo {
   name: string;
@@ -70,7 +104,7 @@ export function emptyBandProfile(bandId = ""): BandProfile {
   };
 }
 
-function limpiarMaticesPorRed(v: any): { instagram: string; tiktok: string; youtube: string; facebook: string } {
+function limpiarMaticesPorRed(v: Record<string, unknown> | null | undefined): { instagram: string; tiktok: string; youtube: string; facebook: string } {
   return {
     instagram: limpiar(v?.instagram),
     tiktok: limpiar(v?.tiktok),
@@ -85,12 +119,17 @@ export function displayBandName(profile?: Partial<BandProfile> | null): string {
   return n || "la banda";
 }
 
-function limpiar(v: any): string {
+function limpiar(v: unknown): string {
   if (v === null || v === undefined) return "";
   return String(v).trim();
 }
 
-function listaLimpia(v: any, max = 12): string[] {
+/** El historial es JSONB que escribe solo dbLogReelFeedback con la forma de ReelFeedbackLogEntry. */
+function historialDeReels(v: unknown): ReelFeedbackLogEntry[] {
+  return Array.isArray(v) ? (v as ReelFeedbackLogEntry[]) : [];
+}
+
+function listaLimpia(v: unknown, max = 12): string[] {
   if (!Array.isArray(v)) return [];
   const salida: string[] = [];
   for (const item of v) {
@@ -153,7 +192,7 @@ export function baseHashtags(profile: Partial<BandProfile> | null | undefined, m
 
 /**
  * Bloque de texto con TODO lo que la IA sabe de verdad sobre la banda, más las reglas
- * anti-invención. Es lo que sustituye al párrafo hardcodeado de Bakandeya.
+ * anti-invención. Es lo que sustituye al párrafo hardcodeado de una banda concreta.
  */
 export function buildBandContextBlock(profile: Partial<BandProfile> | null | undefined): string {
   const p = { ...emptyBandProfile(), ...(profile || {}) };
@@ -255,9 +294,9 @@ export function buildBandContextBlock(profile: Partial<BandProfile> | null | und
 export async function loadBandProfile(
   bandId: string,
   deps: {
-    getBand: (id: string) => Promise<any>;
-    getEpk: (id: string) => Promise<any>;
-    getState: () => any;
+    getBand: (id: string) => Promise<BandaParaPerfil | null | undefined>;
+    getEpk: (id: string) => Promise<Partial<EPKConfig> | null | undefined>;
+    getState: () => EstadoParaPerfil | null | undefined;
   }
 ): Promise<BandProfile> {
   const perfil = emptyBandProfile(bandId);
@@ -289,30 +328,30 @@ export async function loadBandProfile(
     perfil.tonePhrases = listaLimpia(adnDurable.frases_emblematicas_extraidas, 4);
     perfil.toneByPlatform = limpiarMaticesPorRed(adnDurable.matices_por_red);
     perfil.toneStagePhrases = listaLimpia(adnDurable.frases_directo_extraidas, 6);
-    perfil.reelFeedbackHistory = Array.isArray(adnDurable.historial_feedback_reels) ? adnDurable.historial_feedback_reels : [];
+    perfil.reelFeedbackHistory = historialDeReels(adnDurable.historial_feedback_reels);
   }
 
-  let state: any = null;
+  let state: EstadoParaPerfil | null | undefined;
   try {
     state = deps.getState();
-  } catch (e) {
+  } catch {
     state = null;
   }
 
   if (state) {
     const idLimpio = (bandId || "").replace(/^(band|reg)-/, "").toLowerCase();
-    const mismoId = (v: any) =>
+    const mismoId = (v: unknown) =>
       limpiar(v).toLowerCase() === (bandId || "").toLowerCase() ||
       limpiar(v).replace(/^(band|reg)-/, "").toLowerCase() === idLimpio;
 
     const usuarios = Array.isArray(state.users) ? state.users : [];
     perfil.members = usuarios
-      .filter((u: any) => mismoId(u.band_id))
-      .map((u: any) => ({ name: limpiar(u.name || u.username), instrument: limpiar(u.instrument) }))
+      .filter((u) => mismoId(u.band_id))
+      .map((u) => ({ name: limpiar(u.name || u.username), instrument: limpiar(u.instrument) }))
       .filter((m: BandMemberInfo) => m.name || m.instrument);
 
     if (!perfil.name) {
-      const desdeUsuario = usuarios.find((u: any) => mismoId(u.band_id) && limpiar(u.bandName || u.band_name));
+      const desdeUsuario = usuarios.find((u) => mismoId(u.band_id) && limpiar(u.bandName || u.band_name));
       perfil.name = limpiar(desdeUsuario?.bandName || desdeUsuario?.band_name);
     }
 
@@ -320,7 +359,7 @@ export async function loadBandProfile(
     // todavía: cubre despliegues sin Supabase configurado o análisis guardados antes de que
     // existiera esta columna.
     const bandas = Array.isArray(state.bands) ? state.bands : [];
-    const conAdn = bandas.find((b: any) => (mismoId(b.band_id) || mismoId(b.id)) && b.dna_expresion);
+    const conAdn = bandas.find((b) => (mismoId(b.band_id) || mismoId(b.id)) && b.dna_expresion);
     const adn = conAdn?.dna_expresion;
     if (adn && !perfil.toneSummary) {
       perfil.toneSummary = limpiar(adn.tono_comunicacion);
@@ -331,7 +370,7 @@ export async function loadBandProfile(
       perfil.tonePhrases = listaLimpia(adn.frases_emblematicas_extraidas, 4);
       perfil.toneByPlatform = limpiarMaticesPorRed(adn.matices_por_red);
       perfil.toneStagePhrases = listaLimpia(adn.frases_directo_extraidas, 6);
-      perfil.reelFeedbackHistory = Array.isArray(adn.historial_feedback_reels) ? adn.historial_feedback_reels : [];
+      perfil.reelFeedbackHistory = historialDeReels(adn.historial_feedback_reels);
     }
   }
 

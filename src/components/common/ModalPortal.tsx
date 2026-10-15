@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 
 interface ModalPortalProps {
@@ -14,13 +14,11 @@ interface ModalPortalProps {
  * viewport of the browser window, escaping any ancestor CSS transforms, perspective,
  * filters, or overflow-hidden stacking contexts on mobile devices and desktops.
  */
-export const ModalPortal: React.FC<ModalPortalProps> = ({ children, isOpen = true, onClose, lockScroll = true }) => {
-  const [mounted, setMounted] = useState(false);
+const suscribirNada = () => () => {};
 
-  useEffect(() => {
-    setMounted(true);
-    return () => setMounted(false);
-  }, []);
+export const ModalPortal: React.FC<ModalPortalProps> = ({ children, isOpen = true, onClose, lockScroll = true }) => {
+  // Montado en cliente (el portal necesita document.body); sin estado ni efecto.
+  const mounted = useSyncExternalStore(suscribirNada, () => true, () => false);
 
   useEffect(() => {
     if (!isOpen || !lockScroll || typeof document === 'undefined') return;

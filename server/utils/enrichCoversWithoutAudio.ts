@@ -1,6 +1,9 @@
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { dbGetSongs, dbUpsertSong } from "../db/repertoire.js";
 import { safeParseJson } from "../utils.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { RespuestaDatosCover } from '../tiposRespuestasIA.js';
+import { textoNoVacio } from './valoresIA.js';
 
 export interface EnrichedCoverResult {
   songId: string;
@@ -32,7 +35,7 @@ export async function enrichMissingAudioSongsForBand(
   }
 
   // Filtrar canciones que no tienen archivo de audio o son versiones sin bpm/tono contrastado
-  const songsToEnrich = songs.filter((s: any) => {
+  const songsToEnrich = songs.filter((s) => {
     const hasAudio = Boolean(s.audioPrincipalUrl || s.audioUrl);
     // Si no tiene audio, o si tiene audio por defecto/mock y está marcada como versión o sin análisis
     return !hasAudio || s.esVersionCovers;
@@ -83,20 +86,23 @@ REGLAS OBLIGATORIAS:
 
         let responseText = aiRes?.text || "";
         if (!responseText && aiRes?.candidates?.[0]?.content?.parts) {
-          responseText = aiRes.candidates[0].content.parts.map((p: any) => p.text || "").join("\n");
+          responseText = aiRes.candidates[0].content.parts.map((p) => p.text || "").join("\n");
         }
 
-        const parsed = safeParseJson(responseText);
+        const parsed = safeParseJson<RespuestaDatosCover>(responseText);
         if (parsed && typeof parsed === 'object') {
-          if (parsed.tonalidadOriginal) tonoNuevo = String(parsed.tonalidadOriginal).trim();
+          const tono = textoNoVacio(parsed.tonalidadOriginal)?.trim();
+          if (tono) tonoNuevo = tono;
           if (parsed.bpmOriginal && Number(parsed.bpmOriginal) > 40 && Number(parsed.bpmOriginal) < 250) {
             bpmNuevo = Math.round(Number(parsed.bpmOriginal));
           }
           if (parsed.energia && Number(parsed.energia) >= 1 && Number(parsed.energia) <= 20) {
             energiaNueva = Math.round(Number(parsed.energia));
           }
-          if (parsed.artistaOriginal) artistaOriginal = String(parsed.artistaOriginal).trim();
-          if (parsed.generoRock) genero = String(parsed.generoRock).trim();
+          const artista = textoNoVacio(parsed.artistaOriginal)?.trim();
+          if (artista) artistaOriginal = artista;
+          const generoIA = textoNoVacio(parsed.generoRock)?.trim();
+          if (generoIA) genero = generoIA;
         }
       }
 
@@ -129,7 +135,8 @@ REGLAS OBLIGATORIAS:
         genero,
         exito: true
       });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error(`[EnrichCovers] Error procesando "${song.titulo}":`, err);
       results.push({
         songId: song.id,

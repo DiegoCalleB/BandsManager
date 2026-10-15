@@ -1,33 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { Tabs } from '../ui/Tabs';
 import { Lead, Concert, Tour } from '../../types';
-import {
-  findTourRoutingOpportunities,
-  findCorridorForCity,
-  areCitiesLogisticallyCompatible,
-  SPANISH_TOUR_CORRIDORS,
-} from '../../utils/tourRouting';
-import {
-  Sparkles,
-  Flame,
-  AlertCircle,
-  Clock,
-  Compass,
-  MapPin,
-  TrendingUp,
-  Send,
-  CheckCircle2,
-  ChevronDown,
-  ChevronUp,
-  ArrowRight,
-  Printer,
-  FileText,
-  DollarSign,
-  Fuel,
-  Users,
-  ChevronRight,
-  Briefcase,
-} from 'lucide-react';
+import { findTourRoutingOpportunities, findCorridorForCity, areCitiesLogisticallyCompatible } from '../../utils/tourRouting';
+import { Sparkles, Flame, AlertCircle, Clock, Compass, MapPin, TrendingUp, Send, CheckCircle2, ChevronDown, ChevronUp, FileText, DollarSign, ChevronRight } from 'lucide-react';
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Select } from '../ui';
 
@@ -42,16 +17,19 @@ interface MorningBriefingRadarProps {
   bandName?: string;
 }
 
+// Referencia estable: un `[]` por defecto en los props invalidaría los useMemo en cada render
+const SIN_CONCIERTOS: Concert[] = [];
+
 export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
   leads,
-  concerts = [],
-  tours = [],
+  concerts = SIN_CONCIERTOS,
   onSelectLead,
-  onApproveLead,
   onOpenRoadbookModal,
-  isStitchLight = false,
-  bandName = 'la banda',
+  bandName = 'la banda'
 }) => {
+  // Instante de montaje: fecha estimada de los leads confirmados sin concierto (render puro)
+  const [ahora] = useState(Date.now);
+
   // Estado de expansión del briefing (por defecto plegado para no ocupar espacio, persistido en localStorage)
   const [isExpanded, setIsExpanded] = useState<boolean>(() => {
     try {
@@ -177,7 +155,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
       draftCount: draftsToApprove.length,
       followupCount: needsFollowup.length,
     };
-  }, [leads]);
+  }, [leads, concerts]);
 
   // --- 2. DETECCIÓN DE OPORTUNIDADES DE ENLACE DE RUTA ---
   const routingOpportunities = useMemo(() => {
@@ -191,7 +169,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
         if (!virtualConcerts.some((c) => c.ciudad?.toLowerCase() === l.ciudad?.toLowerCase())) {
           virtualConcerts.push({
             id: `lead-conf-${l.id}`,
-            fecha: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000).toISOString(),
+            fecha: new Date(ahora + 20 * 24 * 60 * 60 * 1000).toISOString(),
             ciudad: l.ciudad || 'Madrid',
             sala: l.nombre_sala,
             cache: 600,
@@ -207,7 +185,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
 
     const calculated = findTourRoutingOpportunities(virtualConcerts, leads);
     return calculated;
-  }, [concerts, leads]);
+  }, [concerts, leads, ahora]);
 
   // Simulador de corredor alternativo cuando no hay conciertos confirmados
   const simulatedCorridorOpportunities = useMemo(() => {
@@ -335,7 +313,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {priorityItems.all.map(({ lead, priorityType, tagLabel, tagColor, isDraft, hasDateConflict }) => (
+                  {priorityItems.all.map(({ lead, tagLabel, tagColor, hasDateConflict }) => (
                     <div
                       key={lead.id}
                       className="bg-[var(--sunken)] p-3.5 rounded-[var(--r-m)] transition-ui flex flex-col justify-between space-y-3 group hover:brightness-95"

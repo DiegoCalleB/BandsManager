@@ -157,7 +157,7 @@ const notas = await page.evaluate(async () => {
 await browser.close();
 fs.writeFileSync(path.join(dest, 'foto.html'), notas.foto);
 // la hoja de estilos de este ensayo (Remotion no sirve enlaces simbólicos a ficheros)
-fs.copyFileSync(path.join(aqui, '..', 'styles.css'), path.join(aqui, 'public', 'styles.css'));
+for (const css of fs.readdirSync(path.join(aqui, '..')).filter((f) => /^styles(-\d+)?\.css$/.test(f))) fs.copyFileSync(path.join(aqui, '..', css), path.join(aqui, 'public', css));
 for (const t of notas.taps) { fs.writeFileSync(path.join(dest, t.f), Buffer.from(t.b64, 'base64')); delete t.b64; }
 delete notas.foto;
 fs.writeFileSync(path.join(dest, 'notas.json'), JSON.stringify(notas));

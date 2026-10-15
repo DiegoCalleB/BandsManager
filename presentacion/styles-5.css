@@ -1,0 +1,224 @@
+/* Continuación de styles.css (partido en trozos de menos de 600 líneas, AGENTS.md §5.6; se cargan en orden) */
+/* El lema final, sobre el local vacío */
+.slide.plano > .lema { position: absolute; left: 0; right: 0; top: 50%; translate: 0 -50%; z-index: 2; margin: 0; text-align: center; color: #fff;
+  font: 400 104px/1 Anton, Oswald, sans-serif; letter-spacing: .01em; text-shadow: 0 6px 40px rgba(0,0,0,.85); opacity: 0; }
+.slide.plano > .lema small { display: block; margin-top: 26px; font: 500 34px/1 Onest, sans-serif; letter-spacing: .32em; text-transform: uppercase; color: #ffd596; }
+.slide.plano.active > .lema { animation: lema 7.5s ease 1.2s both; }
+@keyframes lema { 0% { opacity: 0; letter-spacing: .05em; } 18%, 88% { opacity: 1; letter-spacing: .01em; } 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .slide.plano.active > .lema { animation: none; opacity: 1; } }
+/* Capturas de la app: el resalte y el nombre de la función se quedan; las etiquetas numeradas, los chips y el contador, no */
+body.pelicula:not(.scroll) .dr-lab, body.pelicula:not(.scroll) .slide.feat.active > .ficha span, body.pelicula:not(.scroll) .slide.feat.active > .ficha > i { display: none !important; }
+
+/* ───────── Capítulo 5 en la película: tipografía sobre planos en movimiento, sin tarjetas de diapositiva ───────── */
+body.pelicula:not(.scroll) .slide.scene.biz .actor-velo, body.pelicula:not(.scroll) #stage .slide.scene:is(.biz, [data-title="Para darlo a conocer"], [data-title="Qué viene"]) .actor-velo { background: linear-gradient(90deg, rgba(3,5,10,.86) 0%, rgba(3,5,10,.55) 55%, rgba(3,5,10,.25) 100%); opacity: 1; }
+body.pelicula:not(.scroll) .slide.scene.biz h2 { font: 600 34px/1 Onest, sans-serif; letter-spacing: .3em; text-transform: uppercase; color: #ffd596; max-width: none; margin-top: 8px; }
+body.pelicula:not(.scroll) .slide.scene > .biz-cols { left: 150px; right: 150px; top: 300px; width: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 90px; }
+body.pelicula:not(.scroll) .biz-col { background: none; border: 0; border-left: 4px solid #ffb35c; border-radius: 0; padding: 4px 0 4px 36px; backdrop-filter: none; }
+body.pelicula:not(.scroll) .biz-col .badge { display: block; padding: 0; background: none; margin-bottom: 18px; font-size: 24px; letter-spacing: .28em; text-transform: uppercase; color: #ffd596; }
+body.pelicula:not(.scroll) .biz-col .badge.b2b { color: #7fe2d4; }
+body.pelicula:not(.scroll) .biz-col h3 { font: 400 92px/1 Anton, Oswald, sans-serif; text-transform: uppercase; letter-spacing: .01em; color: #fff; text-shadow: 0 4px 30px rgba(0,0,0,.8); }
+body.pelicula:not(.scroll) .biz-col p { margin-top: 20px; font-size: 36px; color: rgba(255,255,255,.88); text-shadow: 0 2px 16px rgba(0,0,0,.9); }
+/* «Y para darlo a conocer»: el máster, como un rótulo y no como una tarjeta */
+body.pelicula:not(.scroll) .slide.scene .enrol.slim { background: none; border: 0; border-left: 4px solid #ffb35c; border-radius: 0; padding: 0 0 0 28px; margin-top: 30px; backdrop-filter: none; }
+body.pelicula:not(.scroll) .enrol.slim .mono { display: none; }
+body.pelicula:not(.scroll) .enrol.slim .en-top b { font: 400 74px/1.05 Anton, Oswald, sans-serif; text-transform: uppercase; text-shadow: 0 4px 30px rgba(0,0,0,.8); }
+body.pelicula:not(.scroll) .enrol.slim .en-top span { font-size: 30px; color: rgba(255,255,255,.85); }
+/* «Qué viene»: la hoja de ruta es material de defensa (créditos y tecla D); en la película queda la notificación */
+body.pelicula:not(.scroll) .slide.scene.tech .steps, body.pelicula:not(.scroll) .slide.scene > .tech-vis.steps { display: none !important; }
+body.pelicula:not(.scroll) .slide.scene.tech:has(> .notif) h2 { font: 600 34px/1 Onest, sans-serif; letter-spacing: .3em; text-transform: uppercase; color: #ffd596; }
+/* Los dos planos más oscuros del capítulo 5 se aclaran un poco (se ven el portátil y las caras) */
+.slide[data-title="Qué viene"] .actor-vid, .slide[data-title="Cómo ganamos dinero"] .actor-vid { filter: brightness(1.7) contrast(1.05); }
+
+/* Mientras Diego no haya grabado su clip: su foto real entera, sobre ella misma desenfocada (es vertical y pequeña) */
+.entrevista .ent.ent-foto::before { content: ''; position: absolute; inset: -60px; background: var(--bg) center / cover; filter: blur(46px) brightness(.45) saturate(.8); }
+.entrevista .ent.ent-foto img { object-fit: contain; object-position: 50% 50%; width: auto; height: 100%; left: 50%; right: auto; translate: -50% 0; }
+.slide.entrevista.active .ent.ent-foto.on img { animation: none; }
+
+/* «Y esta parte es cierta…» sube para no pisarse con los subtítulos */
+body.pelicula:not(.scroll) .slide.scene[data-title="Prólogo · La decisión"] .scene-foot { position: absolute; left: 120px; right: 120px; bottom: auto; top: 720px; margin: 0; font-size: 26px; opacity: .85; }
+
+/* Insertos de la app en las entrevistas (recurso de documental): la voz sigue y se ve la pantalla de BandManager de la que habla */
+.ent-ins { position: absolute; inset: 0; z-index: 2; overflow: hidden; opacity: 0; background: #0b0c10; transition: opacity 160ms linear; pointer-events: none; }
+.entrevista .ent .ent-ins img { position: absolute; inset: auto; max-width: none; height: auto; object-fit: fill; transform-origin: 50% 50%; filter: brightness(1.12) contrast(1.04); }
+.slide.entrevista.active .ent.ins .ent-ins { opacity: 1; }
+.slide.entrevista.active .ent.ins .ent-ins img { animation: entins 7s cubic-bezier(.2, .6, .3, 1) both; }
+@keyframes entins { from { transform: scale(1); } to { transform: scale(1.06); } }
+.ent.ins .ent-rot { visibility: hidden; }
+.ent-ins-rot { position: absolute; left: 150px; top: 110px; padding-left: 18px; border-left: 3px solid #ffb35c; color: #fff; font: 500 24px/1.25 Onest, sans-serif; letter-spacing: .14em; text-transform: uppercase; text-shadow: 0 2px 16px rgba(0,0,0,.95); }
+.ent-ins-rot b { display: block; font: 600 30px/1.1 Oswald, Onest, sans-serif; letter-spacing: .08em; color: #ffb35c; }
+.ent-ins::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.55), transparent 26%, transparent 74%, rgba(0,0,0,.6)); }
+.ent-ins-rot { z-index: 1; padding: 12px 22px 12px 18px; background: rgba(8,9,12,.82); backdrop-filter: blur(6px); border-radius: 0 6px 6px 0; }
+@media (prefers-reduced-motion: reduce) { .ent-ins img { animation: none !important; } }
+
+/* Escena en dos pasos: las hojas impresas entran sobre la pantalla cuando Iago dice que lo imprime */
+.con-paso .paso2-in { opacity: 0; translate: 0 60px; transition: opacity 500ms ease, translate 700ms cubic-bezier(.2,.7,.2,1); pointer-events: none; }
+.con-paso.paso2 .paso2-in { opacity: 1; translate: 0 0; }
+.con-paso.paso2 .ft-shot { filter: brightness(.45) blur(2px); transition: filter 600ms ease; }
+body.scroll .con-paso .paso2-in { opacity: 1; translate: none; }
+
+/* El contraplano de los músicos ya no tapa la app: en las diapositivas de producto es una ventanita (imagen dentro de
+   imagen) y la pantalla de BandManager se ve siempre. Con la tele del local, arriba a la derecha, justo bajo la banda de
+   cine y sobre el marco; con el móvil, en el lado izquierdo, que está vacío en la película. */
+body.pelicula:not(.scroll) #reaccion { inset: auto; right: 56px; top: 56px; width: 280px; height: 158px; border-radius: 14px;
+  border: 3px solid rgba(255,255,255,.85); box-shadow: 0 18px 50px rgba(0,0,0,.7); }
+body.pelicula:not(.scroll):has(.slide.feat.active .ft-shot.phone) #reaccion { right: auto; left: 120px; top: 300px; width: 560px; height: 315px; }
+/* el correo ocupa toda la pantalla (cámara incluida): ahí no hay contraplano, que se vea el correo */
+body.pelicula:not(.scroll):has(.slide.feat.active.mailscene) #reaccion { display: none; }
+
+/* ── Netflix: ¿quién está viendo? y pantalla de inicio con la película destacada ── */
+#gate { background: #141414; }
+.nx-home { position: absolute; inset: 0; display: flex; align-items: flex-end; overflow: clip; }
+#gate[data-fase="perfiles"] .nx-home, #gate[data-fase="home"] .nx-perfiles { display: none; }
+.nx-perfiles { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 34px; font-family: 'Helvetica Neue', Arial, sans-serif; background: #141414; }
+.nx-perfiles .nx-logo-g { position: absolute; top: 44px; left: 64px; }
+.nx-perfiles h2 { font-size: 64px; font-weight: 500; margin: 0; letter-spacing: -.01em; }
+.nx-pf { display: flex; gap: 34px; }
+.nx-perfil { all: unset; display: flex; flex-direction: column; align-items: center; gap: 16px; cursor: pointer; width: 170px; color: #808080; font-size: 24px; }
+.nx-perfil .av { width: 170px; height: 170px; border-radius: 8px; border: 4px solid transparent; transition: border-color .15s, transform .15s; }
+.nx-perfil:hover, .nx-perfil:focus-visible, .nx-perfil.elegido { color: #fff; }
+.nx-perfil:hover .av, .nx-perfil:focus-visible .av { border-color: #fff; }
+.nx-perfil.elegido .av { border-color: #fff; transform: scale(1.08); }
+.nx-admin { font-size: 22px; letter-spacing: .14em; color: #808080; border: 1px solid #808080; padding: 12px 30px; margin-top: 8px; }
+.av { position: relative; display: block; box-sizing: border-box; background: #0071eb; overflow: hidden; }
+.av::before { content: ''; position: absolute; left: 26%; top: 34%; width: 11%; height: 11%; border-radius: 50%; background: #fff; box-shadow: calc(var(--av, 170px) * .0) 0 0 #fff, 0 0 0 0 #fff; }
+.av::after { content: ''; position: absolute; left: 26%; top: 56%; width: 48%; height: 20%; border-radius: 0 0 100px 100px / 0 0 100% 100%; border: 0 solid #fff; background: #fff; clip-path: ellipse(50% 100% at 50% 0); }
+.av.brais { background: #0071eb; } .av.profes { background: #f5c518; } .av.diego { background: #e50914; } .av.pelaez { background: #5fb946; }
+.av.mini { width: 40px; height: 40px; border-radius: 4px; }
+.nx-top nav { display: flex; gap: 26px; margin-left: 34px; font: 500 19px/1 'Helvetica Neue', Arial, sans-serif; color: rgba(255,255,255,.85); }
+.nx-top nav .on { color: #fff; font-weight: 700; }
+.nx-der { margin-left: auto; display: flex; align-items: center; gap: 26px; font: 500 19px/1 'Helvetica Neue', Arial, sans-serif; }
+.nx-lupa { width: 22px; height: 22px; border: 3px solid #fff; border-radius: 50%; position: relative; display: block; }
+.nx-lupa::after { content: ''; position: absolute; width: 11px; height: 3px; background: #fff; right: -11px; bottom: -4px; transform: rotate(45deg); }
+.nx-camp { width: 20px; height: 22px; border: 3px solid #fff; border-radius: 10px 10px 2px 2px; display: block; }
+.nx-top { align-items: center; }
+.nx-hero { padding-bottom: min(31vh, 330px) !important; }
+.nx-top10 { display: flex; align-items: center; gap: 14px; margin-top: 18px; font: 700 28px/1 'Helvetica Neue', Arial, sans-serif; }
+.nx-top10 b { background: #e50914; color: #fff; font: 700 13px/1.05 'Helvetica Neue', Arial, sans-serif; letter-spacing: .04em; padding: 6px 7px; text-align: center; border-radius: 3px; }
+.nx-info { background: rgba(109,109,110,.7) !important; }
+.nx-alt { display: flex; gap: 10px; margin-top: 18px; }
+#gate .nx-alt .gate-btn { font-size: 15px; font-weight: 600; padding: 8px 14px; background: rgba(0,0,0,.45); border: 1px solid rgba(255,255,255,.3); }
+.nx-meta { margin-top: 18px; }
+.nx-lado { position: absolute; right: 0; top: 52%; display: flex; align-items: center; gap: 0; z-index: 2; }
+.nx-lado .nx-mute { width: 54px; height: 54px; border: 2px solid rgba(255,255,255,.6); border-radius: 50%; margin-right: 18px; background: rgba(0,0,0,.4); position: relative; }
+.nx-lado .nx-mute::before { content: ''; position: absolute; left: 15px; top: 20px; width: 9px; height: 12px; background: #fff; }
+.nx-lado .nx-mute::after { content: ''; position: absolute; left: 24px; top: 16px; border: 10px solid transparent; border-right: 12px solid #fff; border-left: 0; }
+.nx-lado .nx-edad { background: rgba(51,51,51,.7); border: 0; border-left: 3px solid #fff; padding: 10px 52px 10px 14px; font: 600 22px/1 'Helvetica Neue', Arial, sans-serif; }
+.nx-filas { position: absolute; left: 0; right: 0; bottom: 56px; padding-left: 64px; z-index: 2; font-family: 'Helvetica Neue', Arial, sans-serif; }
+.nx-filas h3 { font-size: 26px; margin: 0 0 12px; font-weight: 700; }
+.nx-row { display: flex; gap: 8px; }
+.nx-card { flex: 0 0 min(16.2vw, 310px); aspect-ratio: 16/9; border-radius: 4px; position: relative; overflow: hidden; background: linear-gradient(#0008, #000c), var(--img) center / cover; filter: grayscale(.85) brightness(.75); display: flex; flex-direction: column; justify-content: flex-end; padding: 12px 14px; gap: 4px; }
+.nx-card b { font-size: 19px; line-height: 1.15; text-shadow: 0 2px 8px #000; }
+.nx-card em { font-style: normal; font-size: 14px; font-weight: 700; color: #e5e5e5; letter-spacing: .06em; text-transform: uppercase; }
+#gate .gate-note { position: absolute; left: 64px; bottom: 16px; margin: 0; z-index: 2; }
+#gate[data-fase="home"] .nx-hero { animation: nxsube .9s cubic-bezier(.2,.7,.2,1) both; }
+#gate[data-fase="home"] .nx-filas { animation: nxsube 1.1s .25s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes nxsube { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+/* Con el tráiler en marcha, la sinopsis y el género se recogen, como en la plataforma */
+.nx-sin, .nx-gen { max-height: 160px; transition: opacity .9s, max-height .9s, margin .9s; }
+#gate.trailer .nx-sin, #gate.trailer .nx-gen { opacity: 0; max-height: 0; margin: 0; overflow: hidden; }
+#gate.trailer .nx-titulo { font-size: clamp(40px, min(6.6vw, 7.6vh), 100px); transition: font-size .9s; }
+@media (max-height: 800px) and (min-width: 801px) {
+  .nx-perfiles h2 { font-size: 44px; } .nx-perfil, .nx-perfil .av { width: 120px; } .nx-perfil .av { height: 120px; } .nx-perfil { font-size: 18px; }
+  .nx-hero { padding-bottom: 32vh !important; } .nx-titulo { font-size: min(6.4vw, 8vh); margin: 10px 0 12px; } .nx-gen, .nx-meta { display: none; } .nx-sin { font-size: 17px; margin-top: 10px; } .nx-top10 { margin-top: 12px; font-size: 22px; } .nx-alt, .nx-meta { margin-top: 10px; }
+  .nx-top nav, .nx-der { font-size: 15px; } .nx-card b { font-size: 14px; } .nx-card em { font-size: 11px; } .nx-filas h3 { font-size: 20px; }
+}
+
+/* Netflix · «Más información» */
+.nx-modal { position: absolute; inset: 0; z-index: 5; background: rgba(0,0,0,.72); display: grid; place-items: center; font-family: 'Helvetica Neue', Arial, sans-serif; }
+.nx-modal[hidden] { display: none; }
+.nx-mcard { width: min(1180px, 92vw); max-height: 92vh; overflow: hidden; background: #181818; border-radius: 10px; box-shadow: 0 20px 80px #000; animation: nxsube .45s cubic-bezier(.2,.7,.2,1) both; }
+.nx-mfoto { position: relative; height: min(52vh, 560px); display: flex; flex-direction: column; justify-content: flex-end; padding: 0 48px 38px; background: linear-gradient(to top, #181818 4%, transparent 55%), var(--img) center / cover; }
+.nx-mfoto h2 { font: 400 clamp(44px, 6vw, 84px)/.92 Anton, Oswald, Impact, sans-serif; text-transform: uppercase; margin: 0 0 20px; text-shadow: 0 6px 30px #000; }
+.nx-mfoto .gate-btns { margin: 0; }
+.nx-cerrar { position: absolute; top: 18px; right: 18px; width: 44px; height: 44px; border-radius: 50%; border: 0; background: #181818; color: #fff; font-size: 20px; cursor: pointer; }
+.nx-mcuerpo { display: grid; grid-template-columns: 2fr 1fr; gap: 40px; padding: 8px 48px 40px; }
+.nx-mizq p { font-size: 22px; line-height: 1.45; margin: 16px 0 0; }
+.nx-mizq .nx-peq { font-size: 18px; color: #bcbcbc; }
+.nx-verde { color: #46d369; font-weight: 700; }
+.nx-mder { margin: 16px 0 0; font-size: 17px; line-height: 1.5; }
+.nx-mder dt { color: #777; display: inline; margin-right: 8px; }
+.nx-mder dd { display: inline; margin: 0; color: #fff; }
+.nx-mder dd::after { content: ''; display: block; height: 10px; }
+@media (max-height: 800px) { .nx-mfoto { height: 40vh; } .nx-mizq p { font-size: 17px; margin-top: 10px; } .nx-mizq .nx-peq { font-size: 14px; } .nx-mder { font-size: 14px; } .nx-mcuerpo { padding-bottom: 24px; } }
+
+/* Perfiles con foto (si el fichero existe, el generador añade .foto y desaparece la carita) */
+.av.foto { background: var(--foto) center / cover no-repeat; }
+.av.foto::before, .av.foto::after { display: none; }
+.av.diego.foto { background-size: 250%; background-position: 45% 14%; }
+.av.pelaez.foto { background-size: 250%; background-position: 69% 16%; }
+.av.profes.foto { background-size: cover; }
+.av.brais.foto { background-position: 50% 20%; }
+.nx-perfil span { text-align: center; }
+.nx-perfil { flex: 0 0 170px; } .nx-perfil .av { flex: none; } .nx-perfil span { white-space: nowrap; }
+.av.foto { background-origin: border-box; }
+
+/* En la película el diálogo va subtitulado y lo dice el retrato de quien habla: nada de burbujas (la de reacción, la de la escena del local,
+   las de capítulo y la del cierre). Si una burbuja sigue saliendo en modo película, falta su clase aquí. */
+body.pelicula:not(.scroll) :is(.react, .rm-say, .act-msg, .sign-msg) { display: none !important; }
+
+/* Cursor de mentira que pulsa «Reproducir» y salida hacia la película */
+.nx-cursor { position: fixed; z-index: 9; width: 30px; height: 30px; pointer-events: none; transform: translate(-6px, -4px); filter: drop-shadow(0 3px 6px #000a); background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M4 2l15 9-6.5 1.6L16 20l-3 1.3-3.5-7.6L5 17z' fill='white' stroke='black' stroke-width='1.2' stroke-linejoin='round'/></svg>") center / contain no-repeat; }
+.nx-cursor.clic { transform: translate(-6px, -4px) scale(.82); transition: transform .12s; }
+#gatePeli.pulsado { transform: scale(.96); background: #d2d2d2; transition: transform .12s, background .12s; }
+.nx-home { transition: transform .7s cubic-bezier(.5,0,.3,1), opacity .7s; }
+#gate.sale .nx-home { transform: scale(1.08); opacity: 0; }
+
+/* Netflix · más filas, tarjetas con hover y barra superior viva */
+.nx-home { display: block; }
+.nx-scroll { position: absolute; inset: 0; overflow-x: hidden; overflow-y: auto; scrollbar-width: none; }
+.nx-scroll::-webkit-scrollbar { display: none; }
+.nx-pant { position: relative; height: 100%; display: flex; align-items: flex-end; }
+.nx-home > .nx-top { position: absolute; top: 0; left: 0; right: 0; padding: 34px 64px 16px; z-index: 4; background: linear-gradient(#000b, transparent); transition: background .3s; }
+.nx-home > .nx-top.solido { background: #141414; }
+.nx-perf { display: flex; align-items: center; gap: 8px; }
+.nx-flecha { width: 8px; height: 8px; border: solid #fff; border-width: 0 2px 2px 0; transform: translateY(-2px) rotate(45deg); display: block; }
+.nx-camp { position: relative; }
+.nx-camp::after { content: ''; position: absolute; top: -5px; right: -6px; width: 11px; height: 11px; border-radius: 50%; background: #e50914; border: 2px solid #141414; }
+.nx-mas { position: relative; background: #141414; padding: 34px 0 90px 64px; font-family: 'Helvetica Neue', Arial, sans-serif; z-index: 2; }
+.nx-filas2 { margin-bottom: 44px; }
+.nx-filas2 h3 { font-size: 26px; margin: 0 0 12px; font-weight: 700; }
+.nx-card.k { filter: none; background: linear-gradient(#0006, #000b), var(--img) center / cover; transition: transform .25s, box-shadow .25s; }
+.nx-card.k b { font-size: 18px; }
+.nx-filas .nx-card:hover { filter: none; transform: scale(1.1); z-index: 4; transition: transform .25s; }
+.nx-card.k:hover, .nx-card.k.hover { transform: scale(1.22); z-index: 5; box-shadow: 0 14px 46px #000; }
+.nx-acc { display: none; gap: 8px; margin-top: 4px; }
+.nx-acc i { width: 34px; height: 34px; border-radius: 50%; border: 2px solid #9a9a9a; background: #2a2a2a; display: grid; place-items: center; font-style: normal; font-size: 14px; }
+.nx-acc i.p { background: #fff; color: #000; border-color: #fff; }
+.nx-acc i.m { margin-left: auto; }
+.nx-mini { display: none; font-size: 13px; color: #ddd; }
+.nx-mini b { color: #46d369; margin-right: 6px; }
+.nx-card.k:hover .nx-acc, .nx-card.k.hover .nx-acc { display: flex; }
+.nx-card.k:hover .nx-mini, .nx-card.k.hover .nx-mini { display: block; }
+.nx-resta { position: absolute !important; top: 8px; right: 8px; background: #000b; padding: 3px 8px; border-radius: 3px; font-size: 12px !important; text-transform: none !important; letter-spacing: 0 !important; }
+.nx-card u { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: #5a5a5a; text-decoration: none; display: block; }
+.nx-card u::after { content: ''; position: absolute; inset: 0 auto 0 0; width: var(--w); background: #e50914; }
+.nx-row.top { gap: 0; }
+.nx-top-c { display: flex; align-items: flex-end; flex: 0 0 min(25vw, 480px); position: relative; }
+.nx-num { font: 400 min(17vw, 300px)/.78 Anton, Oswald, Impact, sans-serif; color: #141414; -webkit-text-stroke: 4px #6b6b6b; margin-right: -20px; position: relative; z-index: 1; }
+.nx-top-c .nx-card { flex: 0 0 min(11.6vw, 222px); aspect-ratio: 2 / 3; margin-bottom: 4px; }
+.nx-top-c { flex: 0 0 auto; margin-right: 26px; }
+.nx-num { font-size: min(11vw, 210px); }
+.nx-top-c .nx-card { flex: 0 0 min(10.5vw, 200px); }
+#gate:has(.nx-top.solido) .gate-note { opacity: 0; }
+.nx-mini { white-space: nowrap; font-size: 12px; }
+
+/* Pausa de verdad: las animaciones de la escena se quedan quietas (el reproductor #nf sigue vivo) */
+body.pausado #stage, body.pausado #stage *, body.pausado #stage *::before, body.pausado #stage *::after { animation-play-state: paused !important; }
+
+/* Escenas largas con varios planos de fondo (data-title en PLANOS de generar.py, con lista): cada clip entra en --i durante --d y se funde con el
+   siguiente; el último se queda. Evita ver 10 s de vídeo repetidos durante media escena. */
+.slide.scene .scene-bg .actor-vid.sec { opacity: 0; }
+.slide.scene.active .scene-bg .actor-vid.sec { animation: avon var(--d) linear var(--i) both; }
+.slide.scene.active .scene-bg .actor-vid.sec.ult { animation-name: avult; }
+@keyframes avon { 0% { opacity: 0; } 5% { opacity: 1; } 95% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes avult { 0% { opacity: 0; } 5%, 100% { opacity: 1; } }
+
+
+/* Final de película: enlaces para escuchar las dos canciones (los mp3 de audio/musica/, que abre el reproductor del navegador) */
+.nff-mus-t, .nff-mus { opacity: 0; animation: nffaparece 900ms ease-out 3400ms both; }
+.nff-mus-t { margin: 8px 0 0; color: #aaa; font: 600 22px/1 'Helvetica Neue', Arial, sans-serif; letter-spacing: .12em; text-transform: uppercase; }
+.nff-mus { display: flex; gap: 22px; }
+.nff-mus a { display: flex; flex-direction: column; gap: 6px; padding: 16px 30px; border-radius: 4px; background: rgba(255,255,255,.14); color: #fff; text-decoration: none; font-family: 'Helvetica Neue', Arial, sans-serif; text-align: left; }
+.nff-mus a b { font-size: 26px; line-height: 1.1; } .nff-mus a small { font-size: 19px; color: #bbb; }
+.nff-mus a:hover { background: #fff; color: #000; } .nff-mus a:hover small { color: #444; }
+@media (prefers-reduced-motion: reduce) { .nff-mus-t, .nff-mus { animation-duration: 1ms; animation-delay: 0ms; } }

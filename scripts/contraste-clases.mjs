@@ -38,7 +38,7 @@ for (const f of files) {
         const txts = base.map(x => x.match(/^text-\[var\(--([\w-]+)\)\](?:\/(\d+))?$/)).filter(Boolean);
         const reemplazos = new Map();
         // rellenos 'fuertes' (50–90 %): la intención es sólido; con alfa intermedia ningún texto cumple
-        if (fix) for (const bgm of bgs) { const [tokBg, k, a] = bgm; if (a && +a >= 50 && +a <= 90 && ON[k]) { reemplazos.set(bgm[0], `bg-[var(--${k})]`); for (const m of txts) reemplazos.set(m[0], `text-[var(--${ON[k]})]`); } }
+        if (fix) for (const bgm of bgs) { const [, k, a] = bgm; if (a && +a >= 50 && +a <= 90 && ON[k]) { reemplazos.set(bgm[0], `bg-[var(--${k})]`); for (const m of txts) reemplazos.set(m[0], `text-[var(--${ON[k]})]`); } }
         // b) texto casi transparente → opaco
         for (const m of txts) if (m[2] && +m[2] <= 45) {
           errores++; informe.push(`${f}:${linea} texto ${m[0]} (opacidad ${m[2]} %)`);

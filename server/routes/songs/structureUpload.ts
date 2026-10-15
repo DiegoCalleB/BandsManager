@@ -2,14 +2,13 @@
 
 import express from 'express';
 import multer from 'multer';
-import path from 'path';
+import type { Part } from '@google/genai';
 import { requireAuth } from '../../state.js';
 import { getTargetBandId, puedeEscribirEnBanda } from '../../utils/bandAccess.js';
 import { getSupabaseClient, getBucketName } from '../upload.js';
 import { getAiClient, TIMEOUT_IA_LARGO_MS, generateContentWithFallback, GEMINI_MODEL } from '../../ai.js';
 import { getSupabase } from '../../db/core.js';
 import { dbUpsertSong } from '../../db/repertoire.js';
-import { Song } from '../../../src/types.js';
 
 const router = express.Router();
 
@@ -57,7 +56,7 @@ async function extractStructureWithAI(
 
   const base64Data = fileBuffer.toString('base64');
 
-  let imagePart: any;
+  let imagePart: Part;
 
   if (mimeType === 'application/pdf') {
     imagePart = {
@@ -116,7 +115,7 @@ Example response format:
     return extracted;
   } catch (error) {
     console.error('AI extraction error:', error);
-    throw new Error('No se pudo extraer la información de la estructura');
+    throw new Error('No se pudo extraer la información de la estructura', { cause: error });
   }
 }
 
@@ -202,7 +201,7 @@ router.post(
       // Update song with extracted data. estructuraVerificada se resetea siempre a false: un
       // documento/cifrado nuevo no hereda la confianza que alguien depositó en el anterior,
       // tiene que volver a revisarse antes de usarse en directo.
-      const updatedSong: Record<string, any> = {
+      const updatedSong: Record<string, unknown> = {
         ...song,
         estructuraDocumentoUrl: fileUrl,
         estructuraDocumentoNombre: file.originalname,
@@ -226,7 +225,7 @@ router.post(
         };
       }
 
-      let updatedData: any;
+      let updatedData: Awaited<ReturnType<typeof dbUpsertSong>>;
       try {
         updatedData = await dbUpsertSong(updatedSong, bandId);
       } catch (updateError) {

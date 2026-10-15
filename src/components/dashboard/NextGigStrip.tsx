@@ -1,7 +1,7 @@
 import React from 'react';
 import { ChevronRight, Mic } from 'lucide-react';
 import type { Concert } from '../../types';
-import { diasHasta, formatearCuentaAtras } from './ExecutiveSummaryHero';
+import { diasHasta, formatearCuentaAtras } from './executiveSummaryUtils';
 
 interface NextGigStripProps {
   concerts: Concert[];

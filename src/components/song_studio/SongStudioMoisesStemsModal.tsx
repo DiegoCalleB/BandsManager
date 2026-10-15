@@ -1,9 +1,9 @@
+import { Info, Sliders, Sparkles, X } from 'lucide-react';
 import React from 'react';
-import { Sliders, X, Sparkles, Info } from 'lucide-react';
-import { SongAudioIdea, Song } from '../../types';
-import { MoisesSeparationPreset, MOISES_PRESETS_CONFIG } from '../SongStudioModal';
+import { Song, SongAudioIdea } from '../../types';
 import { Button, IconButton } from '../ui';
 import { IrisPrism } from './IrisPrism';
+import { MOISES_PRESETS_CONFIG, MoisesSeparationPreset } from './moisesStems';
 
 interface SongStudioMoisesStemsModalProps {
   showMoisesStemsModal: SongAudioIdea | null;
@@ -36,7 +36,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
         <div className="flex items-center justify-between border-b border-[var(--acc)]/30 pb-3">
           <div className="flex items-center gap-2 text-[var(--acc)] font-mono font-bold text-sm">
             <Sliders className="w-5 h-5 text-[var(--acc)]" />
-            <span>Iris Espectro — Separador de Pistas con IA</span>
+            <span>Iris Prism — Separar pistas</span>
           </div>
           <IconButton
             label="Cerrar"
@@ -139,7 +139,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
         {moisesTab === 'how_it_works' && (
           <div className="space-y-3 text-xs text-[var(--ink-2)] leading-relaxed font-sans">
             <p>
-              <strong>¿Cómo funciona Iris Espectro?</strong>
+              <strong>¿Cómo funciona Iris Prism?</strong>
             </p>
             <p>
               Iris utiliza modelos de inteligencia artificial alojados en GPU dedicadas para analizar el espectro frecuencial de tus

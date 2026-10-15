@@ -17,10 +17,13 @@ import express from "express";
 import crypto from "crypto";
 import { requireAuth } from "../state.js";
 import { getTargetBandId } from "../utils/bandAccess.js";
+import { gmailOAuthRateLimiter } from "../middleware/rateLimiter.js";
 import { getSupabase } from "../db/core.js";
 import { dbUpsertBandGmailOAuth, dbDeleteBandGmailOAuth, dbGetBandGmailOAuth, toSafeGmailOAuthResponse } from "../db/gmailOAuth.js";
 import { invalidarAccessTokenGmail } from "../services/gmailApiClient.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
+import { responderError } from '../utils/errorHttp.js';
 const router = express.Router();
 
 // gmail.compose: crear/leer/enviar borradores (crearBorradorGmailApi, enviarEmailGmailApi,
@@ -43,6 +46,12 @@ const ESTADO_VALIDEZ_MS = 10 * 60 * 1000; // 10 minutos: tiempo de sobra para co
 const NOMBRE_COOKIE_NONCE = "gmail_oauth_nonce";
 const noncesConsumidos = new Map<string, number>();
 
+/**
+ * Firma HMAC-SHA256 del `state` de OAuth. CodeQL la marca como «hash de contraseña con esfuerzo
+ * insuficiente» (falso positivo): no se hashea ninguna contraseña, `secreto` es CRON_SECRET (clave
+ * del servidor, alta entropía) y HMAC con clave es el primitivo correcto para autenticar un mensaje;
+ * un KDF lento (scrypt/bcrypt) solo tiene sentido para secretos de baja entropía.
+ */
 function firmaEstado(secreto: string, bandId: string, ts: string, nonce: string): string {
   return crypto.createHmac("sha256", secreto).update(`gmail-oauth:${bandId}:${ts}:${nonce}`).digest("hex").slice(0, 32);
 }
@@ -115,7 +124,7 @@ function oauthConfigured(): boolean {
 }
 
 // GET /api/gmail-oauth/authorize-url
-router.get("/authorize-url", requireAuth, (req, res) => {
+router.get("/authorize-url", gmailOAuthRateLimiter, requireAuth, (req, res) => {
   if (!oauthConfigured()) {
     return res.status(503).json({ error: "El servidor no tiene configurado el OAuth de Gmail (GOOGLE_OAUTH_CLIENT_ID/SECRET/REDIRECT_URI)." });
   }
@@ -139,14 +148,15 @@ router.get("/authorize-url", requireAuth, (req, res) => {
     url.searchParams.set("scope", GMAIL_OAUTH_SCOPE);
     url.searchParams.set("state", state);
     res.json({ url: url.toString() });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error generando URL de autorización de Gmail OAuth:", err);
-    res.status(500).json({ error: err.message || "Error al generar la URL de autorización." });
+    responderError(res, err, "Error al generar la URL de autorización.");
   }
 });
 
 // GET /api/gmail-oauth/callback (público a propósito - ver comentario de arriba)
-router.get("/callback", async (req, res) => {
+router.get("/callback", gmailOAuthRateLimiter, async (req, res) => {
   const redirigirConError = (motivo: string) => res.redirect(`/?gmail_oauth=error&motivo=${encodeURIComponent(motivo)}`);
 
   const bandId = validarYConsumirEstadoOAuth(req.query.state, leerCookie(req, NOMBRE_COOKIE_NONCE));
@@ -200,7 +210,7 @@ router.get("/callback", async (req, res) => {
         const profile = await profileRes.json();
         gmailEmail = profile.emailAddress || "";
       }
-    } catch (_) {}
+    } catch { /* se prueba el siguiente método para leer el email de la cuenta */ }
 
     // Fallback 1: Decodificar id_token si Google lo envió
     if (!gmailEmail && tokenData.id_token) {
@@ -210,7 +220,7 @@ router.get("/callback", async (req, res) => {
           const decoded = JSON.parse(Buffer.from(payloadBase64, "base64").toString("utf8"));
           gmailEmail = decoded.email || "";
         }
-      } catch (_) {}
+      } catch { /* se prueba el siguiente método para leer el email de la cuenta */ }
     }
 
     // Fallback 2: Endpoint userinfo clásico
@@ -223,7 +233,7 @@ router.get("/callback", async (req, res) => {
           const uData = await userinfoRes.json();
           gmailEmail = uData.email || "";
         }
-      } catch (_) {}
+      } catch { /* ningún método devolvió el email: la cuenta se conecta sin él */ }
     }
 
     await dbUpsertBandGmailOAuth({
@@ -251,26 +261,28 @@ router.get("/callback", async (req, res) => {
     }
 
     res.redirect("/?gmail_oauth=conectado");
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error en el callback de Gmail OAuth:", err);
     redirigirConError("error_interno");
   }
 });
 
 // GET /api/gmail-oauth/status
-router.get("/status", requireAuth, async (req, res) => {
+router.get("/status", gmailOAuthRateLimiter, requireAuth, async (req, res) => {
   try {
     const bandId = getTargetBandId(req);
     const account = await dbGetBandGmailOAuth(bandId);
     res.json(toSafeGmailOAuthResponse(account));
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error consultando estado de Gmail OAuth:", err);
     res.status(500).json({ error: "Error al consultar el estado de conexión de Gmail." });
   }
 });
 
 // POST /api/gmail-oauth/disconnect
-router.post("/disconnect", requireAuth, async (req, res) => {
+router.post("/disconnect", gmailOAuthRateLimiter, requireAuth, async (req, res) => {
   try {
     const bandId = getTargetBandId(req);
     const cuenta = await dbGetBandGmailOAuth(bandId);
@@ -291,7 +303,8 @@ router.post("/disconnect", requireAuth, async (req, res) => {
       }
     }
     res.json({ success: true });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error desconectando Gmail OAuth:", err);
     res.status(500).json({ error: "Error al desconectar la cuenta de Gmail." });
   }

@@ -19,7 +19,7 @@ export async function dbGetPrintSettings(bandId: string): Promise<PrintSettings 
     .maybeSingle();
 
   if (error && error.code !== "PGRST116") {
-    console.error(`[PrintSettings DB] Error consultando ajustes de impresión de ${targetBand}:`, error);
+    console.error("[PrintSettings DB] Error consultando ajustes de impresión de %s:", targetBand, error);
     return null;
   }
   return mergePrintSettings(data?.settings);
@@ -46,7 +46,7 @@ export async function dbUpsertPrintSettings(bandId: string, incoming: unknown): 
     .upsert({ band_id: targetBand, settings: merged, updated_at: new Date().toISOString() }, { onConflict: "band_id" });
 
   if (error) {
-    console.error(`[PrintSettings DB] Error guardando ajustes de impresión de ${targetBand}:`, error);
+    console.error("[PrintSettings DB] Error guardando ajustes de impresión de %s:", targetBand, error);
     return null;
   }
   return merged;

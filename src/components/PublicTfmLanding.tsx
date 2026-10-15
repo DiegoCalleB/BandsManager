@@ -1,19 +1,8 @@
 import { ShowIcon } from './ui/ShowIcon';
-import React, { useEffect, useState, useRef } from 'react';
-import {
-  ArrowRight,
-  Check,
-  ChevronDown,
-  Layers,
-  Rocket,
-  ShieldCheck,
-  Sliders,
-  Sparkles,
-  Star,
-  Video,
-} from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { ArrowRight, Check, ChevronDown, Layers, Rocket, ShieldCheck, Sliders, Star } from 'lucide-react';
 import { Button } from './ui';
-import { useLanguage, SupportedLanguage } from '../context/LanguageContext';
+import { useLanguage, SupportedLanguage } from '../context/idioma';
 import { LandingChatWidget } from './LandingChatWidget';
 
 interface PublicTfmLandingProps {
@@ -69,19 +58,12 @@ const Captura: React.FC<{
 export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) => {
   const { language, setLanguage } = useLanguage();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [email, setEmail] = useState('');
-  const emailRef = useRef<HTMLInputElement>(null);
 
   const es = language === 'es';
 
   useEffect(() => {
     document.title = 'BandManager.io · Demostración TFM';
   }, []);
-
-  const handleCta = (e: React.FormEvent) => {
-    e.preventDefault();
-    onEntrar();
-  };
 
   const handleLangChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setLanguage(e.target.value as SupportedLanguage);
@@ -149,8 +131,8 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
           </div>
 
           <nav aria-label="Secciones" className="hidden items-center gap-6 text-sm text-[var(--ink-2)] md:flex">
-            <a href="#escrow" className="hover:text-[var(--ink)]">{es ? 'Contratos & Escrow' : 'Contracts & Escrow'}</a>
-            <a href="#multibanda-iris" className="hover:text-[var(--ink)]">{es ? 'Multibanda & Iris' : 'Multi-band & Iris'}</a>
+            <a href="#escrow" className="hover:text-[var(--ink)]">{es ? 'Contratos y Escrow' : 'Contracts y Escrow'}</a>
+            <a href="#multibanda-iris" className="hover:text-[var(--ink)]">{es ? 'Multibanda e Iris' : 'Multi-band e Iris'}</a>
             <a href="#como-funciona" className="hover:text-[var(--ink)]">{es ? 'Flujo de Trabajo' : 'Workflow'}</a>
             <a href="#preguntas" className="hover:text-[var(--ink)]">{es ? 'Preguntas' : 'FAQs'}</a>
           </nav>
@@ -183,7 +165,7 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
               <ShieldCheck className="size-3.5 text-[var(--ok)]" aria-hidden />
               {es
                 ? 'Sistema de Gestión de Giras y Contratos con Garantía de Depósito'
-                : 'Tour Management & Digital Contracts with Deposit Escrow Guarantee'}
+                : 'Tour Management y Digital Contracts with Deposit Escrow Guarantee'}
             </p>
 
             <h1 className="font-display text-[2.25rem] font-bold leading-[1.08] tracking-tight text-balance sm:text-5xl lg:text-6xl">
@@ -206,7 +188,7 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
                 href="#como-funciona"
                 className="inline-flex h-11 items-center gap-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)] px-5 text-sm font-semibold text-[var(--ink)] transition-ui hover:brightness-95"
               >
-                {es ? 'Ver Demo de Contrato y Escrow' : 'View Contract & Escrow Demo'}
+                {es ? 'Ver Demo de Contrato y Escrow' : 'View Contract y Escrow Demo'}
               </a>
             </div>
             <p className="mt-3 text-xs text-[var(--ink-2)]">
@@ -312,7 +294,7 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
                   1
                 </span>
                 <h3 className="font-semibold text-base mb-2">
-                  {es ? 'Configura tu EPK, Rider y temas' : 'Configure EPK, Rider & Songs'}
+                  {es ? 'Configura tu EPK, Rider y temas' : 'Configure EPK, Rider y Songs'}
                 </h3>
                 <p className="text-sm text-[var(--ink-2)]">
                   {es
@@ -325,7 +307,7 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
                   2
                 </span>
                 <h3 className="font-semibold text-base mb-2">
-                  {es ? 'Firma digital y depósito de señal' : 'Digital Signing & Escrow Deposit'}
+                  {es ? 'Firma digital y depósito de señal' : 'Digital Signing y Escrow Deposit'}
                 </h3>
                 <p className="text-sm text-[var(--ink-2)]">
                   {es
@@ -366,8 +348,8 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
             </p>
             <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
               {es
-                ? 'Dos bandas, un creador: Os Herdeiros do Código & Master of Prompts'
-                : 'Two bands, one creator: Os Herdeiros do Código & Master of Prompts'}
+                ? 'Dos bandas, un creador: Os Herdeiros do Código y Master of Prompts'
+                : 'Two bands, one creator: Os Herdeiros do Código y Master of Prompts'}
             </h2>
             <p className="mt-3 text-base text-[var(--ink-2)] max-w-3xl">
               {es
@@ -393,11 +375,11 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
               <div className="rounded-[var(--r-m)] bg-[var(--surface)] p-4 text-xs text-[var(--ink-2)] space-y-2">
                 <div className="flex items-center justify-between font-semibold text-[var(--ink)]">
                   <span><ShowIcon inline emoji="🎸" /> Os Herdeiros do Código</span>
-                  <span className="text-[var(--ok)]">Sala Capitol · Negociando 80/20</span>
+                  <span className="text-[var(--ok)]">Sala capitol · negociando 80/20</span>
                 </div>
                 <div className="flex items-center justify-between font-semibold text-[var(--ink)]">
                   <span><ShowIcon inline emoji="⚡" /> Master of Prompts</span>
-                  <span className="text-[var(--acc-ink)]">Resurrection Fest · Confirmado</span>
+                  <span className="text-[var(--acc-ink)]">Resurrection fest · confirmado</span>
                 </div>
                 <p className="text-micro text-[var(--ink-2)] pt-1">
                   {es
@@ -408,7 +390,7 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
             </div>
             <div className="lg:col-span-7">
               <div className="rounded-[var(--r-xl)] bg-[var(--sunken)] p-2 sm:p-3">
-                <Captura nombre="bandas" movil="m-bandas" alt="Selector multibanda con Os Herdeiros do Código y Master of Prompts" />
+                <Captura nombre="bandas" movil="m-bandas" alt="Selector multibanda: cambiar de proyecto con un toque" />
               </div>
             </div>
           </div>
@@ -416,7 +398,7 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
           <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-14">
             <div className="order-2 lg:order-1 lg:col-span-7">
               <div className="rounded-[var(--r-xl)] bg-[var(--sunken)] p-2 sm:p-3">
-                <Captura nombre="repertorio" movil="m-repertorio" alt="Setlist con mapa de energía de Master of Prompts" />
+                <Captura nombre="repertorio" movil="m-repertorio" alt="Setlist con mapa de energía" />
               </div>
             </div>
             <div className="order-1 lg:order-2 lg:col-span-5">
@@ -451,7 +433,7 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
         <section className="bg-[var(--sunken)] py-16 sm:py-24">
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
             <h2 className="mb-12 font-display text-3xl font-bold tracking-tight sm:text-4xl text-center">
-              {es ? 'Métricas de Garantía y Validación' : 'Validation Metrics & Assurance'}
+              {es ? 'Métricas de Garantía y Validación' : 'Validation Metrics y Assurance'}
             </h2>
 
             <div className="grid gap-6 sm:grid-cols-3 mb-12">

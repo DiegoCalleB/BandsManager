@@ -3,6 +3,9 @@ import { Video, Youtube, Plus, Trash2, Award } from "lucide-react";
 import { EPKVideo } from "../../../types";
 import { Button, IconButton, Input, Select } from '../../ui';
 
+/** Vídeo con el tipo (videoclip, directo…) que puede traer aunque {@link EPKVideo} no lo declare. */
+type VideoConTipo = EPKVideo & { tipo?: string };
+
 interface StepVideosProps {
   videos: EPKVideo[];
   newVideoUrl: string;
@@ -61,9 +64,9 @@ export const StepVideos: React.FC<StepVideosProps> = ({
                     <span className="text-sm font-medium text-[var(--ink)]">
                       {vid.titulo}
                     </span>
-                    {(vid as any).tipo && (
+                    {(vid as VideoConTipo).tipo && (
                       <span className="text-micro px-1.5 py-0.5 rounded bg-[var(--sunken)] text-[var(--ink-2)] capitalize">
-                        {(vid as any).tipo}
+                        {(vid as VideoConTipo).tipo}
                       </span>
                     )}
                     {vid.destacado && (
@@ -134,7 +137,7 @@ export const StepVideos: React.FC<StepVideosProps> = ({
             <Select
               size="sm"
               value={newVideoType}
-              onChange={(e) => setNewVideoType(e.target.value as any)}
+              onChange={(e) => setNewVideoType(e.target.value as StepVideosProps["newVideoType"])}
               wrapperClassName="w-full"
             >
               <option value="videoclip">Videoclip oficial</option>

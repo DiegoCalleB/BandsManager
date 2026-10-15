@@ -1,0 +1,39 @@
+---
+id: src_components_SocialPlatformsList
+title: "src/components/SocialPlatformsList.tsx"
+layer: frontend
+domain: social
+file: "src/components/SocialPlatformsList.tsx"
+tags: ["frontend", "social", "auto"]
+---
+
+# 📌 src/components/SocialPlatformsList.tsx
+
+> **Ubicación:** `src/components/SocialPlatformsList.tsx`  
+> **Capa:** `#layer/frontend` | **Dominio:** `#domain/social`
+
+## 📖 Descripción
+Exporta: SocialLinks, PayPalLogo, SocialPlatformsList, BizumLogo.
+
+---
+
+## 🔗 Conexiones Salientes (Dependencies / Calls)
+_Sin dependencias salientes directas._
+
+---
+
+## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_epk_EPKDonacionesBlock|src/components/epk/EPKDonacionesBlock.tsx]] *(from #frontend)*
+- [[src_components_fans_landing_DonationCard|src/components/fans_landing/DonationCard.tsx]] *(from #frontend)*
+- [[src_components_fans_landing_FansLandingSuccess|src/components/fans_landing/FansLandingSuccess.tsx]] *(from #frontend)*
+- [[src_components_fans_landing_hooks_useFanBandProfile|src/components/fans_landing/hooks/useFanBandProfile.ts]] *(from #frontend)*
+- [[src_components_fans_landing_hooks_useFanPayments|src/components/fans_landing/hooks/useFanPayments.ts]] *(from #frontend)*
+- [[src_components_fans_landing_SignupFormTab|src/components/fans_landing/SignupFormTab.tsx]] *(from #frontend)*
+- [[src_components_fans_landing_SocialLinksTab|src/components/fans_landing/SocialLinksTab.tsx]] *(from #frontend)*
+- [[src_components_PublicEPK|src/components/PublicEPK.tsx]] *(from #frontend)*
+
+---
+
+## 🛡️ Reglas de Aislamiento & Calidad
+- [ ] ¿Respeta el trust boundary de `band_id`?
+- [ ] ¿Tiene pruebas unitarias o de integración asociadas?

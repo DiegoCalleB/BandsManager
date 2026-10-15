@@ -1,19 +1,5 @@
 import React, { useState } from 'react';
-import {
-  X,
-  Calendar,
-  Clock,
-  MapPin,
-  Users,
-  Disc3,
-  FileText,
-  CheckSquare,
-  Plus,
-  Sparkles,
-  SlidersHorizontal,
-  ChevronDown,
-  ChevronUp,
-} from 'lucide-react';
+import { X, Calendar, MapPin, Users, Disc3, Plus, SlidersHorizontal, ChevronDown, ChevronUp } from 'lucide-react';
 import { Rehearsal, ThemeColors, Setlist } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
 import { Button, IconButton, Input, Select, Textarea } from '../ui';
@@ -33,15 +19,14 @@ export function ConvocarEnsayoModal({
   isOpen,
   onClose,
   onSave,
-  colors,
   setlists = [],
   bandUsers = [],
   currentBandId,
-  initialRehearsal,
+  initialRehearsal
 }: ConvocarEnsayoModalProps) {
   const isEditing = Boolean(initialRehearsal);
 
-  const [fecha, setFecha] = useState(initialRehearsal?.fecha || new Date(Date.now() + 86400000 * 2).toISOString().split('T')[0]);
+  const [fecha, setFecha] = useState(() => initialRehearsal?.fecha || new Date(Date.now() + 86400000 * 2).toISOString().split('T')[0]);
   const [hora, setHora] = useState(initialRehearsal?.hora || '19:30');
   const [horaFin, setHoraFin] = useState(initialRehearsal?.horaFin || '21:30');
   const [lugar, setLugar] = useState(initialRehearsal?.lugar || 'Local de Ensayo');

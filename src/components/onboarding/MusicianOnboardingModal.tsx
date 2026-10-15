@@ -1,57 +1,50 @@
 import React from "react";
-import {
-  Calendar,
-  BookOpen,
-  Disc3,
-  ArrowRight,
-  X,
-  CheckCircle2,
-  Music2,
-  ShieldCheck,
-  Globe,
-  Check,
-} from "lucide-react";
+import { Calendar, BookOpen, Disc3, ArrowRight, X, ShieldCheck } from "lucide-react";
 import { NavItemId } from "../../config/navGroups";
 import { markOnboardingCompleted } from "../../utils/userPreferences";
-import {
-  useLanguage,
-  SUPPORTED_LANGUAGES,
-  SupportedLanguage,
-} from "../../context/LanguageContext";
+import { useLanguage, SUPPORTED_LANGUAGES } from "../../context/idioma";
 import { IconButton } from '../ui';
 
 interface MusicianOnboardingModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectMission: (view: NavItemId) => void;
+  /** Abre el asistente largo del perfil (14 pasos) cerrando antes esta bienvenida. */
+  onOpenProfileWizard?: () => void;
   bandName: string;
 }
 
 export const MusicianOnboardingModal: React.FC<
   MusicianOnboardingModalProps
-> = ({ isOpen, onClose, onSelectMission, bandName }) => {
+> = ({ isOpen, onClose, onSelectMission, onOpenProfileWizard, bandName }) => {
   const { language: currentAppLang, setLanguage: setAppLang } = useLanguage();
 
   if (!isOpen) return null;
 
-  const handleChooseMission = (view: NavItemId) => {
-    markOnboardingCompleted(undefined, { onboarding: true }, true).catch(
-      () => {},
-    );
-    if (typeof window !== "undefined") {
+  /** Deja guardado que la bienvenida ya se vio; avisa al resto de la app salvo que siga el asistente largo. */
+  const marcarVista = (avisar: boolean) => {
+    markOnboardingCompleted(undefined, { onboarding: true }, true).catch(() => {
+      // Sin conexión: se guarda también en este navegador y se reintenta en la próxima sesión.
+    });
+    if (avisar && typeof window !== "undefined") {
       window.dispatchEvent(new CustomEvent("bandmanager_onboarding_finished"));
     }
+  };
+
+  const handleChooseMission = (view: NavItemId) => {
+    marcarVista(true);
     onSelectMission(view);
     onClose();
   };
 
+  const handleOpenProfileWizard = () => {
+    marcarVista(false);
+    onClose();
+    onOpenProfileWizard?.();
+  };
+
   const handleDismiss = () => {
-    markOnboardingCompleted(undefined, { onboarding: true }, true).catch(
-      () => {},
-    );
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent("bandmanager_onboarding_finished"));
-    }
+    marcarVista(true);
     onClose();
   };
 
@@ -229,6 +222,16 @@ export const MusicianOnboardingModal: React.FC<
             </span>
           </div>
 
+          <div className="flex w-full sm:w-auto flex-col sm:flex-row items-stretch gap-2">
+            {onOpenProfileWizard && (
+              <button
+                type="button"
+                onClick={handleOpenProfileWizard}
+                className="px-4 py-2 rounded-[var(--r-s)] text-[var(--acc-ink)] hover:bg-[var(--acc-soft)] text-xs font-sans font-bold transition-colors cursor-pointer"
+              >
+                Completar el perfil de la banda (14 pasos)
+              </button>
+            )}
           <button
             type="button"
             onClick={handleDismiss}
@@ -236,6 +239,7 @@ export const MusicianOnboardingModal: React.FC<
           >
             Explorar por mi cuenta
           </button>
+          </div>
         </div>
       </div>
     </div>

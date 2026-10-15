@@ -1,16 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useEffectEvent, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet.markercluster";
 import { Lead } from "../types";
-import {
-  MapPin,
-  Navigation,
-  Eye,
-  Check,
-  Loader2,
-  RefreshCw,
-  Layers,
-} from "lucide-react";
+import { MapPin, Navigation, Check, Loader2, Layers } from "lucide-react";
 import { escapeHtml } from "../utils/escapeHtml";
 
 interface VenueMapProps {
@@ -561,7 +553,7 @@ function resolveLeadCoordinates(lead: Lead, index: number): [number, number] {
   }
 
   // 4. Clean city name (e.g. "Barbate (Cádiz)" -> "Barbate", "Vilaxoán de Arousa" -> "Vilaxoán")
-  const mainPart = rawCity.split(/[\(\-\/\,]/)[0].trim();
+  const mainPart = rawCity.split(/[(\-/,]/)[0].trim();
   if (SPANISH_CITIES_GEO[mainPart]) {
     const base = SPANISH_CITIES_GEO[mainPart];
     return offsetCoords(base, index);
@@ -693,7 +685,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
   const mapRef = useRef<HTMLDivElement | null>(null);
   const leafletMap = useRef<L.Map | null>(null);
   const tileLayerRef = useRef<L.TileLayer | null>(null);
-  const markersGroup = useRef<any>(null);
+  const markersGroup = useRef<L.MarkerClusterGroup | null>(null);
 
   const [mapStyle, setMapStyle] = useState<MapStyleKey>("streets");
   const [showStyleMenu, setShowStyleMenu] = useState<boolean>(false);
@@ -702,7 +694,13 @@ export const VenueMap: React.FC<VenueMapProps> = ({
     Record<string, [number, number]>
   >({});
   const [isGeocoding, setIsGeocoding] = useState<boolean>(false);
-  const [geocodedCount, setGeocodedCount] = useState<number>(0);
+  const [, setGeocodedCount] = useState<number>(0);
+
+  // Valores «en vivo» para los efectos de Leaflet: leerlos no debe re-crear el mapa ni los marcadores
+  const estiloInicial = useEffectEvent(() => MAP_STYLES[mapStyle]);
+  const idLeadSeleccionado = useEffectEvent(() => selectedLead?.id);
+  const seleccionarLead = useEffectEvent((lead: Lead) => onSelectLead(lead));
+  const aprobarLead = useEffectEvent((leadId: string) => onUpdateLead(leadId, { estado: "aprobado" }));
 
   // Initialize Map with Marker Clustering
   useEffect(() => {
@@ -719,7 +717,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
       L.control.zoom({ position: "bottomright" }).addTo(map);
 
       // Tile Layer (Default to Voyager for crisp bright visibility)
-      const currentPreset = MAP_STYLES[mapStyle];
+      const currentPreset = estiloInicial();
       const layer = L.tileLayer(currentPreset.url, {
         attribution: currentPreset.attr,
         maxZoom: 19,
@@ -728,13 +726,13 @@ export const VenueMap: React.FC<VenueMapProps> = ({
       tileLayerRef.current = layer;
 
       // Marker Cluster Group (Agrupación por zonas como Celeritas / Google Maps)
-      const clusterGroup = (L as any).markerClusterGroup({
+      const clusterGroup = L.markerClusterGroup({
         showCoverageOnHover: false,
         zoomToBoundsOnClick: true,
         spiderfyOnMaxZoom: true,
         removeOutsideVisibleBounds: true,
         maxClusterRadius: 50,
-        iconCreateFunction: (cluster: any) => {
+        iconCreateFunction: (cluster) => {
           const count = cluster.getChildCount();
           let size = 38;
           let bgColor = "var(--acc)";
@@ -823,10 +821,6 @@ export const VenueMap: React.FC<VenueMapProps> = ({
 
       // Calculate base coords using smart dictionary & fuzzy location resolver
       leads.forEach((lead, index) => {
-        const fullKey = `${lead.nombre_sala}-${lead.ciudad}`
-          .toLowerCase()
-          .trim();
-
         // Instantly resolve accurate local venue/district/city coordinates
         const resolved = resolveLeadCoordinates(lead, index);
         newCoords[lead.id] = resolved;
@@ -930,7 +924,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
 
       // Badge color based on status (Google Maps style vibrant pins)
       let pinColor = "#e11d48"; // Rose/Red default
-      if (lead.estado === "aprobado" || lead.estado === ("confirmado" as any))
+      if (lead.estado === "aprobado" || lead.estado === "confirmado")
         pinColor = "var(--ok)"; // Green
       else if (lead.estado === "pendiente_aprobacion")
         pinColor = "var(--acc)"; // Amber
@@ -938,7 +932,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
         pinColor = "#2563eb"; // Blue
       else if (lead.estado === "no_interesado") pinColor = "#64748b"; // Slate
 
-      const isSelected = selectedLead?.id === lead.id;
+      const isSelected = idLeadSeleccionado() === lead.id;
 
       let cleanMapImg = lead.imagen_url || "";
       if (cleanMapImg.includes("icon.horse/icon/")) {
@@ -1157,13 +1151,13 @@ export const VenueMap: React.FC<VenueMapProps> = ({
         const btnSelect = document.getElementById(`pop-select-${lead.id}`);
         if (btnSelect) {
           btnSelect.onclick = () => {
-            onSelectLead(lead);
+            seleccionarLead(lead);
           };
         }
         const btnApprove = document.getElementById(`pop-approve-${lead.id}`);
         if (btnApprove) {
           btnApprove.onclick = () => {
-            onUpdateLead(lead.id, { estado: "aprobado" });
+            aprobarLead(lead.id);
             marker.closePopup();
           };
         }
@@ -1216,7 +1210,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
               marker.openPopup();
             }
           });
-        } catch (e) {
+        } catch {
           leafletMap.current.setView(
             pos,
             Math.max(leafletMap.current.getZoom(), 15),

@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  Sparkles,
-  Mail,
-  ShieldCheck,
-  Check,
-  Send,
-  Bot,
-  Lock,
-} from "lucide-react";
+import { Sparkles, Mail, Bot } from "lucide-react";
 import { Input } from '../../ui';
 
 interface StepAgentEmailProps {

@@ -19,13 +19,21 @@ Registro histórico de mensajes enviados y recibidos por lead y sala.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(Layer: #schema, Domain: #system)*
+- [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[server_services_sentimentAnalysis|server/services/sentimentAnalysis.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
+- [[tabla_lead_messages|tabla lead_messages]] *(Layer: #schema, Domain: #booking)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[route_leads_reply|Leads Reply Route]] *(from #route)*
 - [[agent_enviador|Enviador Agent (Dispatcher)]] *(from #agent)*
 - [[agent_lector|Lector Agent (Listener)]] *(from #agent)*
+- [[agent_redactor|Agente Redactor (borradores de respuesta)]] *(from #agent)*
+- [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
+- [[route_leads_reply|Leads Reply Route]] *(from #route)*
+- [[server_db|server/db.ts]] *(from #db)*
 
 ---
 

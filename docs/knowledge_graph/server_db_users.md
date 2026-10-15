@@ -1,0 +1,44 @@
+---
+id: server_db_users
+title: "server/db/users.ts"
+layer: db
+domain: system
+file: "server/db/users.ts"
+tags: ["db", "system", "auto"]
+---
+
+# 📌 server/db/users.ts
+
+> **Ubicación:** `server/db/users.ts`  
+> **Capa:** `#layer/db` | **Dominio:** `#domain/system`
+
+## 📖 Descripción
+Usuarios (`users`) y su pertenencia a bandas (`user_bands`).
+
+---
+
+## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
+- [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[server_stateTypes|server/stateTypes.ts]] *(Layer: #service, Domain: #system)*
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
+- [[tabla_user_bands|tabla user_bands]] *(Layer: #schema, Domain: #system)*
+- [[tabla_users|tabla users]] *(Layer: #schema, Domain: #system)*
+
+---
+
+## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
+- [[fn_fans_epk|Fans y EPK]] *(from #feature)*
+- [[server_db|server/db.ts]] *(from #db)*
+- [[server_db_calendarConflicts|server/db/calendarConflicts.ts]] *(from #db)*
+- [[server_db_sync|server/db/sync.ts]] *(from #db)*
+- [[server_routes_deals|server/routes/deals.ts]] *(from #route)*
+
+---
+
+## 🛡️ Reglas de Aislamiento & Calidad
+- [ ] ¿Respeta el trust boundary de `band_id`?
+- [ ] ¿Tiene pruebas unitarias o de integración asociadas?

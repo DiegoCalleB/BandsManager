@@ -1,20 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
-import {
-  X,
-  Mic,
-  MicOff,
-  Volume2,
-  VolumeX,
-  Guitar,
-  Zap,
-  Radio,
-  Check,
-  RefreshCw,
-  AlertCircle,
-} from "lucide-react";
+import React, { useState, useEffect, useEffectEvent, useRef } from "react";
+import { X, Mic, MicOff, Volume2, Guitar, Radio, Check, RefreshCw, AlertCircle } from "lucide-react";
 import { ThemeColors } from "../types";
 import { ModalPortal } from "./common/ModalPortal";
 import { Button, IconButton } from './ui';
+import { TunerPresets } from '../utils/tunerPresets';
+import { comoErrorCapturado } from '../utils/errorCapturado';
 
 interface TunerModalProps {
   isOpen: boolean;
@@ -35,155 +25,6 @@ const NOTE_NAMES = [
   "A",
   "A#",
   "B",
-];
-
-export interface PresetString {
-  note: string;
-  octave: number;
-  freq: number;
-  label: string; // e.g."6ª - E2"
-}
-
-export interface TunerPreset {
-  id: string;
-  name: string;
-  category: "guitar" | "bass" | "ukulele";
-  description?: string;
-  strings: PresetString[];
-}
-
-export const TunerPresets: TunerPreset[] = [
-  {
-    id: "guitar_std",
-    name: "Guitarra Estándar (E A D G B E)",
-    category: "guitar",
-    description: "6 cuerdas estándar (Mi, La, Re, Sol, Si, Mi)",
-    strings: [
-      { note: "E", octave: 2, freq: 82.41, label: "6ª cuerda - E2 (Grave)" },
-      { note: "A", octave: 2, freq: 110.0, label: "5ª cuerda - A2" },
-      { note: "D", octave: 3, freq: 146.83, label: "4ª cuerda - D3" },
-      { note: "G", octave: 3, freq: 196.0, label: "3ª cuerda - G3" },
-      { note: "B", octave: 3, freq: 246.94, label: "2ª cuerda - B3" },
-      { note: "E", octave: 4, freq: 329.63, label: "1ª cuerda - E4 (Aguda)" },
-    ],
-  },
-  {
-    id: "guitar_dropd",
-    name: "Guitarra Drop D (D A D G B E)",
-    category: "guitar",
-    description: "Afinación en Re grave para rock y metal",
-    strings: [
-      { note: "D", octave: 2, freq: 73.42, label: "6ª cuerda - D2 (Drop D)" },
-      { note: "A", octave: 2, freq: 110.0, label: "5ª cuerda - A2" },
-      { note: "D", octave: 3, freq: 146.83, label: "4ª cuerda - D3" },
-      { note: "G", octave: 3, freq: 196.0, label: "3ª cuerda - G3" },
-      { note: "B", octave: 3, freq: 246.94, label: "2ª cuerda - B3" },
-      { note: "E", octave: 4, freq: 329.63, label: "1ª cuerda - E4" },
-    ],
-  },
-  {
-    id: "guitar_7",
-    name: "Guitarra 7 Cuerdas (B E A D G B E)",
-    category: "guitar",
-    description: "Guitarra de rango extendido con Si grave",
-    strings: [
-      { note: "B", octave: 1, freq: 61.74, label: "7ª cuerda - B1" },
-      { note: "E", octave: 2, freq: 82.41, label: "6ª cuerda - E2" },
-      { note: "A", octave: 2, freq: 110.0, label: "5ª cuerda - A2" },
-      { note: "D", octave: 3, freq: 146.83, label: "4ª cuerda - D3" },
-      { note: "G", octave: 3, freq: 196.0, label: "3ª cuerda - G3" },
-      { note: "B", octave: 3, freq: 246.94, label: "2ª cuerda - B3" },
-      { note: "E", octave: 4, freq: 329.63, label: "1ª cuerda - E4" },
-    ],
-  },
-  {
-    id: "ukulele_std",
-    name: "Ukelele Estándar / High-G (G C E A)",
-    category: "ukulele",
-    description: "Afinación reentrante tradicional (Soprano, Concierto, Tenor)",
-    strings: [
-      {
-        note: "G",
-        octave: 4,
-        freq: 392.0,
-        label: "4ª cuerda - G4 (Sol agudo / High-G)",
-      },
-      { note: "C", octave: 4, freq: 261.63, label: "3ª cuerda - C4 (Do)" },
-      { note: "E", octave: 4, freq: 329.63, label: "2ª cuerda - E4 (Mi)" },
-      { note: "A", octave: 4, freq: 440.0, label: "1ª cuerda - A4 (La)" },
-    ],
-  },
-  {
-    id: "ukulele_lowg",
-    name: "Ukelele Low-G (G C E A - Sol Grave)",
-    category: "ukulele",
-    description: "Sol grave en 4ª cuerda, ideal para melodías y fingerpicking",
-    strings: [
-      {
-        note: "G",
-        octave: 3,
-        freq: 196.0,
-        label: "4ª cuerda - G3 (Sol grave / Low-G)",
-      },
-      { note: "C", octave: 4, freq: 261.63, label: "3ª cuerda - C4 (Do)" },
-      { note: "E", octave: 4, freq: 329.63, label: "2ª cuerda - E4 (Mi)" },
-      { note: "A", octave: 4, freq: 440.0, label: "1ª cuerda - A4 (La)" },
-    ],
-  },
-  {
-    id: "ukulele_baritone",
-    name: "Ukelele Barítono (D G B E)",
-    category: "ukulele",
-    description: "Afinación estándar del ukelele barítono (Re, Sol, Si, Mi)",
-    strings: [
-      { note: "D", octave: 3, freq: 146.83, label: "4ª cuerda - D3 (Re)" },
-      { note: "G", octave: 3, freq: 196.0, label: "3ª cuerda - G3 (Sol)" },
-      { note: "B", octave: 3, freq: 246.94, label: "2ª cuerda - B3 (Si)" },
-      { note: "E", octave: 4, freq: 329.63, label: "1ª cuerda - E4 (Mi)" },
-    ],
-  },
-  {
-    id: "ukulele_d",
-    name: "Ukelele Afinación en D (A D F# B)",
-    category: "ukulele",
-    description: "Afinación hawaiana tradicional un tono más aguda",
-    strings: [
-      { note: "A", octave: 4, freq: 440.0, label: "4ª cuerda - A4 (La)" },
-      { note: "D", octave: 4, freq: 293.66, label: "3ª cuerda - D4 (Re)" },
-      { note: "F#", octave: 4, freq: 369.99, label: "2ª cuerda - F#4 (Fa#)" },
-      { note: "B", octave: 4, freq: 493.88, label: "1ª cuerda - B4 (Si)" },
-    ],
-  },
-  {
-    id: "bass_4",
-    name: "Bajo Eléctrico 4 Cuerdas (E A D G)",
-    category: "bass",
-    description: "4 cuerdas estándar (Mi, La, Re, Sol)",
-    strings: [
-      { note: "E", octave: 1, freq: 41.2, label: "4ª cuerda - E1 (Grave)" },
-      { note: "A", octave: 1, freq: 55.0, label: "3ª cuerda - A1" },
-      { note: "D", octave: 2, freq: 73.42, label: "2ª cuerda - D2" },
-      { note: "G", octave: 2, freq: 98.0, label: "1ª cuerda - G2 (Aguda)" },
-    ],
-  },
-  {
-    id: "bass_5",
-    name: "Bajo Eléctrico 5 Cuerdas (B E A D G)",
-    category: "bass",
-    description: "5 cuerdas con Si super grave adicional",
-    strings: [
-      {
-        note: "B",
-        octave: 0,
-        freq: 30.87,
-        label: "5ª cuerda - B0 (Super Grave)",
-      },
-      { note: "E", octave: 1, freq: 41.2, label: "4ª cuerda - E1" },
-      { note: "A", octave: 1, freq: 55.0, label: "3ª cuerda - A1" },
-      { note: "D", octave: 2, freq: 73.42, label: "2ª cuerda - D2" },
-      { note: "G", octave: 2, freq: 98.0, label: "1ª cuerda - G2" },
-    ],
-  },
 ];
 
 // Helper to convert frequency to closest note
@@ -217,8 +58,8 @@ function autoCorrelate(buf: Float32Array, sampleRate: number): number {
   if (rms < 0.008) return -1; // Too quiet
 
   let r1 = 0,
-    r2 = SIZE - 1,
-    thres = 0.2;
+    r2 = SIZE - 1;
+  const thres = 0.2;
   for (let i = 0; i < SIZE / 2; i++) {
     if (Math.abs(buf[i]) < thres) {
       r1 = i;
@@ -326,7 +167,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
       mediaStreamRef.current = stream;
 
       const AudioCtx =
-        window.AudioContext || (window as any).webkitAudioContext;
+        window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
       if (!AudioCtx) {
         setMicError("El navegador no soporta Web Audio API.");
         return;
@@ -345,7 +186,8 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
 
       setIsListening(true);
       updatePitchLoop();
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.warn("Microphone access warning:", err?.message || err);
       const isPermissionDenied =
         err?.name === "NotAllowedError" ||
@@ -370,7 +212,8 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
   };
 
   // Stop Mic Listening
-  const stopTuner = () => {
+  // Libera los recursos externos (rAF, micrófono, AudioContext) sin tocar estado de React
+  const liberarAfinador = () => {
     if (animFrameRef.current) {
       cancelAnimationFrame(animFrameRef.current);
       animFrameRef.current = null;
@@ -380,10 +223,14 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
       mediaStreamRef.current = null;
     }
     if (audioCtxRef.current && audioCtxRef.current.state !== "closed") {
-      audioCtxRef.current.close().catch(() => {});
+      audioCtxRef.current.close().catch(() => { /* contexto de audio ya cerrado o en transición: no hay nada que cambiar */ });
       audioCtxRef.current = null;
     }
     analyserRef.current = null;
+  };
+
+  const stopTuner = () => {
+    liberarAfinador();
     setIsListening(false);
     setPitch(null);
   };
@@ -422,7 +269,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
 
     try {
       const ctx = new (
-        window.AudioContext || (window as any).webkitAudioContext
+        window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
       )();
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -443,31 +290,41 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
     }
   };
 
-  const stopReferenceTone = () => {
+  const liberarTono = () => {
     if (toneOscRef.current) {
       try {
         toneOscRef.current.stop();
         toneOscRef.current.disconnect();
-      } catch (e) {}
+      } catch { /* el oscilador ya estaba parado: nada que detener */ }
       toneOscRef.current = null;
     }
+  };
+
+  const stopReferenceTone = () => {
+    liberarTono();
     setPlayingToneFreq(null);
   };
 
-  // Stop everything when modal closes
+  // Al cerrar el modal se para todo: el estado se deriva durante el render...
+  if (!isOpen && (isListening || pitch !== null || playingToneFreq !== null)) {
+    setIsListening(false);
+    setPitch(null);
+    setPlayingToneFreq(null);
+  }
+
+  // ...y los recursos externos (micrófono, AudioContext, oscilador) se liberan en un efecto
+  const liberarTodo = useEffectEvent(() => {
+    liberarAfinador();
+    liberarTono();
+  });
+
   useEffect(() => {
-    if (!isOpen) {
-      stopTuner();
-      stopReferenceTone();
-    }
+    if (!isOpen) liberarTodo();
   }, [isOpen]);
 
   // Clean up on unmount
   useEffect(() => {
-    return () => {
-      stopTuner();
-      stopReferenceTone();
-    };
+    return () => liberarTodo();
   }, []);
 
   if (!isOpen) return null;

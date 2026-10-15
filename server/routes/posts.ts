@@ -11,8 +11,10 @@ import {
   dbUpsertBandSocialAccount,
   dbDeleteBandSocialAccount
 } from "../db.js";
-import { getTargetBandId } from "../utils/bandAccess.js";
+import { getTargetBandId, bandaDe } from "../utils/bandAccess.js";
 import { publishSocialPostNow, publishDueScheduledPosts } from "../services/socialPublisher.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import { responderError } from '../utils/errorHttp.js';
 
 const router = express.Router();
 
@@ -22,9 +24,9 @@ router.get("/posts", requireAuth, async (req, res) => {
   try {
     const posts = await dbGetSocialPosts(userBandId);
     res.json(posts);
-  } catch (err) {
+  } catch {
     const state = loadState();
-    res.json((state.posts || []).filter((p: any) => p.band_id === userBandId || p.bandId === userBandId));
+    res.json((state.posts || []).filter((p) => bandaDe(p) === userBandId));
   }
 });
 
@@ -35,21 +37,23 @@ router.put("/posts/:id", requireAuth, async (req, res) => {
   const updated: Partial<SocialPost> = req.body;
   const merged = { ...updated, id };
 
-  let saved: any;
+  // Fila de social_posts tal como la devuelve Supabase tras el upsert.
+  let saved: SocialPost;
   try {
     saved = await dbUpsertSocialPost(merged, userBandId);
 
     const state = loadState();
     const idx = state.posts.findIndex((p: SocialPost) => p.id === id);
     if (idx !== -1) {
-      state.posts[idx] = saved as any;
+      state.posts[idx] = saved;
     } else {
-      state.posts.push(saved as any);
+      state.posts.push(saved);
     }
     saveState(state);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error updating social post:", err);
-    return res.status(500).json({ error: err.message || String(err) });
+    return responderError(res, err);
   }
 
   let webhookTriggered = false;
@@ -71,7 +75,8 @@ router.put("/posts/:id", requireAuth, async (req, res) => {
       } else {
         webhookError = `HTTP ${resp.status}: ${await resp.text()}`;
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error triggering publish webhook on update:", err);
       webhookError = err.message || String(err);
     }
@@ -85,16 +90,17 @@ router.post("/posts", requireAuth, async (req, res) => {
   const userBandId = getTargetBandId(req);
   const newPost: SocialPost = req.body;
   try {
-    const saved = await dbUpsertSocialPost(newPost, userBandId);
+    const saved: SocialPost = await dbUpsertSocialPost(newPost, userBandId);
 
     const state = loadState();
-    state.posts.push(saved as any);
+    state.posts.push(saved);
     saveState(state);
 
     res.json({ success: true, post: saved });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error creating social post:", err);
-    res.status(500).json({ error: err.message || String(err) });
+    responderError(res, err);
   }
 });
 
@@ -110,9 +116,10 @@ router.delete("/posts/:id", requireAuth, async (req, res) => {
     saveState(state);
 
     res.json({ success: true });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error deleting social post:", err);
-    res.status(500).json({ error: err.message || String(err) });
+    responderError(res, err);
   }
 });
 
@@ -124,9 +131,10 @@ router.get("/social/accounts", requireAuth, async (req, res) => {
   try {
     const accounts = await dbGetBandSocialAccounts(userBandId);
     res.json({ success: true, accounts });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error obteniendo cuentas sociales:", err);
-    res.status(500).json({ success: false, error: err.message || String(err) });
+    responderError(res, err);
   }
 });
 
@@ -155,9 +163,10 @@ router.post("/social/accounts/connect", requireAuth, async (req, res) => {
 
     const saved = await dbUpsertBandSocialAccount(accountPayload, userBandId);
     res.json({ success: true, account: saved, message: `¡Cuenta de ${plataforma} vinculada con éxito!` });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error vinculando cuenta social:", err);
-    res.status(500).json({ success: false, error: err.message || String(err) });
+    responderError(res, err);
   }
 });
 
@@ -168,9 +177,10 @@ router.delete("/social/accounts/:id", requireAuth, async (req, res) => {
   try {
     await dbDeleteBandSocialAccount(id, userBandId);
     res.json({ success: true, message: "Cuenta desconectada con éxito." });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error desconectando cuenta social:", err);
-    res.status(500).json({ success: false, error: err.message || String(err) });
+    responderError(res, err);
   }
 });
 
@@ -181,13 +191,15 @@ router.post("/social/publish-now/:id", requireAuth, async (req, res) => {
 
   try {
     const result = await publishSocialPostNow(id, userBandId);
-    if (!result.success) {
-      return res.status(400).json({ success: false, error: result.error });
-    }
-    res.json({ success: true, result, message: `¡Publicación despachada a ${result.platform} con éxito!` });
-  } catch (err: any) {
+    if (result.platform === "unknown") return res.status(404).json({ success: false, error: result.error });
+    // 'asistido' y 'fallido' son resultados de negocio, no errores de la petición: el cliente
+    // enseña el motivo (qué conectar, por qué no se autopublica) en vez de un "error de conexión".
+    if (!result.success) return res.json({ success: false, modo: result.modo, error: result.error });
+    res.json({ success: true, result, publishedUrl: result.publishedUrl, message: `Publicado en ${result.platform}.` });
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error en publish-now:", err);
-    res.status(500).json({ success: false, error: err.message || String(err) });
+    responderError(res, err);
   }
 });
 
@@ -197,9 +209,10 @@ router.post("/social/run-scheduled-publisher", requireAuth, async (req, res) => 
   try {
     const report = await publishDueScheduledPosts(userBandId);
     res.json({ success: true, report });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error ejecutando scheduled publisher:", err);
-    res.status(500).json({ success: false, error: err.message || String(err) });
+    responderError(res, err);
   }
 });
 
@@ -207,9 +220,9 @@ router.post("/social/run-scheduled-publisher", requireAuth, async (req, res) => 
 router.post("/posts/sync", requireAuth, async (req, res) => {
   const userBandId = getTargetBandId(req);
   try {
-    const posts = await dbGetSocialPosts(userBandId);
+    const posts: SocialPost[] = await dbGetSocialPosts(userBandId);
     const state = loadState();
-    state.posts = posts as any;
+    state.posts = posts;
     saveState(state);
     
     res.json({
@@ -217,12 +230,10 @@ router.post("/posts/sync", requireAuth, async (req, res) => {
       message: `¡Se han sincronizado correctamente ${posts.length} publicaciones de redes sociales con Supabase!`,
       posts
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in /api/posts/sync:", error);
-    res.status(500).json({
-      success: false,
-      error: `Error al sincronizar con Supabase: ${error.message || error}`
-    });
+    responderError(res, error, "Error al sincronizar con Supabase.");
   }
 });
 
@@ -263,12 +274,10 @@ router.post("/posts/trigger-webhook", requireAuth, async (req, res) => {
         error: `El webhook respondió con error ${response.status}.`
       });
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error triggering publish webhook:", err);
-    return res.status(500).json({
-      success: false,
-      error: `Error al conectar con el webhook de publicación: ${err.message || err}`
-    });
+    return responderError(res, err, "Error al conectar con el webhook de publicación.");
   }
 });
 

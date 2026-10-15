@@ -1,26 +1,8 @@
-import { ShowIcon } from './ui/ShowIcon';
-import React, { useEffect, useState, useRef } from 'react';
-import {
-  ArrowRight,
-  Check,
-  ChevronDown,
-  Globe,
-  Guitar,
-  Headphones,
-  Music2,
-  QrCode,
-  Rocket,
-  ShieldCheck,
-  Smartphone,
-  Sparkles,
-  Star,
-  Truck,
-  Users,
-  Wallet,
-  Zap,
-} from 'lucide-react';
-import { Button, Card } from './ui';
-import { useLanguage, SupportedLanguage } from '../context/LanguageContext';
+import React, { useEffect, useState } from 'react';
+import { ArrowRight, ChevronDown, Music2, QrCode, Rocket, ShieldCheck, Sparkles, Users } from 'lucide-react';
+import { Button } from './ui';
+import { useLanguage, SupportedLanguage } from '../context/idioma';
+import { registrarEvento } from '../utils/analitica';
 import { LandingChatWidget } from './LandingChatWidget';
 
 interface PublicLandingProps {
@@ -76,10 +58,12 @@ const Captura: React.FC<{
 
 export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
   const { language, setLanguage, t } = useLanguage();
+  const entrar = () => {
+    registrarEvento('CTA Landing');
+    onEntrar();
+  };
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [fotoError, setFotoError] = useState(false);
-  const [email, setEmail] = useState('');
-  const emailRef = useRef<HTMLInputElement>(null);
 
   const es = language === 'es';
 
@@ -130,12 +114,6 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
             priceCurrency: 'EUR',
             description: language === 'es' ? 'Plan gratuito disponible' : 'Free plan available',
           },
-          aggregateRating: {
-            '@type': 'AggregateRating',
-            ratingValue: '4.9',
-            ratingCount: '312',
-            bestRating: '5',
-          },
         },
         {
           '@type': 'FAQPage',
@@ -164,6 +142,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
   }, [language, t]);
 
   const handleLangChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    registrarEvento('Idioma Cambiado', { idioma: e.target.value });
     setLanguage(e.target.value as SupportedLanguage);
   };
 
@@ -213,7 +192,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
               ))}
             </select>
 
-            <Button variant="primary" size="md" onClick={onEntrar} id="landing-entrar">
+            <Button variant="primary" size="md" onClick={entrar} id="landing-entrar">
               {t('landing.nav.enter')}
             </Button>
           </div>
@@ -238,7 +217,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button variant="primary" size="lg" onClick={onEntrar}>
+              <Button variant="primary" size="lg" onClick={entrar}>
                 {t('landing.hero.cta.primary')} <ArrowRight className="size-4" aria-hidden />
               </Button>
               <a
@@ -369,7 +348,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
               <div className="rounded-[var(--r-xl)] bg-[var(--surface)] p-2 sm:p-3">
                 <Captura
                   nombre="hojas"
-                  movil="miembros"
+                  movil="m-hojas"
                   alt="Setlists personalizados por músico en BandManager"
                 />
               </div>
@@ -441,7 +420,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
               <div className="order-1 lg:order-2 lg:col-span-5">
                 <div className="inline-flex items-center gap-2 rounded-[var(--r-pill)] bg-[var(--acc)]/10 px-3 py-1 text-xs font-semibold text-[var(--ink)] mb-4">
                   <QrCode className="size-3.5" />
-                  {es ? 'QR y Captación de Fans' : 'QR & Fan Acquisition'}
+                  {es ? 'QR y Captación de Fans' : 'QR y Fan Acquisition'}
                 </div>
                 <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl mb-5">
                   {es
@@ -554,7 +533,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
             </h2>
 
             <div className="mt-8 flex justify-center">
-              <Button onClick={onEntrar} variant="primary" size="lg">
+              <Button onClick={entrar} variant="primary" size="lg">
                 {t('landing.cta.button')} <ArrowRight className="size-4" aria-hidden />
               </Button>
             </div>
@@ -576,7 +555,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
           <div className="flex items-center gap-4">
             <button
               type="button"
-              onClick={onEntrar}
+              onClick={entrar}
               className="cursor-pointer font-medium text-[var(--ink)] hover:underline"
             >
               {t('landing.nav.enter')}

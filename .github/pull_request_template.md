@@ -4,12 +4,13 @@
 
 ## Rama base
 
-- [ ] Este PR apunta a `develop` (rama activa), no a `main` (solo la toca el entorno de producción de Railway y suele ir por detrás)
+- [ ] Rama base verificada (`main` o rama de trabajo correspondiente)
 
 ## Plan de pruebas
 
 - [ ] `npx tsc --noEmit` sin errores nuevos (el ratchet de CI tolera un margen pequeño sobre el `BASELINE` de `.github/workflows/ci.yml`, pero no añadas más)
 - [ ] `npm run lint` (esbuild dry-run bundle, no ESLint) sin errores
+- [ ] Si añadiste o cambiaste rutas: `npm run docs:api` y `docs/api/` commiteado (CI lo comprueba)
 - [ ] `npx vitest run` en verde — si algún test falla ya en la base sin tu cambio, dilo explícitamente aquí en vez de ocultarlo
 - [ ] Verificación manual en el navegador si el cambio toca UI/frontend (el tsc/lint/tests no prueban que la funcionalidad funcione, solo que compila)
 

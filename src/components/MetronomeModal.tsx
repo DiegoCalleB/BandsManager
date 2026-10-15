@@ -1,15 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  X,
-  Play,
-  Pause,
-  Disc,
-  Zap,
-  Volume2,
-  VolumeX,
-  Music,
-  Clock,
-} from "lucide-react";
+import { programarClic } from "../utils/clicMetronomo";
+import { X, Play, Pause, Zap, Music, Clock } from "lucide-react";
 import { Song, ThemeColors } from "../types";
 import { ModalPortal } from "./common/ModalPortal";
 import { ShowIcon } from './ui/ShowIcon';
@@ -27,15 +18,14 @@ export function MetronomeModal({
   isOpen,
   onClose,
   songs = [],
-  colors,
-  initialBpm = 120,
+  initialBpm = 120
 }: MetronomeModalProps) {
   const [bpm, setBpm] = useState<number>(initialBpm);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [timeSignature, setTimeSignature] = useState<number>(4); // Beats per bar: 4 = 4/4, 3 = 3/4, 6 = 6/8, 2 = 2/4
   const [currentBeat, setCurrentBeat] = useState<number>(0);
-  const [volume, setVolume] = useState<number>(0.8);
-  const [isMuted, setIsMuted] = useState<boolean>(false);
+  const [volume] = useState<number>(0.8);
+  const [isMuted] = useState<boolean>(false);
   const [selectedSongId, setSelectedSongId] = useState<string>("");
 
   // Tap tempo state
@@ -48,11 +38,11 @@ export function MetronomeModal({
   const currentBeatRef = useRef<number>(0);
 
   // Update initial BPM when prop changes
-  useEffect(() => {
-    if (initialBpm && initialBpm > 0) {
-      setBpm(initialBpm);
-    }
-  }, [initialBpm]);
+  const [initialBpmPrevio, setInitialBpmPrevio] = useState(initialBpm);
+  if (initialBpm !== initialBpmPrevio) {
+    setInitialBpmPrevio(initialBpm);
+    if (initialBpm && initialBpm > 0) setBpm(initialBpm);
+  }
 
   // Handle selected song BPM sync
   const handleSelectSong = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -97,33 +87,9 @@ export function MetronomeModal({
     }
   };
 
-  // Play click audio oscillator
   const scheduleClick = (beatNumber: number, time: number) => {
     if (!audioCtxRef.current || isMuted) return;
-
-    const osc = audioCtxRef.current.createOscillator();
-    const gain = audioCtxRef.current.createGain();
-
-    // High pitch for beat 1 (accent), lower pitch for other beats
-    if (beatNumber === 0) {
-      osc.frequency.value = 1200; // Accent pitch (Hz)
-      gain.gain.value = volume;
-    } else {
-      osc.frequency.value = 800; // Normal click pitch (Hz)
-      gain.gain.value = volume * 0.6;
-    }
-
-    osc.type = "sine";
-
-    // Fast exponential decay for clean click sound
-    gain.gain.setValueAtTime(gain.gain.value, time);
-    gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.05);
-
-    osc.connect(gain);
-    gain.connect(audioCtxRef.current.destination);
-
-    osc.start(time);
-    osc.stop(time + 0.05);
+    programarClic(audioCtxRef.current, time, beatNumber === 0, volume);
   };
 
   // Scheduler loop
@@ -160,7 +126,7 @@ export function MetronomeModal({
       // Start audio context
       if (!audioCtxRef.current) {
         audioCtxRef.current = new (
-          window.AudioContext || (window as any).webkitAudioContext
+          window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
         )();
       }
       if (audioCtxRef.current.state === "suspended") {
@@ -183,20 +149,21 @@ export function MetronomeModal({
     }
   };
 
-  // Stop metronome on modal close & suspend AudioContext to conserve battery
+  // Al cerrar el modal el metrónomo se para (estado derivado durante el render)...
+  if (!isOpen && isPlaying) {
+    setIsPlaying(false);
+    setCurrentBeat(0);
+  }
+
+  // ...y se libera el temporizador y se suspende el AudioContext para ahorrar batería
   useEffect(() => {
-    if (!isOpen) {
-      if (isPlaying) {
-        if (timerWorkerRef.current) {
-          clearInterval(timerWorkerRef.current);
-          timerWorkerRef.current = null;
-        }
-        setIsPlaying(false);
-        setCurrentBeat(0);
-      }
-      if (audioCtxRef.current && audioCtxRef.current.state === "running") {
-        audioCtxRef.current.suspend().catch(() => {});
-      }
+    if (isOpen) return;
+    if (timerWorkerRef.current) {
+      clearInterval(timerWorkerRef.current);
+      timerWorkerRef.current = null;
+    }
+    if (audioCtxRef.current && audioCtxRef.current.state === "running") {
+      audioCtxRef.current.suspend().catch(() => { /* contexto de audio ya cerrado o en transición: no hay nada que cambiar */ });
     }
   }, [isOpen]);
 
@@ -207,7 +174,7 @@ export function MetronomeModal({
         clearInterval(timerWorkerRef.current);
       }
       if (audioCtxRef.current) {
-        audioCtxRef.current.close().catch(() => {});
+        audioCtxRef.current.close().catch(() => { /* contexto de audio ya cerrado o en transición: no hay nada que cambiar */ });
       }
     };
   }, []);

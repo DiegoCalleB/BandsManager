@@ -5,7 +5,7 @@ const POSTER = '/video/iris-spectrum-loop.jpg';
 
 // Calienta la caché del navegador para que el vídeo arranque al instante cuando empieza la separación.
 if (typeof window !== 'undefined') {
-  const warm = () => void fetch(SRC).catch(() => {});
+  const warm = () => void fetch(SRC).catch(() => { /* precarga opcional: si falla, el recurso se pide al mostrarse */ });
   if ('requestIdleCallback' in window) window.requestIdleCallback(warm);
   else setTimeout(warm, 2000);
 }

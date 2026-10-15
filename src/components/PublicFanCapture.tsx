@@ -1,73 +1,57 @@
 import React, { useState, useEffect } from "react";
-import {
-  Sparkles,
-  Heart,
-  CheckCircle2,
-  Download,
-  Copy,
-  Check,
-  ShieldCheck,
-  Mail,
-  User,
-  MapPin,
-  Music,
-} from "lucide-react";
+import { Sparkles, Heart, CheckCircle2, ShieldCheck, Mail, User, MapPin, Music } from "lucide-react";
 import { sanitizeConcertDisplayName } from "../utils/fanUtils";
 import { ShowIcon } from './ui/ShowIcon';
 import { Input } from './ui';
+import { comoErrorCapturado } from '../utils/errorCapturado';
+
+/** Origen de la captura leído de la URL (?concertId, ?concertName, ?band_id). */
+function leerOrigenDeLaUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const concertId = params.get("concertId") || params.get("cId") || "";
+  const cName = params.get("concertName") || params.get("cName") || "";
+  const bandId = params.get("band_id") || params.get("band") || "";
+  const concertName = cName ? sanitizeConcertDisplayName(cName) : "";
+  return { concertId, concertName, bandId };
+}
 
 export const PublicFanCapture: React.FC = () => {
+  const [origen] = useState(leerOrigenDeLaUrl);
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
   const [ciudad, setCiudad] = useState("");
-  const [comoConocio, setComoConocio] = useState("");
-  const [conciertoOrigenId, setConciertoOrigenId] = useState("");
-  const [conciertoOrigenNombre, setConciertoOrigenNombre] = useState("");
+  const [comoConocio, setComoConocio] = useState(
+    origen.concertName ? `Concierto: ${origen.concertName}` : "En directo / Concierto",
+  );
+  const [conciertoOrigenId] = useState(origen.concertId);
+  const [conciertoOrigenNombre] = useState(origen.concertName);
   const [consentimientoRGPD, setConsentimientoRGPD] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [incentivoData, setIncentivoData] = useState<any>(null);
-  const [copiedCode, setCopiedCode] = useState(false);
+  const [, setIncentivoData] = useState<unknown>(null);
   const [bandInfo, setBandInfo] = useState<{ name: string; logoUrl: string }>({
     name: "",
     logoUrl: "",
   });
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const cId = params.get("concertId") || params.get("cId") || "";
-    const cName = params.get("concertName") || params.get("cName") || "";
-    const bandId = params.get("band_id") || params.get("band") || "";
-
-    if (cId) setConciertoOrigenId(cId);
-    if (cName) {
-      const sanitizedName = sanitizeConcertDisplayName(cName);
-      setConciertoOrigenNombre(sanitizedName);
-      setComoConocio(`Concierto: ${sanitizedName}`);
-    } else {
-      setComoConocio("En directo / Concierto");
-    }
-
+    const { bandId } = origen;
     fetch(
       `/api/public/epk${bandId ? `?band_id=${encodeURIComponent(bandId)}` : ""}`,
     )
       .then((res) => res.json())
       .then((data) => {
         if (data?.bandName) {
-          const isBkn =
-            (data.bandId || "").includes("bakandeya") ||
-            data.bandName.toLowerCase().includes("bakandeya");
           setBandInfo({
             name: data.bandName,
-            logoUrl:
-              data.epkConfig?.logoUrl || (isBkn ? "/logo_bakandeya.jpg" : ""),
+            logoUrl: data.epkConfig?.logoUrl || "",
           });
         }
       })
-      .catch(() => {});
-  }, []);
+      .catch(() => { /* sin datos de la banda la captura sigue con nombre y logo genéricos */ });
+  }, [origen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -112,17 +96,12 @@ export const PublicFanCapture: React.FC = () => {
 
       setIncentivoData(data.incentivo);
       setSubmitted(true);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error submitting fan form:", err);
       setLoading(false);
       setErrorMsg("No se pudo conectar con el servidor. Inténtalo de nuevo.");
     }
-  };
-
-  const handleCopyCode = (code: string) => {
-    navigator.clipboard.writeText(code);
-    setCopiedCode(true);
-    setTimeout(() => setCopiedCode(false), 2000);
   };
 
   return (
@@ -165,7 +144,7 @@ export const PublicFanCapture: React.FC = () => {
               </span>
             ) : (
               <span>
-                Recibe información de Bakandeya directamente en tu correo.
+                Recibe información de {bandInfo.name || "la banda"} directamente en tu correo.
               </span>
             )}
           </p>
@@ -253,9 +232,9 @@ export const PublicFanCapture: React.FC = () => {
                 />
                 <span>
                   Acepto recibir novedades, lanzamientos y fechas de conciertos
-                  de <strong>Bakandeya</strong>.
+                  de <strong>{bandInfo.name || "la banda"}</strong>.
                   <span className="block text-micro text-[var(--ink-2)] mt-0.5">
-                    Responsable: Bakandeya. Puedes darte de baja en cualquier
+                    Responsable: {bandInfo.name || "la banda"}. Puedes darte de baja en cualquier
                     momento con 1 clic.
                   </span>
                 </span>
@@ -272,7 +251,7 @@ export const PublicFanCapture: React.FC = () => {
               ) : (
                 <>
                   <Sparkles className="w-4 h-4" />
-                  <span>UNIRME A BAKANDEYA</span>
+                  <span>UNIRME A {(bandInfo.name || "LA BANDA").toUpperCase()}</span>
                 </>
               )}
             </button>
@@ -324,7 +303,7 @@ export const PublicFanCapture: React.FC = () => {
         </div>
 
         <footer className="text-center text-xs text-[var(--ink-2)]">
-          Bakandeya official community • powered by bandManager
+          {bandInfo.name ? `${bandInfo.name} official community • ` : ""}powered by bandManager
         </footer>
       </div>
     </div>

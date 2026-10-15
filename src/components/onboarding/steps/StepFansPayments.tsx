@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Heart, DollarSign, Upload, FileText, CheckCircle2, Loader2, Trash2, Smartphone, CreditCard } from 'lucide-react';
+import { Heart, DollarSign, Upload, CheckCircle2, Loader2, Trash2, Smartphone, CreditCard } from 'lucide-react';
 import { Button, IconButton, Input, LinkButton } from '../../ui';
 
 interface StepFansPaymentsProps {

@@ -41,7 +41,8 @@ export async function syncActiveCampaignsRadar(targetBandId?: string): Promise<{
 
       // 1. Obtener campañas activas
       const campaigns = await dbGetCampaigns(bandId);
-      const activeCampaign = campaigns.find(c => c.isActive || (c as any).is_active);
+      // normalizeCampaignFromDb ya funde la columna is_active en isActive.
+      const activeCampaign = campaigns.find(c => c.isActive);
 
       // Si no hay campaña activa explícita, se toma el listado general de leads
       const allLeads = await dbGetLeads(bandId);

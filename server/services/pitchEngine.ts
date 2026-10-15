@@ -21,10 +21,12 @@ import {
   getRecommendedWordRange
 } from "../utils/promptSafety.js";
 import { findCorridorForCity } from "../../src/utils/tourRouting.js";
-import { findSemanticallySimilarPitches, checkNegativePatternSimilarity } from "./pitchVectorStore.js";
+import { findSemanticallySimilarPitches } from "./pitchVectorStore.js";
 import { evaluateAndRefinePitch } from "./pitchJudge.js";
 import { fetchVenueLiveContext, fetchBandSpotifyTraction } from "./venueIntelligenceService.js";
 import { getBandOperationalContext } from "./agentIntelligence.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { BookingCampaign, Concert, Lead } from '../../src/types.js';
 
 export interface PitchContextResult {
   bandDna: BandDnaProfile;
@@ -54,7 +56,7 @@ export interface GenerateMultiPitchParams {
   tono_rating?: number;
   contenido_rating?: number;
   providers?: string[];
-  activeCampaign?: any;
+  activeCampaign?: BookingCampaign | null;
 }
 
 export interface RegeneratePitchParams {
@@ -66,19 +68,19 @@ export interface RegeneratePitchParams {
   alcance?: "este_pitch" | "global";
   provider?: string;
   modelName?: string;
-  activeCampaign?: any;
+  activeCampaign?: BookingCampaign | null;
 }
 
 /**
  * Busca conciertos cercanos en la misma ruta geográfica para aportar valor de logística real
  */
-export function findNearbyTourContextForLead(lead: any, stateConcerts: any[]): string | null {
+export function findNearbyTourContextForLead(lead: Pick<Lead, "ciudad"> | null | undefined, stateConcerts: Concert[]): string | null {
   if (!lead?.ciudad || !Array.isArray(stateConcerts) || stateConcerts.length === 0) return null;
   const leadCorridor = findCorridorForCity(lead.ciudad);
   if (!leadCorridor) return null;
 
   const now = new Date();
-  const upcomingConfirmed = stateConcerts.filter((c: any) => {
+  const upcomingConfirmed = stateConcerts.filter((c) => {
     if (!c.fecha) return false;
     const cDate = new Date(c.fecha);
     const isFuture = cDate >= now;
@@ -86,7 +88,7 @@ export function findNearbyTourContextForLead(lead: any, stateConcerts: any[]): s
     return isFuture && isConfirmed && c.ciudad;
   });
 
-  const nearby = upcomingConfirmed.find((c: any) => {
+  const nearby = upcomingConfirmed.find((c) => {
     const cCorridor = findCorridorForCity(c.ciudad);
     return cCorridor && (cCorridor.key === leadCorridor.key || leadCorridor.info.neighboringCorridors.includes(cCorridor.key));
   });
@@ -105,9 +107,9 @@ export class PitchEngine {
    */
   static async compileContext(
     userBandId: string,
-    lead: any,
+    lead: Lead,
     options: {
-      activeCampaign?: any;
+      activeCampaign?: BookingCampaign | null;
       comentario?: string;
       tono_rating?: number;
       contenido_rating?: number;
@@ -296,7 +298,7 @@ export class PitchEngine {
     );
 
     // 7. User Prompt según sea generación nueva o refinamiento
-    let userPrompt = "";
+    let userPrompt: string;
     if (options.isRegeneration) {
       userPrompt = `Reescribe y perfecciona el correo de pitch para "${sanitizeExternalText(lead.nombre_sala)}" en ${sanitizeExternalText(lead.ciudad) || "España"} (Tipo: ${sanitizeExternalText(lead.tipo) || "sala"}, Aforo: ${lead.aforo || "N/D"}).
 
@@ -339,7 +341,7 @@ ${lead.pitch_generado ? `\n(Versión previa de referencia: "${sanitizeExternalTe
     const { leadId, userBandId, comentario, tono_rating, contenido_rating, providers, activeCampaign } = params;
     const state = loadState();
 
-    let lead = state.leads.find((l: any) => String(l.id) === String(leadId));
+    let lead = state.leads.find((l) => String(l.id) === String(leadId));
     if (!lead) {
       try {
         lead = await dbGetLeadById(leadId, userBandId);
@@ -370,7 +372,7 @@ ${lead.pitch_generado ? `\n(Versión previa de referencia: "${sanitizeExternalTe
 
     // Auditar heurísticamente y evaluar/refinar con LLM-as-a-Judge cada propuesta
     const auditedProposals: MultiPitchProposalWithAudit[] = await Promise.all(
-      (rawProposals || []).map(async (p: any) => {
+      (rawProposals || []).map(async (p) => {
         const rawText = p.text || "";
         const evaluation = await evaluateAndRefinePitch({
           pitchText: rawText,
@@ -404,7 +406,7 @@ ${lead.pitch_generado ? `\n(Versión previa de referencia: "${sanitizeExternalTe
     const { leadId, userBandId, tono_rating, contenido_rating, comentario, alcance, provider, modelName, activeCampaign } = params;
     const state = loadState();
 
-    let lead = state.leads.find((l: any) => String(l.id) === String(leadId));
+    let lead = state.leads.find((l) => String(l.id) === String(leadId));
     if (!lead) {
       try {
         lead = await dbGetLeadById(leadId, userBandId);
@@ -443,7 +445,8 @@ ${lead.pitch_generado ? `\n(Versión previa de referencia: "${sanitizeExternalTe
       if (unifiedRes && unifiedRes.text) {
         newPitchText = unifiedRes.text.trim();
       }
-    } catch (aiErr: any) {
+    } catch (aiErrCapturado) {
+      const aiErr = comoErrorCapturado(aiErrCapturado);
       console.warn(`[PitchEngine] Fallo ${provider || "AI"} al regenerar pitch, utilizando motor local de ADN:`, aiErr.message);
     }
 
@@ -473,7 +476,7 @@ ${lead.pitch_generado ? `\n(Versión previa de referencia: "${sanitizeExternalTe
     const audit = evaluation.audit;
 
     // Registro de aprendizaje en el lead
-    const finalAlcance = alcance === "este_pitch" ? "este_pitch" : "global";
+    const finalAlcance: 'este_pitch' | 'global' = alcance === 'este_pitch' ? 'este_pitch' : 'global';
     const logEntry = {
       id: `fb-${Date.now()}`,
       fecha: new Date().toISOString(),

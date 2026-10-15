@@ -5,6 +5,8 @@ export * from "./db/contacts.js";
 export * from "./db/leads.js";
 export * from "./db/rehearsals.js";
 export * from "./db/concerts.js";
+export * from "./db/enlacesCortos.js";
+export * from "./db/referidos.js";
 export * from "./db/repertoire.js";
 export * from "./db/epk.js";
 export * from "./db/autonomy.js";

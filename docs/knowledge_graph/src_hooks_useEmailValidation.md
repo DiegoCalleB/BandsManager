@@ -1,0 +1,39 @@
+---
+id: src_hooks_useEmailValidation
+title: "src/hooks/useEmailValidation.ts"
+layer: hook
+domain: system
+file: "src/hooks/useEmailValidation.ts"
+tags: ["hook", "system", "auto"]
+---
+
+# 📌 src/hooks/useEmailValidation.ts
+
+> **Ubicación:** `src/hooks/useEmailValidation.ts`  
+> **Capa:** `#layer/hook` | **Dominio:** `#domain/system`
+
+## 📖 Descripción
+Exporta: useEmailValidation, getEmailStatus, isBouncedLead.
+
+---
+
+## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[route_leads_crud|Leads CRUD Route]] *(Layer: #route, Domain: #booking)*
+- [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
+
+---
+
+## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_booking_leads_table_hooks_useLeadsBatchDateScan|src/components/booking/leads_table/hooks/useLeadsBatchDateScan.ts]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadRowContact|src/components/booking/leads_table/LeadRowContact.tsx]] *(from #frontend)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `src/hooks/__tests__/hooksSinEfectosEnCascada.behavior.test.ts`
+
+---
+
+## 🛡️ Reglas de Aislamiento & Calidad
+- [ ] ¿Respeta el trust boundary de `band_id`?
+- [ ] ¿Tiene pruebas unitarias o de integración asociadas?

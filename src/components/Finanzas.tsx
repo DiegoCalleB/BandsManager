@@ -4,30 +4,11 @@ import {
   Payment,
   Concert,
   ConcertExpenseBreakdown,
+  Tour,
+  User,
 } from "../types";
-import {
-  TrendingUp,
-  TrendingDown,
-  DollarSign,
-  Plus,
-  Filter,
-  Search,
-  X,
-  CheckCircle2,
-  AlertCircle,
-  RefreshCw,
-  Trash2,
-  Calendar,
-  FileText,
-  Check,
-  ArrowRight,
-  Calculator,
-  Edit3,
-  AlertTriangle,
-  ShieldCheck,
-} from "lucide-react";
+import { TrendingUp, TrendingDown, DollarSign, Plus, Search, X, CheckCircle2, AlertCircle, RefreshCw, Calendar, FileText, Calculator, Edit3 } from "lucide-react";
 import { PublicoSilhouette } from "./ui/PublicoSilhouette";
-import { FinanceSummaryCards } from "./finanzas/FinanceSummaryCards";
 import { AddTransactionModal } from "./finanzas/AddTransactionModal";
 import { calculateFinancialSummary } from "../utils/financeUtils";
 import { apiFetch } from "../utils/api";
@@ -36,6 +17,18 @@ import { Button, Input, Select, Textarea } from './ui';
 
 import { formatEur } from '../utils/formatMoney';
 import { Tabs } from "./ui/Tabs";
+import { comoErrorCapturado } from '../utils/errorCapturado';
+/** Filtro por tipo de movimiento del listado. */
+type FiltroTipo = "todos" | "ingreso" | "gasto";
+/** Filtro por estado de pago del listado. */
+type FiltroEstado = "todos" | "pendiente" | "pagado";
+/** Respuesta de `POST /api/payments/sync`. */
+interface RespuestaSyncFinanzas {
+  success?: boolean;
+  message?: string;
+  error?: string;
+}
+
 interface FinanzasProps {
   colors: ThemeColors;
   payments: Payment[];
@@ -49,8 +42,8 @@ interface FinanzasProps {
     id: string,
     updatedFields: Partial<Concert>,
   ) => Promise<void>;
-  tours?: any[];
-  bandUsers?: any[];
+  tours?: Tour[];
+  bandUsers?: User[];
 }
 
 export default function Finanzas({
@@ -77,31 +70,14 @@ export default function Finanzas({
 
   // Search & Filter State
   const [searchTerm, setSearchTerm] = useState("");
-  const [typeFilter, setTypeFilter] = useState<"todos" | "ingreso" | "gasto">(
+  const [typeFilter, setTypeFilter] = useState<FiltroTipo>(
     "todos",
   );
   const [categoryFilter, setCategoryFilter] = useState<string>("todos");
-  const [statusFilter, setStatusFilter] = useState<
-    "todos" | "pendiente" | "pagado"
-  >("todos");
+  const [statusFilter, setStatusFilter] = useState<FiltroEstado>("todos");
 
   // Form State for Add Transaction
   const [isAddOpen, setIsAddOpen] = useState(false);
-  const [tipo, setTipo] = useState<"ingreso" | "gasto">("ingreso");
-  const [categoria, setCategoria] = useState<
-    | "concierto"
-    | "merchandising"
-    | "subvencion"
-    | "transporte"
-    | "alojamiento"
-    | "comida"
-    | "promo"
-    | "otros"
-  >("concierto");
-  const [concepto, setConcepto] = useState("");
-  const [importe, setImporte] = useState("");
-  const [fecha, setFecha] = useState(new Date().toISOString().split("T")[0]);
-  const [estado, setEstado] = useState<"pendiente" | "pagado">("pagado");
 
   // Sync state
   const [isSyncing, setIsSyncing] = useState(false);
@@ -113,7 +89,7 @@ export default function Finanzas({
     setSyncSuccess("");
     setSyncError("");
     try {
-      const data = await apiFetch<any>("/api/payments/sync", {
+      const data = await apiFetch<RespuestaSyncFinanzas>("/api/payments/sync", {
         method: "POST",
       });
       if (data?.success) {
@@ -124,36 +100,13 @@ export default function Finanzas({
           data?.error || "Error al intentar sincronizar las finanzas.",
         );
       }
-    } catch (error: any) {
+    } catch (errorCapturado) {
+      const error = comoErrorCapturado(errorCapturado);
       console.error("Error synchronizing finances:", error);
       setSyncError(error?.message || "Error de conexión con el servidor.");
     } finally {
       setIsSyncing(false);
     }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!concepto || !importe) return;
-
-    const newPayment: Payment = {
-      id: "pay-" + Date.now(),
-      tipo,
-      categoria,
-      concepto,
-      importe: parseFloat(importe) || 0,
-      fecha,
-      estado,
-    };
-
-    await onAddPayment(newPayment);
-    setIsAddOpen(false);
-
-    // Reset form
-    setConcepto("");
-    setImporte("");
-    setFecha(new Date().toISOString().split("T")[0]);
-    setEstado("pagado");
   };
 
   const handleToggleEstado = async (payment: Payment) => {
@@ -185,18 +138,8 @@ export default function Finanzas({
   });
 
   const categories = Array.from(new Set(payments.map((p) => p.categoria)));
-
-  const isLightTheme =
-    (typeof document !== "undefined" &&
-      document.documentElement.dataset.theme === "light") ||
-    colors.name?.toLowerCase().includes("light") ||
-    colors.bg.includes("f8fafc") ||
-    colors.bg.includes("white") ||
-    colors.bg.includes("neutral-50") ||
-    false;
   const textTitle = "text-[var(--ink)]";
   const textSub = "text-[var(--ink-2)]";
-  const textMuted = "text-[var(--ink-2)]";
   const cardBorder = "";
 
   return (
@@ -880,7 +823,7 @@ export default function Finanzas({
                 <Select
                   size="sm"
                   value={typeFilter}
-                  onChange={(e) => setTypeFilter(e.target.value as any)}
+                  onChange={(e) => setTypeFilter(e.target.value as FiltroTipo)}
                 >
                   <option value="todos">Tipo: Todos</option>
                   <option value="ingreso">Ingreso (+)</option>
@@ -905,7 +848,7 @@ export default function Finanzas({
                 <Select
                   size="sm"
                   value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value as any)}
+                  onChange={(e) => setStatusFilter(e.target.value as FiltroEstado)}
                 >
                   <option value="todos">Estado: Todos</option>
                   <option value="pendiente">Pendiente</option>

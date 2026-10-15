@@ -18,13 +18,29 @@ Endpoint para redacción automática de respuestas en hilos de negociación.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[sec_prompt_safety|Prompt Injection Sanitizer]] *(Layer: #security, Domain: #system)*
-- [[service_pitch_engine|Pitch Engine & Multi-Model Routing]] *(Layer: #service, Domain: #booking)*
+- [[agent_redactor|Agente Redactor (borradores de respuesta)]] *(Layer: #agent, Domain: #booking)*
 - [[db_lead_messages|Lead Messages & Thread DB]] *(Layer: #db, Domain: #booking)*
+- [[db_state_sync|In-Memory State & Supabase Sync]] *(Layer: #db, Domain: #system)*
+- [[sec_prompt_safety|Prompt Injection Sanitizer]] *(Layer: #security, Domain: #system)*
+- [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
+- [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_pitchLearning|server/db/pitchLearning.ts]] *(Layer: #db, Domain: #booking)*
+- [[server_services_sentimentAnalysis|server/services/sentimentAnalysis.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_leadLanguage|server/utils/leadLanguage.ts]] *(Layer: #service, Domain: #booking)*
+- [[service_pitch_engine|Pitch Engine & Multi-Model Routing]] *(Layer: #service, Domain: #booking)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
+- [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
+- [[server_routes_leads|server/routes/leads.ts]] *(from #route)*
+- [[src_components_booking_venue_modal_VenuePitchWorkspace|src/components/booking/venue_modal/VenuePitchWorkspace.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_panel_hooks_buildVenuePanelActions|src/components/booking/venue_panel/hooks/buildVenuePanelActions.ts]] *(from #frontend)*
+- [[src_components_booking_venue_panel_hooks_useVenueMessageThread|src/components/booking/venue_panel/hooks/useVenueMessageThread.ts]] *(from #frontend)*
 - [[ui_venue_detail|Venue Detail & Pitch Simulator]] *(from #frontend)*
 
 ---

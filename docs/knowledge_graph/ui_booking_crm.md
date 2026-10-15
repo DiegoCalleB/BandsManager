@@ -19,13 +19,20 @@ Panel principal del embudo de contratación, gestión de salas y radar comercial
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[hook_booking_pipeline|useBookingPipeline Hook]] *(Layer: #hook, Domain: #booking)*
+- [[src_components_booking_crm_BookingCrmLayout|src/components/booking/crm/BookingCrmLayout.tsx]] *(Layer: #frontend, Domain: #booking)*
+- [[src_components_booking_crm_BookingCrmProvider|src/components/booking/crm/BookingCrmProvider.tsx]] *(Layer: #frontend, Domain: #booking)*
+- [[src_components_booking_crm_hooks_useBookingCrmController|src/components/booking/crm/hooks/useBookingCrmController.ts]] *(Layer: #frontend, Domain: #booking)*
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_bookingUtils|src/utils/bookingUtils.ts]] *(Layer: #service, Domain: #booking)*
 - [[ui_leads_table|Leads Table & Actions]] *(Layer: #frontend, Domain: #booking)*
 - [[ui_venue_detail|Venue Detail & Pitch Simulator]] *(Layer: #frontend, Domain: #booking)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-_Sin llamadas entrantes indexadas._
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
+- [[src_app_lazyViews|src/app/lazyViews.ts]] *(from #service)*
+- [[src_components_booking_crm_BookingCrmContext|src/components/booking/crm/BookingCrmContext.ts]] *(from #frontend)*
 
 ---
 

@@ -1,32 +1,5 @@
 import React, { useState, useMemo } from "react";
-import {
-  Plus,
-  Disc3,
-  Clock,
-  CheckSquare,
-  Square,
-  Trash2,
-  ArrowUp,
-  ArrowDown,
-  Sparkles,
-  Coffee,
-  Play,
-  Music,
-  Flame,
-  Edit3,
-  CheckCircle2,
-  AlertCircle,
-  X,
-  Layers,
-  Volume2,
-  ListOrdered,
-  GripVertical,
-  Search,
-  Star,
-  Undo2,
-  FolderInput,
-  FlameKindling,
-} from "lucide-react";
+import { Plus, Disc3, Clock, CheckSquare, Square, Trash2, ArrowUp, ArrowDown, Play, CheckCircle2, X, Layers, ListOrdered, GripVertical, Search, Star, Undo2, FolderInput } from "lucide-react";
 import {
   Rehearsal,
   RehearsalAgendaItem,
@@ -103,16 +76,18 @@ if (TRANSPARENT_DRAG_IMAGE) {
     "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBTAA7";
 }
 
+/** Id único de un ítem de agenda (a nivel de módulo: solo se invoca desde handlers). */
+const idAgenda = (clave: string, aleatorio = false) =>
+  `ag-${clave}-${Date.now()}${aleatorio ? `-${Math.random().toString(36).substring(2, 5)}` : ""}`;
+
 export function OrdenDelDiaTab({
   rehearsal,
   onUpdateRehearsal,
   songs = [],
   setlists = [],
-  nextConcert,
-  colors,
-  onGoToLiveMode,
+  onGoToLiveMode
 }: OrdenDelDiaTabProps) {
-  const agenda = rehearsal.agenda || [];
+  const agenda = useMemo(() => rehearsal.agenda || [], [rehearsal.agenda]);
   const objetivos = rehearsal.objetivos || [];
 
   // Modales
@@ -357,7 +332,7 @@ export function OrdenDelDiaTab({
 
     if (replace || agenda.length === 0) {
       items.push({
-        id: `ag-warmup-${Date.now()}`,
+        id: idAgenda('warmup'),
         tipo: "calentamiento",
         titulo: "Calentamiento & Prueba de Sonido",
         duracionEstimadaMin: 15,
@@ -369,7 +344,7 @@ export function OrdenDelDiaTab({
       if (it.tipoItem === "cancion" || it.songId) {
         const s = songs.find((x) => x.id === it.songId);
         items.push({
-          id: `ag-st-${idx}-${Date.now()}-${Math.random().toString(36).substring(2, 5)}`,
+          id: idAgenda(`st-${idx}`, true),
           tipo: "cancion",
           titulo: s?.titulo || it.tituloCustom || "Canción",
           songId: it.songId,
@@ -381,7 +356,7 @@ export function OrdenDelDiaTab({
         });
       } else {
         items.push({
-          id: `ag-pausa-${idx}-${Date.now()}`,
+          id: idAgenda(`pausa-${idx}`),
           tipo: "pausa",
           titulo: it.tituloCustom || "Pausa / Intermedio",
           duracionEstimadaMin: 10,
@@ -391,7 +366,7 @@ export function OrdenDelDiaTab({
 
     if (replace || agenda.length === 0) {
       items.push({
-        id: `ag-outro-${Date.now()}`,
+        id: idAgenda('outro'),
         tipo: "outro",
         titulo: "Repaso Final & Valoración",
         duracionEstimadaMin: 10,
@@ -1177,7 +1152,7 @@ export function OrdenDelDiaTab({
                           key={key}
                           type="button"
                           onClick={() => {
-                            setBlockTipo(key as any);
+                            setBlockTipo(key as RehearsalAgendaItem["tipo"]);
                             if (!blockTitulo) setBlockTitulo(def.label);
                           }}
                           className={`p-2.5 rounded-[var(--r-m)] text-left flex items-center gap-2 text-xs font-sans transition-ui cursor-pointer ${

@@ -1,23 +1,9 @@
 import React, { useRef } from "react";
-import {
-  Guitar,
-  Upload,
-  Camera,
-  Loader2,
-  Sparkles,
-  Globe,
-  Type,
-  Check,
-} from "lucide-react";
+import { Guitar, Upload, Camera, Loader2, Globe, Type, Check } from "lucide-react";
 import {
   BAND_FONT_OPTIONS,
   getFontFamilyById,
 } from "../../../config/bandFonts";
-import {
-  useLanguage,
-  SUPPORTED_LANGUAGES,
-  SupportedLanguage,
-} from "../../../context/LanguageContext";
 import { Button, Input } from '../../ui';
 
 interface StepIdentityProps {
@@ -45,7 +31,6 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
   genre,
   setGenre,
   language,
-  setLanguage,
   fontStyle,
   setFontStyle,
   city,
@@ -54,11 +39,9 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
   setLogoUrl,
   isUploadingLogo,
   onLogoUpload,
-  commonGenres,
-  commonLanguages,
+  commonGenres
 }) => {
   const logoInputRef = useRef<HTMLInputElement | null>(null);
-  const { language: currentAppLang } = useLanguage();
 
   const previewName = localBandName.trim() || "Nombre de la Banda";
   const selectedFontFamily = getFontFamilyById(fontStyle);

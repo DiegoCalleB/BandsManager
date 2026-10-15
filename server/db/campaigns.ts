@@ -1,7 +1,10 @@
 // Campañas de booking (`booking_campaigns`) y su normalización desde BD.
 
+import { bandaDe } from '../utils/bandAccess.js';
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { BookingCampaign } from '../../src/types.js';
 
 export interface DbCampaign {
   id: string;
@@ -35,7 +38,46 @@ export interface DbCampaign {
   created_at?: string;
 }
 
-export function normalizeCampaignFromDb(c: any) {
+type CachePorTipoCampania = NonNullable<DbCampaign["min_cache_by_type"]>;
+type ReglasTonoCampania = NonNullable<DbCampaign["campaign_tone_rules"]>;
+
+/**
+ * Campaña tal como llega para normalizarse: fila de `campaigns`/`booking_campaigns` (las listas y
+ * mapas JSONB de filas antiguas pueden venir como texto) o ya en camelCase.
+ */
+export type FilaCampania = Partial<
+  Omit<DbCampaign, "id" | "target_cities" | "target_dates" | "custom_pitch_templates" | "min_cache_by_type" | "campaign_tone_rules">
+> & {
+  id?: string | number;
+  bandId?: string;
+  target_cities?: string[] | string;
+  targetCities?: string[];
+  target_dates?: string[] | string;
+  targetDates?: string[];
+  custom_pitch_templates?: Record<string, string> | string;
+  customPitchTemplates?: Record<string, string> | string;
+  min_cache_by_type?: CachePorTipoCampania | string;
+  minCacheByType?: CachePorTipoCampania | string;
+  campaign_tone_rules?: ReglasTonoCampania | string;
+  campaignToneRules?: ReglasTonoCampania | string;
+  minCapacity?: number;
+  maxCapacity?: number;
+  targetDatesText?: string;
+  campaignStartDate?: string;
+  campaignEndDate?: string;
+  isActive?: boolean;
+  createdAt?: string;
+};
+
+/** Campaña que manda el cliente para guardar (camelCase, con fechas también en snake_case). */
+export type EntradaCampania = Partial<BookingCampaign> & {
+  campaign_start_date?: string;
+  campaign_end_date?: string;
+  minCacheByType?: CachePorTipoCampania;
+  campaignToneRules?: ReglasTonoCampania;
+};
+
+export function normalizeCampaignFromDb(c: FilaCampania) {
   let targetCities: string[] = [];
   if (Array.isArray(c.target_cities)) {
     targetCities = c.target_cities;
@@ -79,7 +121,7 @@ export function normalizeCampaignFromDb(c: any) {
     }
   }
 
-  let campaignToneRules = undefined;
+  let campaignToneRules: ReglasTonoCampania | undefined = undefined;
   const rawToneRules = c.campaign_tone_rules ?? c.campaignToneRules;
   if (rawToneRules && typeof rawToneRules === "object" && !Array.isArray(rawToneRules)) {
     campaignToneRules = rawToneRules;
@@ -92,7 +134,7 @@ export function normalizeCampaignFromDb(c: any) {
     }
   }
 
-  let minCacheByType: any = {};
+  let minCacheByType: CachePorTipoCampania = {};
   const rawMinCache = c.min_cache_by_type ?? c.minCacheByType;
   if (rawMinCache && typeof rawMinCache === "object" && !Array.isArray(rawMinCache)) {
     minCacheByType = rawMinCache;
@@ -107,7 +149,7 @@ export function normalizeCampaignFromDb(c: any) {
 
   return {
     id: String(c.id),
-    band_id: c.band_id || c.bandId,
+    band_id: bandaDe(c),
     name: c.name || "Campaña de Booking",
     targetCities,
     minCapacity: Number(c.min_capacity ?? c.minCapacity ?? 0),
@@ -138,7 +180,7 @@ export async function dbGetCampaigns(bandId: string) {
       .order("created_at", { ascending: false });
 
     if (!error && data) {
-      const validated = data.filter((c: any) => cleanBandId(c.band_id) === cleanId);
+      const validated = (data as FilaCampania[]).filter((c) => cleanBandId(c.band_id) === cleanId);
       return validated.map(normalizeCampaignFromDb);
     }
 
@@ -153,15 +195,16 @@ export async function dbGetCampaigns(bandId: string) {
       console.warn("Supabase campaigns query warning:", error?.message || fallbackError.message);
       return [];
     }
-    const validatedFallback = (fallbackData || []).filter((c: any) => cleanBandId(c.band_id) === cleanId);
+    const validatedFallback = ((fallbackData || []) as FilaCampania[]).filter((c) => cleanBandId(c.band_id) === cleanId);
     return validatedFallback.map(normalizeCampaignFromDb);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Could not query campaigns from Supabase:", err?.message || err);
     return [];
   }
 }
 
-export async function dbUpsertCampaign(campaign: any, bandId: string) {
+export async function dbUpsertCampaign(campaign: EntradaCampania, bandId: string) {
   const sb = getSupabase();
   // 'bandId' es el único origen de confianza: lo resuelve la ruta a partir de la sesión
   // (req.user.band_id). 'campaign.band_id' viene del cuerpo de la petición sin validar — de
@@ -170,7 +213,7 @@ export async function dbUpsertCampaign(campaign: any, bandId: string) {
   const targetBandId = cleanBandId(bandId);
   await ensureRegisteredBandExists(targetBandId);
 
-  const payload: any = {
+  const payload: DbCampaign = {
     id: String(campaign.id || Date.now().toString()),
     band_id: targetBandId,
     name: campaign.name || "Nueva Campaña",
@@ -232,7 +275,8 @@ export async function dbUpsertCampaign(campaign: any, bandId: string) {
       throw new Error(`Supabase Error (upsert campaign): ${error?.message || fbError.message}`);
     }
     return normalizeCampaignFromDb(fbData || payload);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Failed to persist campaign to Supabase:", err?.message || err);
     throw err instanceof Error ? err : new Error(String(err));
   }
@@ -257,7 +301,8 @@ export async function dbDeleteCampaign(id: string, bandId: string) {
     // Una de las dos tablas puede no existir (hay fallback): solo es fallo si fallan las dos.
     if (e1 && e2) throw new Error(e1.message || e2.message);
     return true;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Failed to delete campaign from Supabase:", err?.message || err);
     // Antes devolvía true: la campaña «borrada» reaparecía al recargar.
     throw err instanceof Error ? err : new Error(String(err));
@@ -296,7 +341,8 @@ export async function dbSetActiveCampaign(id: string | null, bandId: string) {
       }
     }
     return true;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Failed to set active campaign in Supabase:", err?.message || err);
     return false;
   }

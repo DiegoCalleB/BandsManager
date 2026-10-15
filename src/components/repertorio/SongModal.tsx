@@ -1,16 +1,12 @@
 import React, { useState, useRef } from 'react';
 import { X, Upload, Disc3, CheckCircle2, Music, Users, ChevronDown, ChevronUp, SlidersHorizontal } from 'lucide-react';
 import { ThemeColors, Song } from '../../types';
-import { BandMemberOption, resolveBandMembers, getSongMemberNote } from '../../utils/repertorioUtils';
+import { BandMemberOption, resolveBandMembers, getSongMemberNote, isSongTonoMarkedForMember, isSongBpmMarkedForMember } from '../../utils/repertorioUtils';
 import { formatSongTitle } from '../../utils/formatSongTitle';
 import { ModalPortal } from '../common/ModalPortal';
 import { ShowIcon } from '../ui/ShowIcon';
 import { textOnColor } from '../../utils/contrastText';
 import { Button, IconButton, Input, Select, Textarea } from '../ui';
-
-// Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
-// activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
-const isStitchLight = false;
 
 interface SongModalProps {
   isOpen: boolean;
@@ -27,13 +23,12 @@ interface SongModalProps {
 export function SongModal({
   isOpen,
   editingSong,
-  colors,
   onClose,
   onSave,
   albumsList = [],
   defaultAlbum = '',
   defaultAlbumForNewSong = '',
-  bandMembers = [],
+  bandMembers = []
 }: SongModalProps) {
   const effectiveDefaultAlbum = defaultAlbumForNewSong || defaultAlbum || '';
   const resolvedMembers = resolveBandMembers(bandMembers, editingSong?.notasMiembros);
@@ -50,7 +45,7 @@ export function SongModal({
     const albumVal = editingSong?.albumDisco || editingSong?.album || effectiveDefaultAlbum || '';
     return albumsList.includes(albumVal) ? '' : albumVal;
   });
-  const [audioFileUrl, setAudioFileUrl] = useState<string>(editingSong?.audioPrincipalUrl || (editingSong as any)?.audioUrl || '');
+  const [audioFileUrl, setAudioFileUrl] = useState<string>(editingSong?.audioPrincipalUrl || editingSong?.audioUrl || '');
   const [audioFileName, setAudioFileName] = useState<string>('');
 
   // Determine if advanced section should start open (e.g. if editing a song with extra data)
@@ -72,6 +67,19 @@ export function SongModal({
     const initial: Record<string, string> = {};
     resolvedMembers.forEach((m) => {
       initial[m.name.toLowerCase()] = getSongMemberNote(editingSong, m.id, m.name);
+    });
+    return initial;
+  });
+
+  // Qué músicos quieren ver tonalidad/BPM en su setlist para este tema (vive en la canción,
+  // por músico, igual que su nota: notasPorMiembro[].mostrarTono).
+  const [memberShowState, setMemberShowState] = useState<Record<string, { tono: boolean; bpm: boolean }>>(() => {
+    const initial: Record<string, { tono: boolean; bpm: boolean }> = {};
+    resolvedMembers.forEach((m) => {
+      initial[m.name.toLowerCase()] = {
+        tono: isSongTonoMarkedForMember(editingSong, m.id, m.name),
+        bpm: isSongBpmMarkedForMember(editingSong, m.id, m.name),
+      };
     });
     return initial;
   });
@@ -449,6 +457,18 @@ export function SongModal({
 
                     {/* Member Notes Section */}
                     <input type="hidden" name="notasMiembrosJson" value={JSON.stringify(memberNotesState)} />
+                    <input
+                      type="hidden"
+                      name="mostrarTonoJson"
+                      value={JSON.stringify(
+                        resolvedMembers.map((m) => ({
+                          id: m.id,
+                          name: m.name,
+                          tono: memberShowState[m.name.toLowerCase()]?.tono === true,
+                          bpm: memberShowState[m.name.toLowerCase()]?.bpm === true,
+                        })),
+                      )}
+                    />
 
                     <div className="pt-2 border-t border-[var(--hair)]/5 space-y-2">
                       <div className="flex items-center justify-between">
@@ -498,6 +518,28 @@ export function SongModal({
                                   placeholder={`Notas para ${member.name}...`}
                                   className="w-full"
                                 />
+                                <div className="flex items-center gap-4 text-micro text-[var(--ink-2)]">
+                                  {([['tono', 'Ver tonalidad'], ['bpm', 'Ver BPM']] as const).map(([flag, label]) => (
+                                    <label key={flag} className="flex items-center gap-1.5 cursor-pointer select-none">
+                                      <input
+                                        type="checkbox"
+                                        checked={memberShowState[memberKey]?.[flag] === true}
+                                        onChange={(e) =>
+                                          setMemberShowState((prev) => ({
+                                            ...prev,
+                                            [memberKey]: {
+                                              tono: prev[memberKey]?.tono === true,
+                                              bpm: prev[memberKey]?.bpm === true,
+                                              [flag]: e.target.checked,
+                                            },
+                                          }))
+                                        }
+                                        className="rounded accent-[var(--ok)] cursor-pointer"
+                                      />
+                                      {label}
+                                    </label>
+                                  ))}
+                                </div>
                               </div>
                             );
                           })}

@@ -1,20 +1,10 @@
 /**
  * Band ID Hashing & Token Utility (Client-side)
  * Generates and parses obfuscated URLs for public EPK and Fans landing pages
- * so that raw database IDs ('band-bakandeya', 'reg-1729...') are never exposed in links.
+ * so that raw database IDs ('band-demo', 'reg-1729...') are never exposed in links.
  */
 
 const SALT = 'bandmanager_secure_salt_2025';
-
-function simpleHash(str: string): number {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
-    hash |= 0; // Convert to 32bit integer
-  }
-  return hash;
-}
 
 /**
  * Encodes a band ID into an obfuscated alphanumeric token.

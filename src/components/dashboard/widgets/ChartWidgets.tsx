@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo } from "react";
 import {
   Building2,
   DollarSign,
-  Users,
   ArrowRight,
   Zap,
   TrendingUp,
@@ -10,14 +9,9 @@ import {
 import { Lead, Concert, Fan, ThemeColors, Setlist, Song } from "../../../types";
 import { getEnergyInfo } from "../../../utils/energyPacingUtils";
 import { Onda, OndaSeries } from "../../ui/Onda";
-import { CurveSeries } from "../../ui/CurveSeries";
 import { EnergyCurve } from "./EnergyCurve";
 import { api } from "../../../services/api";
 import { Select } from '../../ui';
-
-// Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
-// activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
-const isStitchLight = false;
 
 export interface ChartWidgetProps {
   /** Heredado de main: Espectro resuelve el tema en tokens, así que se acepta y se ignora. */
@@ -41,10 +35,12 @@ export function RepertorioEnergyChartWidget({
   setlists: providedSetlists,
   songs: providedSongs,
 }: ChartWidgetProps) {
-  const [setlistsList, setSetlistsList] = useState<Setlist[]>(
-    providedSetlists || [],
-  );
-  const [songsList, setSongsList] = useState<Song[]>(providedSongs || []);
+  // Datos propios: solo se rellenan cuando NADIE pasa las props (ver comentario del efecto).
+  const [fetchedSetlists, setFetchedSetlists] = useState<Setlist[]>([]);
+  const [fetchedSongs, setFetchedSongs] = useState<Song[]>([]);
+  const propsProvided = providedSetlists !== undefined || providedSongs !== undefined;
+  const setlistsList = propsProvided ? providedSetlists || [] : fetchedSetlists;
+  const songsList = propsProvided ? providedSongs || [] : fetchedSongs;
   const [selectedRepertorioId, setSelectedRepertorioId] =
     useState<string>("all");
 
@@ -57,11 +53,7 @@ export function RepertorioEnergyChartWidget({
   // El fetch propio queda solo para cuando NADIE pasa estas props (undefined de verdad, p.ej.
   // este widget usado aislado, sin Dashboard.tsx de por medio).
   useEffect(() => {
-    if (providedSetlists !== undefined || providedSongs !== undefined) {
-      setSetlistsList(providedSetlists || []);
-      setSongsList(providedSongs || []);
-      return;
-    }
+    if (propsProvided) return;
 
     const loadData = async () => {
       try {
@@ -69,15 +61,15 @@ export function RepertorioEnergyChartWidget({
           api.getSetlists(),
           api.getSongs(),
         ]);
-        setSetlistsList(setlistsRes?.setlists || []);
-        setSongsList(songsRes?.songs || []);
+        setFetchedSetlists(setlistsRes?.setlists || []);
+        setFetchedSongs(songsRes?.songs || []);
       } catch (err) {
         console.error("[Dashboard] Error fetching setlists/songs:", err);
       }
     };
 
     loadData();
-  }, [providedSetlists, providedSongs]);
+  }, [propsProvided]);
 
   // Prepare chart data for active setlist or fallback demo setlist
   let chartData: Array<{
@@ -89,7 +81,7 @@ export function RepertorioEnergyChartWidget({
     label: string;
     hexColor: string;
     durationMin: number;
-  }> = [];
+  }>;
 
   // Use selected repertorio/setlist or active setlist
   const activeSetlist =
@@ -315,8 +307,7 @@ export function RepertorioEnergyChartWidget({
 export function BookingFunnelChartWidget({
   leads = [],
   onNavigate,
-  heightMode = "normal",
-  isStitchLight = false,
+  heightMode = "normal"
 }: ChartWidgetProps) {
   const counts = {
     nuevo: leads.filter((l) => l.estado === "nuevo").length,
@@ -529,92 +520,6 @@ export function FinancesChartWidget({
           height={heightMode === "compact" ? 120 : heightMode === "tall" ? 260 : 180}
           barWidth={14}
           gap={3}
-        />
-        )}
-      </div>
-    </div>
-  );
-}
-
-/* 4. GRÁFICO DE CRECIMIENTO DE FANS & SOCIAL */
-export function SocialFansGrowthWidget({
-  fans = [],
-  onNavigate,
-  heightMode = "normal",
-  isStitchLight = false,
-}: ChartWidgetProps) {
-  const fansCount = fans.length;
-  // Acumulado real de fans por mes de captura (últimos 6 meses). Nada inventado.
-  const growthData = useMemo(() => {
-    const NOMBRES = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
-    const hoy = new Date();
-    return Array.from({ length: 6 }, (_, i) => {
-      const d = new Date(hoy.getFullYear(), hoy.getMonth() - (5 - i), 1);
-      const finMes = new Date(d.getFullYear(), d.getMonth() + 1, 1).toISOString().slice(0, 10);
-      return {
-        mes: NOMBRES[d.getMonth()],
-        fans: fans.filter((f) => (f.fechaCaptura || "").slice(0, 10) < finMes).length,
-      };
-    });
-  }, [fans]);
-
-  const minHeightClass =
-    heightMode === "compact"
-      ? "h-[200px]"
-      : heightMode === "tall"
-        ? "h-[360px]"
-        : "h-[270px]";
-
-  return (
-    <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
-      <div className="flex items-center justify-between pb-2.5">
-        <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc-soft)] text-[var(--acc-ink)] shrink-0">
-            <Users className="w-5 h-5" />
-          </div>
-          <div>
-            <h3 className="text-sm font-bold font-display text-[var(--ink)]">
-              Captación de fans y QR
-            </h3>
-            <p className="text-xs font-sans text-[var(--ink-2)]">
-              Crecimiento en registro de seguidores
-            </p>
-          </div>
-        </div>
-
-        {onNavigate && (
-          <button
-            type="button"
-            onClick={() => onNavigate("fans")}
-            className="text-xs font-sans text-[var(--acc)] hover:text-[var(--acc)]/70 font-bold flex items-center gap-1 cursor-pointer"
-          >
-            <span>Captura QR</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-        )}
-      </div>
-
-      <div className="flex items-center justify-between px-3 py-2 rounded-[var(--r-m)] bg-[var(--sunken)] text-xs font-sans">
-        <span className="text-[var(--ink-2)]">Fans Registrados:</span>
-        <span className="font-bold text-[var(--acc)] text-sm">
-          {fansCount} seguidores
-        </span>
-      </div>
-
-      <div
-        className={`w-full ${minHeightClass} pt-2 flex flex-col items-center justify-center`}
-      >
-        {fansCount === 0 ? (
-          <p className="text-xs text-[var(--ink-2)] font-sans px-4 text-center">
-            Aún no hay fans registrados. Pon el QR en la mesa de merchan y esto empieza a moverse.
-          </p>
-        ) : (
-        <CurveSeries
-          className="w-full"
-          height={heightMode === "compact" ? 140 : heightMode === "tall" ? 300 : 200}
-          area
-          formatValue={(v) => `${v.toLocaleString("es-ES")} fans`}
-          series={[{ label: "Fans acumulados", color: "var(--acc)", data: growthData.map((d) => ({ label: d.mes, value: d.fans })) }]}
         />
         )}
       </div>

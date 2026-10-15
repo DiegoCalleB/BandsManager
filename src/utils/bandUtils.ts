@@ -1,6 +1,6 @@
 // Normaliza un band_id para comparar (quita el prefijo band-/reg-). Antes, un bandId vacío
-// devolvía'bakandeya' en silencio: cualquier comprobación tipo `cleanBandId(x) === 'bakandeya'`
-// hecha sobre un usuario o registro SIN banda pasaba como si fuese la banda insignia. Usamos un
+// devolvía una banda por defecto en silencio: una comprobación de pertenencia
+// hecha sobre un usuario o registro SIN banda pasaba como si fuese de esa banda. Usamos un
 // centinela que no coincide con ningún band_id real en vez de inventar una banda por defecto.
 export function cleanBandId(bandId?: string): string {
   if (!bandId || !bandId.trim()) return '__sin_banda__';

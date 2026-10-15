@@ -1,9 +1,9 @@
 // Generación de emails simulados para la simulación de booking.
 
 import express from "express";
-import { Lead } from "../../../src/types.js";
 import { loadState, requireAuth } from "../../state.js";
 import { getAiClient, generateContentWithFallback } from "../../ai.js";
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
@@ -14,17 +14,16 @@ router.post("/generate-simulated-email", requireAuth, async (req, res) => {
   }
 
   const state = loadState();
-  const lead = state.leads.find((l: any) => l.id === leadId);
+  const lead = state.leads.find((l) => l.id === leadId);
   if (!lead) {
     return res.status(404).json({ success: false, error: "Lead no encontrado." });
   }
 
-  const userBandId = lead.band_id || (req as any).user?.band_id ;
+  const userBandId = lead.band_id || req.user?.band_id ;
   const bandConfig = state.epkConfigsByBand?.[userBandId] || state.epkConfigsByBand?.[userBandId.replace(/^(band|reg)-/, '')] || state.epkConfig || {};
-  const registeredBand = state.registeredBands?.find((b: any) => b.band_id === userBandId || b.band_id === userBandId.replace(/^(band|reg)-/, ''));
+  const registeredBand = state.registeredBands?.find((b) => b.band_id === userBandId || b.band_id === userBandId.replace(/^(band|reg)-/, ''));
   const cleanId = userBandId.replace(/^(band|reg)-/, '');
-  const isBakandeya = cleanId === 'bakandeya';
-  const bandName = registeredBand?.nombre_banda || registeredBand?.bandName || bandConfig?.contactoBooking?.nombre || bandConfig?.nombre_banda || (isBakandeya ? 'Bakandeya' : cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
+  const bandName = registeredBand?.nombre_banda || registeredBand?.bandName || bandConfig?.contactoBooking?.nombre || cleanId.charAt(0).toUpperCase() + cleanId.slice(1);
   const bandBio = bandConfig?.biografia || registeredBand?.biografia || registeredBand?.dossier_texto_extra || '';
 
   const ai = getAiClient();
@@ -33,7 +32,7 @@ router.post("/generate-simulated-email", requireAuth, async (req, res) => {
   const fechaStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
 
   const defaultSender = senderName || (bandName + " Agent Manager");
-  let prompt = "";
+  let prompt: string;
   if (role === "sala") {
     prompt = `Actúa como el programador o responsable de booking de la sala o festival "${lead.nombre_sala}" en la ciudad de "${lead.ciudad}" (Aforo: ${lead.aforo || "N/D"}, género musical habitual: ${lead.genero || "N/D"}).
 Genera una respuesta realista por correo electrónico a la propuesta que la banda "${bandName}" (${bandBio ? `con propuesta: ${bandBio}` : 'banda de música en directo'}) te envió para tocar en su gira.
@@ -76,7 +75,8 @@ Pautas importantes:
         generatedText = response.text.trim();
         isSimulated = false;
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.warn("Fallo al llamar a Gemini para generar correo simulado, usando generador local:", err.message);
     }
   }

@@ -16,8 +16,9 @@ export function escapeHtml(valor: unknown): string {
 }
 
 /** Devuelve una copia del objeto con todos sus campos de texto escapados (el resto, intacto). */
-export function escaparTextos<T extends Record<string, any>>(obj: T): T {
-  const copia: Record<string, any> = {};
-  for (const [k, v] of Object.entries(obj)) copia[k] = typeof v === 'string' ? escapeHtml(v) : v;
+export function escaparTextos<T extends object>(obj: T): T {
+  const copia: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(obj) as Array<[string, unknown]>) copia[k] = typeof v === 'string' ? escapeHtml(v) : v;
+  // Mismas claves que el original y los valores de texto siguen siendo texto.
   return copia as T;
 }

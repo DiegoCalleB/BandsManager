@@ -142,6 +142,14 @@ describe('normalizeHighlights', () => {
     expect(sinTags.hashtags).toEqual(['#Lavanda']);
   });
 
+  it('respeta una lengthCategory válida del modelo y deduce la duración si no lo es', () => {
+    const [valida] = normalizeHighlights([{ title: 'A', startSec: 0, endSec: 30, lengthCategory: 'story_bts' }], opciones);
+    expect(valida.lengthCategory).toBe('story_bts');
+    // Antes cualquier texto del modelo pasaba tal cual al cliente como categoría.
+    const [inventada] = normalizeHighlights([{ title: 'A', startSec: 0, endSec: 12, lengthCategory: 'viralisimo' }], opciones);
+    expect(inventada.lengthCategory).toBe('micro_hook');
+  });
+
   it('aguanta entradas basura sin lanzar', () => {
     expect(normalizeHighlights(null, opciones)).toEqual([]);
     expect(normalizeHighlights([null, 'texto', 42], opciones)).toEqual([]);

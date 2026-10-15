@@ -11,6 +11,8 @@
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
 import { fetchMadridOpenDataCulturalEvents } from "./openDataCulturalService.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { RespuestaLeadsPublicos } from '../tiposRespuestasIA.js';
 
 export interface PublicCulturalLead {
   entidad_publica: string; // Ej: Ayuntamiento de Guadalajara - Área de Cultura
@@ -74,7 +76,8 @@ export async function searchPublicCulturalOpportunities(params: {
         });
       });
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[PublicCulturalRadar] Error consultando open data municipal:", err?.message);
   }
 
@@ -119,9 +122,9 @@ Devuelve máximo ${limit} entidades públicas y programas culturales REALES.`;
         }
       });
 
-      const parsed = safeParseJson(aiRes.text || "{}");
+      const parsed = safeParseJson<RespuestaLeadsPublicos<Partial<PublicCulturalLead>>>(aiRes.text || "{}");
       if (parsed && Array.isArray(parsed.leads_publicos)) {
-        parsed.leads_publicos.forEach((item: any) => {
+        parsed.leads_publicos.forEach((item: Partial<PublicCulturalLead>) => {
           if (item.entidad_publica) {
             leadsPublicos.push({
               entidad_publica: item.entidad_publica,
@@ -142,7 +145,8 @@ Devuelve máximo ${limit} entidades públicas y programas culturales REALES.`;
         });
       }
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[Public Cultural Radar] Error en escaneo:", err?.message);
   }
 

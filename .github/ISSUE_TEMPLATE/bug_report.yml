@@ -1,0 +1,62 @@
+name: "🐛 Reporte de Bug / Regresión"
+description: "Informa de un error de software, fallo de ejecución o regresión funcional"
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por reportar este error. Consulta **[AGENTS.md](https://github.com/DiegoCalleB/BandsManager/blob/main/AGENTS.md)** para detalles de arquitectura y mandamientos del sistema.
+  - type: textarea
+    id: descripcion
+    attributes:
+      label: Descripción del problema
+      description: Explica de forma clara y concisa qué falló.
+      placeholder: Al hacer click en... la aplicación lanza un error...
+    validations:
+      required: true
+  - type: dropdown
+    id: componente
+    attributes:
+      label: Módulo o Subsistema afectado
+      description: Selecciona el área técnica donde ocurre el fallo.
+      options:
+        - "CRM Booking & Leads"
+        - "Agentes de Booking (Scout, Redactor, Enviador, Lector)"
+        - "Repertorio, Canciones y Setlists"
+        - "Audio & IA Musical (Stems, Acordes, Transcripción)"
+        - "EPK & Dossier Web Público"
+        - "Finanzas, Pagos & Stripe"
+        - "Calendario, Rutas & Giras"
+        - "Autenticación, Seguridad & Multi-Tenancy"
+        - "Otro / Infraestructura"
+    validations:
+      required: true
+  - type: textarea
+    id: pasos
+    attributes:
+      label: Pasos para reproducir
+      description: Pasos exactos para recrear el comportamiento anómalo.
+      placeholder: |
+        1. Ir a '...'
+        2. Pulsar en '...'
+        3. Ver error en consola o interfaz
+    validations:
+      required: true
+  - type: textarea
+    id: esperado_vs_actual
+    attributes:
+      label: Comportamiento esperado vs Comportamiento actual
+      placeholder: |
+        - Esperado: El lead pasa a estado 'pendiente_aprobacion'.
+        - Actual: Se muestra un error 500 en consola de red.
+    validations:
+      required: true
+  - type: textarea
+    id: entorno
+    attributes:
+      label: Entorno y contexto
+      description: Navegador, SO, Node.js o commit/versión probada.
+      placeholder: Windows 11 / Chrome 124 / Node 22 / Commit a5401ed4
+    validations:
+      required: false

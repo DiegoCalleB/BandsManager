@@ -1,0 +1,39 @@
+---
+id: src_utils_cartel_layout
+title: "src/utils/cartel/layout.ts"
+layer: service
+domain: system
+file: "src/utils/cartel/layout.ts"
+tags: ["service", "system", "auto"]
+---
+
+# 📌 src/utils/cartel/layout.ts
+
+> **Ubicación:** `src/utils/cartel/layout.ts`  
+> **Capa:** `#layer/service` | **Dominio:** `#domain/system`
+
+## 📖 Descripción
+Dónde va cada cosa en el cartel. Puro: recibe un medidor de texto (en el navegador,
+
+---
+
+## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_utils_cartel_formatos|src/utils/cartel/formatos.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_cartel_texto|src/utils/cartel/texto.ts]] *(Layer: #service, Domain: #system)*
+
+---
+
+## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_utils_cartel_datos|src/utils/cartel/datos.ts]] *(from #service)*
+- [[src_utils_cartel_render|src/utils/cartel/render.ts]] *(from #service)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `src/utils/cartel/__tests__/layout.test.ts`
+
+---
+
+## 🛡️ Reglas de Aislamiento & Calidad
+- [ ] ¿Respeta el trust boundary de `band_id`?
+- [ ] ¿Tiene pruebas unitarias o de integración asociadas?

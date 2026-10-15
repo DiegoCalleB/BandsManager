@@ -47,7 +47,7 @@ Cada llamada a modelos generativos (Gemini, DeepSeek, OpenAI) debe registrarse e
 
 ## ⏱️ 3. Trazabilidad del Scheduler In-Process
 
-- Cada tick del scheduler (~60 segundos) registra su timestamp de inicio y fin en `agent_schedule_state`.
+- Cada tick del scheduler (24 h por defecto, configurable) registra su timestamp de inicio y fin en `agent_schedule_state`.
 - Las tareas atómicas (ejecución del Scout, despacho del Enviador, lectura del Lector) registran:
   - Duración de ejecución en milisegundos.
   - Número de leads procesados.

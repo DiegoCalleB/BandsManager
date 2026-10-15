@@ -1,13 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useReajusteAlCambiar } from '../../hooks/useReajusteAlCambiar';
 import { X, Layers, Check } from 'lucide-react';
 import { Setlist, ThemeColors } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
-import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, Select, Textarea } from '../ui';
-
-// Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
-// activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
-const isStitchLight = false;
 
 interface SetlistModalProps {
   isOpen: boolean;
@@ -17,12 +13,12 @@ interface SetlistModalProps {
   onSave: (setlistData: { id?: string; nombre: string; descripcion: string; tipoFormato: Setlist['tipoFormato'] }) => void;
 }
 
-export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }: SetlistModalProps) {
+export function SetlistModal({ isOpen, setlistToEdit, onClose, onSave }: SetlistModalProps) {
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [tipoFormato, setTipoFormato] = useState<Setlist['tipoFormato']>('festival');
 
-  useEffect(() => {
+  useReajusteAlCambiar([setlistToEdit] as const, () => {
     if (setlistToEdit) {
       setNombre(setlistToEdit.nombre || '');
       setDescripcion(setlistToEdit.descripcion || '');
@@ -32,7 +28,7 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
       setDescripcion('Repertorio optimizado para directo de alta energía');
       setTipoFormato('festival');
     }
-  }, [setlistToEdit]);
+  });
 
   if (!isOpen) return null;
 
@@ -88,7 +84,7 @@ export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }:
               <label className="block text-[var(--ink-2)] font-semibold mb-1">Formato de concierto</label>
               <Select aria-label="Formato de concierto"
                 value={tipoFormato}
-                onChange={(e) => setTipoFormato(e.target.value as any)}
+                onChange={(e) => setTipoFormato(e.target.value as Setlist['tipoFormato'])}
                 wrapperClassName="w-full"
               >
                 <option value="festival">Festival (45-60m caña directa)</option>

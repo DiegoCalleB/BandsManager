@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, CheckCircle2, XCircle, Lightbulb, Compass, MessageSquarePlus, ChevronDown, ChevronUp, Wand2 } from 'lucide-react';
+import { Sparkles, CheckCircle2, XCircle, Lightbulb, Compass, MessageSquarePlus, Wand2 } from 'lucide-react';
 import type { TemplateCategory } from './TemplateConfigSection';
 import { CATEGORY_RECOMMENDATIONS } from '../../data/templateRecommendations';
 import { ShowIcon } from '../ui/ShowIcon';
@@ -14,12 +14,11 @@ interface TemplateRecommendationsCardProps {
 
 export function TemplateRecommendationsCard({
   category,
-  isStitchLight,
   onApplyPromptImprovement,
   isOptimizing,
-  onClose,
+  onClose
 }: TemplateRecommendationsCardProps & { onClose?: () => void }) {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded] = useState(true);
   const rec = CATEGORY_RECOMMENDATIONS[category] || CATEGORY_RECOMMENDATIONS.salas;
 
   return (

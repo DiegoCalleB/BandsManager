@@ -1,5 +1,7 @@
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, type ContentListUnion, type GenerateContentConfig } from "@google/genai";
 import { dbRecordAiUsage } from "./db/aiLedger.js";
+import type { EPKConfig } from "../src/types.js";
+import { comoErrorCapturado, type ErrorCapturado } from '../src/utils/errorCapturado.js';
 
 export const GEMINI_MODEL = "gemini-2.5-flash";
 
@@ -185,40 +187,55 @@ export function getAvailableAIProviders() {
   ];
 }
 
-export function extractTextFromContents(contents: any): string {
+/** Lo que se lee de un contenido o una parte del SDK de Gemini (o de un objeto suelto con `text`). */
+type ContenidoConTexto = { parts?: unknown; text?: unknown };
+
+const comoContenido = (valor: unknown): ContenidoConTexto =>
+  typeof valor === "object" && valor !== null ? (valor as ContenidoConTexto) : {};
+
+const textoDeParte = (parte: unknown): string => {
+  const { text } = comoContenido(parte);
+  return text ? String(text) : "";
+};
+
+export function extractTextFromContents(contents: unknown): string {
   if (!contents) return "";
   if (typeof contents === "string") return contents;
   if (Array.isArray(contents)) {
     return contents
-      .map((c) => {
+      .map((c: unknown) => {
         if (typeof c === "string") return c;
-        if (c?.parts && Array.isArray(c.parts)) {
-          return c.parts.map((p: any) => p?.text || "").join("\n");
+        const { parts, text } = comoContenido(c);
+        if (Array.isArray(parts)) {
+          return parts.map(textoDeParte).join("\n");
         }
-        if (c?.text) return c.text;
+        if (text) return String(text);
         return "";
       })
       .join("\n");
   }
-  if (contents?.parts && Array.isArray(contents.parts)) {
-    return contents.parts.map((p: any) => p?.text || "").join("\n");
+  const { parts, text } = comoContenido(contents);
+  if (Array.isArray(parts)) {
+    return parts.map(textoDeParte).join("\n");
   }
-  if (contents?.text) return contents.text;
+  if (text) return String(text);
   return String(contents);
 }
 
-export function isSpendingCapError(err: any): boolean {
-  if (!err) return false;
-  const msg = (err.message || String(err)).toLowerCase();
+export function isSpendingCapError(capturado: unknown): boolean {
+  if (!capturado) return false;
+  const err = comoErrorCapturado(capturado);
+  const msg = (err.message || String(capturado)).toLowerCase();
   return msg.includes("spending cap") || msg.includes("spend cap") || msg.includes("exceeded its monthly");
 }
 
-export function isSpendCapOrQuotaError(err: any): boolean {
-  if (!err) return false;
-  const msg = (err.message || String(err) || JSON.stringify(err)).toLowerCase();
+export function isSpendCapOrQuotaError(capturado: unknown): boolean {
+  if (!capturado) return false;
+  const err = comoErrorCapturado(capturado);
+  const msg = (err.message || String(capturado) || JSON.stringify(capturado)).toLowerCase();
   const status = String(err.status || err.code || err.statusCode || "");
   return (
-    isSpendingCapError(err) ||
+    isSpendingCapError(capturado) ||
     status === "429" ||
     status === "RESOURCE_EXHAUSTED" ||
     msg.includes("429") ||
@@ -240,8 +257,8 @@ export function setGeminiSpendingCap(active: boolean, durationMs = 15 * 60 * 100
 export async function generateContentWithFallback(
   client: GoogleGenAI,
   params: {
-    contents: any;
-    config?: any;
+    contents: ContentListUnion;
+    config?: GenerateContentConfig;
     preferredModel?: string;
     /**
      * Permite caer en generateSmartLocalPitchFallback si se agotan TODOS los proveedores.
@@ -261,8 +278,8 @@ export async function generateContentWithFallback(
     ? [params.preferredModel, ...FALLBACK_MODELS.filter(m => m !== params.preferredModel)]
     : FALLBACK_MODELS;
 
-  let lastError: any = null;
-  let deepSeekError: any = null;
+  let lastError: ErrorCapturado | null = null;
+  let deepSeekError: ErrorCapturado | null = null;
 
   const skipGeminiDueToCap = Date.now() < geminiSpendingCapUntil;
   if (!skipGeminiDueToCap) {
@@ -290,7 +307,8 @@ export async function generateContentWithFallback(
           });
           return response;
         }
-      } catch (err: any) {
+      } catch (errCapturado) {
+        const err = comoErrorCapturado(errCapturado);
         lastError = err;
         if (isSpendingCapError(err)) {
           geminiSpendingCapUntil = Date.now() + 15 * 60 * 1000;
@@ -315,7 +333,7 @@ export async function generateContentWithFallback(
       console.log("[AI Engine] Activando failover automático a DeepSeek V3 por fallo/cuota en Gemini...");
       const text = await callDeepSeek({
         prompt: promptText,
-        systemPrompt: params.config?.systemInstruction,
+        systemPrompt: params.config?.systemInstruction === undefined ? undefined : extractTextFromContents(params.config.systemInstruction),
         temperature: params.config?.temperature,
         timeoutMs: params.timeoutMs
       });
@@ -325,7 +343,8 @@ export async function generateContentWithFallback(
           candidates: [{ content: { parts: [{ text }] } }]
         };
       }
-    } catch (dsErr: any) {
+    } catch (dsErrCapturado) {
+      const dsErr = comoErrorCapturado(dsErrCapturado);
       deepSeekError = dsErr;
       console.warn("[AI Engine] Falló también fallback a DeepSeek:", dsErr.message);
     }
@@ -348,13 +367,16 @@ export async function generateContentWithFallback(
   // error (server/routes/chat.ts) no podía distinguir "solo falló Gemini" de "fallaron los dos
   // proveedores por motivos distintos" (ej. cuota de Gemini + sin saldo en DeepSeek). Se adjuntan
   // ambos errores por separado para que el mensaje al usuario pueda nombrar la causa real de cada uno.
-  const finalError: any = lastError instanceof Error
+  const finalError: Error & { geminiError?: ErrorCapturado | null; deepSeekError?: ErrorCapturado | null } = lastError instanceof Error
     ? lastError
     : new Error(String(lastError || "Ningún proveedor de IA disponible: se han agotado las claves configuradas o han fallado todas."));
   finalError.geminiError = lastError;
   finalError.deepSeekError = deepSeekError;
   throw finalError;
 }
+
+/** Lo que devuelve `generateContentWithFallback`: la respuesta del SDK o el sustituto de DeepSeek / generador local. */
+export type RespuestaIA = Awaited<ReturnType<typeof generateContentWithFallback>>;
 
 export function generateSmartGeneralFallback(promptText: string): string {
   const lower = (promptText || "").toLowerCase();
@@ -392,7 +414,7 @@ export interface PitchLinks {
  * todo. El EPK sí se puede construir siempre porque no depende de que la banda lo haya
  * rellenado: es la misma ruta pública que ya usa EPKManager.tsx (/epk?band=...).
  */
-export function buildPitchLinksFromEpkConfig(bandConfig: any, bandId?: string): PitchLinks {
+export function buildPitchLinksFromEpkConfig(bandConfig: Partial<Pick<EPKConfig, "enlacesRedes">> | null | undefined, bandId?: string): PitchLinks {
   const links: PitchLinks = {};
   if (bandConfig?.enlacesRedes?.spotify) links.spotify = bandConfig.enlacesRedes.spotify;
   if (bandConfig?.enlacesRedes?.youtube) links.youtube = bandConfig.enlacesRedes.youtube;
@@ -401,21 +423,6 @@ export function buildPitchLinksFromEpkConfig(bandConfig: any, bandId?: string): 
     links.epk = `${base}/epk?band=${encodeURIComponent(bandId)}`;
   }
   return links;
-}
-
-function formatPitchLinksBlock(
-  links: PitchLinks | undefined,
-  header: string,
-  labels: { spotify: string; youtube: string; epk: string }
-): string {
-  const lines: string[] = [];
-  if (links?.spotify) lines.push(`• ${labels.spotify}: ${links.spotify}`);
-  if (links?.youtube) lines.push(`• ${labels.youtube}: ${links.youtube}`);
-  if (links?.epk) lines.push(`• ${labels.epk}: ${links.epk}`);
-  // Sin enlaces reales, no se menciona la sección: es mejor omitirla que rellenarla con URLs
-  // inventadas que no llevan a ningún sitio.
-  if (lines.length === 0) return "";
-  return `\n\n${header}\n${lines.join("\n")}`;
 }
 
 export function generateSmartLocalPitchFallback(params: {
@@ -431,7 +438,7 @@ export function generateSmartLocalPitchFallback(params: {
 
   // Extract venue details with clean pattern matching
   let salaNombre = "la sala";
-  const salaMatch = text.match(/(?:SALA|Sala|SALA DESTINO|nombre_sala)\s*[:=]\s*([^\n,\(\)]+)/i) ||
+  const salaMatch = text.match(/(?:SALA|Sala|SALA DESTINO|nombre_sala)\s*[:=]\s*([^\n,()]+)/i) ||
                     text.match(/para\s+(?:la\s+sala\s+|el\s+|el\s+ayuntamiento\s+de\s+)?([A-ZÁÉÍÓÚÑa-záéíóúñ0-9\s]{3,40})(?:\s*\(|$)/i);
   if (salaMatch && salaMatch[1]) {
     const rawSala = salaMatch[1].replace(/^-\s*Nombre:\s*/i, '').replace(/^enviar\s*/i, '').trim();
@@ -441,7 +448,7 @@ export function generateSmartLocalPitchFallback(params: {
   }
 
   let ciudad = "";
-  const ciudadMatch = text.match(/(?:CIUDAD|Ciudad)\s*[:=]\s*([^\n,\(\)]+)/i) || text.match(/\(([A-ZÁÉÍÓÚÑa-záéíóúñ\s]{3,30})\)/);
+  const ciudadMatch = text.match(/(?:CIUDAD|Ciudad)\s*[:=]\s*([^\n,()]+)/i) || text.match(/\(([A-ZÁÉÍÓÚÑa-záéíóúñ\s]{3,30})\)/);
   if (ciudadMatch && ciudadMatch[1]) {
     ciudad = ciudadMatch[1].trim();
   }
@@ -453,11 +460,11 @@ export function generateSmartLocalPitchFallback(params: {
   }
 
   // Extract band name cleanly. Antes, si el regex de abajo no encontraba nada, el pitch de
-  // emergencia se enviaba a la sala presentándose como "Bakandeya" - con su estilo musical real
-  // (ver isBakandeya más abajo) - aunque el generador estuviera redactando para otra banda. Un
-  // genérico sin nombre propio es mucho mejor que mentir con el nombre real de otro cliente.
+  // emergencia se enviaba a la sala presentándose con el nombre y el estilo musical de otra
+  // banda, aunque el generador estuviera redactando para una distinta. Un genérico sin nombre
+  // propio es mucho mejor que mentir con el nombre real de otro cliente.
   let bandName = "nuestra banda";
-  const bandMatch = text.match(/(?:Banda|Nombre de la banda|Artista)\s*[:=]\s*([^\n,\.]+)/i) ||
+  const bandMatch = text.match(/(?:Banda|Nombre de la banda|Artista)\s*[:=]\s*([^\n,.]+)/i) ||
                     text.match(/(?:de la banda\s+)"([^"]+)"/i);
   if (bandMatch && bandMatch[1]) {
     const rawBand = bandMatch[1].replace(/^-\s*Nombre:\s*/i, '').trim();
@@ -467,13 +474,13 @@ export function generateSmartLocalPitchFallback(params: {
   }
 
   let estilo = "Música en directo";
-  const estiloMatch = text.match(/(?:Estilo|Género|Estilo musical)\s*[:=]\s*([^\n,\.]+)/i);
+  const estiloMatch = text.match(/(?:Estilo|Género|Estilo musical)\s*[:=]\s*([^\n,.]+)/i);
   if (estiloMatch && estiloMatch[1]) {
     estilo = estiloMatch[1].trim();
   }
 
   let formato = "Banda en directo";
-  const formatoMatch = text.match(/(?:Formato|Formación)\s*[:=]\s*([^\n,\.]+)/i);
+  const formatoMatch = text.match(/(?:Formato|Formación)\s*[:=]\s*([^\n,.]+)/i);
   if (formatoMatch && formatoMatch[1]) {
     formato = formatoMatch[1].trim();
   }
@@ -605,6 +612,11 @@ ${dossierNote}
 Un saludo cordial,`;
 }
 
+/** Lo que se lee de la respuesta de `/chat/completions` de DeepSeek (formato OpenAI). */
+interface RespuestaDeepSeek {
+  choices?: Array<{ message?: { content?: string } }>;
+}
+
 // DeepSeek API integration (OpenAI-compatible)
 export async function callDeepSeek(params: {
   prompt: string;
@@ -647,7 +659,7 @@ export async function callDeepSeek(params: {
     throw new Error(`DeepSeek API error (${res.status}): ${errText}`);
   }
 
-  const data: any = await res.json();
+  const data: RespuestaDeepSeek = await res.json();
   const text = data?.choices?.[0]?.message?.content || "";
   return text.trim();
 }
@@ -713,7 +725,8 @@ export async function generateUnifiedAI(params: {
       if (text) {
         return { text: text.trim(), provider: "gemini", modelName: params.modelName || GEMINI_MODEL };
       }
-    } catch (geminiErr: any) {
+    } catch (geminiErrCapturado) {
+      const geminiErr = comoErrorCapturado(geminiErrCapturado);
       console.warn(`[AI Engine] Gemini error (${geminiErr.message || geminiErr}).`);
       if (!allowFallback) {
         throw geminiErr;
@@ -732,7 +745,8 @@ export async function generateUnifiedAI(params: {
         maxTokens: params.maxTokens
       });
       return { text, provider: "deepseek", modelName: "deepseek-chat (fallback)", fallbackFrom: "gemini" };
-    } catch (dsErr: any) {
+    } catch (dsErrCapturado) {
+      const dsErr = comoErrorCapturado(dsErrCapturado);
       console.warn("[AI Engine] Fallback a DeepSeek falló:", dsErr.message);
     }
   }
@@ -778,7 +792,7 @@ export async function generateMultiModelProposals(params: {
         const result = await generateUnifiedAI({
           prompt: params.prompt,
           systemPrompt: params.systemPrompt,
-          provider: providerId as any,
+          provider: providerId,
           allowFallback: false // in comparison mode, test each model independently
         });
         const fullInputText = (params.systemPrompt || "") + "\n" + (params.prompt || "");
@@ -792,7 +806,8 @@ export async function generateMultiModelProposals(params: {
           durationMs: Date.now() - startTime,
           costEstimate
         };
-      } catch (err: any) {
+      } catch (errCapturado) {
+        const err = comoErrorCapturado(errCapturado);
         let cleanErrMsg = err?.message || "Error al contactar proveedor IA";
         if (cleanErrMsg.includes("429") || cleanErrMsg.includes("spending cap") || cleanErrMsg.includes("RESOURCE_EXHAUSTED")) {
           cleanErrMsg = "Límite mensual de gasto alcanzado en Google AI Studio (Error 429). Puedes gestionarlo en ai.studio/billing";

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Concert, Rehearsal } from '../../types';
+import React, { useState } from 'react';
+import { Concert, Rehearsal, Setlist } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, Input, Select, Textarea } from '../ui';
@@ -16,14 +16,13 @@ interface CalendarCreateEventModalProps {
   onAddRehearsal?: (rehearsal: Rehearsal) => void;
   onAddConcert?: (concert: Concert) => void;
   setSyncSuccessMessage?: (msg: string) => void;
-  availableSetlists?: any[];
+  availableSetlists?: Setlist[];
 }
 
 export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> = ({
   showCreateModal,
   setShowCreateModal,
   selectedDate,
-  isStitchLight = false,
   effectiveBandsList,
   activeBandId,
   activeBandName,
@@ -31,7 +30,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
   onAddRehearsal,
   onAddConcert,
   setSyncSuccessMessage,
-  availableSetlists = [],
+  availableSetlists = []
 }) => {
   const [selectedBandIdForNewEvent, setSelectedBandIdForNewEvent] = useState(activeBandId);
   const [convocatoriaTipo, setConvocatoriaTipo] = useState<'completa' | 'parcial'>('completa');
@@ -45,13 +44,13 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
   const [reuNotas, setReuNotas] = useState(
     '1. Repasar próximas fechas y logística.\n2. Presupuestos y gastos.\n3. Nuevos temas del repertorio.'
   );
-  const [reuEstado, setReuEstado] = useState<'programado' | 'completado' | 'cancelado'>('programado');
+  const [reuEstado] = useState<'programado' | 'completado' | 'cancelado'>('programado');
 
   // Rehearsal fields
   const [rehTime, setRehTime] = useState('18:00 - 21:00');
   const [rehLugar, setRehLugar] = useState('Locales de Ensayo');
   const [rehNotas, setRehNotas] = useState('Ensayo general de repertorio directo');
-  const [rehEstado, setRehEstado] = useState<'programado' | 'completado' | 'cancelado'>('programado');
+  const [rehEstado] = useState<'programado' | 'completado' | 'cancelado'>('programado');
   const [rehSetlistId, setRehSetlistId] = useState<string>('');
 
   // Concert fields
@@ -59,21 +58,30 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
   const [concSala, setConcSala] = useState('');
   const [concCache, setConcCache] = useState('1200');
   const [concAforo, setConcAforo] = useState('300');
-  const [concContrato, setConcContrato] = useState(true);
-  const [concEstadoPago, setConcEstadoPago] = useState<'pendiente' | 'pagado' | 'anticipo'>('pendiente');
-  const [concTipo, setConcTipo] = useState<'propio' | 'festival' | 'privado'>('propio');
-  const [concNotas, setConcNotas] = useState('Concierto agendado desde el calendario');
-  const [concIdioma, setConcIdioma] = useState('');
+  const [concContrato] = useState(true);
+  const [concEstadoPago] = useState<'pendiente' | 'pagado' | 'anticipo'>('pendiente');
+  const [concTipo] = useState<'propio' | 'festival' | 'privado'>('propio');
+  const [concNotas] = useState('Concierto agendado desde el calendario');
+  const [concIdioma] = useState('');
   const [concSetlistId, setConcSetlistId] = useState<string>('');
   const [concIsPosible, setConcIsPosible] = useState(false);
 
-  useEffect(() => {
+  // Al abrir el modal (o cambiar banda/miembros) se reinicia la convocatoria.
+  // Se ajusta el estado durante el render comparando con las entradas previas.
+  const [prevInputs, setPrevInputs] = useState<{ open: typeof showCreateModal; band: string; members: typeof effectiveBandMembers } | null>(null);
+  if (
+    prevInputs === null ||
+    prevInputs.open !== showCreateModal ||
+    prevInputs.band !== activeBandId ||
+    prevInputs.members !== effectiveBandMembers
+  ) {
+    setPrevInputs({ open: showCreateModal, band: activeBandId, members: effectiveBandMembers });
     if (showCreateModal) {
       setSelectedBandIdForNewEvent(activeBandId);
       setConvocatoriaTipo('completa');
       setConvocadosIds(effectiveBandMembers.map((m) => m.id));
     }
-  }, [showCreateModal, activeBandId, effectiveBandMembers]);
+  }
 
   if (!showCreateModal) return null;
 
@@ -413,7 +421,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     <option value="">Sin repertorio específico</option>
                     {availableSetlists.map((s) => (
                       <option key={s.id} value={s.id}>
-                        {s.nombre || s.title}
+                        {s.nombre}
                       </option>
                     ))}
                   </Select>
@@ -526,7 +534,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     <option value="">Seleccionar repertorio…</option>
                     {availableSetlists.map((s) => (
                       <option key={s.id} value={s.id}>
-                        {s.nombre || s.title}
+                        {s.nombre}
                       </option>
                     ))}
                   </Select>

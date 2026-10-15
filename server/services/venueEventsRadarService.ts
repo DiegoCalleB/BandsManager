@@ -8,8 +8,9 @@
  * 4. Si NO se encuentran datos de la sala en ninguna fuente, no inventa fechas: devuelve mensaje claro "(no se han encontrado datos de fechas de esta sala)".
  */
 
-import { getAiClient, generateContentWithFallback } from "../ai.js";
+import { getAiClient, generateContentWithFallback, type RespuestaIA } from "../ai.js";
 import { scrapeVenueWithJina } from "./jinaReaderService.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export type EstadoCartelera = 
   | 'publicada_libre' 
@@ -213,7 +214,8 @@ export async function detectVenueEventsAndFreeDates(
         jinaSuccess = true;
         console.log(`[Venue Radar] ✓ Jina Reader extrajo ${jinaWebText.length} caracteres de la web oficial de ${cleanVenue}`);
       }
-    } catch (jinaErr: any) {
+    } catch (jinaErrCapturado) {
+      const jinaErr = comoErrorCapturado(jinaErrCapturado);
       console.warn(`[Venue Radar] Aviso al consultar web oficial con Jina Reader:`, jinaErr?.message || jinaErr);
     }
   }
@@ -283,7 +285,7 @@ Si NO encuentras conciertos ni cartelera pública de esta sala para ese periodo,
 }`;
 
   try {
-    let response: any = null;
+    let response: RespuestaIA | null = null;
     try {
       response = await generateContentWithFallback(client, {
         contents: prompt,
@@ -291,7 +293,7 @@ Si NO encuentras conciertos ni cartelera pública de esta sala para ese periodo,
           tools: [{ googleSearch: {} }]
         }
       });
-    } catch (_err) {
+    } catch {
       response = await generateContentWithFallback(client, { contents: prompt });
     }
 
@@ -311,7 +313,7 @@ Si NO encuentras conciertos ni cartelera pública de esta sala para ese periodo,
     if (startIdx !== -1 && endIdx !== -1) {
       try {
         parsed = JSON.parse(cleaned.substring(startIdx, endIdx + 1));
-      } catch (_) {}
+      } catch { /* JSON del modelo mal formado: se trata como «sin datos encontrados» */ }
     }
 
     const conciertos = Array.isArray(parsed.conciertos) ? parsed.conciertos : [];
@@ -368,7 +370,6 @@ Si NO encuentras conciertos ni cartelera pública de esta sala para ese periodo,
     // Obtener rango ISO de las fechas objetivo de campaña
     const targetIsoDates = candidates.map(c => c.isoDate).filter(f => /^\d{4}-\d{2}-\d{2}$/.test(f)).sort();
     const minTargetIso = targetIsoDates.length > 0 ? targetIsoDates[0] : undefined;
-    const maxTargetIso = targetIsoDates.length > 0 ? targetIsoDates[targetIsoDates.length - 1] : undefined;
 
     // Calcular disponibilidad en los candidatos
     const freeDatesLabels: string[] = [];
@@ -442,7 +443,8 @@ Si NO encuentras conciertos ni cartelera pública de esta sala para ese periodo,
       is_campaign_active: isCampaignActive,
       success: true
     };
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn(`[VenueRadar] Error detectando fechas para "${cleanVenue}":`, err?.message || err);
     return {
       venue_name: cleanVenue,

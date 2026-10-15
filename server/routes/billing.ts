@@ -78,7 +78,11 @@ export function liberarEvento(eventId: string): void {
 export { isValidEmail } from "../utils/email.js";
 import { isValidEmail } from "../utils/email.js";
 import { bandaFacturableDelUsuario, mismaBanda } from "../utils/bandAccess.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { AppState } from '../stateTypes.js';
+import type { BandaFacturable, FacturaStripeLegada, SesionCheckoutLegada, SuscripcionStripeLegada } from './tiposBilling.js';
 
+import { responderError } from '../utils/errorHttp.js';
 export function resolveValidEmail(userEmail?: string, bandId?: string): string | undefined {
   if (userEmail && isValidEmail(userEmail)) {
     return userEmail.trim().toLowerCase();
@@ -86,7 +90,7 @@ export function resolveValidEmail(userEmail?: string, bandId?: string): string |
   try {
     const state = loadState();
     if (userEmail && state.users && Array.isArray(state.users)) {
-      const matchedUser = state.users.find((u: any) => 
+      const matchedUser = state.users.find((u) => 
         (u.id === userEmail || u.username?.toLowerCase() === userEmail.toLowerCase() || u.email?.toLowerCase() === userEmail.toLowerCase()) &&
         isValidEmail(u.email)
       );
@@ -101,18 +105,18 @@ export function resolveValidEmail(userEmail?: string, bandId?: string): string |
         return bandConfig.contactoBooking.email.trim().toLowerCase();
       }
     }
-  } catch (err) {
+  } catch {
     // Ignore lookup errors
   }
   return undefined;
 }
 
-export function findBandInState(state: any, bandId?: string, customerEmail?: string) {
+export function findBandInState(state: AppState, bandId?: string, customerEmail?: string) {
   if (!state.registeredBands) state.registeredBands = [];
   const cleanBandId = (bandId || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
   const cleanEmail = (customerEmail || '').toLowerCase().trim();
 
-  const band = state.registeredBands.find((b: any) => {
+  const band: BandaFacturable | undefined = state.registeredBands.find((b) => {
     const bBid = (b.band_id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
     const bId = (b.id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
     const bName = (b.nombre_banda || b.bandName || b.name || '').toLowerCase().trim();
@@ -149,7 +153,7 @@ export async function applyPlanUpgrade(
   const { band: foundBand, cleanBandId } = findBandInState(state, bandId, customerEmail);
   const credits = PLAN_CREDITS[normPlan] || 800;
 
-  let bandToSave: any = foundBand;
+  let bandToSave: BandaFacturable | undefined = foundBand;
 
   if (foundBand) {
     foundBand.plan = normPlan;
@@ -185,7 +189,7 @@ export async function applyPlanUpgrade(
 
   // Update in-memory users
   if (state.users && Array.isArray(state.users)) {
-    state.users.forEach((u: any) => {
+    state.users.forEach((u) => {
       const uEmail = (u.email || u.username || '').toLowerCase().trim();
       const uBand = (u.band_id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
       if ((customerEmail && uEmail === customerEmail.toLowerCase().trim()) || (cleanBandId && uBand === cleanBandId)) {
@@ -234,7 +238,8 @@ export async function applyPlanUpgrade(
         })
         .ilike("email", customerEmail.trim());
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[Billing Upgrade] Error updating Supabase tables:", err?.message || err);
   }
 
@@ -260,7 +265,7 @@ export async function schedulePlanDowngrade(
   }
 
   if (state.users && Array.isArray(state.users)) {
-    state.users.forEach((u: any) => {
+    state.users.forEach((u) => {
       const uEmail = (u.email || u.username || '').toLowerCase().trim();
       const uBand = (u.band_id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
       if ((customerEmail && uEmail === customerEmail.toLowerCase().trim()) || (cleanBandId && uBand === cleanBandId)) {
@@ -295,7 +300,8 @@ export async function schedulePlanDowngrade(
         })
         .ilike("email", customerEmail.trim());
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[Billing Schedule Downgrade] Error updating Supabase:", err);
   }
 
@@ -318,7 +324,7 @@ export async function applyPlanCancellation(bandId: string, customerEmail?: stri
   }
 
   if (state.users && Array.isArray(state.users)) {
-    state.users.forEach((u: any) => {
+    state.users.forEach((u) => {
       const uEmail = (u.email || u.username || '').toLowerCase().trim();
       const uBand = (u.band_id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
       if ((customerEmail && uEmail === customerEmail.toLowerCase().trim()) || (cleanBandId && uBand === cleanBandId)) {
@@ -357,7 +363,8 @@ export async function applyPlanCancellation(bandId: string, customerEmail?: stri
         })
         .ilike("email", customerEmail.trim());
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[Billing Cancellation] Error updating Supabase:", err);
   }
 
@@ -374,7 +381,7 @@ export async function handlePaymentFailed(bandId: string, customerEmail?: string
   }
 
   if (state.users && Array.isArray(state.users)) {
-    state.users.forEach((u: any) => {
+    state.users.forEach((u) => {
       const uEmail = (u.email || u.username || '').toLowerCase().trim();
       const uBand = (u.band_id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
       if ((customerEmail && uEmail === customerEmail.toLowerCase().trim()) || (cleanBandId && uBand === cleanBandId)) {
@@ -398,7 +405,8 @@ export async function handlePaymentFailed(bandId: string, customerEmail?: string
         .update({ estado_suscripcion: 'pago_pendiente' })
         .ilike("email", customerEmail.trim());
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[Billing Payment Failed] Error updating Supabase:", err);
   }
 }
@@ -414,12 +422,10 @@ export async function handleInvoicePaid(bandId: string, customerEmail?: string, 
     activePlan = foundBand.plan_pendiente;
   }
 
-  const credits = PLAN_CREDITS[activePlan] || 800;
-
   return applyPlanUpgrade(bandId, activePlan, customerEmail, {
     stripeCustomerId: invoice?.customer as string,
-    stripeSubscriptionId: (invoice as any)?.subscription as string,
-    billingInterval: (invoice as any)?.lines?.data?.[0]?.price?.recurring?.interval === 'year' ? 'annual' : 'monthly'
+    stripeSubscriptionId: (invoice as FacturaStripeLegada | undefined)?.subscription as string,
+    billingInterval: (invoice as FacturaStripeLegada | undefined)?.lines?.data?.[0]?.price?.recurring?.interval === 'year' ? 'annual' : 'monthly'
   });
 }
 
@@ -430,7 +436,7 @@ export function getOriginHost(req: express.Request): string {
     if (req.headers.referer) {
       try {
         host = new URL(req.headers.referer).origin;
-      } catch (e) {}
+      } catch { /* referer mal formado: se usa el host por defecto */ }
     }
   }
   if (!host || host === "null") {
@@ -457,7 +463,7 @@ export function urlDeVueltaSegura(req: express.Request, returnUrl?: unknown): st
   try {
     const destino = new URL(returnUrl);
     if (destino.origin === new URL(origen).origin) return returnUrl;
-  } catch (e) {
+  } catch {
     // URL no parseable: se ignora y se vuelve al origen conocido.
   }
   return origen;
@@ -490,7 +496,8 @@ router.post(["/billing/confirm-success", "/stripe/confirm-success"], requireAuth
     let session: Stripe.Checkout.Session;
     try {
       session = await stripe.checkout.sessions.retrieve(sessionId);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.warn("[Billing] Sesión de Checkout no recuperable:", err?.message || err);
       return res.status(404).json({ success: false, error: "Sesión de pago no encontrada en Stripe." });
     }
@@ -529,9 +536,10 @@ router.post(["/billing/confirm-success", "/stripe/confirm-success"], requireAuth
       stripeSubscriptionId: (session.subscription as string) || undefined
     });
     return res.json(result);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error in /billing/confirm-success:", err);
-    return res.status(500).json({ success: false, error: err?.message || "Error confirming plan upgrade" });
+    return responderError(res, err, "Error confirming plan upgrade");
   }
 });
 
@@ -587,7 +595,8 @@ router.post(["/billing/create-checkout-session", "/stripe/create-checkout-sessio
         if (existingCustomers.data.length > 0) {
           customerId = existingCustomers.data[0].id;
         }
-      } catch (err: any) {
+      } catch (errCapturado) {
+        const err = comoErrorCapturado(errCapturado);
         console.warn("[Billing] Could not lookup existing customer by email in Stripe:", err?.message || err);
       }
     }
@@ -640,9 +649,10 @@ router.post(["/billing/create-checkout-session", "/stripe/create-checkout-sessio
     });
 
     res.json({ success: true, url: session.url });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error creating Stripe checkout session:", error);
-    res.status(500).json({ success: false, error: error.message || "Error al crear la sesión de pago con Stripe" });
+    responderError(res, error, "Error al crear la sesión de pago con Stripe");
   }
 });
 
@@ -688,7 +698,8 @@ router.post(["/billing/create-portal-session", "/stripe/create-portal-session"],
           });
           customerId = newCustomer.id;
         }
-      } catch (err: any) {
+      } catch (errCapturado) {
+        const err = comoErrorCapturado(errCapturado);
         console.warn("[Billing] Could not create/lookup customer for portal:", err?.message || err);
       }
     }
@@ -706,12 +717,10 @@ router.post(["/billing/create-portal-session", "/stripe/create-portal-session"],
     });
 
     return res.json({ success: true, url: portalSession.url });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error creating Stripe billing portal session:", error);
-    return res.status(500).json({
-      success: false,
-      error: error.message || "Error al abrir el Portal de Clientes de Stripe"
-    });
+    return responderError(res, error, "Error al abrir el Portal de Clientes de Stripe");
   }
 });
 
@@ -728,21 +737,22 @@ async function handleWebhook(req: express.Request, res: express.Response) {
   }
 
   try {
-    const rawBody = (req as any).rawBody || (Buffer.isBuffer(req.body) ? req.body : Buffer.from(JSON.stringify(req.body)));
+    const rawBody = (req as typeof req & { rawBody?: Buffer }).rawBody || (Buffer.isBuffer(req.body) ? req.body : Buffer.from(JSON.stringify(req.body)));
     const stripe = getStripe();
     event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
-  } catch (err: any) {
-    console.error(`[Stripe Webhook] Signature verification failed: ${err.message}`);
-    return res.status(400).send(`Webhook Error: ${err.message}`);
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
+    console.error("[Stripe Webhook] Signature verification failed: %s", err.message);
+    return res.status(400).type("text/plain").send("Webhook Error: firma no válida.");
   }
 
   // Idempotency check: Ignore duplicate events
   if (event.id && (await isEventProcessed(event.id))) {
-    console.log(`[Stripe Webhook] Event ${event.id} already processed. Skipping.`);
+    console.log("[Stripe Webhook] Event %s already processed. Skipping.", event.id);
     return res.json({ received: true, idempotent: true });
   }
 
-  console.log(`[Stripe Webhook] Processing event ${event.type} (${event.id})`);
+  console.log("[Stripe Webhook] Processing event %s (%s)", event.type, event.id);
 
   try {
     switch (event.type) {
@@ -757,7 +767,7 @@ async function handleWebhook(req: express.Request, res: express.Response) {
           const amountPaidCents = session.amount_total ?? 0;
           if (donorBandId && event.id) {
             const resultado = await dbSettleAiDonation(donorBandId, amountPaidCents, event.id);
-            console.log(`[Stripe Webhook] Donación IA liquidada para la banda ${donorBandId}:`, resultado);
+            console.log("[Stripe Webhook] Donación IA liquidada para la banda %s:", donorBandId, resultado);
           } else {
             console.warn("[Stripe Webhook] Sesión de donación sin bandId en metadata; se ignora.");
           }
@@ -770,8 +780,8 @@ async function handleWebhook(req: express.Request, res: express.Response) {
           break;
         }
 
-        const bandId = session.metadata?.bandId || (session as any).subscription_data?.metadata?.bandId;
-        const planId = session.metadata?.planId || (session as any).subscription_data?.metadata?.planId;
+        const bandId = session.metadata?.bandId || (session as Stripe.Checkout.Session & SesionCheckoutLegada).subscription_data?.metadata?.bandId;
+        const planId = session.metadata?.planId || (session as Stripe.Checkout.Session & SesionCheckoutLegada).subscription_data?.metadata?.planId;
         const customerEmail = session.customer_email || session.metadata?.userEmail;
         const customerId = session.customer as string;
         const subscriptionId = session.subscription as string;
@@ -792,7 +802,7 @@ async function handleWebhook(req: express.Request, res: express.Response) {
         const paymentIntentId = typeof charge.payment_intent === "string" ? charge.payment_intent : charge.payment_intent?.id;
         if (paymentIntentId) {
           const n = await dbRecordDealSupportRefund(paymentIntentId, charge.amount_refunded ?? 0);
-          if (n > 0) console.log(`[Stripe Webhook] Reembolso anotado en ${n} aportación(es) de bolo (${paymentIntentId}).`);
+          if (n > 0) console.log("[Stripe Webhook] Reembolso anotado en %s aportación(es) de bolo (%s).", n, paymentIntentId);
         }
         break;
       }
@@ -803,8 +813,9 @@ async function handleWebhook(req: express.Request, res: express.Response) {
         const customerEmail = subscription.metadata?.userEmail;
         const targetPlan = subscription.metadata?.planId || 'de_gira';
         const cancelAtPeriodEnd = subscription.cancel_at_period_end;
-        const periodEnd = (subscription as any).current_period_end
-          ? new Date((subscription as any).current_period_end * 1000).toISOString()
+        const finPeriodo = (subscription as Stripe.Subscription & SuscripcionStripeLegada).current_period_end;
+        const periodEnd = finPeriodo
+          ? new Date(finPeriodo * 1000).toISOString()
           : new Date().toISOString();
 
         if (cancelAtPeriodEnd) {
@@ -835,7 +846,7 @@ async function handleWebhook(req: express.Request, res: express.Response) {
 
       case "invoice.paid": {
         const invoice = event.data.object as Stripe.Invoice;
-        const bandId = invoice.metadata?.bandId || (invoice as any).subscription_details?.metadata?.bandId;
+        const bandId = invoice.metadata?.bandId || (invoice as Stripe.Invoice & FacturaStripeLegada).subscription_details?.metadata?.bandId;
         const customerEmail = invoice.customer_email || invoice.metadata?.userEmail;
 
         await handleInvoicePaid(bandId || '', customerEmail, invoice);
@@ -844,7 +855,7 @@ async function handleWebhook(req: express.Request, res: express.Response) {
 
       case "invoice.payment_failed": {
         const invoice = event.data.object as Stripe.Invoice;
-        const bandId = invoice.metadata?.bandId || (invoice as any).subscription_details?.metadata?.bandId;
+        const bandId = invoice.metadata?.bandId || (invoice as Stripe.Invoice & FacturaStripeLegada).subscription_details?.metadata?.bandId;
         const customerEmail = invoice.customer_email || invoice.metadata?.userEmail;
 
         await handlePaymentFailed(bandId || '', customerEmail);
@@ -852,7 +863,7 @@ async function handleWebhook(req: express.Request, res: express.Response) {
       }
 
       default:
-        console.log(`[Stripe Webhook] Unhandled event type ${event.type}`);
+        console.log("[Stripe Webhook] Unhandled event type %s", event.type);
     }
 
     // Persist event in DB for permanent idempotency
@@ -860,8 +871,9 @@ async function handleWebhook(req: express.Request, res: express.Response) {
       await dbRecordWebhookEvent(event.id, event.type, event.data?.object);
       marcarEventoProcesado(event.id);
     }
-  } catch (procErr: any) {
-    console.error(`[Stripe Webhook] Error processing event ${event.type} (${event.id}):`, procErr);
+  } catch (procErrCapturado) {
+    const procErr = comoErrorCapturado(procErrCapturado);
+    console.error("[Stripe Webhook] Error processing event %s (%s):", event.type, event.id, procErr);
     // Stripe solo reintenta si no recibe un 2xx. Antes se respondía 200 siempre, así que un cobro
     // cuyo registro fallaba (BD caída, columna que falta...) se perdía sin dejar rastro.
     if (event.id) liberarEvento(event.id);
@@ -922,7 +934,7 @@ router.post(["/billing/consume-credits", "/stripe/consume-credits"], requireAuth
           .update({ creditos_usados: newUsed, creditos_periodo: totalCredits })
           .or(`band_id.eq.${bandId},id.eq.${bandId},band_id.eq.band-${cleanBandId},id.eq.band-${cleanBandId}`);
       }
-    } catch (e) {}
+    } catch (err) { console.warn("[Billing] No se pudo actualizar el consumo de créditos de la banda:", err); }
 
     return res.json({
       success: true,
@@ -930,8 +942,9 @@ router.post(["/billing/consume-credits", "/stripe/consume-credits"], requireAuth
       creditos_periodo: totalCredits,
       creditos_restantes: totalCredits - newUsed
     });
-  } catch (err: any) {
-    return res.status(500).json({ success: false, error: err.message || "Error al consumir créditos" });
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
+    return responderError(res, err, "Error al consumir créditos");
   }
 });
 
@@ -964,8 +977,9 @@ router.get(["/billing/credits-status", "/stripe/credits-status"], requireAuth, a
       plan_pendiente: foundBand?.plan_pendiente || null,
       fecha_cambio_plan: foundBand?.fecha_cambio_plan || null
     });
-  } catch (err: any) {
-    return res.status(500).json({ success: false, error: err.message || "Error al obtener estado de créditos" });
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
+    return responderError(res, err, "Error al obtener estado de créditos");
   }
 });
 

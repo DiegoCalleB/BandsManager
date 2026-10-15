@@ -18,13 +18,59 @@ Endpoints REST para creación, actualización y filtrado de salas por banda.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
+- [[agent_scout|Scout Discovery Agent]] *(Layer: #agent, Domain: #booking)*
 - [[db_leads|Leads DB Handlers]] *(Layer: #db, Domain: #booking)*
+- [[db_state_sync|In-Memory State & Supabase Sync]] *(Layer: #db, Domain: #system)*
+- [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
+- [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
+- [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_pitchLearning|server/db/pitchLearning.ts]] *(Layer: #db, Domain: #booking)*
+- [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(Layer: #security, Domain: #system)*
+- [[server_routes_leads_helpers|server/routes/leads/helpers.ts]] *(Layer: #route, Domain: #booking)*
+- [[server_utils_bandDna|server/utils/bandDna.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_email|server/utils/email.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_festivalDateFilter|server/utils/festivalDateFilter.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_planLimits|server/utils/planLimits.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_spanishFestivalsDB|server/utils/spanishFestivalsDB.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_urlHost|server/utils/urlHost.ts]] *(Layer: #service, Domain: #system)*
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
+- [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
 - [[hook_booking_pipeline|useBookingPipeline Hook]] *(from #hook)*
+- [[server_routes_leads|server/routes/leads.ts]] *(from #route)*
+- [[src_components_booking_AddLeadModal|src/components/booking/AddLeadModal.tsx]] *(from #frontend)*
+- [[src_components_booking_ChangeLeadImageModal|src/components/booking/ChangeLeadImageModal.tsx]] *(from #frontend)*
+- [[src_components_booking_crm_BulkActionsSection|src/components/booking/crm/BulkActionsSection.tsx]] *(from #frontend)*
+- [[src_components_booking_crm_crmTypes|src/components/booking/crm/crmTypes.ts]] *(from #frontend)*
+- [[src_components_booking_crm_hooks_useLeadFormsAndEnrichment|src/components/booking/crm/hooks/useLeadFormsAndEnrichment.ts]] *(from #frontend)*
+- [[src_components_booking_CRMContactEnricherModal|src/components/booking/CRMContactEnricherModal.tsx]] *(from #frontend)*
+- [[src_components_booking_ExcelImportModal|src/components/booking/ExcelImportModal.tsx]] *(from #frontend)*
+- [[src_components_booking_google_places_hooks_useAlternativePlaceSources|src/components/booking/google_places/hooks/useAlternativePlaceSources.ts]] *(from #frontend)*
+- [[src_components_booking_google_places_hooks_useMassCampaignSearch|src/components/booking/google_places/hooks/useMassCampaignSearch.ts]] *(from #frontend)*
+- [[src_components_booking_google_places_hooks_usePlaceCrmImport|src/components/booking/google_places/hooks/usePlaceCrmImport.ts]] *(from #frontend)*
+- [[src_components_booking_google_places_hooks_usePlaceEmailExtraction|src/components/booking/google_places/hooks/usePlaceEmailExtraction.ts]] *(from #frontend)*
+- [[src_components_booking_google_places_hooks_usePlaceSearch|src/components/booking/google_places/hooks/usePlaceSearch.ts]] *(from #frontend)*
+- [[src_components_booking_LeadDuplicatesModal|src/components/booking/LeadDuplicatesModal.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_hooks_useLeadsBatchDateScan|src/components/booking/leads_table/hooks/useLeadsBatchDateScan.ts]] *(from #frontend)*
+- [[src_components_booking_venue_modal_VenueEmailThread|src/components/booking/venue_modal/VenueEmailThread.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_modal_VenueProfileColumn|src/components/booking/venue_modal/VenueProfileColumn.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_panel_hooks_buildVenuePanelActions|src/components/booking/venue_panel/hooks/buildVenuePanelActions.ts]] *(from #frontend)*
+- [[src_hooks_useEmailValidation|src/hooks/useEmailValidation.ts]] *(from #hook)*
+- [[src_services_api|src/services/api.ts]] *(from #service)*
+- [[ui_venue_detail|Venue Detail & Pitch Simulator]] *(from #frontend)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/leadsCampanasRateLimit.test.ts`
+- `server/routes/__tests__/leadsConcurrenciaEstado.test.ts`
 
 ---
 

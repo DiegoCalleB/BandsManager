@@ -1,12 +1,5 @@
 import React, { useRef } from "react";
-import {
-  Camera,
-  Upload,
-  Trash2,
-  Loader2,
-  Plus,
-  Image as ImageIcon,
-} from "lucide-react";
+import { Camera, Upload, Trash2, Loader2, Plus } from "lucide-react";
 import { Button, Input } from '../../ui';
 
 interface StepPhotosProps {

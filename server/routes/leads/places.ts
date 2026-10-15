@@ -14,6 +14,9 @@ import { searchVenuesWithSerper, enrichVenueDetailsWithSerper } from "../../serv
 import { discoverVenuesMultiSource } from "../../services/multiSourceVenueDiscoveryService.js";
 import { findVenuesBySimilarArtists } from "../../services/similarBandsVenueMatcherService.js";
 import { searchPublicCulturalOpportunities } from "../../services/publicCulturalEventsRadarService.js";
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
+import type { CandidatoCruzado, CandidatoScout, ContactoExtraido, LeadConocido, RespuestaBusquedaPlaces, RespuestaIA, RespuestaScoutIA } from "./tiposScout.js";
+import { responderError } from '../../utils/errorHttp.js';
 
 const router = express.Router();
 
@@ -87,10 +90,10 @@ router.post(["/places-search", "/leads/places-search"], requireAuth, async (req,
           })
         });
 
-        const v1Data: any = await v1Res.json();
+        const v1Data = (await v1Res.json()) as RespuestaBusquedaPlaces;
         if (v1Res.ok && Array.isArray(v1Data.places) && v1Data.places.length > 0) {
           const v1Places = v1Data.places
-            .filter((place: any) => {
+            .filter((place) => {
               // Strictly filter out permanently closed or temporarily closed venues
               const status = place.businessStatus || "OPERATIONAL";
               if (status === "CLOSED_PERMANENTLY" || status === "CLOSED_TEMPORARILY") {
@@ -100,7 +103,7 @@ router.post(["/places-search", "/leads/places-search"], requireAuth, async (req,
               return true;
             })
             .slice(0, limit)
-            .map((place: any) => {
+            .map((place) => {
             const addressParts = (place.formattedAddress || "").split(",");
             const extractedCity = ciudad || (addressParts.length >= 2 ? addressParts[addressParts.length - 2].trim().replace(/\d{5}\s*/, '') : "España");
 
@@ -192,7 +195,8 @@ router.post(["/places-search", "/leads/places-search"], requireAuth, async (req,
             results: v1Places
           });
         }
-      } catch (placesErr: any) {
+      } catch (placesErrCapturado) {
+        const placesErr = comoErrorCapturado(placesErrCapturado);
         console.warn("[Google Places API Warning] Failed to fetch from Places API, falling back to Serper/Gemini:", placesErr.message);
       }
     }
@@ -232,7 +236,7 @@ router.post(["/places-search", "/leads/places-search"], requireAuth, async (req,
                     place.instagram = contactData.instagram;
                   }
                 }
-              } catch (_) {}
+              } catch { /* sin datos de contacto extraíbles: la sala se devuelve tal cual */ }
               return place;
             })
           );
@@ -245,7 +249,8 @@ router.post(["/places-search", "/leads/places-search"], requireAuth, async (req,
             results: enrichedResults
           });
         }
-      } catch (serperErr: any) {
+      } catch (serperErrCapturado) {
+        const serperErr = comoErrorCapturado(serperErrCapturado);
         console.warn("[Serper Places Warning] Error en búsqueda con Serper, pasando a fallback Gemini:", serperErr?.message || serperErr);
       }
     }
@@ -356,7 +361,7 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con este formato:
   ]
 }`;
 
-    let response: any;
+    let response: RespuestaIA;
     try {
       response = await generateContentWithFallback(aiClient, {
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
@@ -364,7 +369,8 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con este formato:
           tools: [{ googleSearch: {} }]
         }
       });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       if (!isSpendCapOrQuotaError(err)) {
         response = await generateContentWithFallback(aiClient, {
           contents: [{ role: 'user', parts: [{ text: prompt }] }],
@@ -376,9 +382,9 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con este formato:
     }
 
     const textResult = response?.text || "{}";
-    const parsed = safeParseJson(textResult);
+    const parsed: RespuestaScoutIA = safeParseJson(textResult);
     const rawResults = Array.isArray(parsed?.results) ? parsed.results : [];
-    const results = rawResults.slice(0, limit).map((r: any) => {
+    const results = rawResults.slice(0, limit).map((r) => {
       let img = r.imagen_url || "";
       const domain = getDomainFromUrl(r.website || "");
       if (!img && domain) {
@@ -397,31 +403,21 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con este formato:
       query: searchQuery,
       results
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/places-search:", error);
-    res.status(500).json({ error: error?.message || "Error al buscar salas en Google Places." });
+    responderError(res, error, "Error al buscar salas en Google Places.");
   }
 });
 
 // Búsqueda Masiva de Recintos, Locales y Discotecas para Campaña Activa y Estilo de Banda
 router.post(["/campaign-mass-search", "/leads/campaign-mass-search"], requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id;
+    const userBandId = req.user?.band_id;
     const state = loadState();
-    let { 
-      targetCities, 
-      minCapacity, 
-      maxCapacity, 
-      targetDates,
-      targetDatesText,
-      tipos, 
-      campaignName, 
-      campaignId, 
-      limitPerCity, 
-      bandGenre, 
-      genero, 
-      bandStyle 
-    } = req.body;
+    // Ciudades, aforos y nombre de campaña se completan después con la campaña activa.
+    let { targetCities, minCapacity, maxCapacity, campaignName } = req.body;
+    const { targetDates, targetDatesText, tipos, limitPerCity, bandGenre, genero, bandStyle } = req.body;
 
     // Obtener ADN de la banda para conocer su género y estilo por defecto si no se indica
     let bandDnaGenre = "";
@@ -444,12 +440,13 @@ router.post(["/campaign-mass-search", "/leads/campaign-mass-search"], requireAut
         try {
           const activeCamp = await dbGetActiveCampaign(userBandId);
           if (activeCamp) {
-            const cities = activeCamp.targetCities || (activeCamp as any).target_cities;
+            // dbGetActiveCampaign ya normaliza los alias snake_case (target_cities, min_capacity...).
+            const cities = activeCamp.targetCities;
             targetCities = Array.isArray(cities) && cities.length > 0
               ? cities 
-              : [(activeCamp as any).ciudad || "Madrid"];
-            if (minCapacity === undefined) minCapacity = activeCamp.minCapacity ?? (activeCamp as any).min_capacity;
-            if (maxCapacity === undefined) maxCapacity = activeCamp.maxCapacity ?? (activeCamp as any).max_capacity;
+              : ["Madrid"];
+            if (minCapacity === undefined) minCapacity = activeCamp.minCapacity;
+            if (maxCapacity === undefined) maxCapacity = activeCamp.maxCapacity;
             if (!campaignName) campaignName = activeCamp.name;
           }
         } catch (e) {
@@ -473,7 +470,7 @@ router.post(["/campaign-mass-search", "/leads/campaign-mass-search"], requireAut
     console.log(`[Campaign Mass Search] Iniciando prospección masiva para banda "${bandName}" (${resolvedGenre}) en campaña "${campaignName || 'Activa'}" - Ciudades: ${targetCities.join(', ')} (Aforo: ${minCap}-${maxCap === Infinity ? '∞' : maxCap}) [Categorías: ${activeTipos.join(', ')}]`);
 
     // 1. CARGA DE LEADS EXISTENTES PARA DEDUPLICACIÓN CONTRA SUPABASE Y ESTADO
-    let existingLeads: any[] = [];
+    let existingLeads: LeadConocido[] = [];
     if (userBandId) {
       try {
         existingLeads = await dbGetLeads(userBandId);
@@ -481,13 +478,13 @@ router.post(["/campaign-mass-search", "/leads/campaign-mass-search"], requireAut
         console.warn("[Campaign Mass Search] Error consultando leads existentes:", e);
       }
     }
-    const allKnownLeads = [...existingLeads, ...(state.leads || [])];
+    const allKnownLeads: LeadConocido[] = [...existingLeads, ...(state.leads || [])];
 
     // Índices de coincidencia rápida
-    const existingMap = new Map<string, any>();
+    const existingMap = new Map<string, LeadConocido>();
     const existingPlaceIds = new Set<string>();
-    const existingDomains = new Map<string, any>();
-    const existingPhones = new Map<string, any>();
+    const existingDomains = new Map<string, LeadConocido>();
+    const existingPhones = new Map<string, LeadConocido>();
 
     for (const lead of allKnownLeads) {
       if (!lead.nombre_sala) continue;
@@ -511,7 +508,7 @@ router.post(["/campaign-mass-search", "/leads/campaign-mass-search"], requireAut
     }
 
     // 2. EJECUCIÓN MULTI-CONSULTA PARA CADA CIUDAD DE LA CAMPAÑA
-    const discoveredRaw: any[] = [];
+    const discoveredRaw: CandidatoScout[] = [];
     const placesApiKey = process.env.GOOGLE_PLACES_API_KEY || process.env.VITE_GOOGLE_PLACES_API_KEY || "";
 
     for (const city of targetCities) {
@@ -574,7 +571,7 @@ router.post(["/campaign-mass-search", "/leads/campaign-mass-search"], requireAut
                 pageSize: Math.min(limit, 10)
               })
             });
-            const v1Data: any = await v1Res.json();
+            const v1Data = (await v1Res.json()) as RespuestaBusquedaPlaces;
             if (v1Res.ok && Array.isArray(v1Data.places)) {
               for (const place of v1Data.places) {
                 const status = place.businessStatus || "OPERATIONAL";
@@ -625,7 +622,8 @@ router.post(["/campaign-mass-search", "/leads/campaign-mass-search"], requireAut
                 });
               }
             }
-          } catch (pErr: any) {
+          } catch (pErrCapturado) {
+            const pErr = comoErrorCapturado(pErrCapturado);
             console.warn(`[Mass Places] Advertencia en consulta "${sqObj.query}":`, pErr.message);
           }
         }
@@ -669,17 +667,17 @@ Responde estrictamente con un JSON con la estructura:
   "results": [ ... ]
 }`;
 
-          let response: any;
+          let response: RespuestaIA;
           try {
             response = await generateContentWithFallback(aiClient, {
               contents: [{ role: 'user', parts: [{ text: groundingPrompt }] }],
               config: {
-                // @ts-ignore
                 tools: [{ googleSearch: {} }],
                 responseMimeType: 'application/json'
               }
             });
-          } catch (aiErr: any) {
+          } catch (aiErrCapturado) {
+            const aiErr = comoErrorCapturado(aiErrCapturado);
             if (!isSpendCapOrQuotaError(aiErr)) {
               response = await generateContentWithFallback(aiClient, {
                 contents: [{ role: 'user', parts: [{ text: groundingPrompt }] }],
@@ -689,7 +687,7 @@ Responde estrictamente con un JSON con la estructura:
           }
 
           const textRes = response?.text || "{}";
-          const parsedRes = safeParseJson(textRes);
+          const parsedRes: RespuestaScoutIA = safeParseJson(textRes);
           if (Array.isArray(parsedRes?.results)) {
             for (const r of parsedRes.results) {
               let img = r.imagen_url || "";
@@ -710,14 +708,15 @@ Responde estrictamente con un JSON con la estructura:
               });
             }
           }
-        } catch (groundingErr: any) {
+        } catch (groundingErrCapturado) {
+          const groundingErr = comoErrorCapturado(groundingErrCapturado);
           console.warn(`[Mass Grounding] Error en ${cleanCity}:`, groundingErr.message);
         }
       }
     }
 
     // 3. FUSIÓN INTRA-LOTE Y DEDUPLICACIÓN CONTRA SUPABASE
-    const unifiedPool = new Map<string, any>();
+    const unifiedPool = new Map<string, CandidatoCruzado>();
 
     for (const raw of discoveredRaw) {
       if (!raw.nombre_sala || raw.nombre_sala.trim().length < 2) continue;
@@ -742,7 +741,7 @@ Responde estrictamente con un JSON con la estructura:
       if (isDeleted) continue;
 
       // Verificación contra CRM de Supabase
-      let matchedExisting: any = null;
+      let matchedExisting: LeadConocido | null | undefined = null;
       if (raw.place_id && existingPlaceIds.has(raw.place_id)) {
         matchedExisting = allKnownLeads.find(l => l.place_id === raw.place_id);
       }
@@ -813,9 +812,10 @@ Responde estrictamente con un JSON con la estructura:
       results: finalResults
     });
 
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/campaign-mass-search:", error);
-    res.status(500).json({ error: error?.message || "Error al realizar la búsqueda masiva de recintos para la campaña." });
+    responderError(res, error, "Error al realizar la búsqueda masiva de recintos para la campaña.");
   }
 });
 
@@ -848,11 +848,11 @@ router.post(["/extract-emails", "/leads/extract-emails"], requireAuth, async (re
     console.log(`[Email Extractor] Procesando extracción de email para ${places.length} salas...`);
 
     // Helper to process a sub-batch of max 4 items
-    const processBatch = async (batch: any[]) => {
-      const prompt = `Eres el Agente Especialista en Extracción de Contactos Directos de Bakandeya.
+    const processBatch = async (batch: CandidatoScout[]): Promise<ContactoExtraido[]> => {
+      const prompt = `Eres el Agente Especialista en Extracción de Contactos Directos de la banda.
 Tu misión es investigar y extraer el CORREO ELECTRÓNICO OFICIAL DE CONTACTO O BOOKING y el USUARIO DE INSTAGRAM REAL para cada una de las siguientes entidades en España:
 
-${JSON.stringify(batch.map((p: any) => ({
+${JSON.stringify(batch.map((p) => ({
   id: p.place_id || p.id || p.nombre_sala,
   nombre_sala: p.nombre_sala,
   ciudad: p.ciudad || "",
@@ -887,7 +887,7 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con la estructura:
 }`;
 
       try {
-        let response: any;
+        let response: RespuestaIA;
         try {
           response = await generateContentWithFallback(aiClient, {
             contents: [{ role: 'user', parts: [{ text: prompt }] }],
@@ -895,7 +895,8 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con la estructura:
               tools: [{ googleSearch: {} }]
             }
           });
-        } catch (err: any) {
+        } catch (errCapturado) {
+          const err = comoErrorCapturado(errCapturado);
           if (!isSpendCapOrQuotaError(err)) {
             console.warn("[Email Extractor Warning] Grounding failed, fallback to direct JSON model:", err?.message || err);
             response = await generateContentWithFallback(aiClient, {
@@ -908,9 +909,10 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con la estructura:
         }
 
         const textResult = response?.text || "{}";
-        const parsed = safeParseJson(textResult);
+        const parsed: RespuestaScoutIA = safeParseJson(textResult);
         return Array.isArray(parsed?.extracted) ? parsed.extracted : [];
-      } catch (err: any) {
+      } catch (errCapturado) {
+        const err = comoErrorCapturado(errCapturado);
         console.warn("[Email Extractor Warning] Error processing batch:", err?.message);
         return batch.map(p => ({
           id: p.place_id || p.id || p.nombre_sala,
@@ -926,12 +928,12 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con la estructura:
 
     // Split places into chunks of 3 for fast, reliable search execution without timeouts
     const CHUNK_SIZE = 3;
-    const chunks: any[][] = [];
+    const chunks: CandidatoScout[][] = [];
     for (let i = 0; i < places.length; i += CHUNK_SIZE) {
       chunks.push(places.slice(i, i + CHUNK_SIZE));
     }
 
-    const allExtracted: any[] = [];
+    const allExtracted: ContactoExtraido[] = [];
     for (const chunk of chunks) {
       const result = await processBatch(chunk);
       allExtracted.push(...result);
@@ -940,12 +942,13 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con la estructura:
     return res.json({
       success: true,
       totalProcessed: places.length,
-      extractedCount: allExtracted.filter((e: any) => e.email_contacto && e.email_contacto.trim() !== "").length,
+      extractedCount: allExtracted.filter((e) => e.email_contacto && e.email_contacto.trim() !== "").length,
       extracted: allExtracted
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/extract-emails:", error);
-    res.status(500).json({ error: error?.message || "Error al extraer correos electrónicos de las salas." });
+    responderError(res, error, "Error al extraer correos electrónicos de las salas.");
   }
 });
 
@@ -957,7 +960,7 @@ router.post(["/import-places", "/leads/import-places"], requireAuth, async (req,
       return res.status(400).json({ error: "Proporciona un array de leads a importar." });
     }
 
-    const userBandId = (req as any).user?.band_id ;
+    const userBandId = req.user?.band_id ;
     const state = loadState();
     let importedCount = 0;
     const newlyAddedLeads: Lead[] = [];
@@ -974,7 +977,7 @@ router.post(["/import-places", "/leads/import-places"], requireAuth, async (req,
       }
 
       // Check if lead already exists by name and city
-      const existing = state.leads.find((l: any) => 
+      const existing = state.leads.find((l) => 
         l.nombre_sala.toLowerCase().trim() === rawLead.nombre_sala.toLowerCase().trim() &&
         (l.ciudad || "").toLowerCase().trim() === (rawLead.ciudad || "").toLowerCase().trim()
       );
@@ -1060,7 +1063,7 @@ router.post(["/import-places", "/leads/import-places"], requireAuth, async (req,
           direccion: rawLead.direccion || "",
           aforo: Number(rawLead.aforo) || 0,
           genero: rawLead.genero || "Música en Directo / Mestizaje",
-          tipo: resolvedType as any,
+          tipo: resolvedType,
           email_contacto: rawLead.email_contacto || "",
           telefono: rawPhone || telMovil || telFijo || "",
           telefono_movil: telMovil,
@@ -1093,9 +1096,10 @@ router.post(["/import-places", "/leads/import-places"], requireAuth, async (req,
       totalLeads: state.leads.length,
       leads: newlyAddedLeads
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/import-places:", error);
-    res.status(500).json({ error: error?.message || "Error al importar salas de Google Places." });
+    responderError(res, error, "Error al importar salas de Google Places.");
   }
 });
 
@@ -1115,12 +1119,10 @@ router.post(["/multi-source-venues", "/leads/multi-source-venues"], requireAuth,
       limit: Number(limit) || 10
     });
     return res.json(result);
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/multi-source-venues:", error);
-    return res.status(500).json({
-      success: false,
-      error: error?.message || "Error al realizar la búsqueda multi-fuente de recintos."
-    });
+    return responderError(res, error, "Error al realizar la búsqueda multi-fuente de recintos.");
   }
 });
 
@@ -1153,12 +1155,10 @@ router.post(["/similar-artists-venues", "/leads/similar-artists-venues"], requir
       limit: Number(limit) || 8
     });
     return res.json(result);
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/similar-artists-venues:", error);
-    return res.status(500).json({
-      success: false,
-      error: error?.message || "Error al buscar recintos por afinidad artística."
-    });
+    return responderError(res, error, "Error al buscar recintos por afinidad artística.");
   }
 });
 
@@ -1175,12 +1175,10 @@ router.post(["/public-cultural-radar", "/leads/public-cultural-radar"], requireA
       limit: Number(limit) || 8
     });
     return res.json(result);
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/public-cultural-radar:", error);
-    return res.status(500).json({
-      success: false,
-      error: error?.message || "Error al escanear oportunidades de contratación pública."
-    });
+    return responderError(res, error, "Error al escanear oportunidades de contratación pública.");
   }
 });
 

@@ -1,4 +1,4 @@
-import { Song, SetlistItem } from "../../src/types.js";
+import { Song } from "../../src/types.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { tonalidadesSonFiables } from "../../src/utils/harmonicAnalysis.js";
 import { BandStyleContext, buildBandStyleContextBlock } from "./bandStyleContext.js";
@@ -137,6 +137,6 @@ IMPORTANTE:
     return analysis;
   } catch (error) {
     console.error("[SetlistAI] Error analyzing with AI:", error);
-    throw new Error(`No se pudo analizar el setlist: ${error instanceof Error ? error.message : 'Error desconocido'}`);
+    throw new Error(`No se pudo analizar el setlist: ${error instanceof Error ? error.message : 'Error desconocido'}`, { cause: error });
   }
 }

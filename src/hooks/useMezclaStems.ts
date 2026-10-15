@@ -1,0 +1,106 @@
+import { useEffect, useRef, type RefObject } from 'react';
+import type { AudioTrack } from '../types';
+import { resolveAudioUrl } from '../utils/audioStorage';
+import { aplicarTono, tonoConectado } from './useTonePitchShift';
+import { factorDucking, suscribirDucking } from '../utils/ducking';
+import { hayPistaEnSolo, volumenEfectivo, type AjustesPistas } from '../utils/mezclaStems';
+
+const DERIVA_MAX_S = 0.15;
+
+/**
+ * Reproduce `pistas` (stems) siguiendo al `<audio>` principal, que sigue siendo el reloj del visor
+ * (acordes, letra y barra de posición no cambian). Cuando hay pistas, el principal se silencia.
+ * Con `pistas` vacío no hace nada y el principal suena entero.
+ * `ajustes` (silencio/solo/volumen por pista) se aplica en vivo, sin reiniciar la reproducción.
+ * `semitonos` transpone también los stems (el principal va aparte, ver `useTonoAudio`).
+ */
+export function useMezclaStems(audioRef: RefObject<HTMLAudioElement | null>, pistas: AudioTrack[], audioUrl: string, ajustes: AjustesPistas = {}, semitonos = 0): void {
+  const clave = pistas.map((p) => p.id).join('|');
+  const ajustesRef = useRef(ajustes);
+  const pistasRef = useRef(pistas);
+  const mapaRef = useRef(new Map<string, HTMLAudioElement>());
+  const semitonosRef = useRef(semitonos);
+  // Primero de los efectos: los demás leen los valores más recientes a través de estos refs.
+  useEffect(() => {
+    semitonosRef.current = semitonos;
+    ajustesRef.current = ajustes;
+    pistasRef.current = pistas;
+  });
+
+  const aplicarVolumenes = () => {
+    const solo = hayPistaEnSolo(pistasRef.current, ajustesRef.current);
+    for (const p of pistasRef.current) {
+      const el = mapaRef.current.get(p.id);
+      if (el) el.volume = volumenEfectivo(p, ajustesRef.current, solo) * factorDucking();
+    }
+  };
+
+  useEffect(aplicarVolumenes, [ajustes]);
+
+  // Ducking: al sonar un acorde de muestra baja la canción, sean stems o el audio principal (que va mudo si hay stems).
+  const aplicarRef = useRef(aplicarVolumenes);
+  useEffect(() => { aplicarRef.current = aplicarVolumenes; });
+  useEffect(() => suscribirDucking(() => {
+    aplicarRef.current();
+    const maestro = audioRef.current;
+    if (maestro && !maestro.muted) maestro.volume = factorDucking();
+  }), [audioRef]);
+
+  const aplicarTonos = () => {
+    for (const el of mapaRef.current.values()) {
+      if (semitonosRef.current !== 0 || tonoConectado(el)) void aplicarTono(el, semitonosRef.current);
+    }
+  };
+  useEffect(aplicarTonos, [semitonos]);
+
+  useEffect(() => {
+    const maestro = audioRef.current;
+    if (!maestro || pistas.length === 0) return;
+    let vivo = true;
+    const mapa = mapaRef.current;
+    maestro.muted = true;
+    const esclavos: HTMLAudioElement[] = [];
+
+    const alinear = () => {
+      for (const el of esclavos) if (Math.abs(el.currentTime - maestro.currentTime) > DERIVA_MAX_S) el.currentTime = maestro.currentTime;
+    };
+    const tocar = () => { alinear(); esclavos.forEach((el) => { void el.play().catch(() => { /* autoplay bloqueado sin gesto del usuario: queda en pausa y se reproduce al pulsar */ }); }); };
+    const parar = () => esclavos.forEach((el) => el.pause());
+    const ritmo = () => esclavos.forEach((el) => { el.playbackRate = maestro.playbackRate; });
+
+    maestro.addEventListener('play', tocar);
+    maestro.addEventListener('pause', parar);
+    maestro.addEventListener('seeked', alinear);
+    maestro.addEventListener('timeupdate', alinear);
+    maestro.addEventListener('ratechange', ritmo);
+
+    (async () => {
+      for (const p of pistas) {
+        const el = new Audio();
+        el.preload = 'auto';
+        el.crossOrigin = 'anonymous';
+        try { el.src = (await resolveAudioUrl(p.audioUrl)) || p.audioUrl; } catch { el.src = p.audioUrl; }
+        if (!vivo) return;
+        esclavos.push(el);
+        mapa.set(p.id, el);
+      }
+      aplicarVolumenes();
+      aplicarTonos();
+      ritmo();
+      if (!maestro.paused) tocar();
+    })();
+
+    return () => {
+      vivo = false;
+      mapa.clear();
+      maestro.muted = false;
+      maestro.removeEventListener('play', tocar);
+      maestro.removeEventListener('pause', parar);
+      maestro.removeEventListener('seeked', alinear);
+      maestro.removeEventListener('timeupdate', alinear);
+      maestro.removeEventListener('ratechange', ritmo);
+      esclavos.forEach((el) => { el.pause(); el.removeAttribute('src'); el.load(); });
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [clave, audioUrl, audioRef]);
+}

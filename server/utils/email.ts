@@ -32,6 +32,16 @@ export interface ResultadoGuardaEnvio {
   motivo?: string;
 }
 
+/** Campos de un lead que mira la guarda de envío (del lead guardado o de la actualización). */
+export interface CamposGuardaEnvio {
+  estado?: string;
+  email_contacto?: string;
+  email_secundario?: string;
+  email?: string;
+  nombre_sala?: string;
+  nombre_medio?: string;
+}
+
 /**
  * ¿Puede esta actualización meter el lead en la cola de envío?
  *
@@ -39,14 +49,14 @@ export interface ResultadoGuardaEnvio {
  * estaba aprobado, o moverlo a 'descartado' sin email, no tiene por qué fallar.
  */
 export function puedeEntrarEnColaDeEnvio(
-  leadExistente: any,
-  camposActualizados: any
+  leadExistente: CamposGuardaEnvio | null | undefined,
+  camposActualizados: CamposGuardaEnvio | null | undefined
 ): ResultadoGuardaEnvio {
   const entraAhora =
     esEstadoDeEnvio(camposActualizados?.estado) && !esEstadoDeEnvio(leadExistente?.estado);
   if (!entraAhora) return { ok: true };
 
-  const fusionado = { ...(leadExistente || {}), ...(camposActualizados || {}) };
+  const fusionado: CamposGuardaEnvio = { ...(leadExistente || {}), ...(camposActualizados || {}) };
   const email = fusionado.email_contacto || fusionado.email_secundario || fusionado.email;
   if (esEmailValido(email) || esEmailValido(fusionado.email_contacto) || esEmailValido(fusionado.email_secundario)) return { ok: true };
 

@@ -1,5 +1,5 @@
 -- ==============================================================================
--- BANDMANAGER.AI / BAKANDEYA — TRIGGER DE RESPUESTA INMEDIATA (aprobado_respuesta)
+-- BANDMANAGER.AI — TRIGGER DE RESPUESTA INMEDIATA (aprobado_respuesta)
 -- ==============================================================================
 --
 -- El envío programado de pitches en frío ("Enviador") ya NO vive aquí: lo gestiona el

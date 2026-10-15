@@ -1,5 +1,5 @@
-import React from 'react';
 import { Guitar, Sliders, X } from 'lucide-react';
+import React from 'react';
 import { ChatMessage } from '../Chatbot';
 import { Button } from '../ui';
 
@@ -19,7 +19,6 @@ export interface ChatbotHeaderProps {
 }
 
 export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
-  isStitchLight,
   bandDisplayName,
   isAdmin,
   onOpenAutonomyModal,

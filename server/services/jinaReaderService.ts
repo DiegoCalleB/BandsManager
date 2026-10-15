@@ -11,6 +11,7 @@
  */
 
 import { esUrlExternaSegura } from "../utils/ssrfGuard.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export interface JinaExtractedVenueData {
   url: string;
@@ -108,6 +109,13 @@ export function extractRelevantEmails(text: string): { principal?: string; secun
   };
 }
 
+/** Respuesta JSON de Jina Reader (`Accept: application/json`); según la versión el contenido va en `data` o en la raíz. */
+interface RespuestaJsonJina {
+  data?: { content?: string; text?: string; title?: string };
+  content?: string;
+  title?: string;
+}
+
 /**
  * Escanea un sitio web mediante Jina Reader API (r.jina.ai)
  */
@@ -157,7 +165,7 @@ export async function scrapeVenueWithJina(targetUrl: string): Promise<JinaExtrac
 
     const contentType = res.headers.get("content-type") || "";
     if (contentType.includes("application/json")) {
-      const json: any = await res.json();
+      const json: RespuestaJsonJina = await res.json();
       markdown = json.data?.content || json.data?.text || json.content || "";
       pageTitle = json.data?.title || json.title || "";
     } else {
@@ -217,7 +225,8 @@ export async function scrapeVenueWithJina(targetUrl: string): Promise<JinaExtrac
       rider_specs: riderSpecs,
       resumen_markdown: markdown.slice(0, 600)
     };
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     if (err?.name === "AbortError") {
       console.log(`[JinaReader] Timeout (9s) consultando ${targetUrl}`);
     } else {

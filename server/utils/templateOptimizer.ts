@@ -3,6 +3,15 @@ import { safeParseJson } from "../utils.js";
 import type { TemplateFeedbackLog } from "../promptsManager.js";
 import { dbGetCategoryTemplates, dbUpsertCategoryTemplate } from "../db/categoryTemplates.js";
 import { getGlobalPitchFeedbackSummary, formatGlobalPitchFeedbackForPrompt } from "../routes/leads/feedback.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { EPKConfig } from "../../src/types.js";
+import type { AppState, BandaRegistradaGuardada } from "../stateTypes.js";
+
+/** EPK guardado; los datos legados traen también `nombre_banda`. */
+type EpkConNombreLegado = Partial<EPKConfig> & { nombre_banda?: string };
+
+/** Banda registrada con los textos legados que se usan como biografía. */
+type BandaConBioLegada = BandaRegistradaGuardada & { biografia?: string; dossier_texto_extra?: string };
 
 export const CATEGORY_LABELS: Record<string, string> = {
   salas: "Salas y Teatros de Conciertos",
@@ -33,13 +42,13 @@ export function countUnoptimizedFeedback(feedbackLogs: TemplateFeedbackLog[] | u
   return count;
 }
 
-export function resolveBandNameAndBio(state: any, bandId: string): { bandName: string; bandBio: string } {
+export function resolveBandNameAndBio(state: AppState | null | undefined, bandId: string): { bandName: string; bandBio: string } {
   const cleanId = bandId.replace(/^(band|reg)-/, "");
-  const bandConfig = state?.epkConfigsByBand?.[bandId] || state?.epkConfigsByBand?.[cleanId] || state?.epkConfig || {};
-  const registeredBand = state?.registeredBands?.find((b: any) => b.band_id === bandId || b.band_id === cleanId);
-  const isBakandeya = cleanId === "bakandeya";
+  const bandConfig: EpkConNombreLegado = state?.epkConfigsByBand?.[bandId] || state?.epkConfigsByBand?.[cleanId] || state?.epkConfig || {};
+  // biografia y dossier_texto_extra son texto cuando existen (columnas de registered_bands).
+  const registeredBand = state?.registeredBands?.find((b) => b.band_id === bandId || b.band_id === cleanId) as BandaConBioLegada | undefined;
   const bandName = registeredBand?.nombre_banda || registeredBand?.bandName || bandConfig?.contactoBooking?.nombre || bandConfig?.nombre_banda ||
-    (isBakandeya ? "Bakandeya" : cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
+    cleanId.charAt(0).toUpperCase() + cleanId.slice(1);
   const bandBio = bandConfig?.biografia || registeredBand?.biografia || registeredBand?.dossier_texto_extra || "";
   return { bandName, bandBio };
 }
@@ -139,7 +148,7 @@ export async function generateOptimizedCategoryTemplate(params: {
 }): Promise<OptimizedTemplateResult> {
   const prompt = buildTemplateOptimizationPrompt(params);
   const ai = getAiClient();
-  let resultJson: any = null;
+  let resultJson: Partial<OptimizedTemplateResult> | null = null;
 
   if (ai) {
     try {
@@ -154,7 +163,8 @@ export async function generateOptimizedCategoryTemplate(params: {
   }
 
   if (resultJson && resultJson.subject && resultJson.body && resultJson.guidelines) {
-    return { ...resultJson, isSimulated: false };
+    // Asunto, cuerpo y pautas ya comprobados; la explicación la da el modelo (puede faltar).
+    return { ...resultJson, isSimulated: false } as OptimizedTemplateResult;
   }
 
   const categoryLabel = CATEGORY_LABELS[params.category] || params.category || "General";
@@ -270,7 +280,7 @@ Devuelve un único JSON VÁLIDO con esta estructura exacta (sin texto antes ni d
   "ayuntamientos": { ... }
 }`;
 
-  let resultJson: any = null;
+  let resultJson: Record<string, Partial<OptimizedTemplateResult> | undefined> | null = null;
   if (ai) {
     try {
       const response = await generateContentWithFallback(ai, {
@@ -286,12 +296,13 @@ Devuelve un único JSON VÁLIDO con esta estructura exacta (sin texto antes ni d
   const results: Record<string, OptimizedTemplateResult> = {};
 
   for (const cat of categories) {
-    if (resultJson && resultJson[cat] && resultJson[cat].subject && resultJson[cat].body) {
+    const propuesta = resultJson?.[cat];
+    if (propuesta && propuesta.subject && propuesta.body) {
       results[cat] = {
-        subject: resultJson[cat].subject,
-        body: resultJson[cat].body,
-        guidelines: resultJson[cat].guidelines || `Pautas adaptadas para ${CATEGORY_LABELS[cat]}`,
-        explanation: resultJson[cat].explanation || `Generada y adaptada para ${CATEGORY_LABELS[cat]} a partir de la propuesta base.`,
+        subject: propuesta.subject,
+        body: propuesta.body,
+        guidelines: propuesta.guidelines || `Pautas adaptadas para ${CATEGORY_LABELS[cat]}`,
+        explanation: propuesta.explanation || `Generada y adaptada para ${CATEGORY_LABELS[cat]} a partir de la propuesta base.`,
         isSimulated: false
       };
     } else {
@@ -316,7 +327,7 @@ Devuelve un único JSON VÁLIDO con esta estructura exacta (sin texto antes ni d
  * "optimizar con IA". Pensada para llamarse en segundo plano tras cada guardado
  * (POST /api/templates/save), igual que triggerSelfRefiningToneDnaBackground para pitches.
  */
-export async function autoOptimizeCategoryTemplateIfDue(bandId: string, category: string, state: any): Promise<void> {
+export async function autoOptimizeCategoryTemplateIfDue(bandId: string, category: string, state: AppState): Promise<void> {
   try {
     const existing = await dbGetCategoryTemplates(bandId);
     const current = existing[category];
@@ -365,7 +376,8 @@ export async function autoOptimizeCategoryTemplateIfDue(bandId: string, category
     });
 
     console.log(`[Auto-optimize plantilla] "${category}" de ${bandId} regenerada tras ${pending} valoraciones acumuladas.`);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Notice during autoOptimizeCategoryTemplateIfDue:", err?.message || err);
   }
 }

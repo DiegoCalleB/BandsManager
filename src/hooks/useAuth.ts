@@ -1,38 +1,47 @@
 import { useState, useEffect, useCallback } from 'react';
-import { User } from '../types';
+import { BandaDisponible, User } from '../types';
 import { api } from '../services/api';
 import { guardarCookieDeSesion, borrarCookieDeSesion } from '../utils/sessionCookie';
 import { syncAllUserPreferencesFromUser } from '../utils/userPreferences';
+import { atribuirReferidoPendiente } from '../utils/referido';
+import { atribuirReferido } from '../utils/promocionApi';
+import { leerTokenDeSesion, leerUsuarioDeSesion } from '../services/sesionLocal';
+import { comoErrorCapturado } from '../utils/errorCapturado';
 
-/** Sesión del usuario: estado persistido en `localStorage` (`bakandeya_user`), login y logout. */
+/**
+ * Banda de la lista de bandas disponibles. Además de {@link BandaDisponible}, las listas que llegan
+ * de otros orígenes (o guardadas en `localStorage` por versiones anteriores) pueden traer `id`/`name`.
+ */
+export type BandaDeLaSesion = BandaDisponible & { id?: string; name?: string };
+
+/** Sesión del usuario: estado persistido en `localStorage` (`bandmanager_user`), login y logout. */
 export function useAuth() {
   const [currentUser, setCurrentUser] = useState<User | null>(() => {
     try {
-      const savedUser = localStorage.getItem('bakandeya_user');
-      if (savedUser) {
-        const parsed = JSON.parse(savedUser);
+      const parsed = leerUsuarioDeSesion();
+      if (parsed) {
         syncAllUserPreferencesFromUser(parsed);
         return parsed;
       }
       return null;
-    } catch (e) {
+    } catch {
       return null;
     }
   });
 
   const [authToken, setAuthToken] = useState<string | null>(() => {
-    return localStorage.getItem('bakandeya_token') || null;
+    return leerTokenDeSesion() || null;
   });
 
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
-    return !!localStorage.getItem('bakandeya_token') || localStorage.getItem('bakandeya_logged_in') === 'true';
+    return !!leerTokenDeSesion() || localStorage.getItem('bandmanager_logged_in') === 'true';
   });
 
-  const [availableBands, setAvailableBands] = useState<any[]>(() => {
+  const [availableBands, setAvailableBands] = useState<BandaDeLaSesion[]>(() => {
     try {
-      const savedBands = localStorage.getItem('bakandeya_available_bands');
+      const savedBands = localStorage.getItem('bandmanager_available_bands');
       return savedBands ? JSON.parse(savedBands) : [];
-    } catch (e) {
+    } catch {
       return [];
     }
   });
@@ -45,28 +54,30 @@ export function useAuth() {
   }, []);
 
   // Silent session refresh function
-  const refreshSession = useCallback(async () => {
-    const tokenToUse = authToken || localStorage.getItem('bakandeya_token');
-    if (!tokenToUse) return;
+  // Encadenada con `.then`/`.catch` (en vez de async/await) para que las actualizaciones de estado
+  // queden en callbacks asíncronos y no cuenten como setState síncrono al llamarla desde un efecto.
+  const refreshSession = useCallback((): Promise<void> => {
+    const tokenToUse = authToken || leerTokenDeSesion();
+    if (!tokenToUse) return Promise.resolve();
 
-    try {
-      const data = await api.verifyMe();
+    return api.verifyMe().then((data) => {
       if (data && data.user) {
         setCurrentUser(data.user);
         setAvailableBands(data.availableBands || []);
-        localStorage.setItem('bakandeya_user', JSON.stringify(data.user));
+        localStorage.setItem('bandmanager_user', JSON.stringify(data.user));
         syncAllUserPreferencesFromUser(data.user);
-        localStorage.setItem('bakandeya_available_bands', JSON.stringify(data.availableBands || []));
+        localStorage.setItem('bandmanager_available_bands', JSON.stringify(data.availableBands || []));
         if (data.token) {
           setAuthToken(data.token);
-          localStorage.setItem('bakandeya_token', data.token);
+          localStorage.setItem('bandmanager_token', data.token);
           syncSessionCookie(data.token);
         } else {
           syncSessionCookie(tokenToUse);
         }
         setIsLoggedIn(true);
       }
-    } catch (err: any) {
+    }).catch((errCapturado: unknown) => {
+      const err = comoErrorCapturado(errCapturado);
       console.warn('Silent session refresh skipped or offline:', err?.message || err);
       // Un 401 real solo puede venir de una respuesta del servidor, así que nunca coincide con
       // estar offline (sin red, el fetch falla con un error de red, no con un 401). Antes ambas
@@ -83,26 +94,24 @@ export function useAuth() {
         setCurrentUser(null);
         setAuthToken(null);
         setIsLoggedIn(false);
-        localStorage.removeItem('bakandeya_token');
-        localStorage.removeItem('bakandeya_user');
-        localStorage.removeItem('bakandeya_logged_in');
-        localStorage.removeItem('bakandeya_available_bands');
+        localStorage.removeItem('bandmanager_token');
+        localStorage.removeItem('bandmanager_user');
+        localStorage.removeItem('bandmanager_logged_in');
+        localStorage.removeItem('bandmanager_available_bands');
         try {
           borrarCookieDeSesion();
-        } catch (e) {}
+        } catch { /* sin acceso a document.cookie: la cookie caduca sola */ }
       } else if (!navigator.onLine) {
         // Fallo de red real por estar offline: mantener la sesión en caché activa (móvil sin cobertura).
-        const savedUserStr = localStorage.getItem('bakandeya_user');
-        if (savedUserStr) {
-          try {
-            setCurrentUser(JSON.parse(savedUserStr));
-            setIsLoggedIn(true);
-          } catch (e) {}
+        const savedUser = leerUsuarioDeSesion();
+        if (savedUser) {
+          setCurrentUser(savedUser);
+          setIsLoggedIn(true);
         }
       }
       // Online pero con un fallo no-401 (500, CORS, timeout...): no forzamos el cierre de sesión
       // por un error transitorio del servidor, pero tampoco lo ocultamos (ver console.warn arriba).
-    }
+    });
   }, [authToken, syncSessionCookie]);
 
   // Las preferencias de interfaz (p. ej. la disposición del dashboard) se guardan desde los
@@ -156,10 +165,17 @@ export function useAuth() {
     };
   }, [isLoggedIn, authToken, refreshSession]);
 
+  // Una banda recién registrada que llegó por una invitación (?ref=) se atribuye a quien la invitó.
+  // El servidor decide (solo altas recientes, la primera atribución manda); aquí se envía una vez.
+  useEffect(() => {
+    if (!isLoggedIn || !authToken) return;
+    void atribuirReferidoPendiente((codigo) => atribuirReferido(codigo));
+  }, [isLoggedIn, authToken]);
+
   const handleLoginSuccess = useCallback(
-    (user: User, token: string, bandsList?: any[]) => {
+    (user: User, token: string, bandsList?: BandaDeLaSesion[]) => {
       // If the user has a designated main_band_id or preferred band, ensure the active band matches it on login.
-      // Antes, si no había ninguna banda preferida, se caía en'band-bakandeya' en silencio: una
+      // Antes, si no había ninguna banda preferida, se caía en una banda por defecto en silencio: una
       // cuenta nueva sin banda todavía asignada entraba viendo los datos reales de esa banda. Sin
       // banda preferida, dejamos band_id sin normalizar y que el resto de la app pida elegir/crear
       // una banda en vez de asumir una por defecto.
@@ -179,10 +195,10 @@ export function useAuth() {
       };
 
       // If availableBands list is provided, synchronize band name & plan with the active main band
-      if (bandsList && Array.isArray(bandsList) && bandsList.length > 0) {
+      if (normalizedBandId && bandsList && Array.isArray(bandsList) && bandsList.length > 0) {
         const cleanPref = normalizedBandId.replace(/^(band|reg)-/, '');
         const match = bandsList.find(
-          (b: any) =>
+          (b) =>
             b.band_id === normalizedBandId ||
             b.id === normalizedBandId ||
             (b.band_id && b.band_id.replace(/^(band|reg)-/, '') === cleanPref) ||
@@ -201,13 +217,13 @@ export function useAuth() {
       syncSessionCookie(token);
       if (bandsList) {
         setAvailableBands(bandsList);
-        localStorage.setItem('bakandeya_available_bands', JSON.stringify(bandsList));
+        localStorage.setItem('bandmanager_available_bands', JSON.stringify(bandsList));
       }
-      localStorage.setItem('bakandeya_token', token);
-      localStorage.setItem('bakandeya_user', JSON.stringify(resolvedUser));
+      localStorage.setItem('bandmanager_token', token);
+      localStorage.setItem('bandmanager_user', JSON.stringify(resolvedUser));
       syncAllUserPreferencesFromUser(resolvedUser);
-      localStorage.setItem('bakandeya_remember_me', 'true');
-      localStorage.setItem('bakandeya_logged_in', 'true');
+      localStorage.setItem('bandmanager_remember_me', 'true');
+      localStorage.setItem('bandmanager_logged_in', 'true');
       localStorage.setItem('bandmanager_registered_user', 'true');
       setIsLoggedIn(true);
     },
@@ -216,7 +232,7 @@ export function useAuth() {
 
   const handleSwitchBand = useCallback(
     async (band_id: string) => {
-      const tokenToUse = authToken || localStorage.getItem('bakandeya_token');
+      const tokenToUse = authToken || leerTokenDeSesion();
       const response = await fetch('/api/auth/switch-band', {
         method: 'POST',
         headers: {
@@ -233,16 +249,16 @@ export function useAuth() {
 
       if (data.token) {
         setAuthToken(data.token);
-        localStorage.setItem('bakandeya_token', data.token);
+        localStorage.setItem('bandmanager_token', data.token);
         syncSessionCookie(data.token);
       }
       if (data.user) {
         setCurrentUser(data.user);
-        localStorage.setItem('bakandeya_user', JSON.stringify(data.user));
+        localStorage.setItem('bandmanager_user', JSON.stringify(data.user));
       }
       if (data.availableBands) {
         setAvailableBands(data.availableBands);
-        localStorage.setItem('bakandeya_available_bands', JSON.stringify(data.availableBands));
+        localStorage.setItem('bandmanager_available_bands', JSON.stringify(data.availableBands));
       }
       return data.user;
     },
@@ -253,11 +269,11 @@ export function useAuth() {
     const res = await api.setMainBand(band_id);
     if (res.user) {
       setCurrentUser(res.user);
-      localStorage.setItem('bakandeya_user', JSON.stringify(res.user));
+      localStorage.setItem('bandmanager_user', JSON.stringify(res.user));
     }
     if (res.availableBands) {
       setAvailableBands(res.availableBands);
-      localStorage.setItem('bakandeya_available_bands', JSON.stringify(res.availableBands));
+      localStorage.setItem('bandmanager_available_bands', JSON.stringify(res.availableBands));
     }
     return res.user;
   }, []);
@@ -274,13 +290,13 @@ export function useAuth() {
     setAuthToken(null);
     setAvailableBands([]);
     setIsLoggedIn(false);
-    localStorage.removeItem('bakandeya_token');
-    localStorage.removeItem('bakandeya_user');
-    localStorage.removeItem('bakandeya_logged_in');
-    localStorage.removeItem('bakandeya_available_bands');
+    localStorage.removeItem('bandmanager_token');
+    localStorage.removeItem('bandmanager_user');
+    localStorage.removeItem('bandmanager_logged_in');
+    localStorage.removeItem('bandmanager_available_bands');
     try {
       borrarCookieDeSesion();
-    } catch (e) {}
+    } catch { /* sin acceso a document.cookie: la cookie caduca sola */ }
   }, [authToken]);
 
   return {

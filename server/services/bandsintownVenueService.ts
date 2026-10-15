@@ -1,5 +1,7 @@
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { RespuestaListaVenues } from '../tiposRespuestasIA.js';
 
 export interface BandsintownVenueEvent {
   nombre_sala: string;
@@ -11,6 +13,14 @@ export interface BandsintownVenueEvent {
   url_evento?: string;
   aforo_estimado?: number;
   fuente: string;
+}
+
+/** Lo que se lee de cada evento de `GET /artists/{artista}/events` de la API de Bandsintown. */
+interface EventoBandsintown {
+  venue?: { name?: string; city?: string; country?: string };
+  datetime?: string;
+  title?: string;
+  url?: string;
 }
 
 export async function getVenuesFromBandsintown(params: {
@@ -32,9 +42,9 @@ export async function getVenuesFromBandsintown(params: {
         headers: { "Accept": "application/json" }
       });
       if (res.ok) {
-        const events = await res.json();
+        const events: unknown = await res.json();
         if (Array.isArray(events)) {
-          events.forEach((ev: any) => {
+          events.forEach((ev: EventoBandsintown) => {
             if (ev.venue?.name) {
               const city = ev.venue.city || "España";
               if (!params.targetCities || params.targetCities.length === 0 || params.targetCities.some((c) => city.toLowerCase().includes(c.toLowerCase()))) {
@@ -56,7 +66,8 @@ export async function getVenuesFromBandsintown(params: {
           }
         }
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.warn(`[Bandsintown API] Error consultando eventos para ${artistName}:`, err?.message);
     }
   }
@@ -91,9 +102,9 @@ Devuelve máximo ${limit} salas o recintos REALES.`;
           temperature: 0.2
         }
       });
-      const parsed = safeParseJson(aiRes.text || "{}");
+      const parsed = safeParseJson<RespuestaListaVenues<Partial<BandsintownVenueEvent>>>(aiRes.text || "{}");
       if (parsed && Array.isArray(parsed.venues)) {
-        parsed.venues.forEach((v: any) => {
+        parsed.venues.forEach((v: Partial<BandsintownVenueEvent>) => {
           if (v.nombre_sala) {
             results.push({
               nombre_sala: v.nombre_sala,
@@ -108,7 +119,8 @@ Devuelve máximo ${limit} salas o recintos REALES.`;
         });
       }
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn(`[Bandsintown Radar] Error en radar IA de ${artistName}:`, err?.message);
   }
 

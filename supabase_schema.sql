@@ -264,6 +264,19 @@ CREATE TABLE IF NOT EXISTS concerts (
     convocados_ids JSONB DEFAULT '[]'::jsonb,
     convocados_nombres JSONB DEFAULT '[]'::jsonb,
     idioma TEXT DEFAULT '',
+    is_posible BOOLEAN DEFAULT FALSE,
+    custom_qr_url TEXT,
+    cartel_url TEXT,
+    cartel_config JSONB,
+    es_hito_destacado BOOLEAN DEFAULT FALSE,
+    asistencia_propia INTEGER DEFAULT 0,
+    asistencia_otras_bandas INTEGER DEFAULT 0,
+    bandas_compartidas JSONB DEFAULT '[]'::jsonb,
+    post_show_review TEXT DEFAULT '',
+    gira_id TEXT,
+    gira_nombre TEXT,
+    entradas_url TEXT,
+    entradas_lugar_fisico TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -637,7 +650,7 @@ CREATE POLICY "Permitir acceso total al backend" ON reel_analyses FOR ALL USING 
 -- server/db/campaigns.ts prueba primero la tabla "campaigns" y solo cae a "booking_campaigns"
 -- si esa falla. En producción existía una tabla "campaigns" creada a mano con id/band_id como
 -- uuid y start_date/end_date NOT NULL sin default -tipos incompatibles con lo que este código
--- manda (band_id como texto tipo "bakandeya", sin fechas de inicio/fin)-, así que CADA guardado
+-- manda (band_id como texto tipo "mi-banda", sin fechas de inicio/fin)-, así que CADA guardado
 -- fallaba en silencio y la app devolvía un objeto simulado como si se hubiera guardado. Este es
 -- el esquema real y corregido (ver migración fix_campaigns_table_schema).
 CREATE TABLE IF NOT EXISTS campaigns (
@@ -871,7 +884,7 @@ CREATE POLICY "Permitir acceso total al backend" ON pitch_example_threads FOR AL
 -- server/routes/repertorio.ts, server/db/repertoire.ts, src/components/RepertorioSetlists.tsx.
 -- Los "Rápidos" del editor de repertorio (Presentación, Chapa, BIS...) eran botones fijos en
 -- el propio componente y uno de ellos ("Solo Filgue") nombraba directamente a un músico de
--- Bakandeya, apareciendo así en el repertorio de cualquier otra banda. Esta tabla permite que
+-- otra banda, apareciendo así en el repertorio de cualquier otra banda. Esta tabla permite que
 -- cada banda cree sus propios accesos rápidos (icono + etiqueta + texto/duración del ítem que
 -- se inserta) sin tocar código.
 CREATE TABLE IF NOT EXISTS setlist_shortcuts (
@@ -1386,3 +1399,19 @@ SELECT band_id,
        ROUND(SUM(amount_cents - reembolsado_cents) / 100.0, 2)  AS neto_eur
 FROM deal_support_contributions
 GROUP BY band_id;
+
+-- 32. calendar_conflict_notifications (avisos de choque de calendario ya enviados por email)
+--
+-- server/services/calendarConflictService.ts y server/db/calendarConflicts.ts. Evita repetir el
+-- mismo aviso a la misma persona: la huella cambia si se mueve la fecha/hora de algún evento.
+CREATE TABLE IF NOT EXISTS calendar_conflict_notifications (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  band_id TEXT NOT NULL,
+  user_id TEXT NOT NULL,
+  huella TEXT NOT NULL,
+  notified_at TIMESTAMPTZ DEFAULT NOW(),
+  CONSTRAINT uq_calendar_conflict_user_huella UNIQUE (user_id, huella)
+);
+CREATE INDEX IF NOT EXISTS idx_calendar_conflict_notifications_band ON calendar_conflict_notifications(band_id);
+ALTER TABLE calendar_conflict_notifications ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Permitir acceso total al backend" ON calendar_conflict_notifications FOR ALL USING (true);

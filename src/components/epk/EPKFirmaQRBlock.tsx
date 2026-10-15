@@ -1,25 +1,9 @@
 import React, { useState } from "react";
-import {
-  AtSign,
-  Mail,
-  Music,
-  FileDown,
-  QrCode,
-  Copy,
-  ExternalLink,
-  Check,
-  Share2,
-  FileText,
-  Code,
-  HelpCircle,
-  ChevronDown,
-  ChevronUp,
-  Info,
-} from "lucide-react";
+import { AtSign, Mail, Music, QrCode, Copy, ExternalLink, Check, Share2, FileText, Code, HelpCircle, ChevronDown, ChevronUp } from "lucide-react";
 import QRCode from "react-qr-code";
 import { EPKConfig } from "../../types";
 import { EPKBlockWrapper } from "./EPKBlockWrapper";
-import { EPK_BLOCKS, EPKBlockMeta, UNIFIED_PLATFORMS } from "./epkBlocks";
+import { EPK_BLOCKS, EPKBlockMeta, EPKBlockId, UNIFIED_PLATFORMS } from "./epkBlocks";
 import {
   buildEmailSignatureHtml,
   buildEmailSignaturePlainText,
@@ -32,13 +16,12 @@ interface EPKFirmaQRBlockProps {
   config: EPKConfig;
   setConfig: React.Dispatch<React.SetStateAction<EPKConfig>>;
   publicEpkUrl: string;
-  isBakandeya?: boolean;
   handleCopyUrl: () => void;
   copiado: boolean;
-  onNavigateToBlock?: (blockId: any) => void;
+  onNavigateToBlock?: (blockId: EPKBlockId) => void;
   prevBlock?: EPKBlockMeta | null;
   nextBlock?: EPKBlockMeta | null;
-  onNavigate?: (blockId: any) => void;
+  onNavigate?: (blockId: EPKBlockId) => void;
   onSave?: () => void;
   isAllView?: boolean;
 }
@@ -47,7 +30,6 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
   config,
   setConfig,
   publicEpkUrl,
-  isBakandeya = false,
   handleCopyUrl,
   copiado,
   onNavigateToBlock,
@@ -68,7 +50,6 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
   const handleCopyRichSignature = async () => {
     const success = await copyRichSignatureToClipboard({
       epkConfig: config,
-      isBakandeya,
       publicEpkUrl,
     });
     if (success) {
@@ -80,7 +61,6 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
   const handleCopyHtmlCode = async () => {
     const html = buildEmailSignatureHtml({
       epkConfig: config,
-      isBakandeya,
       publicEpkUrl,
     });
     if (typeof navigator !== "undefined" && navigator.clipboard) {
@@ -93,7 +73,6 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
   const handleCopyPlainText = async () => {
     const text = buildEmailSignaturePlainText({
       epkConfig: config,
-      isBakandeya,
       publicEpkUrl,
     });
     if (typeof navigator !== "undefined" && navigator.clipboard) {
@@ -311,7 +290,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
             </div>
             <div className="flex flex-wrap items-center gap-1.5 pt-1">
               {Object.entries(config.enlacesRedes || {})
-                .filter(([_, url]) => Boolean(url && String(url).trim()))
+                .filter(([, url]) => Boolean(url && String(url).trim()))
                 .map(([key]) => {
                   const platform = UNIFIED_PLATFORMS.find((p) => p.key === key);
                   return (
@@ -356,12 +335,6 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                       alt="Logo"
                       className="w-10 h-10 rounded-[var(--r-s)] object-contain shrink-0"
                     />
-                  ) : isBakandeya ? (
-                    <img
-                      src="/logo_bakandeya_bueno_sin_fondo.png"
-                      alt="Bakandeya logo"
-                      className="w-10 h-10 rounded-[var(--r-s)] object-contain shrink-0"
-                    />
                   ) : (
                     <div className="w-10 h-10 rounded-[var(--r-s)] bg-[var(--surface)] flex items-center justify-center text-[var(--ink-2)] font-bold shrink-0">
                       <Music className="w-5 h-5 text-[var(--ink-2)]" />
@@ -372,9 +345,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                     <h4 className="font-bold text-[var(--ink)] text-sm leading-tight truncate">
                       {config.firmaEmail?.nombreRemitente ||
                         config.contactoBooking?.nombre ||
-                        (isBakandeya
-                          ? "Booking y Management"
-                          : "Booking y Management Team")}
+                        "Booking y Management Team"}
                     </h4>
                     <p className="text-[var(--ink-2)] font-medium text-xs truncate">
                       {config.firmaEmail?.cargo || "Booking y Management Team"}
@@ -425,14 +396,6 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                 {(config.firmaEmail?.incluirIconosRedes ?? true) &&
                   (() => {
                     const combinedRedes: Record<string, string> = {
-                      ...(isBakandeya
-                        ? {
-                            instagram:
-                              "https://instagram.com/bakandeya_oficial",
-                            youtube: "https://youtube.com/@bakandeya_oficial",
-                            tiktok: "https://tiktok.com/@bakandeya_oficial",
-                          }
-                        : {}),
                       ...(config.enlacesRedes || {}),
                       ...(config.firmaEmail?.redesSociales || {}),
                     };

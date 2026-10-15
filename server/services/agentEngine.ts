@@ -12,6 +12,8 @@ import { crearBorradorGmailApi, tieneGmailOAuthConectado, comprobarBorradorEnvia
 import { dbGetEpkConfig } from "../db/epk.js";
 import { buildServerEmailHtml } from "../utils/emailTemplate.js";
 import { getBandDnaProfile, buildIndexableSubjectLine } from "../utils/bandDna.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 export async function logAgentExecution(logData: {
   band_id: string;
@@ -22,10 +24,10 @@ export async function logAgentExecution(logData: {
   usuario_email?: string;
   estado: "success" | "error" | "warning";
   mensaje: string;
-  leads_afectados?: any[];
+  leads_afectados?: unknown[];
   conteo_afectados?: number;
   duracion_ms: number;
-  detalles?: any;
+  detalles?: unknown;
 }): Promise<void> {
   try {
     const sb = getSupabase();
@@ -44,7 +46,8 @@ export async function logAgentExecution(logData: {
       duracion_ms: logData.duracion_ms,
       detalles: logData.detalles || {}
     });
-  } catch (e: any) {
+  } catch (eCapturado) {
+    const e = comoErrorCapturado(eCapturado);
     console.warn("[AUDIT LOG ERROR] No se pudo guardar el registro de auditoría en Supabase:", e?.message || e);
   }
 }
@@ -61,7 +64,7 @@ export function limiteDiarioDeEnvios(): number {
 }
 
 /** Correos que la banda ha enviado hoy (UTC): cuenta los mensajes salientes registrados. */
-async function contarEnviosDeHoy(sb: any, bandId: string): Promise<number> {
+async function contarEnviosDeHoy(sb: SupabaseClient, bandId: string): Promise<number> {
   const inicioDelDia = new Date();
   inicioDelDia.setUTCHours(0, 0, 0, 0);
   try {
@@ -79,16 +82,29 @@ async function contarEnviosDeHoy(sb: any, bandId: string): Promise<number> {
 }
 
 /** UPDATE de un lead que NO se traga el error: devuelve el mensaje si falla. */
-async function actualizarLeadComprobando(sb: any, leadId: string, bandId: string, cambios: Record<string, any>): Promise<string | null> {
+async function actualizarLeadComprobando(sb: SupabaseClient, leadId: string, bandId: string, cambios: Record<string, unknown>): Promise<string | null> {
   const { error } = await sb.from("leads").update(cambios).eq("id", leadId).eq("band_id", bandId);
   return error ? String(error.message || error) : null;
+}
+
+/** Qué pasó con cada lead del lote del Enviador. */
+export interface ResultadoEnvioLead {
+  id: string;
+  nombre_sala: string;
+  status: "omitido" | "error" | "borrador" | "enviado";
+  error?: string;
+  email_contacto?: string;
+  estado_anterior?: string;
+  estado_nuevo?: string;
+  carpeta_borradores?: string;
+  fecha_envio?: string;
 }
 
 export interface EnviadorResult {
   success: boolean;
   dispatchedCount: number;
   message: string;
-  results: any[];
+  results: ResultadoEnvioLead[];
 }
 
 // Interruptor de seguridad global: mientras AGENT_EMAIL_MODE no sea exactamente 'send', NINGUNA
@@ -147,10 +163,10 @@ export async function runEnviadorAgent(opts: {
   const { data: bandData } = await sb.from("registered_bands").select("nombre_banda").eq("band_id", opts.bandId).maybeSingle();
   if (bandData?.nombre_banda) bandName = bandData.nombre_banda;
 
-  let epkConfig: any = null;
+  let epkConfig: Awaited<ReturnType<typeof dbGetEpkConfig>> | null = null;
   try {
     epkConfig = await dbGetEpkConfig(opts.bandId);
-  } catch (e) {
+  } catch {
     // Non-blocking fallback
   }
 
@@ -162,10 +178,10 @@ export async function runEnviadorAgent(opts: {
   let dispatchMode = "draft_gmail";
   let dispatchLevel = "draft_only";
   try {
-    const autonomyConfig: any = await dbGetAutonomyConfig(opts.bandId);
+    const autonomyConfig = await dbGetAutonomyConfig(opts.bandId);
     if (autonomyConfig?.dispatchMode === "direct_send") dispatchMode = "direct_send";
     if (autonomyConfig?.dispatchLevel) dispatchLevel = String(autonomyConfig.dispatchLevel);
-  } catch (e) {
+  } catch {
     // Sin configuración de autonomía guardada todavía: se queda en el modo seguro por defecto.
   }
   // Envío real solo si las TRES cosas lo permiten: la plataforma, el modo y el nivel de autonomía.
@@ -178,7 +194,7 @@ export async function runEnviadorAgent(opts: {
   // OAuth conectado (o la banda usa Outlook), se mantiene el camino SMTP/IMAP de siempre.
   const usarGmailOAuth = await tieneGmailOAuthConectado(opts.bandId);
 
-  const results: any[] = [];
+  const results: ResultadoEnvioLead[] = [];
   const nowIso = new Date().toISOString();
 
   // Tope diario de envíos REALES por banda (los borradores no cuentan: los envía una persona).
@@ -237,7 +253,7 @@ export async function runEnviadorAgent(opts: {
         lead,
         isRespuesta
       });
-    } catch (e) {
+    } catch {
       // Fallback silencioso si falla la resolución de ADN
     }
 
@@ -368,11 +384,13 @@ export async function runEnviadorAgent(opts: {
       if (errMensaje) console.warn(`[Enviador] Correo enviado, pero no se registró en lead_messages (${errMensaje.message}).`);
 
       results.push({ id: lead.id, nombre_sala: lead.nombre_sala, email_contacto: emailContacto, estado_anterior: lead.estado, estado_nuevo: nextState, fecha_envio: nowIso, status: "enviado" });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       const isIdentityIssue = err instanceof EmailAgentError && (err.code === "no_token" || err.code === "identity_mismatch");
 
       // Registrar si el fallo fue por "usuario no existe" (invalid_recipient)
-      const failureReason = (err as any).deliveryFailureReason;
+      // Solo el cliente de Gmail adjunta el motivo del fallo de entrega (ver EmailAgentError).
+      const failureReason = err instanceof EmailAgentError ? err.deliveryFailureReason : undefined;
       if (failureReason === 'invalid_recipient') {
         // Se ANTEPONE a las notas existentes (antes se sustituían todas) y el lead sale de la cola
         // de envío para que no se reintente en cada ciclo.
@@ -463,7 +481,8 @@ export async function comprobarBorradoresGmailEnviados(bandId: string): Promise<
     let resultado: { existe: boolean; status: number; messageId?: string; cuerpo?: string };
     try {
       resultado = await comprobarBorradorEnviadoConDetalle(bandId, lead.gmail_draft_id);
-    } catch (e: any) {
+    } catch (eCapturado) {
+      const e = comoErrorCapturado(eCapturado);
       // Un fallo puntual comprobando (token caducado, red) no debe marcar nada como enviado por
       // error - se reintenta en el siguiente tick. Pero SÍ queda registrado en el resultado, para
       // no confundir "no se pudo comprobar" con "se comprobó y sigue existiendo".
@@ -482,7 +501,8 @@ export async function comprobarBorradoresGmailEnviados(bandId: string): Promise<
     let enviado: { messageId: string } | null;
     try {
       enviado = await buscarMensajeEnviadoA(bandId, lead.email_contacto || "");
-    } catch (e: any) {
+    } catch (eCapturado) {
+      const e = comoErrorCapturado(eCapturado);
       errores.push({ leadId: lead.id, draftId: lead.gmail_draft_id, error: e?.message || String(e) });
       continue;
     }

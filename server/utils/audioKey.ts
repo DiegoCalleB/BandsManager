@@ -19,6 +19,7 @@
 import { spawn } from "child_process";
 import ffmpegStatic from "ffmpeg-static";
 import { resolverFuenteAudioLocal } from "./audioEnergy.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export const SAMPLE_RATE = 11025;
 const VENTANA = 8192; // ~743ms a 11025Hz → resolución de ~1.35Hz, suficiente para separar semitonos incluso en graves
@@ -112,7 +113,8 @@ export async function extraerPcmMono(
     const bytesUtiles = Math.floor(buffer.length / 4) * 4;
     const ab = buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + bytesUtiles);
     return new Float32Array(ab);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[Audio] No se pudo extraer PCM para detectar tonalidad:", String(err?.message || err).substring(0, 200));
     return null;
   } finally {

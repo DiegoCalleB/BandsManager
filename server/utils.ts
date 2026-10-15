@@ -1,5 +1,5 @@
-export function safeParseJson(text: string): any {
-  if (!text || typeof text !== "string") return text;
+export function safeParseJson<T = unknown>(text: string): T {
+  if (!text || typeof text !== "string") return text as T;
   let cleanText = text.trim();
   
   if (cleanText.startsWith("```")) {
@@ -31,7 +31,7 @@ export function safeParseJson(text: string): any {
 
   try {
     return JSON.parse(cleanText);
-  } catch (_err) {
+  } catch {
     let sanitized = "";
     let inString = false;
     let escaped = false;
@@ -74,7 +74,7 @@ export function safeParseJson(text: string): any {
 }
 
 // Usada como filtro de tenant en escrituras reales a Supabase (ver
-// bulkImportSpotifyDiscographyToBand). Antes, un bandId vacío devolvía "bakandeya" en silencio,
+// bulkImportSpotifyDiscographyToBand). Antes, un bandId vacío devolvía una banda por defecto en silencio,
 // así que una importación de Spotify sin banda asociada acababa escribiendo canciones en el
 // catálogo real de la banda insignia. Mejor fallar alto, igual que server/db/core.ts#cleanBandId.
 export function cleanBandId(bandId?: string): string {

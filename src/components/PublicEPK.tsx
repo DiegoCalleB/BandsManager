@@ -37,6 +37,7 @@ import {
 } from "./epk/epkTemplates";
 import { getFontFamilyById } from "../config/bandFonts";
 import { ShowIcon } from './ui/ShowIcon';
+import { InsigniaBandManager } from './ui/InsigniaBandManager';
 
 // Carga del servidor: snake_case y camelCase conviven según el origen del dato.
 type PublicSong = Song & {
@@ -107,7 +108,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
             details,
             bandId: epkData?.bandId,
           }),
-        }).catch(() => {});
+        }).catch(() => { /* la telemetría del EPK nunca debe interrumpir al visitante */ });
       } catch {
         // el seguimiento nunca debe romper la vista del dossier
       }
@@ -176,9 +177,6 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
     epkData?.bandName ||
     epkData?.registeredBand?.nombre_banda ||
     dict.bandaPorDefecto;
-  const isBakandeya =
-    (epkData?.bandId || "").includes("bakandeya") ||
-    bandName.toLowerCase().includes("bakandeya");
 
   // Etiquetas fijas de la interfaz. El nombre de la banda y el año siempre están disponibles
   // como variables, así que cualquier cadena del diccionario puede usar {bandName} y {year}.
@@ -199,8 +197,8 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
   }
 
   const config: EPKConfig = epkData?.epkConfig || {
-    biografia: isBakandeya ? t("bioPorDefectoBakandeya") : t("bioPorDefecto"),
-    logoUrl: isBakandeya ? "/logo_bakandeya_bueno_sin_fondo.png" : "",
+    biografia: t("bioPorDefecto"),
+    logoUrl: "",
     bandPhotos: [],
     riderTecnico: t("riderPorDefecto"),
     enlacesRedes: {},
@@ -208,9 +206,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
     temasDestacadosIds: [],
   };
 
-  const displayLogo =
-    config.logoUrl ||
-    (isBakandeya ? "/logo_bakandeya_bueno_sin_fondo.png" : null);
+  const displayLogo = config.logoUrl || null;
 
   // El endpoint público devuelve los temas tal cual salen de Supabase (snake_case), pero el
   // resto de la app usa camelCase. Sin normalizar,'albumDisco' salía undefined y caía al
@@ -225,7 +221,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
 
   // Un enlace de artista/álbum de Spotify se puede incrustar cambiando la ruta por /embed/.
   // Se exigen los 22 caracteres del ID real: si no, un enlace de relleno como
-  //'/artist/bakandeya' generaba un iframe que no carga y dejaba un hueco vacío en la página.
+  //'/artist/mi-banda' generaba un iframe que no carga y dejaba un hueco vacío en la página.
   const spotifyEmbedUrl = (() => {
     const raw = config.enlacesRedes?.spotify || "";
     const match = raw.match(
@@ -441,7 +437,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
               <div className="flex items-center gap-2">
                 <FileText className="w-4 h-4 text-[var(--acc)]" />
                 <p className="text-xs font-bold font-mono uppercase tracking-wider">
-                  Rider Técnico & Dossier PDF
+                  Rider Técnico y Dossier PDF
                 </p>
               </div>
               {safeUrl(config.dossierPdfUrl) && (
@@ -1055,9 +1051,9 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
               </div>
               {(c.entradasUrl || c.entradasLugarFisico) && (
                 <div className="flex flex-wrap items-center gap-2 pt-2 print:hidden">
-                  {c.entradasUrl && (
+                  {safeUrl(c.entradasUrl) && (
                     <a
-                      href={c.entradasUrl}
+                      href={safeUrl(c.entradasUrl)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--ok)] text-[var(--on-ok)] text-xs font-bold hover:bg-[var(--ok)] transition-colors"
@@ -1198,10 +1194,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
           <p
             className={`mt-6 ${styles.heroSubtitle} text-base sm:text-xl max-w-2xl leading-snug`}
           >
-            {contenido.textoPie ||
-              (isBakandeya
-                ? t("lemaPorDefectoBakandeya")
-                : t("lemaPorDefecto"))}
+            {contenido.textoPie || t("lemaPorDefecto")}
           </p>
 
           {config.enlacesRedes && (
@@ -1273,6 +1266,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
             </a>
           )}
           <p>{t("pieDerechos")}</p>
+          <InsigniaBandManager bandId={epkData?.bandId} origen="epk" />
         </footer>
       </div>
 

@@ -69,3 +69,12 @@ describe('aviso de guardados fallidos', () => {
     expect(ventana.fetch).toBe(primera);
   });
 });
+
+describe('instalarAvisoDeGuardados con fetch no reasignable', () => {
+  it('no lanza si window.fetch solo tiene getter y deja la instalación reintentable', () => {
+    const ventana = { dispatchEvent: () => true, __avisoGuardadosInstalado: false } as unknown as Pick<Window, 'fetch' | 'dispatchEvent'> & { __avisoGuardadosInstalado?: boolean };
+    Object.defineProperty(ventana, 'fetch', { get: () => async () => new Response('{}'), configurable: false });
+    expect(() => instalarAvisoDeGuardados(ventana)).not.toThrow();
+    expect(ventana.__avisoGuardadosInstalado).toBe(false);
+  });
+});

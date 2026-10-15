@@ -17,7 +17,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Button, Input, MenuItem, Select } from '../ui';
-import { Song, Setlist, SetlistShortcut } from "../../types";
+import { Song, Setlist, SetlistShortcut, SetlistItem } from "../../types";
 import { formatSongTitle } from "../../utils/formatSongTitle";
 
 interface SetlistAddBarProps {
@@ -35,7 +35,7 @@ interface SetlistAddBarProps {
     notaTema?: string,
   ) => void;
   setIsAddSongsModalOpen: (open: boolean) => void;
-  setEditingShowItem: (item: any) => void;
+  setEditingShowItem: (item: SetlistItem | null) => void;
   setShowShowItemModal: (show: boolean) => void;
   customShortcuts: SetlistShortcut[];
   handleUseCustomShortcut: (sc: SetlistShortcut) => void;

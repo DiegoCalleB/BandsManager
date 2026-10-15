@@ -3,6 +3,7 @@ import { MessageSquareText, Plus, Trash2, Loader2, Pencil } from "lucide-react";
 import { apiFetch } from "../../utils/api";
 import type { TemplateCategory } from "./TemplateConfigSection";
 import { IconButton, Input, LinkButton, Select, Textarea } from '../ui';
+import { comoErrorCapturado } from '../../utils/errorCapturado';
 
 interface ThreadMessage {
   rol: "banda" | "sala";
@@ -16,6 +17,14 @@ interface ExampleThread {
   mensajes: ThreadMessage[];
   resultado: "positiva" | "negativa" | "neutral";
   created_at: string;
+}
+
+/** Respuesta de `/api/example-threads` (listado: `threads`; alta y edición: `thread`). */
+interface RespuestaHilosEjemplo {
+  success?: boolean;
+  threads?: ExampleThread[];
+  thread?: ExampleThread;
+  error?: string;
 }
 
 interface ExampleThreadsSectionProps {
@@ -32,11 +41,13 @@ const RESULTADO_LABEL: Record<string, string> = {
 };
 
 export function ExampleThreadsSection({
-  category,
-  textSub,
+  category
 }: ExampleThreadsSectionProps) {
   const [threads, setThreads] = useState<ExampleThread[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  // Categoría cuyos hilos ya llegaron: mientras no coincida con la actual, se está cargando.
+  const [cargadaCategoria, setCargadaCategoria] = useState<string | null>(null);
+  const [recargando, setRecargando] = useState(false);
+  const isLoading = recargando || cargadaCategoria !== category;
   const [isSaving, setIsSaving] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -50,25 +61,31 @@ export function ExampleThreadsSection({
   ]);
   const [error, setError] = useState<string | null>(null);
 
-  const loadThreads = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const res = await apiFetch(
-        `/api/example-threads?category=${encodeURIComponent(category)}`,
-      );
-      if (res.success) setThreads(res.threads || []);
-    } catch (err) {
-      console.warn("No se pudieron cargar los hilos de ejemplo:", err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [category]);
-
-  useEffect(() => {
-    loadThreads();
+  // Al cambiar de categoría se cierra el formulario y se limpia el error (ajuste en render).
+  const [categoriaPrevia, setCategoriaPrevia] = useState(category);
+  if (category !== categoriaPrevia) {
+    setCategoriaPrevia(category);
     setShowForm(false);
     setError(null);
-  }, [loadThreads]);
+  }
+
+  const pedirHilos = useCallback(
+    () => apiFetch<RespuestaHilosEjemplo>(`/api/example-threads?category=${encodeURIComponent(category)}`)
+      .then((res) => { if (res.success) setThreads(res.threads || []); })
+      .catch((err) => { console.warn("No se pudieron cargar los hilos de ejemplo:", err); })
+      .finally(() => { setCargadaCategoria(category); setRecargando(false); }),
+    [category],
+  );
+
+  /** Recarga la lista (tras guardar o borrar un hilo). */
+  const loadThreads = useCallback(async () => {
+    setRecargando(true);
+    await pedirHilos();
+  }, [pedirHilos]);
+
+  useEffect(() => {
+    void pedirHilos();
+  }, [pedirHilos]);
 
   const resetForm = () => {
     setEditingId(null);
@@ -138,7 +155,7 @@ export function ExampleThreadsSection({
     setIsSaving(true);
     try {
       const res = editingId
-        ? await apiFetch(`/api/example-threads/${editingId}`, {
+        ? await apiFetch<RespuestaHilosEjemplo>(`/api/example-threads/${editingId}`, {
             method: "PUT",
             body: JSON.stringify({
               titulo,
@@ -146,7 +163,7 @@ export function ExampleThreadsSection({
               resultado,
             }),
           })
-        : await apiFetch("/api/example-threads", {
+        : await apiFetch<RespuestaHilosEjemplo>("/api/example-threads", {
             method: "POST",
             body: JSON.stringify({
               category,
@@ -162,7 +179,8 @@ export function ExampleThreadsSection({
       } else {
         setError(res.error || "No se pudo guardar el hilo.");
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setError(err.message || "Error al guardar el hilo.");
     } finally {
       setIsSaving(false);

@@ -39,7 +39,7 @@ graph TD
     Dashboard -->|Aprobación Explícita por el Usuario| Aprobado[Sub-estado: aprobado_propuesta / respuesta]
     Aprobado --> Enviador[3. Enviador Agent]
     Enviador -->|Comprueba AGENT_EMAIL_MODE y dispatch_mode| Envio[Crea Borrador o Envía Directo]
-    Lector[4. Lector Agent] -->|Monitoriza respuestas cada ~60s| Transicion[Transiciona Lead a 'respondido' o 'negociando']
+    Lector[4. Lector Agent] -->|Monitoriza respuestas según el scheduler| Transicion[Transiciona Lead a 'respondido' o 'negociando']
 ```
 
 ### Reglas Invariable de Seguridad Agéntica
@@ -51,7 +51,7 @@ graph TD
 
 ## ⏱️ 3. Operación del Scheduler In-Process (`agentScheduler.ts`)
 
-- El planificador corre un bucle in-process cada ~60 segundos.
+- El planificador corre un bucle in-process (por defecto cada 24 h; configurable con `AGENT_SCHEDULER_INTERVAL_MS`; ver ADR 0007).
 - Mantiene estado de ejecución en la tabla `agent_schedule_state` para evitar duplicidad de envíos tras un despliegue en Railway.
 - **Enviador:** Respeta la ventana comercial de la banda (`horas_enviador`, `dias_enviador`).
 - **Lector:** Corre incondicionalmente en cada tick para detectar inmediatamente respuestas entrantes o borradores enviados a mano en Gmail.

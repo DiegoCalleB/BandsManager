@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { formatTime } from '../EnsayoCronometro';
+import { formatTime } from '../formatTime';
 import { processChordText, extractUniqueChords } from '../../../utils/chordUtils';
 
 describe('Ensayos & Local en Vivo utilities', () => {

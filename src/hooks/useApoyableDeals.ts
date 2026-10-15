@@ -22,27 +22,49 @@ export interface ApoyableDeal {
 export function useApoyableDeals(enabled: boolean, bandId?: string) {
   const [deals, setDeals] = useState<ApoyableDeal[]>([]);
   const [loaded, setLoaded] = useState(false);
+  // Al cambiar de banda (o activarse) se vacía lo anterior en el propio render, no en un efecto.
+  const contexto = `${enabled}|${bandId ?? ''}`;
+  const [contextoPrevio, setContextoPrevio] = useState(contexto);
+  if (contexto !== contextoPrevio) {
+    setContextoPrevio(contexto);
+    setDeals([]);
+    setLoaded(false);
+  }
 
   const refresh = useCallback(async () => {
     if (!enabled || !bandId) return;
-    try {
-      const data = await apiFetch<{ deals?: ApoyableDeal[] }>('/api/donations/deal-support');
-      setDeals(Array.isArray(data?.deals) ? data.deals : []);
-    } catch {
-      setDeals([]);
-    } finally {
-      setLoaded(true);
-    }
+    setDeals(await pedirDealsApoyables());
+    setLoaded(true);
   }, [enabled, bandId]);
 
   useEffect(() => {
-    setDeals([]);
-    setLoaded(false);
-    refresh();
+    if (!enabled || !bandId) return;
+    let vivo = true;
+    const cargar = () => {
+      pedirDealsApoyables().then((lista) => {
+        if (!vivo) return;
+        setDeals(lista);
+        setLoaded(true);
+      });
+    };
+    cargar();
     // 'app-data-updated' se emite cuando llegan datos nuevos (p. ej. la sala acaba de firmar).
-    window.addEventListener('app-data-updated', refresh);
-    return () => window.removeEventListener('app-data-updated', refresh);
-  }, [refresh]);
+    window.addEventListener('app-data-updated', cargar);
+    return () => {
+      vivo = false;
+      window.removeEventListener('app-data-updated', cargar);
+    };
+  }, [enabled, bandId]);
 
   return { deals, loaded, refresh };
+}
+
+/** Deals que admiten apoyo de fans; lista vacía si falla la petición. */
+async function pedirDealsApoyables(): Promise<ApoyableDeal[]> {
+  try {
+    const data = await apiFetch<{ deals?: ApoyableDeal[] }>('/api/donations/deal-support');
+    return Array.isArray(data?.deals) ? data.deals : [];
+  } catch {
+    return [];
+  }
 }

@@ -40,6 +40,15 @@ export function clientIdsPermitidos(): string[] {
   return [...ids];
 }
 
+/** Campos que se leen de la respuesta de tokeninfo de Google (todos pueden faltar). */
+interface InfoTokenGoogle {
+  aud?: string;
+  azp?: string;
+  email?: string;
+  email_verified?: boolean | string;
+  sub?: string;
+}
+
 export async function verificarAccessTokenDeGoogle(
   accessToken: unknown,
   opciones: { emailDeclarado?: string; subDeclarado?: string; fetchImpl?: typeof fetch; clientIds?: string[] } = {}
@@ -61,7 +70,7 @@ export async function verificarAccessTokenDeGoogle(
   }
   if (!respuesta.ok) throw new GoogleVerifyError('Google rechazó el token');
 
-  const info: any = await respuesta.json().catch(() => null);
+  const info = (await respuesta.json().catch(() => null)) as InfoTokenGoogle | null;
   if (!info) throw new GoogleVerifyError('Respuesta de Google no válida');
 
   const emitidoPara = String(info.aud || info.azp || '');

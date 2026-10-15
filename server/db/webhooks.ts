@@ -19,14 +19,14 @@ export async function dbIsWebhookEventProcessed(eventId: string): Promise<boolea
       inMemoryWebhookEvents.add(eventId);
       return true;
     }
-  } catch (e) {
+  } catch {
     // If table doesn't exist yet, in-memory check is used
   }
 
   return false;
 }
 
-export async function dbRecordWebhookEvent(eventId: string, eventType: string, payload?: any): Promise<void> {
+export async function dbRecordWebhookEvent(eventId: string, eventType: string, payload?: unknown): Promise<void> {
   if (!eventId) return;
   inMemoryWebhookEvents.add(eventId);
 
@@ -40,7 +40,7 @@ export async function dbRecordWebhookEvent(eventId: string, eventType: string, p
         payload: payload || {},
         processed_at: new Date().toISOString()
       }, { onConflict: 'event_id' });
-  } catch (e) {
+  } catch {
     // Non-blocking if table doesn't exist
   }
 }

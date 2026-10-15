@@ -13,7 +13,7 @@
 import MailComposer from "nodemailer/lib/mail-composer/index.js";
 import { dbGetBandGmailOAuth } from "../db/gmailOAuth.js";
 import { EmailAgentError, RespuestaEntrante } from "./emailAgentClient.js";
-import { classifyGmailError, isBounceMessage } from "../utils/emailDeliveryTracker.js";
+import { classifyGmailError } from "../utils/emailDeliveryTracker.js";
 
 const TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token";
 const DRAFTS_ENDPOINT = "https://gmail.googleapis.com/gmail/v1/users/me/drafts";
@@ -92,7 +92,7 @@ async function getValidAccessToken(bandId: string): Promise<string> {
       if (parsed.error === "invalid_grant") {
         friendlyMessage = "Token de Google revocado o caducado (invalid_grant). Es necesario reconectar con 'Conectar con Google'.";
       }
-    } catch (_) {}
+    } catch { /* cuerpo de error no JSON: se queda el mensaje genérico */ }
     throw new EmailAgentError(`No se pudo renovar el token de Gmail para '${bandId}': ${friendlyMessage || res.status}`, "api_error");
   }
 
@@ -197,7 +197,7 @@ export async function enviarEmailGmailApi(bandId: string, params: { to: string; 
       "api_error"
     );
     // Adjuntar el tipo de fallo para que agentEngine pueda registrarlo
-    (error as any).deliveryFailureReason = failureReason;
+    error.deliveryFailureReason = failureReason;
     throw error;
   }
 
@@ -237,7 +237,7 @@ export async function comprobarBorradorEnviadoConDetalle(bandId: string, draftId
     const to = headers?.find((h) => h.name.toLowerCase() === "to")?.value;
     const subject = headers?.find((h) => h.name.toLowerCase() === "subject")?.value;
     cuerpo = JSON.stringify({ draftId: data?.id, messageId, threadId: data?.message?.threadId, to, subject });
-  } catch (e) {
+  } catch {
     cuerpo = "no se pudo parsear el cuerpo de la respuesta";
   }
 
@@ -268,7 +268,14 @@ export async function buscarMensajeEnviadoA(bandId: string, email: string): Prom
 // Extrae el primer cuerpo de texto plano de un mensaje de Gmail (formato "full"): o bien viene
 // directo en payload.body, o hay que bajar por payload.parts buscando 'text/plain' (los mensajes
 // multipart/alternative traen html y texto plano como partes hermanas).
-function extraerTextoPlano(payload: any): string {
+/** Parte MIME de un mensaje de Gmail (`format=full`): lo que se lee para sacar el texto plano. */
+interface ParteMensajeGmail {
+  mimeType?: string;
+  body?: { data?: string };
+  parts?: ParteMensajeGmail[];
+}
+
+function extraerTextoPlano(payload: ParteMensajeGmail | undefined): string {
   if (!payload) return "";
   if (payload.mimeType === "text/plain" && payload.body?.data) {
     return base64UrlDecode(payload.body.data);
@@ -345,7 +352,7 @@ export async function leerRespuestasGmailApi(bandId: string, maxResults = 25): P
           friendlyMessage = `${parsed.error.message} (HTTP ${listRes.status})`;
         }
       }
-    } catch (_) {}
+    } catch { /* cuerpo de error no JSON: se queda el mensaje genérico */ }
 
     if (isRateLimit) {
       setGmailRateLimitCooldown(bandId);
@@ -355,8 +362,8 @@ export async function leerRespuestasGmailApi(bandId: string, maxResults = 25): P
 
     throw new EmailAgentError(`No se pudieron listar los mensajes nuevos de '${bandId}': ${friendlyMessage || listRes.status}`, "api_error");
   }
-  const listData = await listRes.json();
-  const ids: string[] = (listData.messages || []).map((m: any) => m.id);
+  const listData: { messages?: Array<{ id: string }> } = await listRes.json();
+  const ids: string[] = (listData.messages || []).map((m) => m.id);
 
   const resultados: RespuestaEntrante[] = [];
   console.log(`[Gmail API] Lector: encontrados ${ids.length} mensajes recientes en Gmail`);

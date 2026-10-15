@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { X, Search, Plus, Check, Disc3, Upload, Image as ImageIcon, Loader2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { useReajusteAlCambiar } from '../../hooks/useReajusteAlCambiar';
+import { X, Search, Plus, Check, Disc3, Upload, Loader2 } from 'lucide-react';
 import { Song, ThemeColors } from '../../types';
 import { formatSongTitle } from '../../utils/formatSongTitle';
 import { uploadFileToServer } from '../../utils/audioStorage';
 import { ModalPortal } from '../common/ModalPortal';
 import { PublicoSilhouette } from '../ui/PublicoSilhouette';
 import { Button, IconButton, Input, Select, Textarea } from '../ui';
+
+/** Canción con el año de disco que algunas filas traen en `albumYear` o `album_year`. */
+type CancionConAnioDisco = Song & { albumYear?: string; album_year?: string };
 
 interface AssignSongsToAlbumModalProps {
   isOpen: boolean;
@@ -36,17 +40,18 @@ export function AssignSongsToAlbumModal({ isOpen, albumName, songs, colors, onCl
   const [description, setDescription] = useState('');
   const [isUploading, setIsUploading] = useState(false);
 
-  useEffect(() => {
+  useReajusteAlCambiar([isOpen, albumName, songs] as const, () => {
     if (isOpen) {
       setCustomAlbumName(albumName);
       const matching = songs.filter((s) => (s.albumDisco || 'Singles / Sin Disco') === albumName || s.albumDisco === albumName);
       setSelectedIds(new Set(matching.map((s) => s.id)));
       const existingCover = matching.find((s) => s.portadaUrl)?.portadaUrl || '';
       setCoverUrl(existingCover);
-      const existingYear = (matching.find((s) => (s as any).albumYear || (s as any).album_year) as any)?.albumYear || (matching.find((s) => (s as any).album_year) as any)?.album_year;
+      const conAnio: CancionConAnioDisco[] = matching;
+      const existingYear = conAnio.find((s) => s.albumYear || s.album_year)?.albumYear || conAnio.find((s) => s.album_year)?.album_year;
       if (existingYear) setAlbumYear(existingYear);
     }
-  }, [isOpen, albumName, songs]);
+  });
 
   if (!isOpen) return null;
 
