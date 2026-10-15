@@ -3261,7 +3261,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:202",
+        "x-source": "server/routes/cartelria.ts:212",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -3299,7 +3299,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:213",
+        "x-source": "server/routes/cartelria.ts:223",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -3339,7 +3339,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:90",
+        "x-source": "server/routes/cartelria.ts:94",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "imagenRateLimiter"
@@ -3379,7 +3379,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:229",
+        "x-source": "server/routes/cartelria.ts:239",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "ficherosRateLimiter"
@@ -3427,7 +3427,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:142",
+        "x-source": "server/routes/cartelria.ts:152",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -3475,7 +3475,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:177",
+        "x-source": "server/routes/cartelria.ts:187",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "ficherosRateLimiter"
@@ -3523,7 +3523,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:155",
+        "x-source": "server/routes/cartelria.ts:165",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "ficherosRateLimiter"
@@ -5444,7 +5444,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/gmailOAuth.ts:312",
+        "x-source": "server/routes/gmailOAuth.ts:298",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "gmailOAuthRateLimiter"
@@ -5485,7 +5485,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/gmailOAuth.ts:299",
+        "x-source": "server/routes/gmailOAuth.ts:285",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "gmailOAuthRateLimiter"

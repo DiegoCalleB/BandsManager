@@ -18,10 +18,11 @@ vi.mock('../../db/core.js', async (orig) => ({ ...(await orig<any>()), getSupaba
 vi.mock('../../state.js', async (orig) => ({ ...(await orig<any>()), loadState: () => ({}), saveState: () => {} }));
 vi.mock('../../db.js', () => ({ dbGetEpkConfig: async () => null, dbGetRegisteredBandById: async () => null }));
 
-const servicio = { url: `${PUB}/carteles/band-a/ia-1.png` as string | null, llamadas: [] as Array<[string, string, number]> };
+const servicio = { url: `${PUB}/carteles/band-a/ia-1.png` as string | null, error: null as unknown, llamadas: [] as Array<[string, string, number]> };
 vi.mock('../../services/imagenCartel.js', () => ({
   generarFondoCartel: async (bandId: string, prompt: string, refs: unknown[] = []) => {
     servicio.llamadas.push([bandId, prompt, refs.length]);
+    if (servicio.error) throw servicio.error;
     return servicio.url;
   },
 }));
@@ -79,6 +80,7 @@ beforeEach(() => {
   ];
   servicio.url = `${PUB}/carteles/band-a/ia-1.png`;
   servicio.llamadas.length = 0;
+  servicio.error = null;
   subidas.length = 0;
   borrados.length = 0;
   leidos.length = 0;
@@ -124,6 +126,21 @@ describe('POST /cartel/fondo', () => {
     const res = await fondo({ concertId: 'c1', estilo: 'neon' });
     expect(res.code).toBe(503);
     expect(res.body.url).toBeUndefined();
+  });
+
+  it('sin cupo o con tope de gasto en el proveedor: 503 con mensaje claro y sin filtrar el error de Google', async () => {
+    servicio.error = Object.assign(new Error('{"error":{"code":403,"message":"Spend cap breached for project: projects/36068629683","status":"PERMISSION_DENIED"}}'), { status: 403 });
+    const res = await fondo({ concertId: 'c1', estilo: 'neon' });
+    expect(res.code).toBe(503);
+    expect(res.body.error).toMatch(/no está disponible/i);
+    expect(JSON.stringify(res.body)).not.toMatch(/36068629683|spend cap|PERMISSION_DENIED/i);
+  });
+
+  it('cualquier otro fallo sigue siendo un 500 genérico', async () => {
+    servicio.error = new Error('boom interno con detalles');
+    const res = await fondo({ concertId: 'c1', estilo: 'neon' });
+    expect(res.code).toBe(500);
+    expect(JSON.stringify(res.body)).not.toMatch(/boom/);
   });
 });
 
