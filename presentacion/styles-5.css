@@ -348,3 +348,20 @@ body.pelicula:not(.scroll) :is(img[src*="gracias-mop"], img[src*="diego-bajista"
 @keyframes apout { to { opacity: 0; } }
 body.scroll .ap-l { opacity: 1; animation: none; }
 @media (prefers-reduced-motion: reduce) { .ap-l { opacity: 1; animation: none !important; } }
+
+/* Pausa «Falta un fan»: la imagen se rompe, aviso de sistema y la espera del escaneo */
+#demo-qr .dq-glitch { position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(255,255,255,.07) 0 2px, transparent 2px 5px); mix-blend-mode: overlay; animation: dqglitch 1.1s steps(2) both; }
+@keyframes dqglitch { 0% { background-color: #ff003c55; transform: translateX(-14px); } 20% { background-color: #00e5ff55; transform: translateX(18px) skewX(4deg); } 40% { background-color: #fff3; transform: translateX(-9px); } 60% { background-color: #ff003c44; transform: translateX(7px); } 100% { background-color: transparent; transform: none; } }
+#demo-qr .dq-caja { animation: dqcaja .9s steps(6) .35s both; }
+@keyframes dqcaja { from { opacity: 0; filter: hue-rotate(90deg) blur(3px); transform: translateX(-12px); } 50% { opacity: .6; transform: translateX(8px); } to { opacity: 1; filter: none; transform: none; } }
+#demo-qr .dq-sis { color: #ff3b4e; font: 700 24px/1 'Courier New', monospace; letter-spacing: .14em; text-transform: uppercase; }
+#demo-qr q { color: #f0e6cf; font-size: 28px; font-style: italic; line-height: 1.3; quotes: none; }
+#demo-qr q:empty, #demo-qr .dq-esp:empty { display: none; }
+#demo-qr .dq-esp { color: #e5a53b; font: 600 24px/1 'Courier New', monospace; font-style: normal; animation: dqparp 1.3s steps(2) infinite; }
+@keyframes dqparp { 50% { opacity: .25; } }
+#demo-qr .dq-sin { opacity: 0; pointer-events: none; transition: opacity 1.5s; }
+#demo-qr .dq-sin.on { opacity: 1; pointer-events: auto; }
+#demo-qr.dq-listo .dq-sis { color: #38d27a; }
+#demo-qr.dq-listo .dq-sis::after { content: ' · ok'; }
+#demo-qr.dq-listo .dq-esp { display: none; }
+@media (prefers-reduced-motion: reduce) { #demo-qr .dq-glitch, #demo-qr .dq-caja, #demo-qr .dq-esp { animation: none; } }

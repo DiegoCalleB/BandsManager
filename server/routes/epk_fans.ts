@@ -11,6 +11,7 @@ import {
   dbGetEpkConfig,
   dbUpsertEpkConfig,
   dbGetFans,
+  dbContarFans,
   dbUpsertFan,
   dbDeleteFan,
   dbGetSongs,
@@ -972,6 +973,21 @@ router.post('/public/fans', publicoRateLimiter, async (req, res) => {
     const err = comoErrorCapturado(errCapturado);
     console.error('Error in public fan registration:', err);
     res.status(500).json({ error: 'Error al procesar el registro de fan.' });
+  }
+});
+
+// Solo el número de fans de la banda (sin nombres ni correos). La película del TFM lo consulta para
+// saber cuándo alguien ha escaneado el QR de fans y dejar que siga. El token de la banda ya va en el
+// propio QR público, así que esto no descubre nada que no pueda ver quien tenga el QR.
+router.get('/public/fans/contador', publicoRateLimiter, async (req, res) => {
+  try {
+    const raw = typeof req.query.b === 'string' ? req.query.b : '';
+    if (!raw.trim()) return res.status(400).json({ error: 'Falta el identificador de la banda.' });
+    const total = await dbContarFans(decodeBandId(raw));
+    res.set('Cache-Control', 'no-store').json({ total });
+  } catch (errCapturado) {
+    console.error('Error contando fans:', comoErrorCapturado(errCapturado));
+    res.status(500).json({ error: 'No se pudo contar.' });
   }
 });
 

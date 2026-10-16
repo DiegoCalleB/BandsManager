@@ -9,7 +9,7 @@
   // de Os Herdeiros) se genera con tools/qr_demo.py --hdc y tiene que apuntar a la misma dirección que DEMO_URL. Es la página pública de fans (/unete) de la banda real «Os Herdeiros
   // do Código» (band-os-herdeiros-do-codigo): el único QR que escanea Brais, y el mismo que sale en «Un QR y el público se hace fan».
   var DEMO_URL = 'https://bandmanager.io/unete?b=t_AAAAAEAOHUwPAAA7FgwRGgFIOxxMDxs7W1dd';
-  var DEMO = { titulo: 'Entra tú también', texto: 'Escanea el código y hazte fan de Os Herdeiros, como el público del festival. La película espera.' };
+  var DEMO = { titulo: 'Falta un fan', texto: 'La escena no continúa hasta que alguien escanee el código y se haga fan de Os Herdeiros.' };
   var ELECCIONES = {
     'Prólogo · Sábado, 11:00 en el local': { id: 'demo', demo: true },
     'Prólogo · La decisión': {
@@ -41,17 +41,36 @@
   };
 
 
+  // Pausa «Falta un fan»: la película se rompe (glitch + aviso de sistema) y no sigue hasta que alguien escanee el QR y se haga fan de verdad.
+  // El servidor de la presentación (/fans-contador) dice cuántos fans tiene la banda; cuando sube, la película avanza. Si no hay contador
+  // (en local, o sin red), se sigue con el botón «Ya estoy dentro» y, a los 25 s, «Seguir sin entrar».
   var pausaQR = function (idx, siguiente, saltar) {
     var el = document.createElement('div'); el.id = 'demo-qr'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', DEMO.titulo);
-    el.innerHTML = '<div class="dq-caja"><img class="dq-qr" src="img/qr-fans.png" alt="QR de fans de Os Herdeiros do Código"><div class="dq-txt"><h2></h2><p></p><small></small><button type="button" class="dq-ok">Ya estoy dentro →</button><button type="button" class="dq-sin">Seguir sin entrar</button></div></div>';
-    el.querySelector('h2').textContent = DEMO.titulo; el.querySelector('p').textContent = DEMO.texto; el.querySelector('small').textContent = 'bandmanager.io/unete';
-    var sigue = function () { removeEventListener('keydown', teclas, true); clearInterval(vigila); el.remove(); hechas.demo = true; saltar(siguiente); };
+    el.innerHTML = '<i class="dq-glitch" aria-hidden="true"></i><div class="dq-caja"><img class="dq-qr" src="img/qr-fans.png" alt="QR de fans de Os Herdeiros do Código"><div class="dq-txt"><b class="dq-sis">Fallo de reproducción</b><h2></h2><p></p><q></q><small></small><em class="dq-esp"></em><button type="button" class="dq-ok" hidden>Ya estoy dentro →</button><button type="button" class="dq-sin">Seguir sin entrar</button></div></div>';
+    var h2 = el.querySelector('h2'), p = el.querySelector('p'), q = el.querySelector('q'), esp = el.querySelector('.dq-esp'), ok = el.querySelector('.dq-ok'), sin = el.querySelector('.dq-sin');
+    h2.textContent = DEMO.titulo; p.textContent = DEMO.texto; el.querySelector('small').textContent = 'bandmanager.io/unete';
+    var base = null, vivo = true;
+    var contar = function () { return fetch('fans-contador', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) { return j && Number.isInteger(j.total) ? j.total : null; }, function () { return null; }); };
+    var fin = function () { vivo = false; clearInterval(sondeo); clearTimeout(tarde); removeEventListener('keydown', teclas, true); clearInterval(vigila); el.remove(); };
+    var sigue = function () { if (!vivo) return; fin(); hechas.demo = true; saltar(siguiente); };
     var teclas = function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); sigue(); } };
-    el.querySelector('.dq-ok').addEventListener('click', sigue); el.querySelector('.dq-sin').addEventListener('click', sigue);
-    var vigila = setInterval(function () { if (D().cur !== idx) { removeEventListener('keydown', teclas, true); clearInterval(vigila); el.remove(); } }, 400);
+    var hecho = function (n) {
+      vivo = false; clearInterval(sondeo); el.classList.add('dq-listo');
+      h2.textContent = 'Fan nº ' + n; p.textContent = 'Bienvenido, Brais. Ahora sí.'; q.textContent = ''; esp.textContent = ''; ok.hidden = true; sin.hidden = true;
+      setTimeout(function () { vivo = true; sigue(); }, 2600);
+    };
+    var sondeo = setInterval(function () { if (!vivo) return; contar().then(function (t) { if (vivo && base !== null && t !== null && t > base) hecho(t); }); }, 2500);
+    var tarde = setTimeout(function () { sin.classList.add('on'); }, 25000);
+    ok.addEventListener('click', sigue); sin.addEventListener('click', sigue);
+    var vigila = setInterval(function () { if (D().cur !== idx) fin(); }, 400);
     document.getElementById('stage').appendChild(el);
     addEventListener('keydown', teclas, true);
-    setTimeout(function () { var b = el.querySelector('.dq-ok'); if (b) b.focus({ preventScroll: true }); }, 50);
+    contar().then(function (t) {
+      base = t;
+      if (t === null) { ok.hidden = false; esp.textContent = 'Cuando estés dentro, pulsa el botón.'; q.textContent = '«Brais, faltas tú.» — Iago'; sin.classList.add('on'); return; }
+      q.textContent = '«Brais, no mires el reloj. Somos ' + t + ' fans… y el ' + (t + 1) + ' estás sentado ahí.» — Iago';
+      esp.textContent = 'Esperando al fan nº ' + (t + 1) + '…';
+    });
   };
 
   var pregunta = function (idx, cfg, quitadas, siguiente, saltar) {
