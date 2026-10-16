@@ -332,3 +332,6 @@ body.pelicula:not(.scroll) :is(img[src*="gracias-mop"], img[src*="diego-bajista"
 /* en el dossier y el setlist, además, el QR de BandManager */
 .sellos-caja .powered .pq { position: absolute; right: 14px; bottom: 10px; width: 78px; height: 78px; padding: 4px; border-radius: 6px; background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,.6); }
 .sellos-caja .powered:has(.pq) { padding-bottom: 12px; min-height: 62px; }
+
+/* Anuncios de BandManager: ilustración propia de cada herramienta, con el logo como firma */
+.nx-ads .nx-game i.arte img:not(.nx-gicono) { z-index: 3; right: 10px; bottom: 10px; width: 36px; height: 36px; border-radius: 10px; }
