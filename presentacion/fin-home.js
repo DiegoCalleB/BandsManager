@@ -90,15 +90,19 @@
     mas.insertBefore(rec, ads ? ads.nextSibling : mas.firstChild);
     mas.appendChild(filaPelis('Comedias con morriña', MORRINA));
   }
-  // Fila «Juegos móviles»: el juego de Diego (Scroll Challenge, con su enlace de Google Play) y las apps de MoureDev. Cada una abre su ficha; el icono real, si existe, va en img/juegos/<id>.png
+  // Fila «Juegos móviles»: el juego de Diego (Scroll Challenge, con su enlace de Google Play) y las apps de MoureDev. Cada una abre su ficha; el icono real, si existe, va en img/juegos/<id>.jpg (o .png)
   // (sin él sale el icono dibujado). Para poner el enlace directo a cada tienda basta cambiar el último campo.
   var PORTFOLIO = 'https://mouredev.com/portfolio/';
   var JUEGOS = [
     ['scroll-challenge', 'Scroll Challenge', 'Juego móvil · Google Play', '#ff3d71,#ffb142', 'juego', 'https://play.google.com/store/apps/details?id=com.scrollchallenge.game'],
     ['flappy-bird', 'Flappy Bird', 'Autor: Brais Moure* (*no, pero le habría encantado)', '#1e90d8,#8fdc4f', 'pajaro', PORTFOLIO],
-    ['speedy-whales', 'Speedy Whales', 'Juego móvil · MoureDev', '#0a4d8c,#27c4f4', 'juego', PORTFOLIO],
-    ['gotrends', 'GoTrends', 'App móvil · Google Trends', '#1a73e8,#34c759', 'app', PORTFOLIO],
-    ['tpcast', 'TP Cast', 'App móvil · Todopoderosos', '#8a2be2,#ff5f6d', 'app', PORTFOLIO]
+    ['chimpy-jump', 'Chimpy Jump', 'Juego móvil · salta, mono, salta', '#4caf50,#b6e08a', 'juego', PORTFOLIO],
+    ['speedy-whales', 'Speedy Whales', 'Juego móvil · ballenas con prisa', '#2f8f9a,#9fe0dc', 'juego', PORTFOLIO],
+    ['tiny-pirates', 'Tiny Pirates', 'Juego móvil · cañonazos y mar', '#1c9bd0,#8fd8f0', 'juego', PORTFOLIO],
+    ['wookieator', 'Wookieator', 'App móvil · el traductor wookiee', '#c99a1c,#2a2a2a', 'app', PORTFOLIO],
+    ['tpcast', 'TP Cast', 'App móvil · Todopoderosos', '#d8c000,#222', 'app', PORTFOLIO],
+    ['pumpkin', 'Pumpkin', 'App móvil · para socios de Pilbeo', '#f0a020,#555', 'app', PORTFOLIO],
+    ['pilbeo', 'Pilbeo', 'App móvil · Camino de Santiago', '#f0b030,#4a9a3a', 'app', PORTFOLIO]
   ];
   ICONOS.juego = '<rect x="2" y="7" width="20" height="11" rx="5.5"/><path d="M7 10.5v4M5 12.5h4"/><circle cx="16" cy="11.5" r=".6"/><circle cx="18.2" cy="13.8" r=".6"/>';
   ICONOS.pajaro = '<ellipse cx="11" cy="13" rx="7" ry="5.5"/><circle cx="14" cy="11" r="1"/><path d="M18 13l3.5 1.2-3.5 1.4M8 13c1.5 2 4 2 5 0M6 17.5l-2 2.5M10 18.5l-1 2.5"/>';
@@ -106,7 +110,7 @@
   if (mas) {
     var jg = document.createElement('div'); jg.className = 'nx-filas2 nx-ads';
     jg.innerHTML = '<h3>Juegos móviles <span class="nx-ad-chip">Android · iOS</span></h3><div class="nx-games">' + JUEGOS.map(function (g) {
-      return '<a class="nx-game" href="' + g[5] + '" target="_blank" rel="noopener"><i style="--c1:' + g[3].split(',')[0] + ';--c2:' + g[3].split(',')[1] + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + ICONOS[g[4]] + '</svg><img class="nx-gicono" src="img/juegos/' + g[0] + '.png" alt="" onerror="this.remove()"></i><b>' + cerrado(g[1]) + '</b><small>' + cerrado(g[2]) + '</small><span>Obtener</span></a>';
+      return '<a class="nx-game" href="' + g[5] + '" target="_blank" rel="noopener"><i style="--c1:' + g[3].split(',')[0] + ';--c2:' + g[3].split(',')[1] + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + ICONOS[g[4]] + '</svg><img class="nx-gicono" src="img/juegos/' + g[0] + '.jpg" alt="" onerror="if(!this.dataset.r){this.dataset.r=1;this.src=this.src.replace(\'.jpg\',\'.png\')}else this.remove()"></i><b>' + cerrado(g[1]) + '</b><small>' + cerrado(g[2]) + '</small><span>Obtener</span></a>';
     }).join('') + '</div>';
     var ads0 = mas.querySelector('.nx-ads'); mas.insertBefore(jg, ads0 ? ads0.nextSibling : mas.firstChild);
   }
