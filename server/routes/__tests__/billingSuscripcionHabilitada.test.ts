@@ -81,4 +81,18 @@ describe('POST /billing/create-checkout-session: interruptor por banda', () => {
     expect(r.code).toBeUndefined();
     expect(sesionesCreate).toHaveBeenCalledTimes(1);
   });
+
+  // Precio que ve el cliente en la pantalla Planes = precio que cobra Stripe (importes en céntimos).
+  it.each([
+    ['local', 'monthly', 1200],
+    ['local', 'annual', 11500],
+    ['de_gira', 'monthly', 2900],
+    ['de_gira', 'annual', 27800],
+    ['cabeza_de_cartel', 'monthly', 7900],
+    ['cabeza_de_cartel', 'annual', 75800],
+  ])('el plan %s (%s) se cobra a %i céntimos', async (planId, billingInterval, esperado) => {
+    await pedir({ planId, billingInterval }, { bandId: 'band-uno' });
+    expect(JSON.stringify(sesionesCreate.mock.calls[0])).toContain(`"unit_amount":${esperado}`);
+  });
 });
+

@@ -569,7 +569,7 @@ router.post(["/billing/create-checkout-session", "/stripe/create-checkout-sessio
     }
 
     const planPrices: Record<string, { monthly: number; annual: number; name: string }> = {
-      local: { monthly: 1500, annual: 14400, name: "Plan LOCAL - BandManager.io" },
+      local: { monthly: 1200, annual: 11500, name: "Plan LOCAL - BandManager.io" },
       de_gira: { monthly: 2900, annual: 27800, name: "Plan DE GIRA - BandManager.io" },
       cabeza_de_cartel: { monthly: 7900, annual: 75800, name: "Plan CABEZA DE CARTEL - BandManager.io" }
     };

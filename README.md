@@ -174,7 +174,7 @@ Se trata como parte del producto, no como un añadido. Las medidas están en [Se
 |---|---|---|---|
 | Promo / Promo+ | 0 € | 0 | EPK, QR, fans, calendario y repertorio (Promo+ añade setlists y discografía). |
 | Ensayo | 0 € | 100 | Primer contacto con booking y agentes (10 leads). |
-| Local | 15 € | 300 | Booking con 50 leads y contactos de medios. |
+| Local | 12 € | 300 | Booking con 50 leads y contactos de medios. |
 | De Gira | 29 € | 800 | Todo ilimitado en una banda, más Tour Manager y Reels. |
 | Cabeza de Cartel | 79 € | 2.500 | Hasta 5 bandas, finanzas y agentes en paralelo. |
 
