@@ -33,6 +33,7 @@ Contabilidad exacta de tokens consumidos por banda y modelo para control de cost
 - [[server_ai|server/ai.ts]] *(from #service)*
 - [[server_db|server/db.ts]] *(from #db)*
 - [[server_routes_ai_music_rutasGeneracion|server/routes/ai_music/rutasGeneracion.ts]] *(from #route)*
+- [[server_services_imagenCartel|server/services/imagenCartel.ts]] *(from #service)*
 - [[service_pitch_engine|Pitch Engine & Multi-Model Routing]] *(from #service)*
 
 ---

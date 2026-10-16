@@ -24,6 +24,7 @@ _Sin dependencias salientes directas._
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_promptsManager|server/promptsManager.ts]] *(from #service)*
+- [[server_utils_auditoriaCopyReel|server/utils/auditoriaCopyReel.ts]] *(from #service)*
 - [[server_utils_bandDna|server/utils/bandDna.ts]] *(from #service)*
 
 ---

@@ -22,6 +22,7 @@ Exporta: BarraAcordeActual, DiagramasAcordeActual.
 - [[src_components_chords_RelojEnAcorde|src/components/chords/RelojEnAcorde.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_acordeActualEstado|src/components/chords/acordeActualEstado.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_utils_estiloArmonia|src/utils/estiloArmonia.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_relojAcorde|src/utils/relojAcorde.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_vistaAcordes|src/utils/vistaAcordes.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_voicings|src/utils/voicings.ts]] *(Layer: #service, Domain: #system)*
 

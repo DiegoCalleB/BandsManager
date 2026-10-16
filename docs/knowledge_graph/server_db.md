@@ -38,6 +38,7 @@ Módulo sin exportaciones con nombre.
 - [[server_db_exampleThreads|server/db/exampleThreads.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_fans|server/db/fans.ts]] *(Layer: #db, Domain: #social)*
 - [[server_db_gmailOAuth|server/db/gmailOAuth.ts]] *(Layer: #security, Domain: #auth)*
+- [[server_db_leadAprobacion|server/db/leadAprobacion.ts]] *(Layer: #db, Domain: #booking)*
 - [[server_db_pitchLearning|server/db/pitchLearning.ts]] *(Layer: #db, Domain: #booking)*
 - [[server_db_production|server/db/production.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_reelAnalyses|server/db/reelAnalyses.ts]] *(Layer: #db, Domain: #social)*
@@ -70,6 +71,7 @@ Módulo sin exportaciones con nombre.
 - [[server_routes_billing|server/routes/billing.ts]] *(from #route)*
 - [[server_routes_campaigns|server/routes/campaigns.ts]] *(from #route)*
 - [[server_routes_campanaConcierto|server/routes/campanaConcierto.ts]] *(from #route)*
+- [[server_routes_cartelria|server/routes/cartelria.ts]] *(from #route)*
 - [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
 - [[server_routes_concerts|server/routes/concerts.ts]] *(from #route)*
 - [[server_routes_donations|server/routes/donations.ts]] *(from #route)*
@@ -98,6 +100,7 @@ Módulo sin exportaciones con nombre.
 - [[server_services_campaignRadarScheduler|server/services/campaignRadarScheduler.ts]] *(from #service)*
 - [[server_services_colaLetras|server/services/colaLetras.ts]] *(from #service)*
 - [[server_services_letraCancion|server/services/letraCancion.ts]] *(from #service)*
+- [[server_services_perfilDeLaPeticion|server/services/perfilDeLaPeticion.ts]] *(from #service)*
 - [[server_services_socialRadarService|server/services/socialRadarService.ts]] *(from #service)*
 - [[server_services_spotifyService|server/services/spotifyService.ts]] *(from #service)*
 - [[service_pitch_engine|Pitch Engine & Multi-Model Routing]] *(from #service)*

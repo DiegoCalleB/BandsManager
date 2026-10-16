@@ -170,7 +170,7 @@ const NODES: GraphNode[] = [
     layer: 'agent',
     domain: 'booking',
     file: 'server/services/agentScheduler.ts',
-    description: 'Bucle in-process (tick de 24 h por defecto, AGENT_SCHEDULER_INTERVAL_MS) que orquesta el Scout, Enviador y Lector.',
+    description: 'Bucle in-process (tick de 5 min por defecto, AGENT_SCHEDULER_INTERVAL_MS) que orquesta el Scout, Enviador y Lector.',
     linksTo: ['agent_enviador', 'agent_lector', 'db_agent_schedule'],
     tags: ['agent', 'scheduler', 'cron']
   },

@@ -172,6 +172,11 @@ BandManager UI Component Library
 - [[src_components_calendar_views_PeriodNavigation|src/components/calendar/views/PeriodNavigation.tsx]] *(from #frontend)*
 - [[src_components_campaign_CampaignManagerModal|src/components/campaign/CampaignManagerModal.tsx]] *(from #frontend)*
 - [[src_components_campaign_GlobalCampaignBar|src/components/campaign/GlobalCampaignBar.tsx]] *(from #frontend)*
+- [[src_components_cartel_AjustesCartel|src/components/cartel/AjustesCartel.tsx]] *(from #frontend)*
+- [[src_components_cartel_CarteleriaView|src/components/cartel/CarteleriaView.tsx]] *(from #frontend)*
+- [[src_components_cartel_EstiloBanda|src/components/cartel/EstiloBanda.tsx]] *(from #frontend)*
+- [[src_components_cartel_PreguntaCabeza|src/components/cartel/PreguntaCabeza.tsx]] *(from #frontend)*
+- [[src_components_cartel_SelectorFondo|src/components/cartel/SelectorFondo.tsx]] *(from #frontend)*
 - [[src_components_chatbot_ActiveRunPanel|src/components/chatbot/ActiveRunPanel.tsx]] *(from #frontend)*
 - [[src_components_chatbot_ChatbotHeader|src/components/chatbot/ChatbotHeader.tsx]] *(from #frontend)*
 - [[src_components_chatbot_ChatbotModeSwitcher|src/components/chatbot/ChatbotModeSwitcher.tsx]] *(from #frontend)*
@@ -283,6 +288,7 @@ BandManager UI Component Library
 - [[src_components_reels_center_ClipReanalysisPanel|src/components/reels_center/ClipReanalysisPanel.tsx]] *(from #frontend)*
 - [[src_components_reels_center_ConnectAccountDialog|src/components/reels_center/ConnectAccountDialog.tsx]] *(from #frontend)*
 - [[src_components_reels_center_CopyEditor|src/components/reels_center/CopyEditor.tsx]] *(from #frontend)*
+- [[src_components_reels_center_CopyPerfectoPanel|src/components/reels_center/CopyPerfectoPanel.tsx]] *(from #frontend)*
 - [[src_components_reels_center_EditorActions|src/components/reels_center/EditorActions.tsx]] *(from #frontend)*
 - [[src_components_reels_center_PublicationsCalendar|src/components/reels_center/PublicationsCalendar.tsx]] *(from #frontend)*
 - [[src_components_reels_center_ReelsCenterHeader|src/components/reels_center/ReelsCenterHeader.tsx]] *(from #frontend)*

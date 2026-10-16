@@ -73,6 +73,8 @@ export interface EstadoGmailOAuth {
   scope?: string;
   connected_at?: string;
   updated_at?: string;
+  /** Si Google revocó el permiso (invalid_grant): cuándo. Hay que reconectar. */
+  needs_reauth_at?: string | null;
 }
 
 /** Respuesta de `POST /api/billing/confirm-success` (applyPlanUpgrade o el error de validación). */

@@ -32,6 +32,8 @@ export interface HighlightClip {
   copyFacebook?: string;
   cta?: string;
   lengthCategory?: "micro_hook" | "hit_moment" | "story_bts";
+  /** Auditoría del copy tal como salió del análisis (server/utils/auditarHighlights.ts). */
+  auditoriaCopy?: { puntuacion: number; apto: boolean; problemas: { campo: string; codigo: string; gravedad: "error" | "aviso"; mensaje: string }[] };
 }
 
 export interface SubtitleCue {

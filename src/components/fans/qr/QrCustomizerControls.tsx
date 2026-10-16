@@ -28,8 +28,13 @@ export const QrCustomizerControls: React.FC<QrCustomizerControlsProps> = ({
 
   // Identificar qué tema está activo actualmente
   const activePresetId =
+    QR_PRESET_THEMES.find(
+      (t) =>
+        t.config.mascot === config.mascot &&
+        t.config.colorPreset === config.colorPreset,
+    )?.id ||
     QR_PRESET_THEMES.find((t) => t.config.mascot === config.mascot)?.id ||
-    (config.mascot === 'band_logo' ? 'band_logo' : 'custom');
+    'custom';
 
   const handleSelectTheme = (themeId: string) => {
     const theme = QR_PRESET_THEMES.find((t) => t.id === themeId);

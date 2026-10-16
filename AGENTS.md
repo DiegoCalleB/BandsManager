@@ -62,7 +62,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
    * Las llamadas de cron/triggers de PostgreSQL usan `requireCronOrAuth` validado por el secreto `CRON_SECRET`.
 2. **Protección de Endpoints de IA Generativa:**
    * Todo endpoint que consuma modelos de IA o consumo de cuotas pagadas (ej. `/api/generate-music` en `ai_music.ts` o `/write-reels-copy` en `chat.ts`) DEBE requerir `requireAuth` Y la tasa de limitación `iaRateLimiter` (`server/middleware/rateLimiter.ts`).
-   * Limitadores hermanos reales (no inventes nombres — solo existen estos cuatro): `loginRateLimiter` (fuerza bruta en login, 10/min), `iaRateLimiter` (análisis IA, 20/5min por usuario), `renderRateLimiter` (renderizado de clips, 10/5min por usuario — lanza ffmpeg, el más caro en CPU/disco), `donationRateLimiter` (checkout de Stripe/donaciones, 10/5min por usuario).
+   * Limitadores hermanos reales (no inventes nombres — la lista completa está en `server/middleware/rateLimiter.ts`; los de estas superficies son): `loginRateLimiter` (fuerza bruta en login, 10/min), `iaRateLimiter` (análisis IA, 20/5min por usuario), `renderRateLimiter` (renderizado de clips, 10/5min por usuario — lanza ffmpeg, el más caro en CPU/disco), `donationRateLimiter` (checkout de Stripe/donaciones, 10/5min por usuario). Para imágenes de IA existe además `imagenRateLimiter` (6/5min por usuario; una imagen cuesta ~5 veces más que un análisis).
    * **No existe un rate limiter general para el resto de la API** — solo estas cuatro superficies específicas (login, IA, render, donaciones) están cubiertas. Es un gap real, no una simplificación de esta documentación: cualquier otro endpoint mutante sin uno de estos cuatro limitadores solo tiene `requireAuth` conteniendo el abuso, nada de rate limiting.
 3. **Protección SSRF (Server-Side Request Forgery):**
    * Cualquier petición `fetch()` saliente realizada por el servidor a URLs provistas por usuarios (ej. scraping de webs de salas) DEBE pasar obligatoriamente por `esUrlExternaSegura` (`server/utils/ssrfGuard.ts`), que bloquea IP privadas/reservadas y re-valida DNS.
@@ -133,6 +133,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
    * La aplicación web lee y actualiza el estado en **Supabase**.
    * Los envíos de correo se realizan únicamente cuando el registro en Supabase pasa a estado `aprobado_propuesta` o `aprobado_respuesta`.
    * La aplicación web no dispara envíos directos no autorizados sin la aprobación explícita humana.
+   * **Constancia de la aprobación:** al aprobar, `PUT /api/leads/:id` sella en `leads` quién (`aprobado_por`), cuándo (`aprobado_at`) y una huella sha256 del texto exacto (`pitch_aprobado_hash`; `server/utils/aprobacionLead.ts`, `server/db/leadAprobacion.ts`). El cliente no puede fijar esos campos. El Enviador solo despacha si la huella coincide con el texto que va a salir: si el texto cambió después de aprobarlo, o el lead llegó a la cola por otro camino, vuelve a `pendiente_aprobacion` y no sale. Editar el texto de un lead ya aprobado también lo devuelve a revisión.
    * `dispatch_mode` (`autonomy_configs`) decide solo qué pasa DESPUÉS de esa aprobación (borrador en Gmail/IMAP para revisión final o despacho directo). Nunca omite la aprobación.
    * **Interruptor de Seguridad Global:** `AGENT_EMAIL_MODE=send` en variables de entorno del servidor. Si no está en `send`, el sistema actúa en modo seguro (`draft`).
 
@@ -180,7 +181,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
          * Protocolo Phone-to-Email / Conversión de redes: traslación inmediata de chats a correo ("¿Te parece bien si te lo dejo por mail para fijar la ventana de fechas?").
    * **Usuario (Human-in-the-Loop):** Lee/edita el borrador y aprueba explícitamente, transicionando a `aprobado_propuesta` (pitch inicial) o `aprobado_respuesta` (réplica a sala).
    * **Enviador** (`server/services/agentEngine.ts`): Lee leads en estado aprobado, despacha respetando ventana comercial de la banda y rate-limits. Registra el envío en `lead_messages`.
-   * **Lector** (`server/services/lectorAgent.ts`): Monitoriza respuestas entrantes cada ~60s (vía Gmail OAuth2 o IMAP), actualiza `lead_messages`, y marca el lead como `respondido` si hay respuesta de la sala.
+   * **Lector** (`server/services/lectorAgent.ts`): Monitoriza respuestas entrantes en las horas de lectura de la banda (`horas_lector`/`dias_lector`, tick del planificador cada 5 min; vía Gmail OAuth2 o IMAP), actualiza `lead_messages`, y marca el lead como `respondido` si hay respuesta de la sala.
 
 4. **Conexión de Correo por Banda (Gmail OAuth2 vs IMAP):**
    * Cada banda conecta su propio buzón. El sistema prefiere automáticamente **Gmail OAuth2** (`band_gmail_oauth_accounts`) sobre IMAP/SMTP (`band_email_accounts`).
@@ -236,7 +237,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
   * **Cobertura con ratchet:** CI ejecuta `npm run test:coverage` y falla si baja de `coverage-thresholds.json`. Cuando la subas, `npm run coverage:ratchet` actualiza el JSON: commitéalo. Nunca lo bajes a mano.
 * **Playwright (E2E Smoke & Journeys):**
   * Suites de humo sobre superficies críticas (`health.spec.ts`, `auth.spec.ts`, `epk-public.spec.ts`, `onboarding-journey.spec.ts`).
-  * Ejecución local sin credenciales externas con `npm run test:e2e`. Regresión visual con `npm run test:visual`.
+  * Ejecución local sin credenciales externas con `npm run test:e2e`.
 
 
 ### 5.4 Code smells — hábito de revisión, no un "sistema" nuevo
@@ -326,7 +327,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
                      transitionAudioEngine.ts, midiExport.ts)
      services/       Cliente HTTP (api.ts) — todas las llamadas al backend pasan por aquí
      context/        React Context providers (auth, idioma, banda activa)
-   e2e/              Playwright — smoke suite + 1 journey + regresión visual (§5.3.2)
+   e2e/              Playwright — smoke suite + recorridos (§5.3.2; ver e2e/README.md)
    supabase/         Migraciones SQL idempotentes (§1)
    skills/           Fuente única de las 9 Golden Tier Skills Universales:
                      - cyber-and-trust-guardian (Security, multi-tenancy & OWASP LLM Defense)

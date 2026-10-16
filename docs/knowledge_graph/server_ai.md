@@ -37,6 +37,7 @@ Exporta: GEMINI_MODEL, TIMEOUT_IA_MS, TIMEOUT_IA_LARGO_MS, FALLBACK_MODELS, getA
 - [[server_routes_ai_music_rutasGeneracion|server/routes/ai_music/rutasGeneracion.ts]] *(from #route)*
 - [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
 - [[server_routes_campanaConcierto|server/routes/campanaConcierto.ts]] *(from #route)*
+- [[server_routes_cartelria|server/routes/cartelria.ts]] *(from #route)*
 - [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
 - [[server_routes_concert_to_album|server/routes/concert_to_album.ts]] *(from #route)*
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(from #route)*
@@ -49,7 +50,10 @@ Exporta: GEMINI_MODEL, TIMEOUT_IA_MS, TIMEOUT_IA_LARGO_MS, FALLBACK_MODELS, getA
 - [[server_routes_songs_structureUpload|server/routes/songs/structureUpload.ts]] *(from #route)*
 - [[server_services_agentIntelligence|server/services/agentIntelligence.ts]] *(from #agent)*
 - [[server_services_bandsintownVenueService|server/services/bandsintownVenueService.ts]] *(from #service)*
+- [[server_services_copyPerfecto|server/services/copyPerfecto.ts]] *(from #service)*
 - [[server_services_googlePlacesVenueService|server/services/googlePlacesVenueService.ts]] *(from #service)*
+- [[server_services_hookDoctor|server/services/hookDoctor.ts]] *(from #service)*
+- [[server_services_imagenCartel|server/services/imagenCartel.ts]] *(from #service)*
 - [[server_services_multiSourceVenueDiscoveryService|server/services/multiSourceVenueDiscoveryService.ts]] *(from #service)*
 - [[server_services_pitchJudge|server/services/pitchJudge.ts]] *(from #service)*
 - [[server_services_pitchVectorStore|server/services/pitchVectorStore.ts]] *(from #service)*

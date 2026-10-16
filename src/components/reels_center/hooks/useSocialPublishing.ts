@@ -126,10 +126,11 @@ export function useSocialPublishing({ bandName, selectedPlatform, scheduledDate,
       });
 
       if (res?.success) {
-        setPublishNowSuccess(
-          `¡Publicado con éxito en ${selectedPlatform}! (${handleToUse}) 🎉`,
-        );
+        setPublishNowSuccess(`Publicado en ${selectedPlatform} (${handleToUse}).`);
         setTimeout(() => setPublishNowSuccess(null), 6000);
+      } else if (res?.modo === "asistido") {
+        // No es un error: el servidor explica qué falta (conectar Instagram, derechos del vídeo…).
+        alert(`No se ha publicado automáticamente.\n\n${res.error}`);
       } else {
         alert(res?.error || "Error al publicar.");
       }

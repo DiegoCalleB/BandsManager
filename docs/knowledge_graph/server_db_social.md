@@ -36,6 +36,7 @@ Redes y contenido social: publicaciones, métricas, cuentas conectadas y piezas 
 - [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
 - [[server_db|server/db.ts]] *(from #db)*
 - [[server_db_sync|server/db/sync.ts]] *(from #db)*
+- [[server_routes_reelsProgramacion|server/routes/reelsProgramacion.ts]] *(from #route)*
 - [[server_services_socialPublisher|server/services/socialPublisher.ts]] *(from #service)*
 
 ---

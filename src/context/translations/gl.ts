@@ -11,6 +11,7 @@ export const gl: Record<string, string> = {
   'nav.epk': 'Dossier (EPK)',
   'nav.fans': 'Captura QR e Fans',
   'nav.reels': 'Reels Center',
+  'nav.carteleria': 'Cartelería',
   'nav.repertorio': 'Repertorios',
   'nav.ensayos': 'Ensaios',
   'nav.discografia': 'Discografía',

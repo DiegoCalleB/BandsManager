@@ -23,11 +23,13 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_chords_AcordeActual|src/components/chords/AcordeActual.tsx]] *(from #frontend)*
 - [[src_components_chords_RelojEnAcorde|src/components/chords/RelojEnAcorde.tsx]] *(from #frontend)*
 
 ---
 
 ## 🧪 Tests que lo cubren
+- `src/audit/pentagrama.test.ts`
 - `src/utils/__tests__/relojAcorde.test.ts`
 
 ---

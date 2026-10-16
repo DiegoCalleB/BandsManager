@@ -36,6 +36,7 @@ Exporta: rolDeClaveSupabase, getSupabase, normalizePlan, cleanBandId.
 - [[server_db_bands|server/db/bands.ts]] *(from #db)*
 - [[server_db_calendarConflicts|server/db/calendarConflicts.ts]] *(from #db)*
 - [[server_db_campaigns|server/db/campaigns.ts]] *(from #db)*
+- [[server_db_cartelEstilo|server/db/cartelEstilo.ts]] *(from #db)*
 - [[server_db_categoryTemplates|server/db/categoryTemplates.ts]] *(from #db)*
 - [[server_db_concerts|server/db/concerts.ts]] *(from #db)*
 - [[server_db_contacts|server/db/contacts.ts]] *(from #db)*
@@ -49,10 +50,13 @@ Exporta: rolDeClaveSupabase, getSupabase, normalizePlan, cleanBandId.
 - [[server_db_exampleThreads|server/db/exampleThreads.ts]] *(from #db)*
 - [[server_db_fans|server/db/fans.ts]] *(from #db)*
 - [[server_db_gmailOAuth|server/db/gmailOAuth.ts]] *(from #security)*
+- [[server_db_leadAprobacion|server/db/leadAprobacion.ts]] *(from #db)*
 - [[server_db_pitchLearning|server/db/pitchLearning.ts]] *(from #db)*
 - [[server_db_printSettings|server/db/printSettings.ts]] *(from #db)*
 - [[server_db_production|server/db/production.ts]] *(from #db)*
 - [[server_db_reelAnalyses|server/db/reelAnalyses.ts]] *(from #db)*
+- [[server_db_reelClips|server/db/reelClips.ts]] *(from #db)*
+- [[server_db_reelMetricas|server/db/reelMetricas.ts]] *(from #db)*
 - [[server_db_referidos|server/db/referidos.ts]] *(from #db)*
 - [[server_db_rehearsals|server/db/rehearsals.ts]] *(from #db)*
 - [[server_db_schedule|server/db/schedule.ts]] *(from #db)*
@@ -74,6 +78,7 @@ Exporta: rolDeClaveSupabase, getSupabase, normalizePlan, cleanBandId.
 - [[server_services_colaLetras|server/services/colaLetras.ts]] *(from #service)*
 - [[server_services_emailAgentClient|server/services/emailAgentClient.ts]] *(from #agent)*
 - [[server_services_metricasBandaService|server/services/metricasBandaService.ts]] *(from #service)*
+- [[server_services_metricasReels|server/services/metricasReels.ts]] *(from #service)*
 - [[server_services_perfilPublicoBanda|server/services/perfilPublicoBanda.ts]] *(from #service)*
 - [[server_services_pitchVectorStore|server/services/pitchVectorStore.ts]] *(from #service)*
 - [[server_services_socialPublisher|server/services/socialPublisher.ts]] *(from #service)*

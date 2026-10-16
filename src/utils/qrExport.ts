@@ -1,3 +1,5 @@
+import { buildQrSvg } from './qrSvg';
+
 /**
  * Utilidades para exportación, descarga e impresión en máxima calidad (Vectorial SVG, PNG 4K 300 DPI y Flyer A4)
  * de Códigos QR para BandManager (Captura de Fans en Concierto, Dossier EPK, Merchandising).
@@ -386,13 +388,8 @@ export function printHighQualityFlyer(options: {
   ctaText?: string;
   subtitle?: string;
 }) {
-  const svgEl = options.svgElement || (options.svgElementId ? document.querySelector<SVGElement>(`#${options.svgElementId} svg`) : null);
-  if (!svgEl) {
-    alert('No se pudo encontrar el código QR para imprimir');
-    return;
-  }
-
-  const svgString = getCleanSvgString(svgEl);
+  // El QR de pantalla puede ser claro sobre fondo oscuro (el fondo no se imprime): en papel, negro sobre blanco.
+  const svgString = buildQrSvg(options.url || '', 74, 'H');
   const printWin = window.open('', '_blank');
   if (!printWin) {
     alert('Por favor habilita las ventanas emergentes (pop-ups) en tu navegador para imprimir el cartel.');
@@ -437,6 +434,7 @@ export function printHighQualityFlyer(options: {
  }
  .poster {
  width: 100%;
+ min-width: 0;
  max-width: 680px;
  margin: 0 auto;
  border-radius: 28px;
@@ -444,7 +442,7 @@ export function printHighQualityFlyer(options: {
  text-align: center;
  background: #ffffff;
  position: relative;
- box-shadow: 0 0 0 3px var(--acc-soft), 0 10px 30px rgba(0,0,0,0.08);
+ box-shadow: 0 0 0 3px #cbd5e1, 0 10px 30px rgba(0,0,0,0.08);
  }
  .logo-box {
  margin: 0 auto 16px auto;
@@ -504,11 +502,11 @@ export function printHighQualityFlyer(options: {
  padding: 20px;
  background: #ffffff;
  border-radius: 24px;
- box-shadow: 0 0 0 2px var(--acc-soft), 0 10px 30px rgba(0,0,0,0.08);
+ box-shadow: 0 0 0 2px #cbd5e1, 0 10px 30px rgba(0,0,0,0.08);
  }
  .qr-wrapper svg {
- width: 280px;
- height: 280px;
+ width: 400px;
+ height: 400px;
  display: block;
  }
  .qr-center-logo {
@@ -516,11 +514,11 @@ export function printHighQualityFlyer(options: {
  top: 50%;
  left: 50%;
  transform: translate(-50%, -50%);
- width: 64px;
- height: 64px;
+ width: 88px;
+ height: 88px;
  background: #ffffff;
- border-radius: 16px;
- box-shadow: 0 0 0 2px var(--acc-soft), 0 4px 12px rgba(0,0,0,0.15);
+ border-radius: 50%;
+ box-shadow: 0 0 0 2px #cbd5e1, 0 4px 12px rgba(0,0,0,0.15);
  display: flex;
  align-items: center;
  justify-content: center;
@@ -538,9 +536,10 @@ export function printHighQualityFlyer(options: {
  border-radius: 12px;
  padding: 10px 16px;
  font-family: monospace;
- font-size: 13px;
+ font-size: 12px;
  color: #334155;
  font-weight: 700;
+ overflow-wrap: anywhere;
  word-break: break-all;
  }
  .footer-note {
@@ -556,7 +555,7 @@ export function printHighQualityFlyer(options: {
  }
  .poster {
  box-shadow: none;
- border-width: 4px;
+ border: none;
  padding: 28px 24px;
  }
  .no-print {
@@ -592,9 +591,7 @@ export function printHighQualityFlyer(options: {
           <div class="footer-note">BandManager • Diseñado para imprimir en A4 y colocar en barras, taquilla, roll-ups o escenario</div>
         </div>
         <script>
-          setTimeout(() => {
-            window.print();
-          }, 350);
+          window.addEventListener('load', () => setTimeout(() => window.print(), 200));
         </script>
       </body>
     </html>
