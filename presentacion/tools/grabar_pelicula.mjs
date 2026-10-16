@@ -40,7 +40,7 @@ await page.route(/\/video\/(?:actores\/)?[^/]+\.mp4$/, async (r) => {
   if (f) await r.fulfill({ path: f, contentType: 'video/webm' }); else await r.continue();
 });
 await page.addInitScript(() => {
-  try { localStorage.setItem('bm_subs', 'es'); } catch (e) { /* sin almacenamiento */ }
+  try { localStorage.setItem('bm_subs', 'es'); } catch { /* sin almacenamiento */ }
   // en la grabación sobran los botones de «Saltar intro» y «Saltar créditos»
   document.addEventListener('DOMContentLoaded', () => document.documentElement.classList.add('grabando'));
   window.__audio = []; window.__taps = [];
@@ -67,7 +67,7 @@ await page.addInitScript(() => {
         }
         conectar.call(this, c.__tap);
       }
-    } catch (e) { /* si falla, solo se pierde ese sonido */ }
+    } catch { /* si falla, solo se pierde ese sonido */ }
     return conectar.apply(this, arguments);
   };
 });
@@ -114,7 +114,7 @@ console.log('\nrecogiendo audio…');
 const datos = await page.evaluate(async () => {
   const taps = [];
   for (const t of window.__taps) {
-    await new Promise((res) => { t.rec.onstop = res; try { t.rec.stop(); } catch (e) { res(); } });
+    await new Promise((res) => { t.rec.onstop = res; try { t.rec.stop(); } catch { res(); } });
     const b = new Blob(t.chunks, { type: 'audio/webm' });
     const buf = new Uint8Array(await b.arrayBuffer());
     let s = ''; for (let i = 0; i < buf.length; i += 0x8000) s += String.fromCharCode.apply(null, buf.subarray(i, i + 0x8000));

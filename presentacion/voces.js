@@ -23,7 +23,7 @@
   // Tres reproductores fijos (no se crean nuevos a mitad de película: Safari no deja sonar audios nuevos sin un clic)
   var pista = [new Audio(), new Audio(), new Audio()], turno = 0;
   pista.forEach(function (a) { a.preload = 'auto'; a.preservesPitch = true; });
-  var volumen = 1, vel = 1; // los cambia el reproductor (volumen y velocidad)
+  var volumen = 1; // los cambia el reproductor (volumen y velocidad)
   var libre = function () { for (var k = 0; k < pista.length; k++) { var a = pista[(turno + k) % pista.length]; if (!a._colgando) { turno = (turno + k + 1) % pista.length; return a; } } return pista[0]; };
   // Ritmo: voces un poco más rápidas; PISAR = cuánto se solapa con la anterior cuando cambia quien habla
   var BASE = 1.17, VEL = BASE, PISAR = 0.3;
@@ -160,9 +160,9 @@
       u.pitch = Math.max(0, Math.min(2, 1 + (t.tono || 0) / 10));
       u.rate = t.vel || 1;
       // guardia: algunos navegadores nunca avisan del final de la voz; sin ella la presentación se quedaría esperando
-      var guardia = esperar(acabar, Math.max(2500, say.length * 95));
+      var guardiaTts = esperar(acabar, Math.max(2500, say.length * 95));
       u.onstart = function () { mover(el, null); };
-      u.onend = function () { limpiar(guardia); acabar(); }; u.onerror = function () { limpiar(guardia); leer(); };
+      u.onend = function () { limpiar(guardiaTts); acabar(); }; u.onerror = function () { limpiar(guardiaTts); leer(); };
       speechSynthesis.speak(u);
       return;
     }
@@ -260,7 +260,7 @@
       pista.forEach(function (a) { if (a.src) return; a.src = silencio; var pr = a.play(); if (pr && pr.then) pr.then(function () { a.pause(); }).catch(function () { /* nada */ }); });
     },
     volumen: function (v) { volumen = v; pista.forEach(function (a) { a.volume = v; }); },
-    velocidad: function (f) { vel = f; VEL = BASE * f; pista.forEach(function (a) { if (!a.paused) a.playbackRate = VEL; }); },
+    velocidad: function (f) { VEL = BASE * f; pista.forEach(function (a) { if (!a.paused) a.playbackRate = VEL; }); },
     duracion: function (slide) {
       var t = 0;
       slide.querySelectorAll('[data-who][data-say]').forEach(function (el) {

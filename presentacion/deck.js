@@ -44,7 +44,6 @@
   const slides = $$('.slide'), N = slides.length;
   let cur = 0;
 
-  const mobile = () => matchMedia('(max-width: 700px)').matches;
   // Con «reducir movimiento» en el sistema no se apaga la animación: solo se queda en fundidos suaves
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('calm');
   const isScroll = () => document.body.classList.contains('scroll');

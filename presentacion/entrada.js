@@ -8,7 +8,7 @@
   const scr = $('.nx-scroll');
   window.NxAudio = (() => {
     let c = null;
-    const ctx = () => { try { if (!c) c = new (window.AudioContext || window.webkitAudioContext)(); return c; } catch (e) { return null; } };
+    const ctx = () => { try { if (!c) c = new (window.AudioContext || window.webkitAudioContext)(); return c; } catch { return null; } };
     const nota = (f, t0, dur, g, tipo) => {
       const a = ctx(); if (!a) return;
       const o = a.createOscillator(), v = a.createGain(); o.type = tipo || 'sine'; o.frequency.value = f;
