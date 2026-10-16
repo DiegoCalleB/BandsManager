@@ -8,7 +8,7 @@ import { AYUDA_NIVEL, ETIQUETA_NIVEL, NIVELES, etiquetaIntervalo, inversionesGui
 import { DiagramaGuitarra } from './DiagramaGuitarra';
 import { Pentagrama } from './Pentagrama';
 import { midiDeAcorde, precargarSonido, sonarAcorde } from '../../utils/sonarAcorde';
-import { prefiereBemoles } from '../../utils/pentagrama';
+import { prefiereBemoles, claveDeVista, midiEscrito } from '../../utils/pentagrama';
 import { ETIQUETA_INVERSION, inversionRecomendada, inversionesDe, nombreInversion, vozTeclado } from '../../utils/inversiones';
 
 const BLANCAS = [0, 2, 4, 5, 7, 9, 11];
@@ -250,7 +250,7 @@ export const CajaAcorde: React.FC<{ chord: string; vista: VistaAcorde; contexto?
       {!tapar && (
         <>
           <button type="button" aria-pressed={conNotas} title="Ver las notas en el pentagrama" onClick={() => setConNotas((v) => !v)} className={`px-3 py-1 rounded-[var(--r-pill)] text-micro font-sans cursor-pointer bg-[var(--surface)] text-[var(--ink)] ${conNotas ? 'font-bold' : ''}`}>{conNotas ? 'Ocultar pentagrama' : '♪ Ver pentagrama'}</button>
-          {conNotas && <Pentagrama midi={midiDeAcorde(chord, vista, nivel, invSonido).map((m) => (vista === 'bajo' ? m + 12 : m))} modo="acorde" bemoles={prefiereBemoles(chord)} etiqueta={`Pentagrama: ${chord}`} />}
+          {conNotas && <Pentagrama midi={midiEscrito(midiDeAcorde(chord, vista, nivel, invSonido), vista)} clave={claveDeVista(vista)} modo="acorde" bemoles={prefiereBemoles(chord)} etiqueta={`Pentagrama: ${chord}`} />}
         </>
       )}
     </div>
