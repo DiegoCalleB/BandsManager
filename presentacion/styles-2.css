@@ -385,7 +385,7 @@ body.scroll .paperwrap { position: relative; right: auto; top: auto; width: 100%
 
 /* QR de la banda con su logo en el centro */
 .qrcard { position: absolute; z-index: 4; left: 1090px; top: 220px; width: 400px; padding: 26px 26px 20px; border-radius: 30px; background: #fff; color: #111; text-align: center; box-shadow: 0 30px 90px rgba(0,0,0,.6), 0 0 80px rgba(96,165,250,.25); transform: rotate(-3deg); }
-.qrcard svg { display: block; width: 100%; height: auto; }
+.qrcard svg, .qrcard img { display: block; width: 100%; height: auto; }
 .qrcard b { display: block; margin-top: 12px; font-size: 27px; font-weight: 600; letter-spacing: -.01em; }
 .qrcard span { font-size: 20px; color: #5a626e; }
 body.scroll .qrcard { position: relative; left: auto; top: auto; margin: 16px auto; width: 70%; transform: none; }

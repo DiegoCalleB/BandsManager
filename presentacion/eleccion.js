@@ -5,11 +5,11 @@
 (function () {
   'use strict';
   var SEGUNDOS = 10;
-  // Pausa «Entra tú también»: la película espera, con un QR en pantalla, hasta que pulsan «Ya estoy dentro». El QR (img/qr-demo.png, con el logo
-  // de Bakandeya) se genera con tools/qr_demo.py y tiene que apuntar a la misma dirección que DEMO_URL. Hoy lleva a la web; cuando exista la
-  // banda de demo, se cambia aquí y se regenera la imagen.
-  var DEMO_URL = 'https://bandmanager.io';
-  var DEMO = { titulo: 'Entra tú también', texto: 'Escanea el código y prueba BandManager desde tu móvil. La película espera.' };
+  // Pausa «Entra tú también»: la película espera, con un QR en pantalla, hasta que pulsan «Ya estoy dentro». El QR (img/qr-fans.png, con el logo
+  // de Os Herdeiros) se genera con tools/qr_demo.py --hdc y tiene que apuntar a la misma dirección que DEMO_URL. Es la página pública de fans (/unete) de la banda real «Os Herdeiros
+  // do Código» (band-os-herdeiros-do-codigo): el único QR que escanea Brais, y el mismo que sale en «Un QR y el público se hace fan».
+  var DEMO_URL = 'https://bandmanager.io/unete?b=t_AAAAAEAOHUwPAAA7FgwRGgFIOxxMDxs7W1dd';
+  var DEMO = { titulo: 'Entra tú también', texto: 'Escanea el código y hazte fan de Os Herdeiros, como el público del festival. La película espera.' };
   var ELECCIONES = {
     'Prólogo · Sábado, 11:00 en el local': { id: 'demo', demo: true },
     'Prólogo · La decisión': {
@@ -43,8 +43,8 @@
 
   var pausaQR = function (idx, siguiente, saltar) {
     var el = document.createElement('div'); el.id = 'demo-qr'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', DEMO.titulo);
-    el.innerHTML = '<div class="dq-caja"><img class="dq-qr" src="img/qr-demo.png" alt="QR para entrar en ' + DEMO_URL + '"><div class="dq-txt"><h2></h2><p></p><small></small><button type="button" class="dq-ok">Ya estoy dentro →</button><button type="button" class="dq-sin">Seguir sin entrar</button></div></div>';
-    el.querySelector('h2').textContent = DEMO.titulo; el.querySelector('p').textContent = DEMO.texto; el.querySelector('small').textContent = DEMO_URL.replace(/^https?:\/\//, '');
+    el.innerHTML = '<div class="dq-caja"><img class="dq-qr" src="img/qr-fans.png" alt="QR de fans de Os Herdeiros do Código"><div class="dq-txt"><h2></h2><p></p><small></small><button type="button" class="dq-ok">Ya estoy dentro →</button><button type="button" class="dq-sin">Seguir sin entrar</button></div></div>';
+    el.querySelector('h2').textContent = DEMO.titulo; el.querySelector('p').textContent = DEMO.texto; el.querySelector('small').textContent = 'bandmanager.io/unete';
     var sigue = function () { removeEventListener('keydown', teclas, true); clearInterval(vigila); el.remove(); hechas.demo = true; saltar(siguiente); };
     var teclas = function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); sigue(); } };
     el.querySelector('.dq-ok').addEventListener('click', sigue); el.querySelector('.dq-sin').addEventListener('click', sigue);
