@@ -274,7 +274,7 @@
   // Botón a la web (créditos y post-créditos): BandManager.io, para que Brais entre a su perfil
   var WEB = 'https://bandmanager.io';
   var webBtn = document.createElement('a'); webBtn.className = 'nf-web'; webBtn.href = WEB; webBtn.target = '_blank'; webBtn.rel = 'noopener';
-  webBtn.innerHTML = '<b>Ir a BandManager.io</b><small>Accede a tu perfil, Brais</small>';
+  webBtn.innerHTML = '<b>Ir a BandManager.io</b><small>Accede a tu perfil o crea tu banda</small>';
   if (stage) stage.appendChild(webBtn);
   var $n = function (q) { return nf.querySelector(q); };
   var D = function () { return window.Deck; };
@@ -391,7 +391,7 @@
     '<p class="nff-mus-t">Escucha las canciones</p><div class="nff-mus">'+
     '<a href="audio/musica/compila.mp3" target="_blank" rel="noopener"><b>▶ Compila nu bravu</b><small>Os Herdeiros do Código</small></a>'+
     '<a href="audio/musica/cabalga.mp3" target="_blank" rel="noopener"><b>▶ Cabalga o lóstrego</b><small>Master of Prompts</small></a></div>'+
-    '<a class="nff-web" href="'+WEB+'" target="_blank" rel="noopener">Accede a tu perfil, Brais → bandmanager.io</a>';
+    '<a class="nff-web" href="'+WEB+'" target="_blank" rel="noopener">Accede a tu perfil o crea tu banda → bandmanager.io</a>';
   if (stage) stage.appendChild(finEl);
   var ANEXO_FIN = ['Arquitectura', 'Cómo se construyó con IA', 'Seguridad', 'Calidad en cifras'];
   var montarFin = function () {
