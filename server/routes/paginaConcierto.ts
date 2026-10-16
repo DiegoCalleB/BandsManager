@@ -29,10 +29,12 @@ import { obtenerPerfilPublicoBandaCacheado } from '../services/perfilPublicoBand
 import { captureError } from '../utils/errorTracking.js';
 
 import emailsCicloVidaRouter from './emailsCicloVida.js';
+import fansContadorRouter from './fans_contador.js';
 export { startEmailsCicloVidaScheduler } from '../services/emailsCicloVida.js';
 
 const router = express.Router();
 router.use(emailsCicloVidaRouter); // baja de los emails de onboarding (/api/emails/baja)
+router.use(fansContadorRouter); // número de fans para la película del TFM (/api/public/fans/contador)
 
 function responderHtml(res: express.Response, status: number, html: string, cache: string) {
   res.status(status);

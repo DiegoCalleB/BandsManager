@@ -1379,7 +1379,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:55",
+        "x-source": "server/routes/epk_fans.ts:54",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -1412,7 +1412,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:73",
+        "x-source": "server/routes/epk_fans.ts:72",
         "x-autenticacion": "middleware"
       },
       "put": {
@@ -1444,7 +1444,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:104",
+        "x-source": "server/routes/epk_fans.ts:103",
         "x-autenticacion": "middleware"
       }
     },
@@ -4728,7 +4728,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:138",
+        "x-source": "server/routes/epk_fans.ts:137",
         "x-autenticacion": "middleware"
       },
       "put": {
@@ -4761,7 +4761,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:158",
+        "x-source": "server/routes/epk_fans.ts:157",
         "x-autenticacion": "middleware"
       }
     },
@@ -4796,7 +4796,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:1087",
+        "x-source": "server/routes/epk_fans.ts:1071",
         "x-autenticacion": "middleware"
       }
     },
@@ -4831,7 +4831,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:234",
+        "x-source": "server/routes/epk_fans.ts:233",
         "x-autenticacion": "middleware"
       }
     },
@@ -5050,7 +5050,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:762",
+        "x-source": "server/routes/epk_fans.ts:761",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -5083,7 +5083,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:781",
+        "x-source": "server/routes/epk_fans.ts:780",
         "x-autenticacion": "middleware"
       }
     },
@@ -5126,7 +5126,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:820",
+        "x-source": "server/routes/epk_fans.ts:819",
         "x-autenticacion": "middleware"
       },
       "delete": {
@@ -5167,7 +5167,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:854",
+        "x-source": "server/routes/epk_fans.ts:853",
         "x-autenticacion": "middleware"
       }
     },
@@ -8592,7 +8592,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:1197",
+        "x-source": "server/routes/epk_fans.ts:1181",
         "x-autenticacion": "middleware"
       }
     },
@@ -9295,7 +9295,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/epk_fans.ts:463",
+        "x-source": "server/routes/epk_fans.ts:462",
         "x-autenticacion": "ninguna"
       }
     },
@@ -9347,7 +9347,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:868",
+        "x-source": "server/routes/epk_fans.ts:867",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -9411,10 +9411,9 @@
     "/api/public/fans/contador": {
       "get": {
         "tags": [
-          "epk_fans"
+          "paginaConcierto"
         ],
         "operationId": "getApiPublicFansContador",
-        "description": "Comentario en el código: Solo el número de fans de la banda (sin nombres ni correos). La película del TFM lo consulta para saber cuándo alguien ha escaneado el QR de fans y dejar que siga. El token de la banda ya va en el propio QR público, así que esto no descubre nada que no pueda ver quien tenga el QR.",
         "security": [],
         "responses": {
           "200": {
@@ -9424,7 +9423,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:982",
+        "x-source": "server/routes/fans_contador.ts:13",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -9469,7 +9468,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:1129",
+        "x-source": "server/routes/epk_fans.ts:1113",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -9492,7 +9491,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:995",
+        "x-source": "server/routes/epk_fans.ts:979",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -14084,7 +14083,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginaConcierto.ts:44",
+        "x-source": "server/routes/paginaConcierto.ts:46",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -14169,7 +14168,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/paginaConcierto.ts:159",
+        "x-source": "server/routes/paginaConcierto.ts:161",
         "x-autenticacion": "ninguna"
       }
     },
@@ -14308,7 +14307,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginaConcierto.ts:141",
+        "x-source": "server/routes/paginaConcierto.ts:143",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
