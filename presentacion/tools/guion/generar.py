@@ -1473,6 +1473,11 @@ html = html.replace('data-title="El correo llega a la sala" data-corto', 'data-t
 html = html.replace('data-title="Date Swap" ', 'data-title="Date Swap" data-min="29500" ', 1)
 html = html.replace('data-title="Del directo al reel" ', 'data-title="Del directo al reel" data-min="26000" ', 1)
 html = html.replace('data-title="Del concierto al disco" ', 'data-title="Del concierto al disco" data-min="13500" ', 1)
+# «El sello de BandManager» (boca a boca y sello en todas las herramientas): fragmento aparte, justo antes de «Entrevista · Los fans»
+_sello = open(os.path.join(AQUI, 'sello.html'), encoding='utf-8').read()
+if 'data-title="El sello de BandManager"' not in html:
+    _i = html.rindex('<section', 0, html.index('data-title="Entrevista · Los fans"'))
+    html = html[:_i] + _sello + '\n' + html[_i:]
 # el móvil del generador de reels enseña a la banda tocando, en lugar del hueco «Band Clip Studio»
 html = html.replace('<img src="img/d-h-reels.jpg" alt="">', '<img src="img/d-h-reels.jpg" alt=""><div class="dr-reelvid"><video data-ambient data-restart muted loop playsinline preload="auto" poster="video/actores/concierto.jpg"><source src="video/actores/concierto.mp4" type="video/mp4"></video></div>', 1)
 html = html.replace('data-title="Cambio de perfil" ', 'data-title="Cambio de perfil" data-min="25500" ', 1)
