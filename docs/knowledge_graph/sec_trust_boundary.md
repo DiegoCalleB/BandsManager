@@ -23,6 +23,7 @@ Resolución forzosa del band_id desde la sesión autenticada. Bloquea inyeccione
 - [[db_repertoire|Repertoire DB Handlers]] *(Layer: #db, Domain: #repertoire)*
 - [[sec_ssrf_guard|SSRF URL Validator]] *(Layer: #security, Domain: #system)*
 - [[server_utils_email|server/utils/email.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_suscripcion|server/utils/suscripcion.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
