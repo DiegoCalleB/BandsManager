@@ -1,0 +1,94 @@
+[
+ {
+  "foto": "thc.jpg",
+  "edad": 15,
+  "texto": "THC",
+  "logro": "Sala Laboratorio, Madrid (Tribunal) · con mi hermano Fer detrás",
+  "foco": [
+   0.32,
+   0.62,
+   0.3,
+   0.5,
+   0.42
+  ]
+ },
+ {
+  "foto": "arritmia.jpg",
+  "edad": 17,
+  "texto": "Arritmia",
+  "logro": "Grabando nuestra primera maqueta",
+  "foco": [
+   0.49,
+   0.55,
+   0.16,
+   0.32,
+   0.5
+  ],
+  "lado": "izq"
+ },
+ {
+  "foto": "bajo-bn.jpg",
+  "edad": 20,
+  "texto": "Limando",
+  "logro": "Pradoluengo (Burgos)",
+  "foco": [
+   0.42,
+   0.5,
+   0.38,
+   0.62,
+   0.5
+  ]
+ },
+ {
+  "foto": "bigband-bernabeu.jpg",
+  "edad": 25,
+  "texto": "Walter Sax Big Band",
+  "logro": "Estadio Santiago Bernabéu",
+  "foco": [
+   0.38,
+   0.55,
+   0.34,
+   0.8,
+   0.5
+  ]
+ },
+ {
+  "foto": "bajo-contraluz.jpg",
+  "edad": 25,
+  "texto": "Walter Sax Big Band",
+  "logro": "A contraluz"
+ },
+ {
+  "foto": "repercusion.jpg",
+  "edad": 30,
+  "texto": "Repercusión",
+  "logro": "Fiestas del PCE · 2015 · compartiendo cartel con Siniestro Total"
+ },
+ {
+  "foto": "miles.jpg",
+  "edad": 33,
+  "texto": "Repercusión",
+  "logro": "Batalla Naval de Vallekas · La Karmela · 2018",
+  "pos": "50% 78%",
+  "dur": 4.2,
+  "gran": true,
+  "foco": [
+   0.5,
+   0.64,
+   0.15,
+   0.27,
+   0.4
+  ],
+  "hito": "Vallekas"
+ },
+ {
+  "foto": "mop-gira.jpg",
+  "edad": 40,
+  "texto": "Master of Prompts",
+  "logro": "Yo ya estoy preparado para la primera gira. ¿Y tú, Brais?",
+  "dur": 4.6,
+  "gran": true,
+  "hito": "Gira",
+  "pos": "50% 35%"
+ }
+]
