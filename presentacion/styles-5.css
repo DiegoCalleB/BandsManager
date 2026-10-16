@@ -313,7 +313,7 @@ body.pelicula:not(.scroll) :is(img[src*="gracias-mop"], img[src*="diego-bajista"
 #demo-qr button { padding: 18px 34px; border: 0; border-radius: 6px; font: 700 30px/1 'Helvetica Neue', Arial, sans-serif; cursor: pointer; }
 #demo-qr .dq-ok { margin-top: 12px; background: #fff; color: #000; }
 #demo-qr .dq-ok:hover, #demo-qr .dq-ok:focus-visible { background: #d8d8d8; outline: 3px solid #e50914; }
-#demo-qr .dq-sin { padding: 10px 0; background: none; color: #9a9aa3; font-size: 22px; font-weight: 600; text-decoration: underline; }
+#demo-qr .dq-sin { background: none; font-weight: 600; }
 @media (prefers-reduced-motion: reduce) { #demo-qr { animation: none; } }
 
 /* «El sello de BandManager»: cuatro herramientas y el sello que se estampa en cada una al nombrarla */
@@ -332,3 +332,38 @@ body.pelicula:not(.scroll) :is(img[src*="gracias-mop"], img[src*="diego-bajista"
 /* en el dossier y el setlist, además, el QR de BandManager */
 .sellos-caja .powered .pq { position: absolute; right: 14px; bottom: 10px; width: 78px; height: 78px; padding: 4px; border-radius: 6px; background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,.6); }
 .sellos-caja .powered:has(.pq) { padding-bottom: 12px; min-height: 62px; }
+
+/* Anuncios de BandManager: ilustración propia de cada herramienta, con el logo como firma */
+.nx-ads .nx-game i.arte img:not(.nx-gicono) { z-index: 3; right: 10px; bottom: 10px; width: 36px; height: 36px; border-radius: 10px; }
+
+/* Apertura: tres frases sobre negro antes del primer plano, para que la película no arranque de golpe */
+.slide.apertura { background: #000; }
+.ap-caja { position: absolute; inset: 0; display: grid; align-content: center; justify-items: center; gap: 34px; text-align: center; padding: 0 160px; }
+.ap-l { margin: 0; font-size: 84px; font-weight: 600; letter-spacing: -.02em; color: #f4efe6; opacity: 0; }
+.ap-2 { font-size: 46px; font-weight: 400; color: #bdb7ab; letter-spacing: 0; }
+.ap-3 { font-size: 46px; font-weight: 500; color: #e0a43a; letter-spacing: 0; }
+.slide.apertura.active .ap-l { animation: aplin 1500ms var(--ease) var(--t) both; }
+.slide.apertura.active .ap-caja { animation: apout 700ms ease-in 6.7s both; }
+@keyframes aplin { from { opacity: 0; filter: blur(8px); transform: translateY(10px); } to { opacity: 1; filter: none; transform: none; } }
+@keyframes apout { to { opacity: 0; } }
+body.scroll .ap-l { opacity: 1; animation: none; }
+@media (prefers-reduced-motion: reduce) { .ap-l { opacity: 1; animation: none !important; } }
+
+/* Pausa «Falta un fan»: la imagen se rompe, aviso de sistema y la espera del escaneo */
+#demo-qr .dq-glitch { position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(255,255,255,.07) 0 2px, transparent 2px 5px); mix-blend-mode: overlay; animation: dqglitch 1.1s steps(2) both; }
+@keyframes dqglitch { 0% { background-color: #ff003c55; transform: translateX(-14px); } 20% { background-color: #00e5ff55; transform: translateX(18px) skewX(4deg); } 40% { background-color: #fff3; transform: translateX(-9px); } 60% { background-color: #ff003c44; transform: translateX(7px); } 100% { background-color: transparent; transform: none; } }
+#demo-qr .dq-caja { animation: dqcaja .9s steps(6) .35s both; }
+@keyframes dqcaja { from { opacity: 0; filter: hue-rotate(90deg) blur(3px); transform: translateX(-12px); } 50% { opacity: .6; transform: translateX(8px); } to { opacity: 1; filter: none; transform: none; } }
+#demo-qr .dq-sis { color: #ff3b4e; font: 700 24px/1 'Courier New', monospace; letter-spacing: .14em; text-transform: uppercase; }
+#demo-qr q { color: #f0e6cf; font-size: 28px; font-style: italic; line-height: 1.3; quotes: none; }
+#demo-qr q:empty, #demo-qr .dq-esp:empty { display: none; }
+#demo-qr .dq-esp { color: #e5a53b; font: 600 24px/1 'Courier New', monospace; font-style: normal; animation: dqparp 1.3s steps(2) infinite; }
+@keyframes dqparp { 50% { opacity: .25; } }
+#demo-qr .dq-sin { opacity: 0; margin-top: 8px; padding: 14px 26px; border: 2px solid #ffffff59; border-radius: 6px; color: #e6e6ec; text-decoration: none; font-size: 24px; pointer-events: none; transition: opacity 1.5s; }
+#demo-qr .dq-sin.on { opacity: 1; pointer-events: auto; }
+#demo-qr.dq-listo .dq-sis { color: #38d27a; }
+#demo-qr.dq-listo .dq-sis::after { content: ' · ok'; }
+#demo-qr.dq-listo .dq-esp { display: none; }
+@media (prefers-reduced-motion: reduce) { #demo-qr .dq-glitch, #demo-qr .dq-caja, #demo-qr .dq-esp { animation: none; } }
+#demo-qr.dq-sinfan .dq-sis { color: #e5a53b; }
+#demo-qr.dq-sinfan .dq-esp { animation: none; color: #e5a53b; }
