@@ -320,7 +320,15 @@ body.pelicula:not(.scroll) :is(img[src*="gracias-mop"], img[src*="diego-bajista"
 .slide.sellos .sellos-caja { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 14px; padding: 12px; height: 100%; box-sizing: border-box; }
 .sellos-caja figure { position: relative; margin: 0; border-radius: 12px; overflow: hidden; background: #111 var(--img) var(--pos) / var(--z) no-repeat; border: 1px solid rgba(255,255,255,.14); box-shadow: 0 14px 40px rgba(0,0,0,.55); min-height: 0; }
 .sellos-caja figcaption { position: absolute; left: 12px; top: 10px; padding: 5px 12px; border-radius: 4px; background: rgba(0,0,0,.72); color: #fff; font: 700 20px/1 Onest, Arial, sans-serif; letter-spacing: .04em; }
-.sellos-caja .sello { position: absolute; right: 14px; bottom: 12px; width: 31%; max-width: 150px; opacity: 0; rotate: -10deg; filter: drop-shadow(0 6px 12px rgba(0,0,0,.65)); }
-.slide.sellos.active .sello { animation: sellazo .55s cubic-bezier(.2, 1.5, .4, 1) var(--t) both; }
-@keyframes sellazo { 0% { opacity: 0; scale: 2.6; rotate: -26deg; } 55% { opacity: 1; scale: .9; rotate: -12deg; } 100% { opacity: 1; scale: 1; rotate: -10deg; } }
-@media (prefers-reduced-motion: reduce) { .slide.sellos.active .sello { animation: none; opacity: 1; } }
+/* «Powered by BandManager.io»: una franja discreta al pie de cada herramienta, como el «Powered by» de cualquier marca */
+.sellos-caja .powered { position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 9px 14px; background: linear-gradient(transparent, rgba(0,0,0,.86) 55%); color: rgba(255,255,255,.78); font: 600 19px/1 Onest, Arial, sans-serif; letter-spacing: .03em; opacity: 0; }
+.sellos-caja .powered i { font-style: normal; font-weight: 500; opacity: .85; }
+.sellos-caja .powered img { width: 26px; height: 26px; border-radius: 6px; }
+.sellos-caja .powered b { color: #fff; font-weight: 800; letter-spacing: .02em; }
+.slide.sellos.active .powered { animation: poweredentra .7s ease-out var(--t) both; }
+@keyframes poweredentra { from { opacity: 0; translate: 0 14px; } to { opacity: 1; translate: 0 0; } }
+@media (prefers-reduced-motion: reduce) { .slide.sellos.active .powered { animation: none; opacity: 1; } }
+
+/* en el dossier y el setlist, además, el QR de BandManager */
+.sellos-caja .powered .pq { position: absolute; right: 14px; bottom: 10px; width: 78px; height: 78px; padding: 4px; border-radius: 6px; background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,.6); }
+.sellos-caja .powered:has(.pq) { padding-bottom: 12px; min-height: 62px; }
