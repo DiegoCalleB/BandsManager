@@ -287,3 +287,17 @@ html.ir-inicio #gate .nx-home { display: flex !important; }
 body.pelicula:not(.scroll) :is(img[src*="img/miembro-"], img[src*="img/personaje-"], img[src*="img/concierto-"]) { filter: saturate(.8) brightness(.94) contrast(1.03); }
 body.pelicula:not(.scroll) .mis-bandas .mb-foto img { filter: saturate(.84) brightness(.88) contrast(1.06) hue-rotate(-3deg); }
 body.pelicula:not(.scroll) :is(img[src*="gracias-mop"], img[src*="diego-bajista"]) { filter: saturate(.95) brightness(1.08) contrast(1.05); }
+
+/* ───────── Elige tu propia aventura (eleccion.js) ───────── */
+#eleccion { position: absolute; left: 0; right: 0; bottom: 80px; z-index: 70; display: flex; flex-direction: column; align-items: center; gap: 18px; font-family: 'Helvetica Neue', Arial, sans-serif; animation: elsube .5s cubic-bezier(.2, .8, .2, 1) both; }
+@keyframes elsube { from { opacity: 0; translate: 0 30px; } to { opacity: 1; translate: 0 0; } }
+#eleccion .el-q { margin: 0; color: #fff; font-size: 34px; font-weight: 700; text-shadow: 0 2px 14px #000; }
+#eleccion .el-ops { display: flex; gap: 22px; }
+#eleccion .el-op { min-width: 300px; max-width: 420px; padding: 20px 30px; border: 2px solid rgba(255,255,255,.55); border-radius: 6px; background: rgba(12,12,14,.82); color: #fff; font: 600 28px/1.2 'Helvetica Neue', Arial, sans-serif; cursor: pointer; backdrop-filter: blur(6px); transition: background .15s, color .15s, transform .15s; }
+#eleccion .el-op:hover, #eleccion .el-op:focus-visible { background: #fff; color: #000; outline: none; transform: scale(1.04); }
+#eleccion .el-tiempo { display: block; width: min(980px, 80vw); height: 5px; border-radius: 3px; background: linear-gradient(90deg, #e50914, #ff5a3c); transform-origin: left; transform: scaleX(var(--k, 1)); box-shadow: 0 0 14px rgba(229,9,20,.6); }
+#eleccion-carta { position: absolute; inset: 0; z-index: 72; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 26px; background: #000; text-align: center; padding: 0 12%; animation: elcarta .5s ease-out both; }
+@keyframes elcarta { from { opacity: 0; } to { opacity: 1; } }
+#eleccion-carta p { margin: 0; color: #fff; font: 400 min(5.4vw, 86px)/1.1 Anton, Oswald, Impact, sans-serif; text-transform: uppercase; letter-spacing: .01em; opacity: 0; animation: elcarta .9s ease-out var(--d, 0s) both; }
+#eleccion-carta p:last-child { color: #e50914; }
+@media (prefers-reduced-motion: reduce) { #eleccion, #eleccion-carta, #eleccion-carta p { animation: none; opacity: 1; } }
