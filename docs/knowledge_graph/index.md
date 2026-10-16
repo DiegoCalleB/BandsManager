@@ -73,12 +73,12 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 
 ## 🤖 Mapa automático (generado desde los imports reales)
 
-1668 nodos: 52 agent · 49 db · 12 external · 14 feature · 944 frontend · 43 hook · 88 route · 65 schema · 12 security · 389 service.
+1673 nodos: 52 agent · 49 db · 12 external · 14 feature · 947 frontend · 43 hook · 89 route · 65 schema · 12 security · 390 service.
 No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el test `grafoConocimiento` falla si queda desfasado.
 
 ### 🔥 Los 20 ficheros más importados
 - [[src_types|src/types.ts]] — 573 ficheros dependen de él
-- [[src_components_ui_index|src/components/ui/index.ts]] — 359 ficheros dependen de él
+- [[src_components_ui_index|src/components/ui/index.ts]] — 361 ficheros dependen de él
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] — 180 ficheros dependen de él
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] — 171 ficheros dependen de él
 - [[src_utils_api|src/utils/api.ts]] — 93 ficheros dependen de él
@@ -96,7 +96,7 @@ No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el t
 - [[server_routes_bands|server/routes/bands.ts]] — 34 ficheros dependen de él
 - [[ext_ffmpeg|FFmpeg]] — 33 ficheros dependen de él
 - [[src_utils_errorMessage|src/utils/errorMessage.ts]] — 33 ficheros dependen de él
-- [[src_components_calendar_CalendarContext|src/components/calendar/CalendarContext.ts]] — 32 ficheros dependen de él
+- [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] — 32 ficheros dependen de él
 
 ---
 

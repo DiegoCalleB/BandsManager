@@ -42,6 +42,7 @@ Captación de fans, landing pública y dossier de prensa (EPK).
 - [[server_db_tours|server/db/tours.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_users|server/db/users.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_contactoEmpresas|server/routes/contactoEmpresas.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(Layer: #route, Domain: #epk)*
 - [[server_routes_interesados|server/routes/interesados.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_tracking|server/routes/tracking.ts]] *(Layer: #route, Domain: #system)*

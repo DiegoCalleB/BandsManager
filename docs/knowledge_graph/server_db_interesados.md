@@ -26,6 +26,7 @@ Interesados de la landing oficial en la lista de espera (`musicians_waitlist`): 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
 - [[fn_fans_epk|Fans y EPK]] *(from #feature)*
+- [[server_routes_contactoEmpresas|server/routes/contactoEmpresas.ts]] *(from #route)*
 - [[server_routes_interesados|server/routes/interesados.ts]] *(from #route)*
 
 ---

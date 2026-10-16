@@ -4,6 +4,7 @@ import { ArrowRight, Check, ChevronDown, Layers, Rocket, ShieldCheck, Sliders, S
 import { Button } from './ui';
 import { useLanguage, SupportedLanguage } from '../context/idioma';
 import { LandingChatWidget } from './LandingChatWidget';
+import { PreciosTfm } from './landing/PreciosTfm';
 
 interface PublicTfmLandingProps {
   onEntrar: () => void;
@@ -134,6 +135,7 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
             <a href="#escrow" className="hover:text-[var(--ink)]">{es ? 'Contratos y Escrow' : 'Contracts y Escrow'}</a>
             <a href="#multibanda-iris" className="hover:text-[var(--ink)]">{es ? 'Multibanda e Iris' : 'Multi-band e Iris'}</a>
             <a href="#como-funciona" className="hover:text-[var(--ink)]">{es ? 'Flujo de Trabajo' : 'Workflow'}</a>
+            <a href="#planes" className="hover:text-[var(--ink)]">{es ? 'Planes' : 'Pricing'}</a>
             <a href="#preguntas" className="hover:text-[var(--ink)]">{es ? 'Preguntas' : 'FAQs'}</a>
           </nav>
 
@@ -490,6 +492,8 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
             </div>
           </div>
         </section>
+
+        <PreciosTfm es={es} />
 
         {/* PREGUNTAS FRECUENTES */}
         <section id="preguntas" className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24">

@@ -24,6 +24,7 @@ Exporta: avisarAlta.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server_routes_contactoEmpresas|server/routes/contactoEmpresas.ts]] *(from #route)*
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(from #route)*
 - [[server_routes_interesados|server/routes/interesados.ts]] *(from #route)*
 - [[server_routes_users_rutasGoogle|server/routes/users/rutasGoogle.ts]] *(from #route)*

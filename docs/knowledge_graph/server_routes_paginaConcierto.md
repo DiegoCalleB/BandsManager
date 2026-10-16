@@ -21,6 +21,7 @@ Páginas públicas indexables: /e/:slug (un concierto), /sitemap.xml y /robots.t
 - [[server_db_concerts|server/db/concerts.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_enlacesCortos|server/db/enlacesCortos.ts]] *(Layer: #db, Domain: #system)*
 - [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(Layer: #security, Domain: #system)*
+- [[server_routes_contactoEmpresas|server/routes/contactoEmpresas.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_emailsCicloVida|server/routes/emailsCicloVida.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_interesados|server/routes/interesados.ts]] *(Layer: #route, Domain: #system)*
 - [[server_services_emailsCicloVida|server/services/emailsCicloVida.ts]] *(Layer: #service, Domain: #system)*

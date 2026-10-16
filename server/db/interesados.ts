@@ -68,3 +68,29 @@ export async function dbBajaInteresado(id: string): Promise<void> {
     .eq('id', id);
   if (error) throw new Error(`Supabase Error (musicians_waitlist): ${error.message}`);
 }
+
+export interface FilaContactoEmpresa {
+  empresa: string;
+  email: string;
+  tipo: string;
+  mensaje: string;
+  idioma: string;
+}
+
+/**
+ * Guarda una consulta de empresa (planes B2B) en la lista de espera con `origen = 'b2b'`. Es un contacto
+ * que nos escribe a nosotros: no se marca como confirmado, así que no entra en la lista de novedades.
+ */
+export async function dbAltaContactoEmpresa(c: FilaContactoEmpresa): Promise<void> {
+  const { error } = await getSupabase().from('musicians_waitlist').insert({
+    id: `b2b-${crypto.randomUUID()}`,
+    nombre_banda: c.empresa,
+    email: c.email,
+    interes_principal: c.tipo,
+    notas: c.mensaje,
+    idioma: c.idioma,
+    origen: 'b2b',
+    consentimiento_at: new Date().toISOString(),
+  });
+  if (error) throw new Error(`Supabase Error (musicians_waitlist b2b): ${error.message}`);
+}

@@ -25,6 +25,7 @@ Lista de novedades de la landing (doble confirmación). Todo aquí es puro, sin 
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_routes_interesados|server/routes/interesados.ts]] *(from #route)*
+- [[server_utils_contactoEmpresas|server/utils/contactoEmpresas.ts]] *(from #service)*
 
 ---
 
