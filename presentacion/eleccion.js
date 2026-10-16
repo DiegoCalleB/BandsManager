@@ -5,7 +5,13 @@
 (function () {
   'use strict';
   var SEGUNDOS = 10;
+  // Pausa «Entra tú también»: la película espera, con un QR en pantalla, hasta que pulsan «Ya estoy dentro». El QR (img/qr-demo.png, con el logo
+  // de Bakandeya) se genera con tools/qr_demo.py y tiene que apuntar a la misma dirección que DEMO_URL. Hoy lleva a la web; cuando exista la
+  // banda de demo, se cambia aquí y se regenera la imagen.
+  var DEMO_URL = 'https://bandmanager.io';
+  var DEMO = { titulo: 'Entra tú también', texto: 'Escanea el código y prueba BandManager desde tu móvil. La película espera.' };
   var ELECCIONES = {
+    'Prólogo · Sábado, 11:00 en el local': { id: 'demo', demo: true },
     'Prólogo · La decisión': {
       id: 'decision', pregunta: '¿Qué hace Iago?',
       opciones: [
@@ -32,6 +38,20 @@
     [].forEach.call(c.querySelectorAll('p'), function (p, i) { p.textContent = lineas[i]; });
     document.getElementById('stage').appendChild(c);
     setTimeout(function () { c.remove(); fin(); }, ms);
+  };
+
+
+  var pausaQR = function (idx, siguiente, saltar) {
+    var el = document.createElement('div'); el.id = 'demo-qr'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', DEMO.titulo);
+    el.innerHTML = '<div class="dq-caja"><img class="dq-qr" src="img/qr-demo.png" alt="QR para entrar en ' + DEMO_URL + '"><div class="dq-txt"><h2></h2><p></p><small></small><button type="button" class="dq-ok">Ya estoy dentro →</button><button type="button" class="dq-sin">Seguir sin entrar</button></div></div>';
+    el.querySelector('h2').textContent = DEMO.titulo; el.querySelector('p').textContent = DEMO.texto; el.querySelector('small').textContent = DEMO_URL.replace(/^https?:\/\//, '');
+    var sigue = function () { removeEventListener('keydown', teclas, true); clearInterval(vigila); el.remove(); hechas.demo = true; saltar(siguiente); };
+    var teclas = function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); sigue(); } };
+    el.querySelector('.dq-ok').addEventListener('click', sigue); el.querySelector('.dq-sin').addEventListener('click', sigue);
+    var vigila = setInterval(function () { if (D().cur !== idx) { removeEventListener('keydown', teclas, true); clearInterval(vigila); el.remove(); } }, 400);
+    document.getElementById('stage').appendChild(el);
+    addEventListener('keydown', teclas, true);
+    setTimeout(function () { var b = el.querySelector('.dq-ok'); if (b) b.focus({ preventScroll: true }); }, 50);
   };
 
   var pregunta = function (idx, cfg, quitadas, siguiente, saltar) {
@@ -71,7 +91,7 @@
     desvia: function (idx, siguiente, saltar) {
       var sl = D().slides[idx], cfg = sl && ELECCIONES[sl.dataset.title];
       if (!cfg || hechas[cfg.id] || activa) return false;
-      pregunta(idx, cfg, [], siguiente, saltar);
+      if (cfg.demo) pausaQR(idx, siguiente, saltar); else pregunta(idx, cfg, [], siguiente, saltar);
       return true;
     },
   };
