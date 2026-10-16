@@ -32,7 +32,7 @@ const resFalso = () => {
 };
 const put = async (body: any) => {
   const res = resFalso();
-  await manejador()({ params: { id: 'l1' }, body, headers: {}, query: {} }, res);
+  await manejador()({ params: { id: 'l1' }, body, headers: {}, query: {}, user: { id: 'u1', role: 'leader' } }, res);
   return res;
 };
 
