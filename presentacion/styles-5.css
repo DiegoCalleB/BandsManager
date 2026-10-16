@@ -266,3 +266,10 @@ body.pausado #stage, body.pausado #stage *, body.pausado #stage *::before, body.
 
 /* icono real de una app (img/juegos/<id>.png): tapa el icono dibujado */
 .nx-game i img.nx-gicono { position: absolute; z-index: 2; inset: 0; right: auto; bottom: auto; width: 100%; height: 100%; border-radius: 0; box-shadow: none; object-fit: cover; }
+
+.nx-filas2.con-flechas { position: relative; }
+.nx-flecha-fila { position: absolute; top: 56px; bottom: 0; width: 56px; border: 0; background: linear-gradient(90deg, #141414cc, transparent); color: #fff; font-size: 54px; line-height: 1; cursor: pointer; opacity: 0; transition: opacity .2s; z-index: 6; }
+.nx-flecha-fila.ant { left: 0; margin-left: -64px; width: 64px; }
+.nx-flecha-fila.sig { right: 0; background: linear-gradient(270deg, #141414cc, transparent); }
+.nx-filas2.con-flechas:hover .nx-flecha-fila { opacity: 1; }
+.nx-flecha-fila:hover { background-color: #0008; }

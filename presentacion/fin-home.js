@@ -46,7 +46,27 @@
     ['Queimada Club', 'Thriller · La primera regla: no hablar del orujo', '#1c1033,#7a4bd6'],
     ['Gaiteiros del Caribe', 'Aventura · La maldición del pulpo muerto', '#04435a,#2fc2c9'],
     ['Misión imposible: aparcar en Santiago', 'Acción · Nadie lo ha conseguido', '#2b3a14,#9bd04a'],
-    ['La Santa Compaña vs. el Scrum Master', 'Terror · Reuniones diarias a las 3 de la madrugada', '#101a2b,#c0392b']
+    ['La Santa Compaña vs. el Scrum Master', 'Terror · Reuniones diarias a las 3 de la madrugada', '#101a2b,#c0392b'],
+    ['Cuatro bodas y un pulpo', 'Comedia romántica · Catering de pulpo á feira', '#7a1f3d,#ff8fa3'],
+    ['Matrix: pastilla azul o empanada', 'Ciencia ficción · Elige empanada', '#05260f,#2fcf6a'],
+    ['Titanic: se hunde el furgón', 'Drama · Y la banda no cabe en la balsa', '#0b2a4a,#6fb7ff'],
+    ['Gladiator: Ultreia', 'Épica · Camino de Santiago, etapa 4', '#5a3a12,#e0b050'],
+    ['Jurassic Park: el último percebeiro', 'Aventura · Solo con marea viva', '#0f3d2e,#6fd0a0'],
+    ['El día de la marmota (pero en Lugo)', 'Comedia · Sigue lloviendo', '#2c3441,#8fa3bf']
+  ];
+  var MORRINA = [
+    ['Sempre chove en Vilalba', 'Comedia · Paraguas incluido', '#16324f,#4f8fc0'],
+    ['Chorizos y cachelos 3', 'Comedia · Ya no queda guion', '#6b1d12,#f08a4b'],
+    ['Mi tío el gaiteiro', 'Familiar · Soplaba demasiado', '#3b2a6b,#b48cff'],
+    ['Tres lacóns para un destino', 'Aventura · Con grelos', '#134a2b,#8fdc6a'],
+    ['A boda do ano en Ourense', 'Romance · Con orquesta de verbena', '#7a2a5a,#ff9ad0'],
+    ['Operación orujo', 'Acción · Que no se entere el abuelo', '#5a1a1a,#ff5a3c'],
+    ['La gran evasión de la rotonda de Lalín', 'Suspense · Todavía están dando vueltas', '#2b2b2b,#9a9a9a'],
+    ['El club de los poetas sin cobertura', 'Drama · Aquí no pilla ni el WhatsApp', '#1f3a4d,#5fb8c9'],
+    ['El exorcista: la queimada se fue de las manos', 'Terror · Con conxuro y todo', '#240a0a,#e04a2a'],
+    ['Origen: soñar con cobrar el día 1', 'Ciencia ficción · Imposible, pero bonito', '#10124a,#7a6bff'],
+    ['Hasta la vista, vermú', 'Comedia · Volveré después del aperitivo', '#6a4a10,#ffcf5a'],
+    ['Cuarenta y tres grados en la Ribeira Sacra', 'Documental · Nadie baja a la playa fluvial', '#5a2a0a,#ff9a3c']
   ];
   var top = document.querySelector('#gate .nx-row.top');
   if (top) {
@@ -58,12 +78,17 @@
       top.appendChild(c);
     });
   }
-  if (mas) {
-    var rec = document.createElement('div'); rec.className = 'nx-filas2';
-    rec.innerHTML = '<h3>Porque viste Os Herdeiros do Código</h3><div class="nx-row">' + RECOMENDADAS.map(function (r) {
+  var filaPelis = function (titulo, lista) {
+    var d = document.createElement('div'); d.className = 'nx-filas2';
+    d.innerHTML = '<h3>' + cerrado(titulo) + '</h3><div class="nx-row">' + lista.map(function (r) {
       return '<div class="nx-card k fake" style="--c1:' + r[2].split(',')[0] + ';--c2:' + r[2].split(',')[1] + '"><i>N</i><b>' + cerrado(r[0]) + '</b><span class="nx-mini"><b>97 % para ti</b> ' + cerrado(r[1]) + '</span></div>';
     }).join('') + '</div>';
-    var ads = mas.querySelector('.nx-ads'); mas.insertBefore(rec, ads ? ads.nextSibling : mas.firstChild);
+    return d;
+  };
+  if (mas) {
+    var rec = filaPelis('Porque viste Os Herdeiros do Código', RECOMENDADAS), ads = mas.querySelector('.nx-ads');
+    mas.insertBefore(rec, ads ? ads.nextSibling : mas.firstChild);
+    mas.appendChild(filaPelis('Comedias con morriña', MORRINA));
   }
   // Fila «Juegos de Brais Moure»: apps móviles de MoureDev. Cada una abre su ficha; el icono real, si existe, va en img/juegos/<id>.png
   // (sin él sale el icono dibujado). Para poner el enlace directo a cada tienda basta cambiar el último campo.
@@ -86,6 +111,17 @@
   }
   var der = document.querySelector('#gate .nx-der');
   if (der) { var bm = document.createElement('a'); bm.className = 'nx-bm'; bm.href = WEB; bm.target = '_blank'; bm.rel = 'noopener'; bm.textContent = 'Pruébalo con tu banda · BandManager.io'; der.insertBefore(bm, der.firstChild); }
+
+  // Flechas para desplazar cada fila de lado a lado (como en Netflix; con el ratón solo no se puede ir hacia el lado)
+  document.querySelectorAll('#gate .nx-filas2').forEach(function (bloque) {
+    var row = bloque.querySelector('.nx-row'); if (!row) return;
+    bloque.classList.add('con-flechas');
+    [['ant', '‹', -1], ['sig', '›', 1]].forEach(function (f) {
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'nx-flecha-fila ' + f[0]; b.setAttribute('aria-label', f[0] === 'ant' ? 'Anterior' : 'Siguiente'); b.textContent = f[1];
+      b.addEventListener('click', function () { row.scrollBy({ left: f[2] * row.clientWidth * 0.85, behavior: 'smooth' }); });
+      bloque.appendChild(b);
+    });
+  });
 
   // Botón «Inicio» en la pantalla final
   var fin = document.getElementById('nf-fin'), otra = fin && fin.querySelector('.nff-otra');
