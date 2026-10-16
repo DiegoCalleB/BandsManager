@@ -51,6 +51,7 @@ describe('regalo de pegatinas', () => {
       expect(regalo).toContain(String(pack.cantidad));
       expect(/exprés/.test(regalo)).toBe(pack.expres);
     }
-    expect(PLANES_B2C.find((p) => p.id === 'ensayo')?.regalo).toBeUndefined();
+    for (const id of ['ensayo', 'local']) expect(PLANES_B2C.find((p) => p.id === id)?.regalo).toBeUndefined();
+    expect(PLANES_B2C.filter((p) => p.regalo).length).toBe(Object.keys(PEGATINAS_POR_PLAN).length);
   });
 });

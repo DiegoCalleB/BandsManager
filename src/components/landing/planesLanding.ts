@@ -21,7 +21,7 @@ export interface PlanLanding {
   para: Texto;
   items: Array<Texto>;
   destacado?: boolean;
-  /** Regalo de la primera suscripción (solo planes de pago de bandas). */
+  /** Regalo de la primera suscripción (solo De Gira y Cabeza de Cartel). */
   regalo?: Texto;
 }
 
@@ -44,7 +44,6 @@ export const PLANES_B2C: PlanLanding[] = [
   {
     id: 'local',
     nombre: 'Local',
-    regalo: t('50 pegatinas de tu banda de regalo', '50 stickers of your band as a gift'),
     precio: t('12 € / mes', '€12 / month'),
     sub: t('o 115 € al año', 'or €115 a year'),
     para: t('Para bandas activas en su circuito local.', 'For active bands on their local circuit.'),
@@ -58,7 +57,7 @@ export const PLANES_B2C: PlanLanding[] = [
   {
     id: 'de_gira',
     nombre: 'De Gira',
-    regalo: t('100 pegatinas de tu banda de regalo', '100 stickers of your band as a gift'),
+    regalo: t('150 pegatinas de tu banda de regalo', '150 stickers of your band as a gift'),
     precio: t('29 € / mes', '€29 / month'),
     sub: t('o 278 € al año', 'or €278 a year'),
     para: t('Para bandas de carretera y booking intensivo.', 'For touring bands and intensive booking.'),
@@ -73,7 +72,7 @@ export const PLANES_B2C: PlanLanding[] = [
   {
     id: 'cabeza_de_cartel',
     nombre: 'Cabeza de Cartel',
-    regalo: t('200 pegatinas de regalo y envío exprés', '200 stickers as a gift and express shipping'),
+    regalo: t('300 pegatinas de regalo y envío exprés', '300 stickers as a gift and express shipping'),
     precio: t('79 € / mes', '€79 / month'),
     sub: t('o 758 € al año', 'or €758 a year'),
     para: t('Para artistas consolidados y mánagers.', 'For established artists and managers.'),

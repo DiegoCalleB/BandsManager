@@ -37,10 +37,6 @@ export function PlanCardLocal() {
                         </p>
                       </div>
 
-                      <div className="mb-3 px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--surface)]/80 flex items-center gap-1.5 text-micro font-sans text-[var(--ink-2)] font-bold">
-                        <span>250 pegatinas gratis</span>
-                      </div>
-
                       <ul className="space-y-2 mb-5 flex-1 text-xs">
                         {[
                           { text: "50 salas de conciertos", cat: "booking" },

@@ -1,10 +1,9 @@
-// Regalo de pegatinas en la primera suscripción de pago. Puro (sin red ni BD) para poder probarlo.
+// Regalo de pegatinas en la primera suscripción de los planes altos (De Gira y Cabeza de Cartel). Puro (sin red ni BD) para poder probarlo.
 // Las cantidades son las que enseñan la pantalla Planes y la landing TFM: un test las mantiene juntas.
 
 export const PEGATINAS_POR_PLAN: Readonly<Record<string, { cantidad: number; expres: boolean }>> = {
-  local: { cantidad: 50, expres: false },
-  de_gira: { cantidad: 100, expres: false },
-  cabeza_de_cartel: { cantidad: 200, expres: true },
+  de_gira: { cantidad: 150, expres: false },
+  cabeza_de_cartel: { cantidad: 300, expres: true },
 };
 
 interface BandaConPlan {

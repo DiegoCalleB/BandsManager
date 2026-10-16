@@ -3,13 +3,13 @@ import { correoAvisoAlta, destinoAvisoAltas } from '../avisoAltas';
 
 describe('destinoAvisoAltas', () => {
   it('usa el buzón del proyecto por defecto', () => {
-    expect(destinoAvisoAltas({})).toBe('bandmanager.pro.io@gmail.com');
+    expect(destinoAvisoAltas({})).toBe('bandmanager.io.pro@gmail.com');
   });
   it('permite cambiarlo con ADMIN_NOTIFY_EMAIL', () => {
     expect(destinoAvisoAltas({ ADMIN_NOTIFY_EMAIL: ' otro@x.com ' })).toBe('otro@x.com');
   });
   it('ignora un valor que no es un email', () => {
-    expect(destinoAvisoAltas({ ADMIN_NOTIFY_EMAIL: 'nada' })).toBe('bandmanager.pro.io@gmail.com');
+    expect(destinoAvisoAltas({ ADMIN_NOTIFY_EMAIL: 'nada' })).toBe('bandmanager.io.pro@gmail.com');
   });
 });
 

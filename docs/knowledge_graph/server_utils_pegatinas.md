@@ -13,7 +13,7 @@ tags: ["service", "system", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Regalo de pegatinas en la primera suscripción de pago. Puro (sin red ni BD) para poder probarlo.
+Regalo de pegatinas en la primera suscripción de los planes altos (De Gira y Cabeza de Cartel). Puro (sin red ni BD) para poder probarlo.
 
 ---
 
@@ -31,6 +31,7 @@ _Sin dependencias salientes directas._
 ## 🧪 Tests que lo cubren
 - `server/utils/__tests__/pegatinas.test.ts`
 - `src/components/landing/__tests__/PreciosTfm.test.tsx`
+- `src/utils/__tests__/pegatinasPlanes.test.ts`
 
 ---
 

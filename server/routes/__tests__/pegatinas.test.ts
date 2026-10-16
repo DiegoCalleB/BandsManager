@@ -50,7 +50,7 @@ describe('regalo de pegatinas', () => {
     estado = {
       registeredBands: [
         { band_id: 'band-a', plan: 'de_gira', estado_suscripcion: 'activo' },
-        { band_id: 'band-b', plan: 'local' },
+        { band_id: 'band-b', plan: 'local', estado_suscripcion: 'activo' },
         { band_id: 'band-c', plan: 'ensayo', estado_suscripcion: 'activo' },
       ],
     };
@@ -59,11 +59,11 @@ describe('regalo de pegatinas', () => {
   it('una banda con plan de pago activo recibe su pack y se avisa por email', async () => {
     const r = await pedir();
     expect(r.body).toEqual({ ok: true });
-    expect(crear).toHaveBeenCalledWith('band-a', { plan: 'de_gira', cantidad: 100, expres: false }, expect.objectContaining({ nombre: 'Ana', pais: 'España' }));
+    expect(crear).toHaveBeenCalledWith('band-a', { plan: 'de_gira', cantidad: 150, expres: false }, expect.objectContaining({ nombre: 'Ana', pais: 'España' }));
     expect(avisar).toHaveBeenCalledWith(expect.objectContaining({ tipo: 'pegatinas', nombre: 'Ana' }));
   });
 
-  it.each(['band-b', 'band-c', 'band-fantasma'])('%s no tiene derecho: 403 y nada se guarda', async (id) => {
+  it.each(['band-b', 'band-c', 'band-fantasma'])('%s no tiene derecho (Local, gratuito o inexistente): 403 y nada se guarda', async (id) => {
     bandaDeLaSesion = id;
     const r = await pedir();
     expect(r.code).toBe(403);
@@ -88,7 +88,7 @@ describe('regalo de pegatinas', () => {
     hay.mockResolvedValue(true);
     const r = res();
     await handler('get')({}, r);
-    expect(r.body).toEqual({ elegible: true, cantidad: 100, expres: false, yaPedido: true });
+    expect(r.body).toEqual({ elegible: true, cantidad: 150, expres: false, yaPedido: true });
     bandaDeLaSesion = 'band-c';
     const r2 = res();
     await handler('get')({}, r2);

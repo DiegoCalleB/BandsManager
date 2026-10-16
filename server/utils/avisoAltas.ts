@@ -27,7 +27,7 @@ const TITULO: Record<TipoAlta, string> = {
 /** Destino de los avisos: `ADMIN_NOTIFY_EMAIL` si está definida; si no, el buzón del proyecto. */
 export function destinoAvisoAltas(env: NodeJS.ProcessEnv = process.env): string {
   const valor = (env.ADMIN_NOTIFY_EMAIL || '').trim();
-  return valor.includes('@') ? valor : 'bandmanager.pro.io@gmail.com';
+  return valor.includes('@') ? valor : 'bandmanager.io.pro@gmail.com';
 }
 
 export function correoAvisoAlta(d: DatosAlta): { asunto: string; html: string } {

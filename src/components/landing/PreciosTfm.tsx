@@ -50,7 +50,7 @@ export const PreciosTfm: React.FC<{ es: boolean }> = ({ es }) => {
       </h2>
       <p className="mx-auto mt-3 max-w-2xl text-center text-[var(--ink-2)]">
         {segmento === 'b2c'
-          ? es ? 'Para bandas y artistas. Empiezas gratis y subes cuando lo necesitas. Con tu primera suscripción, pegatinas de tu banda de regalo.' : 'For bands and artists. Start free and upgrade when you need to. Your first subscription comes with stickers of your band.'
+          ? es ? 'Para bandas y artistas. Empiezas gratis y subes cuando lo necesitas. Con tu primera suscripción a De Gira o Cabeza de Cartel, pegatinas de tu banda de regalo.' : 'For bands and artists. Start free and upgrade when you need to. Your first De Gira or Cabeza de Cartel subscription comes with stickers of your band.'
           : es ? 'Para productoras y mánagers con varias bandas. Contrato anual con dos meses gratis, sin pago con tarjeta.' : 'For producers and managers with several bands. Annual contract: two months free, no card payment.'}
       </p>
       <Tabs<Segmento>

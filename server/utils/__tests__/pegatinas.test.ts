@@ -12,18 +12,17 @@ const bandas = [
 ];
 
 describe('packDeLaBanda', () => {
-  it('cada plan de pago con suscripción activa tiene su pack', () => {
-    expect(packDeLaBanda(bandas, 'band-a')).toEqual({ cantidad: 50, expres: false });
-    expect(packDeLaBanda(bandas, 'band-b')).toEqual({ cantidad: 100, expres: false });
-    expect(packDeLaBanda(bandas, 'band-c')).toEqual({ cantidad: 200, expres: true });
+  it('solo los planes altos con suscripción activa tienen su pack', () => {
+    expect(packDeLaBanda(bandas, 'band-b')).toEqual({ cantidad: 150, expres: false });
+    expect(packDeLaBanda(bandas, 'band-c')).toEqual({ cantidad: 300, expres: true });
   });
-  it.each(['band-d', 'band-e', 'band-f', 'band-g'])('%s no tiene derecho (sin cobro activo o plan gratuito)', (id) => {
+  it.each(['band-a', 'band-d', 'band-e', 'band-f', 'band-g'])('%s no tiene derecho (plan Local, sin cobro activo o plan gratuito)', (id) => {
     expect(packDeLaBanda(bandas, id)).toBeNull();
   });
   it('ignora el prefijo band-/reg-, pero exige la misma banda', () => {
-    expect(packDeLaBanda(bandas, 'REG-a')).toEqual({ cantidad: 50, expres: false });
+    expect(packDeLaBanda(bandas, 'REG-b')).toEqual({ cantidad: 150, expres: false });
     expect(packDeLaBanda(bandas, 'band-')).toBeNull();
-    expect(packDeLaBanda(bandas, 'a-clon')).toBeNull();
+    expect(packDeLaBanda(bandas, 'b-clon')).toBeNull();
   });
   it.each([undefined, '', 'default'])('sin banda válida (%s) no hay pack', (id) => {
     expect(packDeLaBanda(bandas, id as string | undefined)).toBeNull();
@@ -31,8 +30,8 @@ describe('packDeLaBanda', () => {
   it('sin lista de bandas no hay pack', () => {
     expect(packDeLaBanda(undefined, 'band-a')).toBeNull();
   });
-  it('solo hay packs para planes de pago', () => {
-    expect(Object.keys(PEGATINAS_POR_PLAN).sort()).toEqual(['cabeza_de_cartel', 'de_gira', 'local']);
+  it('solo hay packs para De Gira y Cabeza de Cartel', () => {
+    expect(Object.keys(PEGATINAS_POR_PLAN).sort()).toEqual(['cabeza_de_cartel', 'de_gira']);
   });
 });
 
