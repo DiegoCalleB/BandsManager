@@ -7,6 +7,7 @@ import { atribuirReferidoPendiente } from '../utils/referido';
 import { atribuirReferido } from '../utils/promocionApi';
 import { leerTokenDeSesion, leerUsuarioDeSesion } from '../services/sesionLocal';
 import { comoErrorCapturado } from '../utils/errorCapturado';
+import { limpiarChatLocal } from '../utils/limpiarChatLocal';
 
 /**
  * Banda de la lista de bandas disponibles. Además de {@link BandaDisponible}, las listas que llegan
@@ -98,6 +99,7 @@ export function useAuth() {
         localStorage.removeItem('bandmanager_user');
         localStorage.removeItem('bandmanager_logged_in');
         localStorage.removeItem('bandmanager_available_bands');
+    limpiarChatLocal();
         try {
           borrarCookieDeSesion();
         } catch { /* sin acceso a document.cookie: la cookie caduca sola */ }
