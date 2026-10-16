@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Heart, MessageCircle, Share2, Disc, Gauge, Volume2, VolumeX, Maximize2, Music, Upload, CheckCircle2, UserPlus } from 'lucide-react';
+import { Gauge, Volume2, VolumeX, Maximize2, Music, Upload, CheckCircle2 } from 'lucide-react';
 import { ThemeColors } from '../../types';
 import { SUBTITLE_STYLES } from './subtitleStyles';
+import { skinDe } from './plataformaSkin';
+import { AccionesLaterales, BotonSeguir, CabeceraPlataforma } from './PlataformaOverlay';
 import { getYouTubeId, parseRangeTimes, formatTime, SubtitleCue, HighlightClip } from '../../utils/reelsUtils';
 import type { YoutubeVideoMeta } from '../reels_center/reelsHelpers';
 import { ShowIcon } from '../ui/ShowIcon';
@@ -108,6 +110,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
   
   const currentHighlight = highlights[selectedHighlightIndex];
   const { start, end, duration } = currentHighlight ? parseRangeTimes(currentHighlight.range) : { start: 0, end: 0, duration: 0 };
+  const skin = skinDe(selectedPlatform);
   const progressPct = duration > 0 ? Math.min(100, (simulatedTime / duration) * 100) : 0;
 
   return (
@@ -338,11 +341,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
 
         {/* Top Header: Authentic Platform Navigation */}
         <div className="flex justify-between items-center z-20 px-3.5 pt-3">
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-display font-bold text-[var(--ink)] ">
-              {selectedPlatform === 'TikTok' ? 'Para ti' : 'Reels'}
-            </span>
-          </div>
+          <CabeceraPlataforma skin={skin} />
           <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[var(--scrim)]/40 ">
             <span className="w-1.5 h-1.5 rounded-full bg-[var(--alert)]" />
             <span className="text-micro font-mono text-[var(--ink-2)] font-semibold ">PREVIEW</span>
@@ -414,49 +413,8 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
           </div>
         )}
 
-        {/* Right Action Icons Column (Authentic Instagram / TikTok Layout) */}
-        <div className="absolute right-2.5 bottom-12 z-20 flex flex-col items-center gap-3">
-          {/* Avatar with Follow Button */}
-          <div className="relative mb-1">
-            <div className="w-8 h-8 rounded-full p-0.5 flex items-center justify-center ">
-              <span className="w-full h-full rounded-full bg-[var(--sunken)] flex items-center justify-center text-micro font-bold text-[var(--ink)] ">
-                {nombreBanda.charAt(0)}
-              </span>
-            </div>
-            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-4 bg-[var(--alert)] rounded-full flex items-center justify-center text-[var(--on-alert)] text-micro font-bold leading-none ">
-              +
-            </div>
-          </div>
-
-          {/* Like */}
-          <div className="flex flex-col items-center gap-0.5 cursor-pointer">
-            <div className="w-8 h-8 rounded-full bg-[var(--scrim)]/40 flex items-center justify-center text-[var(--ink)] transition-transform">
-              <Heart className="w-4 h-4 fill-[var(--ink)]/10" />
-            </div>
-            <span className="text-micro font-mono text-[var(--ink)] font-bold ">1.4k</span>
-          </div>
-
-          {/* Comment */}
-          <div className="flex flex-col items-center gap-0.5 cursor-pointer">
-            <div className="w-8 h-8 rounded-full bg-[var(--scrim)]/40 flex items-center justify-center text-[var(--ink)] transition-transform">
-              <MessageCircle className="w-4 h-4" />
-            </div>
-            <span className="text-micro font-mono text-[var(--ink)] font-bold ">62</span>
-          </div>
-
-          {/* Share */}
-          <div className="flex flex-col items-center gap-0.5 cursor-pointer">
-            <div className="w-8 h-8 rounded-full bg-[var(--scrim)]/40 flex items-center justify-center text-[var(--ink)] transition-transform">
-              <Share2 className="w-4 h-4" />
-            </div>
-            <span className="text-micro font-mono text-[var(--ink)] font-bold ">89</span>
-          </div>
-
-          {/* Rotating Audio Vinyl */}
-          <div className="w-7 h-7 rounded-full bg-[var(--sunken)] border-2 flex items-center justify-center animate-spin mt-0.5">
-            <Disc className="w-3.5 h-3.5 text-[var(--acc-ink)]" />
-          </div>
-        </div>
+        {/* Columna de botones: cambia con la plataforma (plataformaSkin.ts) */}
+        <AccionesLaterales skin={skin} nombreBanda={nombreBanda} />
 
         {/* Bottom Metadata: Account, Caption & Audio Marquee */}
         <div className="z-20 px-3.5 pb-3.5 pr-14 space-y-1.5 mt-auto">
@@ -465,9 +423,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
             <span className="text-micro font-bold text-[var(--ink)] truncate max-w-[120px] ">
               @{instagramHandle || nombreBanda.toLowerCase().replace(/\s+/g, '')}
             </span>
-            <span className="px-1.5 py-0.5 rounded bg-[var(--ink)]/20 text-[var(--ink)] text-micro font-semibold flex items-center gap-0.5">
-              <UserPlus className="w-2.5 h-2.5" /> Seguir
-            </span>
+            {skin.seguir && <BotonSeguir etiqueta={skin.seguir} />}
           </div>
 
           {/* Post Caption (Clean, 2 lines max, legible) */}

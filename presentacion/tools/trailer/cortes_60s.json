@@ -1,0 +1,17 @@
+[
+ {"ini": 3.7, "fin": 14.6, "paso": "corte", "exacto": true},
+ {"ini": 59.69, "fin": 62.5, "paso": "negro", "exacto": true},
+ {"ini": 62.33, "fin": 68.85, "paso": "corte", "exacto": true},
+ {"ini": 74.04, "fin": 76.65, "paso": "negro", "exacto": true},
+ {"ini": 99.2, "fin": 100.6, "voz": false, "paso": "rampa", "exacto": true},
+ {"ini": 133.2, "fin": 134.6, "voz": false, "paso": "rampa", "exacto": true},
+ {"ini": 161.2, "fin": 162.6, "voz": false, "paso": "rampa", "exacto": true},
+ {"ini": 180.4, "fin": 181.8, "voz": false, "paso": "rampa", "exacto": true},
+ {"ini": 204.0, "fin": 205.4, "voz": false, "paso": "rampa", "exacto": true},
+ {"ini": 361.5, "fin": 362.9, "voz": false, "paso": "rampa", "exacto": true},
+ {"ini": 137.22, "fin": 140.85, "paso": "corte", "exacto": true},
+ {"ini": 177.49, "fin": 183.35, "paso": "fundido", "exacto": true},
+ {"ini": 213.52, "fin": 220.3, "paso": "negro", "exacto": true},
+ {"ini": 256.95, "fin": 263.85, "paso": "negro", "exacto": true},
+ {"ini": 398.8, "fin": 402.3, "voz": false, "paso": "negro", "rotulo": "h4.png", "exacto": true}
+]

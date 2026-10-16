@@ -3,10 +3,10 @@ import QRCode from "qrcode";
 /**
  * QR como SVG en línea (síncrono, sin red ni canvas): cabe en el HTML de impresión, que se mide
  * y se imprime tal cual. Negro puro sobre blanco con zona de silencio de 1 módulo; nivel M, que
- * es lo justo para una URL corta impresa en papel.
+ * es lo justo para una URL corta impresa en papel. Con `level` "H" tolera tapar el centro con un logo.
  */
-export function buildQrSvg(value: string, sizeMm: number): string {
-  const qr = QRCode.create(value, { errorCorrectionLevel: "M" });
+export function buildQrSvg(value: string, sizeMm: number, level: "M" | "H" = "M"): string {
+  const qr = QRCode.create(value, { errorCorrectionLevel: level });
   const n = qr.modules.size;
   const data = qr.modules.data;
   const quiet = 1;
