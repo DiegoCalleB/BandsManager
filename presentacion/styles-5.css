@@ -335,3 +335,16 @@ body.pelicula:not(.scroll) :is(img[src*="gracias-mop"], img[src*="diego-bajista"
 
 /* Anuncios de BandManager: ilustración propia de cada herramienta, con el logo como firma */
 .nx-ads .nx-game i.arte img:not(.nx-gicono) { z-index: 3; right: 10px; bottom: 10px; width: 36px; height: 36px; border-radius: 10px; }
+
+/* Apertura: tres frases sobre negro antes del primer plano, para que la película no arranque de golpe */
+.slide.apertura { background: #000; }
+.ap-caja { position: absolute; inset: 0; display: grid; align-content: center; justify-items: center; gap: 34px; text-align: center; padding: 0 160px; }
+.ap-l { margin: 0; font-size: 84px; font-weight: 600; letter-spacing: -.02em; color: #f4efe6; opacity: 0; }
+.ap-2 { font-size: 46px; font-weight: 400; color: #bdb7ab; letter-spacing: 0; }
+.ap-3 { font-size: 46px; font-weight: 500; color: #e0a43a; letter-spacing: 0; }
+.slide.apertura.active .ap-l { animation: aplin 1500ms var(--ease) var(--t) both; }
+.slide.apertura.active .ap-caja { animation: apout 700ms ease-in 6.7s both; }
+@keyframes aplin { from { opacity: 0; filter: blur(8px); transform: translateY(10px); } to { opacity: 1; filter: none; transform: none; } }
+@keyframes apout { to { opacity: 0; } }
+body.scroll .ap-l { opacity: 1; animation: none; }
+@media (prefers-reduced-motion: reduce) { .ap-l { opacity: 1; animation: none !important; } }
