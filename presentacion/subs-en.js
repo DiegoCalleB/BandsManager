@@ -153,7 +153,7 @@ window.SUBS_EN = {
 "No, Brais: los que llevan a varias bandas. Mánayers, agencias y productoras. Para ellos, una cuenta con todas sus bandas, y planes de empresa, más caros.": "No, Brais: the ones who run several bands. Managers, agencies and production companies. For them, one account with all their bands, and business plans at a higher price.",
 "Las salas y los festivales no son clientes: son el canal. Si trabajar con nosotros es fácil, contestan antes. Mirad El Faro.": "Venues and festivals aren't customers: they're the channel. If we're easy to work with, they answer sooner. Look at El Faro.",
 "¿Y de qué vivimos, entonces? ¿De los aplausos?": "So what do we live on, then? Applause?",
-"De dos motores. Una suscripción por banda, ya construida pero apagada a propósito. Y el apoyo voluntario de quien use la app.": "Two engines. A per-band subscription, already built but switched off on purpose. And voluntary support from whoever uses the app.",
+"De dos motores. Una suscripción por banda, con seis planes. Y el apoyo voluntario de quien use la app.": "Two engines. A per-band subscription, with six plans. And voluntary support from whoever uses the app.",
 "¿Y cuánto es ese apoyo? ¿Más o menos que Peláez?": "And how much is that support? More or less than Peláez?",
 "Muchísimo menos: lo que cada uno quiera. Ya lo he habilitado, para pagar la inteligencia artificial y los servidores.": "A lot less: whatever each person wants. I've already enabled it, to pay for the AI and the servers.",
 "Y ahora, lo que viene: probarlo con una banda real. La nuestra.": "And now, what's next: trying it with a real band. Ours.",

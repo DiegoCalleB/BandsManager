@@ -267,8 +267,8 @@ EN = {
     "And if we're easy to work with, they answer sooner. Look at El Faro: thirty-five minutes.",
 "¿Y de qué vivimos, entonces? ¿De los aplausos?":
     "So what do we live on, then? Applause?",
-"De dos motores. Una suscripción por banda, ya construida pero apagada a propósito. Y el apoyo voluntario de quien use la app.":
-    "Two engines. A per-band subscription, already built but switched off on purpose. And voluntary support from whoever uses the app.",
+"De dos motores. Una suscripción por banda, con seis planes. Y el apoyo voluntario de quien use la app.":
+    "Two engines. A per-band subscription, with six plans. And voluntary support from whoever uses the app.",
 "¿Y cuánto es ese apoyo? ¿Más o menos que Peláez?":
     "And how much is that support? More or less than Peláez?",
 "Muchísimo menos: lo que cada uno quiera. Ya lo he habilitado, para pagar la inteligencia artificial y los servidores.":
