@@ -68,8 +68,8 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
   const es = language === 'es';
 
   useEffect(() => {
-    const title = t('landing.title');
-    const description = t('landing.description');
+    const title = t('landing.meta.title');
+    const description = t('landing.meta.description');
     const url = 'https://bandmanager.io/';
     const image = 'https://bandmanager.io/og-cover.png';
 
@@ -281,14 +281,6 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
               </li>
             ))}
           </ol>
-
-          <div className="mt-14 rounded-[var(--r-xl)] bg-[var(--surface)] p-2 sm:p-3">
-            <Captura
-              nombre="booking"
-              movil="m-booking"
-              alt="Lista de escenarios con su estado de contacto y el agente de booking"
-            />
-          </div>
         </section>
 
         {/* ESTUDIO IA DE PISTAS (IRIS) */}
