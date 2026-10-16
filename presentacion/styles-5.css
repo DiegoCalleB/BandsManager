@@ -273,3 +273,7 @@ body.pausado #stage, body.pausado #stage *, body.pausado #stage *::before, body.
 .nx-flecha-fila.sig { right: 0; background: linear-gradient(270deg, #141414cc, transparent); }
 .nx-filas2.con-flechas:hover .nx-flecha-fila { opacity: 1; }
 .nx-flecha-fila:hover { background-color: #0008; }
+
+/* «Volver al inicio» desde el final de la película: directo al inicio de Netflix, sin pasar por «¿Quién está viendo?» */
+html.ir-inicio #gate .nx-perfiles { display: none !important; }
+html.ir-inicio #gate .nx-home { display: flex !important; }

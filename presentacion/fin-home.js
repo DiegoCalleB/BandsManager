@@ -136,9 +136,15 @@
     otra.parentNode.insertBefore(b, otra.nextSibling);
   }
 
-  // Al volver al inicio no hace falta elegir perfil otra vez
+  // Al volver al inicio no se elige perfil otra vez: directo al inicio con todas las filas (y el tráiler arrancando como siempre)
   if (/[?&]inicio=1/.test(location.search)) {
-    try { history.replaceState(null, '', location.pathname); } catch { /* sin history */ }
-    var perfil = document.querySelector('#gate .nx-perfil'); if (perfil) setTimeout(function () { perfil.click(); }, 250);
+    try { history.replaceState(null, '', location.pathname); } catch (e) { /* sin history */ }
+    var puerta = document.getElementById('gate');
+    if (puerta) {
+      puerta.dataset.fase = 'home';
+      var trailer = puerta.querySelector('.nx-vid');
+      if (trailer) setTimeout(function () { trailer.play().then(function () { puerta.classList.add('trailer'); }).catch(function () { /* sin autoplay */ }); }, 2600);
+      var reproducir = document.getElementById('gatePeli'); if (reproducir) reproducir.focus({ preventScroll: true });
+    }
   }
 })();
