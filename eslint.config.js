@@ -68,6 +68,12 @@ export default tseslint.config(
     languageOptions: { ecmaVersion: 2022, globals: globals.browser },
   },
   {
+    // Los scripts de la presentación (grabación con Playwright, Remotion, auditorías) corren en Node, pero llevan
+    // dentro código de navegador (page.evaluate usa document/window): necesitan los dos juegos de globales.
+    files: ['presentacion/**/*.mjs'],
+    languageOptions: { ecmaVersion: 2022, globals: { ...globals.node, ...globals.browser } },
+  },
+  {
     // Los scripts de utilidad (CommonJS y ESM) corren en Node: sin esto, cada require/process/console
     // salía como no-undef y los scripts nuevos gastaban margen del ratchet de CI sin ser un problema real.
     files: ['scripts/**/*.{js,mjs,cjs}'],

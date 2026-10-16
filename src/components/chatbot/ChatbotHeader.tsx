@@ -1,17 +1,10 @@
-import { Guitar, Sliders, X } from 'lucide-react';
+import { Guitar, X } from 'lucide-react';
 import React from 'react';
 import { ChatMessage } from '../Chatbot';
-import { Button } from '../ui';
 
 export interface ChatbotHeaderProps {
   isStitchLight: boolean;
   bandDisplayName: string;
-  isAdmin: boolean;
-  onOpenAutonomyModal: () => void;
-  autonomyConfig: {
-    dispatchLevel?: string;
-    minCacheThreshold?: number;
-  };
   cleanUserName: string;
   storageKey: string;
   setMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
@@ -20,9 +13,6 @@ export interface ChatbotHeaderProps {
 
 export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
   bandDisplayName,
-  isAdmin,
-  onOpenAutonomyModal,
-  autonomyConfig,
   cleanUserName,
   storageKey,
   setMessages,
@@ -44,14 +34,6 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
       console.error(e);
     }
   };
-
-  const dispatchLabel =
-    autonomyConfig.dispatchLevel === 'draft_only'
-      ? 'Borrador'
-      : autonomyConfig.dispatchLevel === 'scheduled_window'
-        ? 'Ventana 3h'
-        : 'Auto 1er Contacto';
-  const minCache = autonomyConfig.minCacheThreshold || 300;
 
   return (
     <div
@@ -80,40 +62,11 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
               }`}
             />
           </h4>
-          <span className="text-micro font-mono text-[var(--ink-2)]">{bandDisplayName.toUpperCase()} // SUPABASE INTEGRATION</span>
+          <span className="text-micro font-mono text-[var(--ink-2)]">{bandDisplayName.toUpperCase()}</span>
         </div>
       </div>
 
       <div className="flex items-center gap-3">
-        {isAdmin ? (
-          <Button
-            variant="neutral"
-            size="xs"
-            type="button"
-            onClick={onOpenAutonomyModal}
-            className="hidden items-center gap-1.5"
-            title="Configurar niveles de autonomía de los agentes (solo administradores)"
-          >
-            <Sliders className="w-3 h-3 text-[var(--acc)]" />
-            <span>
-              Autonomía: {dispatchLabel} • Min {minCache}€
-            </span>
-            <span className="px-1 py-0.2 text-micro rounded font-bold bg-[var(--acc)]/40 text-[var(--ink)] ml-0.5">ADMIN</span>
-          </Button>
-        ) : (
-          <div
-            className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-mono font-semibold opacity-80 ${
-              'bg-[var(--acc-soft)] text-[var(--acc)] '
-            }`}
-            title="Límites de autonomía configurados (Configuración restringida a Administradores)"
-          >
-            <Sliders className="w-3 h-3 text-[var(--acc)]" />
-            <span>
-              Autonomía: {dispatchLabel} • Min {minCache}€
-            </span>
-          </div>
-        )}
-
         <button
           id="clear-chat-btn"
           onClick={handleClearChat}

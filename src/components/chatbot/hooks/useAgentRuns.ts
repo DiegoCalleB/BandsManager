@@ -12,14 +12,6 @@ import { leerTokenDeSesion } from '../../../services/sesionLocal';
  * @returns Estado derivado y handlers expuestos al contenedor.
  */
 export function useAgentRuns() {
-  const [isAutonomyModalOpen, setIsAutonomyModalOpen] = useState(false);
-
-  // Switch mode between Python GitHub Agents vs Direct Gemini AI
-  const [agentsEnabled, setAgentsEnabled] = useState<boolean>(() => {
-    const saved = localStorage.getItem('bandmanager_agents_enabled');
-    return saved !== null ? saved === 'true' : false; // Default to false (Gemini Direct Mode)
-  });
-
   const [autonomyConfig, setAutonomyConfig] = useState<ChatAutonomyConfig>(() => {
     try {
       const saved = localStorage.getItem('bandmanager_agent_autonomy');
@@ -39,10 +31,6 @@ export function useAgentRuns() {
   });
 
   const [activeRun, setActiveRun] = useState<ActiveAgentRun | null>(null);
-
-  useEffect(() => {
-    localStorage.setItem('bandmanager_agents_enabled', String(agentsEnabled));
-  }, [agentsEnabled]);
 
   useEffect(() => {
     const handleAutonomyChange = () => {
@@ -212,5 +200,5 @@ export function useAgentRuns() {
     return alCambiarActiveRun();
   }, [activeRun?.id, activeRun?.status, activeRun?.isDemo]);
 
-  return { agentsEnabled, autonomyConfig, setActiveRun, setIsAutonomyModalOpen, setAgentsEnabled, activeRun, isAutonomyModalOpen };
+  return { autonomyConfig, setActiveRun, activeRun };
 }

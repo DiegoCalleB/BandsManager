@@ -5444,7 +5444,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/gmailOAuth.ts:312",
+        "x-source": "server/routes/gmailOAuth.ts:298",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "gmailOAuthRateLimiter"
@@ -5485,7 +5485,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/gmailOAuth.ts:299",
+        "x-source": "server/routes/gmailOAuth.ts:285",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "gmailOAuthRateLimiter"
@@ -12363,7 +12363,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/agent.ts:98",
+        "x-source": "server/routes/agent.ts:99",
         "x-autenticacion": "middleware"
       }
     },
@@ -13249,7 +13249,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/chat.ts:641",
+        "x-source": "server/routes/chat.ts:640",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"
