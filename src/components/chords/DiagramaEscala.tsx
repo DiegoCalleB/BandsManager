@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import type { DiagramaEscalaDatos } from '../../utils/guiasArmonia';
 import { midiDeEscala, prefiereBemoles } from '../../utils/pentagrama';
 import { Pentagrama } from './Pentagrama';
+import { usePentagramaSiempre } from './modoEnsayo';
 
 interface Props extends DiagramaEscalaDatos {
   /** Nombre de una nota (pitch class absoluto) ya transpuesto y en la notación elegida. */
@@ -13,7 +14,9 @@ interface Props extends DiagramaEscalaDatos {
  * módulo y la nota que da carácter al modo en otro tono. Sirve igual para guitarra, bajo o teclado.
  */
 export const DiagramaEscala: React.FC<Props> = ({ raiz, notas, distintiva, nombre }) => {
-  const [conNotas, setConNotas] = useState(false);
+  const [siempre] = usePentagramaSiempre();
+  const [manual, setManual] = useState<boolean | null>(null);
+  const conNotas = manual ?? siempre;
   return (
   <>
   <div
@@ -38,7 +41,7 @@ export const DiagramaEscala: React.FC<Props> = ({ raiz, notas, distintiva, nombr
       );
     })}
   </div>
-  <button type="button" aria-pressed={conNotas} onClick={() => setConNotas((v) => !v)} className={`mt-1 px-3 py-1 rounded-[var(--r-pill)] text-micro font-sans cursor-pointer bg-[var(--surface)] text-[var(--ink)] ${conNotas ? 'font-bold' : ''}`}>{conNotas ? 'Ocultar pentagrama' : '♪ Ver pentagrama'}</button>
+  <button type="button" aria-pressed={conNotas} onClick={() => setManual(!conNotas)} className={`mt-1 px-3 py-1 rounded-[var(--r-pill)] text-micro font-sans cursor-pointer bg-[var(--surface)] text-[var(--ink)] ${conNotas ? 'font-bold' : ''}`}>{conNotas ? 'Ocultar pentagrama' : '♪ Ver pentagrama'}</button>
   {conNotas && <Pentagrama midi={midiDeEscala(raiz, notas)} modo="escala" bemoles={prefiereBemoles(nombre(raiz))} etiqueta={`Pentagrama de la escala: ${notas.map(nombre).join(', ')}`} />}
   </>
   );

@@ -3,7 +3,7 @@ import { buscarFormaGuitarra } from '../../utils/chordUtils';
 import { CLASE_FUNCION, LETRA_FUNCION } from '../../utils/estiloArmonia';
 import { CUERDAS_BAJO, COLOR_FUNCION, lineaDeBajo, notasParaDibujar, type ContextoAcorde, type VistaAcorde } from '../../utils/vistaAcordes';
 import { ETIQUETA_VISTA } from './useVistaAcordes';
-import { fijarModoEnsayo, useModoEnsayo } from './modoEnsayo';
+import { fijarModoEnsayo, useModoEnsayo, usePentagramaSiempre } from './modoEnsayo';
 import { AYUDA_NIVEL, ETIQUETA_NIVEL, NIVELES, etiquetaIntervalo, inversionesGuitarra, notaDePasoHacia, pasoEnGuitarra, powerChord, type NivelAcorde } from '../../utils/voicings';
 import { DiagramaGuitarra } from './DiagramaGuitarra';
 import { Pentagrama } from './Pentagrama';
@@ -128,6 +128,7 @@ export const SelectorVistaAcorde: React.FC<{ vista: VistaAcorde; onCambio: (v: V
 /** Nivel de detalle de los diagramas: Básico (power chords) · Normal · Pro (inversiones, intervalos, nota de paso). */
 export const SelectorNivel: React.FC<{ nivel: NivelAcorde; onCambio: (n: NivelAcorde) => void }> = ({ nivel, onCambio }) => {
   const [ensayo, setEnsayo] = useModoEnsayo();
+  const [siempre, setSiempre] = usePentagramaSiempre();
   return (
   <span className="flex items-center gap-1 bg-[var(--surface)] rounded-[var(--r-pill)] p-0.5" role="group" aria-label="Nivel de los diagramas" title={AYUDA_NIVEL[nivel]}>
     {NIVELES.map((n) => (
@@ -150,6 +151,15 @@ export const SelectorNivel: React.FC<{ nivel: NivelAcorde; onCambio: (n: NivelAc
     >
       Ensayo
     </button>
+    <button
+      type="button"
+      aria-pressed={siempre}
+      onClick={() => setSiempre(!siempre)}
+      title="Pentagrama siempre visible en todas las fichas"
+      className={`px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-sans cursor-pointer transition-ui ${siempre ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
+    >
+      ♪ Siempre
+    </button>
   </span>
   );
 };
@@ -169,7 +179,9 @@ const ChipsInversion: React.FC<{ opciones: number[]; activa: number | null; reco
 export const CajaAcorde: React.FC<{ chord: string; vista: VistaAcorde; contexto?: ContextoAcorde; grado?: string; sonando?: boolean; nivel?: NivelAcorde; previo?: string | null; conReloj?: boolean; id?: string; /** false si tocar la ficha ya hace otra cosa (saltar la canción a ese acorde). */ sonar?: boolean }> = ({ chord, vista, contexto, grado, sonando, nivel = 'normal', previo, conReloj, id, sonar = true }) => {
   const [ensayo] = useModoEnsayo();
   const [visto, setVisto] = useState(false);
-  const [conNotas, setConNotas] = useState(false);
+  const [siempre] = usePentagramaSiempre();
+  const [manual, setManual] = useState<boolean | null>(null);
+  const conNotas = manual ?? siempre;
   // La inversión que menos mueve la mano desde el acorde anterior viene puesta en piano y en guitarra Pro (y se puede cambiar);
   // en guitarra Normal sale la forma de siempre y en bajo la raíz, hasta que se elige otra.
   const [invElegida, setInvElegida] = useState<number | null>(null);
@@ -249,7 +261,7 @@ export const CajaAcorde: React.FC<{ chord: string; vista: VistaAcorde; contexto?
       ) : <p className="text-micro text-[var(--ink-2)] font-sans">[Acorde estándar]</p>}
       {!tapar && (
         <>
-          <button type="button" aria-pressed={conNotas} title="Ver las notas en el pentagrama" onClick={() => setConNotas((v) => !v)} className={`px-3 py-1 rounded-[var(--r-pill)] text-micro font-sans cursor-pointer bg-[var(--surface)] text-[var(--ink)] ${conNotas ? 'font-bold' : ''}`}>{conNotas ? 'Ocultar pentagrama' : '♪ Ver pentagrama'}</button>
+          <button type="button" aria-pressed={conNotas} title="Ver las notas en el pentagrama" onClick={() => setManual(!conNotas)} className={`px-3 py-1 rounded-[var(--r-pill)] text-micro font-sans cursor-pointer bg-[var(--surface)] text-[var(--ink)] ${conNotas ? 'font-bold' : ''}`}>{conNotas ? 'Ocultar pentagrama' : '♪ Ver pentagrama'}</button>
           {conNotas && <Pentagrama midi={midiEscrito(midiDeAcorde(chord, vista, nivel, invSonido), vista)} clave={claveDeVista(vista)} modo="acorde" bemoles={prefiereBemoles(chord)} etiqueta={`Pentagrama: ${chord}`} />}
         </>
       )}
