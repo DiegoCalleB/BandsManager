@@ -13,13 +13,13 @@ tags: ["db", "system", "auto"]
 > **Capa:** `#layer/db` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Interesados de la landing oficial (`landing_interesados`): alta con doble confirmación y baja.
+Interesados de la landing oficial en la lista de espera (`musicians_waitlist`): alta con doble
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
-- [[tabla_landing_interesados|tabla landing_interesados]] *(Layer: #schema, Domain: #system)*
+- [[tabla_musicians_waitlist|tabla musicians_waitlist]] *(Layer: #schema, Domain: #system)*
 
 ---
 

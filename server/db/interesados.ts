@@ -1,5 +1,6 @@
-// Interesados de la landing oficial (`landing_interesados`): alta con doble confirmación y baja.
-// Es una tabla de la plataforma, sin `band_id`: no hay datos de ninguna banda.
+// Interesados de la landing oficial en la lista de espera (`musicians_waitlist`): alta con doble
+// confirmación y baja. Es una tabla de la plataforma, sin `band_id`: no hay datos de ninguna banda.
+// Las filas de la lista de espera de músicos anteriores no tienen `confirmado_at`, así que nunca se les escribe.
 
 import crypto from 'node:crypto';
 import { getSupabase } from './core.js';
@@ -19,49 +20,51 @@ export interface Interesado {
 export async function dbAltaInteresado(email: string, idioma: string, origen: string): Promise<Interesado> {
   const sb = getSupabase();
   const { data: existente, error: errLeer } = await sb
-    .from('landing_interesados')
+    .from('musicians_waitlist')
     .select('id, email, idioma, confirmado_at, baja_at')
     .eq('email', email)
+    .order('created_at', { ascending: true })
+    .limit(1)
     .maybeSingle();
-  if (errLeer) throw new Error(`Supabase Error (landing_interesados): ${errLeer.message}`);
+  if (errLeer) throw new Error(`Supabase Error (musicians_waitlist): ${errLeer.message}`);
   if (existente) return existente as Interesado;
 
-  const fila = { id: crypto.randomUUID(), email, idioma, origen };
+  const fila = { id: `interesado-${crypto.randomUUID()}`, email, idioma, origen, consentimiento_at: new Date().toISOString() };
   const { data, error } = await sb
-    .from('landing_interesados')
+    .from('musicians_waitlist')
     .insert(fila)
     .select('id, email, idioma, confirmado_at, baja_at')
     .single();
-  if (error) throw new Error(`Supabase Error (landing_interesados): ${error.message}`);
+  if (error) throw new Error(`Supabase Error (musicians_waitlist): ${error.message}`);
   return data as Interesado;
 }
 
 export async function dbGetInteresado(id: string): Promise<Interesado | null> {
   const { data, error } = await getSupabase()
-    .from('landing_interesados')
+    .from('musicians_waitlist')
     .select('id, email, idioma, confirmado_at, baja_at')
     .eq('id', id)
     .maybeSingle();
-  if (error) throw new Error(`Supabase Error (landing_interesados): ${error.message}`);
+  if (error) throw new Error(`Supabase Error (musicians_waitlist): ${error.message}`);
   return (data as Interesado | null) ?? null;
 }
 
 /** Marca la confirmación (solo la primera vez) y devuelve si acaba de confirmarse ahora. */
 export async function dbConfirmarInteresado(id: string): Promise<boolean> {
   const { data, error } = await getSupabase()
-    .from('landing_interesados')
+    .from('musicians_waitlist')
     .update({ confirmado_at: new Date().toISOString(), baja_at: null })
     .eq('id', id)
     .is('confirmado_at', null)
     .select('id');
-  if (error) throw new Error(`Supabase Error (landing_interesados): ${error.message}`);
+  if (error) throw new Error(`Supabase Error (musicians_waitlist): ${error.message}`);
   return (data?.length ?? 0) > 0;
 }
 
 export async function dbBajaInteresado(id: string): Promise<void> {
   const { error } = await getSupabase()
-    .from('landing_interesados')
+    .from('musicians_waitlist')
     .update({ baja_at: new Date().toISOString() })
     .eq('id', id);
-  if (error) throw new Error(`Supabase Error (landing_interesados): ${error.message}`);
+  if (error) throw new Error(`Supabase Error (musicians_waitlist): ${error.message}`);
 }
