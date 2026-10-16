@@ -44,7 +44,6 @@
   const slides = $$('.slide'), N = slides.length;
   let cur = 0;
 
-  const mobile = () => matchMedia('(max-width: 700px)').matches;
   // Con «reducir movimiento» en el sistema no se apaga la animación: solo se queda en fundidos suaves
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('calm');
   const isScroll = () => document.body.classList.contains('scroll');
@@ -144,7 +143,42 @@
     setIn(tagsAndBrand, true, how === 'instant' ? '0ms' : '60ms');
     if (how === 'instant') { setIn(p.items, true, '0ms'); p.shown = p.steps.length; }
     else if (clicksOn()) { p.items.filter((it) => !tagsAndBrand.includes(it)).forEach((it) => it.el.classList.remove('in')); p.shown = 0; }
-    else { setIn(p.items.filter((it) => !tagsAndBrand.includes(it)), true, '380ms'); p.shown = p.steps.length; }
+    else {
+      // Con voces, los mensajes del chat no entran en cascada: aparecen cuando su personaje empieza a hablar
+      const voces = window.DeckVoces && window.DeckVoces.enabled() && !isScroll() && !document.body.classList.contains('gate'); // con la pantalla de entrada puesta, nadie habla todavía
+      setIn(p.items.filter((it) => !tagsAndBrand.includes(it) && !(voces && it.el.matches('.dlg li'))), true, '380ms');
+      p.shown = p.steps.length;
+      const conVoz = voces && s.querySelector('[data-who][data-say]');
+      // data-min: la diapositiva dura al menos eso aunque acaben antes de hablar (p. ej. para ver un vídeo entero)
+      const t0 = Date.now();
+      // Corte en L: si el plano siguiente entra «en L», se corta cuando a la última frase le quedan ~0,8 s y la voz sigue sobre el plano nuevo
+      const nxL = pelicula && i === cur && proximo(i) !== null && slides[proximo(i)].dataset.corte === 'l';
+      const desde = i === cur ? desdeLinea : 0; desdeLinea = 0;
+      if (i === cur) inicioEscena = performance.now() - (conVoz ? sumaLineas(s, desde) * 1000 : 0);
+      // Si se entra a mitad de escena (barra de progreso o reanudar tras una pausa), la voz sigue en la frase que toca: las animaciones de la
+      // pantalla (el email que se escribe, la cámara, las marcas) saltan al mismo punto en vez de empezar desde cero y quedarse atrás
+      if (i === cur && conVoz && desde > 0) {
+        const off = sumaLineas(s, desde) * 1000;
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          if (cur !== i) return;
+          try { document.getAnimations().forEach((an) => { const tg = an.effect && an.effect.target; if (tg && s.contains(tg) && an.animationName !== undefined) an.currentTime = off; }); } catch (_) { /* sin salto: empieza desde el principio */ }
+        }));
+      }
+      if (conVoz) window.DeckVoces.play(s, (el) => { if (el.matches('.dlg li')) { el.style.setProperty('--n', 0); el.style.setProperty('--b', '0ms'); el.classList.add('in'); } }, null,
+        () => seguirPelicula(Math.max(nxL ? 0 : 280, (+s.dataset.min || 0) - (Date.now() - t0))), { cola: nxL ? 0.8 : 0, desde });
+      else if (i === cur && s.dataset.fin && s.querySelector(s.dataset.fin)) {
+        // escena de animación (data-fin = el último elemento que se anima): sigue cuando termina esa animación, aunque el
+        // navegador vaya cargado y las animaciones arranquen tarde (al grabar el MP4); el tiempo fijo solo es el límite
+        const ult = s.querySelector(s.dataset.fin), tope = durPelicula(s) + 4000;
+        let hecho = false;
+        const seguir = () => { if (hecho || cur !== i) return; hecho = true; ult.removeEventListener('animationend', seguir); seguirPelicula(1300); };
+        ult.addEventListener('animationend', seguir);
+        clearTimeout(pelTimer); pelTimer = setTimeout(seguir, tope);
+      } else if (i === cur) seguirPelicula(durPelicula(s) + (s.querySelectorAll('.dlg li').length * 820));
+    }
+    if (how !== 'instant' && clicksOn() && window.DeckVoces && window.DeckVoces.enabled()) window.DeckVoces.play(s, null, (el) => !el.matches('.dlg li'));
+    // Chat: en automático cada mensaje entra tras el anterior; por clics, cada clic es un mensaje
+    $$('.dlg li', s).forEach((li, k) => li.style.setProperty('--n', how === 'instant' || clicksOn() ? 0 : k));
     paintHud();
   }
 
@@ -167,6 +201,8 @@
     p.steps[p.shown].forEach((it, k) => it.el.style.setProperty('--i', k));
     p.shown += 1; paintHud();
     if (window.DeckSound) window.DeckSound.tick();
+    const habla = p.steps[p.shown - 1].map((it) => it.el).find((el) => el.matches('[data-say]'));
+    if (habla && window.DeckVoces && window.DeckVoces.enabled()) window.DeckVoces.uno(habla);
     return true;
   }
   function stepBack() {
@@ -188,36 +224,171 @@
   }
 
   let delayedVideoTimer = 0;
+  // Modo película (P): cada diapositiva pasa sola; con voces, cuando terminan de hablar
+  let pelicula = false, pelTimer = 0;
+  const durPelicula = (s) => +((corte && s.dataset.durCorto) || (pelicula && s.dataset.durPeli) || s.dataset.dur || (s.classList.contains('trailer') ? 15500 : s.classList.contains('reveal') ? 11000 : 7000));
+  let pausado = false; // reproductor de cine.js: pausa la película sin salir de ella
+  // Corte de 5 minutos: las diapositivas con data-corto forman una lista más corta (?corte o el botón de la entrada)
+  let corte = new URLSearchParams(location.search).has('corte');
+  const idxCorte = slides.map((s, i) => (s.hasAttribute('data-corto') ? i : -1)).filter((i) => i >= 0);
+  // El anexo (data-anexo) va al final de la presentación, para las preguntas: la película se lo salta
+  const idxPeli = slides.map((s, i) => (s.hasAttribute('data-anexo') ? -1 : i)).filter((i) => i >= 0);
+  const lista = () => (corte && idxCorte.length ? idxCorte : pelicula ? idxPeli : slides.map((_, i) => i));
+  const proximo = (i) => { const k = lista().find((x) => x > i); return k === undefined ? null : k; };
+  const anterior = (i) => { const l = lista().filter((x) => x < i); return l.length ? l[l.length - 1] : null; };
+  // ───────── Línea de tiempo (reproductor de cine.js): duración estimada de cada escena, posición y saltos ─────────
+  let desdeLinea = 0, inicioEscena = performance.now(), pausaEn = 0;
+  const lineasDe = (sl) => (window.DeckVoces && window.DeckVoces.lineas ? window.DeckVoces.lineas(sl) : []);
+  const sumaLineas = (sl, k) => lineasDe(sl).slice(0, k).reduce((a, b) => a + b, 0);
+  const durEscena = (i) => {
+    const sl = slides[i], L = lineasDe(sl);
+    // las frases se pisan un poco al cambiar de personaje: ~0,35 s menos por frase (medido en una pasada completa)
+    const voz = L.length && window.DeckVoces && window.DeckVoces.enabled() ? L.reduce((a, b) => a + b, 0) - 0.35 * (L.length - 1) + 0.9 : 0;
+    const base = durPelicula(sl) / 1000;
+    return Math.max(voz, +sl.dataset.min / 1000 || 0, L.length ? 0 : base) + (sl.dataset.corte === 'negro' ? 0.6 : 0.25);
+  };
+  const enEscena = () => Math.max(0, ((pausado ? pausaEn : performance.now()) - inicioEscena) / 1000);
+  const tiempo = () => {
+    const L = lista(); let t = 0;
+    for (const i of L) { if (i === cur) return t + Math.min(enEscena(), durEscena(i)); t += durEscena(i); }
+    return t;
+  };
+  const total = () => lista().reduce((a, i) => a + durEscena(i), 0);
+  // Ir a un segundo concreto de la película: escena y frase (no se puede entrar a mitad de una frase: empieza la que toca)
+  const irA = (seg) => {
+    const L = lista(); let t = 0;
+    for (const i of L) {
+      const d = durEscena(i);
+      if (seg < t + d || i === L[L.length - 1]) {
+        const off = Math.max(0, seg - t), lin = lineasDe(slides[i]); let k = 0, acc = 0;
+        while (k < lin.length && acc + lin[k] <= off + 0.05) { acc += lin[k]; k++; }
+        if (k >= lin.length && lin.length) k = lin.length - 1;
+        desdeLinea = k; show(i);
+        return;
+      }
+      t += d;
+    }
+  };
+
+  // ───────── Montaje (modo película) ─────────
+  // Cada diapositiva dice cómo se entra en ella (data-corte, lo pone el generador):
+  //   j      → se oye al que habla antes de verle (la voz se adelanta ~0,65 s al corte)
+  //   l      → la última frase del plano anterior sigue sonando sobre el nuevo
+  //   rampa  → rampa de velocidad: el plano acelera, corte con golpe grave en el pulso de la música y el nuevo frena
+  //   golpe  → corte seco, con impacto · negro → fundido a negro (saltos de tiempo y capítulos) · fundido → encadenado
+  let corteAuto = false, cambioT = 0, cambioVoz = null, rampaT = 0;
+  const PRE_RAMPA = 560;
+  const velocidad = (sl, de, a, ms) => { // rampa de velocidad de los vídeos de un plano
+    const t0 = performance.now();
+    $$('video', sl).forEach((v) => {
+      const paso = () => { const k = Math.min(1, (performance.now() - t0) / ms), e = k * k * (3 - 2 * k); try { v.playbackRate = de + (a - de) * e; } catch (_) { /* sin rampa */ } if (k < 1) requestAnimationFrame(paso); };
+      paso();
+    });
+  };
+  const seguirPelicula = (ms) => {
+    clearTimeout(pelTimer); clearTimeout(rampaT); pelInfo = null; slides.forEach((x) => x.classList.remove('acelera'));
+    if (!pelicula || pausado) return;
+    const nx = proximo(cur);
+    const ir = () => { corteAuto = true; show(nx); };
+    if (nx !== null && slides[nx].dataset.corte === 'rampa' && !isScroll()) {
+      const total = window.CineMusica ? window.CineMusica.alPulso(ms + PRE_RAMPA) : ms + PRE_RAMPA;
+      const sale = slides[cur];
+      rampaT = setTimeout(() => {
+        if (!pelicula || pausado) return;
+        sale.classList.add('acelera'); velocidad(sale, 1, 4, PRE_RAMPA);
+        if (window.DeckSound) window.DeckSound.rampa(PRE_RAMPA);
+      }, total - PRE_RAMPA);
+      pelInfo = { t0: performance.now(), ms: total };
+      pelTimer = setTimeout(ir, total);
+      return;
+    }
+    pelInfo = { t0: performance.now(), ms };
+    pelTimer = setTimeout(() => { if (nx === null) document.body.dataset.fin = '1'; else ir(); }, ms);
+  };
+  let pelInfo = null, pelResto = null, videosParados = [];
+  const acs = () => (window.__acs || []).filter((c) => c.state !== 'closed');
+  const pausar = (on) => {
+    if (!!on === pausado) return;
+    if (on) {
+      // Pausa de verdad: se congela todo lo que está en marcha (voz en su sitio, vídeos, animaciones, música, efectos y cronómetro de la escena)
+      pausaEn = performance.now(); pausado = true; document.body.classList.add('pausado');
+      pelResto = pelInfo ? Math.max(0, pelInfo.ms - (pausaEn - pelInfo.t0)) : null;
+      clearTimeout(pelTimer); clearTimeout(rampaT);
+      if (window.DeckVoces) { if (window.DeckVoces.pausar) window.DeckVoces.pausar(); else window.DeckVoces.stop(); }
+      videosParados = [...document.querySelectorAll('video')].filter((v) => !v.paused); videosParados.forEach((v) => v.pause());
+      acs().forEach((c) => { try { c.suspend(); } catch (_) { /* ya parado */ } });
+    } else {
+      pausado = false; document.body.classList.remove('pausado');
+      inicioEscena += performance.now() - pausaEn; // el reloj de la escena y la barra de progreso siguen desde donde se pararon
+      acs().forEach((c) => { try { c.resume(); } catch (_) { /* ya en marcha */ } });
+      videosParados.forEach((v) => { if (v.offsetParent) v.play().catch(() => {}); }); videosParados = [];
+      if (window.DeckVoces && window.DeckVoces.reanudar) window.DeckVoces.reanudar();
+      else { const lin = lineasDe(slides[cur]), off = (pausaEn - inicioEscena) / 1000; let k = 0, acc = 0; while (k < lin.length && acc + lin[k] <= off) { acc += lin[k]; k++; } desdeLinea = lin.length ? Math.min(k, lin.length - 1) : 0; show(cur, false); }
+      if (pelResto !== null) seguirPelicula(pelResto); // el plano estaba a punto de cambiar: lo hace en el tiempo que le quedaba
+      pelResto = null;
+    }
+    dispatchEvent(new Event('deckpausa'));
+  };
   let soundStarted = false;
 
+  let montajeT = 0;
   function show(i, push = true, how = 'play') {
-    document.querySelectorAll('video').forEach((v) => v.pause());
+    if (pausado) { pausado = false; document.body.classList.remove('pausado'); dispatchEvent(new Event('deckpausa')); }
+    const destino = Math.max(0, Math.min(N - 1, i));
+    const tipo = corteAuto && pelicula && !isScroll() ? (slides[destino].dataset.corte || '') : '';
+    corteAuto = false;
+    clearTimeout(pelTimer); clearTimeout(rampaT); clearTimeout(cambioT); pelInfo = null;
+    if (cambioVoz) { removeEventListener('voz', cambioVoz); cambioVoz = null; }
+    document.querySelectorAll('video').forEach((v) => { if (!(tipo === 'j' && v.closest('.slide') === slides[cur])) v.pause(); });
+    if (window.DeckVoces) { if (tipo === 'l' && window.DeckVoces.soltar) window.DeckVoces.soltar(); window.DeckVoces.stop(); }
     const prev = cur;
-    cur = Math.max(0, Math.min(N - 1, i));
-    slides.forEach((s, n) => {
-      s.classList.toggle('active', n === cur);
-      s.classList.toggle('before', n < cur);
-      s.classList.toggle('after', n > cur);
-    });
-    if (prev !== cur) reset(prev);
-    reveal(cur, how);
-    $('#count').textContent = `${cur + 1} / ${N}`;
-    $('#aL').disabled = cur === 0; $('#aR').disabled = cur === N - 1;
-    $('#title').textContent = slides[cur].dataset.title || '';
-    $('#prog').style.width = `${((cur + 1) / N) * 100}%`;
-    if (push) history.replaceState(null, '', '#' + (cur + 1));
-    $$('#grid button').forEach((b, n) => b.classList.toggle('cur', n === cur));
-    countUp(slides[cur]);
-    if (window.DeckSound && !isScroll() && (prev !== cur || !soundStarted)) { soundStarted = true; window.DeckSound.slide(slides[cur]); }
-    clearTimeout(delayedVideoTimer);
-    slides[cur].querySelectorAll('video[data-delay]').forEach((v) => {
-      v.pause(); v.currentTime = 0;
-      delayedVideoTimer = setTimeout(() => { if (v.offsetParent) v.play().catch(() => {}); }, Number(v.dataset.delay));
-    });
-    slides[cur].querySelectorAll('video[data-ambient]').forEach((v) => {
-      if (v.dataset.restart !== undefined) v.currentTime = 0;
-      if (v.offsetParent) v.play().catch(() => {});
-    });
+    cur = destino;
+    slides.forEach((s) => delete s.dataset.corteAhora);
+    if (tipo) slides[cur].dataset.corteAhora = tipo;
+    const cambiar = (conReveal) => {
+      clearTimeout(cambioT);
+      if (cambioVoz) { removeEventListener('voz', cambioVoz); cambioVoz = null; }
+      clearTimeout(montajeT);
+      if (tipo) document.body.dataset.corte = tipo; else delete document.body.dataset.corte;
+      montajeT = setTimeout(() => { delete document.body.dataset.corte; }, 1500);
+      slides.forEach((s, n) => {
+        s.classList.toggle('active', n === cur);
+        s.classList.toggle('before', n < cur);
+        s.classList.toggle('after', n > cur);
+        if (n !== cur) s.classList.remove('acelera');
+      });
+      if (prev !== cur) reset(prev);
+      if (conReveal) reveal(cur, how);
+      $('#count').textContent = `${cur + 1} / ${N}`;
+      $('#aL').disabled = cur === 0; $('#aR').disabled = cur === N - 1;
+      $('#title').textContent = slides[cur].dataset.title || '';
+      $('#prog').style.width = `${((cur + 1) / N) * 100}%`;
+      if (push) history.replaceState(null, '', '#' + (cur + 1));
+      $$('#grid button').forEach((b, n) => b.classList.toggle('cur', n === cur));
+      countUp(slides[cur]);
+      if (window.DeckSound && !isScroll() && (prev !== cur || !soundStarted)) { soundStarted = true; window.DeckSound.slide(slides[cur]); }
+      if (prev !== slides.length && slides[prev] && prev !== cur) $$('video', slides[prev]).forEach((v) => v.pause());
+      clearTimeout(delayedVideoTimer);
+      slides[cur].querySelectorAll('video[data-delay]').forEach((v) => {
+        v.pause(); v.currentTime = 0;
+        delayedVideoTimer = setTimeout(() => { if (v.offsetParent && !pausado) v.play().catch(() => {}); }, Number(v.dataset.delay));
+      });
+      slides[cur].querySelectorAll('video[data-ambient]').forEach((v) => {
+        if (v.dataset.restart !== undefined) v.currentTime = 0;
+        if (v.offsetParent) v.play().catch(() => {});
+      });
+      // el plano nuevo entra rápido y frena (rampa) o a velocidad normal
+      if (tipo === 'rampa') velocidad(slides[cur], 3, 1, 900); else $$('video', slides[cur]).forEach((v) => { try { v.playbackRate = 1; } catch (_) { /* nada */ } });
+      dispatchEvent(new Event('deckslide'));
+    };
+    const voces = window.DeckVoces && window.DeckVoces.enabled();
+    if (tipo === 'j' && voces && slides[cur].querySelector('[data-who][data-say]')) {
+      // Corte en J: primero se oye al que habla y, un instante después, se le ve
+      reveal(cur, how);
+      cambioVoz = () => { removeEventListener('voz', cambioVoz); cambioVoz = null; clearTimeout(cambioT); cambioT = setTimeout(() => cambiar(false), 650); };
+      addEventListener('voz', cambioVoz);
+      cambioT = setTimeout(() => cambiar(false), 2400);
+    } else cambiar(true);
   }
 
   // Pantalla de entrada: da el gesto que el navegador exige para el sonido y arranca el tráiler a la vez
@@ -227,6 +398,7 @@
     if (startsAtBeginning && !isScroll()) {
       document.body.classList.add('gate');
       const go = (withSound) => {
+        nxAudio.apaga();
         document.body.classList.remove('gate');
         gate.classList.add('out');
         setTimeout(() => gate.remove(), 700);
@@ -235,13 +407,49 @@
         show(cur, false);
       };
       $('#gateSound').onclick = () => go(true);
+      const peli = (conCorte) => () => {
+        corte = conCorte || corte; document.body.classList.toggle('corte', corte);
+        const ir = () => { go(true); dispatchEvent(new KeyboardEvent('keydown', { key: 'p' })); };
+        $$('.gate-btn').forEach((b) => { b.disabled = true; });
+        nxAudio.apaga(); gate.classList.add('sale');
+        if (window.CineIdent) window.CineIdent.play(ir); else ir();
+      };
+      if ($('#gatePeli')) $('#gatePeli').onclick = peli(false);
+      if ($('#gateCorto')) $('#gateCorto').onclick = peli(true);
       $('#gateSilent').onclick = () => go(false);
-      $('#gateSound').focus({ preventScroll: true });
+      // Sonido y cursor de la entrada: ver entrada.js
+      const nxAudio = window.NxAudio;
+      // La barra superior se vuelve sólida al bajar, y en la grabación el cursor recorre las filas antes de pulsar «Reproducir»
+      const scr = $('.nx-scroll'), barra = $('.nx-home > .nx-top');
+      if (scr && barra) scr.addEventListener('scroll', () => barra.classList.toggle('solido', scr.scrollTop > 12));
+      // ¿Quién está viendo? → inicio con la película destacada: a los pocos segundos arranca el tráiler solo
+      const vid = $('.nx-vid');
+      const aInicio = (btn) => {
+        if (gate.dataset.fase !== 'perfiles') return;
+        btn.classList.add('elegido'); nxAudio.tuc();
+        setTimeout(() => {
+          gate.dataset.fase = 'home';
+          ($('#gatePeli') || $('#gateSound')).focus({ preventScroll: true });
+          if (vid) setTimeout(() => { vid.play().then(() => { gate.classList.add('trailer'); }).catch(() => {}); }, 2600);
+        }, 700);
+      };
+      $$('.nx-perfil').forEach((b) => { b.onclick = () => aInicio(b); });
+      // «Más información»: la ficha de la película, como en la plataforma; el tráiler de fondo se queda como está
+      const ficha = $('#nxModal');
+      const fichaAbrir = () => { if (ficha) { ficha.hidden = false; $('#nxCerrar').focus({ preventScroll: true }); } };
+      const fichaCerrar = () => { if (ficha) { ficha.hidden = true; $('#gatePeli').focus({ preventScroll: true }); } };
+      if ($('#gateInfo')) $('#gateInfo').onclick = fichaAbrir;
+      if ($('#nxCerrar')) $('#nxCerrar').onclick = fichaCerrar;
+      if ($('#nxModalPeli')) $('#nxModalPeli').onclick = () => { ficha.hidden = true; $('#gatePeli').click(); };
+      if (ficha) ficha.onclick = (e) => { if (e.target === ficha) fichaCerrar(); };
+      if ($('.nx-perfil')) $('.nx-perfil').focus({ preventScroll: true });
+      else ($('#gatePeli') || $('#gateSound')).focus({ preventScroll: true });
+      if (corte) document.body.classList.add('corte');
     } else gate.remove();
   }
 
-  const next = () => { if (!stepForward()) show(cur + 1); };
-  const prev = () => { if (!stepBack()) show(cur - 1, true, clicksOn() ? 'instant' : 'play'); };
+  const next = () => { if (!stepForward()) { const nx = proximo(cur); if (nx !== null) show(nx); } };
+  const prev = () => { if (!stepBack()) { const an = anterior(cur); if (an !== null) show(an, true, clicksOn() ? 'instant' : 'play'); } };
 
   function countUp(slide) {
     $$('[data-count]', slide).forEach((el) => {
@@ -290,7 +498,13 @@
   addEventListener('keydown', (e) => {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     if (document.body.classList.contains('gate')) {
-      if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') { e.preventDefault(); $('#gateSound').click(); }
+      const ficha = $('#nxModal');
+      if (ficha && !ficha.hidden) { if (e.key === 'Escape') { e.preventDefault(); $('#nxCerrar').click(); } return; } // con la ficha abierta, Enter pulsa el botón enfocado
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') {
+        e.preventDefault();
+        if (gate && gate.dataset.fase === 'perfiles') ($('.nx-perfil.elegido') || $('.nx-perfil')).click();
+        else ($('#gatePeli') || $('#gateSound')).click();
+      }
       return;
     }
     if (e.target.tagName === 'VIDEO' && (e.key === ' ' || e.key === 'Enter')) return;
@@ -310,16 +524,24 @@
       case 'g': case 'G': toggleGrid(); break;
       case 't': case 'T': toggleTheme(); break;
       case 'm': case 'M': window.DeckSound?.toggle(); break;
+      case 'p': case 'P': pelicula = !pelicula; document.body.classList.toggle('pelicula', pelicula); if ($('#bPeli')) $('#bPeli').setAttribute('aria-pressed', String(pelicula)); if ($('#bPeli')) $('#bPeli').textContent = pelicula ? 'Película: sí' : 'Película'; if (pelicula) show(cur, false); else clearTimeout(pelTimer); break;
+      case 'v': case 'V': if (window.DeckVoces) { window.DeckVoces.toggle(); show(cur, false, 'instant'); } break;
       case 'a': case 'A': toggleAnim(); break;
       case 's': case 'S': setScroll(!isScroll()); show(cur, false); break;
     }
   });
+  // Para el reproductor estilo Netflix (cine.js)
+  window.Deck = { get cur() { return cur; }, N, slides, show: (i) => show(i), next, prev, pausar, lista, proximo, anterior, tiempo, total, irA, durEscena, get corte() { return corte; }, get pausado() { return pausado; }, get pelicula() { return pelicula; } };
   $('#edgeL').onclick = prev; $('#edgeR').onclick = next;
   $('#bPrev').onclick = prev; $('#bNext').onclick = next; $('#aL').onclick = prev; $('#aR').onclick = next;
   $('#bGrid').onclick = toggleGrid; $('#bFs').onclick = fs; $('#bTheme').onclick = toggleTheme;
   $('#bAnim').onclick = toggleAnim;
   $('#bSound').onclick = () => window.DeckSound && window.DeckSound.toggle();
-  if (window.DeckSound) window.DeckSound.onChange((on) => { const b = $('#bSound'); b.textContent = on ? 'Sonido: sí' : 'Sonido'; b.setAttribute('aria-pressed', String(on)); });
+  if (window.DeckSound) window.DeckSound.onChange((on) => { const b = $('#bSound'); b.textContent = on ? 'Sonido: sí' : 'Sonido'; b.setAttribute('aria-pressed', String(on)); if (!on && window.DeckVoces) window.DeckVoces.stop(); });
+  const pintaVoces = () => { const b = $('#bVoces'); if (b && window.DeckVoces) { b.textContent = window.DeckVoces.pref ? 'Voces: sí' : 'Voces: no'; b.setAttribute('aria-pressed', String(window.DeckVoces.pref)); } };
+  if (window.DeckVoces) { window.DeckVoces.onChange(pintaVoces); pintaVoces(); }
+  if ($('#bPeli')) $('#bPeli').onclick = () => dispatchEvent(new KeyboardEvent('keydown', { key: 'p' }));
+  if ($('#bVoces')) $('#bVoces').onclick = () => { if (window.DeckVoces) { window.DeckVoces.toggle(); show(cur, false, 'instant'); } };
   $('#bScroll').onclick = () => { setScroll(true); show(cur, false); };
 
   let tx = 0, ty = 0;
@@ -349,7 +571,8 @@
     slides.forEach((s) => io.observe(s));
   }
 
-  if (mobile() || location.search.includes('scroll')) document.body.classList.add('scroll');
+  // El modo lectura (scroll) solo se pide a propósito (?scroll o la tecla S): en pantallas estrechas también se ve la película, escalada
+  if (location.search.includes('scroll')) document.body.classList.add('scroll');
   fit();
   show((parseInt(location.hash.slice(1), 10) || 1) - 1, false);
   setTimeout(() => { const h = $('#hint'); if (h) h.style.opacity = 0; }, 5000);

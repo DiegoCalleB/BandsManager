@@ -6,6 +6,7 @@
 
 import { getSupabase, dbGetAutonomyConfig } from "../db.js";
 import { esEmailValido, ESTADOS_DE_ENVIO } from "../utils/email.js";
+import { aprobacionVigente } from "../utils/aprobacionLead.js";
 import { loadState } from "../state.js";
 import { enviarEmail, crearBorrador, EmailAgentError } from "./emailAgentClient.js";
 import { crearBorradorGmailApi, tieneGmailOAuthConectado, comprobarBorradorEnviadoConDetalle, buscarMensajeEnviadoA, enviarEmailGmailApi, obtenerEmailDeLaCuentaConectada } from "./gmailApiClient.js";
@@ -216,6 +217,23 @@ export async function runEnviadorAgent(opts: {
       results.push({ id: lead.id, nombre_sala: lead.nombre_sala, status: "omitido", error: "El email de contacto rebotó antes. Corrígelo antes de volver a enviar." });
       continue;
     }
+    // Solo sale el texto que una persona aprobó. Antes, con el pitch vacío se enviaba el último
+    // mensaje recibido (se le devolvía a la sala su propio correo) o un texto genérico.
+    const textoAprobado = String(lead.pitch_generado || "").trim();
+    if (!textoAprobado) {
+      results.push({ id: lead.id, nombre_sala: lead.nombre_sala, status: "error", error: "El lead no tiene texto aprobado que enviar. Redacta y aprueba el correo antes de despacharlo." });
+      continue;
+    }
+    // Y solo si consta que una persona aprobó ESE texto: si cambió después de aprobarlo, o el lead
+    // llegó a la cola por otro camino, no sale hasta que se apruebe de nuevo (AGENTS.md §3).
+    const aprobacion = aprobacionVigente(lead);
+    if (!aprobacion.ok) {
+      // Vuelve a la cola de revisión: es donde una persona puede aprobar el texto (si se quedara
+      // "aprobado" sin sello, fallaría en cada ciclo y no habría botón de aprobar).
+      await actualizarLeadComprobando(sb, lead.id, opts.bandId, { estado: "pendiente_aprobacion", aprobado_por: null, aprobado_at: null, pitch_aprobado_hash: null });
+      results.push({ id: lead.id, nombre_sala: lead.nombre_sala, status: "error", error: `${aprobacion.motivo} (La sala ha vuelto a «pendiente de aprobación».)` });
+      continue;
+    }
     if (ENVIO_REAL && enviadosHoy >= TOPE_DIARIO) {
       results.push({ id: lead.id, nombre_sala: lead.nombre_sala, status: "omitido", error: `Se alcanzó el tope diario de ${TOPE_DIARIO} envíos. Continúa mañana.` });
       continue;
@@ -232,9 +250,8 @@ export async function runEnviadorAgent(opts: {
       .filter((e, i, todos) => todos.findIndex((x) => x.toLowerCase() === e.toLowerCase()) === i);
 
     const emailContacto = rawEmails.length > 0 ? rawEmails.join(", ") : (lead.email_contacto || lead.email);
-    const rawPitch = lead.pitch_generado || lead.ultimo_mensaje_recibido || "Hola, os dejamos nuestra propuesta de concierto.";
     const { html: emailHtml, text: emailText, cleanPitch } = buildServerEmailHtml({
-      pitchText: rawPitch,
+      pitchText: textoAprobado,
       bandName,
       bandId: opts.bandId,
       epkConfig,

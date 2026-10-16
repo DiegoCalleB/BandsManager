@@ -11,9 +11,10 @@
 // que la banda tenga que volver a intervenir.
 
 import MailComposer from "nodemailer/lib/mail-composer/index.js";
-import { dbGetBandGmailOAuth } from "../db/gmailOAuth.js";
+import { dbGetBandGmailOAuth, dbMarkGmailNeedsReauth, dbSetGmailHistoryId } from "../db/gmailOAuth.js";
 import { EmailAgentError, RespuestaEntrante } from "./emailAgentClient.js";
 import { classifyGmailError } from "../utils/emailDeliveryTracker.js";
+import { esRespuestaAutomatica } from "../utils/respuestaEntrante.js";
 
 const TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token";
 const DRAFTS_ENDPOINT = "https://gmail.googleapis.com/gmail/v1/users/me/drafts";
@@ -86,14 +87,18 @@ async function getValidAccessToken(bandId: string): Promise<string> {
 
   if (!res.ok) {
     const errBody = await res.text().catch(() => "");
-    let friendlyMessage = errBody;
+    let revocado = false;
     try {
-      const parsed = JSON.parse(errBody);
-      if (parsed.error === "invalid_grant") {
-        friendlyMessage = "Token de Google revocado o caducado (invalid_grant). Es necesario reconectar con 'Conectar con Google'.";
-      }
-    } catch { /* cuerpo de error no JSON: se queda el mensaje genérico */ }
-    throw new EmailAgentError(`No se pudo renovar el token de Gmail para '${bandId}': ${friendlyMessage || res.status}`, "api_error");
+      revocado = JSON.parse(errBody).error === "invalid_grant";
+    } catch { /* cuerpo de error no JSON: no es una revocación */ }
+    if (revocado) {
+      // Google revocó el permiso (caduca a los 7 días con la app OAuth en modo Testing): reintentar
+      // no sirve. Se marca la cuenta para que el planificador pare y la pantalla pida reconectar.
+      accessTokenCache.delete(bandId);
+      await dbMarkGmailNeedsReauth(bandId);
+      throw new EmailAgentError(`Google ha revocado el acceso de Gmail de '${bandId}' (invalid_grant). Hay que reconectar con 'Conectar con Google'.`, "reauth_required");
+    }
+    throw new EmailAgentError(`No se pudo renovar el token de Gmail para '${bandId}': ${errBody || res.status}`, "api_error");
   }
 
   const data = await res.json();
@@ -104,9 +109,11 @@ async function getValidAccessToken(bandId: string): Promise<string> {
   return accessToken;
 }
 
+// Una cuenta marcada para reconectar (Google revocó el permiso) no cuenta como conectada: los
+// agentes caen al camino IMAP si lo hay, en vez de fallar cada vez con un token muerto.
 export async function tieneGmailOAuthConectado(bandId: string): Promise<boolean> {
   const account = await dbGetBandGmailOAuth(bandId);
-  return !!account;
+  return !!account && !account.needs_reauth_at;
 }
 
 // Diagnóstico: a qué cuenta de Gmail pertenece de verdad el access token que se está usando.
@@ -275,6 +282,12 @@ interface ParteMensajeGmail {
   parts?: ParteMensajeGmail[];
 }
 
+/** Mensaje de Gmail (`format=full`) con lo que se lee de él. */
+interface MensajeGmail {
+  threadId?: string;
+  payload?: ParteMensajeGmail & { headers?: Array<{ name: string; value: string }> };
+}
+
 function extraerTextoPlano(payload: ParteMensajeGmail | undefined): string {
   if (!payload) return "";
   if (payload.mimeType === "text/plain" && payload.body?.data) {
@@ -316,103 +329,163 @@ function headerValue(headers: Array<{ name: string; value: string }> | undefined
   return headers?.find((h) => h.name.toLowerCase() === name.toLowerCase())?.value || "";
 }
 
-// Igual que leerRespuestasEntrantes (emailAgentClient.ts) pero vía la API de Gmail en vez de
-// IMAP - lo que usa el Agente Lector cuando la banda conectó Gmail por OAuth sin contraseña de
-// aplicación.
-// Busca emails recibidos recientemente en la bandeja (tanto no leídos como leídos recientes)
-// para no perder respuestas que hayan sido abiertas en un cliente móvil o web.
-export async function leerRespuestasGmailApi(bandId: string, maxResults = 25): Promise<RespuestaEntrante[]> {
-  if (isGmailRateLimited(bandId)) {
-    const until = gmailRateLimitCooldownMap.get(bandId);
-    console.warn(`[Gmail API] Sondeo omitido para banda '${bandId}': enfriamiento activo por límite 429 de Google (hasta ${new Date(until || 0).toLocaleTimeString()}).`);
-    return [];
-  }
-
-  const accessToken = await getValidAccessToken(bandId);
-
-  // Busca emails recibidos recientemente en la bandeja de entrada (últimos 7 días)
-  // No limitamos únicamente a is:unread para no ignorar emails que el usuario haya abierto previamente en su móvil.
-  const query = encodeURIComponent("in:inbox newer_than:7d");
-  const listRes = await fetchConTimeout(`${MESSAGES_ENDPOINT}?q=${query}&maxResults=${Math.min(maxResults, 25)}`, {
-    headers: { Authorization: `Bearer ${accessToken}` }
+// Un mensaje completo de la API de Gmail (format=full) -> RespuestaEntrante.
+export function parsearMensajeGmail(msg: MensajeGmail, id: string): RespuestaEntrante {
+  const headers = msg.payload?.headers;
+  const fromRaw = headerValue(headers, "From");
+  const fromMatch = fromRaw.match(/<([^>]+)>/);
+  const fromAddress = (fromMatch ? fromMatch[1] : fromRaw).toLowerCase().trim();
+  // El nombre es lo que hay antes de la dirección entre < >; nada de "limpiar" etiquetas a medias.
+  const fromName = fromRaw.includes("<") ? fromRaw.split("<")[0].replace(/"/g, "").trim() : "";
+  const toAddress = headerValue(headers, "To");
+  const dateHeader = headerValue(headers, "Date");
+  const subject = headerValue(headers, "Subject");
+  const messageId = headerValue(headers, "Message-ID") || `gmail-${id}`;
+  const inReplyTo = headerValue(headers, "In-Reply-To");
+  const referencesRaw = headerValue(headers, "References");
+  const references = referencesRaw
+    ? referencesRaw.split(/\s+/).map((r) => r.trim()).filter(Boolean)
+    : undefined;
+  const text = extraerTextoPlano(msg.payload).trim();
+  const automatico = esRespuestaAutomatica({
+    subject, from: fromAddress, text,
+    autoSubmitted: headerValue(headers, "Auto-Submitted"), precedence: headerValue(headers, "Precedence"),
+    xAutoreply: headerValue(headers, "X-Autoreply") || headerValue(headers, "X-Autorespond"),
+    listUnsubscribe: headerValue(headers, "List-Unsubscribe")
   });
-  if (!listRes.ok) {
-    const errBody = await listRes.text().catch(() => "");
-    let isRateLimit = listRes.status === 429;
-    let friendlyMessage = errBody;
-    try {
-      const parsed = JSON.parse(errBody);
-      if (parsed.error?.code === 429 || parsed.error?.status === "RESOURCE_EXHAUSTED" || parsed.error?.message?.includes("RESOURCE_EXHAUSTED")) {
-        isRateLimit = true;
-      }
-      if (parsed.error?.message) {
-        if (isRateLimit) {
-          friendlyMessage = "Límite de peticiones de Google excedido (429 Rate Limit - RESOURCE_EXHAUSTED). Esperando período de enfriamiento.";
-        } else {
-          friendlyMessage = `${parsed.error.message} (HTTP ${listRes.status})`;
-        }
-      }
-    } catch { /* cuerpo de error no JSON: se queda el mensaje genérico */ }
 
-    if (isRateLimit) {
-      setGmailRateLimitCooldown(bandId);
-      console.warn(`[Gmail API] Límite de peticiones 429 en '${bandId}'. Enfriamiento activado y retorno de 0 mensajes para recuperación.`);
-      return [];
-    }
+  return {
+    uid: id,
+    messageId,
+    from: fromAddress,
+    fromName: fromName || undefined,
+    to: toAddress || undefined,
+    subject,
+    text,
+    date: dateHeader ? new Date(dateHeader) : null,
+    inReplyTo: inReplyTo || undefined,
+    references,
+    threadId: msg.threadId || undefined,
+    ...(automatico ? { automatico: true } : {})
+  };
+}
 
-    throw new EmailAgentError(`No se pudieron listar los mensajes nuevos de '${bandId}': ${friendlyMessage || listRes.status}`, "api_error");
-  }
-  const listData: { messages?: Array<{ id: string }> } = await listRes.json();
-  const ids: string[] = (listData.messages || []).map((m) => m.id);
+// --- Lectura incremental de la bandeja (lo que usa el Agente Lector con Gmail OAuth) ---------
+// La lectura anterior pedía "in:inbox newer_than:7d" con un máximo de 25: en un buzón normal
+// (newsletters, notificaciones) la respuesta de una sala quedaba fuera de esos 25 y no se veía
+// nunca. Aquí se guarda el historyId de Gmail del último estado procesado y se piden solo los
+// mensajes añadidos desde entonces, con paginación y sea cual sea el volumen del buzón.
 
-  const resultados: RespuestaEntrante[] = [];
-  console.log(`[Gmail API] Lector: encontrados ${ids.length} mensajes recientes en Gmail`);
+const GMAIL_API = "https://gmail.googleapis.com/gmail/v1/users/me";
+/** Tope del escaneo completo (sin cursor): 200 mensajes de los últimos 7 días. */
+const MAX_ESCANEO_COMPLETO = 200;
 
-  for (const id of ids) {
-    const msgRes = await fetchConTimeout(`${MESSAGES_ENDPOINT}/${id}?format=full`, {
+export interface LecturaBandeja {
+  mensajes: RespuestaEntrante[];
+  /** "incremental": solo lo nuevo desde el cursor. "completa": escaneo de 7 días (primera vez o cursor caducado). */
+  modo: "incremental" | "completa";
+  /**
+   * Guarda el cursor. Se llama SOLO cuando el Lector ha terminado de procesar los mensajes: si el
+   * proceso falla a medias el cursor no avanza y la siguiente lectura repite (el Lector ya evita
+   * duplicados por Message-ID).
+   */
+  avanzarCursor: () => Promise<void>;
+}
+
+const SIN_LECTURA: LecturaBandeja = { mensajes: [], modo: "completa", avanzarCursor: async () => {} };
+
+async function esLimiteDeGoogle(res: Response): Promise<boolean> {
+  if (res.status === 429) return true;
+  const cuerpo = await res.clone().text().catch(() => "");
+  return cuerpo.includes("RESOURCE_EXHAUSTED");
+}
+
+async function listarIdsEscaneoCompleto(bandId: string, accessToken: string): Promise<string[] | null> {
+  const ids: string[] = [];
+  let pageToken = "";
+  do {
+    const q = encodeURIComponent("in:inbox newer_than:7d");
+    const res = await fetchConTimeout(`${MESSAGES_ENDPOINT}?q=${q}&maxResults=100${pageToken ? `&pageToken=${encodeURIComponent(pageToken)}` : ""}`, {
       headers: { Authorization: `Bearer ${accessToken}` }
     });
-    if (!msgRes.ok) {
-      console.warn(`[Gmail API] No se pudo leer mensaje ${id}: ${msgRes.status}`);
+    if (!res.ok) {
+      if (await esLimiteDeGoogle(res)) { setGmailRateLimitCooldown(bandId); return null; }
+      throw new EmailAgentError(`No se pudieron listar los mensajes de '${bandId}' (HTTP ${res.status}).`, "api_error");
+    }
+    const data: { messages?: Array<{ id: string }>; nextPageToken?: string } = await res.json();
+    ids.push(...(data.messages || []).map((m) => m.id));
+    pageToken = data.nextPageToken || "";
+  } while (pageToken && ids.length < MAX_ESCANEO_COMPLETO);
+  return ids.slice(0, MAX_ESCANEO_COMPLETO);
+}
+
+/** Ids de mensajes añadidos a la bandeja desde `cursor`; "caducado" si Google ya no conserva ese historial. */
+async function listarIdsDesdeCursor(bandId: string, accessToken: string, cursor: string): Promise<string[] | "caducado" | null> {
+  const ids = new Set<string>();
+  let pageToken = "";
+  do {
+    const res = await fetchConTimeout(
+      `${GMAIL_API}/history?startHistoryId=${encodeURIComponent(cursor)}&historyTypes=messageAdded&labelId=INBOX&maxResults=100${pageToken ? `&pageToken=${encodeURIComponent(pageToken)}` : ""}`,
+      { headers: { Authorization: `Bearer ${accessToken}` } }
+    );
+    if (res.status === 404) return "caducado";
+    if (!res.ok) {
+      if (await esLimiteDeGoogle(res)) { setGmailRateLimitCooldown(bandId); return null; }
+      throw new EmailAgentError(`No se pudo leer el historial de la bandeja de '${bandId}' (HTTP ${res.status}).`, "api_error");
+    }
+    const data: { history?: Array<{ messagesAdded?: Array<{ message?: { id: string; labelIds?: string[] } }> }>; nextPageToken?: string } = await res.json();
+    for (const h of data.history || []) {
+      for (const a of h.messagesAdded || []) {
+        if (a.message?.id && (!a.message.labelIds || a.message.labelIds.includes("INBOX"))) ids.add(a.message.id);
+      }
+    }
+    pageToken = data.nextPageToken || "";
+  } while (pageToken);
+  return [...ids];
+}
+
+export async function leerBandejaGmailIncremental(bandId: string): Promise<LecturaBandeja> {
+  if (isGmailRateLimited(bandId)) return SIN_LECTURA;
+  const accessToken = await getValidAccessToken(bandId);
+  const cursor = (await dbGetBandGmailOAuth(bandId))?.gmail_history_id || "";
+
+  // El historyId actual se toma ANTES de leer: lo que llegue mientras se lee queda dentro de la
+  // siguiente lectura en vez de perderse entre las dos.
+  const perfil = await fetchConTimeout(`${GMAIL_API}/profile`, { headers: { Authorization: `Bearer ${accessToken}` } });
+  if (!perfil.ok) {
+    if (await esLimiteDeGoogle(perfil)) { setGmailRateLimitCooldown(bandId); return SIN_LECTURA; }
+    throw new EmailAgentError(`No se pudo consultar el perfil de Gmail de '${bandId}' (HTTP ${perfil.status}).`, "api_error");
+  }
+  const historyIdActual = String((await perfil.json()).historyId || "");
+
+  let modo: LecturaBandeja["modo"] = "incremental";
+  let ids = cursor ? await listarIdsDesdeCursor(bandId, accessToken, cursor) : "caducado";
+  if (ids === "caducado") {
+    modo = "completa";
+    ids = await listarIdsEscaneoCompleto(bandId, accessToken);
+  }
+  if (ids === null) return SIN_LECTURA; // límite de Google: se reintenta en la siguiente lectura
+
+  const mensajes: RespuestaEntrante[] = [];
+  for (const id of ids) {
+    const res = await fetchConTimeout(`${MESSAGES_ENDPOINT}/${id}?format=full`, { headers: { Authorization: `Bearer ${accessToken}` } });
+    if (!res.ok) {
+      console.warn(`[Gmail API] No se pudo leer mensaje ${id}: ${res.status}`); // p. ej. borrado antes de leerlo
       continue;
     }
-    const msg = await msgRes.json();
-    const headers = msg.payload?.headers;
-    const fromRaw = headerValue(headers, "From");
-    const fromMatch = fromRaw.match(/<([^>]+)>/);
-    const fromAddress = (fromMatch ? fromMatch[1] : fromRaw).toLowerCase().trim();
-    const fromName = fromRaw.replace(/<.*?>/, "").replace(/"/g, "").trim();
-    const toAddress = headerValue(headers, "To");
-    const dateHeader = headerValue(headers, "Date");
-    const subject = headerValue(headers, "Subject");
-    const messageId = headerValue(headers, "Message-ID") || `gmail-${id}`;
-    const inReplyTo = headerValue(headers, "In-Reply-To");
-    const referencesRaw = headerValue(headers, "References");
-    const references = referencesRaw
-      ? referencesRaw.split(/\s+/).map((r) => r.trim()).filter(Boolean)
-      : undefined;
-    const threadId = msg.threadId || undefined;
-    const text = extraerTextoPlano(msg.payload).trim();
-
-    console.log(`[Gmail API] Mensaje: From=${fromAddress}, Subject=${subject?.substring(0, 40)}, ThreadId=${threadId}, Text length=${text.length}`);
-
-    resultados.push({
-      uid: id,
-      messageId,
-      from: fromAddress,
-      fromName: fromName || undefined,
-      to: toAddress || undefined,
-      subject,
-      text,
-      date: dateHeader ? new Date(dateHeader) : null,
-      inReplyTo: inReplyTo || undefined,
-      references,
-      threadId
-    });
+    mensajes.push(parsearMensajeGmail(await res.json(), id));
   }
+  console.log(`[Gmail API] Lector (${modo}): ${mensajes.length} mensaje(s) de la bandeja de '${bandId}'.`);
 
-  console.log(`[Gmail API] Procesados ${resultados.length} mensajes exitosamente`);
-  return resultados;
+  return {
+    mensajes,
+    modo,
+    avanzarCursor: async () => {
+      if (historyIdActual && !(await dbSetGmailHistoryId(bandId, historyIdActual))) {
+        console.warn(`[Gmail API] No se pudo guardar el cursor de '${bandId}': la próxima lectura repetirá el escaneo de 7 días.`);
+      }
+    }
+  };
 }
 
 // Quita la etiqueta UNREAD de los mensajes ya procesados, para que el siguiente tick no los

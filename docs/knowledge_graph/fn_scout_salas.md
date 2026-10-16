@@ -25,6 +25,7 @@ Descubrimiento de salas, eventos y contactos desde fuentes abiertas, mapas y red
 - [[server_db_tiposAdn|server/db/tiposAdn.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_tolerantWrite|server/db/tolerantWrite.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_leads_placesPhoto|server/routes/leads/placesPhoto.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_services_bandsintownVenueService|server/services/bandsintownVenueService.ts]] *(Layer: #service, Domain: #booking)*
 - [[server_services_googlePlacesVenueService|server/services/googlePlacesVenueService.ts]] *(Layer: #service, Domain: #booking)*
 - [[server_services_multiSourceVenueDiscoveryService|server/services/multiSourceVenueDiscoveryService.ts]] *(Layer: #service, Domain: #booking)*

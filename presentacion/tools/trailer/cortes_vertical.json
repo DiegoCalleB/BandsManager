@@ -1,0 +1,10 @@
+[
+ {"ini": 47.6, "fin": 54.15, "paso": "corte", "rotulo": "s1.png", "exacto": true},
+ {"ini": 62.35, "fin": 65.6, "paso": "corte", "rotulo": "s2.png", "exacto": true},
+ {"ini": 99.2, "fin": 100.0, "voz": false, "paso": "rampa", "exacto": true},
+ {"ini": 133.4, "fin": 134.2, "voz": false, "paso": "rampa", "exacto": true},
+ {"ini": 161.4, "fin": 162.2, "voz": false, "paso": "rampa", "exacto": true},
+ {"ini": 180.6, "fin": 181.4, "voz": false, "paso": "rampa", "exacto": true},
+ {"ini": 361.6, "fin": 362.4, "voz": false, "paso": "rampa", "exacto": true},
+ {"ini": 256.95, "fin": 263.85, "paso": "negro", "rotulo": "s3.png", "exacto": true}
+]

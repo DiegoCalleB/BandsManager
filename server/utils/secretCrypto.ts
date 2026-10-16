@@ -19,6 +19,11 @@ function getKey(): Buffer | null {
   return key;
 }
 
+/** En producción sin CREDENTIALS_ENCRYPTION_KEY no se puede guardar ninguna credencial de correo (Gmail ni IMAP). */
+export function faltaClaveDeCifradoEnProduccion(): boolean {
+  return process.env.NODE_ENV === "production" && !process.env.CREDENTIALS_ENCRYPTION_KEY;
+}
+
 export function isEncryptedSecret(value: string): boolean {
   return value.startsWith(PREFIX);
 }

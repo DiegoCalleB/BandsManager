@@ -1,0 +1,125 @@
+/* Reparto de la presentación: el ÚNICO sitio donde cambiar a un músico.
+   Si cambia un miembro de la banda (nombre, instrumento o foto), se edita aquí y se actualiza en todas
+   las diapositivas: chats, reparto, escena del local, tráiler y créditos.
+
+   Cómo se usa en index.html:
+   - Mensaje de chat:  <li data-who="bateria" data-t="23:58">Texto del mensaje</li>
+   - Nombre o rol en cualquier texto:  {bateria} → nombre, {bateria:rol} → «batería», {bateria:Rol} → «Batería»,
+     {bateria:cargo} → cargo largo (para el reparto).
+   - Foto:  <img data-foto="bateria" alt="{bateria}">
+
+   Las claves son papeles (bajo, bateria, voz, guitarra), no nombres, para que sobrevivan a un cambio de músico.
+   Los chistes del guion dependen de la personalidad de cada personaje: si entra alguien nuevo, revisar los
+   mensajes que lo mencionan. El nombre «Brais» de The Big School by Brais Moure es el del profesor, no el del batería:
+   no pasa por aquí.
+
+   Voces (`tts`): cada personaje habla con su voz. Los audios se generan con
+   `python3 presentacion/tools/voces.py` (ver presentacion/tools/README.md) y van a `audio/voces/`.
+   Si cambias un músico o su voz, vuelve a ejecutarlo: solo regenera las frases que han cambiado.
+   - motor: 'elevenlabs' (voces naturales de España; `voz` = voice_id de la biblioteca de ElevenLabs, `estabilidad`
+     0 muy expresiva · 1 monótona, `etiqueta` opcional de actuación como '[excited]'), o locales: 'kokoro' (sid 29 em_alex, 53 em_santa, 28 ef_dora) o 'piper' (modelo es_ES-davefx-medium,
+     es_ES-sharvard-medium con sid 0 hombre / 1 mujer)
+   - tono: semitonos (+ agudo, − grave) · vel: velocidad · efecto: 'telefono' | 'radio' | 'robot' | ninguno
+
+   Pronunciación (`pron`): cómo debe decir la voz el nombre si no lo lee bien escrito (solo afecta al audio).
+
+   Movimiento (`mov`): cómo se mueve el personaje cuando habla (su retrato sale en grande en un hueco libre de la
+   diapositiva y se mueve al ritmo de su voz): 'bombo' (rebota, como un batería) · 'diva' (se balancea) ·
+   'cabeceo' (headbang) · 'cool' (asiente tranquilo) · 'calma' (por defecto). Si cambia el músico, se cambia aquí. */
+(function () {
+  var R = window.REPARTO = {
+    bajo:     { nombre: 'Iago',    pron: 'Yago',    rol: 'bajo',      cargo: 'Bajo',            foto: 'img/miembro-iago.jpg',    color: '#8fb6ff', yo: true,
+                mov: 'cool',
+                tts: { motor: 'elevenlabs', voz: 'QmP1sd0PqJY98PkCbohx', estabilidad: 0.5 } }, // voz diseñada: madrileño de San Blas
+    bateria:  { nombre: 'Brais',   rol: 'batería',   cargo: 'Batería',         foto: 'img/miembro-brais.jpg',   color: '#ffd596',
+                mov: 'bombo',
+                tts: { motor: 'elevenlabs', voz: 'Gffipq2YbMiqOFEtgMO6', estabilidad: 0.5 } },
+    voz:      { nombre: 'Alan',    rol: 'voz',       cargo: 'Voz y guitarra',  foto: 'img/miembro-xandre.jpg',  color: '#ff9ec4',
+                mov: 'diva',
+                tts: { motor: 'elevenlabs', voz: 'SxiIZdPt3fsiAenlubTX', estabilidad: 0 } },
+    guitarra: { nombre: 'Álvaro',  rol: 'guitarra',  cargo: 'Guitarra solista', foto: 'img/miembro-alvaro.jpg', color: '#8be0a4',
+                mov: 'cabeceo',
+                tts: { motor: 'elevenlabs', voz: 'ozbKZapo4Cy6jU7KTHtp', estabilidad: 0.35 } },
+    manager:  { nombre: 'Programador', rol: 'Sala El Faro', cargo: 'Programador de sala', foto: 'img/personaje-manager.jpg', color: '#c9a6ff',
+                tts: { motor: 'elevenlabs', voz: 'Zb72NBThGN2Rv3y1RSTT', estabilidad: 0.5, efecto: 'telefono' } },
+    sello:    { nombre: 'Peláez', rol: 'Discos Cuarzo', cargo: 'Discográfica', foto: 'img/personaje-sello.jpg', color: '#d6ae5c',
+                tts: { motor: 'elevenlabs', voz: 'ewZshglVwjWcMIuBYCCS', estabilidad: 0.5, efecto: 'telefono' } },
+    voz_mop:  { nombre: 'Master of Prompts', rol: 'voz', cargo: 'Voz de Master of Prompts', foto: 'img/personaje-cantante.jpg', color: '#ffb36a',
+                tts: { motor: 'elevenlabs', voz: 'WEpPZOD2xY23gV1z2GzQ', estabilidad: 0.4 } },
+    ia_claude: { nombre: 'Claudio', rol: 'Claude Code', cargo: 'Asistente de IA', foto: 'img/logo-claude.svg', color: '#f0a27c',
+                tts: { motor: 'elevenlabs', voz: 'OMWmRY8slGlr6mHJSqwy', estabilidad: 0.6 } },
+    ia_gemini: { nombre: 'Guglio',  rol: 'Gemini',      cargo: 'Asistente de IA', foto: 'img/logo-gemini.svg', color: '#7fc0ff',
+                tts: { motor: 'elevenlabs', voz: 'XyPIlDiohfZSbL4jAB2e', estabilidad: 0.6 } },
+    // Diego de la Calle, el bajista de verdad (el giro: Iago era él). Habla él, no el personaje, en «El reto» y «La invitación»
+    diego:    { nombre: 'Diego', rol: 'bajo', cargo: 'El bajista de verdad', foto: 'img/diego-bajista.jpg', color: '#ffcf6b',
+                mov: 'calma',
+                tts: { motor: 'elevenlabs', voz: 'U1qYNY0pKaPbq2VSGpif', modelo: 'eleven_multilingual_v2', estabilidad: 0.5, similitud: 0.8, estilo: 0.3 } },
+    locutor:  { nombre: 'Radio Riff', rol: 'locutor', cargo: 'Locutor', foto: null, color: '#ffb36a',
+                tts: { motor: 'elevenlabs', voz: '4L2A19qwD3pMcNlt484F', estabilidad: 0.3, efecto: 'radio' } },
+  };
+
+  var cap = function (s) { return s.charAt(0).toUpperCase() + s.slice(1); };
+  var valor = function (k, f) {
+    var m = R[k];
+    if (!m) return null;
+    if (!f || f === 'nombre') return m.nombre;
+    if (f === 'rol') return m.rol;
+    if (f === 'Rol') return cap(m.rol);
+    if (f === 'cargo') return m.cargo;
+    return null;
+  };
+  var sustituir = function (s) {
+    return s.indexOf('{') < 0 ? s : s.replace(/\{(\w+)(?::(\w+))?\}/g, function (todo, k, f) {
+      var v = valor(k, f); return v == null ? todo : v;
+    });
+  };
+
+  window.REPARTO_TEXTO = sustituir;
+  if (typeof document === 'undefined') return; // en Node (generador de voces) solo hacen falta los datos
+
+  // 1) Textos y atributos con {clave}
+  var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+    acceptNode: function (n) {
+      var p = n.parentNode && n.parentNode.nodeName;
+      return p === 'SCRIPT' || p === 'STYLE' || p === 'NOSCRIPT' || n.nodeValue.indexOf('{') < 0 ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+    },
+  });
+  var nodos = [], n;
+  while ((n = walker.nextNode())) nodos.push(n);
+  nodos.forEach(function (t) { t.nodeValue = sustituir(t.nodeValue); });
+  document.querySelectorAll('[alt],[title],[aria-label],[data-title],[data-say]').forEach(function (el) {
+    ['alt', 'title', 'aria-label', 'data-title', 'data-say'].forEach(function (a) {
+      var v = el.getAttribute(a); if (v && v.indexOf('{') >= 0) el.setAttribute(a, sustituir(v));
+    });
+  });
+
+  // 2) Fotos del reparto
+  document.querySelectorAll('img[data-foto]').forEach(function (img) {
+    var m = R[img.dataset.foto]; if (m && m.foto) img.src = m.foto;
+  });
+
+  // Cada elemento hablado lleva el movimiento de su personaje (lo usa styles.css)
+  document.querySelectorAll('[data-who]').forEach(function (el) {
+    var m = R[el.dataset.who]; if (m && m.mov) el.dataset.mov = m.mov;
+  });
+
+  // 3) Mensajes de chat: <li data-who="clave">texto</li> → avatar + burbuja con «Nombre · rol»
+  document.querySelectorAll('.dlg > li[data-who]').forEach(function (li) {
+    var m = R[li.dataset.who]; if (!m) return;
+    var hora = li.dataset.t;
+    li.style.setProperty('--c', m.color);
+    if (m.yo) li.classList.add('me');
+    var av;
+    if (m.foto) { av = document.createElement('img'); av.src = m.foto; av.alt = m.nombre; }
+    else { av = document.createElement('span'); av.setAttribute('aria-hidden', 'true'); av.textContent = m.nombre.charAt(0); }
+    av.className = 'av';
+    var b = document.createElement('div'); b.className = 'bub';
+    var et = document.createElement('b'); et.textContent = m.nombre + ' · ' + m.rol;
+    if (hora) { var i = document.createElement('i'); i.textContent = hora; et.appendChild(i); }
+    b.appendChild(et);
+    var txt = document.createElement('span'); txt.className = 'txt';
+    while (li.firstChild) txt.appendChild(li.firstChild); // el texto del mensaje (con su marcado) pasa a la burbuja
+    b.appendChild(txt);
+    li.appendChild(av); li.appendChild(b);
+  });
+})();

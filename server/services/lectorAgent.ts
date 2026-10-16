@@ -10,19 +10,20 @@
 
 import { esEmailValido } from "../utils/email.js";
 import { leerRespuestasEntrantes, marcarComoLeido, type RespuestaEntrante } from "./emailAgentClient.js";
-import { leerRespuestasGmailApi, marcarComoLeidoGmailApi, tieneGmailOAuthConectado } from "./gmailApiClient.js";
+import { leerBandejaGmailIncremental, marcarComoLeidoGmailApi, tieneGmailOAuthConectado } from "./gmailApiClient.js";
 import { comprobarBorradoresGmailEnviados } from "./agentEngine.js";
 import { generarBorradorRespuesta, getNegotiationKeywords, matchesKeyword, detectResponseType } from "./replyDrafting.js";
-import { analyzeIncomingMessageSentiment } from "./sentimentAnalysis.js";
+import { analyzeIncomingMessageSentiment, type MessageSentimentAnalysis } from "./sentimentAnalysis.js";
 import { dbGetLeads, dbUpsertLead, dbLeadMessageExists, dbCreateLeadMessage, dbGetLeadMessages, dbGetAutonomyConfig, getSupabase } from "../db.js";
 import { isBounceMessage, extractFailedRecipientEmail } from "../utils/emailDeliveryTracker.js";
 import { detectPitchLanguage } from "../utils/leadLanguage.js";
+import { quitarTextoCitado } from "../utils/respuestaEntrante.js";
 import type { LeadConCorreo } from "./tiposLeadCorreo.js";
 
 // Clasificador de precisión para respuestas entrantes de salas/festivales/medios:
 // Evalúa el contenido del mensaje entrante en el idioma del lead y determina la transición de estado óptima:
-// 1. 'rejection' -> 'no_interesado'
-// 2. 'confirmation' -> 'confirmado'
+// 1. 'rejection' -> 'no_interesado' (ver decidirEstadoTrasRespuesta: exige también a la IA)
+// 2. 'confirmation' -> 'negociando': que la sala diga que sí NO cierra el bolo solo, lo confirma una persona
 // 3. 'price_negotiation' o palabras clave de negociación -> 'negociando'
 // 4. 'follow_up' / 'neutral' -> 'respondido'
 export function detectarEstadoTrasRespuesta(estadoActual: string, textoRespuesta: string, languageCode?: string): string {
@@ -46,7 +47,7 @@ export function detectarEstadoTrasRespuesta(estadoActual: string, textoRespuesta
     return "no_interesado";
   }
   if (resType === "confirmation") {
-    return "confirmado";
+    return "negociando";
   }
   if (resType === "price_negotiation" || getNegotiationKeywords(lang).some((k) => matchesKeyword(t, k))) {
     return "negociando";
@@ -55,6 +56,29 @@ export function detectarEstadoTrasRespuesta(estadoActual: string, textoRespuesta
     return "respondido";
   }
   return estadoActual;
+}
+
+type SenalesIA = Pick<MessageSentimentAnalysis, "intencion" | "sentimiento" | "confianza" | "motor">;
+
+/**
+ * Estado del lead tras una respuesta, combinando las palabras clave con el análisis de la IA.
+ * Descartar un lead (`no_interesado`) o aplazarlo es difícil de deshacer sin darse cuenta, así que
+ * exige las DOS señales y que la IA sea de verdad (no el clasificador heurístico de respaldo) y
+ * esté segura. Con una sola, queda en `respondido` y decide una persona. `confirmado` nunca sale de aquí.
+ */
+export function decidirEstadoTrasRespuesta(estadoActual: string, textoRespuesta: string, languageCode: string | undefined, ia: SenalesIA): string {
+  const porPalabras = detectarEstadoTrasRespuesta(estadoActual, textoRespuesta, languageCode);
+  if (estadoActual === "descartado" || estadoActual === "confirmado") return estadoActual;
+
+  const iaFiable = ia.motor === "gemini_flash" && ia.confianza >= 0.7;
+  const iaRechaza = String(ia.intencion).startsWith("rechazo") || ia.sentimiento === "rechazo" || ia.sentimiento === "negativo";
+  if (porPalabras === "no_interesado") {
+    if (iaFiable && iaRechaza) return ia.intencion === "rechazo_programacion_llena" ? "aplazado" : "no_interesado";
+    // Un falso rechazo (una disculpa, una frase suelta) no hace retroceder a quien ya negocia.
+    return ["contactado", "esperando_respuesta", "nuevo"].includes(estadoActual) ? "respondido" : estadoActual;
+  }
+  if (iaFiable && ia.intencion === "confirmar_fecha" && porPalabras === "respondido") return "negociando";
+  return porPalabras;
 }
 
 // Tope de borradores de respuesta generados con IA por banda y hora: a diferencia de los
@@ -99,11 +123,26 @@ export interface LectorAgentResult {
   borradorIaGenerados: number;
   borradorIaFallidos: number;
   borradorIaBloqueadosPorLimite: number;
+  /** Autoresponders, newsletters y avisos de sistema: se ignoran, sin cambiar estados ni gastar IA. */
+  automaticosIgnorados: number;
 }
 
 function cleanMessageId(id?: string): string {
   if (!id) return "";
   return id.replace(/^imap-/, "").replace(/^<+/, "").replace(/>+$/, "").trim().toLowerCase();
+}
+
+/**
+ * Patrón ILIKE para buscar en lead_messages el mensaje cuyo id (`imap-<Message-ID>`) contiene la
+ * referencia. La referencia viene de las cabeceras In-Reply-To/References, que escribe un tercero:
+ * antes se interpolaba en un filtro `.or(...)` de PostgREST, donde una coma o un paréntesis
+ * cambiaban el filtro. Se escapan los comodines de LIKE (y `*`, que PostgREST trata como `%`), y
+ * una referencia corta se descarta porque como subcadena casaría con cualquier id.
+ */
+export function patronIlikeMessageId(ref: string): string | null {
+  if (!ref || ref.length < 8) return null;
+  const escapada = ref.replace(/[\\%_]/g, (c) => `\\${c}`).replace(/\*/g, "_");
+  return `imap-%${escapada}%`;
 }
 
 function cleanEmailAddress(addr?: string): string {
@@ -119,6 +158,12 @@ function extractEmailDomain(addr?: string): string {
   return parts.length === 2 ? parts[1].trim().toLowerCase() : "";
 }
 
+/** Estados en los que una sala puede estar respondiendo: ya se le escribió (o se está respondiendo). */
+const ESTADOS_EN_CONVERSACION: string[] = [
+  "contactado", "esperando_respuesta", "borrador_creado", "respondido", "negociando",
+  "pendiente_aprobacion", "aprobado_respuesta", "enviado"
+];
+
 const GENERIC_EMAIL_DOMAINS = new Set([
   "gmail.com", "googlemail.com", "hotmail.com", "outlook.com", "live.com",
   "yahoo.com", "yahoo.es", "icloud.com", "me.com", "proton.me", "protonmail.com"
@@ -130,8 +175,8 @@ const GENERIC_EMAIL_DOMAINS = new Set([
  * 1. Gmail Thread ID (100% determinista si se envió por Gmail)
  * 2. In-Reply-To & References RFC 5322 (cadena de Message-IDs)
  * 3. Email principal / secundario / normalizado
- * 4. Dominio corporativo de la sala/festival (ej: @baobaoclub.com -> Sala BaoBao)
- * 5. Asunto y mención del nombre del recinto con estado activo
+ * 4. Dominio corporativo de la sala/festival, solo si una única sala lo tiene
+ * 5. Asunto de respuesta (Re:) con el nombre de una única sala en conversación
  */
 export async function findMatchingLeadForIncomingMessage(
   msg: RespuestaEntrante,
@@ -148,19 +193,6 @@ export async function findMatchingLeadForIncomingMessage(
     if (leadByThread) {
       return { lead: leadByThread, matchReason: `Gmail Thread ID (${msg.threadId})`, shouldAutoEnrichEmail: fromClean };
     }
-
-    try {
-      const { data: msgByThread } = await sb
-        .from("lead_messages")
-        .select("lead_id")
-        .eq("band_id", bandId)
-        .eq("asunto", msg.subject || "")
-        .maybeSingle();
-      if (msgByThread) {
-        const matched = leads.find((l) => String(l.id) === String(msgByThread.lead_id));
-        if (matched) return { lead: matched, matchReason: `Lead Message Thread/Subject (${msg.threadId})`, shouldAutoEnrichEmail: fromClean };
-      }
-    } catch (err) { console.warn("[Lector] Fallo buscando el lead por asunto del hilo; se prueba el siguiente criterio:", err); }
   }
 
   // --- VECTOR 2: In-Reply-To & References RFC 5322 ---
@@ -178,19 +210,21 @@ export async function findMatchingLeadForIncomingMessage(
     // Comprobar con leads.gmail_message_id
     const leadByMsgId = leads.find((l) => {
       const gId = cleanMessageId(l.gmail_message_id);
-      return gId && (gId === ref || ref.includes(gId) || gId.includes(ref));
+      return gId && gId === ref; // exacto: por subcadena, un id corto casaba con cualquier referencia
     });
     if (leadByMsgId) {
       return { lead: leadByMsgId, matchReason: `RFC References Match (${ref})`, shouldAutoEnrichEmail: fromClean };
     }
 
     // Comprobar en lead_messages
+    const patron = patronIlikeMessageId(ref);
+    if (!patron) continue;
     try {
       const { data: origMsg } = await sb
         .from("lead_messages")
         .select("lead_id")
         .eq("band_id", bandId)
-        .or(`id.eq.imap-${ref},id.eq.imap-<${ref}>,id.ilike.%${ref}%`)
+        .ilike("id", patron)
         .limit(1)
         .maybeSingle();
 
@@ -208,9 +242,8 @@ export async function findMatchingLeadForIncomingMessage(
     const leadByEmail = leads.find((l) => {
       const main = cleanEmailAddress(l.email_contacto);
       const sec = cleanEmailAddress(l.email_secundario);
-      if (main && (main === fromClean || fromClean.includes(main) || main.includes(fromClean))) return true;
-      if (sec && (sec === fromClean || fromClean.includes(sec) || sec.includes(fromClean))) return true;
-      return false;
+      // Exacto: por subcadena, "aa@x.com" casaba con "a@x.com" y la respuesta acababa en otra sala.
+      return Boolean(main && main === fromClean) || Boolean(sec && sec === fromClean);
     });
 
     if (leadByEmail) {
@@ -218,9 +251,9 @@ export async function findMatchingLeadForIncomingMessage(
     }
   }
 
-  // --- VECTOR 4: Dominio Corporativo del Recinto ---
+  // --- VECTOR 4: Dominio Corporativo del Recinto (solo si UNA sala tiene ese dominio) ---
   if (fromDomain && !GENERIC_EMAIL_DOMAINS.has(fromDomain)) {
-    const leadByDomain = leads.find((l) => {
+    const leadsPorDominio = leads.filter((l) => {
       const mainDom = extractEmailDomain(l.email_contacto);
       const secDom = extractEmailDomain(l.email_secundario);
       let webDom = "";
@@ -229,32 +262,27 @@ export async function findMatchingLeadForIncomingMessage(
           webDom = new URL(l.website.startsWith("http") ? l.website : `https://${l.website}`).hostname.replace(/^www\./, "").toLowerCase();
         } catch { /* web del lead mal formada: no cuenta para emparejar por dominio */ }
       }
-      return (mainDom && mainDom === fromDomain) || (secDom && secDom === fromDomain) || (webDom && (webDom === fromDomain || fromDomain.includes(webDom) || webDom.includes(fromDomain)));
+      return (mainDom && mainDom === fromDomain) || (secDom && secDom === fromDomain) || (webDom && (webDom === fromDomain || fromDomain.endsWith(`.${webDom}`)));
     });
 
-    if (leadByDomain) {
-      return { lead: leadByDomain, matchReason: `Domain Match (@${fromDomain})` };
+    // Dos salas del mismo grupo comparten dominio: elegir una sería adivinar.
+    if (leadsPorDominio.length === 1) {
+      return { lead: leadsPorDominio[0], matchReason: `Domain Match (@${fromDomain})` };
     }
   }
 
-  // --- VECTOR 5: Asunto & Nombre de la Sala (Fuzzy Matching Inteligente) ---
-  const subjectClean = (msg.subject || "").toLowerCase().replace(/^(re|fwd|rv|aw|respuesta|sv):\s*/gi, "").trim();
-  if (subjectClean.length >= 3) {
+  // --- VECTOR 5: Asunto con el nombre de la sala (el más débil: solo si es una respuesta, la sala
+  // ya está en conversación y es la ÚNICA candidata). Un correo nuevo, una newsletter o un lead
+  // aún sin contactar que casan por nombre no son una respuesta de esa sala.
+  const esRespuesta = /^\s*(re|rv|aw|sv|respuesta)\s*:/i.test(msg.subject || "");
+  const subjectClean = (msg.subject || "").toLowerCase().replace(/^(?:\s*(?:re|fwd|rv|aw|respuesta|sv)\s*:)+/i, "").trim();
+  if (esRespuesta && subjectClean.length >= 3) {
     const candidateLeads = leads.filter((l) => {
       const nombre = (l.nombre_sala || "").toLowerCase().trim();
-      return nombre.length >= 3 && subjectClean.includes(nombre);
+      return nombre.length >= 3 && subjectClean.includes(nombre) && ESTADOS_EN_CONVERSACION.includes(l.estado);
     });
-
     if (candidateLeads.length === 1) {
       return { lead: candidateLeads[0], matchReason: `Subject Name Match ("${candidateLeads[0].nombre_sala}")` };
-    }
-
-    if (candidateLeads.length > 1) {
-      // Priorizar el que esté en un estado de conversación activa
-      const active = candidateLeads.find((l) => ["contactado", "esperando_respuesta", "borrador_creado", "negociando"].includes(l.estado));
-      if (active) {
-        return { lead: active, matchReason: `Subject Active Conversation Match ("${active.nombre_sala}")` };
-      }
     }
   }
 
@@ -288,7 +316,16 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
     }
   }
 
-  const mensajes = usarGmailOAuth ? await leerRespuestasGmailApi(bandId) : await leerRespuestasEntrantes(bandId);
+  // Gmail se lee con cursor (solo lo nuevo, sin tope de 25); el cursor avanza al terminar de procesar.
+  let avanzarCursor: () => Promise<void> = async () => {};
+  let mensajes: RespuestaEntrante[];
+  if (usarGmailOAuth) {
+    const lectura = await leerBandejaGmailIncremental(bandId);
+    mensajes = lectura.mensajes;
+    avanzarCursor = lectura.avanzarCursor;
+  } else {
+    mensajes = await leerRespuestasEntrantes(bandId);
+  }
 
   console.log(`[Lector] Banda ${bandId}: encontrados ${mensajes.length} mensaje(s). Usando ${usarGmailOAuth ? "Gmail API" : "IMAP"}`);
   if (mensajes.length > 0) {
@@ -296,7 +333,8 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
   }
 
   if (mensajes.length === 0) {
-    return { mensajesLeidos: 0, leadsActualizados, sinEmparejar: 0, borradoresEnviadosDetectados, borradoresTodaviaSinEnviar, erroresComprobandoBorradores, cuentaGmailReal, borradorIaGenerados: 0, borradorIaFallidos: 0, borradorIaBloqueadosPorLimite: 0 };
+    await avanzarCursor();
+    return { mensajesLeidos: 0, leadsActualizados, sinEmparejar: 0, borradoresEnviadosDetectados, borradoresTodaviaSinEnviar, erroresComprobandoBorradores, cuentaGmailReal, borradorIaGenerados: 0, borradorIaFallidos: 0, borradorIaBloqueadosPorLimite: 0, automaticosIgnorados: 0 };
   }
 
   const leads: LeadConCorreo[] = await dbGetLeads(bandId);
@@ -305,6 +343,7 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
   let borradorIaGenerados = 0;
   let borradorIaFallidos = 0;
   let borradorIaBloqueadosPorLimite = 0;
+  let automaticosIgnorados = 0;
 
   for (const msg of mensajes) {
     // Un bounce/NDR llega DESPUÉS de que el Enviador ya diera el pitch por enviado
@@ -320,6 +359,14 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
         }, bandId);
         leadsActualizados.push(String(leadBounce.id));
       }
+      uidsProcesados.push(msg.uid);
+      continue;
+    }
+
+    // Un autoresponder ("fuera de la oficina"), una newsletter o un aviso de sistema no es una
+    // respuesta de la sala: no cambia el estado de ningún lead ni gasta una llamada de IA.
+    if (msg.automatico) {
+      automaticosIgnorados++;
       uidsProcesados.push(msg.uid);
       continue;
     }
@@ -365,12 +412,16 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
     const messageRowId = `imap-${msg.messageId}`;
     const yaRegistrado = await dbLeadMessageExists(messageRowId);
     if (!yaRegistrado) {
+      // Se clasifica y se redacta sobre lo que escribió la sala; lo citado es nuestro propio pitch
+      // ("caché", "fecha"...) y el clasificador lo leía como si lo dijera ella. En lead_messages se
+      // guarda el mensaje completo, tal como llegó.
+      const textoPropio = quitarTextoCitado(msg.text);
       const hiloPrevio = await dbGetLeadMessages(String(lead.id), bandId);
       const threadSoFar = hiloPrevio.map((m) => ({ remitente: m.remitente, mensaje: m.mensaje }));
 
       // Análisis de sentimiento, intención y temperatura comercial por el Agente Lector
       const leadLang = detectPitchLanguage(lead);
-      const sentimentAnalysis = await analyzeIncomingMessageSentiment(msg.text, leadLang.code, {
+      const sentimentAnalysis = await analyzeIncomingMessageSentiment(textoPropio, leadLang.code, {
         name: lead.nombre_sala,
         city: lead.ciudad,
         tipo: lead.tipo
@@ -406,14 +457,19 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
       });
 
       // Auto-Contestador: Redactar respuesta de alta precisión en 'pendiente_aprobacion'
-      let nuevoEstado = detectarEstadoTrasRespuesta(lead.estado, msg.text, leadLang.code);
+      let nuevoEstado = decidirEstadoTrasRespuesta(lead.estado, textoPropio, leadLang.code, sentimentAnalysis);
       let borradorGenerado: string | null = null;
-      if (puedeGenerarBorradorIA(bandId)) {
+      // Un rechazo o un aplazamiento confirmado no se contesta ni vuelve a la cola de aprobación:
+      // sería pisar su estado y redactarle una réplica a quien ha dicho que no.
+      const cierraElHilo = nuevoEstado === "no_interesado" || nuevoEstado === "aplazado";
+      if (cierraElHilo) {
+        console.log(`[Lector] Lead ${lead.id} -> ${nuevoEstado}: no se redacta réplica.`);
+      } else if (puedeGenerarBorradorIA(bandId)) {
         try {
           const { draftReply } = await generarBorradorRespuesta(
             bandId,
             lead,
-            msg.text,
+            textoPropio,
             threadSoFar,
             undefined,
             undefined,
@@ -491,5 +547,7 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
     console.log(`[Lector] Banda ${bandId}: ${uidsProcesados.length} mensaje(s) procesados manteniendo su estado SIN LEER en la bandeja de entrada.`);
   }
 
-  return { mensajesLeidos: mensajes.length, leadsActualizados, sinEmparejar, borradoresEnviadosDetectados, borradoresTodaviaSinEnviar, erroresComprobandoBorradores, cuentaGmailReal, borradorIaGenerados, borradorIaFallidos, borradorIaBloqueadosPorLimite };
+  await avanzarCursor();
+
+  return { mensajesLeidos: mensajes.length, leadsActualizados, sinEmparejar, borradoresEnviadosDetectados, borradoresTodaviaSinEnviar, erroresComprobandoBorradores, cuentaGmailReal, borradorIaGenerados, borradorIaFallidos, borradorIaBloqueadosPorLimite, automaticosIgnorados };
 }

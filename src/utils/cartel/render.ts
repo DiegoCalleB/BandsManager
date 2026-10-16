@@ -9,6 +9,7 @@ import { decidirTinta, medirLuz, unirPixeles, type Tinta } from './contraste';
 import type { DefFormato } from './formatos';
 import type { FondoGuardado, PaletaId } from './config';
 import { aplicarGrano, semillaDeTexto } from './grano';
+import { dibujarPlacas, luzMedia, planPlacas } from './placas';
 
 export const TINTAS = { clara: '#F4F1EA', oscura: '#17181C' } as const;
 
@@ -266,9 +267,13 @@ export async function renderCartel(
     dibujarOnda(ctx, hueco, paleta.acento, piezas.semilla, u);
   } else if (imagen) {
     dibujarFondoImagen(ctx, imagen, L.ancho, L.alto);
-    // A un fondo de IA se le pone fibra de papel: sin ella tiene el aspecto liso de una imagen
-    // generada. La foto propia de la banda se deja como es. Antes de medir el contraste y del texto.
-    if (fondo.tipo === 'imagen' && fondo.origen === 'ia') aplicarGrano(ctx, L.ancho, L.alto, semillaDeTexto(piezas.semilla));
+    if (fondo.tipo === 'imagen' && fondo.origen === 'ia') {
+      // Un fondo de IA lleva el texto en placas de papel (como un cartel impreso) y fibra por encima:
+      // sin ella tiene el aspecto liso de una imagen generada. La foto propia de la banda se deja
+      // como es. Todo antes de medir el contraste y de pintar el texto.
+      dibujarPlacas(ctx, planPlacas(L, luzMedia(canvas)));
+      aplicarGrano(ctx, L.ancho, L.alto, semillaDeTexto(piezas.semilla));
+    }
   }
 
   // 2. Tinta y velo, medidos sobre el fondo real de cada zona.

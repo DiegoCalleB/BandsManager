@@ -61,6 +61,7 @@ Embudo de salas y festivales: leads, enriquecimiento, pitch con IA, respuestas y
 - [[server_routes_leads_helpers|server/routes/leads/helpers.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_routes_leads_import|server/routes/leads/import.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_routes_leads_places|server/routes/leads/places.ts]] *(Layer: #route, Domain: #booking)*
+- [[server_routes_leads_placesPhoto|server/routes/leads/placesPhoto.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_routes_leads_simulation|server/routes/leads/simulation.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_routes_leads_templates|server/routes/leads/templates.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_routes_leads_tiposScout|server/routes/leads/tiposScout.ts]] *(Layer: #route, Domain: #booking)*

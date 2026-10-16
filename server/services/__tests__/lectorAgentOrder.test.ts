@@ -2,17 +2,18 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // Bug real de producción que este test fija: comprobarBorradoresGmailEnviados solo necesita el
 // scope gmail.compose (el que ya tenía cualquier banda conectada antes de añadir gmail.modify),
-// mientras que leerRespuestasGmailApi necesita el scope nuevo. Si una banda todavía no ha
-// reconectado Gmail, leerRespuestasGmailApi falla con 403 - y si esa llamada va ANTES en el
+// mientras que leerBandejaGmailIncremental necesita el scope nuevo. Si una banda todavía no ha
+// reconectado Gmail, leerBandejaGmailIncremental falla con 403 - y si esa llamada va ANTES en el
 // código, la excepción corta la función entera antes de llegar a comprobar los borradores
 // enviados, dejando esa detección completamente sin ejecutarse. Deben ser independientes.
 
 const tieneGmailOAuthConectadoMock = vi.fn();
-const leerRespuestasGmailApiMock = vi.fn();
+const leerBandejaGmailIncrementalMock = vi.fn();
+const avanzarCursorMock = vi.fn();
 const marcarComoLeidoGmailApiMock = vi.fn();
 vi.mock('../gmailApiClient.js', () => ({
   tieneGmailOAuthConectado: (...args: any[]) => tieneGmailOAuthConectadoMock(...args),
-  leerRespuestasGmailApi: (...args: any[]) => leerRespuestasGmailApiMock(...args),
+  leerBandejaGmailIncremental: async (...args: any[]) => ({ mensajes: await leerBandejaGmailIncrementalMock(...args), modo: 'completa', avanzarCursor: avanzarCursorMock }),
   marcarComoLeidoGmailApi: (...args: any[]) => marcarComoLeidoGmailApiMock(...args)
 }));
 
@@ -67,7 +68,7 @@ vi.mock('../sentimentAnalysis.js', () => ({
 
 import { runLectorAgent, puedeGenerarBorradorIA } from '../lectorAgent';
 
-describe('runLectorAgent: comprobarBorradoresGmailEnviados no depende de que leerRespuestasGmailApi funcione', () => {
+describe('runLectorAgent: comprobarBorradoresGmailEnviados no depende de que leerBandejaGmailIncremental funcione', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -75,7 +76,7 @@ describe('runLectorAgent: comprobarBorradoresGmailEnviados no depende de que lee
   it('comprueba los borradores enviados aunque leer la bandeja falle por falta de scope (403)', async () => {
     tieneGmailOAuthConectadoMock.mockResolvedValue(true);
     comprobarBorradoresGmailEnviadosMock.mockResolvedValue({ revisados: 1, confirmadosEnviados: ['lead-1'] });
-    leerRespuestasGmailApiMock.mockRejectedValue(new Error('Request had insufficient authentication scopes.'));
+    leerBandejaGmailIncrementalMock.mockRejectedValue(new Error('Request had insufficient authentication scopes.'));
 
     await expect(runLectorAgent('band-test')).rejects.toThrow('insufficient authentication scopes');
 
@@ -88,7 +89,7 @@ describe('runLectorAgent: comprobarBorradoresGmailEnviados no depende de que lee
   it('con Gmail OAuth conectado y ambas llamadas OK, procesa borradores enviados y mensajes en el mismo run', async () => {
     tieneGmailOAuthConectadoMock.mockResolvedValue(true);
     comprobarBorradoresGmailEnviadosMock.mockResolvedValue({ revisados: 1, confirmadosEnviados: ['lead-1'] });
-    leerRespuestasGmailApiMock.mockResolvedValue([]);
+    leerBandejaGmailIncrementalMock.mockResolvedValue([]);
 
     const result = await runLectorAgent('band-test');
 
@@ -134,7 +135,7 @@ describe('runLectorAgent: visibilidad de la actividad del Contestador automátic
   });
 
   it('cuenta un borrador generado con éxito', async () => {
-    leerRespuestasGmailApiMock.mockResolvedValue([mensajeEntrante]);
+    leerBandejaGmailIncrementalMock.mockResolvedValue([mensajeEntrante]);
     generarBorradorRespuestaMock.mockResolvedValue({ draftReply: 'Hola, gracias por escribir.', isSimulated: false });
 
     const result = await runLectorAgent(`band-generado-${Date.now()}`);
@@ -145,7 +146,7 @@ describe('runLectorAgent: visibilidad de la actividad del Contestador automátic
   });
 
   it('cuenta un fallo cuando generarBorradorRespuesta lanza una excepción', async () => {
-    leerRespuestasGmailApiMock.mockResolvedValue([mensajeEntrante]);
+    leerBandejaGmailIncrementalMock.mockResolvedValue([mensajeEntrante]);
     generarBorradorRespuestaMock.mockRejectedValue(new Error('IA no disponible'));
 
     const result = await runLectorAgent(`band-fallo-${Date.now()}`);
@@ -156,7 +157,7 @@ describe('runLectorAgent: visibilidad de la actividad del Contestador automátic
   });
 
   it('cuenta un bloqueo cuando se alcanza el tope de puedeGenerarBorradorIA', async () => {
-    leerRespuestasGmailApiMock.mockResolvedValue([mensajeEntrante]);
+    leerBandejaGmailIncrementalMock.mockResolvedValue([mensajeEntrante]);
     generarBorradorRespuestaMock.mockResolvedValue({ draftReply: 'no debería llamarse', isSimulated: false });
 
     const bandId = `band-tope-${Date.now()}`;
