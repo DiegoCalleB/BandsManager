@@ -235,3 +235,18 @@ body.pausado #stage, body.pausado #stage *, body.pausado #stage *::before, body.
 .mb-voz { position: absolute; left: 0; top: 0; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
 /* con la voz de Diego encima, los subtítulos ocupan abajo: la línea de edades pasa arriba */
 .mis-bandas .mb-linea { bottom: auto; top: 66px; scale: .8; transform-origin: 50% 0; }
+
+/* ── Inicio de «Netflix»: fila de anuncios de BandManager.io (como la de Juegos), acceso fijo y botón «Inicio» del final ── */
+.nx-ad-chip { margin-left: 14px; padding: 3px 10px; border: 1px solid #777; border-radius: 3px; color: #bbb; font-size: 14px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; vertical-align: middle; }
+.nx-games { display: flex; gap: 22px; }
+.nx-game { flex: 0 0 188px; display: flex; flex-direction: column; gap: 4px; color: #fff; text-decoration: none; position: relative; }
+.nx-game i { display: grid; place-items: center; width: 188px; height: 188px; border-radius: 22%; background: linear-gradient(145deg, var(--g)); font-style: normal; font-size: 84px; box-shadow: 0 8px 24px #0009; transition: transform .25s, box-shadow .25s; }
+.nx-game:hover i, .nx-game:focus-visible i { transform: scale(1.07); box-shadow: 0 14px 40px #000; }
+.nx-game b { margin-top: 10px; font-size: 19px; line-height: 1.15; }
+.nx-game small { color: #a3a3a3; font-size: 14px; line-height: 1.25; }
+.nx-game span { margin-top: 6px; align-self: flex-start; padding: 5px 14px; border-radius: 4px; background: #e50914; font-size: 14px; font-weight: 700; }
+.nx-bm { margin-right: 18px; padding: 7px 16px; border-radius: 4px; background: #e50914; color: #fff; font-size: 15px; font-weight: 700; text-decoration: none; white-space: nowrap; }
+.nx-bm:hover { background: #f6121d; }
+.nff-inicio { padding: 14px 34px; border: 0; border-radius: 4px; background: #fff; color: #000; font: 600 26px/1 'Helvetica Neue', Arial, sans-serif; cursor: pointer; opacity: 0; animation: nffaparece 900ms ease-out 3200ms both; }
+.nff-inicio:hover { background: #d8d8d8; }
+@media (prefers-reduced-motion: reduce) { .nff-inicio { animation-duration: 1ms; animation-delay: 0ms; } }
