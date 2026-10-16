@@ -103,12 +103,12 @@
   var JUEGOS = [
     ['scroll-challenge', 'Scroll Challenge', 'Juego móvil · Google Play', '#ff3d71,#ffb142', 'juego', 'https://play.google.com/store/apps/details?id=com.scrollchallenge.game'],
     ['flappy-bird', 'Flappy Bird', 'Autor: Brais Moure* (*no, pero le habría encantado)', '#1e90d8,#8fdc4f', 'pajaro', PORTFOLIO],
-    ['chimpy-jump', 'Chimpy Jump', 'Juego móvil · salta, mono, salta', '#4caf50,#b6e08a', 'juego', PORTFOLIO],
-    ['speedy-whales', 'Speedy Whales', 'Juego móvil · ballenas con prisa', '#2f8f9a,#9fe0dc', 'juego', PORTFOLIO],
-    ['tiny-pirates', 'Tiny Pirates', 'Juego móvil · cañonazos y mar', '#1c9bd0,#8fd8f0', 'juego', PORTFOLIO],
-    ['wookieator', 'Wookieator', 'App móvil · el traductor wookiee', '#c99a1c,#2a2a2a', 'app', PORTFOLIO],
-    ['tpcast', 'TP Cast', 'App móvil · Todopoderosos', '#d8c000,#222', 'app', PORTFOLIO],
-    ['pumpkin', 'Pumpkin', 'App móvil · para socios de Pilbeo', '#f0a020,#555', 'app', PORTFOLIO],
+    ['chimpy-jump', 'Chimpy Jump', 'Juego móvil · salta, mono, salta · Google Play', '#4caf50,#b6e08a', 'juego', 'https://play.google.com/store/apps/details?id=com.braismoure.ChimpyJump&hl=es'],
+    ['speedy-whales', 'Speedy Whales', 'Juego móvil · ballenas con prisa · App Store', '#2f8f9a,#9fe0dc', 'juego', 'https://itunes.apple.com/es/app/speedy-whales/id1065767426?mt=8'],
+    ['tiny-pirates', 'Tiny Pirates', 'Juego móvil · cañonazos y mar · App Store', '#1c9bd0,#8fd8f0', 'juego', 'https://itunes.apple.com/us/app/tiny-pirates!-pirate-cannons/id1055590186?l=es&ls=1&mt=8'],
+    ['wookieator', 'Wookieator', 'App móvil · el traductor wookiee · App Store', '#c99a1c,#2a2a2a', 'app', 'https://itunes.apple.com/lr/app/wookieator-the-wookiee-translator/id919286486?mt=8'],
+    ['tpcast', 'TP Cast', 'App móvil · Todopoderosos', '#d8c000,#222', 'app', 'https://tpcast.app/'],
+    ['pumpkin', 'Pumpkin', 'App móvil · para socios de Pilbeo · Google Play', '#f0a020,#555', 'app', 'https://play.google.com/store/apps/details?id=com.pilbeo.pilbeo_pumpkin_android&hl=es'],
     ['pilbeo', 'Pilbeo', 'App móvil · Camino de Santiago', '#f0b030,#4a9a3a', 'app', PORTFOLIO]
   ];
   ICONOS.juego = '<rect x="2" y="7" width="20" height="11" rx="5.5"/><path d="M7 10.5v4M5 12.5h4"/><circle cx="16" cy="11.5" r=".6"/><circle cx="18.2" cy="13.8" r=".6"/>';
