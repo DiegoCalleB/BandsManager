@@ -273,3 +273,11 @@ body.pausado #stage, body.pausado #stage *, body.pausado #stage *::before, body.
 .nx-flecha-fila.sig { right: 0; background: linear-gradient(270deg, #141414cc, transparent); }
 .nx-filas2.con-flechas:hover .nx-flecha-fila { opacity: 1; }
 .nx-flecha-fila:hover { background-color: #0008; }
+
+/* «Volver al inicio» desde el final de la película: directo al inicio de Netflix, sin pasar por «¿Quién está viendo?» */
+html.ir-inicio #gate .nx-perfiles { display: none !important; }
+html.ir-inicio #gate .nx-home { display: flex !important; }
+
+/* ilustraciones propias de los juegos (sin círculo de cristal ni degradado encima) */
+.nx-game i.arte::before, .nx-game i.arte::after { display: none; }
+.nx-game i.arte svg { width: 100%; height: 100%; padding: 0; border: 0; border-radius: 0; background: none; stroke: none; stroke-width: 0; filter: none; }

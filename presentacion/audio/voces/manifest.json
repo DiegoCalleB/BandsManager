@@ -439,17 +439,6 @@
   "v": "5e3406bb0d99",
   "who": "bateria"
  },
- "26d7ccf6": {
-  "d": 8.06,
-  "e": "0659498499416533321000000000000000000000000009997358314821199971665466533310000023541455201356884660375751453464564244046314214320000000000000000000001476563059899499876416646894772135456621654333310",
-  "f": "26d7ccf6.mp3",
-  "h": "3a7ca9fe",
-  "oido": "de dos motores. Una suscripción por Danda, ya construida pero apagada a propósito. Y el apoyo voluntario de quien ose la app.",
-  "qa": 0.91,
-  "say": "De dos motores. Una suscripción por banda, ya construida pero apagada a propósito. Y el apoyo voluntario de quien use la app.",
-  "v": "ed9974e04c0a",
-  "who": "bajo"
- },
  "2841abbd": {
   "d": 10.42,
   "e": "0499959326489944210644453232153202111100000000000499997761431331201110011100000000134210088521111100000001242101353100000000000364201643395653212033210000000003983108938625634243762102310002210397874543232023311000000025410232123221100000397546222310253100000",
@@ -669,17 +658,6 @@
   "say": "Tres veces en una hora. Eso es que están leyendo. Y el cartel cierra… ahora.",
   "v": "e1bbae2004b9",
   "who": "bajo"
- },
- "3f0ba94f": {
-  "d": 2.45,
-  "e": "03113999710332102542000000000002899855921058555114424783100",
-  "f": "3f0ba94f.mp3",
-  "h": "5ac402de",
-  "oido": "¿Y quién es ese? ¿Tiene más pelo que yo?",
-  "qa": 1.0,
-  "say": "[curious] ¿Y quién es ese? ¿Tiene más pelo que yo?",
-  "v": "65e367738a02",
-  "who": "voz"
  },
  "406be4f0": {
   "d": 2.23,
@@ -1676,17 +1654,6 @@
   "v": "f10723a49cef",
   "who": "bateria"
  },
- "a04e6e4b": {
-  "d": 3.77,
-  "e": "05542679669991956566662046651016843221100000000006555435999329678897453200000144374654255321",
-  "f": "a04e6e4b.mp3",
-  "h": "75a188ef",
-  "oido": "El cantante de Master of Proms, guardaos el nombre que da volver.",
-  "qa": 0.8,
-  "say": "El cantante de Máster of Prompts. Guardaos el nombre, que va a volver.",
-  "v": "fe2cbca131c9",
-  "who": "bajo"
- },
  "a15920bc": {
   "d": 2.33,
   "e": "02389869810295554138438544866430253344721075101975332100",
@@ -1730,6 +1697,17 @@
   "say": "¿Alguien le ha contestado a la sala del catorce? Che, que yo soy la voz, no la secretaria.",
   "v": "4400292cbde0",
   "who": "voz"
+ },
+ "a6173ea3": {
+  "d": 6.7,
+  "e": "0866739956994165343210000000000000000000299942941583204987258546554333200000000034421664105655432100000000000000000000001465541499893987665166698584026666315554434210",
+  "f": "a6173ea3.mp3",
+  "h": "e9d01b2c",
+  "oido": "de dos motores, una suscripción por banda con seis planes y el apoyo voluntario de Kenusela app.",
+  "qa": 0.89,
+  "say": "De dos motores. Una suscripción por banda, con seis planes. Y el apoyo voluntario de quien use la app.",
+  "v": "b5a106fafb85",
+  "who": "bajo"
  },
  "a617749f": {
   "d": 7.25,

@@ -207,7 +207,7 @@ _Generado desde la película actual. Las escenas del anexo (para preguntas) no e
 
 ## 38 · Cómo ganamos dinero
 **38.1 Álvaro:** ¿Y de qué vivimos? ¿De los aplausos?  
-**38.2 Iago:** Dos motores: una suscripción por banda, ya construida pero apagada a propósito, y el apoyo voluntario de quien use la app.  
+**38.2 Iago:** Dos motores: una suscripción por banda, con seis planes, y el apoyo voluntario de quien use la app.  
 **38.3 Brais:** ¿Y cuánto es ese apoyo? ¿Más que Peláez?  
 **38.4 Iago:** Muchísimo menos: lo que cada uno quiera. Ya lo he habilitado, para pagar la IA y los servidores.  
 

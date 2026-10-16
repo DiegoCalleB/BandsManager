@@ -13,6 +13,13 @@
     setlist: '<path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/>',
     tour: '<path d="M2 16V8a2 2 0 012-2h9l5 5h3a1 1 0 011 1v4"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M9 17h6M2 16h3"/>'
   };
+  // Ilustraciones propias (vectoriales) para los juegos que aún no tienen su icono real en img/juegos/: ocupan todo el icono
+  var ARTE = {
+    'speedy-whales': '<rect width="100" height="100" fill="#d4efec"/><path d="M0 62q8-6 16 0t16 0 16 0 16 0 16 0 16 0 4-2v40H0z" fill="#7cc7c9"/><path d="M0 74q8-6 16 0t16 0 16 0 16 0 16 0 16 0 4-2v28H0z" fill="#5da3b0"/><path d="M20 56q0-22 22-22h18q20 0 20 22v4q0 12-14 12H36q-16 0-16-16z" fill="#fff"/><path d="M26 50q-14-2-17-16 12-2 20 8z" fill="#fff"/><circle cx="72" cy="52" r="2.6" fill="#5da3b0"/><path d="M44 34q-2-10 6-14M52 34q0-9 8-11" stroke="#fff" stroke-width="4" stroke-linecap="round" fill="none"/>',
+    'tiny-pirates': '<rect width="100" height="100" fill="#9bd9f0"/><circle cx="20" cy="22" r="8" fill="#fff"/><circle cx="30" cy="25" r="7" fill="#fff"/><circle cx="76" cy="18" r="7" fill="#fff"/><circle cx="85" cy="21" r="6" fill="#fff"/><path d="M0 66q8-6 16 0t16 0 16 0 16 0 16 0 16 0 4-2v36H0z" fill="#3f9dc0"/><path d="M26 64h48l-8 14H34z" fill="#8a5a2b"/><path d="M50 62V28" stroke="#4a2f14" stroke-width="3"/><path d="M52 30h20v22H52z" fill="#fff"/><rect x="26" y="26" width="22" height="18" rx="2" fill="#111"/><circle cx="37" cy="33" r="3.4" fill="#fff"/><path d="M31 38l12 4M43 38l-12 4" stroke="#fff" stroke-width="2"/><circle cx="73" cy="66" r="5" fill="#111"/>',
+    'flappy-bird': '<rect width="100" height="100" fill="#4ec0ca"/><rect x="62" y="64" width="22" height="40" rx="3" fill="#74bf2e"/><rect x="58" y="60" width="30" height="12" rx="3" fill="#8fdc4f"/><path d="M0 84h100v16H0z" fill="#ded895"/><path d="M0 84h100v5H0z" fill="#8fdc4f"/><ellipse cx="42" cy="46" rx="22" ry="17" fill="#f8d12f"/><path d="M60 44l16 4-16 6z" fill="#f08a1e"/><ellipse cx="50" cy="38" rx="8" ry="9" fill="#fff"/><circle cx="52" cy="38" r="3.4" fill="#111"/><path d="M26 48q8-8 18 0-8 10-18 0z" fill="#fff6c8"/>',
+    'scroll-challenge': '<rect width="100" height="100" fill="#14122b"/><circle cx="50" cy="50" r="42" fill="#ff3d71" opacity=".25"/><rect x="30" y="12" width="40" height="76" rx="9" fill="#10243a" stroke="#34d4ff" stroke-width="3"/><path d="M50 62V32M40 42l10-11 10 11" stroke="#34d4ff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M58 70q6-16 16-14t4 14-12 16z" fill="#f4b183"/>'
+  };
   var ANUNCIOS = [
     ['swap', 'Date Swap', 'Booking · cambia fechas con otra banda', '#6a2bff,#ff4f9a', 'img/d-h-swap.jpg', '50% 55%', '260%'],
     ['amigas', 'Bandas amigas', 'Comunidad · cartel doble', '#007f6e,#2fd6a0', 'img/d-h-amigas.jpg', '50% 40%', '240%'],
@@ -90,15 +97,19 @@
     mas.insertBefore(rec, ads ? ads.nextSibling : mas.firstChild);
     mas.appendChild(filaPelis('Comedias con morriña', MORRINA));
   }
-  // Fila «Juegos móviles»: el juego de Diego (Scroll Challenge, con su enlace de Google Play) y las apps de MoureDev. Cada una abre su ficha; el icono real, si existe, va en img/juegos/<id>.png
+  // Fila «Juegos móviles»: el juego de Diego (Scroll Challenge, con su enlace de Google Play) y las apps de MoureDev. Cada una abre su ficha; el icono real, si existe, va en img/juegos/<id>.jpg (o .png)
   // (sin él sale el icono dibujado). Para poner el enlace directo a cada tienda basta cambiar el último campo.
   var PORTFOLIO = 'https://mouredev.com/portfolio/';
   var JUEGOS = [
     ['scroll-challenge', 'Scroll Challenge', 'Juego móvil · Google Play', '#ff3d71,#ffb142', 'juego', 'https://play.google.com/store/apps/details?id=com.scrollchallenge.game'],
     ['flappy-bird', 'Flappy Bird', 'Autor: Brais Moure* (*no, pero le habría encantado)', '#1e90d8,#8fdc4f', 'pajaro', PORTFOLIO],
-    ['speedy-whales', 'Speedy Whales', 'Juego móvil · MoureDev', '#0a4d8c,#27c4f4', 'juego', PORTFOLIO],
-    ['gotrends', 'GoTrends', 'App móvil · Google Trends', '#1a73e8,#34c759', 'app', PORTFOLIO],
-    ['tpcast', 'TP Cast', 'App móvil · Todopoderosos', '#8a2be2,#ff5f6d', 'app', PORTFOLIO]
+    ['chimpy-jump', 'Chimpy Jump', 'Juego móvil · salta, mono, salta · Google Play', '#4caf50,#b6e08a', 'juego', 'https://play.google.com/store/apps/details?id=com.braismoure.ChimpyJump&hl=es'],
+    ['speedy-whales', 'Speedy Whales', 'Juego móvil · ballenas con prisa · App Store', '#2f8f9a,#9fe0dc', 'juego', 'https://itunes.apple.com/es/app/speedy-whales/id1065767426?mt=8'],
+    ['tiny-pirates', 'Tiny Pirates', 'Juego móvil · cañonazos y mar · App Store', '#1c9bd0,#8fd8f0', 'juego', 'https://itunes.apple.com/us/app/tiny-pirates!-pirate-cannons/id1055590186?l=es&ls=1&mt=8'],
+    ['wookieator', 'Wookieator', 'App móvil · el traductor wookiee · App Store', '#c99a1c,#2a2a2a', 'app', 'https://itunes.apple.com/lr/app/wookieator-the-wookiee-translator/id919286486?mt=8'],
+    ['tpcast', 'TP Cast', 'App móvil · Todopoderosos', '#d8c000,#222', 'app', 'https://tpcast.app/'],
+    ['pumpkin', 'Pumpkin', 'App móvil · para socios de Pilbeo · Google Play', '#f0a020,#555', 'app', 'https://play.google.com/store/apps/details?id=com.pilbeo.pilbeo_pumpkin_android&hl=es'],
+    ['pilbeo', 'Pilbeo', 'App móvil · Camino de Santiago', '#f0b030,#4a9a3a', 'app', PORTFOLIO]
   ];
   ICONOS.juego = '<rect x="2" y="7" width="20" height="11" rx="5.5"/><path d="M7 10.5v4M5 12.5h4"/><circle cx="16" cy="11.5" r=".6"/><circle cx="18.2" cy="13.8" r=".6"/>';
   ICONOS.pajaro = '<ellipse cx="11" cy="13" rx="7" ry="5.5"/><circle cx="14" cy="11" r="1"/><path d="M18 13l3.5 1.2-3.5 1.4M8 13c1.5 2 4 2 5 0M6 17.5l-2 2.5M10 18.5l-1 2.5"/>';
@@ -106,7 +117,7 @@
   if (mas) {
     var jg = document.createElement('div'); jg.className = 'nx-filas2 nx-ads';
     jg.innerHTML = '<h3>Juegos móviles <span class="nx-ad-chip">Android · iOS</span></h3><div class="nx-games">' + JUEGOS.map(function (g) {
-      return '<a class="nx-game" href="' + g[5] + '" target="_blank" rel="noopener"><i style="--c1:' + g[3].split(',')[0] + ';--c2:' + g[3].split(',')[1] + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + ICONOS[g[4]] + '</svg><img class="nx-gicono" src="img/juegos/' + g[0] + '.png" alt="" onerror="this.remove()"></i><b>' + cerrado(g[1]) + '</b><small>' + cerrado(g[2]) + '</small><span>Obtener</span></a>';
+      return '<a class="nx-game" href="' + g[5] + '" target="_blank" rel="noopener"><i style="--c1:' + g[3].split(',')[0] + ';--c2:' + g[3].split(',')[1] + '"' + (ARTE[g[0]] ? ' class="arte"><svg viewBox="0 0 100 100" aria-hidden="true">' + ARTE[g[0]] : '><svg viewBox="0 0 24 24" aria-hidden="true">' + ICONOS[g[4]]) + '</svg><img class="nx-gicono" src="img/juegos/' + g[0] + '.jpg" alt="" onerror="if(!this.dataset.r){this.dataset.r=1;this.src=this.src.replace(\'.jpg\',\'.png\')}else this.remove()"></i><b>' + cerrado(g[1]) + '</b><small>' + cerrado(g[2]) + '</small><span>Obtener</span></a>';
     }).join('') + '</div>';
     var ads0 = mas.querySelector('.nx-ads'); mas.insertBefore(jg, ads0 ? ads0.nextSibling : mas.firstChild);
   }
@@ -132,9 +143,15 @@
     otra.parentNode.insertBefore(b, otra.nextSibling);
   }
 
-  // Al volver al inicio no hace falta elegir perfil otra vez
+  // Al volver al inicio no se elige perfil otra vez: directo al inicio con todas las filas (y el tráiler arrancando como siempre)
   if (/[?&]inicio=1/.test(location.search)) {
-    try { history.replaceState(null, '', location.pathname); } catch { /* sin history */ }
-    var perfil = document.querySelector('#gate .nx-perfil'); if (perfil) setTimeout(function () { perfil.click(); }, 250);
+    try { history.replaceState(null, '', location.pathname); } catch (_e) { /* sin history */ }
+    var puerta = document.getElementById('gate');
+    if (puerta) {
+      puerta.dataset.fase = 'home';
+      var trailer = puerta.querySelector('.nx-vid');
+      if (trailer) setTimeout(function () { trailer.play().then(function () { puerta.classList.add('trailer'); }).catch(function () { /* sin autoplay */ }); }, 2600);
+      var reproducir = document.getElementById('gatePeli'); if (reproducir) reproducir.focus({ preventScroll: true });
+    }
   }
 })();

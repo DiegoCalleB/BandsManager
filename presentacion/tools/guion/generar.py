@@ -639,11 +639,11 @@ add(f'''<section class="slide scene biz" data-title="Cómo ganamos dinero" data-
   <span class="tag">Cómo lo hacemos · El dinero</span>
   <h2>Y de qué vivimos.</h2>
   <div class="biz-cols">
-    <div class="biz-col"><span class="badge">Construido, desactivado a propósito</span><h3>Suscripción por banda</h3><p>Seis planes, de gratis a 79 € al mes</p></div>
+    <div class="biz-col"><span class="badge">Ingresos recurrentes</span><h3>Suscripción por banda</h3><p>Seis planes, de gratis a 79 € al mes</p></div>
     <div class="biz-col"><span class="badge b2b">Ya habilitado, voluntario</span><h3>Apoyo de los usuarios</h3><p>Para pagar la IA, la base de datos y los servidores</p></div>
   </div>
   {dlg(m('alvaro', '¿Y de qué vivimos, entonces?'),
-       m('iago', 'Dos motores. Una suscripción por banda, que ya está construida aunque la tengo desactivada a propósito. Y el apoyo voluntario de quien use la app.'),
+       m('iago', 'Dos motores. Una suscripción por banda, con seis planes. Y el apoyo voluntario de quien use la app.'),
        m('brais', '¿Y cuánto es ese apoyo?', say='¿Y cuánto es ese apoyo? ¿Más o menos que Peláez?'),
        m('iago', 'Lo que cada uno quiera. Ya he habilitado que los usuarios apoyen el proyecto, para pagar la IA, la base de datos y los servidores.', say='Muchísimo menos: lo que cada uno quiera. Ya he habilitado que los usuarios apoyen el proyecto, para pagar la inteligencia artificial, la base de datos y los servidores. Si vosotros tocáis y cobráis, nosotros ganamos.'), cls='tight')}
 </section>
@@ -896,7 +896,7 @@ add('''<section class="slide giro-reloj" data-title="El reloj" data-transition="
   <p class="gr-c" style="--t:9.3s;--d:2.7s">También contaba para esto.</p>
   <div class="notif" aria-hidden="true"><i>🔔</i><div><small>BandManager · ahora</small><b>Alguien está viendo tu TFM</b><span>Ahora mismo. Desde el principio.</span></div></div>
   <p class="gr-c" style="--t:12.3s;--d:3s">Brais: en esta historia eras el batería.</p>
-  <p class="gr-c" style="--t:15.2s;--d:3s">Pero en la de verdad, el festival sois vosotros.</p>
+  <p class="gr-c" style="--t:15.2s;--d:3s">Pero en la realidad, el cartel lo cierras tú.</p>
   <p class="gr-c gr-ask" style="--t:18.4s">Y ahora… un reto.</p>
 </section>
 ''')
@@ -1032,7 +1032,7 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
     </dl>
     <h3>Modelos de negocio de BandManager.io</h3>
     <dl class="cr-dl">
-      <dt>B2C</dt><dd>Músicos, DJs, solistas y orquestas con su suscripción, de 0 a 79 € al mes. Construida y desactivada a propósito</dd>
+      <dt>B2C</dt><dd>Músicos, DJs, solistas y orquestas con su suscripción, de 0 a 79 € al mes</dd>
       <dt>B2B</dt><dd>Mánagers, agencias, salas, festivales y productoras, con planes para varias bandas</dd>
       <dt>B2B2C</dt><dd>La plataforma sirve a la banda y esta llega a su público: QR de fans, apoyo y entradas</dd>
       <dt>C2C</dt><dd>Entre bandas: Date Swap y bandas amigas, con intercambio de fechas</dd>
