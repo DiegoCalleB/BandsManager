@@ -25,6 +25,7 @@ _Sin dependencias salientes directas._
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_routes_enlacesCortos|server/routes/enlacesCortos.ts]] *(from #route)*
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(from #route)*
+- [[server_routes_fans_contador|server/routes/fans_contador.ts]] *(from #route)*
 - [[server_routes_paginaConcierto|server/routes/paginaConcierto.ts]] *(from #route)*
 - [[server_routes_referidos|server/routes/referidos.ts]] *(from #route)*
 - [[server_utils_emailTemplate|server/utils/emailTemplate.ts]] *(from #service)*
