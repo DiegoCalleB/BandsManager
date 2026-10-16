@@ -49,6 +49,7 @@ Esquema relacional de tablas, índices pgvector, funciones y políticas RLS.
 - [[tabla_fan_link_clicks|tabla fan_link_clicks]] *(Layer: #schema, Domain: #social)*
 - [[tabla_fans|tabla fans]] *(Layer: #schema, Domain: #social)*
 - [[tabla_gear_checklists|tabla gear_checklists]] *(Layer: #schema, Domain: #system)*
+- [[tabla_landing_interesados|tabla landing_interesados]] *(Layer: #schema, Domain: #system)*
 - [[tabla_lead_messages|tabla lead_messages]] *(Layer: #schema, Domain: #booking)*
 - [[tabla_leads|tabla leads]] *(Layer: #schema, Domain: #booking)*
 - [[tabla_letras_jobs|tabla letras_jobs]] *(Layer: #schema, Domain: #repertoire)*

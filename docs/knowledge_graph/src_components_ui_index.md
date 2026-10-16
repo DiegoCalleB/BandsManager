@@ -251,6 +251,7 @@ BandManager UI Component Library
 - [[src_components_finanzas_AddTransactionModal|src/components/finanzas/AddTransactionModal.tsx]] *(from #frontend)*
 - [[src_components_FontSelectorModal|src/components/FontSelectorModal.tsx]] *(from #frontend)*
 - [[src_components_InvitarBandaCard|src/components/InvitarBandaCard.tsx]] *(from #frontend)*
+- [[src_components_landing_FormularioInteres|src/components/landing/FormularioInteres.tsx]] *(from #frontend)*
 - [[src_components_LandingChatWidget|src/components/LandingChatWidget.tsx]] *(from #frontend)*
 - [[src_components_LoginModal|src/components/LoginModal.tsx]] *(from #frontend)*
 - [[src_components_Merchan|src/components/Merchan.tsx]] *(from #frontend)*

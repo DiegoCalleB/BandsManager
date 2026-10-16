@@ -29,10 +29,12 @@ import { obtenerPerfilPublicoBandaCacheado } from '../services/perfilPublicoBand
 import { captureError } from '../utils/errorTracking.js';
 
 import emailsCicloVidaRouter from './emailsCicloVida.js';
+import interesadosRouter from './interesados.js';
 export { startEmailsCicloVidaScheduler } from '../services/emailsCicloVida.js';
 
 const router = express.Router();
 router.use(emailsCicloVidaRouter); // baja de los emails de onboarding (/api/emails/baja)
+router.use(interesadosRouter); // lista de novedades de la landing (/api/public/interesados)
 
 function responderHtml(res: express.Response, status: number, html: string, cache: string) {
   res.status(status);

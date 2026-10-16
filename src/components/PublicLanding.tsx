@@ -4,6 +4,7 @@ import { Button } from './ui';
 import { useLanguage, SupportedLanguage } from '../context/idioma';
 import { registrarEvento } from '../utils/analitica';
 import { LandingChatWidget } from './LandingChatWidget';
+import { FormularioInteres } from './landing/FormularioInteres';
 
 interface PublicLandingProps {
   onEntrar: () => void;
@@ -533,6 +534,8 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
                 {t('landing.cta.note')}
               </span>
             </p>
+
+            <FormularioInteres es={es} />
           </div>
         </section>
       </main>

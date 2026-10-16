@@ -1415,3 +1415,18 @@ CREATE TABLE IF NOT EXISTS calendar_conflict_notifications (
 CREATE INDEX IF NOT EXISTS idx_calendar_conflict_notifications_band ON calendar_conflict_notifications(band_id);
 ALTER TABLE calendar_conflict_notifications ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Permitir acceso total al backend" ON calendar_conflict_notifications FOR ALL USING (true);
+
+-- landing_interesados (lista de novedades de la landing oficial, con doble confirmación)
+CREATE TABLE IF NOT EXISTS landing_interesados (
+  id TEXT PRIMARY KEY,
+  email TEXT NOT NULL,
+  idioma TEXT NOT NULL DEFAULT 'es',
+  origen TEXT NOT NULL DEFAULT 'landing',
+  consentimiento_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  confirmado_at TIMESTAMPTZ,
+  baja_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_landing_interesados_email ON landing_interesados(email);
+ALTER TABLE landing_interesados ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Permitir acceso total al backend" ON landing_interesados FOR ALL USING (true);
