@@ -1,6 +1,7 @@
 // Descubrimiento de salas/festivales: búsqueda en Places, campañas masivas, extracción de emails,
 // importación y artistas similares.
 
+import { urlFotoPlaces } from "../../utils/placesPhoto.js";
 import express from "express";
 import { Lead } from "../../../src/types.js";
 import { loadState, saveState, requireAuth } from "../../state.js";
@@ -107,10 +108,7 @@ router.post(["/places-search", "/leads/places-search"], requireAuth, async (req,
             const addressParts = (place.formattedAddress || "").split(",");
             const extractedCity = ciudad || (addressParts.length >= 2 ? addressParts[addressParts.length - 2].trim().replace(/\d{5}\s*/, '') : "España");
 
-            let photoUrl = "";
-            if (place.photos && place.photos.length > 0 && place.photos[0].name) {
-              photoUrl = `https://places.googleapis.com/v1/${place.photos[0].name}/media?maxHeightPx=600&maxWidthPx=800&key=${placesApiKey}`;
-            }
+            let photoUrl = place.photos?.[0]?.name ? urlFotoPlaces(place.photos[0].name) : "";
 
             const domain = getDomainFromUrl(place.websiteUri || "");
             if (!photoUrl && domain) {
@@ -577,10 +575,7 @@ router.post(["/campaign-mass-search", "/leads/campaign-mass-search"], requireAut
                 const status = place.businessStatus || "OPERATIONAL";
                 if (status === "CLOSED_PERMANENTLY" || status === "CLOSED_TEMPORARILY") continue;
 
-                let photoUrl = "";
-                if (place.photos && place.photos.length > 0 && place.photos[0].name) {
-                  photoUrl = `https://places.googleapis.com/v1/${place.photos[0].name}/media?maxHeightPx=600&maxWidthPx=800&key=${placesApiKey}`;
-                }
+                let photoUrl = place.photos?.[0]?.name ? urlFotoPlaces(place.photos[0].name) : "";
                 const domain = getDomainFromUrl(place.websiteUri || "");
                 if (!photoUrl && domain) {
                   photoUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;

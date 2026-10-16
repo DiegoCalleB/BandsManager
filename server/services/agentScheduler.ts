@@ -10,11 +10,18 @@ import { startAgentQueueWorker, stopAgentQueueWorker } from "./agentQueueWorker.
 import { captureError } from "../utils/errorTracking.js";
 import type { RegisteredBand } from "../../src/types.js";
 import { isGmailRateLimited } from "./gmailApiClient.js";
+import { faltaClaveDeCifradoEnProduccion } from "../utils/secretCrypto.js";
 
-// Planificador periódico: por defecto 1 vez al día (24 horas) para optimizar consultas y costos en Supabase.
-// Puede modificarse mediante la variable de entorno AGENT_SCHEDULER_INTERVAL_MS.
-const TICK_MS = Number(process.env.AGENT_SCHEDULER_INTERVAL_MS) || (24 * 60 * 60 * 1000);
+// Cada tick solo mira la hora local de cada banda; los agentes se encolan cuando esa hora está en
+// su ventana (horas_*/dias_* de band_schedules) y no se han lanzado ya en esa hora. Antes el tick
+// era de 24 h y además exigía coincidir con la hora configurada, así que el Enviador solo salía si
+// la hora de arranque del proceso caía en la ventana, y cada redeploy reiniciaba la cuenta. Un
+// tick de 5 min dispara cada ventana con <=5 min de retraso; cualquier valor >1 h salta horas.
+const TICK_MS = Number(process.env.AGENT_SCHEDULER_INTERVAL_MS) || 5 * 60 * 1000;
+// Primer tick poco después de arrancar: tras un deploy no hay que esperar un intervalo entero.
+const PRIMER_TICK_MS = 30 * 1000;
 let schedulerHandle: NodeJS.Timeout | null = null;
+let primerTickHandle: NodeJS.Timeout | null = null;
 let tickEnCurso = false;
 
 /**
@@ -30,7 +37,8 @@ export async function bandHasEmailConfigured(bandId: string): Promise<boolean> {
     
     // Gmail OAuth requiere que exista el refresh_token y que las credenciales de Google estén en las variables de entorno
     const hasValidGmail = Boolean(
-      oauth?.refresh_token && 
+      oauth?.refresh_token &&
+      !oauth.needs_reauth_at && 
       process.env.GOOGLE_OAUTH_CLIENT_ID && 
       process.env.GOOGLE_OAUTH_CLIENT_SECRET
     );
@@ -66,27 +74,25 @@ export function currentHourAndDay(timezone: string, now: Date): { hour: number; 
   return { hour, dayIso, dateKey };
 }
 
-async function runIfScheduledHour(
-  kind: "enviador" | "lector",
-  bandId: string,
-  schedule: { timezone: string; horas_enviador: number[]; dias_enviador: number[]; horas_lector: number[]; dias_lector: number[] },
-  action: () => Promise<void>
-) {
+type HorarioAgentes = { timezone: string; horas_enviador: number[]; dias_enviador: number[]; horas_lector: number[]; dias_lector: number[] };
+
+/** Clave de la ejecución si a `kind` le toca correr ahora según el horario de la banda; si no, null. */
+export function claveEjecucionProgramada(kind: "enviador" | "lector", bandId: string, schedule: HorarioAgentes, now: Date): string | null {
   const horas = kind === "enviador" ? schedule.horas_enviador : schedule.horas_lector;
   const dias = kind === "enviador" ? schedule.dias_enviador : schedule.dias_lector;
-  const { hour, dayIso, dateKey } = currentHourAndDay(schedule.timezone, new Date());
+  const { hour, dayIso, dateKey } = currentHourAndDay(schedule.timezone, now);
+  if (!dias.includes(dayIso) || !horas.includes(hour)) return null;
+  return `${kind}:${bandId}:${dateKey}:${hour}`;
+}
 
-  if (!dias.includes(dayIso) || !horas.includes(hour)) return;
-
-  const jobName = `${kind}:${bandId}:${dateKey}:${hour}`;
-  const lastRun = await dbGetAgentLastRun(jobName);
-  if (lastRun) return;
-
+/** Ejecuta `action` una sola vez por clave: la marca en agent_schedule_state sobrevive a redeploys. */
+async function ejecutarUnaVez(jobName: string, action: () => Promise<void>) {
+  if (await dbGetAgentLastRun(jobName)) return;
   await dbSetAgentLastRun(jobName);
   try {
     await action();
   } catch (e) {
-    console.error(`[AgentScheduler] Error encolando ${kind} para ${bandId}:`, e);
+    console.error(`[AgentScheduler] Error encolando ${jobName}:`, e);
   }
 }
 
@@ -108,14 +114,9 @@ async function tick() {
 
     const activeBands = bands.filter((b) => (b.estado_cuenta || "activo") === "activo");
 
+    const now = new Date();
     for (const band of activeBands) {
       const bandId = band.band_id;
-
-      // El Agente Lector y Enviador solo deben operar si la banda tiene configurada su cuenta de email (Gmail OAuth o IMAP)
-      const tieneEmail = await bandHasEmailConfigured(bandId);
-      if (!tieneEmail) {
-        continue;
-      }
 
       let schedule;
       try {
@@ -124,22 +125,31 @@ async function tick() {
         continue;
       }
 
-      // Enviador: Encola despacho de pitches respetando la ventana comercial de la banda
-      await runIfScheduledHour("enviador", bandId, schedule, async () => {
-        await enqueueAgentJob({
+      // Primero lo barato (la hora): las consultas de cuenta de email y last-run solo se hacen
+      // cuando a esta banda le toca algo en esta hora.
+      const claveEnviador = claveEjecucionProgramada("enviador", bandId, schedule, now);
+      const claveLector = isGmailRateLimited(bandId) ? null : claveEjecucionProgramada("lector", bandId, schedule, now);
+      if (!claveEnviador && !claveLector) continue;
+
+      // Lector y Enviador solo operan si la banda tiene cuenta de email (Gmail OAuth o IMAP).
+      if (!(await bandHasEmailConfigured(bandId))) continue;
+
+      // Enviador: despacho de lo ya aprobado dentro de la ventana comercial de la banda.
+      if (claveEnviador) {
+        await ejecutarUnaVez(claveEnviador, () => enqueueAgentJob({
           bandId,
           agentType: "redactor_pitch_dispatch",
           payload: { trigger: "scheduled_window" }
-        });
-      });
+        }).then(() => undefined));
+      }
 
-      // Lector: Encola revisión periódica de la bandeja de entrada para la banda si no está en enfriamiento por rate limit
-      if (!isGmailRateLimited(bandId)) {
-        await enqueueAgentJob({
+      // Lector: revisión de la bandeja en las horas de lectura de la banda.
+      if (claveLector) {
+        await ejecutarUnaVez(claveLector, () => enqueueAgentJob({
           bandId,
           agentType: "lector_inbox_check",
-          payload: { trigger: "scheduled_daily_poll" }
-        });
+          payload: { trigger: "scheduled_window" }
+        }).then(() => undefined));
       }
     }
 
@@ -158,22 +168,33 @@ export async function triggerManualSchedulerTick(): Promise<void> {
 
 export function startAgentScheduler(): void {
   if (schedulerHandle) return;
-  console.log(`[AgentScheduler] Iniciado Scheduler & Worker Engine (Frecuencia de sondeo: cada ${Math.round(TICK_MS / (60 * 60 * 1000))} horas).`);
+  if (faltaClaveDeCifradoEnProduccion()) {
+    console.error("[Seguridad Credenciales] ❌ CREDENTIALS_ENCRYPTION_KEY no está configurada: no se podrá guardar ninguna credencial de correo (Gmail OAuth ni IMAP) hasta definirla.");
+  }
+  console.log(`[AgentScheduler] Iniciado Scheduler & Worker Engine (tick cada ${Math.round(TICK_MS / 1000)} s).`);
+  if (TICK_MS > 60 * 60 * 1000) {
+    console.warn("[AgentScheduler] AGENT_SCHEDULER_INTERVAL_MS > 1 h: se saltarán horas de las ventanas de envío y lectura.");
+  }
 
   // Arrancar el worker de consumo de colas
   startAgentQueueWorker();
 
-  // El planificador se programa periódicamente a su intervalo normal (24h por defecto)
-  schedulerHandle = setInterval(() => {
+  const lanzarTick = () => {
     tick().catch((e) => {
       console.error("[AgentScheduler] Error en tick del productor:", e);
       captureError(e, { fase: "tick" });
     });
-  }, TICK_MS);
+  };
+  primerTickHandle = setTimeout(lanzarTick, PRIMER_TICK_MS);
+  schedulerHandle = setInterval(lanzarTick, TICK_MS);
 }
 
 export function stopAgentScheduler(): void {
   stopAgentQueueWorker();
+  if (primerTickHandle) {
+    clearTimeout(primerTickHandle);
+    primerTickHandle = null;
+  }
   if (schedulerHandle) {
     clearInterval(schedulerHandle);
     schedulerHandle = null;

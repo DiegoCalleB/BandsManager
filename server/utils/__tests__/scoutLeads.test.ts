@@ -42,6 +42,19 @@ describe('limpiarCampoContacto', () => {
     expect(limpiarCampoContacto('desconocido')).toBe('');
   });
 
+  it('vacía los ejemplos de la plantilla actual del prompt del Scout (routes/agent.ts)', () => {
+    expect(limpiarCampoContacto('+34 000 000 000')).toBe('');
+    expect(limpiarCampoContacto('@usuario_oficial')).toBe('');
+    expect(limpiarCampoContacto('https://sitio-oficial.com')).toBe('');
+    expect(esLeadDescubiertoValido({ nombre_sala: 'Nombre oficial exacto' })).toBe(false);
+  });
+
+  it('vacía cualquier teléfono hecho solo de ceros, con o sin prefijo', () => {
+    expect(limpiarCampoContacto('000 00 00 00')).toBe('');
+    expect(limpiarCampoContacto('+351 000 000 000')).toBe('');
+    expect(limpiarCampoContacto('+34 959 21 01 00')).toBe('+34 959 21 01 00');
+  });
+
   it('vacía lo que no es texto', () => {
     expect(limpiarCampoContacto(undefined)).toBe('');
     expect(limpiarCampoContacto(null)).toBe('');
@@ -108,5 +121,28 @@ describe('prepararLeadsDescubiertos', () => {
     for (const e of entradas) {
       expect(prepararLeadsDescubiertos(e, 'Ávila', 'sala')).toHaveLength(0);
     }
+  });
+});
+
+describe('datos de Google Places que sobreviven a la normalización', () => {
+  it('conserva place_id y dirección para deduplicar y localizar la sala', () => {
+    const r = normalizarLeadDescubierto(
+      { nombre_sala: 'Sala Caracol', place_id: 'ChIJ123', direccion: 'Calle Bernardino Obregón 18, Madrid' },
+      'Madrid', 'sala'
+    );
+    expect(r.place_id).toBe('ChIJ123');
+    expect(r.direccion).toBe('Calle Bernardino Obregón 18, Madrid');
+  });
+
+  it('solo acepta fotos servidas por nuestro proxy o favicons de Google, nunca una URL cualquiera del modelo', () => {
+    const foto = (imagen_url: unknown) => normalizarLeadDescubierto({ nombre_sala: 'X', imagen_url }, 'M', 'sala').imagen_url;
+    expect(foto('/api/places/photo?name=places%2Fa%2Fphotos%2Fb')).toBe('/api/places/photo?name=places%2Fa%2Fphotos%2Fb');
+    expect(foto('https://www.google.com/s2/favicons?domain=caracol.es&sz=128')).toBe('https://www.google.com/s2/favicons?domain=caracol.es&sz=128');
+    expect(foto('https://places.googleapis.com/v1/places/a/photos/b/media?key=SECRETA')).toBe('');
+    expect(foto('javascript:alert(1)')).toBe('');
+    expect(foto('https://www.google.com.evil.com/s2/favicons?domain=x')).toBe('');
+    expect(foto('https://evil.com/?https://www.google.com/s2/favicons?domain=x')).toBe('');
+    expect(foto('https://www.google.com/other')).toBe('');
+    expect(foto(undefined)).toBe('');
   });
 });

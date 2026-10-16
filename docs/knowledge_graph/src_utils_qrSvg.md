@@ -24,6 +24,7 @@ _Sin dependencias salientes directas._
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_repertorio_pdf_export_buildHeaderFooter|src/components/repertorio/pdf_export/buildHeaderFooter.ts]] *(from #frontend)*
+- [[src_utils_qrExport|src/utils/qrExport.ts]] *(from #service)*
 
 ---
 
