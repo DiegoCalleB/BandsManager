@@ -97,7 +97,7 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `POST` | `/api/agents/test-intel` | Sesión | — |  | [`server/routes/agent.ts:975`](../../server/routes/agent.ts#L975) |
 | `POST` | `/api/internal/agents/responder-hilo` | Sesión | — |  | [`server/routes/agent.ts:932`](../../server/routes/agent.ts#L932) |
 | `POST` | `/api/reset` | Sesión + líder | — |  | [`server/routes/agent.ts:1179`](../../server/routes/agent.ts#L1179) |
-| `POST` | `/api/trigger-agent` | Sesión | — |  | [`server/routes/agent.ts:98`](../../server/routes/agent.ts#L98) |
+| `POST` | `/api/trigger-agent` | Sesión | — |  | [`server/routes/agent.ts:99`](../../server/routes/agent.ts#L99) |
 
 ### agentQueue
 
@@ -210,7 +210,7 @@ Son las que un revisor de seguridad querrá mirar primero.
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
 | `POST` | `/api/chat` | Sesión | chatRateLimiter |  | [`server/routes/chat.ts:30`](../../server/routes/chat.ts#L30) |
-| `POST` | `/api/write-reels-copy` | Sesión | iaRateLimiter |  | [`server/routes/chat.ts:641`](../../server/routes/chat.ts#L641) |
+| `POST` | `/api/write-reels-copy` | Sesión | iaRateLimiter |  | [`server/routes/chat.ts:640`](../../server/routes/chat.ts#L640) |
 
 ### concert_to_album
 
@@ -315,8 +315,8 @@ EPK público de la banda y registro de fans con consentimiento RGPD.
 |---|---|---|---|---|---|
 | `GET` | `/api/gmail-oauth/authorize-url` | Sesión | gmailOAuthRateLimiter |  | [`server/routes/gmailOAuth.ts:144`](../../server/routes/gmailOAuth.ts#L144) |
 | `GET` | `/api/gmail-oauth/callback` | Pública | gmailOAuthRateLimiter |  | [`server/routes/gmailOAuth.ts:184`](../../server/routes/gmailOAuth.ts#L184) |
-| `POST` | `/api/gmail-oauth/disconnect` | Sesión | gmailOAuthRateLimiter |  | [`server/routes/gmailOAuth.ts:312`](../../server/routes/gmailOAuth.ts#L312) |
-| `GET` | `/api/gmail-oauth/status` | Sesión | gmailOAuthRateLimiter |  | [`server/routes/gmailOAuth.ts:299`](../../server/routes/gmailOAuth.ts#L299) |
+| `POST` | `/api/gmail-oauth/disconnect` | Sesión | gmailOAuthRateLimiter |  | [`server/routes/gmailOAuth.ts:298`](../../server/routes/gmailOAuth.ts#L298) |
+| `GET` | `/api/gmail-oauth/status` | Sesión | gmailOAuthRateLimiter |  | [`server/routes/gmailOAuth.ts:285`](../../server/routes/gmailOAuth.ts#L285) |
 
 ### leads
 

@@ -23,6 +23,7 @@ Elección pura de artista y preview a partir de las respuestas de la API públic
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server_services_metricasBandaService|server/services/metricasBandaService.ts]] *(from #service)*
 - [[server_services_musicPreviewService|server/services/musicPreviewService.ts]] *(from #service)*
 
 ---

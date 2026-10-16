@@ -59,7 +59,7 @@ export const RelojEnAcorde: React.FC<Props> = ({ activo, indice, tiempos, duraci
 
   // Siempre con el mismo relleno (3 px) para que activarse no desplace la letra.
   return (
-    <span ref={anillo} className={diagrama ? 'flex rounded-[calc(var(--r-m)+3px)] p-[3px]' : 'inline-flex rounded-[var(--r-s)] p-[3px] align-bottom'} data-reloj={activo ? 'activo' : undefined}>
+    <span ref={anillo} className={diagrama ? 'flex rounded-[calc(var(--r-m)+3px)] p-[3px] [&>*]:flex-1 [&>*]:min-w-0' : 'inline-flex rounded-[var(--r-s)] p-[3px] align-bottom'} data-reloj={activo ? 'activo' : undefined}>
       {children}
     </span>
   );

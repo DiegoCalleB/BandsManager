@@ -10,12 +10,14 @@ import { useBandCrm } from "./BandCrmContext";
  * @returns Sección de interfaz.
  */
 export function BandsMapView() {
-  const { filteredBands, handleOpenEditModal } = useBandCrm();
+  const { filteredBands, handleOpenEditModal, disponibles, escuchar } = useBandCrm();
     return (
 
   <BandMap
     bands={filteredBands}
     onSelectBand={(band) => handleOpenEditModal(band)}
+    disponibles={disponibles}
+    onEscuchar={escuchar}
   />
     );
 

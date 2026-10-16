@@ -182,6 +182,9 @@ export function BandCardsGrid() {
                 {metricas[band.id].spotify?.seguidores != null && (
                   <span title="Seguidores en Spotify">Spotify {formatoCompacto(metricas[band.id].spotify!.seguidores!)}</span>
                 )}
+                {metricas[band.id].deezer?.seguidores != null && (
+                  <span title="Fans en Deezer">Deezer {formatoCompacto(metricas[band.id].deezer!.seguidores!)}</span>
+                )}
                 {metricas[band.id].youtube?.suscriptores != null && (
                   <span title="Suscriptores en YouTube">YouTube {formatoCompacto(metricas[band.id].youtube!.suscriptores!)}</span>
                 )}
