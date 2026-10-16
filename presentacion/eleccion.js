@@ -11,7 +11,7 @@
   var DEMO_URL = 'https://bandmanager.io/unete?b=t_AAAAAEAOHUwPAAA7FgwRGgFIOxxMDxs7W1dd';
   var DEMO = { titulo: 'Falta un fan', texto: 'La escena no continúa hasta que alguien escanee el código y se haga fan de Os Herdeiros.' };
   var ELECCIONES = {
-    'Prólogo · Sábado, 11:00 en el local': { id: 'demo', demo: true },
+    'Un QR y el público se hace fan': { id: 'demo', demo: true },
     'Prólogo · La decisión': {
       id: 'decision', pregunta: '¿Qué hace Iago?',
       opciones: [
