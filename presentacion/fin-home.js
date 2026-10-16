@@ -65,6 +65,23 @@
     }).join('') + '</div>';
     var ads = mas.querySelector('.nx-ads'); mas.insertBefore(rec, ads ? ads.nextSibling : mas.firstChild);
   }
+  // Fila «Juegos de Brais Moure»: apps móviles de MoureDev. Cada una abre su ficha; el icono real, si existe, va en img/juegos/<id>.png
+  // (sin él sale el icono dibujado). Para poner el enlace directo a cada tienda basta cambiar el último campo.
+  var PORTFOLIO = 'https://mouredev.com/portfolio/';
+  var JUEGOS = [
+    ['speedy-whales', 'Speedy Whales', 'Juego móvil · MoureDev', '#0a4d8c,#27c4f4', 'juego', PORTFOLIO],
+    ['gotrends', 'GoTrends', 'App móvil · Google Trends', '#1a73e8,#34c759', 'app', PORTFOLIO],
+    ['tpcast', 'TP Cast', 'App móvil · Todopoderosos', '#8a2be2,#ff5f6d', 'app', PORTFOLIO]
+  ];
+  ICONOS.juego = '<rect x="2" y="7" width="20" height="11" rx="5.5"/><path d="M7 10.5v4M5 12.5h4"/><circle cx="16" cy="11.5" r=".6"/><circle cx="18.2" cy="13.8" r=".6"/>';
+  ICONOS.app = '<rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/>';
+  if (mas) {
+    var jg = document.createElement('div'); jg.className = 'nx-filas2 nx-ads';
+    jg.innerHTML = '<h3>Juegos de Brais Moure <span class="nx-ad-chip">Android · iOS</span></h3><div class="nx-games">' + JUEGOS.map(function (g) {
+      return '<a class="nx-game" href="' + g[5] + '" target="_blank" rel="noopener"><i style="--c1:' + g[3].split(',')[0] + ';--c2:' + g[3].split(',')[1] + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + ICONOS[g[4]] + '</svg><img class="nx-gicono" src="img/juegos/' + g[0] + '.png" alt="" onerror="this.remove()"></i><b>' + cerrado(g[1]) + '</b><small>' + cerrado(g[2]) + '</small><span>Obtener</span></a>';
+    }).join('') + '</div>';
+    var ads0 = mas.querySelector('.nx-ads'); mas.insertBefore(jg, ads0 ? ads0.nextSibling : mas.firstChild);
+  }
   var der = document.querySelector('#gate .nx-der');
   if (der) { var bm = document.createElement('a'); bm.className = 'nx-bm'; bm.href = WEB; bm.target = '_blank'; bm.rel = 'noopener'; bm.textContent = 'Pruébalo con tu banda · BandManager.io'; der.insertBefore(bm, der.firstChild); }
 
