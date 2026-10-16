@@ -9,11 +9,11 @@ type Segmento = 'b2c' | 'b2b';
 const Tarjeta: React.FC<{ plan: PlanLanding; es: boolean }> = ({ plan, es }) => {
   const l = es ? 'es' : 'en';
   return (
-    <li className={`flex flex-col rounded-[var(--r-l)] p-6 ${plan.destacado ? 'bg-[var(--surface)] ring-2 ring-[var(--acc)]' : 'bg-[var(--surface)]'}`}>
+    <li className="flex flex-col rounded-[var(--r-l)] bg-[var(--surface)] p-6">
       <div className="flex items-center justify-between gap-2">
         <h3 className="font-display text-lg font-bold">{plan.nombre}</h3>
         {plan.destacado && (
-          <span className="rounded-[var(--r-pill)] bg-[var(--acc)]/10 px-2.5 py-0.5 text-xs font-semibold text-[var(--ink)]">
+          <span className="rounded-[var(--r-pill)] bg-[var(--acc)] px-2.5 py-0.5 text-xs font-semibold text-[var(--on-acc)]">
             {es ? 'Recomendado' : 'Recommended'}
           </span>
         )}
@@ -45,7 +45,7 @@ export const PreciosTfm: React.FC<{ es: boolean }> = ({ es }) => {
       <p className="mx-auto mt-3 max-w-2xl text-center text-[var(--ink-2)]">
         {segmento === 'b2c'
           ? es ? 'Para bandas y artistas. Empiezas gratis y subes cuando lo necesitas.' : 'For bands and artists. Start free and upgrade when you need to.'
-          : es ? 'Para empresas con varias bandas. Se contratan bajo acuerdo, sin pago con tarjeta.' : 'For companies with several bands. Contracted by agreement, no card payment.'}
+          : es ? 'Para productoras y mánagers con varias bandas. Contrato anual con dos meses gratis, sin pago con tarjeta.' : 'For producers and managers with several bands. Annual contract: two months free, no card payment.'}
       </p>
       <Tabs<Segmento>
         aria-label={es ? 'Tipo de plan' : 'Plan type'}

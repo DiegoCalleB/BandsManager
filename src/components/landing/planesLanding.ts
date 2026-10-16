@@ -81,42 +81,48 @@ export const PLANES_B2C: PlanLanding[] = [
   },
 ];
 
+/**
+ * Lógica de precio B2B: cuota base que incluye un cupo de bandas + precio por banda extra, siempre por
+ * encima de lo que paga hoy una banda suelta (Cabeza de Cartel: 79 € / 5 bandas ≈ 16 € por banda).
+ * Cada banda lleva 500 créditos de IA al mes, como en Cabeza de Cartel. Contrato anual: 10 meses al precio
+ * de 12 meses cobrados (dos meses gratis) para asegurar permanencia.
+ */
 export const PLANES_B2B: PlanLanding[] = [
   {
     id: 'agencia',
     nombre: 'Agencia',
-    precio: t('Desde 149 € / mes', 'From €149 / month'),
-    sub: t('≈ 10 € por banda', '≈ €10 per band'),
-    para: t('Mánagers y agencias con una cartera pequeña.', 'Managers and small agencies.'),
+    precio: t('199 € / mes', '€199 / month'),
+    sub: t('10 bandas incluidas · +15 € por banda extra', '10 bands included · +€15 per extra band'),
+    para: t('Mánagers y productoras con una cartera en crecimiento.', 'Managers and producers with a growing roster.'),
     items: [
-      t('Hasta 15 bandas en una sola cuenta', 'Up to 15 bands in a single account'),
-      t('5.000 créditos IA al mes, compartidos', '5,000 AI credits a month, shared'),
+      t('Panel y calendario únicos para toda la cartera', 'One dashboard and calendar for the whole roster'),
+      t('500 créditos IA al mes por banda, en bolsa común', '500 AI credits a month per band, in a shared pool'),
       t('Hasta 5 personas del equipo', 'Up to 5 team members'),
-      t('Panel y calendario conjuntos', 'Shared dashboard and calendar'),
+      t('Informe mensual por banda', 'Monthly report per band'),
       t('Soporte por email en 48 h', 'Email support within 48 h'),
     ],
   },
   {
     id: 'sello',
-    nombre: 'Sello y Sala',
-    precio: t('Desde 349 € / mes', 'From €349 / month'),
-    sub: t('≈ 9 € por banda', '≈ €9 per band'),
-    para: t('Sellos, salas, festivales y escuelas.', 'Labels, venues, festivals and schools.'),
+    nombre: 'Sello y Productora',
+    precio: t('449 € / mes', '€449 / month'),
+    sub: t('30 bandas incluidas · +12 € por banda extra', '30 bands included · +€12 per extra band'),
+    para: t('Productoras, sellos, salas y festivales con muchas bandas.', 'Producers, labels, venues and festivals with many bands.'),
     destacado: true,
     items: [
-      t('Hasta 40 bandas o proyectos', 'Up to 40 bands or projects'),
-      t('15.000 créditos IA al mes, compartidos', '15,000 AI credits a month, shared'),
-      t('Hasta 15 personas del equipo con roles', 'Up to 15 team members with roles'),
-      t('Agentes de booking en lote', 'Batch booking agents'),
-      t('Puesta en marcha acompañada y soporte en 24 h', 'Guided onboarding and 24 h support'),
+      t('Todo lo de Agencia, hasta 15 personas con roles', 'Everything in Agency, up to 15 people with roles'),
+      t('Agentes de booking en lote para toda la cartera', 'Batch booking agents across the whole roster'),
+      t('Facturación única por cartera', 'One invoice for the whole roster'),
+      t('Puesta en marcha acompañada', 'Guided onboarding'),
+      t('Soporte en 24 h', '24 h support'),
     ],
   },
   {
     id: 'corporativo',
     nombre: 'Corporativo',
     precio: t('A medida', 'Custom'),
-    sub: t('contrato anual', 'annual contract'),
-    para: t('Grandes agencias y grupos de comunicación.', 'Large agencies and media groups.'),
+    sub: t('desde 50 bandas · contrato anual', 'from 50 bands · annual contract'),
+    para: t('Grandes productoras y grupos de comunicación.', 'Large producers and media groups.'),
     items: [
       t('Bandas y equipo sin límite', 'Unlimited bands and team'),
       t('Créditos IA y modelos a acordar', 'AI credits and models to be agreed'),

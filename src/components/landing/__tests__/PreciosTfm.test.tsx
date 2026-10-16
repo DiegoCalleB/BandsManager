@@ -9,7 +9,7 @@ afterEach(cleanup);
 describe('PreciosTfm', () => {
   it('abre en bandas (B2C) con los cuatro planes reales y sus precios', () => {
     render(<PreciosTfm es />);
-    for (const nombre of ['Ensayo', 'Local', 'De Gira', 'Cabeza de Cartel']) expect(screen.getByText(nombre)).toBeTruthy();
+    for (const nombre of ['Ensayo', 'Local', 'De Gira', 'Cabeza de Cartel']) expect(screen.getAllByText(nombre).length).toBeGreaterThan(0);
     expect(screen.getByText('12 € / mes')).toBeTruthy();
     expect(screen.getByText('29 € / mes')).toBeTruthy();
     expect(screen.getByText('79 € / mes')).toBeTruthy();
@@ -19,7 +19,7 @@ describe('PreciosTfm', () => {
   it('la pestaña Empresas enseña los planes B2B y el formulario de contacto', () => {
     render(<PreciosTfm es />);
     fireEvent.click(screen.getByRole('tab', { name: 'Empresas' }));
-    for (const nombre of ['Agencia', 'Sello y Sala', 'Corporativo']) expect(screen.getByText(nombre)).toBeTruthy();
+    for (const nombre of ['Agencia', 'Sello y Productora', 'Corporativo']) expect(screen.getByText(nombre)).toBeTruthy();
     expect(screen.getByRole('form', { name: 'Consulta para empresas' })).toBeTruthy();
     expect(screen.queryByText('Ensayo')).toBeNull();
   });
