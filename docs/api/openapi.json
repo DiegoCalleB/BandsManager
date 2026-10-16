@@ -539,7 +539,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/ai_music/rutasGeneracion.ts:120",
+        "x-source": "server/routes/ai_music/rutasGeneracion.ts:121",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"
@@ -579,7 +579,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/ai_music/rutaSeparacion.ts:119",
+        "x-source": "server/routes/ai_music/rutaSeparacion.ts:120",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"
@@ -5194,7 +5194,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/ai_music/rutasGeneracion.ts:20",
+        "x-source": "server/routes/ai_music/rutasGeneracion.ts:21",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"
@@ -5270,7 +5270,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/ai_music/rutasGeneracion.ts:20",
+        "x-source": "server/routes/ai_music/rutasGeneracion.ts:21",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"
@@ -12325,7 +12325,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/transposeRoute.ts:12",
+        "x-source": "server/routes/transposeRoute.ts:13",
         "x-autenticacion": "middleware"
       }
     },
@@ -14328,7 +14328,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/transposeRoute.ts:12",
+        "x-source": "server/routes/transposeRoute.ts:13",
         "x-autenticacion": "middleware"
       }
     }
