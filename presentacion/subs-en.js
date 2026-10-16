@@ -196,5 +196,13 @@ window.SUBS_EN = {
 "¡Estos de Netflix tienen ojo, chaval!": "Those Netflix people have an eye, mate!",
 "Brais… la peli va de mí.": "Brais… the movie is about me.",
 "Por cierto, el miércoles ensayo con Máster of Prompts. ¿A qué hora era?": "By the way, on Wednesday I rehearse with Master of Prompts. What time was it?",
-"Mira el calendario, Brais. Mira el calendario.": "Check the calendar, Brais. Check the calendar."
+"Mira el calendario, Brais. Mira el calendario.": "Check the calendar, Brais. Check the calendar.",
+"Vale, pero tengo una duda. Si esto es tan bueno… ¿cómo se entera el resto de bandas?": "Okay, but I have a question. If this is so good… how do the other bands find out?",
+"De boca a oreja, tío. Una banda se lo cuenta a otra, y esa a otra. Como pasa con los buenos pedales.": "Word of mouth. One band tells another, and that one tells the next. Just like good pedals.",
+"Y le damos un empujón: todo lo que sale de la app lleva el sello de Band Mánayer. El cú-erre de los fans, el dossier, el acuerdo con la sala, el sétlist…": "And we give it a push: everything that comes out of the app carries the BandManager seal. The fans' QR, the dossier, the agreement with the venue, the setlist…",
+"¿Mi hoja de batería también? ¡Ya me veo en la portada, neno!": "My drum sheet too? I can already see myself on the cover!",
+"¡Cada vez que una sala lea nuestro dossier, nos hace publicidad gratis, che!": "Every time a venue reads our dossier, it's free advertising for us, che!",
+"Exacto. Y encima, una gran campaña en redes, para que los músicos de todo el mundo sepan que esta app existe.": "Exactly. And on top of that, a big social media campaign, so musicians all over the world know this app exists.",
+"¿De todo el mundo? ¿Hasta los de gaita?": "All over the world? Even the bagpipers?",
+"Sobre todo los de gaita, tío. Esos conocen a todo el mundo.": "Especially the bagpipers, man. They know everybody."
 };

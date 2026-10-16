@@ -1449,7 +1449,7 @@ open(os.path.join(AQUI, '..', '..', 'DEFENSA.md'), 'w', encoding='utf-8').write(
 _tec = ''.join('<h3>' + _t + '</h3><dl class="cr-dl">' + ''.join('<dt>' + _a + '</dt><dd>' + _md(_b) + '</dd>' for _a, _b in _cs) + '</dl>' for _i, _t, _cs in _df.SECCIONES)
 html = html.replace('<!--TECNICA-->', _tec, 1)
 html = html.replace('<script src="sound.js"></script>', _panel + '\n<script src="sound.js"></script>', 1)
-html = html.replace('<script src="sound.js"></script>', '<script src="reparto.js"></script>\n<script src="sound.js"></script>\n<script src="voces.js"></script>\n<script src="subs-en.js"></script>\n<script src="cine.js"></script>\n<script src="cine-directo.js"></script>\n<script src="fin-home.js"></script>')
+html = html.replace('<script src="sound.js"></script>', '<script src="reparto.js"></script>\n<script src="sound.js"></script>\n<script src="voces.js"></script>\n<script src="subs-en.js"></script>\n<script src="subs-gl.js"></script>\n<script src="mezcla.js"></script>\n<script src="cine.js"></script>\n<script src="cine-directo.js"></script>\n<script src="fin-home.js"></script>\n<script src="eleccion.js"></script>\n<script src="aviso.js"></script>')
 for k, r, say in (('brais', 'bateria', EXTRA_SAY['cast_bateria']), ('xandre', 'voz', EXTRA_SAY['cast_voz']),
                   ('alvaro', 'guitarra', EXTRA_SAY['cast_guitarra']), ('iago', 'bajo', EXTRA_SAY['cast_bajo'])):
     html = html.replace(f'<figure><img src="img/miembro-{k}.jpg"', f'<figure data-who="{r}" data-say="{say}"><img src="img/miembro-{k}.jpg"', 1)
@@ -1473,6 +1473,11 @@ html = html.replace('data-title="El correo llega a la sala" data-corto', 'data-t
 html = html.replace('data-title="Date Swap" ', 'data-title="Date Swap" data-min="29500" ', 1)
 html = html.replace('data-title="Del directo al reel" ', 'data-title="Del directo al reel" data-min="26000" ', 1)
 html = html.replace('data-title="Del concierto al disco" ', 'data-title="Del concierto al disco" data-min="13500" ', 1)
+# «El sello de BandManager» (boca a boca y sello en todas las herramientas): fragmento aparte, justo antes de «Entrevista · Los fans»
+_sello = open(os.path.join(AQUI, 'sello.html'), encoding='utf-8').read()
+if 'data-title="El sello de BandManager"' not in html:
+    _i = html.rindex('<section', 0, html.index('data-title="Entrevista · Los fans"'))
+    html = html[:_i] + _sello + '\n' + html[_i:]
 # el móvil del generador de reels enseña a la banda tocando, en lugar del hueco «Band Clip Studio»
 html = html.replace('<img src="img/d-h-reels.jpg" alt="">', '<img src="img/d-h-reels.jpg" alt=""><div class="dr-reelvid"><video data-ambient data-restart muted loop playsinline preload="auto" poster="video/actores/concierto.jpg"><source src="video/actores/concierto.mp4" type="video/mp4"></video></div>', 1)
 html = html.replace('data-title="Cambio de perfil" ', 'data-title="Cambio de perfil" data-min="25500" ', 1)
