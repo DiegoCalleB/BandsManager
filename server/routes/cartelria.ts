@@ -27,6 +27,7 @@ import { validarMagicBytes } from './upload.js';
 import { generarFondoCartel } from '../services/imagenCartel.js';
 import { cargarReferencias } from '../services/referenciasCartel.js';
 import { dbGetAdnCartel, dbGuardarAdnCartel } from '../db/cartelEstilo.js';
+import { isSpendCapOrQuotaError } from '../ai.js';
 import { loadBandProfile } from '../utils/bandProfile.js';
 import { CONFIG_INICIAL, conFondoIa, sanearConfigCartel, type CartelConfig } from '../../src/utils/cartel/config.js';
 import { FORMATOS } from '../../src/utils/cartel/formatos.js';
@@ -87,6 +88,9 @@ const fallo = (res: express.Response, ruta: string, e: unknown, mensaje: string)
   res.status(500).json({ error: mensaje });
 };
 
+/** Sin cupo o tope de gasto en el proveedor de IA: no es culpa de la persona ni se le enseña el error del proveedor. */
+const IA_SIN_CUPO = 'La IA de imágenes no está disponible ahora mismo. Prueba más tarde; tu cartel con color sigue funcionando.';
+
 cartelriaRouter.post('/cartel/fondo', requireAuth, imagenRateLimiter, async (req, res) => {
   try {
     const bandId = getTargetBandId(req);
@@ -135,6 +139,12 @@ cartelriaRouter.post('/cartel/fondo', requireAuth, imagenRateLimiter, async (req
     );
     res.json({ url, estilo, referencias: imagenes.length });
   } catch (e) {
+    if (isSpendCapOrQuotaError(e)) {
+      // Solo la causa corta al log: el cuerpo del error trae ids de proyecto del proveedor.
+      console.warn('[cartel] Gemini sin cupo o con tope de gasto: no se genera el fondo.');
+      captureError(new Error('Gemini sin cupo o con tope de gasto (cartel/fondo)'), { ruta: 'POST /cartel/fondo' });
+      return res.status(503).json({ error: IA_SIN_CUPO });
+    }
     fallo(res, 'POST /cartel/fondo', e, 'No se pudo generar el fondo.');
   }
 });

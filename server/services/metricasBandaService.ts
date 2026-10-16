@@ -3,13 +3,14 @@
 
 import { getSpotifyAccessToken } from "./spotifyService.js";
 import { elegirCanalYoutube } from "../utils/metricasBanda.js";
+import { elegirArtistaDeezer, ArtistaDeezer } from "../utils/musicPreview.js";
 import { spotifyArtistId } from "../../src/utils/spotifyEmbed.js";
 import { getSupabase } from "../db/core.js";
 
 export type Resultado = { fila: FilaMetrica } | { motivo: string };
 
 export interface FilaMetrica {
-  fuente: "spotify" | "youtube";
+  fuente: "spotify" | "youtube" | "deezer";
   seguidores?: number | null;
   suscriptores?: number | null;
   visualizaciones?: number | null;
@@ -37,6 +38,23 @@ async function metricasSpotify(enlace: string): Promise<Resultado> {
     return { fila: { fuente: "spotify", seguidores, popularidad } };
   } catch (err) {
     return { motivo: `Spotify no responde (${err instanceof Error ? err.message : "error"})` };
+  }
+}
+
+/** Fans de Deezer: sustituye a los seguidores de Spotify, que la app en modo desarrollo no recibe. */
+async function metricasDeezer(nombre: string): Promise<Resultado> {
+  try {
+    const res = await fetch(`https://api.deezer.com/search/artist?q=${encodeURIComponent(nombre)}&limit=10`, {
+      signal: AbortSignal.timeout(6000),
+    });
+    if (!res.ok) return { motivo: `Deezer respondió ${res.status}` };
+    const datos = (await res.json()) as { data?: ArtistaDeezer[] };
+    const artista = elegirArtistaDeezer(nombre, datos.data || []);
+    if (!artista) return { motivo: "Deezer no tiene un artista con ese nombre exacto" };
+    if (typeof artista.nb_fan !== "number") return { motivo: "Deezer no devuelve fans" };
+    return { fila: { fuente: "deezer", seguidores: artista.nb_fan } };
+  } catch (err) {
+    return { motivo: `Deezer no responde (${err instanceof Error ? err.message : "error"})` };
   }
 }
 
@@ -81,11 +99,11 @@ async function metricasYoutube(nombre: string): Promise<Resultado> {
 export async function capturarMetricasBanda(
   nombre: string,
   enlaceSpotify: string,
-): Promise<{ filas: FilaMetrica[]; motivos: { fuente: "spotify" | "youtube"; motivo: string }[] }> {
-  const [sp, yt] = await Promise.all([metricasSpotify(enlaceSpotify), metricasYoutube(nombre)]);
+): Promise<{ filas: FilaMetrica[]; motivos: { fuente: FilaMetrica["fuente"]; motivo: string }[] }> {
+  const [sp, dz, yt] = await Promise.all([metricasSpotify(enlaceSpotify), metricasDeezer(nombre), metricasYoutube(nombre)]);
   const filas: FilaMetrica[] = [];
-  const motivos: { fuente: "spotify" | "youtube"; motivo: string }[] = [];
-  for (const [fuente, r] of [["spotify", sp], ["youtube", yt]] as const) {
+  const motivos: { fuente: FilaMetrica["fuente"]; motivo: string }[] = [];
+  for (const [fuente, r] of [["spotify", sp], ["deezer", dz], ["youtube", yt]] as const) {
     if ("fila" in r) filas.push(r.fila);
     else motivos.push({ fuente, motivo: r.motivo });
   }

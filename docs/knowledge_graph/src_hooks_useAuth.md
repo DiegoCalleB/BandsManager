@@ -23,6 +23,7 @@ Exporta: BandaDeLaSesion, useAuth.
 - [[src_services_sesionLocal|src/services/sesionLocal.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_limpiarChatLocal|src/utils/limpiarChatLocal.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_promocionApi|src/utils/promocionApi.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_referido|src/utils/referido.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_sessionCookie|src/utils/sessionCookie.ts]] *(Layer: #service, Domain: #auth)*

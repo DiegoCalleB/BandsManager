@@ -50,6 +50,7 @@ Exporta: rolDeClaveSupabase, getSupabase, normalizePlan, cleanBandId.
 - [[server_db_exampleThreads|server/db/exampleThreads.ts]] *(from #db)*
 - [[server_db_fans|server/db/fans.ts]] *(from #db)*
 - [[server_db_gmailOAuth|server/db/gmailOAuth.ts]] *(from #security)*
+- [[server_db_leadAprobacion|server/db/leadAprobacion.ts]] *(from #db)*
 - [[server_db_pitchLearning|server/db/pitchLearning.ts]] *(from #db)*
 - [[server_db_printSettings|server/db/printSettings.ts]] *(from #db)*
 - [[server_db_production|server/db/production.ts]] *(from #db)*
@@ -67,7 +68,6 @@ Exporta: rolDeClaveSupabase, getSupabase, normalizePlan, cleanBandId.
 - [[server_db_webhooks|server/db/webhooks.ts]] *(from #db)*
 - [[server_routes_bandMusic|server/routes/bandMusic.ts]] *(from #route)*
 - [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
-- [[server_routes_gmailOAuth|server/routes/gmailOAuth.ts]] *(from #security)*
 - [[server_routes_songs_structureUpload|server/routes/songs/structureUpload.ts]] *(from #route)*
 - [[server_routes_tracking|server/routes/tracking.ts]] *(from #route)*
 - [[server_routes_users_adminInicial|server/routes/users/adminInicial.ts]] *(from #route)*
@@ -76,6 +76,7 @@ Exporta: rolDeClaveSupabase, getSupabase, normalizePlan, cleanBandId.
 - [[server_services_calendarConflictService|server/services/calendarConflictService.ts]] *(from #service)*
 - [[server_services_colaLetras|server/services/colaLetras.ts]] *(from #service)*
 - [[server_services_emailAgentClient|server/services/emailAgentClient.ts]] *(from #agent)*
+- [[server_services_gmailConexion|server/services/gmailConexion.ts]] *(from #service)*
 - [[server_services_metricasBandaService|server/services/metricasBandaService.ts]] *(from #service)*
 - [[server_services_metricasReels|server/services/metricasReels.ts]] *(from #service)*
 - [[server_services_perfilPublicoBanda|server/services/perfilPublicoBanda.ts]] *(from #service)*

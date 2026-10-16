@@ -234,11 +234,11 @@ export const QR_PRESET_THEMES: QrPresetTheme[] = [
     id: 'classic_black',
     name: 'Clásico Blanco & Negro',
     icon: '⬛',
-    description: 'Estilo monocromático limpio y sobrio para cualquier imprenta.',
+    description: 'Monocromo limpio y sobrio para imprenta, con el logo de la banda en el centro.',
     config: {
       dotStyle: 'classics',
       eyeStyle: 'classic',
-      mascot: 'none',
+      mascot: 'band_logo',
       colorPreset: 'classic_black',
       primaryColor: '#ffffff',
       secondaryColor: '#cbd5e1',
@@ -248,7 +248,7 @@ export const QR_PRESET_THEMES: QrPresetTheme[] = [
       frameTitle: '',
       frameSubtitle: '',
       showBackgroundGlow: false,
-      logoBackgroundShape: 'squircle',
+      logoBackgroundShape: 'circle',
     },
   },
 ];

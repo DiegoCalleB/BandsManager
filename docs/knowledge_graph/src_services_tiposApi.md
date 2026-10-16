@@ -25,6 +25,8 @@ Formas de las respuestas del servidor que usa `api.ts` y que no tienen ya un tip
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_EmailAccountConfig|src/components/EmailAccountConfig.tsx]] *(from #frontend)*
+- [[src_components_GmailOAuthEstado|src/components/GmailOAuthEstado.tsx]] *(from #security)*
 - [[src_services_api|src/services/api.ts]] *(from #service)*
 
 ---

@@ -13,7 +13,7 @@ tags: ["agent", "scheduler", "cron"]
 > **Capa:** `#layer/agent` | **Dominio:** `#domain/booking`
 
 ## 📖 Descripción
-Bucle in-process (tick de 24 h por defecto, AGENT_SCHEDULER_INTERVAL_MS) que orquesta el Scout, Enviador y Lector.
+Bucle in-process (tick de 5 min por defecto, AGENT_SCHEDULER_INTERVAL_MS) que orquesta el Scout, Enviador y Lector.
 
 ---
 
@@ -26,6 +26,7 @@ Bucle in-process (tick de 24 h por defecto, AGENT_SCHEDULER_INTERVAL_MS) que orq
 - [[server_services_agentQueueWorker|server/services/agentQueueWorker.ts]] *(Layer: #agent, Domain: #system)*
 - [[server_services_gmailApiClient|server/services/gmailApiClient.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_errorTracking|server/utils/errorTracking.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_secretCrypto|server/utils/secretCrypto.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---

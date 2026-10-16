@@ -26,6 +26,7 @@ _Sin dependencias salientes directas._
 - [[agent_enviador|Enviador Agent (Dispatcher)]] *(from #agent)*
 - [[server_db_core|server/db/core.ts]] *(from #db)*
 - [[server_routes_upload|server/routes/upload.ts]] *(from #route)*
+- [[server_utils_redactorAlcance|server/utils/redactorAlcance.ts]] *(from #service)*
 
 ---
 

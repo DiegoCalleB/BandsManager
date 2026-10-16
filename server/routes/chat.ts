@@ -28,9 +28,8 @@ const router = express.Router();
 // banda. Sin sesión, `userReq` salía null y todo eso se contestaba sobre la banda por defecto a
 // quien preguntara.
 router.post("/chat", requireAuth, chatRateLimiter, async (req, res) => {
-  const { message, chatHistory, agentsEnabled: agentsEnabledBody, autonomyConfig } = req.body;
+  const { message, chatHistory } = req.body;
   if (!mensajeAceptable(message)) return res.status(400).json({ error: "El mensaje no es válido o es demasiado largo." });
-  const agentsEnabled = agentsEnabledBody !== false;
   const userReq = getUserFromRequestLocal(req);
   // requireAuth ya garantiza que hay banda activa (getUserFromRequest devuelve null si no la
   // hay), pero esta ruta vuelve a resolver el usuario por su cuenta con getUserFromRequestLocal:
@@ -57,16 +56,16 @@ router.post("/chat", requireAuth, chatRateLimiter, async (req, res) => {
   }
   
   // Intercept agent trigger intents to bypass Gemini API completely
-  // Only trigger if agents are enabled AND user explicitly requests to execute/launch an agent AND NOT asking questions or hypothetical queries
+  // Only trigger if the user explicitly requests to execute/launch an agent AND NOT asking questions or hypothetical queries
   const isQuestionOrHypothetical = /(\?|¿|y si|qué pasa|que pasa|cómo|como funciona|explica|explicame|qué hace|que hace|podrías explicar|dudas)/i.test(lower);
   const isNegativeAgentIntent = /(no quiero|no ejecutes|sin agentes|no lances|sin lanzar|sin disparar|no dispares|no usar|sin usar agentes|no hace falta agente)/i.test(lower);
 
-  const isExplicitAgentTrigger = agentsEnabled && !isNegativeAgentIntent && !isQuestionOrHypothetical && (
+  const isExplicitAgentTrigger = !isNegativeAgentIntent && !isQuestionOrHypothetical && (
     (lower.includes("ejecuta") || lower.includes("ejecutar") || lower.includes("lanza") || lower.includes("lanzar") || lower.includes("corre") || lower.includes("correr") || lower.includes("dispara") || lower.includes("disparar") || lower.includes("inicia") || lower.includes("iniciar") || lower.includes("arranca") || lower.includes("arrancar")) &&
     (lower.includes("agente") || lower.includes("scout") || lower.includes("redactor") || lower.includes("enviador") || lower.includes("lector") || lower.includes("descubridor"))
   );
 
-  const isAgentQuery = agentsEnabled && !isNegativeAgentIntent && !isQuestionOrHypothetical && (isExplicitAgentTrigger || (lower.startsWith("agente ") && (lower.includes("scout") || lower.includes("redactor") || lower.includes("enviador") || lower.includes("lector") || lower.includes("descubridor"))));
+  const isAgentQuery = !isNegativeAgentIntent && !isQuestionOrHypothetical && (isExplicitAgentTrigger || (lower.startsWith("agente ") && (lower.includes("scout") || lower.includes("redactor") || lower.includes("enviador") || lower.includes("lector") || lower.includes("descubridor"))));
 
   if (isAgentQuery) {
     let agentName = "Enviador";
@@ -124,8 +123,7 @@ router.post("/chat", requireAuth, chatRateLimiter, async (req, res) => {
       }
 
       if (!triggerParams.region) {
-        triggerParams.region = "Huelva";
-        triggerParams.ciudad = "Huelva";
+        return res.json({ text: `¿En qué ciudad o región quieres que busque el agente ${agentName}? Por ejemplo: "lanza el scout en Sevilla".` });
       }
 
       if (agentName === "Scout Descubridor") {
@@ -344,7 +342,7 @@ INFORMACIÓN DE LA BANDA ${targetBandName.toUpperCase()}:
 - Redes sociales y enlaces: ${JSON.stringify(epkConfigData?.enlacesRedes || {})}
 `;
 
-    const autonomy = autonomyConfig || getAutonomyConfigForBand(state, bandIdForEpk);
+    const autonomy = getAutonomyConfigForBand(state, bandIdForEpk);
     const minCache = umbralSeguro(autonomy.minCacheThreshold, 300);
     const maxCache = umbralSeguro(autonomy.maxCacheThreshold, 800);
 

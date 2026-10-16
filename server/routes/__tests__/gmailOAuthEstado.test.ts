@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { firmarEstadoOAuth, verificarEstadoOAuth, validarYConsumirEstadoOAuth } from '../gmailOAuth';
+import { firmarEstadoOAuth, verificarEstadoOAuth, validarYConsumirEstadoOAuth, dominioDeRetornoDistinto } from '../gmailOAuth';
 
 const CRON_ORIGINAL = process.env.CRON_SECRET;
 
@@ -75,5 +75,23 @@ describe('validarYConsumirEstadoOAuth (nonce + cookie + un solo uso)', () => {
 
   it('rechaza el formato antiguo de tres partes (sin nonce)', () => {
     expect(validarYConsumirEstadoOAuth('band-a.123.abc', 'x')).toBeNull();
+  });
+});
+
+describe('dominioDeRetornoDistinto (la cookie del flujo no viaja entre dominios)', () => {
+  const retorno = 'https://bands-manager.up.railway.app/api/gmail-oauth/callback';
+
+  it('si se empieza en el mismo dominio al que Google devolverá al usuario, no hay problema', () => {
+    expect(dominioDeRetornoDistinto('bands-manager.up.railway.app', retorno)).toBeNull();
+    expect(dominioDeRetornoDistinto('BANDS-MANAGER.up.railway.app:443', retorno)).toBeNull();
+  });
+
+  it('si se empieza en otro dominio, devuelve el dominio donde hay que abrir la app', () => {
+    expect(dominioDeRetornoDistinto('bandmanager.io', retorno)).toBe('bands-manager.up.railway.app');
+  });
+
+  it('sin datos suficientes (sin host o con una URL de retorno rota) no bloquea nada', () => {
+    expect(dominioDeRetornoDistinto(undefined, retorno)).toBeNull();
+    expect(dominioDeRetornoDistinto('bandmanager.io', 'no es una url')).toBeNull();
   });
 });

@@ -23,6 +23,7 @@ Pinta el cartel en un canvas a partir del layout puro. Es la única pieza con DO
 - [[src_utils_cartel_formatos|src/utils/cartel/formatos.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_grano|src/utils/cartel/grano.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_layout|src/utils/cartel/layout.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_cartel_placas|src/utils/cartel/placas.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

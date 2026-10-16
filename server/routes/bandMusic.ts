@@ -184,12 +184,12 @@ router.get("/bands/metricas", requireAuth, async (req, res) => {
       .order("periodo", { ascending: false });
     if (error) throw new Error(error.message);
 
-    const porBanda: Record<string, { periodo: string; spotify?: unknown; youtube?: unknown }> = {};
+    const porBanda: Record<string, { periodo: string; spotify?: unknown; youtube?: unknown; deezer?: unknown }> = {};
     for (const fila of data || []) {
       const actual = porBanda[fila.band_contact_id] || (porBanda[fila.band_contact_id] = { periodo: fila.periodo });
       // Solo el periodo más reciente de cada banda (las filas vienen ordenadas por periodo desc).
       if (actual.periodo !== fila.periodo) continue;
-      actual[fila.fuente as "spotify" | "youtube"] = fila;
+      actual[fila.fuente as "spotify" | "youtube" | "deezer"] = fila;
     }
     res.json({ success: true, metricas: porBanda });
   } catch (err) {
