@@ -33,7 +33,7 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 - [[ext_gemini|Gemini (Google GenAI)]] — 16 ficheros lo usan
 - [[ext_google_oauth_gmail|Google OAuth / Gmail API]] — 7 ficheros lo usan
 - [[ext_replicate|Replicate]] — 11 ficheros lo usan
-- [[ext_resend|Resend]] — 4 ficheros lo usan
+- [[ext_resend|Resend]] — 5 ficheros lo usan
 - [[ext_sentry|Sentry]] — 2 ficheros lo usan
 - [[ext_spotify|Spotify]] — 7 ficheros lo usan
 - [[ext_stripe|Stripe]] — 4 ficheros lo usan
@@ -73,7 +73,7 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 
 ## 🤖 Mapa automático (generado desde los imports reales)
 
-1660 nodos: 53 agent · 48 db · 12 external · 14 feature · 942 frontend · 43 hook · 87 route · 65 schema · 12 security · 384 service.
+1662 nodos: 53 agent · 48 db · 12 external · 14 feature · 942 frontend · 43 hook · 87 route · 65 schema · 12 security · 386 service.
 No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el test `grafoConocimiento` falla si queda desfasado.
 
 ### 🔥 Los 20 ficheros más importados

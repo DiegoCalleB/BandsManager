@@ -33,6 +33,7 @@ Exporta: getProductionAppUrl, resolveResendApiKey, SendEmailOptions, sendTransac
 - [[server_routes_users_rutasRegistro|server/routes/users/rutasRegistro.ts]] *(from #route)*
 - [[server_services_calendarConflictService|server/services/calendarConflictService.ts]] *(from #service)*
 - [[server_services_emailsCicloVida|server/services/emailsCicloVida.ts]] *(from #service)*
+- [[server_services_gmailConexion|server/services/gmailConexion.ts]] *(from #service)*
 
 ---
 

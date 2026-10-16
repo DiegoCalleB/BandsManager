@@ -249,7 +249,7 @@ export const CajaAcorde: React.FC<{ chord: string; vista: VistaAcorde; contexto?
       ) : <p className="text-micro text-[var(--ink-2)] font-sans">[Acorde estándar]</p>}
       {!tapar && (
         <>
-          <button type="button" aria-pressed={conNotas} title="Ver las notas en el pentagrama" onClick={() => setConNotas((v) => !v)} className={`px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-sans cursor-pointer ${conNotas ? 'bg-[var(--surface)] text-[var(--ink)] font-bold' : 'text-[var(--ink-2)]'}`}>Pentagrama</button>
+          <button type="button" aria-pressed={conNotas} title="Ver las notas en el pentagrama" onClick={() => setConNotas((v) => !v)} className={`px-3 py-1 rounded-[var(--r-pill)] text-micro font-sans cursor-pointer bg-[var(--surface)] text-[var(--ink)] ${conNotas ? 'font-bold' : ''}`}>{conNotas ? 'Ocultar pentagrama' : '♪ Ver pentagrama'}</button>
           {conNotas && <Pentagrama midi={midiDeAcorde(chord, vista, nivel, invSonido).map((m) => (vista === 'bajo' ? m + 12 : m))} modo="acorde" bemoles={prefiereBemoles(chord)} etiqueta={`Pentagrama: ${chord}`} />}
         </>
       )}
