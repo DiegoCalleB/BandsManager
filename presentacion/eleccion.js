@@ -6,9 +6,8 @@
   'use strict';
   var SEGUNDOS = 10;
   // Pausa «Entra tú también»: la película espera, con un QR en pantalla, hasta que pulsan «Ya estoy dentro». El QR (img/qr-fans.png, con el logo
-  // de Os Herdeiros) se genera con tools/qr_demo.py --hdc y tiene que apuntar a la misma dirección que DEMO_URL. Es la página pública de fans (/unete) de la banda real «Os Herdeiros
+  // de Os Herdeiros) se genera con tools/qr_demo.py --hdc y tiene que apuntar a https://bandmanager.io/unete?b=t_AAAAAEAOHUwPAAA7FgwRGgFIOxxMDxs7W1dd. Es la página pública de fans (/unete) de la banda real «Os Herdeiros
   // do Código» (band-os-herdeiros-do-codigo): el único QR que escanea Brais, y el mismo que sale en «Un QR y el público se hace fan».
-  var DEMO_URL = 'https://bandmanager.io/unete?b=t_AAAAAEAOHUwPAAA7FgwRGgFIOxxMDxs7W1dd';
   var DEMO = { titulo: 'Falta un fan', texto: 'La escena no continúa hasta que alguien escanee el código y se haga fan de Os Herdeiros.' };
   var ELECCIONES = {
     'Un QR y el público se hace fan': { id: 'demo', demo: true },
