@@ -21,7 +21,7 @@ Una banda de rock gallega-madrileña, **Os Herdeiros do Código**, a punto de se
 Al final de la película se revela que:
 - **el bajista soy yo, Diego de la Calle**. Iago era mi personaje: yo fui dejando mis bandas una a una por falta de organización, y hice BandManager para volver a subirme a un escenario;
 - **el reloj** que aparece en pantalla durante toda la película (cuenta atrás, el «cierre del cartel del Resu») **en realidad contaba para la entrega del TFM**. Suena una notificación: «Alguien está viendo tu TFM. Ahora mismo. Desde el principio.»;
-- **Brais** (el batería de la historia) **no es solo un personaje**: es Brais Moure, mi profesor y destinatario real. «En esta historia eras el batería. Pero en la de verdad, el festival sois vosotros.»
+- **Brais** (el batería de la historia) **no es solo un personaje**: es Brais Moure, mi profesor y destinatario real. «En esta historia eras el batería. Pero en la realidad, el cartel lo cierras tú.»
 - Diego rompe la cuarta pared, mira a cámara y **reta a Brais en directo**: le ha preparado el setlist del primer ensayo de su banda de metal, **Master of Prompts** (canciones de coña sobre programar: *Psychosocket*, *Freak on a Branch*, *Fear of the Deadline*), y le dice «Nos falta batería. Y es tuya: solo tienes que decir que sí.»
 - La película **cierra con un enlace a la web real**: BandManager.io («Accede a tu perfil, Brais»).
 

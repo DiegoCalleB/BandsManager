@@ -805,7 +805,7 @@ _(escena visual, sin diálogo)_
 - No solo contaba para el cierre del cartel del Resu.
 - También contaba para esto.
 - Brais: en esta historia eras el batería.
-- Pero en la de verdad, el festival sois vosotros.
+- Pero en la realidad, el cartel lo cierras tú.
 - Y ahora… un reto.
 
 ---

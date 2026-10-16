@@ -896,7 +896,7 @@ add('''<section class="slide giro-reloj" data-title="El reloj" data-transition="
   <p class="gr-c" style="--t:9.3s;--d:2.7s">También contaba para esto.</p>
   <div class="notif" aria-hidden="true"><i>🔔</i><div><small>BandManager · ahora</small><b>Alguien está viendo tu TFM</b><span>Ahora mismo. Desde el principio.</span></div></div>
   <p class="gr-c" style="--t:12.3s;--d:3s">Brais: en esta historia eras el batería.</p>
-  <p class="gr-c" style="--t:15.2s;--d:3s">Pero en la de verdad, el festival sois vosotros.</p>
+  <p class="gr-c" style="--t:15.2s;--d:3s">Pero en la realidad, el cartel lo cierras tú.</p>
   <p class="gr-c gr-ask" style="--t:18.4s">Y ahora… un reto.</p>
 </section>
 ''')
