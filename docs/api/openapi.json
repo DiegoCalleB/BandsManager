@@ -12363,7 +12363,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/agent.ts:98",
+        "x-source": "server/routes/agent.ts:99",
         "x-autenticacion": "middleware"
       }
     },
@@ -13249,7 +13249,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/chat.ts:641",
+        "x-source": "server/routes/chat.ts:640",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"
