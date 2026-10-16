@@ -43,7 +43,7 @@
 
   // Pausa «Falta un fan»: la película se rompe (glitch + aviso de sistema) y no sigue hasta que alguien escanee el QR y se haga fan de verdad.
   // El servidor de la presentación (/fans-contador) dice cuántos fans tiene la banda; cuando sube, la película avanza. Si no hay contador
-  // (en local, o sin red), se sigue con el botón «Ya estoy dentro» y, a los 25 s, «Seguir sin entrar».
+  // (en local, o sin red), se sigue con el botón «Ya estoy dentro» y, a los 6 s, «Seguir sin entrar».
   var pausaQR = function (idx, siguiente, saltar) {
     var el = document.createElement('div'); el.id = 'demo-qr'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', DEMO.titulo);
     el.innerHTML = '<i class="dq-glitch" aria-hidden="true"></i><div class="dq-caja"><img class="dq-qr" src="img/qr-fans.png" alt="QR de fans de Os Herdeiros do Código"><div class="dq-txt"><b class="dq-sis">Fallo de reproducción</b><h2></h2><p></p><q></q><small></small><em class="dq-esp"></em><button type="button" class="dq-ok" hidden>Ya estoy dentro →</button><button type="button" class="dq-sin">Seguir sin entrar</button></div></div>';
@@ -60,8 +60,17 @@
       setTimeout(function () { vivo = true; sigue(); }, 2600);
     };
     var sondeo = setInterval(function () { if (!vivo) return; contar().then(function (t) { if (vivo && base !== null && t !== null && t > base) hecho(t); }); }, 2500);
-    var tarde = setTimeout(function () { sin.classList.add('on'); }, 25000);
-    ok.addEventListener('click', sigue); sin.addEventListener('click', sigue);
+    var tarde = setTimeout(function () { sin.classList.add('on'); }, 6000);
+    // «Seguir sin entrar»: reacción amable y con guasa antes de continuar
+    var sinFan = function () {
+      if (!vivo) return;
+      vivo = false; clearInterval(sondeo); clearTimeout(tarde); el.classList.add('dq-sinfan');
+      el.querySelector('.dq-sis').textContent = 'Reproducción restablecida';
+      h2.textContent = 'Sin problema, Brais'; p.textContent = 'Aquí nadie se hace fan a la fuerza. La plaza nº ' + (base !== null ? base + 1 : 'del fan') + ' queda reservada a tu nombre.';
+      q.textContent = '«Tranquilo. El QR no caduca. Tú, tampoco.» — Iago'; esp.textContent = 'Seguimos. Pero te estamos mirando 👀'; ok.hidden = true; sin.hidden = true;
+      setTimeout(function () { vivo = true; sigue(); }, 4200);
+    };
+    ok.addEventListener('click', sigue); sin.addEventListener('click', sinFan);
     var vigila = setInterval(function () { if (D().cur !== idx) fin(); }, 400);
     document.getElementById('stage').appendChild(el);
     addEventListener('keydown', teclas, true);
