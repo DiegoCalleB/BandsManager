@@ -281,3 +281,9 @@ html.ir-inicio #gate .nx-home { display: flex !important; }
 /* ilustraciones propias de los juegos (sin círculo de cristal ni degradado encima) */
 .nx-game i.arte::before, .nx-game i.arte::after { display: none; }
 .nx-game i.arte svg { width: 100%; height: 100%; padding: 0; border: 0; border-radius: 0; background: none; stroke: none; stroke-width: 0; filter: none; }
+
+/* Etalonaje por origen: medido sobre todo el material (saturación media de las fotos de IA 0,43, de los vídeos 0,29, de las fotos reales 0,37
+   con 0,10 más de calor y 0,34 de luz), se acercan las fotos al tono de los planos de vídeo; el etalonaje común (#etalon, #grano, #vineta) hace el resto */
+body.pelicula:not(.scroll) :is(img[src*="img/miembro-"], img[src*="img/personaje-"], img[src*="img/concierto-"]) { filter: saturate(.8) brightness(.94) contrast(1.03); }
+body.pelicula:not(.scroll) .mis-bandas .mb-foto img { filter: saturate(.84) brightness(.88) contrast(1.06) hue-rotate(-3deg); }
+body.pelicula:not(.scroll) :is(img[src*="gracias-mop"], img[src*="diego-bajista"]) { filter: saturate(.95) brightness(1.08) contrast(1.05); }
