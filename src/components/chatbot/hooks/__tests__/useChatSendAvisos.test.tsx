@@ -18,8 +18,6 @@ function montar() {
     currentUser: { band_id: 'band-a' },
     userRole: 'leader',
     messages: [],
-    agentsEnabled: true,
-    autonomyConfig: {},
   } as unknown as ChatSendParams;
   const { result } = renderHook(() => useChatSend(params));
   const enviar = () => result.current.handleSendMessage({ preventDefault() {} } as React.FormEvent);

@@ -25,7 +25,6 @@ Contexto del chat del asistente: reparte el estado y las acciones del controlado
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_chatbot_ActiveRunPanel|src/components/chatbot/ActiveRunPanel.tsx]] *(from #frontend)*
-- [[src_components_chatbot_AutonomyModalHost|src/components/chatbot/AutonomyModalHost.tsx]] *(from #frontend)*
 - [[src_components_chatbot_ChatInputForm|src/components/chatbot/ChatInputForm.tsx]] *(from #frontend)*
 - [[src_components_chatbot_ChatLayout|src/components/chatbot/ChatLayout.tsx]] *(from #frontend)*
 - [[src_components_chatbot_ChatLoadingIndicator|src/components/chatbot/ChatLoadingIndicator.tsx]] *(from #frontend)*
