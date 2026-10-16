@@ -18,7 +18,9 @@ Exporta: ReelsPhoneMockupProps, ReelsPhoneMockup.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_reels_PlataformaOverlay|src/components/reels/PlataformaOverlay.tsx]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_center_reelsHelpers|src/components/reels_center/reelsHelpers.ts]] *(Layer: #frontend, Domain: #social)*
+- [[src_components_reels_plataformaSkin|src/components/reels/plataformaSkin.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_subtitleStyles|src/components/reels/subtitleStyles.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
