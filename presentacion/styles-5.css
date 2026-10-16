@@ -254,3 +254,12 @@ body.pausado #stage, body.pausado #stage *, body.pausado #stage *::before, body.
 .nff-inicio { padding: 14px 34px; border: 0; border-radius: 4px; background: #fff; color: #000; font: 600 26px/1 'Helvetica Neue', Arial, sans-serif; cursor: pointer; opacity: 0; animation: nffaparece 900ms ease-out 3200ms both; }
 .nff-inicio:hover { background: #d8d8d8; }
 @media (prefers-reduced-motion: reduce) { .nff-inicio { animation-duration: 1ms; animation-delay: 0ms; } }
+
+/* pósters tipográficos de las películas inventadas del Top 10 y de «Porque viste…» */
+.nx-card.fake { background: radial-gradient(circle at 20% 15%, var(--c1), transparent 70%), linear-gradient(155deg, var(--c1), var(--c2)); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 14px; box-sizing: border-box; }
+.nx-card.fake > i { position: absolute; left: 10px; top: 8px; font: 400 26px/1 Anton, Impact, sans-serif; color: #e50914; font-style: normal; }
+.nx-card.fake > b { font: 400 min(1.7vw, 30px)/1.08 Anton, Oswald, Impact, sans-serif; text-transform: uppercase; letter-spacing: .01em; text-shadow: 0 3px 12px #0008; }
+.nx-card.fake .nx-mini b { font: inherit; }
+/* las filas del inicio se desplazan hacia el lado (los puestos 7 a 10 del Top 10 quedan fuera de la pantalla) */
+.nx-filas2 .nx-row { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; padding: 28px 40px 28px 0; margin: -28px 0; }
+.nx-filas2 .nx-row::-webkit-scrollbar { display: none; }

@@ -33,6 +33,38 @@
       }).join('') + '</div>';
     mas.insertBefore(fila, mas.firstChild);
   }
+  // Top 10 en Monforte de Lemos: las cuatro últimas son películas gallegas inventadas (pósters tipográficos), y una fila de recomendados
+  var POSTERS = [
+    ['Pulpo a feira 2: la venganza del cachelo', '#8a1c1c,#ff7a3c'],
+    ['Terminator: hasta la queimada, baby', '#1b2a49,#4a7bd0'],
+    ['Padrón non pica', '#0f5a2a,#7fd04a'],
+    ['Mamma Mía, qué lacón', '#5b1f6e,#ff7eb3']
+  ];
+  var RECOMENDADAS = [
+    ['Fast & Furious: Monforte Drift', 'Acción · Tres bandas, una furgoneta y cero seguros', '#a31515,#ff6a3c'],
+    ['El Señor de los Callos', 'Fantasía · Una sola tripa para dominarlos a todos', '#4b2a0b,#d69a3c'],
+    ['Queimada Club', 'Thriller · La primera regla: no hablar del orujo', '#1c1033,#7a4bd6'],
+    ['Gaiteiros del Caribe', 'Aventura · La maldición del pulpo muerto', '#04435a,#2fc2c9'],
+    ['Misión imposible: aparcar en Santiago', 'Acción · Nadie lo ha conseguido', '#2b3a14,#9bd04a'],
+    ['La Santa Compaña vs. el Scrum Master', 'Terror · Reuniones diarias a las 3 de la madrugada', '#101a2b,#c0392b']
+  ];
+  var top = document.querySelector('#gate .nx-row.top');
+  if (top) {
+    var h = top.parentNode.querySelector('h3'); if (h) h.textContent = 'Top 10 en Monforte de Lemos hoy';
+    var n0 = top.querySelectorAll('.nx-top-c').length;
+    POSTERS.forEach(function (p, k) {
+      var c = document.createElement('div'); c.className = 'nx-top-c';
+      c.innerHTML = '<span class="nx-num">' + (n0 + k + 1) + '</span><div class="nx-card k fake" style="--c1:' + p[1].split(',')[0] + ';--c2:' + p[1].split(',')[1] + '"><i>N</i><b>' + cerrado(p[0]) + '</b></div>';
+      top.appendChild(c);
+    });
+  }
+  if (mas) {
+    var rec = document.createElement('div'); rec.className = 'nx-filas2';
+    rec.innerHTML = '<h3>Porque viste Os Herdeiros do Código</h3><div class="nx-row">' + RECOMENDADAS.map(function (r) {
+      return '<div class="nx-card k fake" style="--c1:' + r[2].split(',')[0] + ';--c2:' + r[2].split(',')[1] + '"><i>N</i><b>' + cerrado(r[0]) + '</b><span class="nx-mini"><b>97 % para ti</b> ' + cerrado(r[1]) + '</span></div>';
+    }).join('') + '</div>';
+    var ads = mas.querySelector('.nx-ads'); mas.insertBefore(rec, ads ? ads.nextSibling : mas.firstChild);
+  }
   var der = document.querySelector('#gate .nx-der');
   if (der) { var bm = document.createElement('a'); bm.className = 'nx-bm'; bm.href = WEB; bm.target = '_blank'; bm.rel = 'noopener'; bm.textContent = 'Pruébalo con tu banda · BandManager.io'; der.insertBefore(bm, der.firstChild); }
 
