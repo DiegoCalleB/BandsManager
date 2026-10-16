@@ -7,5 +7,10 @@
 		Cache-Control "public, max-age=300"
 	}
 	header /img/* Cache-Control "public, max-age=86400"
-	file_server
+	handle /aviso {
+		reverse_proxy 127.0.0.1:8787
+	}
+	handle {
+		file_server
+	}
 }

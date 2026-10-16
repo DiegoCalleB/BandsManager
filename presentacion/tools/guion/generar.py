@@ -1449,7 +1449,7 @@ open(os.path.join(AQUI, '..', '..', 'DEFENSA.md'), 'w', encoding='utf-8').write(
 _tec = ''.join('<h3>' + _t + '</h3><dl class="cr-dl">' + ''.join('<dt>' + _a + '</dt><dd>' + _md(_b) + '</dd>' for _a, _b in _cs) + '</dl>' for _i, _t, _cs in _df.SECCIONES)
 html = html.replace('<!--TECNICA-->', _tec, 1)
 html = html.replace('<script src="sound.js"></script>', _panel + '\n<script src="sound.js"></script>', 1)
-html = html.replace('<script src="sound.js"></script>', '<script src="reparto.js"></script>\n<script src="sound.js"></script>\n<script src="voces.js"></script>\n<script src="subs-en.js"></script>\n<script src="subs-gl.js"></script>\n<script src="mezcla.js"></script>\n<script src="cine.js"></script>\n<script src="cine-directo.js"></script>\n<script src="fin-home.js"></script>')
+html = html.replace('<script src="sound.js"></script>', '<script src="reparto.js"></script>\n<script src="sound.js"></script>\n<script src="voces.js"></script>\n<script src="subs-en.js"></script>\n<script src="subs-gl.js"></script>\n<script src="mezcla.js"></script>\n<script src="cine.js"></script>\n<script src="cine-directo.js"></script>\n<script src="fin-home.js"></script>\n<script src="aviso.js"></script>')
 for k, r, say in (('brais', 'bateria', EXTRA_SAY['cast_bateria']), ('xandre', 'voz', EXTRA_SAY['cast_voz']),
                   ('alvaro', 'guitarra', EXTRA_SAY['cast_guitarra']), ('iago', 'bajo', EXTRA_SAY['cast_bajo'])):
     html = html.replace(f'<figure><img src="img/miembro-{k}.jpg"', f'<figure data-who="{r}" data-say="{say}"><img src="img/miembro-{k}.jpg"', 1)
