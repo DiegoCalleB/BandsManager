@@ -14,9 +14,10 @@ describe('midiDeAcorde', () => {
   it('guitarra Básico: solo raíz y quinta (power chord)', () => {
     expect(midiDeAcorde('E', 'guitarra', 'basico', 0)).toEqual([52, 59]);
   });
-  it('bajo: una sola nota grave, la de la inversión', () => {
-    expect(midiDeAcorde('C', 'bajo', 'normal', 0)).toEqual([36]);
-    expect(midiDeAcorde('C', 'bajo', 'normal', 1)).toEqual([40]);
+  it('bajo: las notas del acorde una a una, de grave a agudo, empezando por la de la inversión', () => {
+    expect(midiDeAcorde('C', 'bajo', 'normal', 0)).toEqual([36, 40, 43]);
+    expect(midiDeAcorde('C', 'bajo', 'normal', 1)).toEqual([40, 43, 48]);
+    expect(midiDeAcorde('C', 'bajo', 'basico', 0)).toEqual([36, 43]);
   });
   it('un acorde que no se reconoce no suena', () => {
     expect(midiDeAcorde('xyz', 'teclado')).toEqual([]);
