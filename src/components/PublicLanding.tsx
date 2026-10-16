@@ -231,18 +231,15 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
           </div>
 
           <div className="relative mt-14">
-            <div className="rounded-[var(--r-xl)] bg-[var(--sunken)] p-2 sm:p-3">
-              <Captura
-                nombre="panel"
-                movil="movil-panel"
-                alt={
-                  language === 'es'
-                    ? 'Panel de BandManager con alertas del mánager y la agenda de bolos'
-                    : 'BandManager dashboard with manager alerts and gig agenda'
-                }
-                eager
-              />
-            </div>
+            <img
+              src="/landing/hero-directo.jpg"
+              alt={es ? 'Bajista tocando en directo con su banda' : 'Bassist playing live with the band'}
+              width={1024}
+              height={559}
+              loading="eager"
+              decoding="async"
+              className="h-auto w-full rounded-[var(--r-xl)] object-cover"
+            />
           </div>
         </section>
 
