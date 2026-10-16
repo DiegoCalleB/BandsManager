@@ -2,7 +2,7 @@
 
 > Generado automáticamente por `scripts/generate-openapi.mjs` a partir del código. No se edita a mano: ejecuta `npm run docs:api`.
 
-**373 rutas HTTP** (322 declaraciones de handler; el resto son alias) en 31 dominios. Contrato máquina-legible: [`openapi.json`](./openapi.json) (OpenAPI 3.1). Visor interactivo: [`index.html`](./index.html) (hay que abrirlo en un navegador; GitHub no lo renderiza). Decisión de diseño: [ADR 0012](../adr/0012-contrato-api-openapi-por-ast.md).
+**375 rutas HTTP** (324 declaraciones de handler; el resto son alias) en 31 dominios. Contrato máquina-legible: [`openapi.json`](./openapi.json) (OpenAPI 3.1). Visor interactivo: [`index.html`](./index.html) (hay que abrirlo en un navegador; GitHub no lo renderiza). Decisión de diseño: [ADR 0012](../adr/0012-contrato-api-openapi-por-ast.md).
 
 ## Cómo leerla
 
@@ -12,7 +12,7 @@
 
 | Acceso | Rutas |
 |---|---|
-| Sesión | 322 |
+| Sesión | 324 |
 | Sesión (comprobada en el handler) | 6 |
 | Sesión opcional | 3 |
 | Firma o secreto | 7 |
@@ -68,12 +68,12 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `GET` | `/api/tracking/pdf` | Pública | — |  | [`server/routes/tracking.ts:328`](../../server/routes/tracking.ts#L328) |
 | `POST` | `/api/webhooks/replicate-stems` | Firma o secreto | webhookRateLimiter |  | [`server/routes/ai_music/rutasWebhooks.ts:17`](../../server/routes/ai_music/rutasWebhooks.ts#L17) |
 | `POST` | `/api/webhooks/resend` | Firma o secreto | publicoRateLimiter |  | [`server/routes/tracking.ts:464`](../../server/routes/tracking.ts#L464) |
-| `GET` | `/e/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:48`](../../server/routes/paginaConcierto.ts#L48) |
+| `GET` | `/e/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:50`](../../server/routes/paginaConcierto.ts#L50) |
 | `GET` | `/health` | Pública | — |  | [`server.ts:168`](../../server.ts#L168) |
 | `GET` | `/privacy` | Pública | — |  | [`server.ts:182`](../../server.ts#L182) |
 | `GET` | `/r/{code}` | Pública | publicoRateLimiter |  | [`server/routes/enlacesCortos.ts:49`](../../server/routes/enlacesCortos.ts#L49) |
-| `GET` | `/robots.txt` | Pública | — |  | [`server/routes/paginaConcierto.ts:163`](../../server/routes/paginaConcierto.ts#L163) |
-| `GET` | `/sitemap.xml` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:145`](../../server/routes/paginaConcierto.ts#L145) |
+| `GET` | `/robots.txt` | Pública | — |  | [`server/routes/paginaConcierto.ts:165`](../../server/routes/paginaConcierto.ts#L165) |
+| `GET` | `/sitemap.xml` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:147`](../../server/routes/paginaConcierto.ts#L147) |
 | `GET` | `/terms` | Pública | — |  | [`server.ts:224`](../../server.ts#L224) |
 
 ## Operaciones con esquema documentado
@@ -435,14 +435,16 @@ Salas, festivales y contactos del CRM de booking. Los agentes (Scout, Redactor, 
 
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
+| `GET` | `/api/billing/pegatinas` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/pegatinas.ts:16`](../../server/routes/pegatinas.ts#L16) |
+| `POST` | `/api/billing/pegatinas` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/pegatinas.ts:27`](../../server/routes/pegatinas.ts#L27) |
 | `GET` | `/api/emails/baja` | Pública | publicoRateLimiter |  | [`server/routes/emailsCicloVida.ts:13`](../../server/routes/emailsCicloVida.ts#L13) |
 | `POST` | `/api/public/contacto-empresas` | Pública | publicoRateLimiter, consultaRateLimiter |  | [`server/routes/contactoEmpresas.ts:23`](../../server/routes/contactoEmpresas.ts#L23) |
 | `POST` | `/api/public/interesados` | Pública | publicoRateLimiter, altaRateLimiter |  | [`server/routes/interesados.ts:35`](../../server/routes/interesados.ts#L35) |
 | `GET` | `/api/public/interesados/baja` | Pública | publicoRateLimiter |  | [`server/routes/interesados.ts:90`](../../server/routes/interesados.ts#L90) |
 | `GET` | `/api/public/interesados/confirmar` | Pública | publicoRateLimiter |  | [`server/routes/interesados.ts:71`](../../server/routes/interesados.ts#L71) |
-| `GET` | `/e/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:48`](../../server/routes/paginaConcierto.ts#L48) |
-| `GET` | `/robots.txt` | Pública | — |  | [`server/routes/paginaConcierto.ts:163`](../../server/routes/paginaConcierto.ts#L163) |
-| `GET` | `/sitemap.xml` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:145`](../../server/routes/paginaConcierto.ts#L145) |
+| `GET` | `/e/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:50`](../../server/routes/paginaConcierto.ts#L50) |
+| `GET` | `/robots.txt` | Pública | — |  | [`server/routes/paginaConcierto.ts:165`](../../server/routes/paginaConcierto.ts#L165) |
+| `GET` | `/sitemap.xml` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:147`](../../server/routes/paginaConcierto.ts#L147) |
 
 ### posts
 

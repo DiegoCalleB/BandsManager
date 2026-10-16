@@ -31,12 +31,14 @@ import { captureError } from '../utils/errorTracking.js';
 import emailsCicloVidaRouter from './emailsCicloVida.js';
 import interesadosRouter from './interesados.js';
 import contactoEmpresasRouter from './contactoEmpresas.js';
+import pegatinasRouter from './pegatinas.js';
 export { startEmailsCicloVidaScheduler } from '../services/emailsCicloVida.js';
 
 const router = express.Router();
 router.use(emailsCicloVidaRouter); // baja de los emails de onboarding (/api/emails/baja)
 router.use(interesadosRouter); // lista de novedades de la landing (/api/public/interesados)
 router.use(contactoEmpresasRouter); // consultas de empresas, planes B2B (/api/public/contacto-empresas)
+router.use(pegatinasRouter); // regalo de pegatinas en la primera suscripción (/api/billing/pegatinas)
 
 function responderHtml(res: express.Response, status: number, html: string, cache: string) {
   res.status(status);

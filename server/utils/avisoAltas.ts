@@ -3,7 +3,7 @@
 
 import { escapeHtml } from './html.js';
 
-export type TipoAlta = 'registro' | 'espera' | 'espera_confirmada' | 'b2b';
+export type TipoAlta = 'registro' | 'espera' | 'espera_confirmada' | 'b2b' | 'pegatinas';
 
 export interface DatosAlta {
   tipo: TipoAlta;
@@ -21,6 +21,7 @@ const TITULO: Record<TipoAlta, string> = {
   espera: 'Nueva persona en la lista de espera (pendiente de confirmar)',
   espera_confirmada: 'Lista de espera: email confirmado',
   b2b: 'Nueva consulta de empresa (planes B2B)',
+  pegatinas: 'Pedido de pegatinas de regalo (primera suscripción)',
 };
 
 /** Destino de los avisos: `ADMIN_NOTIFY_EMAIL` si está definida; si no, el buzón del proyecto. */

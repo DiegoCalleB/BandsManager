@@ -72,6 +72,7 @@ _Sin dependencias salientes directas._
 - [[tabla_messages|tabla messages]] *(from #schema)*
 - [[tabla_metricas_bandas_amigas|tabla metricas_bandas_amigas]] *(from #schema)*
 - [[tabla_payments|tabla payments]] *(from #schema)*
+- [[tabla_pegatinas_pedidos|tabla pegatinas_pedidos]] *(from #schema)*
 - [[tabla_pitch_example_threads|tabla pitch_example_threads]] *(from #schema)*
 - [[tabla_pitch_learning_examples|tabla pitch_learning_examples]] *(from #schema)*
 - [[tabla_pitch_vector_store|tabla pitch_vector_store]] *(from #schema)*

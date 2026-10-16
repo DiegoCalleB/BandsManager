@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Check } from 'lucide-react';
+import { Check, Gift } from 'lucide-react';
 import { Tabs } from '../ui';
 import { FormularioEmpresas } from './FormularioEmpresas';
 import { PLANES_B2B, PLANES_B2C, type PlanLanding } from './planesLanding';
@@ -21,6 +21,12 @@ const Tarjeta: React.FC<{ plan: PlanLanding; es: boolean }> = ({ plan, es }) => 
       <p className="mt-3 font-display text-2xl font-bold tracking-tight">{plan.precio[l]}</p>
       <p className="text-xs text-[var(--ink-2)]">{plan.sub[l]}</p>
       <p className="mt-3 text-sm text-[var(--ink-2)]">{plan.para[l]}</p>
+      {plan.regalo && (
+        <p className="mt-3 flex items-center gap-2 rounded-[var(--r-pill)] bg-[var(--sunken)] px-3 py-1.5 text-xs font-semibold">
+          <Gift className="size-3.5 shrink-0 text-[var(--acc-ink)]" aria-hidden />
+          {plan.regalo[l]}
+        </p>
+      )}
       <ul className="mt-4 space-y-2 text-sm">
         {plan.items.map((i) => (
           <li key={i.es} className="flex items-start gap-2">
@@ -44,7 +50,7 @@ export const PreciosTfm: React.FC<{ es: boolean }> = ({ es }) => {
       </h2>
       <p className="mx-auto mt-3 max-w-2xl text-center text-[var(--ink-2)]">
         {segmento === 'b2c'
-          ? es ? 'Para bandas y artistas. Empiezas gratis y subes cuando lo necesitas.' : 'For bands and artists. Start free and upgrade when you need to.'
+          ? es ? 'Para bandas y artistas. Empiezas gratis y subes cuando lo necesitas. Con tu primera suscripción, pegatinas de tu banda de regalo.' : 'For bands and artists. Start free and upgrade when you need to. Your first subscription comes with stickers of your band.'
           : es ? 'Para productoras y mánagers con varias bandas. Contrato anual con dos meses gratis, sin pago con tarjeta.' : 'For producers and managers with several bands. Annual contract: two months free, no card payment.'}
       </p>
       <Tabs<Segmento>

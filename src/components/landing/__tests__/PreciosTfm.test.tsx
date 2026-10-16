@@ -42,3 +42,15 @@ describe('PreciosTfm', () => {
     }
   });
 });
+
+describe('regalo de pegatinas', () => {
+  it('la landing promete exactamente las pegatinas que da el servidor', async () => {
+    const { PEGATINAS_POR_PLAN } = await import('../../../../server/utils/pegatinas');
+    for (const [plan, pack] of Object.entries(PEGATINAS_POR_PLAN)) {
+      const regalo = PLANES_B2C.find((p) => p.id === plan)?.regalo?.es ?? '';
+      expect(regalo).toContain(String(pack.cantidad));
+      expect(/exprés/.test(regalo)).toBe(pack.expres);
+    }
+    expect(PLANES_B2C.find((p) => p.id === 'ensayo')?.regalo).toBeUndefined();
+  });
+});

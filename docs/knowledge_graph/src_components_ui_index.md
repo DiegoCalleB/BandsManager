@@ -309,6 +309,7 @@ BandManager UI Component Library
 - [[src_components_reels_ReelsTheaterModal|src/components/reels/ReelsTheaterModal.tsx]] *(from #frontend)*
 - [[src_components_reels_SocialGrowthPlanView|src/components/reels/SocialGrowthPlanView.tsx]] *(from #frontend)*
 - [[src_components_reels_ViralGrowthStudio|src/components/reels/ViralGrowthStudio.tsx]] *(from #frontend)*
+- [[src_components_RegaloPegatinas|src/components/RegaloPegatinas.tsx]] *(from #frontend)*
 - [[src_components_repertorio_AddSongsToSetlistModal|src/components/repertorio/AddSongsToSetlistModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_AssignSetlistModal|src/components/repertorio/AssignSetlistModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_AssignSongsToAlbumModal|src/components/repertorio/AssignSongsToAlbumModal.tsx]] *(from #frontend)*

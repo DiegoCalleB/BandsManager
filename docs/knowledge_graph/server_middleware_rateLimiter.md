@@ -46,6 +46,7 @@ Exporta: _vaciarRateLimitStore, ipDelCliente, createRateLimiter, loginRateLimite
 - [[server_routes_interesados|server/routes/interesados.ts]] *(from #route)*
 - [[server_routes_leads_placesPhoto|server/routes/leads/placesPhoto.ts]] *(from #route)*
 - [[server_routes_paginaConcierto|server/routes/paginaConcierto.ts]] *(from #route)*
+- [[server_routes_pegatinas|server/routes/pegatinas.ts]] *(from #route)*
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
 - [[server_routes_reelsTexto|server/routes/reelsTexto.ts]] *(from #route)*
 - [[server_routes_referidos|server/routes/referidos.ts]] *(from #route)*
