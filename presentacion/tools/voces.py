@@ -149,8 +149,9 @@ def listar_voces():
     for pag in range(3):
         r = json.loads(eleven(f'/shared-voices?page_size=100&language=es&page={pag}'))
         for v in r['voices']:
-            print(f"pública  {v['voice_id']}  {v['public_owner_id']}  {v.get('accent')}  {v.get('gender')}  {v.get('age')}  "
-                  f"{v['name']} · {(v.get('description') or '')[:90]}")
+            # catálogo público de voces (ids y rasgos de la voz, no datos de personas ni la clave): mismas columnas de siempre
+            ficha = '  '.join(str(v.get(k)) for k in ('voice_id', 'public_owner_id', 'accent', 'gender', 'age'))
+            print(f"pública  {ficha}  {v['name']} · {(v.get('description') or '')[:90]}")
         if not r.get('has_more'):
             break
 

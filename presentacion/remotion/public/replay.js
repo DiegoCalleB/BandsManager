@@ -63,7 +63,7 @@
       const lista = animas.get(el.dataset.rid + '|' + (ef.pseudoElement || '') + '|' + (a.animationName || a.transitionProperty || a.id || ''));
       let s = N.t0;
       if (lista) for (const x of lista) { if (x <= t) s = x; else break; }
-      try { a.currentTime = Math.max(0, t - s); } catch (e) { /* animación ya terminada */ }
+      try { a.currentTime = Math.max(0, t - s); } catch { /* animación ya terminada */ }
     }
     // cada vídeo, en su fotograma
     const vids = [...document.querySelectorAll('.slide.active video, video:not(.slide video)')];

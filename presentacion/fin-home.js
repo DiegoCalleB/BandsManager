@@ -138,7 +138,7 @@
 
   // Al volver al inicio no hace falta elegir perfil otra vez
   if (/[?&]inicio=1/.test(location.search)) {
-    try { history.replaceState(null, '', location.pathname); } catch (e) { /* sin history */ }
+    try { history.replaceState(null, '', location.pathname); } catch { /* sin history */ }
     var perfil = document.querySelector('#gate .nx-perfil'); if (perfil) setTimeout(function () { perfil.click(); }, 250);
   }
 })();

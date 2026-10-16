@@ -15,7 +15,7 @@
   var ac = null, master = null, pistas = {}, actual = '';
   var crearAudio = function () {
     if (ac) return true;
-    try { var AC = window.AudioContext || window.webkitAudioContext; ac = new AC(); master = ac.createGain(); master.gain.value = 0; master.connect(ac.destination); return true; } catch (e) { ac = null; return false; }
+    try { var AC = window.AudioContext || window.webkitAudioContext; ac = new AC(); master = ac.createGain(); master.gain.value = 0; master.connect(ac.destination); return true; } catch { ac = null; return false; }
   };
   ['pointerdown', 'keydown'].forEach(function (ev) { addEventListener(ev, function () {
     crearAudio(); if (ac && ac.state === 'suspended') ac.resume();
@@ -27,7 +27,7 @@
     if (pistas[n]) return pistas[n];
     var a = new Audio('audio/musica/' + n + '.mp3?v=3'); a.loop = true; // las canciones también: si un bloque de escenas dura más que la canción, vuelve a empezar a.preload = 'auto'; a.dataset.tap = '1';
     var p = { a: a, g: null, v: 0 };
-    if (crearAudio()) { try { var src = ac.createMediaElementSource(a); p.g = ac.createGain(); p.g.gain.value = 0; src.connect(p.g); p.g.connect(master); } catch (e) { p.g = null; } }
+    if (crearAudio()) { try { var src = ac.createMediaElementSource(a); p.g = ac.createGain(); p.g.gain.value = 0; src.connect(p.g); p.g.connect(master); } catch { p.g = null; } }
     pistas[n] = p; return p;
   };
   var activo = function () {
@@ -38,8 +38,8 @@
   var hayDramatica = false, hayGiro = false;
   // «giro»: la canción del momento «el bajista soy yo» (audio/musica/giro.mp3). Tampoco va en el repositorio (derechos): quien la tenga la
   // deja ahí y suena solo en esa escena; si no está, esa escena usa «dramatica» y, si tampoco, «noches».
-  try { fetch('audio/musica/dramatica.mp3', { method: 'HEAD' }).then(function (r) { if (r.ok) { MUSICA.dramatica = 46; hayDramatica = true; } }).catch(function () { /* sin ella */ }); } catch (e) { /* sin fetch */ }
-  try { fetch('audio/musica/giro.mp3', { method: 'HEAD' }).then(function (r) { if (r.ok) { MUSICA.giro = 100; hayGiro = true; } }).catch(function () { /* sin ella */ }); } catch (e) { /* sin fetch */ }
+  try { fetch('audio/musica/dramatica.mp3', { method: 'HEAD' }).then(function (r) { if (r.ok) { MUSICA.dramatica = 46; hayDramatica = true; } }).catch(function () { /* sin ella */ }); } catch { /* sin fetch */ }
+  try { fetch('audio/musica/giro.mp3', { method: 'HEAD' }).then(function (r) { if (r.ok) { MUSICA.giro = 100; hayGiro = true; } }).catch(function () { /* sin ella */ }); } catch { /* sin fetch */ }
   var quiere = function () {
     var sl = document.querySelector('.slide.active'), q = sl ? (sl.dataset.musica || '') : '';
     if (q === 'giro' && !hayGiro) q = 'dramatica';
@@ -52,7 +52,7 @@
     var o = objetivo(); vol += (o - vol) * 0.07; if (Math.abs(o - vol) < 0.003) vol = o;
     var q = activo() ? quiere() : '', antes = actual;
     if (q && q !== '-' && MUSICA[q]) actual = q; else if (q === '-') actual = '';
-    if (actual && actual !== antes && actual in CANCION) { try { pista(actual).a.currentTime = CANCION[actual]; } catch (e) { /* aún sin cargar */ } }
+    if (actual && actual !== antes && actual in CANCION) { try { pista(actual).a.currentTime = CANCION[actual]; } catch { /* aún sin cargar */ } }
     var vivo = false;
     Object.keys(MUSICA).forEach(function (n) {
       var p = pistas[n]; if (!p && n !== actual) return; p = pista(n);
@@ -116,7 +116,7 @@
       var g = c.createGain(); g.gain.setValueAtTime(0.0001, t + 0.4); g.gain.exponentialRampToValueAtTime(0.14, t + 1.2); g.gain.exponentialRampToValueAtTime(0.0001, t + 2.7);
       ruido.connect(f); f.connect(g); g.connect(out); ruido.start(t + 0.4);
       setTimeout(function () { c.close(); }, 4500);
-    } catch (e) { /* sin audio: solo se ve */ }
+    } catch { /* sin audio: solo se ve */ }
   };
   window.CineIdent = { play: function (fin, conSonido) {
     ident.classList.add('on'); if (conSonido !== false) sting();
@@ -140,7 +140,7 @@
   // Subtítulos: español por defecto (en una película el diálogo va subtitulado, sin burbujas); también en inglés o desactivados.
   // La preferencia solo se guarda cuando el espectador la cambia (bm_subs2), así el valor por defecto manda mientras no toque nada.
   var SUBS_KEY = 'bm_subs2', subsLang = 'es', subsOn = true;
-  try { var guardado = localStorage.getItem(SUBS_KEY); if (guardado === 'es' || guardado === 'en' || guardado === 'off') { subsLang = guardado; subsOn = guardado !== 'off'; } } catch (e) { /* sin almacenamiento: español */ }
+  try { var guardado = localStorage.getItem(SUBS_KEY); if (guardado === 'es' || guardado === 'en' || guardado === 'off') { subsLang = guardado; subsOn = guardado !== 'off'; } } catch { /* sin almacenamiento: español */ }
   var enIngles = function (t) { var m = window.SUBS_EN; return (m && m[t.replace(/\[[^\]]*\]\s*/g, '').trim()]) || ''; };
   // Plano y contraplano: en las escenas de la app, cuando pregunta un músico se corta a la banda mirando el portátil de Iago
   // (un solo clip, encuadrado en quien habla); cuando contesta Iago, vuelve la pantalla. El corte lo hace el CSS según quién habla.
@@ -222,7 +222,7 @@
     .observe(document.body, { subtree: true, attributes: true, attributeFilter: ['class'] });
   var ponerSubs = function (lang, guardar) {
     subsLang = lang; subsOn = lang !== 'off'; body.classList.toggle('subs', subsOn);
-    if (guardar) { try { localStorage.setItem(SUBS_KEY, lang); } catch (e) { /* da igual */ } }
+    if (guardar) { try { localStorage.setItem(SUBS_KEY, lang); } catch { /* da igual */ } }
     pintarMenu();
   };
 
@@ -295,19 +295,19 @@
     return out;
   };
   var capActual = function () { var d = D(), c = capitulos(); if (!d) return null; var L = d.lista(), pos = L.indexOf(d.cur); return c.filter(function (x) { return L.indexOf(x.i) <= pos; }).pop() || null; };
-  var vol = 1, velocidad = 1;
-  try { vol = Math.max(0, Math.min(1, +(localStorage.getItem('bm_vol') || 1))); } catch (e) { /* por defecto, al máximo */ }
+  var volUsu = 1, velocidad = 1;
+  try { volUsu = Math.max(0, Math.min(1, +(localStorage.getItem('bm_vol') || 1))); } catch { /* por defecto, al máximo */ }
   var aplicarVol = function () {
-    if (window.DeckVoces && window.DeckVoces.volumen) window.DeckVoces.volumen(vol);
-    if (window.DeckSound && window.DeckSound.volumen) window.DeckSound.volumen(vol);
-    volGlobal = vol; $n('.nf-vr').value = Math.round(vol * 100);
-    try { localStorage.setItem('bm_vol', String(vol)); } catch (e) { /* da igual */ }
+    if (window.DeckVoces && window.DeckVoces.volumen) window.DeckVoces.volumen(volUsu);
+    if (window.DeckSound && window.DeckSound.volumen) window.DeckSound.volumen(volUsu);
+    volGlobal = volUsu; $n('.nf-vr').value = Math.round(volUsu * 100);
+    try { localStorage.setItem('bm_vol', String(volUsu)); } catch { /* da igual */ }
   };
   var pintarMenu = function () {
     nf.querySelectorAll('.nf-menu [data-s]').forEach(function (p) { var act = p.dataset.s === subsLang; p.classList.toggle('on', act); p.setAttribute('aria-checked', String(act)); });
     nf.querySelectorAll('.nf-menu [data-v]').forEach(function (p) { p.classList.toggle('on', +p.dataset.v === velocidad); });
     $n('[data-nf="subs"]').classList.toggle('activo', subsOn);
-    var d = D(), lista = $n('.nf-lista'), ca = capActual(); lista.textContent = '';
+    var lista = $n('.nf-lista'), ca = capActual(); lista.textContent = '';
     capitulos().forEach(function (c, k) {
       var li = document.createElement('li'); li.dataset.i = c.i; li.classList.toggle('on', !!ca && ca.i === c.i);
       li.innerHTML = '<b>' + (k + 1) + '</b><span></span><em>' + mmss(c.t) + '</em>'; li.querySelector('span').textContent = c.nombre.replace(/^Capítulo \d+ · /, '');
@@ -334,7 +334,7 @@
     $n('.nf-cap').textContent = ca ? ca.nombre : '';
     $n('.nf-pcap').textContent = pre + esc;
     nf.querySelectorAll('[data-nf="play"]').forEach(function (b) { b.innerHTML = d.pausado ? ico.play : ico.pausa; b.setAttribute('aria-label', d.pausado ? 'Reproducir' : 'Pausa'); });
-    var son = !!(window.DeckSound && window.DeckSound.enabled) && vol > 0;
+    var son = !!(window.DeckSound && window.DeckSound.enabled) && volUsu > 0;
     $n('[data-nf="sonido"]').innerHTML = son ? ico.sonido : ico.mudo;
     $n('[data-nf="sig"]').disabled = d.proximo(d.cur) === null;
     var marcas = capitulos().map(function (c) { return tot ? (c.t / tot * 100).toFixed(2) : 0; }).join(',');
@@ -359,14 +359,14 @@
     mas: function () { saltar(15); },
     sig: function () { var d = D(), a = d && d.proximo(d.cur); salirDelFinal(); if (a !== null && a !== undefined) d.show(a); },
     sonido: function () {
-      if (window.DeckSound && !window.DeckSound.enabled) { window.DeckSound.toggle(); if (!vol) vol = 1; }
-      else vol = vol > 0 ? 0 : (+nf.dataset.volPrev || 1);
-      if (vol) nf.dataset.volPrev = vol; aplicarVol();
+      if (window.DeckSound && !window.DeckSound.enabled) { window.DeckSound.toggle(); if (!volUsu) volUsu = 1; }
+      else volUsu = volUsu > 0 ? 0 : (+nf.dataset.volPrev || 1);
+      if (volUsu) nf.dataset.volPrev = volUsu; aplicarVol();
     },
     subs: function () { var on = nf.classList.contains('menu'); cerrarMenus(); if (!on) nf.classList.add('menu'); },
     vel: function () { var on = nf.classList.contains('menu-vel'); cerrarMenus(); if (!on) nf.classList.add('menu-vel'); },
     caps: function () { var on = nf.classList.contains('menu-caps'); cerrarMenus(); if (!on) { pintarMenu(); nf.classList.add('menu-caps'); } },
-    fs: function () { var r = document.documentElement; (document.fullscreenElement ? document.exitFullscreen() : r.requestFullscreen && r.requestFullscreen()); }
+    fs: function () { var r = document.documentElement; if (document.fullscreenElement) document.exitFullscreen(); else if (r.requestFullscreen) r.requestFullscreen(); }
   };
   nf.addEventListener('click', function (e) {
     var b = e.target.closest('[data-nf]'), s = e.target.closest('[data-s]'), v = e.target.closest('[data-v]'), c = e.target.closest('.nf-lista li');
@@ -375,7 +375,7 @@
     if (c) { var d = D(); cerrarMenus(); if (d) d.show(+c.dataset.i); return; }
     if (b) { e.stopPropagation(); acciones[b.dataset.nf](); pintar(); pintarMenu(); despierta(); }
   });
-  $n('.nf-vr').addEventListener('input', function (e) { vol = +e.target.value / 100; if (vol && window.DeckSound && !window.DeckSound.enabled) window.DeckSound.toggle(); aplicarVol(); pintar(); });
+  $n('.nf-vr').addEventListener('input', function (e) { volUsu = +e.target.value / 100; if (volUsu && window.DeckSound && !window.DeckSound.enabled) window.DeckSound.toggle(); aplicarVol(); pintar(); });
   var prog = $n('.nf-prog');
   var tiempoEn = function (e) { var r = prog.getBoundingClientRect(), d = D(); return Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) * (d ? d.total() : 0); };
   // Imagen de una escena para la vista previa: su fondo o su primera imagen
@@ -448,14 +448,14 @@
   var cont = document.createElement('button'); cont.type = 'button'; cont.className = 'nf-sig-ep nf-cont';
   cont.innerHTML = '<span><small>Continuar viendo</small><em></em></span>'; if (stage) stage.appendChild(cont);
   var posGuardada = 0, contT = 0;
-  try { posGuardada = +(localStorage.getItem('bm_pos') || 0); } catch (e) { /* sin almacenamiento */ }
+  try { posGuardada = +(localStorage.getItem('bm_pos') || 0); } catch { /* sin almacenamiento */ }
   cont.addEventListener('click', function () { var d = D(); if (d) d.irA(posGuardada); cont.classList.remove('on'); posGuardada = 0; });
   setInterval(function () {
     var d = D(); if (!d || !d.total || !body.classList.contains('pelicula') || body.classList.contains('scroll')) { cont.classList.remove('on'); return; }
     var t = d.tiempo();
     if (posGuardada > 20 && posGuardada < d.total() - 20 && t < 15 && !contT) { contT = Date.now(); cont.querySelector('em').textContent = 'Seguir en ' + mmss(posGuardada); cont.classList.add('on'); }
     if (contT && (Date.now() - contT > 9000 || t > 30)) { cont.classList.remove('on'); posGuardada = 0; }
-    if (!posGuardada || !cont.classList.contains('on')) try { if (t > 20) localStorage.setItem('bm_pos', String(Math.round(t))); } catch (e) { /* da igual */ }
+    if (!posGuardada || !cont.classList.contains('on')) try { if (t > 20) localStorage.setItem('bm_pos', String(Math.round(t))); } catch { /* da igual */ }
   }, 1000);
   // «Defensa técnica» (tecla D o botón de arriba): panel de apoyo con arquitectura, seguridad, agentes, calidad, negocio y preguntas del tribunal.
   // Pausa la película al abrirse y la reanuda al cerrarse. El contenido lo genera tools/guion/defensa.py
@@ -537,7 +537,7 @@
   addEventListener('hashchange', function () { setTimeout(camara, 30); });
   addEventListener('voz', camara);
   addEventListener('hashchange', pintar);
-  addEventListener('deckpausa', function () { pintar(); despierta(); if (D() && D().pausado) Object.keys(pistas).forEach(function (n) { try { pistas[n].a.pause(); } catch (e) { /* sin pista */ } }); });
+  addEventListener('deckpausa', function () { pintar(); despierta(); if (D() && D().pausado) Object.keys(pistas).forEach(function (n) { try { pistas[n].a.pause(); } catch { /* sin pista */ } }); });
   addEventListener('voz', pintar);
   // Teclas de Netflix en modo película: espacio o K pausa · ← / J −15 s · → / L +15 s · ↑ ↓ volumen · M silencio ·
   // N siguiente escena · S saltar intro o créditos · F pantalla completa · C subtítulos · Esc cierra los menús
@@ -549,8 +549,8 @@
     if (k === ' ' || k === 'k' || k === 'K' || k === 'Enter') acciones.play();
     else if (k === 'ArrowLeft' || k === 'j' || k === 'J') saltar(-15);
     else if (k === 'ArrowRight' || k === 'l' || k === 'L') saltar(15);
-    else if (k === 'ArrowUp' || k === 'ArrowDown') { vol = Math.max(0, Math.min(1, Math.round((vol + (k === 'ArrowUp' ? 0.1 : -0.1)) * 10) / 10)); if (vol && window.DeckSound && !window.DeckSound.enabled) window.DeckSound.toggle(); aplicarVol(); flash(vol ? ico.sonido : ico.mudo, Math.round(vol * 100) + ' %'); }
-    else if (k === 'm' || k === 'M') { acciones.sonido(); flash(vol ? ico.sonido : ico.mudo); }
+    else if (k === 'ArrowUp' || k === 'ArrowDown') { volUsu = Math.max(0, Math.min(1, Math.round((volUsu + (k === 'ArrowUp' ? 0.1 : -0.1)) * 10) / 10)); if (volUsu && window.DeckSound && !window.DeckSound.enabled) window.DeckSound.toggle(); aplicarVol(); flash(volUsu ? ico.sonido : ico.mudo, Math.round(volUsu * 100) + ' %'); }
+    else if (k === 'm' || k === 'M') { acciones.sonido(); flash(volUsu ? ico.sonido : ico.mudo); }
     else if (k === 'n' || k === 'N') acciones.sig();
     else if ((k === 's' || k === 'S') && salto()) { var d = D(); d.show(salto().i); }
     else if (k === 'Escape' && /menu/.test(nf.className)) cerrarMenus();

@@ -30,7 +30,7 @@ await page.route(/\/video\/[^/]+\.mp4$/, async (r) => {
 });
 page.on('pageerror', (e) => console.error('error en la página:', e.message));
 await page.addInitScript(() => {
-  try { localStorage.setItem('bm_subs', 'es'); } catch (e) { /* sin almacenamiento */ }
+  try { localStorage.setItem('bm_subs', 'es'); } catch { /* sin almacenamiento */ }
   document.addEventListener('DOMContentLoaded', () => document.documentElement.classList.add('grabando'));
   const R = (window.__R = { ops: [], anims: [], media: [], voces: [], taps: [], on: false });
   let n = 0;
@@ -111,7 +111,7 @@ await page.addInitScript(() => {
         }
         conectar.call(this, c.__tap);
       }
-    } catch (e) { /* si falla, solo se pierde ese sonido */ }
+    } catch { /* si falla, solo se pierde ese sonido */ }
     return conectar.apply(this, arguments);
   };
   // empieza a anotar: foto de la página y, desde ahí, cada cambio
@@ -147,7 +147,7 @@ const notas = await page.evaluate(async () => {
   const R = window.__R; R.on = false; R.obs.disconnect();
   const taps = [];
   for (const [i, t] of R.taps.entries()) {
-    await new Promise((res) => { t.rec.onstop = res; try { t.rec.stop(); } catch (e) { res(); } });
+    await new Promise((res) => { t.rec.onstop = res; try { t.rec.stop(); } catch { res(); } });
     const buf = new Uint8Array(await new Blob(t.chunks, { type: 'audio/webm' }).arrayBuffer());
     let s = ''; for (let k = 0; k < buf.length; k += 0x8000) s += String.fromCharCode.apply(null, buf.subarray(k, k + 0x8000));
     taps.push({ f: `tap${i}.webm`, t: t.t, b64: btoa(s) });
