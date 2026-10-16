@@ -15,7 +15,7 @@
   var ac = null, master = null, pistas = {}, actual = '';
   var crearAudio = function () {
     if (ac) return true;
-    try { var AC = window.AudioContext || window.webkitAudioContext; ac = new AC(); master = ac.createGain(); master.gain.value = 0; master.connect(ac.destination); return true; } catch { ac = null; return false; }
+    try { var AC = window.AudioContext || window.webkitAudioContext; ac = new AC(); master = ac.createGain(); master.gain.value = 0; if (window.CineMezcla) window.CineMezcla.cadena(ac, master); else master.connect(ac.destination); return true; } catch { ac = null; return false; }
   };
   ['pointerdown', 'keydown'].forEach(function (ev) { addEventListener(ev, function () {
     crearAudio(); if (ac && ac.state === 'suspended') ac.resume();
@@ -49,7 +49,7 @@
   var vol = 0;
   // Volumen general (ducking) y fundido entre piezas (~1,6 s)
   function paso() {
-    var o = objetivo(); vol += (o - vol) * 0.07; if (Math.abs(o - vol) < 0.003) vol = o;
+    var o = objetivo(); vol += (o - vol) * (window.CineMezcla ? window.CineMezcla.coef(o, vol) : 0.07); if (Math.abs(o - vol) < 0.003) vol = o;
     var q = activo() ? quiere() : '', antes = actual;
     if (q && q !== '-' && MUSICA[q]) actual = q; else if (q === '-') actual = '';
     if (actual && actual !== antes && actual in CANCION) { try { pista(actual).a.currentTime = CANCION[actual]; } catch { /* aún sin cargar */ } }
@@ -58,12 +58,13 @@
       var p = pistas[n]; if (!p && n !== actual) return; p = pista(n);
       var meta = n === actual && o > 0 ? 1 : 0;
       p.v += (meta - p.v) * 0.035; if (Math.abs(meta - p.v) < 0.004) p.v = meta;
-      if (p.g) p.g.gain.value = p.v * (n in CANCION ? CANCION_X : 1); else p.a.volume = Math.max(0, Math.min(1, p.v * vol * volGlobal));
+      if (p.g) p.g.gain.value = p.v * (n in CANCION ? CANCION_X : 1.4); else p.a.volume = Math.max(0, Math.min(1, p.v * vol * volGlobal));
       if (p.v > 0 && p.a.paused && !p.a.ended) p.a.play().catch(function () { /* sin gesto: no suena */ });
       if (p.v === 0 && !p.a.paused) p.a.pause();
       if (p.v > 0) vivo = true;
     });
     if (master) master.gain.value = vol * volGlobal;
+    if (window.CineMezcla) window.CineMezcla.dip(vol, ALTO, BAJO);
     if (!vivo && o === 0 && vol === 0) { raf = 0; return; }
     raf = requestAnimationFrame(paso);
   }
