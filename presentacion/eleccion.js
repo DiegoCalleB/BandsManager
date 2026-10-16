@@ -90,7 +90,7 @@
   window.Eleccion = {
     desvia: function (idx, siguiente, saltar) {
       var sl = D().slides[idx], cfg = sl && ELECCIONES[sl.dataset.title];
-      if (!cfg || hechas[cfg.id] || activa) return false;
+      if (!cfg || hechas[cfg.id] || activa || /[?&]grabando/.test(location.search)) return false; // al grabar el MP4 de respaldo no hay pausas ni preguntas
       if (cfg.demo) pausaQR(idx, siguiente, saltar); else pregunta(idx, cfg, [], siguiente, saltar);
       return true;
     },
