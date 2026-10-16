@@ -145,7 +145,7 @@
 
   // Al volver al inicio no se elige perfil otra vez: directo al inicio con todas las filas (y el tráiler arrancando como siempre)
   if (/[?&]inicio=1/.test(location.search)) {
-    try { history.replaceState(null, '', location.pathname); } catch (e) { /* sin history */ }
+    try { history.replaceState(null, '', location.pathname); } catch (_e) { /* sin history */ }
     var puerta = document.getElementById('gate');
     if (puerta) {
       puerta.dataset.fase = 'home';
