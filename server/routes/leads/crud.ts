@@ -8,7 +8,7 @@ import { puedeEntrarEnColaDeEnvio } from "../../utils/email.js";
 import { Lead } from "../../../src/types.js";
 import { loadState, saveState, requireAuth } from "../../state.js";
 import type { PaginatedLeadsResult } from "../../db/leads.js";
-import { dbGetLeads, dbGetLeadsPaginated, dbGetLeadById, dbUpsertLead, dbDeleteLead, dbBulkDeleteLeads, dbCheckDeletedLead, dbGetLeadMessages, dbGetActiveCampaign } from "../../db.js";
+import { dbGetLeads, dbGetLeadsPaginated, dbGetLeadById, dbUpsertLead, dbDeleteLead, dbBulkDeleteLeads, dbCheckDeletedLead, dbGetLeadMessages, dbGetActiveCampaign, aplicarAprobacionTrasGuardar } from "../../db.js";
 import { getAvailableAIProviders } from "../../ai.js";
 import { autoEnrichLead, extractFestivalDates } from "../../auto_enrichment.js";
 import { isBadDirectoryUrl, getDomainFromUrl } from "./helpers.js";
@@ -141,7 +141,7 @@ router.put("/leads/:id", requireAuth, apiAutenticadaRateLimiter, async (req, res
     const userBandId = getTargetBandId(req);
     const { id } = req.params;
     // `expectedStatus` es una condición de la petición, no un campo del lead: no debe guardarse.
-    const { expectedStatus, ...updatedFields } = req.body || {};
+    const { expectedStatus, aprobado_por: _a, aprobado_at: _b, pitch_aprobado_hash: _c, ...updatedFields } = req.body || {};
 
     const existing = await dbGetLeadById(id, userBandId);
 
@@ -174,6 +174,8 @@ router.put("/leads/:id", requireAuth, apiAutenticadaRateLimiter, async (req, res
       (k) => updatedFields[k] === "" || updatedFields[k] === null
     );
     const saved = await dbUpsertLead(merged, userBandId, { permitirVaciar: true });
+    // Constancia de aprobación (quién, cuándo, huella del texto); el cliente no puede fijarla.
+    saved.estado = (await aplicarAprobacionTrasGuardar(existing, updatedFields, saved, userBandId, req.user?.email || req.user?.username || "desconocido")) as typeof saved.estado;
 
     // Dynamic Few-Shot & Self-Refining Tone DNA: registrar edición humana al aprobar o modificar el pitch
     const esAprobacion = updatedFields.estado === "aprobado" || updatedFields.estado === "aprobado_propuesta" || updatedFields.estado === "aprobado_respuesta";

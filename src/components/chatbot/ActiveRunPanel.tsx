@@ -173,8 +173,9 @@ export function ActiveRunPanel() {
                 }
               }
 
-              // Fallback to region-specific simulated leads if no new leads were detected or in demo mode
-              if (detectedLeads.length === 0 || activeRun.isDemo) {
+              // Leads de ejemplo SOLO en modo demo: en una ejecución real que no encontró nada se
+              // mostraban como "Añadido" salas que no existían en el CRM.
+              if (activeRun.isDemo) {
                 const regionName = activeRun.region || activeRun.params?.region || activeRun.params?.ciudad || 'Huelva';
                 const normLoc = regionName.toLowerCase();
                 const dateTag = new Date().toLocaleDateString();

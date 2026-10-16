@@ -34,6 +34,7 @@ _Sin dependencias salientes directas._
 
 ## 🧪 Tests que lo cubren
 - `src/utils/cartel/__tests__/layout.test.ts`
+- `src/utils/cartel/__tests__/placas.test.ts`
 
 ---
 

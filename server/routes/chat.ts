@@ -124,8 +124,7 @@ router.post("/chat", requireAuth, chatRateLimiter, async (req, res) => {
       }
 
       if (!triggerParams.region) {
-        triggerParams.region = "Huelva";
-        triggerParams.ciudad = "Huelva";
+        return res.json({ text: `¿En qué ciudad o región quieres que busque el agente ${agentName}? Por ejemplo: "lanza el scout en Sevilla".` });
       }
 
       if (agentName === "Scout Descubridor") {

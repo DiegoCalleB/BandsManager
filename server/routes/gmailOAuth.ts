@@ -28,7 +28,7 @@ const router = express.Router();
 
 // gmail.compose: crear/leer/enviar borradores (crearBorradorGmailApi, enviarEmailGmailApi,
 // comprobarBorradorEnviado). gmail.modify: leer la bandeja y quitar la etiqueta UNREAD de lo ya
-// procesado (leerRespuestasGmailApi/marcarComoLeidoGmailApi en gmailApiClient.ts) - lo que
+// procesado (leerBandejaGmailIncremental/marcarComoLeidoGmailApi en gmailApiClient.ts) - lo que
 // necesita el Agente Lector para detectar respuestas de una banda conectada solo por OAuth, sin
 // IMAP. Una banda que conectó antes de este cambio solo tiene gmail.compose concedido y necesita
 // reconectar (botón "Desconectar" + "Conectar con Google" de nuevo) para que el Lector funcione.
@@ -119,6 +119,23 @@ export function validarYConsumirEstadoOAuth(state: unknown, nonceCookie: string)
   return verificado.bandId;
 }
 
+/**
+ * La cookie del flujo (nonce) solo viaja al dominio donde se puso. Si el usuario empieza en
+ * bandmanager.io pero Google le devuelve a la URL de retorno registrada (otro dominio, p. ej. el de
+ * Railway), el callback llega sin cookie y falla con un opaco «estado inválido». Devuelve el dominio
+ * donde hay que abrir la app para que el flujo cierre, o null si ya coincide (o no se puede saber).
+ */
+export function dominioDeRetornoDistinto(hostPeticion: string | undefined, redirectUri: string | undefined): string | null {
+  if (!hostPeticion || !redirectUri) return null;
+  try {
+    const esperado = new URL(redirectUri).hostname.toLowerCase();
+    const actual = hostPeticion.split(",")[0].trim().toLowerCase().replace(/:\d+$/, "");
+    return esperado && actual && esperado !== actual ? esperado : null;
+  } catch {
+    return null;
+  }
+}
+
 function oauthConfigured(): boolean {
   return Boolean(process.env.GOOGLE_OAUTH_CLIENT_ID && process.env.GOOGLE_OAUTH_CLIENT_SECRET && process.env.GOOGLE_OAUTH_REDIRECT_URI);
 }
@@ -127,6 +144,14 @@ function oauthConfigured(): boolean {
 router.get("/authorize-url", gmailOAuthRateLimiter, requireAuth, (req, res) => {
   if (!oauthConfigured()) {
     return res.status(503).json({ error: "El servidor no tiene configurado el OAuth de Gmail (GOOGLE_OAUTH_CLIENT_ID/SECRET/REDIRECT_URI)." });
+  }
+  const dominioCorrecto = dominioDeRetornoDistinto(String(req.headers["x-forwarded-host"] || req.headers.host || ""), process.env.GOOGLE_OAUTH_REDIRECT_URI);
+  if (dominioCorrecto) {
+    return res.status(409).json({
+      error: `Para conectar Gmail abre la app en https://${dominioCorrecto} (con tu sesión iniciada ahí) y vuelve a pulsar «Conectar con Google». Desde este dominio Google no puede devolverte a la app.`,
+      codigo: "dominio_de_retorno_distinto",
+      dominio: dominioCorrecto
+    });
   }
   try {
     const bandId = getTargetBandId(req);
@@ -159,10 +184,12 @@ router.get("/authorize-url", gmailOAuthRateLimiter, requireAuth, (req, res) => {
 router.get("/callback", gmailOAuthRateLimiter, async (req, res) => {
   const redirigirConError = (motivo: string) => res.redirect(`/?gmail_oauth=error&motivo=${encodeURIComponent(motivo)}`);
 
-  const bandId = validarYConsumirEstadoOAuth(req.query.state, leerCookie(req, NOMBRE_COOKIE_NONCE));
+  const nonceCookie = leerCookie(req, NOMBRE_COOKIE_NONCE);
+  const bandId = validarYConsumirEstadoOAuth(req.query.state, nonceCookie);
   res.clearCookie(NOMBRE_COOKIE_NONCE, { path: "/api/gmail-oauth" });
   if (!bandId) {
-    return redirigirConError("estado_invalido_o_caducado");
+    // Estado correcto pero sin la cookie del flujo = se empezó en otro dominio u otro navegador.
+    return redirigirConError(!nonceCookie && partesEstadoVerificado(req.query.state) ? "empieza_y_termina_en_el_mismo_dominio" : "estado_invalido_o_caducado");
   }
 
   const code = typeof req.query.code === "string" ? req.query.code : "";
@@ -264,7 +291,7 @@ router.get("/callback", gmailOAuthRateLimiter, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error en el callback de Gmail OAuth:", err);
-    redirigirConError("error_interno");
+    redirigirConError(/CREDENTIALS_ENCRYPTION_KEY/.test(err?.message || "") ? "servidor_sin_clave_de_cifrado" : "error_interno");
   }
 });
 
