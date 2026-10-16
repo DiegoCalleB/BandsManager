@@ -11,7 +11,7 @@
   // Son la banda sonora de los capítulos (sus versiones sintéticas, «tema» y «lostrego», llevan mucha gaita y quedan solo para algún
   // momento suelto). Arrancan desde el segundo indicado cada vez que se entra en su bloque de escenas.
   var CANCION = { compila: 0, cabalga: 0, giro: 0 }; // giro: segundo desde el que empieza (cámbialo al punto que quieras)
-  var ALTO = 0.24, BAJO = 0.09, raf = 0, body = document.body, volGlobal = 1;
+  var ALTO = 0.24, BAJO = 0.09, CANCION_X = 1.8, /* las canciones (con voz y mezcla densa) se perdían bajo el diálogo: suenan más fuertes que las piezas de fondo */ raf = 0, body = document.body, volGlobal = 1;
   var ac = null, master = null, pistas = {}, actual = '';
   var crearAudio = function () {
     if (ac) return true;
@@ -58,7 +58,7 @@
       var p = pistas[n]; if (!p && n !== actual) return; p = pista(n);
       var meta = n === actual && o > 0 ? 1 : 0;
       p.v += (meta - p.v) * 0.035; if (Math.abs(meta - p.v) < 0.004) p.v = meta;
-      if (p.g) p.g.gain.value = p.v; else p.a.volume = Math.max(0, Math.min(1, p.v * vol * volGlobal));
+      if (p.g) p.g.gain.value = p.v * (n in CANCION ? CANCION_X : 1); else p.a.volume = Math.max(0, Math.min(1, p.v * vol * volGlobal));
       if (p.v > 0 && p.a.paused && !p.a.ended) p.a.play().catch(function () { /* sin gesto: no suena */ });
       if (p.v === 0 && !p.a.paused) p.a.pause();
       if (p.v > 0) vivo = true;
@@ -154,6 +154,8 @@
     v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.dataset.who = w;
     v.poster = 'video/actores/' + CARAS[w] + '.jpg'; v.src = 'video/actores/' + CARAS[w] + '.mp4'; rx.appendChild(v); vids.push(v);
   });
+  // El cantante de Master of Prompts no tiene vídeo: su foto hace de contraplano cuando habla
+  var mop = document.createElement('img'); mop.className = 'rx-mop'; mop.dataset.who = 'voz_mop'; mop.alt = ''; mop.src = 'img/personaje-cantante.jpg'; rx.appendChild(mop);
   rx.classList.add('con-caras');
   if (stage) stage.appendChild(rx);
   var vivaReaccion = function () {
@@ -272,7 +274,7 @@
   // Botón a la web (créditos y post-créditos): BandManager.io, para que Brais entre a su perfil
   var WEB = 'https://bandmanager.io';
   var webBtn = document.createElement('a'); webBtn.className = 'nf-web'; webBtn.href = WEB; webBtn.target = '_blank'; webBtn.rel = 'noopener';
-  webBtn.innerHTML = '<b>Ir a BandManager.io</b><small>Accede a tu perfil, Brais</small>';
+  webBtn.innerHTML = '<b>Ir a BandManager.io</b><small>Accede a tu perfil o crea tu banda</small>';
   if (stage) stage.appendChild(webBtn);
   var $n = function (q) { return nf.querySelector(q); };
   var D = function () { return window.Deck; };
@@ -346,13 +348,16 @@
   };
   // El icono que salta un momento en el centro, como en Netflix
   var flash = function (svg, txt) { var f = $n('.nf-flash'); f.innerHTML = svg + (txt ? '<b>' + txt + '</b>' : ''); f.classList.remove('on'); void f.offsetWidth; f.classList.add('on'); };
-  var saltar = function (seg) { var d = D(); if (!d) return; d.irA(Math.max(0, Math.min(d.total() - 0.5, d.tiempo() + seg))); flash(seg < 0 ? ico.menos : ico.mas); setTimeout(pintar, 60); };
+  // Desde la pantalla final («Más como esta») cualquier mando de navegación vuelve a la película: antes ⟲15 saltaba por debajo y la pantalla negra se quedaba encima
+  var salirDelFinal = function () { if (body.classList.contains('fin-peli')) { body.classList.remove('fin-peli'); delete body.dataset.fin; } };
+  var saltar = function (seg) { var d = D(); if (!d) return; salirDelFinal(); d.irA(Math.max(0, Math.min(d.total() - 0.5, d.tiempo() + seg))); flash(seg < 0 ? ico.menos : ico.mas); setTimeout(pintar, 60); };
   var cerrarMenus = function () { nf.classList.remove('menu', 'menu-vel', 'menu-caps'); };
   var acciones = {
-    play: function () { var d = D(); if (!d) return; d.pausar(!d.pausado); flash(d.pausado ? ico.pausa : ico.play); },
+    // en la pantalla final, ▶ es «Ver otra vez» (como el icono de repetir de Netflix); antes solo pausaba la nada
+    play: function () { var d = D(); if (!d) return; if (body.classList.contains('fin-peli')) { salirDelFinal(); if (d.pausado) d.pausar(false); d.show(0); return; } d.pausar(!d.pausado); flash(d.pausado ? ico.pausa : ico.play); },
     menos: function () { saltar(-15); },
     mas: function () { saltar(15); },
-    sig: function () { var d = D(), a = d && d.proximo(d.cur); if (a !== null && a !== undefined) d.show(a); },
+    sig: function () { var d = D(), a = d && d.proximo(d.cur); salirDelFinal(); if (a !== null && a !== undefined) d.show(a); },
     sonido: function () {
       if (window.DeckSound && !window.DeckSound.enabled) { window.DeckSound.toggle(); if (!volUsu) volUsu = 1; }
       else volUsu = volUsu > 0 ? 0 : (+nf.dataset.volPrev || 1);
@@ -386,7 +391,7 @@
     '<p class="nff-mus-t">Escucha las canciones</p><div class="nff-mus">'+
     '<a href="audio/musica/compila.mp3" target="_blank" rel="noopener"><b>▶ Compila nu bravu</b><small>Os Herdeiros do Código</small></a>'+
     '<a href="audio/musica/cabalga.mp3" target="_blank" rel="noopener"><b>▶ Cabalga o lóstrego</b><small>Master of Prompts</small></a></div>'+
-    '<a class="nff-web" href="'+WEB+'" target="_blank" rel="noopener">Accede a tu perfil, Brais → bandmanager.io</a>';
+    '<a class="nff-web" href="'+WEB+'" target="_blank" rel="noopener">Accede a tu perfil o crea tu banda → bandmanager.io</a>';
   if (stage) stage.appendChild(finEl);
   var ANEXO_FIN = ['Arquitectura', 'Cómo se construyó con IA', 'Seguridad', 'Calidad en cifras'];
   var montarFin = function () {
@@ -413,7 +418,7 @@
     else if (card) { reanudar(); var p = document.getElementById('bPeli'); if (p && body.classList.contains('pelicula')) p.click(); d.show(+card.dataset.i); }
   });
   var escenaEnTiempo = function (seg) { var d = D(), t = 0, L = d.lista(); for (var k = 0; k < L.length; k++) { t += d.durEscena(L[k]); if (seg < t) return L[k]; } return L[L.length - 1]; };
-  prog.addEventListener('click', function (e) { var d = D(); if (d) { d.irA(tiempoEn(e)); setTimeout(pintar, 60); } });
+  prog.addEventListener('click', function (e) { var d = D(); if (d) { salirDelFinal(); d.irA(tiempoEn(e)); setTimeout(pintar, 60); } });
   prog.addEventListener('mousemove', function (e) {
     var d = D(); if (!d) return; var seg = tiempoEn(e), tip = $n('.nf-tip'), r = prog.getBoundingClientRect();
     var ie = escenaEnTiempo(seg), th = miniatura(ie);

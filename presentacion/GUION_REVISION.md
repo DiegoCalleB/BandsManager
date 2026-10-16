@@ -815,7 +815,7 @@ _(escena visual, sin diálogo)_
 **Rótulo:** Fin de la historia · El reto  
 **Titular:** Brais, un reto.  
 
-**57.1** · **Diego**: Y ahora, Brais, un reto. No para el Brais de esta historia: para ti, el de verdad.
+**57.1** · **Diego**: Y ahora, Brais, un reto. No para el batería de esta historia: para ti, el de verdad.
 
 **57.2** · **Diego**: Te he preparado el setlist del primer ensayo de Master of Prompts: metal, con letras de coña sobre programar.  
    _Voz:_ Te he preparado el sétlist del primer ensayo de Máster of Prompts. Metal, con letras de coña sobre programar.
@@ -830,7 +830,7 @@ _(escena visual, sin diálogo)_
 **Rótulo:** Fin de la historia · La invitación  
 **Titular:** Te guardamos el sitio.  
 
-**58.1** · **Diego**: Brais… yo había dejado de tocar. Este máster me devolvió las ganas.
+**58.1** · **Diego**: Yo había dejado de tocar. Este máster me devolvió las ganas.
 
 **58.2** · **Diego**: Nos falta batería, Brais. Y es tuya: solo tienes que decir que sí.
 
@@ -843,11 +843,11 @@ _(escena visual, sin diálogo)_
 **59.1** · **Diego**: A Brais y a todo el profesorado de The Big School, por un máster que acaba en una aplicación de verdad.  
    _Voz:_ Gracias, Brais. Y gracias a todo el profesorado de la Big Scul, por un máster que acaba en una aplicación de verdad.
 
-**59.2** · **Diego**: Y la invitación sigue en pie, Brais, y es solo para ti: un batería tan bueno no se deja escapar.  
-   _Voz:_ Y la invitación sigue en pie, Brais. Y es solo para ti. Un batería tan bueno no se deja escapar.
+**59.2** · **Diego**: Y la invitación sigue en pie, y es solo para ti: un batería tan bueno no se deja escapar.  
+   _Voz:_ Y la invitación sigue en pie. Y es solo para ti. Un batería tan bueno no se deja escapar.
 
 **59.3** · **Diego**: Diego · bajo Ensayamos el sábado. Os llevo vuestros setlists personalizados. 🎸  
-   _Voz:_ Ensayamos el sábado, Brais. Te llevo tu sétlist. Tu hoja, con tus notas. Solo las tuyas.
+   _Voz:_ Ensayamos el sábado. Te llevo tu sétlist. Tu hoja, con tus notas. Solo las tuyas.
 
 ---
 

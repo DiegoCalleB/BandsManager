@@ -1152,8 +1152,8 @@
   "lines": [
    {
     "who": "diego",
-    "txt": "Y ahora, Brais, un reto. No para el Brais de esta historia: para ti, el de verdad.",
-    "voz": "Y ahora, Brais, un reto. No para el Brais de esta historia: para ti, el de verdad."
+    "txt": "Y ahora, Brais, un reto. No para el batería de esta historia: para ti, el de verdad.",
+    "voz": "Y ahora, Brais, un reto. No para el batería de esta historia: para ti, el de verdad."
    },
    {
     "who": "diego",
@@ -1174,8 +1174,8 @@
   "lines": [
    {
     "who": "diego",
-    "txt": "Brais… yo había dejado de tocar. Este máster me devolvió las ganas.",
-    "voz": "Brais… yo había dejado de tocar. Este máster me devolvió las ganas."
+    "txt": "Yo había dejado de tocar. Este máster me devolvió las ganas.",
+    "voz": "Yo había dejado de tocar. Este máster me devolvió las ganas."
    },
    {
     "who": "diego",
@@ -1196,13 +1196,13 @@
    },
    {
     "who": "diego",
-    "txt": "Y la invitación sigue en pie, Brais, y es solo para ti: un batería tan bueno no se deja escapar.",
-    "voz": "Y la invitación sigue en pie, Brais. Y es solo para ti. Un batería tan bueno no se deja escapar."
+    "txt": "Y la invitación sigue en pie, y es solo para ti: un batería tan bueno no se deja escapar.",
+    "voz": "Y la invitación sigue en pie. Y es solo para ti. Un batería tan bueno no se deja escapar."
    },
    {
     "who": "diego",
-    "txt": "Ensayamos el sábado, Brais. Te llevo tu setlist: tu hoja, con tus notas. Solo las tuyas.",
-    "voz": "Ensayamos el sábado, Brais. Te llevo tu sétlist. Tu hoja, con tus notas. Solo las tuyas."
+    "txt": "Ensayamos el sábado. Te llevo tu setlist: tu hoja, con tus notas. Solo las tuyas.",
+    "voz": "Ensayamos el sábado. Te llevo tu sétlist. Tu hoja, con tus notas. Solo las tuyas."
    }
   ],
   "nota": "Gracias corto al profesorado y todo lo demás para Brais. El cierre adapta 'Os llevo vuestros setlists personalizados' a Brais con el callback a su '¡Mi hoja! ¡Con mis notas! ¡Solo las mías!' (Una hoja para cada músico) y a 'Ensayamos el sábado' (Otro jueves). OJO: el texto en pantalla de esta escena no sale del JSON (sign-msg en base.html y <p> fijos en generar.py)."

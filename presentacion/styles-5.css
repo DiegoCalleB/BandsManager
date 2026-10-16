@@ -62,6 +62,10 @@ body.scroll .con-paso .paso2-in { opacity: 1; translate: none; }
 body.pelicula:not(.scroll) #reaccion { inset: auto; right: 56px; top: 56px; width: 280px; height: 158px; border-radius: 14px;
   border: 3px solid rgba(255,255,255,.85); box-shadow: 0 18px 50px rgba(0,0,0,.7); }
 body.pelicula:not(.scroll):has(.slide.feat.active .ft-shot.phone) #reaccion { right: auto; left: 120px; top: 300px; width: 560px; height: 315px; }
+/* el cantante de Master of Prompts: su foto en la ventanita cuando habla */
+#reaccion .rx-mop { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; opacity: 0; }
+body.pelicula:not(.scroll):has(.slide.feat.active [data-who="voz_mop"].habla) #reaccion { opacity: 1; }
+body.pelicula:not(.scroll):has(.slide.feat.active [data-who="voz_mop"].habla) #reaccion .rx-mop { opacity: 1; }
 /* el correo ocupa toda la pantalla (cámara incluida): ahí no hay contraplano, que se vea el correo */
 body.pelicula:not(.scroll):has(.slide.feat.active.mailscene) #reaccion { display: none; }
 
@@ -222,3 +226,50 @@ body.pausado #stage, body.pausado #stage *, body.pausado #stage *::before, body.
 .nff-mus a b { font-size: 26px; line-height: 1.1; } .nff-mus a small { font-size: 19px; color: #bbb; }
 .nff-mus a:hover { background: #fff; color: #000; } .nff-mus a:hover small { color: #444; }
 @media (prefers-reduced-motion: reduce) { .nff-mus-t, .nff-mus { animation-duration: 1ms; animation-delay: 0ms; } }
+
+/* el móvil del generador de reels enseña a la banda tocando (encaja en el hueco de «Band Clip Studio», entre la cabecera y los iconos) */
+.dr-reelvid { position: absolute; left: 76.56%; top: 37.1%; width: 14.5%; height: 21.6%; border-radius: 18px; overflow: hidden; pointer-events: none; }
+.dr-reelvid video { position: absolute; inset: 0; width: 100% !important; height: 100% !important; object-fit: cover !important; object-position: 50% 40%; }
+
+/* las frases de Diego suenan sobre las fotos de «Mis bandas»; el elemento solo es el portador de la voz */
+.mb-voz { position: absolute; left: 0; top: 0; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+/* con la voz de Diego encima, los subtítulos ocupan abajo: la línea de edades pasa arriba */
+.mis-bandas .mb-linea { bottom: auto; top: 66px; scale: .8; transform-origin: 50% 0; }
+
+/* ── Inicio de «Netflix»: fila de anuncios de BandManager.io (como la de Juegos), acceso fijo y botón «Inicio» del final ── */
+.nx-ad-chip { margin-left: 14px; padding: 3px 10px; border: 1px solid #777; border-radius: 3px; color: #bbb; font-size: 14px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; vertical-align: middle; }
+.nx-games { display: flex; gap: 22px; }
+.nx-game { flex: 0 0 188px; display: flex; flex-direction: column; gap: 4px; color: #fff; text-decoration: none; position: relative; }
+.nx-game i { position: relative; display: grid; place-items: center; overflow: hidden; width: 188px; height: 188px; border-radius: 22%; background: radial-gradient(circle at 18% 12%, var(--c1) 0, transparent 62%), radial-gradient(circle at 92% 96%, var(--c2) 0, transparent 66%), linear-gradient(150deg, var(--c1), var(--c2)); box-shadow: 0 8px 24px #0009, inset 0 0 0 1px #ffffff26; transition: transform .25s, box-shadow .25s; }
+.nx-game i::before { content: ''; position: absolute; inset: 0; background: repeating-radial-gradient(circle at 50% 118%, transparent 0 22px, #ffffff14 22px 24px); }
+.nx-game i::after { content: ''; position: absolute; inset: 0; background: linear-gradient(165deg, #ffffff40 0, transparent 38%), linear-gradient(transparent 60%, #0005); }
+.nx-game i svg { position: relative; z-index: 1; width: 64px; height: 64px; padding: 24px; box-sizing: content-box; border-radius: 50%; background: #ffffff2e; border: 2px solid #ffffff59; fill: none; stroke: #fff; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 3px 8px #0006); }
+.nx-game i img { position: absolute; z-index: 1; right: 10px; bottom: 10px; width: 30px; height: 30px; border-radius: 9px; box-shadow: 0 2px 8px #0007; }
+.nx-game:hover i, .nx-game:focus-visible i { transform: scale(1.07); box-shadow: 0 14px 40px #000; }
+.nx-game b { margin-top: 10px; font-size: 19px; line-height: 1.15; }
+.nx-game small { color: #a3a3a3; font-size: 14px; line-height: 1.25; }
+.nx-game span { margin-top: 6px; align-self: flex-start; padding: 5px 14px; border-radius: 4px; background: #e50914; font-size: 14px; font-weight: 700; }
+.nx-bm { margin-right: 18px; padding: 7px 16px; border-radius: 4px; background: #e50914; color: #fff; font-size: 15px; font-weight: 700; text-decoration: none; white-space: nowrap; }
+.nx-bm:hover { background: #f6121d; }
+.nff-inicio { padding: 14px 34px; border: 0; border-radius: 4px; background: #fff; color: #000; font: 600 26px/1 'Helvetica Neue', Arial, sans-serif; cursor: pointer; opacity: 0; animation: nffaparece 900ms ease-out 3200ms both; }
+.nff-inicio:hover { background: #d8d8d8; }
+@media (prefers-reduced-motion: reduce) { .nff-inicio { animation-duration: 1ms; animation-delay: 0ms; } }
+
+/* pósters tipográficos de las películas inventadas del Top 10 y de «Porque viste…» */
+.nx-card.fake { background: radial-gradient(circle at 20% 15%, var(--c1), transparent 70%), linear-gradient(155deg, var(--c1), var(--c2)); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 14px; box-sizing: border-box; }
+.nx-card.fake > i { position: absolute; left: 10px; top: 8px; font: 400 26px/1 Anton, Impact, sans-serif; color: #e50914; font-style: normal; }
+.nx-card.fake > b { font: 400 min(1.7vw, 30px)/1.08 Anton, Oswald, Impact, sans-serif; text-transform: uppercase; letter-spacing: .01em; text-shadow: 0 3px 12px #0008; }
+.nx-card.fake .nx-mini b { font: inherit; }
+/* las filas del inicio se desplazan hacia el lado (los puestos 7 a 10 del Top 10 quedan fuera de la pantalla) */
+.nx-filas2 .nx-row { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; padding: 28px 40px 28px 0; margin: -28px 0; }
+.nx-filas2 .nx-row::-webkit-scrollbar { display: none; }
+
+/* icono real de una app (img/juegos/<id>.png): tapa el icono dibujado */
+.nx-game i img.nx-gicono { position: absolute; z-index: 2; inset: 0; right: auto; bottom: auto; width: 100%; height: 100%; border-radius: 0; box-shadow: none; object-fit: cover; }
+
+.nx-filas2.con-flechas { position: relative; }
+.nx-flecha-fila { position: absolute; top: 56px; bottom: 0; width: 56px; border: 0; background: linear-gradient(90deg, #141414cc, transparent); color: #fff; font-size: 54px; line-height: 1; cursor: pointer; opacity: 0; transition: opacity .2s; z-index: 6; }
+.nx-flecha-fila.ant { left: 0; margin-left: -64px; width: 64px; }
+.nx-flecha-fila.sig { right: 0; background: linear-gradient(270deg, #141414cc, transparent); }
+.nx-filas2.con-flechas:hover .nx-flecha-fila { opacity: 1; }
+.nx-flecha-fila:hover { background-color: #0008; }

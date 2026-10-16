@@ -100,10 +100,10 @@ Diego sale con su propia cara. Cámara fija, mirada directa al objetivo, sonrisa
 - **Prompt base:** `Intimate direct-to-camera cinematic revelation shot, tight close-up, 85mm portrait lens f/1.4. A 41-year-old man (Diego), rock musician and software engineer, looks directly into the lens with a calm, knowing smile. Clean Rembrandt lighting, authentic eye contact, subtle conversational lip movement, 35mm Kodak texture, zero uncanny valley.`
 
 ### A5a · «Yo había dejado de tocar» — ~5,2 s (plano 56.1)
-«Brais… yo había dejado de tocar. Este máster me devolvió las ganas.»
+«Yo había dejado de tocar. Este máster me devolvió las ganas.»
 
 ### A5b1 · El reto (parte 1) — ~5 s (plano 55.1)
-«Y ahora, Brais, un reto. No para el Brais de esta historia: para ti, el de verdad.»
+«Y ahora, Brais, un reto. No para el batería de esta historia: para ti, el de verdad.»
 
 ### A5b2 · El reto (parte 2) — ~3,5 s
 «En casa le das caña a la batería.»

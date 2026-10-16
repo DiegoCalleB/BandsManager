@@ -299,22 +299,22 @@ EN = {
     "So, we rehearse on Saturday. And on Wednesday, with the metalheads. Rock and roll!",
 "Traidor.":
     "Traitor.",
-"Y ahora, Brais, un reto. No para el Brais de esta historia: para ti, el de verdad.":
-    "And now, Brais, a challenge. Not for the Brais of this story: for you, the real one.",
+"Y ahora, Brais, un reto. No para el batería de esta historia: para ti, el de verdad.":
+    "And now, Brais, a challenge. Not for the drummer of this story: for you, the real one.",
 "Te he preparado el sétlist del primer ensayo de Máster of Prompts. Metal, con letras de coña sobre programar.":
     "I've prepared the setlist for the first rehearsal of Master of Prompts. Metal, with joke lyrics about programming.",
 "Y te lo mando como lo mandamos todo: la IA lo redacta, yo lo repaso, y… enviado.":
     "And I'm sending it the way we send everything: the AI writes it, I review it, and… sent.",
-"Brais… yo había dejado de tocar. Este máster me devolvió las ganas.":
-    "Brais… I'd stopped playing. This master's gave me the urge back.",
+"Yo había dejado de tocar. Este máster me devolvió las ganas.":
+    "I'd stopped playing. This master's gave me the urge back.",
 "Nos falta batería, Brais. Y es tuya: solo tienes que decir que sí.":
     "We need a drummer, Brais. And it's yours: you just have to say yes.",
 "Gracias, Brais. Y gracias a todo el profesorado de la Big Scul, por un máster que acaba en una aplicación de verdad.":
     "Thank you, Brais. And thanks to all the faculty at The Big School, for a master's that ends in a real application.",
-"Y la invitación sigue en pie, Brais. Y es solo para ti. Un batería tan bueno no se deja escapar.":
-    "And the invitation still stands, Brais. And it's only for you. A drummer this good doesn't get away.",
-"Ensayamos el sábado, Brais. Te llevo tu sétlist. Tu hoja, con tus notas. Solo las tuyas.":
-    "We rehearse on Saturday, Brais. I'll bring your setlist. Your sheet, with your notes. Only yours.",
+"Y la invitación sigue en pie. Y es solo para ti. Un batería tan bueno no se deja escapar.":
+    "And the invitation still stands. And it's only for you. A drummer this good doesn't get away.",
+"Ensayamos el sábado. Te llevo tu sétlist. Tu hoja, con tus notas. Solo las tuyas.":
+    "We rehearse on Saturday. I'll bring your setlist. Your sheet, with your notes. Only yours.",
 "¿Ya se ha acabado la peli? ¿Y quién paga las birras de la fiesta?":
     "Is the movie over already? And who's paying for the party's beers?",
 "Lo de dividir gastos está en mi lista de pendientes, Brais. Justo debajo de cobrarte las birras.":
@@ -435,6 +435,36 @@ EN = {
     "It's missing nothing! It's the Swiss army knife of bands!",
 "Iago, esto es una locura. Lo necesitan todos los grupos, los mánayers, las productoras. ¡Todos!":
     "Iago, this is crazy. Every band needs it, the managers, the production companies. Everyone!",
+"¿Y si no sé qué escala tocar encima? Porque yo improviso por intuición. Y mi intuición desafina.":
+    "What if I don't know which scale to play over it? I improvise by instinct. And my instinct is out of tune.",
+"Para eso está el profesor de armonía. Lee los acordes de la canción, y te explica cómo funciona.":
+    "That's what the harmony teacher is for. It reads the song's chords and explains how it works.",
+"Le dices tu nivel y tu instrumento, y te sugiere qué escala usar para improvisar. Y cómo componer encima.":
+    "You tell it your level and your instrument, and it suggests which scale to improvise with. And how to compose over it.",
+"¡Pentatónica menor de Mi, y a volar! ¡Me acaba de arreglar el solo! ¡Me acaba de arreglar la vida!":
+    "E minor pentatonic, and off we go! It just fixed my solo! It just fixed my life!",
+"Eso sí: te lo marca como idea, no como verdad. Las notas las saca la app. La inteligencia artificial solo te las explica.":
+    "One thing: it marks it as an idea, not as the truth. The app works out the notes. The AI only explains them.",
+"Oye… ¿y si me coinciden dos ensayos a la vez? Uno con cada banda.":
+    "Hey… what if two rehearsals clash? One with each band.",
+"El calendario te avisa. Si dos eventos se pisan, si no da tiempo a llegar de un sitio a otro, o si vas justo para montar.":
+    "The calendar warns you. If two events overlap, if you can't make it from one place to the other, or if you're cutting it fine to set up.",
+"¡Ai, mi madriña! ¡Me acaba de salvar el miércoles! ¡Esto vale su peso en oro, neno!":
+    "Oh my goodness! It just saved my Wednesday! This is worth its weight in gold, mate!",
+"El miércoles. El de los metaleros, ¿no, traidor?":
+    "Wednesday. The metalheads' one, right, traitor?",
+"Y solo avisa cuando hay una persona en los dos sitios. Si no, no te molesta.":
+    "And it only warns you when the same person is in both places. Otherwise, it doesn't bother you.",
+"¡Esto es como Tinder, pero para bandas! ¡Y sin tener que hablar con nadie!":
+    "This is like Tinder, but for bands! And without having to talk to anyone!",
+"Home, ¿y la gasolina de la furgo y de mi coche? Que la última gira la puse yo. Creo.":
+    "Hey, what about the petrol for the van and my car? I paid for the last tour. I think.",
+"Metes los coches que van en ruta, con su consumo, y te calcula la gasolina de cada parada.":
+    "You add the cars on the route, with their consumption, and it works out the petrol for each stop.",
+"Y te dice lo que queda limpio de cada bolo, después de gasolina, dietas y hotel.":
+    "And it tells you what's left clean from each gig, after petrol, meals and hotel.",
+"¡Ni una discusión más en la gasolinera! ¡Esto es amor, tío, amor!":
+    "Not one more argument at the petrol station! This is love, mate, love!",
 }
 
 def main():

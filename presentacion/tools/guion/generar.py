@@ -335,8 +335,6 @@ add(feat('Date Swap', TAG1, 'Date Swap: cambio de fecha.',
          [m('iago', 'Esto es Date Swap: le propongo a otra banda cambiarnos las fechas. Nosotros tocamos en su ciudad y ellos en la nuestra. La IA redacta la propuesta.'),
           m('mop', 'Os leo. Me encanta: nosotros vamos a Santiago y vosotros venís a Vigo. ¡Cartel doble!'),
           m('brais', '¡Cartel doble con otra banda! ¡Esto no lo tenían ni los Rolling!'),
-          m('xandre', '¿Y quién es ese?'),
-          m('iago', 'El cantante de Master of Prompts. Guardaos su cara, que va a volver.'),
           m('mop', 'Y oye, Brais: nos falta batería. ¿Te vienes a Master of Prompts?', say='[laughs] Y oye, {bateria}: nos falta batería. ¿Te vienes a Máster of Prompts?'),
           m('brais', '¿Yo? ¡Pero si ya tengo banda! Bueno… los miércoles libro.', say='[gasps] ¿Yo? ¡Pero si ya tengo banda! Bueno… los miércoles libro.'),
           m('xandre', '¡Traidor! ¡Nos deja por unos metaleros!', say='[dramatically] ¡Traidor! ¡Nos deja por unos metaleros, che!')],
@@ -350,7 +348,7 @@ add(feat('Cambio de perfil', TAG1, 'Una cuenta, varias bandas.',
           m('iago', 'Como los perfiles de una plataforma de cine. ¿Quién toca hoy? Master of Prompts.', cls='sync', say='Como los perfiles de una plataforma de cine. ¿Quién toca hoy? Máster of Prompts.'),
           m('xandre', '¡Cambió todo! ¡El logo, el calendario, hasta las salas!', say='[amazed] ¡Ché, cambió todo! ¡El logo, el calendario, hasta las salas!'),
           m('iago', 'Y lo de una banda no se ve nunca en la otra. Esa es la primera regla de la casa. Solo se juntan en tu calendario.', say='Y lo de una banda no se ve nunca en la otra. Esa es la primera regla de la casa. Solo se juntan en tu calendario personal.')],
-         shot_vid_sync('video/v-perfiles.mp4', 'video/v-perfiles.jpg')))
+         shot_vid_sync('video/v-perfiles-2.mp4', 'video/v-perfiles.jpg')))
 
 add(feat('Bandas amigas', TAG1, 'Bandas amigas, a la escucha.',
          [m('xandre', '¿Y las otras bandas? Siempre acabamos con los mismos contactos en el móvil.'),
@@ -430,6 +428,15 @@ add(feat('Una hoja para cada músico', TAG2, 'El setlist, ordenado e impreso.',
          shot_vid('video/v-energia.mp4', 'video/v-energia.jpg') + f'''
   <div class="paperwrap paso2-in" aria-label="Hoja de setlist impresa para el batería y la voz">{back}{front}</div>''', grupo='musica', cls='con-paso'))
 
+# Versión larga de «La curva de energía» (en la película va fusionada en «Una hoja para cada músico»): vive en el anexo
+add(feat('La curva de energía', TAG2, 'La curva de energía.',
+         [m('iago', 'Cada tema tiene su energía. La app dibuja la curva del concierto.', say='Mirad, chavales: cada tema tiene su energía, y la app dibuja la curva del concierto entero.'),
+          m('alvaro', '¿Y si la curva se cae a mitad del bolo?', say='[curious] ¿Y si a mitad del bolo la curva se cae?'),
+          m('iago', 'Le das a «Optimizar orden» y te propone el setlist perfecto.', say='Le das a optimizar orden, y te propone el setlist perfecto. Tú decides si lo aplicas.'),
+          m('iago', 'Y vigila las transiciones: energía y tonalidad, tema a tema.', say='Y la inteligencia artificial vigila las transiciones: que no choquen ni la energía ni el tono de un tema al siguiente.'),
+          m('xandre', '¡Un setlist que sube como un cohete! 🚀', say='[amazed] ¡Ché, un setlist que sube como un cohete!')],
+         shot_vid('video/v-energia.mp4', 'video/v-energia.jpg'), grupo='musica'))
+
 add(feat('Los acordes pasan solos', TAG2, 'Los acordes pasan solos.',
          [m('iago', 'Dale al play, Álvaro. Los acordes y la letra van siguiendo la canción solos.'),
           m('alvaro', '¡Pero tío! ¡Te has copiado de Ultimate Guitar! ¡Pellízcame! ¡Esto es mejor que un solo de Slash!'),
@@ -484,7 +491,6 @@ add(feat('Choques en el calendario', TAG2, 'El calendario avisa de los choques.'
          shot_vid_sync('video/v-choques.mp4', 'img/d-h-calendario.jpg'), grupo='musica'))
 
 # ───────── Capítulo 3 · Que te conozcan ─────────
-add(plano('Plano · Furgoneta (tras el ensayo)', 'video/actores/furgoneta', 4500))
 add(act('Capítulo 3 · Que te conozcan', 'III', 'Capítulo 3 de 5 · Que te conozcan', 'Que nos conozcan.',
         'Un dossier, un QR y un vídeo para que la gente nos siga.', 'iago',
         '¡Y ahora, que nos conozca más gente! 🌍', 3, 'img/concierto-3.jpg'))
@@ -551,6 +557,8 @@ add(feat('Cuánto entra y cuánto queda', 'Sábado · 12:50 · Después del conc
           m('brais', '¡Oye!')],
          shot_img('img/d-h-finanzas.jpg'), grupo='negocio'))
 
+add(plano('Plano · Furgoneta (hacia el negocio)', 'video/actores/furgoneta', 4000))
+
 add(feat('La gira, con gasolina y todo', 'Sábado · 12:55 · Después del concierto', 'La gira, con la gasolina calculada.',
          [m('brais', '¿Y la gasolina de la furgo y de mi coche?', say='Home, ¿y la gasolina de la furgo y de mi coche? ¿Quién la paga?'),
           m('iago', 'Metes los coches que van en ruta y calcula el gasto de cada parada.', say='Metes los coches que van en ruta, con su consumo, y te calcula la gasolina de cada parada.'),
@@ -590,7 +598,6 @@ add(scene('Esto lo necesitan todos', 'Sábado · 13:05 · El local de ensayo', '
               m('iago', 'Si me hago rico, una buena parte irá para la banda. ¡Os Herdeiros do Código lo va a petar, chavales!'), cls='tight'), tr='zoom'))
 
 # ───────── Capítulo 5 · Cómo lo hacemos ─────────
-add(plano('Plano · Furgoneta (hacia el negocio)', 'video/actores/furgoneta', 4000))
 add(act('Capítulo 5 · Cómo lo hacemos', 'V', 'Capítulo 5 de 5 · Cómo lo hacemos', '¿Y cómo lo hacemos?',
         'De qué vivimos, y cómo está hecho por dentro.', 'iago',
         'Vamos por partes. Os cuento mi estrategia.', 5, 'img/concierto-1.jpg'))
@@ -870,7 +877,7 @@ if FOTOS:
     linea = ('<div class="mb-linea" aria-hidden="true">' + ''.join(
         f'<span style="--t:{t0:.2f}s"><i></i><b>{e}</b><u>{n}</u></span>' for e, t0, n in hitos) + '</div>')
     S[[i for i, x in enumerate(S) if 'data-title="El giro: el bajista soy yo"' in x][0]] = S[[i for i, x in enumerate(S) if 'data-title="El giro: el bajista soy yo"' in x][0]].replace(
-        '<!--MIS-BANDAS-->', f'''<section class="slide mis-bandas" data-title="Mis bandas" data-transition="fade" data-dur="{int((t + 1.8) * 1000)}" data-fin=".mb-fin">
+        '<!--MIS-BANDAS-->', f'''<section class="slide mis-bandas" data-title="Mis bandas" data-transition="fade" data-min="{int((t + 1.8) * 1000)}" data-dur="{int((t + 1.8) * 1000)}" data-fin=".mb-fin">
   <span class="tag" style="opacity:0">Fin de la historia · Diego de la Calle</span>
   {cuerpo}
   {linea}
@@ -897,7 +904,7 @@ add('''<section class="slide giro-reloj" data-title="El reloj" data-transition="
 # El reto: para Brais Moure de verdad (no el batería de la historia). Toca muy bien en casa; le falta el escenario. La pantalla la dirige direccion.py
 add(f'''<section class="slide feat dl reto" data-grupo="promocion" data-title="El reto" data-vent-vivo="En directo · el portátil de Diego de la Calle, el bajista de verdad" data-transition="zoom">
   <div class="ft-copy"><span class="tag">Fin de la historia · El reto</span><h2>Brais, un reto.</h2>
-    {dlg(m('diego', 'Y ahora, Brais, un reto. No para el Brais de esta historia: para ti, el de verdad. En casa le das caña a la batería.',
+    {dlg(m('diego', 'Y ahora, Brais, un reto. No para el batería de esta historia: para ti, el de verdad. En casa le das caña a la batería.',
            say='Y ahora, {bateria}, un reto. No para el {bateria} de esta historia: para ti. El de verdad. En casa le das caña a la batería.'),
          m('diego', 'Te he preparado el setlist del primer ensayo de Master of Prompts: metal, con letras de coña sobre programar.',
            say='Te he preparado el sétlist del primer ensayo de Máster of Prompts. Metal, con letras de coña sobre programar.'),
@@ -912,7 +919,7 @@ add(f'''<section class="slide feat dl reto" data-grupo="promocion" data-title="E
 # La invitación: el correo llega a la bandeja de Brais. La voz de Diego, sin bromas. El cursor se queda sobre «Aceptar»: la decisión es suya
 add(f'''<section class="slide feat dl reto invitacion" data-grupo="promocion" data-title="La invitación" data-vent-tab="Recibidos · Brais Moure" data-vent-url="correo" data-vent-vivo="Mientras tanto, en el portátil de Brais…" data-transition="fade">
   <div class="ft-copy"><span class="tag">Fin de la historia · La invitación</span><h2>Te guardamos el sitio.</h2>
-    {dlg(m('diego', 'Brais… yo había dejado de tocar. Este máster me devolvió las ganas.', say='[softly] {bateria}… yo había dejado de tocar. Este máster me devolvió las ganas.'),
+    {dlg(m('diego', 'Yo había dejado de tocar. Este máster me devolvió las ganas.', say='[softly] Yo había dejado de tocar. Este máster me devolvió las ganas.'),
          m('diego', 'Nos falta batería, Brais. Y es tuya: solo tienes que decir que sí.', say='[softly] Nos falta batería, {bateria}. Y es tuya: solo tienes que decir que sí.'))}
   </div>
   <div class="ft-shot"><img src="img/miembro-brais.jpg" alt="El correo de Diego en la bandeja de Brais, con el botón para aceptar la invitación"></div>
@@ -1229,6 +1236,11 @@ def _mover(titulo, tras):
 _mover('Afina el correo', 'La IA escribe, tú apruebas')
 _mover('Medios de comunicación', 'El correo llega a la sala')
 _mover('Bandas amigas', 'Medios de comunicación')
+# Rescatadas del anexo (17-oct): cada una al capítulo donde encaja
+_mover('El profesor de armonía', 'Los acordes pasan solos')
+_mover('Choques en el calendario', 'Calendario de la banda')
+_mover('Bandas amigas', 'Del concierto al disco')
+_mover('La gira, con gasolina y todo', 'Cuánto entra y cuánto queda')
 
 # Orden de la recta final del capítulo 4: la ráfaga de funciones va antes del momento íntimo (así «Las noches» no se pisa)
 _ym = [i for i, x in enumerate(S) if 'data-title="Y mucho más"' in x]
@@ -1287,8 +1299,8 @@ for _e in [e for e in json.load(open(os.path.join(AQUI, 'guion_final.json'), enc
 
 # Anexo: escenas que no entran en la película (para que dure lo que dice el cartel) pero siguen en la presentación,
 # al final, para el turno de preguntas. En modo película se saltan (data-anexo, ver deck.js).
-ANEXO = ['Medios de comunicación', 'Afina el correo', 'Bandas amigas', 'El seguimiento de las redes', 'La discografía, desde Spotify',
-         'El profesor de armonía', 'Choques en el calendario', 'Merchan en un minuto', 'La gira, con gasolina y todo',
+ANEXO = ['Medios de comunicación', 'Afina el correo', 'El seguimiento de las redes', 'La discografía, desde Spotify',
+         'La curva de energía', 'Merchan en un minuto',
          'Las ideas, en su sitio', 'La ficha del bolo',
          'El mapa que lee la IA', 'Arquitectura', 'Cómo se construyó con IA', 'Seguridad', 'Calidad en cifras']
 fuera = []
@@ -1310,6 +1322,7 @@ DOLOR = {
     'Bandas amigas': ('Siempre los mismos contactos', 'Escuchas a otras bandas y ves sus números'),
     'El acuerdo, firmado desde BandManager': ('El caché cambia el día del bolo', 'Fecha, caché y rider, por escrito'),
     'Una hoja para cada músico': ('El mismo setlist para todos', 'Una hoja para cada músico, con sus notas'),
+    'La curva de energía': ('Un setlist ordenado a ojo', 'La IA ordena el setlist por energía'),
     'Los acordes pasan solos': ('Buscar los acordes en otra web', 'Acordes y letra siguen la canción'),
     'El profesor de armonía': ('Sin saber qué escala tocar', 'El profesor te sugiere la escala'),
     'Iris separa los instrumentos': ('Sin pistas separadas, no se oye el bajo', 'Iris separa cada instrumento'),
@@ -1347,6 +1360,10 @@ FICHAS = {
     'El dossier de la banda': ('Dossier web', 'La web de la banda, con fotos, formación y contacto de booking.', ['Se edita desde la app', 'La IA sabe cuándo lo abren']),
     'Un QR y el público se hace fan': ('QR de fans', 'El público escanea y os sigue, ve los bolos, apoya a la banda y deja su correo.', ['Con su consentimiento', 'Regalo a cambio del correo']),
     'Del directo al reel': ('Reels con IA', 'Del vídeo del concierto saca los mejores trozos, listos para cada red.', ['Instagram, TikTok y YouTube', 'Formato de cada plataforma']),
+    'Bandas amigas': ('Bandas amigas', 'Otras bandas con su estilo, su ciudad y su público. Las escuchas sin salir de la app y ves sus números.', ['Escuchar desde Spotify', 'Métricas del mes en Spotify y YouTube']),
+    'El profesor de armonía': ('Profesor de armonía', 'Lee los acordes de la canción y te sugiere qué escala usar para improvisar y cómo componer encima.', ['Según tu nivel y tu instrumento', 'Es una idea, no una verdad']),
+    'Choques en el calendario': ('Choques de calendario', 'Avisa si dos eventos se pisan, si no da tiempo a llegar o si vas justo para montar.', ['Solo si hay una persona en los dos sitios']),
+    'La gira, con gasolina y todo': ('Gira', 'Los coches de la ruta, con su consumo: la gasolina de cada parada y lo que queda limpio de cada bolo.', ['Gasolina, dietas y hotel']),
     'Cuánto entra y cuánto queda': ('Finanzas', 'Lo que entra por cada bolo, los gastos y lo que le toca a cada músico.', ['En una sola pantalla', 'Cuentas claras']),
 }
 _nf = 0
@@ -1377,14 +1394,17 @@ PLANOS = {'Prólogo · Jueves, 23:47': 'jueves', 'Prólogo · Viernes, 22:10': '
           'Lo han visto todo': 'local', 'Las noches': 'noches', 'El festival, 02:14': ['festival', 'concierto'],
           'Otro jueves, 23:47': 'otro-jueves', 'En la radio': 'concierto', 'La sala contestó': 'manager',
           # el capítulo 5 ya no es fondo de foto con tarjetas: pasa sobre planos en movimiento
-          'Para darlo a conocer': 'local', 'A quién se lo vendemos': 'concierto', 'Cómo ganamos dinero': 'espaldas-a', 'Qué viene': 'hombro-iago', 'Confirmados': 'otro-jueves',
-          'Esto lo necesitan todos': 'alvaro-escenario'}
+          'Para darlo a conocer': 'local', 'A quién se lo vendemos': 'espaldas', 'Cómo ganamos dinero': ['espaldas-a', 'iago-cu'], 'Qué viene': 'hombro-iago', 'Confirmados': 'otro-jueves',
+          'Esto lo necesitan todos': ['otro-jueves', 'concierto']}
 _ACT = os.path.join(AQUI, '..', '..', 'video', 'actores')
 # Escenas con varios planos de fondo seguidos: segundo en que entra cada clip (el último se queda); el CSS los funde (.actor-vid.sec)
-SECUENCIA = {'El festival, 02:14': [0, 19]}
+SECUENCIA = {'El festival, 02:14': [0, 13.5], 'Esto lo necesitan todos': [0, 9.5], 'Cómo ganamos dinero': [0, 8.5]}
 def _vids(k, t):
     ini = SECUENCIA[t]
-    return ''.join(_vid(c, f' style="--i:{ini[n]}s;--d:{(ini[n + 1] - ini[n] + 0.8) if n + 1 < len(k) else 60}s"').replace('class="actor-vid"', 'class="actor-vid sec' + (' ult' if n + 1 == len(k) else '') + '"') for n, c in enumerate(k))
+    est = lambda n: f' style="--i:{ini[n]}s;--d:{(ini[n + 1] - ini[n] + 0.8) if n + 1 < len(k) else 60}s"'
+    cls = lambda n: 'actor-vid sec' + (' ult' if n + 1 == len(k) else '')
+    # una entrada «img/….jpg» es una foto fija (con su zoom lento) en vez de un clip
+    return ''.join(f'<img class="{cls(n)} foto-resu"{est(n)} src="{c}" alt="">' if c.endswith('.jpg') else _vid(c, est(n)).replace('class="actor-vid"', f'class="{cls(n)}"') for n, c in enumerate(k))
 def _vid(k, extra=''):
     return (f'<video class="actor-vid"{extra} data-ambient data-restart muted loop playsinline preload="auto"'
             + (f' poster="video/actores/{k}.jpg"' if os.path.exists(os.path.join(_ACT, k + '.jpg')) else '')
@@ -1393,7 +1413,7 @@ def _vid(k, extra=''):
 for _i, _x in enumerate(S):
     _t = re.search(r'data-title="([^"]+)"', _x)
     _k = _t and PLANOS.get(_t.group(1))
-    if _k and all(os.path.exists(os.path.join(_ACT, c + '.mp4')) for c in ([_k] if isinstance(_k, str) else _k)):
+    if _k and all(os.path.exists(os.path.join(_ACT, '..', '..', c) if c.endswith('.jpg') else os.path.join(_ACT, c + '.mp4')) for c in ([_k] if isinstance(_k, str) else _k)):
         _v = _vid(_k) if isinstance(_k, str) else _vids(_k, _t.group(1))
         S[_i] = re.sub(r'(<div class="scene-bg"[^>]*>)', lambda mm: mm.group(1) + _v + '<i class="actor-velo"></i>', _x, count=1)
         if _k == 'manager': S[_i] = re.sub(r'(<section [^>]*)>', r'\1 data-sin-plato>', S[_i], count=1)  # el vídeo ya es el mánager: sin su retrato encima
@@ -1403,6 +1423,13 @@ for _i, _x in enumerate(S):
 import json as _json
 _json.dump(direccion.MOVS, open(os.path.join(AQUI, '..', '..', 'remotion', 'public', 'direccion.json'), 'w'))
 html = head + '\n\n' + '\n'.join(S) + '\n' + tail
+if FOTOS:
+    # El giro: las frases de Diego suenan sobre «Mis bandas» (las fotos de sus grupos), sin una escena aparte con la foto fija
+    _i = html.index('<section class="slide entrevista" data-title="El giro: el bajista soy yo"'); _j = html.index('</section>', _i) + len('</section>')
+    _voz = re.findall(r'data-who="diego"[^>]*data-say="([^"]*)"', html[_i:_j]); assert len(_voz) == 2, _voz
+    html = html[:_i] + html[_j:].lstrip('\n')
+    _mb = re.search(r'<section class="slide mis-bandas" data-title="Mis bandas"[^>]*>', html).group(0)
+    html = html.replace(_mb, _mb + ''.join(f'\n  <i class="mb-voz" data-who="diego" data-say="{v}"></i>' for v in _voz), 1)
 # Defensa técnica: el panel (tecla D) y presentacion/DEFENSA.md salen del mismo contenido (defensa.py)
 import defensa as _df, re as _re
 def _md(t): return _re.sub(r'`([^`]+)`', r'<code>\1</code>', t)
@@ -1422,7 +1449,7 @@ open(os.path.join(AQUI, '..', '..', 'DEFENSA.md'), 'w', encoding='utf-8').write(
 _tec = ''.join('<h3>' + _t + '</h3><dl class="cr-dl">' + ''.join('<dt>' + _a + '</dt><dd>' + _md(_b) + '</dd>' for _a, _b in _cs) + '</dl>' for _i, _t, _cs in _df.SECCIONES)
 html = html.replace('<!--TECNICA-->', _tec, 1)
 html = html.replace('<script src="sound.js"></script>', _panel + '\n<script src="sound.js"></script>', 1)
-html = html.replace('<script src="sound.js"></script>', '<script src="reparto.js"></script>\n<script src="sound.js"></script>\n<script src="voces.js"></script>\n<script src="subs-en.js"></script>\n<script src="cine.js"></script>\n<script src="cine-directo.js"></script>')
+html = html.replace('<script src="sound.js"></script>', '<script src="reparto.js"></script>\n<script src="sound.js"></script>\n<script src="voces.js"></script>\n<script src="subs-en.js"></script>\n<script src="cine.js"></script>\n<script src="cine-directo.js"></script>\n<script src="fin-home.js"></script>')
 for k, r, say in (('brais', 'bateria', EXTRA_SAY['cast_bateria']), ('xandre', 'voz', EXTRA_SAY['cast_voz']),
                   ('alvaro', 'guitarra', EXTRA_SAY['cast_guitarra']), ('iago', 'bajo', EXTRA_SAY['cast_bajo'])):
     html = html.replace(f'<figure><img src="img/miembro-{k}.jpg"', f'<figure data-who="{r}" data-say="{say}"><img src="img/miembro-{k}.jpg"', 1)
@@ -1430,6 +1457,7 @@ CORTO = ['Tráiler', 'Prólogo · Jueves, 23:47', 'Prólogo · La llamada', 'Tí
          'Iris separa los instrumentos', 'Choques en el calendario', 'Las noches', 'El festival, 02:14', 'En la radio', 'El giro: el bajista soy yo',
          'Un sueño hecho realidad', 'El reloj', 'El reto', 'La invitación', 'Gracias', 'Créditos']
 if FOTOS:
+    CORTO.remove('El giro: el bajista soy yo')
     CORTO.insert(CORTO.index('Un sueño hecho realidad'), 'Mis bandas')
 for t in CORTO:
     n = html.count(f'data-title="{t}"')
@@ -1445,7 +1473,10 @@ html = html.replace('data-title="El correo llega a la sala" data-corto', 'data-t
 html = html.replace('data-title="Date Swap" ', 'data-title="Date Swap" data-min="29500" ', 1)
 html = html.replace('data-title="Del directo al reel" ', 'data-title="Del directo al reel" data-min="26000" ', 1)
 html = html.replace('data-title="Del concierto al disco" ', 'data-title="Del concierto al disco" data-min="13500" ', 1)
+# el móvil del generador de reels enseña a la banda tocando, en lugar del hueco «Band Clip Studio»
+html = html.replace('<img src="img/d-h-reels.jpg" alt="">', '<img src="img/d-h-reels.jpg" alt=""><div class="dr-reelvid"><video data-ambient data-restart muted loop playsinline preload="auto" poster="video/actores/concierto.jpg"><source src="video/actores/concierto.mp4" type="video/mp4"></video></div>', 1)
 html = html.replace('data-title="Cambio de perfil" ', 'data-title="Cambio de perfil" data-min="25500" ', 1)
+html = html.replace('data-title="Bandas amigas" ', 'data-title="Bandas amigas" data-min="25200" ', 1)
 html = html.replace('<table class="sheet">', '<table class="sheet" data-who="guitarra" data-say="' + EXTRA_SAY['excel'] + '">', 1)
 html = html.replace('<div class="rm-say">', '<div class="rm-say" data-who="bajo" data-say="' + EXTRA_SAY['sala'] + '">', 1)
 html = html.replace('<div class="react wow"><img src="img/miembro-brais.jpg"', '<div class="react wow" data-who="bateria" data-say="' + EXTRA_SAY['react'] + '"><img src="img/miembro-brais.jpg"', 1)
@@ -1548,7 +1579,7 @@ CORTES = {
     'Prólogo · La decisión': 'l', 'Prólogo · Viernes, 22:10': 'fundido', 'Prólogo · Sábado, 11:00 en el local': 'j',
     'Todas las salas, en un sitio': 'rampa', 'La IA escribe, tú apruebas': 'j', 'El correo llega a la sala': 'golpe', 'Date Swap': 'rampa', 'Cambio de perfil': 'l',
     'Bandas amigas': 'rampa', 'El acuerdo, firmado desde BandManager': 'j', 'La sala contestó': 'negro',
-    'Una hoja para cada músico': 'rampa', 'Los acordes pasan solos': 'j', 'El profesor de armonía': 'l',
+    'Una hoja para cada músico': 'rampa', 'La curva de energía': 'j', 'Los acordes pasan solos': 'j', 'El profesor de armonía': 'l',
     'Iris separa los instrumentos': 'l', 'Las ideas, en su sitio': 'j', 'Calendario de la banda': 'rampa', 'La ficha del bolo': 'j',
     'Choques en el calendario': 'l', 'El dossier de la banda': 'rampa', 'Un QR y el público se hace fan': 'j', 'Merchan en un minuto': 'rampa',
     'Del directo al reel': 'rampa', 'Del concierto al disco': 'rampa', 'Cuánto entra y cuánto queda': 'rampa', 'La gira, con gasolina y todo': 'j',
@@ -1565,6 +1596,9 @@ CORTES = {
 MUSICA = {'Tráiler': '-', 'Título': '-', 'Prólogo · La banda': 'tension', 'Capítulo 1 · Conseguir el bolo': 'compila', 'Capítulo 3 · Que te conozcan': 'cabalga', 'Las noches': 'dramatica', 'Esto lo necesitan todos': 'compila', 'Y mucho más': 'cabalga',
           'Qué viene': 'tension', 'Confirmados': 'compila', 'El festival, 02:14': 'compila', 'Otro jueves, 23:47': 'noches', 'Mis bandas': 'lostrego', 'El giro: el bajista soy yo': 'giro', 'Un sueño hecho realidad': 'dramatica', 'El reloj': '-', 'El reto': 'tema', 'La invitación': 'dramatica', 'Gracias': 'cabalga', 'Plano · El local, vacío': 'cabalga',
           'Escena post-créditos': 'tema'}
+if FOTOS:  # «Mis bandas» hace de escena del giro: entra por negro y lleva su canción
+    CORTES.pop('El giro: el bajista soy yo', None); MUSICA.pop('El giro: el bajista soy yo', None)
+    CORTES['Mis bandas'] = 'negro'; MUSICA['Mis bandas'] = 'giro'
 for t in CORTES:
     if t.startswith('Capítulo') or (t == 'Mis bandas' and not FOTOS):
         continue
@@ -1644,7 +1678,7 @@ def _aplicar_guion(html):
             v = [l['voz'] for l in L]
             cuerpo = re.sub(r'<p class="sub">.*?</p>',
                 '<p class="sub" data-who="diego" data-say="' + esc(v[0]) + '">A Brais y a todo el profesorado de The Big School, por un máster que acaba en una aplicación de verdad.</p>\n'
-                '  <p class="sub inv" data-who="diego" data-say="' + esc(v[1]) + '">Y la invitación sigue en pie, Brais, y es solo para ti: un batería tan bueno no se deja escapar.</p>', cuerpo, 1, flags=re.S)
+                '  <p class="sub inv" data-who="diego" data-say="' + esc(v[1]) + '">Y la invitación sigue en pie, y es solo para ti: un batería tan bueno no se deja escapar.</p>', cuerpo, 1, flags=re.S)
             cuerpo = re.sub(r'<div class="sign-msg">', '<div class="sign-msg" data-who="diego" data-say="' + esc(v[2]) + '">', cuerpo, 1)
             if os.path.exists(os.path.join(AQUI, '..', '..', 'img', 'gracias-mop.jpg')):
                 _i = cuerpo.find('<div class="art">')
@@ -1654,7 +1688,7 @@ def _aplicar_guion(html):
                         _n += -1 if _m.group(1) else 1
                         if _n == 0:
                             _j = _i + _m.end(); _j = cuerpo.index('>', _j) + 1; break
-                    cuerpo = cuerpo[:_i] + '<div class="art foto">' + (_GRACIAS_VID if os.path.exists(os.path.join(AQUI, '..', '..', 'video', 'actores', 'gracias.mp4')) else '<img class="foto-mop" src="img/gracias-mop.jpg" alt="Brais y Diego con una Estrella Galicia, ya en Master of Prompts">') + '<p class="foto-lema"><b>¿Te imaginas vivir esto?</b><b class="l2">¿Te gustaría?</b><span class="l3">Con BandManager es posible esto y mucho más.</span></p><span class="foto-pie">Montaje con IA · ya sois de Master of Prompts</span></div>' + cuerpo[_j:]
+                    cuerpo = cuerpo[:_i] + '<div class="art foto">' + (_GRACIAS_VID if os.path.exists(os.path.join(AQUI, '..', '..', 'video', 'actores', 'gracias.mp4')) else '<img class="foto-mop" src="img/gracias-mop.jpg" alt="Brais y Diego con una Estrella Galicia, ya en Master of Prompts">') + '<p class="foto-lema"><b>¿Te imaginas vivir esto?</b><b class="l2">¿Te gustaría?</b><span class="l3">¡Con BandManager esto es posible y mucho más!</span></p><span class="foto-pie">Montaje con IA · ya sois de Master of Prompts</span></div>' + cuerpo[_j:]
 
         else:
             avisos.append(f'{t}: estructura no soportada ({len(els)}→{len(L)})')
