@@ -14,7 +14,7 @@
   "info": {
     "title": "BandManager.io API",
     "version": "3.0.0",
-    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (369) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
+    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (370) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
     "license": {
       "name": "AGPL-3.0-only",
       "identifier": "AGPL-3.0-only"
@@ -1379,7 +1379,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:54",
+        "x-source": "server/routes/epk_fans.ts:55",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -1412,7 +1412,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:72",
+        "x-source": "server/routes/epk_fans.ts:73",
         "x-autenticacion": "middleware"
       },
       "put": {
@@ -1444,7 +1444,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:103",
+        "x-source": "server/routes/epk_fans.ts:104",
         "x-autenticacion": "middleware"
       }
     },
@@ -4728,7 +4728,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:137",
+        "x-source": "server/routes/epk_fans.ts:138",
         "x-autenticacion": "middleware"
       },
       "put": {
@@ -4761,7 +4761,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:157",
+        "x-source": "server/routes/epk_fans.ts:158",
         "x-autenticacion": "middleware"
       }
     },
@@ -4796,7 +4796,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:1071",
+        "x-source": "server/routes/epk_fans.ts:1087",
         "x-autenticacion": "middleware"
       }
     },
@@ -4831,7 +4831,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:233",
+        "x-source": "server/routes/epk_fans.ts:234",
         "x-autenticacion": "middleware"
       }
     },
@@ -5050,7 +5050,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:761",
+        "x-source": "server/routes/epk_fans.ts:762",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -5083,7 +5083,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:780",
+        "x-source": "server/routes/epk_fans.ts:781",
         "x-autenticacion": "middleware"
       }
     },
@@ -5126,7 +5126,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:819",
+        "x-source": "server/routes/epk_fans.ts:820",
         "x-autenticacion": "middleware"
       },
       "delete": {
@@ -5167,7 +5167,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:853",
+        "x-source": "server/routes/epk_fans.ts:854",
         "x-autenticacion": "middleware"
       }
     },
@@ -8592,7 +8592,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:1181",
+        "x-source": "server/routes/epk_fans.ts:1197",
         "x-autenticacion": "middleware"
       }
     },
@@ -9295,7 +9295,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/epk_fans.ts:462",
+        "x-source": "server/routes/epk_fans.ts:463",
         "x-autenticacion": "ninguna"
       }
     },
@@ -9347,7 +9347,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:867",
+        "x-source": "server/routes/epk_fans.ts:868",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -9408,6 +9408,29 @@
         "x-esquemas": "curado"
       }
     },
+    "/api/public/fans/contador": {
+      "get": {
+        "tags": [
+          "epk_fans"
+        ],
+        "operationId": "getApiPublicFansContador",
+        "description": "Comentario en el código: Solo el número de fans de la banda (sin nombres ni correos). La película del TFM lo consulta para saber cuándo alguien ha escaneado el QR de fans y dejar que siga. El token de la banda ya va en el propio QR público, así que esto no descubre nada que no pueda ver quien tenga el QR.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/epk_fans.ts:982",
+        "x-autenticacion": "ninguna",
+        "x-rate-limiters": [
+          "publicoRateLimiter"
+        ]
+      }
+    },
     "/api/public/insignia": {
       "get": {
         "tags": [
@@ -9446,7 +9469,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:1113",
+        "x-source": "server/routes/epk_fans.ts:1129",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -9469,7 +9492,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:979",
+        "x-source": "server/routes/epk_fans.ts:995",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
