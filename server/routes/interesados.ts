@@ -9,6 +9,7 @@ import express from 'express';
 import { createRateLimiter, publicoRateLimiter } from '../middleware/rateLimiter.js';
 import { dbAltaInteresado, dbBajaInteresado, dbConfirmarInteresado, dbGetInteresado } from '../db/interesados.js';
 import { getProductionAppUrl, sendTransactionalEmail } from '../services/transactionalEmail.js';
+import { avisarAlta } from '../services/avisoAltas.js';
 import { captureError } from '../utils/errorTracking.js';
 import { idSeguro } from '../utils/trackingSeguro.js';
 import {
@@ -45,6 +46,7 @@ router.post('/api/public/interesados', publicoRateLimiter, altaRateLimiter, asyn
 
     const idioma = idiomaInteresado(req.body?.idioma);
     const interesado = await dbAltaInteresado(email, idioma, 'landing');
+    if (interesado.nuevo) void avisarAlta({ tipo: 'espera', email, origen: 'landing oficial' });
     // Ya confirmado o dado de baja: no se le vuelve a escribir (la baja se respeta siempre).
     if (interesado.confirmado_at || interesado.baja_at) return hecho();
 
@@ -71,6 +73,7 @@ router.get('/api/public/interesados/confirmar', publicoRateLimiter, async (req, 
     const interesado = await interesadoDelEnlace('confirmar', req.query);
     if (!interesado) return res.status(400).type('html').send(paginaInteresado('Enlace no válido. / Invalid link.'));
     if (await dbConfirmarInteresado(interesado.id)) {
+      void avisarAlta({ tipo: 'espera_confirmada', email: interesado.email, origen: 'landing oficial' });
       const base = getProductionAppUrl(process.env.APP_URL);
       const idioma = idiomaInteresado(interesado.idioma);
       const correo = correoBienvenida(idioma, base, urlInteresado(base, 'baja', interesado.id));

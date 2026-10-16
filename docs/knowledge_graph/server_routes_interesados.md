@@ -21,6 +21,7 @@ Lista de novedades de la landing oficial, con doble confirmación (sin sesión).
 - [[server_db_interesados|server/db/interesados.ts]] *(Layer: #db, Domain: #system)*
 - [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(Layer: #security, Domain: #system)*
 - [[server_routes_interesados|server/routes/interesados.ts]] *(Layer: #route, Domain: #system)*
+- [[server_services_avisoAltas|server/services/avisoAltas.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_transactionalEmail|server/services/transactionalEmail.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_errorTracking|server/utils/errorTracking.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_interesados|server/utils/interesados.ts]] *(Layer: #service, Domain: #system)*

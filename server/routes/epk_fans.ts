@@ -1,6 +1,7 @@
 // EPK y captación de fans: configuración de autonomía de agentes, EPK editable/traducible, listas de
 // fans y su telemetría.
 
+import { avisarAlta } from '../services/avisoAltas.js';
 import { publicoRateLimiter } from '../middleware/rateLimiter.js';
 import express from 'express';
 import { loadState, saveState, requireAuth, getEpkConfigForBand, getAutonomyConfigForBand } from '../state.js';
@@ -1158,6 +1159,7 @@ router.post('/public/musicians-waitlist', publicoRateLimiter, async (req, res) =
     };
 
     const saved = await dbUpsertMusicianWaitlist(waitlistItem);
+    void avisarAlta({ tipo: 'espera', email: waitlistItem.email, nombre: waitlistItem.nombreBanda, origen: 'formulario de músicos' });
 
     const state = loadState();
     if (!state.musiciansWaitlist) state.musiciansWaitlist = [];

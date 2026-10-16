@@ -17,7 +17,7 @@ export interface Interesado {
  * Registra (o recupera) al interesado por email. Pedir el alta dos veces no duplica la fila ni pisa
  * una confirmación o una baja ya hechas.
  */
-export async function dbAltaInteresado(email: string, idioma: string, origen: string): Promise<Interesado> {
+export async function dbAltaInteresado(email: string, idioma: string, origen: string): Promise<Interesado & { nuevo: boolean }> {
   const sb = getSupabase();
   const { data: existente, error: errLeer } = await sb
     .from('musicians_waitlist')
@@ -27,7 +27,7 @@ export async function dbAltaInteresado(email: string, idioma: string, origen: st
     .limit(1)
     .maybeSingle();
   if (errLeer) throw new Error(`Supabase Error (musicians_waitlist): ${errLeer.message}`);
-  if (existente) return existente as Interesado;
+  if (existente) return { ...(existente as Interesado), nuevo: false };
 
   const fila = { id: `interesado-${crypto.randomUUID()}`, email, idioma, origen, consentimiento_at: new Date().toISOString() };
   const { data, error } = await sb
@@ -36,7 +36,7 @@ export async function dbAltaInteresado(email: string, idioma: string, origen: st
     .select('id, email, idioma, confirmado_at, baja_at')
     .single();
   if (error) throw new Error(`Supabase Error (musicians_waitlist): ${error.message}`);
-  return data as Interesado;
+  return { ...(data as Interesado), nuevo: true };
 }
 
 export async function dbGetInteresado(id: string): Promise<Interesado | null> {
