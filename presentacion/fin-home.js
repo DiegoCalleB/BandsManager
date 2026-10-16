@@ -90,10 +90,11 @@
     mas.insertBefore(rec, ads ? ads.nextSibling : mas.firstChild);
     mas.appendChild(filaPelis('Comedias con morriña', MORRINA));
   }
-  // Fila «Juegos de Brais Moure»: apps móviles de MoureDev. Cada una abre su ficha; el icono real, si existe, va en img/juegos/<id>.png
+  // Fila «Juegos móviles»: el juego de Diego (Scroll Challenge, con su enlace de Google Play) y las apps de MoureDev. Cada una abre su ficha; el icono real, si existe, va en img/juegos/<id>.png
   // (sin él sale el icono dibujado). Para poner el enlace directo a cada tienda basta cambiar el último campo.
   var PORTFOLIO = 'https://mouredev.com/portfolio/';
   var JUEGOS = [
+    ['scroll-challenge', 'Scroll Challenge', 'Juego móvil · Google Play', '#ff3d71,#ffb142', 'juego', 'https://play.google.com/store/apps/details?id=com.scrollchallenge.game'],
     ['flappy-bird', 'Flappy Bird', 'Autor: Brais Moure* (*no, pero le habría encantado)', '#1e90d8,#8fdc4f', 'pajaro', PORTFOLIO],
     ['speedy-whales', 'Speedy Whales', 'Juego móvil · MoureDev', '#0a4d8c,#27c4f4', 'juego', PORTFOLIO],
     ['gotrends', 'GoTrends', 'App móvil · Google Trends', '#1a73e8,#34c759', 'app', PORTFOLIO],
@@ -104,7 +105,7 @@
   ICONOS.app = '<rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/>';
   if (mas) {
     var jg = document.createElement('div'); jg.className = 'nx-filas2 nx-ads';
-    jg.innerHTML = '<h3>Juegos de Brais Moure <span class="nx-ad-chip">Android · iOS</span></h3><div class="nx-games">' + JUEGOS.map(function (g) {
+    jg.innerHTML = '<h3>Juegos móviles <span class="nx-ad-chip">Android · iOS</span></h3><div class="nx-games">' + JUEGOS.map(function (g) {
       return '<a class="nx-game" href="' + g[5] + '" target="_blank" rel="noopener"><i style="--c1:' + g[3].split(',')[0] + ';--c2:' + g[3].split(',')[1] + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + ICONOS[g[4]] + '</svg><img class="nx-gicono" src="img/juegos/' + g[0] + '.png" alt="" onerror="this.remove()"></i><b>' + cerrado(g[1]) + '</b><small>' + cerrado(g[2]) + '</small><span>Obtener</span></a>';
     }).join('') + '</div>';
     var ads0 = mas.querySelector('.nx-ads'); mas.insertBefore(jg, ads0 ? ads0.nextSibling : mas.firstChild);
