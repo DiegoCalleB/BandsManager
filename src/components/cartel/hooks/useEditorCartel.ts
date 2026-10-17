@@ -4,6 +4,7 @@ import { FORMATOS, ORDEN_FORMATOS, type FormatoCartel } from '../../../utils/car
 import { bandasDelBolo, conciertosParaCartel, datosDesdeConcierto, esCompartido } from '../../../utils/cartel/datos';
 import { ajustesDe, configDesdeEstado, CONFIG_INICIAL, conFondoIa, MAX_LOGOS, sanearConfigCartel, type AjustesBolo } from '../../../utils/cartel/config';
 import { prepararLogo } from '../../../utils/cartel/logos';
+import { resolverVoz } from '../../../utils/cartel/voces';
 import { lineaHorario } from '../../../utils/cartel/texto';
 import { sinVersion } from '../../../utils/cartel/adn';
 import { useAdnCartel, type DatosBandaCartel } from './useAdnCartel';
@@ -144,6 +145,7 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
 
   const conLogo = ajustes.logo && !!logoUrl;
   const { paletaBanda } = adn;
+  const estiloArranque = adn.estiloSugerido;
   const piezasPara = useCallback(
     (f: FormatoCartel): PiezasCartel | null => {
       if (!concierto) return null;
@@ -157,9 +159,10 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
         // La fila de logos: primero el de la banda (si está activado) y luego los subidos para este bolo.
         logos: [...(conLogo && logoUrl ? [logoUrl] : []), ...logosExtra],
         logosTinta: ajustes.logosTinta,
+        voz: resolverVoz(ajustes.letra, estiloArranque),
       };
     },
-    [concierto, bandName, ajustes, enlace, marca, conLogo, logoUrl, paletaBanda, logosExtra]
+    [concierto, bandName, ajustes, enlace, marca, conLogo, logoUrl, paletaBanda, logosExtra, estiloArranque]
   );
 
   // Vista previa: se pinta fuera de pantalla y se copia al final, así no parpadea ni se mezclan

@@ -20,6 +20,7 @@ Dónde va cada cosa en el cartel. Puro: recibe un medidor de texto (en el navega
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_utils_cartel_formatos|src/utils/cartel/formatos.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_texto|src/utils/cartel/texto.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_cartel_voces|src/utils/cartel/voces.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

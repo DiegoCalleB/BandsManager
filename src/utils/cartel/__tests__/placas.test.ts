@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { calcularLayout, type DatosCartel, type OpcionesLayout, type Rect } from '../layout';
 import { FORMATOS, ORDEN_FORMATOS, dimensiones } from '../formatos';
 import { PAPEL, planPlacas } from '../placas';
+import type { ArtePapel } from '../papel';
 
 const medir = (t: string, px: number) => t.length * px * 0.6;
 const datos: DatosCartel = {
@@ -75,5 +76,33 @@ describe('planPlacas', () => {
     const L = calcularLayout(def, dimensiones(def).ancho, largo, todo, medir);
     const plan = planPlacas(L, 0.7);
     if (plan.bandas.length === 1) expect(plan.ventana.y).toBe(plan.orla[0].h);
+  });
+
+  describe('modo fundido (la ilustración está sobre un papel liso)', () => {
+    const arte: ArtePapel = { papel: '#EEE6D3', limpio: true, tinta: '#8A2C28' };
+
+    it('el cartel es del papel de la ilustración, sin filetes ni orla, y la ventana llega de lado a lado', () => {
+      const def = FORMATOS.feed;
+      const L = calcularLayout(def, dimensiones(def).ancho, datos, todo, medir);
+      const plan = planPlacas(L, 0.8, arte);
+      expect(plan.modo).toBe('fundido');
+      expect(plan.color).toBe('#EEE6D3');
+      expect(plan.filetes).toEqual([]);
+      expect(plan.orla).toEqual([]);
+      expect(plan.ventana.x).toBe(0);
+      expect(plan.ventana.w).toBe(L.ancho);
+    });
+
+    it('si el borde no está limpio se enmarca, como antes', () => {
+      const def = FORMATOS.feed;
+      const L = calcularLayout(def, dimensiones(def).ancho, datos, todo, medir);
+      for (const a of [{ ...arte, limpio: false }, null, undefined]) {
+        const plan = planPlacas(L, 0.8, a);
+        expect(plan.modo).toBe('marco');
+        expect(plan.color).toBe(PAPEL.claro);
+        expect(plan.filetes.length).toBeGreaterThan(0);
+        expect(plan.orla).toHaveLength(4);
+      }
+    });
   });
 });

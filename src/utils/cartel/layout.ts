@@ -5,6 +5,7 @@
 // Todo se expresa en `u` = ancho / 1080, así el mismo diseño escala de la vista previa al A4.
 
 import { ajustarPiezas } from './texto';
+import { VOCES, type VozCartel } from './voces';
 import type { DefFormato } from './formatos';
 
 export interface BandaCartel {
@@ -41,9 +42,11 @@ export interface OpcionesLayout {
    * sitio: un nombre de dos palabras a tamaño máximo se comía casi la mitad del cartel.
    */
   compacto?: boolean;
+  /** La letra de exhibición (nombre y día de la fecha). */
+  voz?: VozCartel;
 }
 
-export type Medidor = (texto: string, px: number, peso: number) => number;
+export type Medidor = (texto: string, px: number, peso: number, titulo?: boolean) => number;
 
 export interface Linea {
   texto: string;
@@ -53,6 +56,8 @@ export interface Linea {
   px: number;
   peso: number;
   alinear: 'left' | 'right';
+  /** Va en la letra de exhibición de la voz (el nombre y el día), no en Onest. */
+  titulo?: boolean;
 }
 
 export interface Rect {
@@ -108,17 +113,16 @@ export function filaDeLogos(aspectos: number[], x0: number, yTecho: number, util
   return { rects, alto };
 }
 
-const INTERLINEA = 0.94;
 
 /**
  * Mayor tamaño (entre `max` y `min`) con el que las piezas caben en `ancho` en como mucho
  * `maxLineas`. Un nombre corto crece hasta llenar el ancho: así es un cartel, no un formulario.
  */
-function encajar(piezas: string[], sep: string, ancho: number, maxLineas: number, max: number, min: number, peso: number, medir: Medidor, prefijo = '') {
+function encajar(piezas: string[], sep: string, ancho: number, maxLineas: number, max: number, min: number, peso: number, medir: Medidor, prefijo = '', titulo = false) {
   let px = max;
   for (;;) {
-    const lineas = ajustarPiezas(piezas, sep, ancho, (t) => medir(t, px, peso), prefijo);
-    const cabe = lineas.length <= maxLineas && lineas.every((l) => medir(l, px, peso) <= ancho);
+    const lineas = ajustarPiezas(piezas, sep, ancho, (t) => medir(t, px, peso, titulo), prefijo);
+    const cabe = lineas.length <= maxLineas && lineas.every((l) => medir(l, px, peso, titulo) <= ancho);
     if (cabe || px <= min) return { px, lineas: lineas.slice(0, maxLineas) };
     px = Math.max(min, Math.floor(px * 0.92));
   }
@@ -145,12 +149,26 @@ export function calcularLayout(
 
   let y = m + def.seguroArriba * alto;
   const titular = principales.map((b) => b.nombre.trim().toUpperCase());
+  const voz = VOCES[opciones.voz ?? 'moderna'];
   if (titular.length) {
     // Un nombre de una o dos palabras puede ir en dos líneas grandes; uno largo, en tres.
-    const { px, lineas: ls } = encajar(titular, ' + ', util, 3, Math.round((opciones.compacto ? 150 : 210) * u), Math.round(56 * u), 800, medir, '+ ');
+    const maxTitulo = Math.round((opciones.compacto ? voz.tituloCompacto : voz.titulo) * u);
+    const intentar = (k: number) => encajar(titular, ' + ', util, k, maxTitulo, Math.round(56 * u), voz.peso, medir, '+ ', true);
+    let { px, lineas: ls } = intentar(3);
+    // Con una ilustración, el nombre en UNA línea ancha (o dos) si cabe sin quedarse pequeño: es lo que hace un
+    // cartel, y deja sitio al dibujo. Un nombre largo sigue partiéndose en tres.
+    if (opciones.compacto) {
+      for (const k of [1, 2]) {
+        const c = intentar(k);
+        if (c.lineas.length <= k && c.px >= maxTitulo * 0.5) {
+          ({ px, lineas: ls } = c);
+          break;
+        }
+      }
+    }
     for (const t of ls) {
-      lineas.push({ texto: t, x: m, y, px, peso: 800, alinear: 'left' });
-      y += px * INTERLINEA;
+      lineas.push({ texto: t, x: m, y, px, peso: voz.peso, alinear: 'left', titulo: true });
+      y += px * voz.interlinea;
     }
   }
   if (secundarias.length) {
@@ -188,9 +206,38 @@ export function calcularLayout(
     { piezas: [datos.extra.trim().toUpperCase()], px: Math.round(34 * u), peso: 600, maxLineas: 1, min: Math.round(22 * u), espacio: 0 },
   ].filter((b) => b.piezas.some((p) => p.trim()));
 
+  // La fecha, con jerarquía: el día enorme y, a su lado, el mes y el año y el día de la semana. Si no se puede
+  // partir (formato raro) o no cabe, va en una línea como siempre.
+  const partes = /^(\S+)\s+(\d{1,2})\s+(\S+)\s+(\d{4})$/.exec(datos.fecha.trim());
+  const numPx = Math.round(voz.numeral * u);
+  const pxMes = Math.round(54 * u);
+  const pxDia = Math.round(36 * u);
+  const compuesta = partes
+    ? (() => {
+        const [, dia, num, mes, anio] = partes;
+        const ancNum = medir(num, numPx, voz.peso, true);
+        const lado = `${mes} ${anio}`;
+        const ancLado = Math.max(medir(lado, pxMes, 800), medir(dia, pxDia, 600));
+        const hueco = 28 * u;
+        return ancNum + hueco + ancLado <= anchoDatos ? { dia, num, lado, ancNum, hueco } : null;
+      })()
+    : null;
+
   const colocadas: Linea[] = [];
   let yb = fondo;
   for (const b of [...bloques].reverse()) {
+    if (compuesta && b.piezas[0] === datos.fecha) {
+      yb -= b.espacio;
+      // El cuerpo del día manda: las cifras ocupan ~0,72 del cuerpo, centradas en vertical en su caja.
+      const altoNum = numPx * 0.86;
+      yb -= altoNum;
+      colocadas.unshift(
+        { texto: compuesta.num, x: m, y: yb - numPx * 0.12, px: numPx, peso: voz.peso, alinear: 'left', titulo: true },
+        { texto: compuesta.lado, x: m + compuesta.ancNum + compuesta.hueco, y: yb + altoNum * 0.12, px: pxMes, peso: 800, alinear: 'left' },
+        { texto: compuesta.dia, x: m + compuesta.ancNum + compuesta.hueco, y: yb + altoNum * 0.12 + pxMes * 1.12, px: pxDia, peso: 600, alinear: 'left' }
+      );
+      continue;
+    }
     const { px, lineas: ls } = encajar(b.piezas, ' · ', anchoDatos, b.maxLineas, b.px, b.min, b.peso, medir);
     yb -= b.espacio;
     for (const t of [...ls].reverse()) {

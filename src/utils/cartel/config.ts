@@ -6,6 +6,7 @@
 // almacenamiento y de la carpeta de ESA banda (`esUrlDeCartel` en server/utils/cartelUrl.ts).
 
 import { ORDEN_FORMATOS, type FormatoCartel } from './formatos';
+import { LETRAS_CARTEL, type LetraCartel } from './voces';
 
 /** `banda` = «Tus colores», sacados del logo al abrir la vista (no se guardan: dependen del logo actual). */
 export const PALETA_IDS = ['noche', 'amarillo', 'electrico', 'bosque', 'banda'] as const;
@@ -27,6 +28,8 @@ export interface CartelConfig {
   marca: boolean;
   /** Logo de la banda en la fila de logos del cartel. */
   logo: boolean;
+  /** La letra del nombre y del día: `auto` la saca del estilo de la banda. */
+  letra: LetraCartel;
   /** Logos en la tinta del cartel (como impresos) en vez de a color sobre una placa clara. */
   logosTinta: boolean;
   /** Logos de otras bandas del bolo (subidos para este cartel), en el orden en que salen. */
@@ -52,6 +55,7 @@ export const CONFIG_INICIAL: CartelConfig = {
   qr: true,
   marca: true,
   logo: false,
+  letra: 'auto',
   logosTinta: true,
   logos: [],
   fondosIa: [],
@@ -103,6 +107,7 @@ export function sanearConfigCartel(raw: unknown, esUrlPermitida: (url: string) =
     qr: booleano(r.qr, true),
     marca: booleano(r.marca, true),
     logo: booleano(r.logo, false),
+    letra: (LETRAS_CARTEL as readonly string[]).includes(r.letra as string) ? (r.letra as LetraCartel) : 'auto',
     logosTinta: booleano(r.logosTinta, true),
     logos,
     fondosIa,
@@ -116,10 +121,10 @@ export function conFondoIa(config: CartelConfig, url: string): CartelConfig {
 }
 
 /** Lo que se decide por bolo y no es el fondo. */
-export type AjustesBolo = Pick<CartelConfig, 'cabeza' | 'extra' | 'horario' | 'qr' | 'marca' | 'logo' | 'logosTinta'>;
+export type AjustesBolo = Pick<CartelConfig, 'cabeza' | 'extra' | 'horario' | 'qr' | 'marca' | 'logo' | 'logosTinta' | 'letra'>;
 
 export function ajustesDe(c: CartelConfig): AjustesBolo {
-  return { cabeza: c.cabeza, extra: c.extra, horario: c.horario, qr: c.qr, marca: c.marca, logo: c.logo, logosTinta: c.logosTinta };
+  return { cabeza: c.cabeza, extra: c.extra, horario: c.horario, qr: c.qr, marca: c.marca, logo: c.logo, logosTinta: c.logosTinta, letra: c.letra };
 }
 
 /**

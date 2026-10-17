@@ -39,3 +39,16 @@ describe('logos de otras bandas en la configuración', () => {
     expect(r.logosTinta).toBe(true);
   });
 });
+
+describe('la letra del cartel en la configuración', () => {
+  it('por defecto es automática, y solo valen las voces conocidas', () => {
+    expect(CONFIG_INICIAL.letra).toBe('auto');
+    expect(sanearConfigCartel({}, ok)!.letra).toBe('auto');
+    for (const l of ['auto', 'moderna', 'cartel', 'clasica']) expect(sanearConfigCartel({ letra: l }, ok)!.letra).toBe(l);
+    for (const l of ['comic-sans', 5, null, ['cartel']]) expect(sanearConfigCartel({ letra: l }, ok)!.letra).toBe('auto');
+  });
+
+  it('es un ajuste del bolo y se guarda con él', () => {
+    expect(ajustesDe({ ...CONFIG_INICIAL, letra: 'cartel' }).letra).toBe('cartel');
+  });
+});

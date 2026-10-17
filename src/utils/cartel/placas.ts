@@ -6,6 +6,7 @@
 // `planPlacas` es puro (testeable sin canvas); `dibujarPlacas` solo pinta el plan.
 
 import type { LayoutCartel, Rect } from './layout';
+import type { ArtePapel } from './papel';
 
 /** Papel claro y papel oscuro de la obra (como las tintas del cartel, no son tokens de la interfaz). */
 export const PAPEL = { claro: '#EFE8D8', oscuro: '#16171B' } as const;
@@ -17,6 +18,11 @@ const MAX_OCUPADO = 0.78;
 const MIN_VENTANA = 0.22;
 
 export interface PlanPlacas {
+  /**
+   * `fundido`: la ilustración está dibujada sobre un papel liso y el cartel es de ese MISMO papel; se funde
+   * con él, sin caja ni filetes. `marco`: el borde de la ilustración está lleno de dibujo, se enmarca.
+   */
+  modo: 'fundido' | 'marco';
   color: string;
   filete: string;
   /** Bandas lisas (arriba y/o abajo) y su filete en el borde que da a la ilustración. */
@@ -29,7 +35,7 @@ export interface PlanPlacas {
 }
 
 /** `luz`: luminosidad media del fondo (0 = negro, 1 = blanco). Un fondo claro lleva papel claro. */
-export function planPlacas(L: LayoutCartel, luz: number): PlanPlacas {
+export function planPlacas(L: LayoutCartel, luz: number, arte?: ArtePapel | null): PlanPlacas {
   const u = L.ancho / 1080;
   const papel = luz >= 0.5 ? 'claro' : 'oscuro';
   const { arriba, abajo } = L.zonas;
@@ -45,15 +51,28 @@ export function planPlacas(L: LayoutCartel, luz: number): PlanPlacas {
     filetes.unshift({ x: 0, y: arriba.h - grosorFilete, w: L.ancho, h: grosorFilete });
   }
 
-  const orla: Rect[] = [
-    { x: 0, y: 0, w: L.ancho, h: orlaGrosor },
-    { x: 0, y: L.alto - orlaGrosor, w: L.ancho, h: orlaGrosor },
-    { x: 0, y: 0, w: orlaGrosor, h: L.alto },
-    { x: L.ancho - orlaGrosor, y: 0, w: orlaGrosor, h: L.alto },
-  ];
-  const arribaLibre = conArriba ? arriba.h : orlaGrosor;
-  const ventana: Rect = { x: orlaGrosor, y: arribaLibre, w: L.ancho - 2 * orlaGrosor, h: Math.max(1, abajo.y - arribaLibre) };
-  return { color: PAPEL[papel], filete: FILETE[papel], bandas, filetes, orla, ventana };
+  const fundido = !!arte?.limpio;
+  const orla: Rect[] = fundido
+    ? []
+    : [
+        { x: 0, y: 0, w: L.ancho, h: orlaGrosor },
+        { x: 0, y: L.alto - orlaGrosor, w: L.ancho, h: orlaGrosor },
+        { x: 0, y: 0, w: orlaGrosor, h: L.alto },
+        { x: L.ancho - orlaGrosor, y: 0, w: orlaGrosor, h: L.alto },
+      ];
+  // Fundido: la ilustración llega de lado a lado (su borde se difumina contra el papel). Marco: dentro de la orla.
+  const margen = fundido ? 0 : orlaGrosor;
+  const arribaLibre = conArriba ? arriba.h : margen;
+  const ventana: Rect = { x: margen, y: arribaLibre, w: L.ancho - 2 * margen, h: Math.max(1, abajo.y - arribaLibre) };
+  return {
+    modo: fundido ? 'fundido' : 'marco',
+    color: fundido ? arte!.papel : PAPEL[papel],
+    filete: FILETE[papel],
+    bandas,
+    filetes: fundido ? [] : filetes,
+    orla,
+    ventana,
+  };
 }
 
 export function dibujarPlacas(ctx: CanvasRenderingContext2D, plan: PlanPlacas): void {

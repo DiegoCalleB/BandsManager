@@ -224,3 +224,87 @@ describe('modo compacto (con ilustración de IA)', () => {
     expect(nombre(calcularLayout(FORMATOS.feed, 1080, largo, compacto, medir)).px).toBe(nombre(calcularLayout(FORMATOS.feed, 1080, largo, sinNada, medir)).px);
   });
 });
+
+describe('la fecha con jerarquía', () => {
+  const lineasDeFecha = (L: ReturnType<typeof calcularLayout>) => L.lineas.filter((l) => l.texto === '14' || l.texto === 'NOV 2026' || l.texto === 'SÁB');
+
+  it('el día va enorme, en la letra de cartel, y el mes, el año y el día de la semana a su lado', () => {
+    for (const f of ORDEN_FORMATOS) {
+      const def = FORMATOS[f];
+      const { ancho: w } = dimensiones(def);
+      const L = calcularLayout(def, w, datos({ fecha: 'SÁB 14 NOV 2026' }), todo, medir);
+      const [num, lado, dia] = ['14', 'NOV 2026', 'SÁB'].map((t) => L.lineas.find((l) => l.texto === t)!);
+      expect(num, f).toBeDefined();
+      expect(num.titulo).toBe(true);
+      expect(num.px).toBeGreaterThan(lado.px * 2);
+      expect(lado.x).toBeGreaterThan(num.x + medir('14', num.px));
+      expect(dia.x).toBe(lado.x);
+      expect(dia.y).toBeGreaterThan(lado.y);
+      expect(L.lineas.some((l) => l.texto === 'SÁB 14 NOV 2026')).toBe(false);
+      for (const l of lineasDeFecha(L)) expect(l.y + l.px, `${l.texto} se sale`).toBeLessThanOrEqual(L.alto);
+    }
+  });
+
+  it('el bloque de la fecha no pisa el de las horas ni el QR', () => {
+    const L = calcularLayout(FORMATOS.imprimir, 2480, datos(), todo, medir);
+    const num = L.lineas.find((l) => l.texto === '14')!;
+    const horas = L.lineas.find((l) => l.texto.startsWith('PUERTAS'))!;
+    expect(num.y + num.px * 0.86).toBeLessThanOrEqual(horas.y + 1);
+    const finLado = Math.max(...['NOV 2026', 'SÁB'].map((t) => { const l = L.lineas.find((x) => x.texto === t)!; return l.x + medir(t, l.px); }));
+    expect(finLado).toBeLessThan(L.qr!.x);
+  });
+
+  it('una fecha que no se puede partir, o que no cabe, va en una sola línea como siempre', () => {
+    const L = calcularLayout(FORMATOS.feed, 1080, datos({ fecha: 'HOY MISMO' }), sinNada, medir);
+    expect(L.lineas.some((l) => l.texto === 'HOY MISMO')).toBe(true);
+    const estrecho = calcularLayout(FORMATOS.feed, 1080, datos(), { ...todo, qr: true }, (t, px) => t.length * px * 2.2);
+    // No cabe el día enorme con su lado: no se compone (no hay un «14» suelto con letra de exhibición).
+    expect(estrecho.lineas.some((l) => l.texto === '14' && l.titulo)).toBe(false);
+  });
+});
+
+describe('el nombre con letra de exhibición', () => {
+  const nombre = (o: Partial<OpcionesLayout>, lineup = [{ nombre: 'Ruta 66', cabeza: true }], f: keyof typeof FORMATOS = 'imprimir') => {
+    const def = FORMATOS[f];
+    const L = calcularLayout(def, dimensiones(def).ancho, datos({ lineup }), { ...sinNada, ...o }, medir);
+    return L.lineas.filter((l) => l.titulo && l.texto !== '14');
+  };
+
+  it('el nombre sale en la letra de exhibición de la voz y el resto no', () => {
+    const L = calcularLayout(FORMATOS.feed, 1080, datos(), { ...sinNada, voz: 'cartel' }, medir);
+    expect(L.lineas.filter((l) => l.titulo).map((l) => l.texto).join(' ')).toContain('PIJAMAS');
+    expect(L.lineas.find((l) => l.texto.startsWith('SALA'))?.titulo).toBeFalsy();
+  });
+
+  it('la voz de cartel (condensada) llena más ancho con letras más altas', () => {
+    const moderna = nombre({ voz: 'moderna' })[0].px;
+    const cartel = nombre({ voz: 'cartel' })[0].px;
+    expect(cartel).toBeGreaterThan(0);
+    expect(moderna).toBeGreaterThan(0);
+  });
+
+  it('con una ilustración, un nombre corto va en UNA línea ancha, y uno largo se sigue partiendo', () => {
+    for (const voz of ['moderna', 'cartel', 'clasica'] as const) {
+      expect(nombre({ voz, compacto: true }, [{ nombre: 'Banda Demo', cabeza: true }]), voz).toHaveLength(1);
+    }
+    const largo = nombre({ voz: 'cartel', compacto: true }, [{ nombre: 'La Orquesta Sinfónica Experimental del Norte', cabeza: true }]);
+    expect(largo.length).toBeGreaterThan(1);
+  });
+
+  it('sin ilustración el nombre sigue ocupando el cartel (dos líneas grandes)', () => {
+    expect(nombre({ voz: 'cartel' }, [{ nombre: 'Banda Demo', cabeza: true }]).length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('el nombre nunca se sale del ancho útil, en ninguna voz ni formato', () => {
+    for (const voz of ['moderna', 'cartel', 'clasica'] as const) {
+      for (const f of ORDEN_FORMATOS) {
+        for (const compacto of [false, true]) {
+          const def = FORMATOS[f];
+          const { ancho: w } = dimensiones(def);
+          const L = calcularLayout(def, w, datos({ lineup: [{ nombre: 'Los Increíbles Pijamas de la Muerte Súbita', cabeza: true }] }), { ...sinNada, voz, compacto }, medir);
+          for (const l of L.lineas.filter((x) => x.titulo)) expect(l.x + medir(l.texto, l.px), `${voz} ${f}`).toBeLessThanOrEqual(w - 72 * (w / 1080) + 0.5);
+        }
+      }
+    }
+  });
+});
