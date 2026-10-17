@@ -9,15 +9,31 @@
   // de Os Herdeiros) se genera con tools/qr_demo.py --hdc y tiene que apuntar a https://bandmanager.io/unete?b=t_AAAAAEAOHUwPAAA7FgwRGgFIOxxMDxs7W1dd. Es la página pública de fans (/unete) de la banda real «Os Herdeiros
   // do Código» (band-os-herdeiros-do-codigo): el único QR que escanea Brais, y el mismo que sale en «Un QR y el público se hace fan».
   var DEMO = { titulo: 'Falta un fan', texto: 'La escena no continúa hasta que alguien escanee el código y se haga fan de Os Herdeiros.' };
+  // Cada elección: la primera opción es la de siempre (la que sigue la historia, y la que se toma si nadie responde). Una opción con `final`
+  // es un final alternativo: cartas de texto, «Fin», rebobinado y vuelta a la misma decisión con esa opción ya marcada como vista.
   var ELECCIONES = {
-    'Un QR y el público se hace fan': { id: 'demo', demo: true },
-    'Prólogo · La decisión': {
-      id: 'decision', pregunta: '¿Qué hace Iago?',
+    'Prólogo · La llamada': {
+      id: 'pelaez', pregunta: 'Peláez les ofrece llevarles los bolos por el 30 %. ¿Qué hace la banda?',
       opciones: [
-        { t: 'Empezar esta noche' },
-        { t: 'Dejarlo para el lunes', carta: ['El lunes se convirtió en martes.', 'Y el martes, en nunca.', 'La sala del catorce no contestó.', 'Esto no es lo que pasó.'], ms: 9000, vuelve: true },
+        { t: 'No firmar nada' },
+        { t: 'Aceptar el 30 %', final: true, carta: ['La banda aceptó el treinta por ciento.', 'Peláez eligió el repertorio. Fuera baladas.', 'Fuera también las birras.', 'En verano, Os Herdeiros do Código dejó de existir.', 'Fin.'], ms: 10600 },
       ],
     },
+    'Entrevista · El treinta por ciento': {
+      id: 'master', pregunta: 'Iago lleva semanas dudando. ¿Se apunta al máster de Desarrollo con IA de The Big School?',
+      opciones: [
+        { t: 'Sí, me apunto' },
+        { t: 'No, paso', final: true, carta: ['Iago no se apuntó al máster.', 'Sin proyecto, no hubo aplicación.', 'Sin aplicación, el sábado siguió sin respuesta.', 'La sala del catorce nunca contestó.', 'Os Herdeiros do Código se separó en octubre.', 'Fin.'], ms: 12200 },
+      ],
+    },
+    'Capítulo 5 · Cómo lo hacemos': {
+      id: 'marketing', pregunta: 'La app ya funciona, pero no la conoce nadie. ¿Iago se apunta también al máster de Marketing Digital?',
+      opciones: [
+        { t: 'Sí, otro máster' },
+        { t: 'No, ya tengo bastante', final: true, carta: ['Sin marketing, nadie conoció BandManager.', 'La mejor aplicación para bandas, en un cajón.', 'Ninguna banda la descargó.', 'Ni siquiera Peláez.', 'Fin.'], ms: 10800 },
+      ],
+    },
+    'Un QR y el público se hace fan': { id: 'demo', demo: true },
     'La invitación': {
       id: 'invitacion', pregunta: 'Brais, ¿qué respondes?',
       opciones: [
@@ -27,18 +43,25 @@
       ],
     },
   };
+  var TOTAL_FINALES = 3, finales = {};
   var hechas = {}, activa = null;
   var D = function () { return window.Deck; };
 
-  var cierra = function () { if (activa) { clearInterval(activa.reloj); activa.el.remove(); activa = null; } };
+  var cierra = function () { document.body.classList.remove('eligiendo'); if (activa) { clearInterval(activa.reloj); activa.el.remove(); activa = null; } };
   var carta = function (lineas, ms, fin) {
     var c = document.createElement('div'); c.id = 'eleccion-carta'; c.setAttribute('role', 'status');
-    c.innerHTML = lineas.map(function (l, i) { return '<p style="--d:' + (0.4 + i * 1.6) + 's"></p>'; }).join('');
+    c.innerHTML = lineas.map(function (l, i) { return '<p style="--d:' + (0.5 + i * 1.7) + 's"></p>'; }).join('');
     [].forEach.call(c.querySelectorAll('p'), function (p, i) { p.textContent = lineas[i]; });
     document.getElementById('stage').appendChild(c);
     setTimeout(function () { c.remove(); fin(); }, ms);
   };
-
+  // Rebobinado tras un final alternativo: franjas de vídeo viejo, «⏪» y vuelta a la decisión
+  var rebobina = function (fin) {
+    var r = document.createElement('div'); r.id = 'eleccion-rebobina'; r.setAttribute('role', 'status');
+    r.innerHTML = '<i aria-hidden="true">◀◀</i><b>Volviendo a la decisión</b>';
+    document.getElementById('stage').appendChild(r);
+    setTimeout(function () { r.remove(); fin(); }, 2100);
+  };
 
   // Pausa «Falta un fan»: la película se rompe (glitch + aviso de sistema) y no sigue hasta que alguien escanee el QR y se haga fan de verdad.
   // El servidor de la presentación (/fans-contador) dice cuántos fans tiene la banda; cuando sube, la película avanza. Si no hay contador
@@ -82,35 +105,43 @@
   };
 
   var pregunta = function (idx, cfg, quitadas, siguiente, saltar) {
-    var ops = cfg.opciones.filter(function (o) { return quitadas.indexOf(o) < 0; });
     var el = document.createElement('div'); el.id = 'eleccion'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', cfg.pregunta);
-    el.innerHTML = '<p class="el-q"></p><div class="el-ops"></div><i class="el-tiempo"></i>';
+    el.innerHTML = '<p class="el-q"></p><div class="el-ops"></div><i class="el-tiempo"></i><small class="el-fin"></small>';
     el.querySelector('.el-q').textContent = quitadas.length ? 'Vuelve a elegir. ' + cfg.pregunta : cfg.pregunta;
+    var n = Object.keys(finales).length;
+    if (n) el.querySelector('.el-fin').textContent = 'Finales encontrados: ' + n + ' de ' + TOTAL_FINALES;
     var caja = el.querySelector('.el-ops'), tiempo = el.querySelector('.el-tiempo');
+    var libres = cfg.opciones.filter(function (o) { return quitadas.indexOf(o) < 0; });
     var elige = function (op) {
       if (!activa) return;
       cierra(); removeEventListener('keydown', teclas, true);
-      var sigue = function () { if (op.vuelve) pregunta(idx, cfg, quitadas.concat(op), siguiente, saltar); else { hechas[cfg.id] = true; saltar(siguiente); } };
-      if (op.carta) carta(op.carta, op.ms, sigue); else sigue();
+      var fin = function () {
+        if (op.final) { finales[cfg.id] = true; rebobina(function () { pregunta(idx, cfg, quitadas.concat(op), siguiente, saltar); }); }
+        else if (op.vuelve) pregunta(idx, cfg, quitadas.concat(op), siguiente, saltar);
+        else { hechas[cfg.id] = true; saltar(siguiente); }
+      };
+      if (op.carta) carta(op.carta, op.ms, fin); else fin();
     };
     var teclas = function (e) {
-      var k = e.key, n = parseInt(k, 10);
-      if (n >= 1 && n <= ops.length) { e.preventDefault(); e.stopPropagation(); elige(ops[n - 1]); }
-      else if (k === 'Enter') { e.preventDefault(); e.stopPropagation(); elige(ops[0]); }
+      var k = e.key, i = parseInt(k, 10) - 1;
+      if (i >= 0 && cfg.opciones[i] && quitadas.indexOf(cfg.opciones[i]) < 0) { e.preventDefault(); e.stopPropagation(); elige(cfg.opciones[i]); }
+      else if (k === 'Enter') { e.preventDefault(); e.stopPropagation(); elige(libres[0]); }
     };
-    ops.forEach(function (op, i) {
-      var b = document.createElement('button'); b.type = 'button'; b.className = 'el-op'; b.textContent = op.t;
-      b.addEventListener('click', function () { elige(op); }); caja.appendChild(b);
-      if (i === 0) setTimeout(function () { b.focus({ preventScroll: true }); }, 50);
+    cfg.opciones.forEach(function (op, i) {
+      var visto = quitadas.indexOf(op) >= 0;
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'el-op' + (visto ? ' el-visto' : ''); b.disabled = visto;
+      b.innerHTML = '<kbd></kbd><span></span>'; b.querySelector('kbd').textContent = String(i + 1); b.querySelector('span').textContent = op.t + (visto ? ' · final visto' : '');
+      if (!visto) { b.addEventListener('click', function () { elige(op); }); if (op === libres[0]) setTimeout(function () { b.focus({ preventScroll: true }); }, 50); }
+      caja.appendChild(b);
     });
-    document.getElementById('stage').appendChild(el);
+    document.getElementById('stage').appendChild(el); document.body.classList.add('eligiendo');
     addEventListener('keydown', teclas, true);
     var t0 = performance.now();
     activa = { el: el, reloj: setInterval(function () {
       var k = Math.min(1, (performance.now() - t0) / (SEGUNDOS * 1000));
       tiempo.style.setProperty('--k', String(1 - k));
       if (D().cur !== idx) { cierra(); removeEventListener('keydown', teclas, true); }   // si saltan de escena, se cancela
-      else if (k >= 1) elige(ops[0]);                                                  // sin respuesta: la de siempre
+      else if (k >= 1) elige(libres[0]);                                                  // sin respuesta: la de siempre
     }, 80) };
   };
 
