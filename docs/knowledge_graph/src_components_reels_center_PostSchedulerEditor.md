@@ -26,8 +26,10 @@ Exporta: PostSchedulerEditor.
 - [[src_components_reels_center_PlatformSelector|src/components/reels_center/PlatformSelector.tsx]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_center_RecommendationTips|src/components/reels_center/RecommendationTips.tsx]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_center_ReelsCenterContext|src/components/reels_center/ReelsCenterContext.ts]] *(Layer: #frontend, Domain: #social)*
+- [[src_components_reels_center_RevisionFinalDialog|src/components/reels_center/RevisionFinalDialog.tsx]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_center_SchedulerInputs|src/components/reels_center/SchedulerInputs.tsx]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_center_ViralGrowthStudioPanel|src/components/reels_center/ViralGrowthStudioPanel.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_reels_center_revisionFinal|src/components/reels_center/revisionFinal.ts]] *(Layer: #frontend, Domain: #social)*
 
 ---
 

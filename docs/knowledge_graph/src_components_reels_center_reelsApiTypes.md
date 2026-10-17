@@ -47,6 +47,7 @@ Contratos tipados de las respuestas de la API del Centro de Reels.
 - [[src_components_reels_center_hooks_useSocialPublishing|src/components/reels_center/hooks/useSocialPublishing.ts]] *(from #frontend)*
 - [[src_components_reels_center_hooks_useVideoAnalyzer|src/components/reels_center/hooks/useVideoAnalyzer.ts]] *(from #frontend)*
 - [[src_components_reels_center_razonDelTramo|src/components/reels_center/razonDelTramo.ts]] *(from #frontend)*
+- [[src_components_reels_center_revisionFinal|src/components/reels_center/revisionFinal.ts]] *(from #frontend)*
 
 ---
 
