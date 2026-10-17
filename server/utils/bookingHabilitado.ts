@@ -17,6 +17,11 @@ export const BOOKING_NO_HABILITADO = {
   error: 'Esta función no está disponible para tu banda.',
 } as const;
 
+/** `true` si la fila de `registered_bands` tiene el booking encendido (los procesos de fondo no tienen sesión). */
+export function bandaConBooking(banda: { suscripcion_habilitada?: unknown } | null | undefined): boolean {
+  return banda?.suscripcion_habilitada === true;
+}
+
 /** `true` si esta persona, con la banda que tiene activa, puede usar el booking. */
 export function puedeVerBooking(user: { role?: string; band_id?: string } | null | undefined): boolean {
   if (!user) return false;

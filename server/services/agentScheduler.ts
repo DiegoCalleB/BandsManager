@@ -8,6 +8,7 @@ import { dbGetAgentLastRun, dbSetAgentLastRun } from "../db/agentSchedule.js";
 import { enqueueAgentJob } from "./agentQueueService.js";
 import { startAgentQueueWorker, stopAgentQueueWorker } from "./agentQueueWorker.js";
 import { captureError } from "../utils/errorTracking.js";
+import { bandaConBooking } from "../utils/bookingHabilitado.js";
 import type { RegisteredBand } from "../../src/types.js";
 import { isGmailRateLimited } from "./gmailApiClient.js";
 import { faltaClaveDeCifradoEnProduccion } from "../utils/secretCrypto.js";
@@ -103,7 +104,7 @@ async function tick() {
   }
   tickEnCurso = true;
   try {
-    let bands: Pick<RegisteredBand, "band_id" | "estado_cuenta">[] = [];
+    let bands: (Pick<RegisteredBand, "band_id" | "estado_cuenta"> & { suscripcion_habilitada?: unknown })[] = [];
     try {
       bands = await dbGetRegisteredBands();
     } catch (e) {
@@ -112,7 +113,8 @@ async function tick() {
       return;
     }
 
-    const activeBands = bands.filter((b) => (b.estado_cuenta || "activo") === "activo");
+    // El booking es reservado: el planificador solo trabaja para las bandas con el interruptor encendido.
+    const activeBands = bands.filter((b) => (b.estado_cuenta || "activo") === "activo" && bandaConBooking(b));
 
     const now = new Date();
     for (const band of activeBands) {

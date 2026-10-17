@@ -25,8 +25,10 @@ El booking (salas, medios, management, grupos aliados, agentes y campañas) es r
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[agent_scheduler|Agent Scheduler In-Process]] *(from #agent)*
 - [[server|server.ts]] *(from #route)*
 - [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
+- [[server_services_agentQueueWorker|server/services/agentQueueWorker.ts]] *(from #agent)*
 
 ---
 

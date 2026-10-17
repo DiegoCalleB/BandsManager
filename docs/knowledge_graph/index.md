@@ -87,7 +87,7 @@ No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el t
 - [[db_state_sync|In-Memory State & Supabase Sync]] — 70 ficheros dependen de él
 - [[server_db_core|server/db/core.ts]] — 64 ficheros dependen de él
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] — 58 ficheros dependen de él
-- [[server_db|server/db.ts]] — 51 ficheros dependen de él
+- [[server_db|server/db.ts]] — 52 ficheros dependen de él
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] — 49 ficheros dependen de él
 - [[server_ai|server/ai.ts]] — 45 ficheros dependen de él
 - [[src_services_api|src/services/api.ts]] — 44 ficheros dependen de él

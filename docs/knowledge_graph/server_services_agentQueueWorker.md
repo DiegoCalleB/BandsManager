@@ -21,10 +21,12 @@ Worker Engine para la procesación distribuida de la cola de agentes de IA.
 - [[agent_enviador|Enviador Agent (Dispatcher)]] *(Layer: #agent, Domain: #booking)*
 - [[agent_lector|Lector Agent (Listener)]] *(Layer: #agent, Domain: #booking)*
 - [[agent_scheduler|Agent Scheduler In-Process]] *(Layer: #agent, Domain: #booking)*
+- [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
 - [[server_services_agentQueueService|server/services/agentQueueService.ts]] *(Layer: #agent, Domain: #system)*
 - [[server_services_campaignRadarScheduler|server/services/campaignRadarScheduler.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_emailAgentClient|server/services/emailAgentClient.ts]] *(Layer: #agent, Domain: #system)*
 - [[server_services_stemPredictionReconciler|server/services/stemPredictionReconciler.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[server_utils_bookingHabilitado|server/utils/bookingHabilitado.ts]] *(Layer: #service, Domain: #booking)*
 - [[server_utils_errorTracking|server/utils/errorTracking.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
