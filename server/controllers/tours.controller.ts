@@ -5,6 +5,7 @@ import { Tour } from "../../src/types.js";
 import { dbGetTours, dbUpsertTour, dbDeleteTour } from "../db.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 import { responderError } from '../utils/errorHttp.js';
+import { fusionarColeccionDeBanda, quitarDeBanda, reemplazarDeBanda } from '../utils/estadoPorBanda.js';
 
 export const toursController = {
   async getTours(req: Request, res: Response) {
@@ -18,7 +19,7 @@ export const toursController = {
       const tours = await dbGetTours(userBandId);
 
       const state = loadState();
-      state.tours = tours;
+      state.tours = fusionarColeccionDeBanda(state.tours, userBandId, tours);
       saveState(state);
 
       res.json({ tours });
@@ -41,8 +42,7 @@ export const toursController = {
       const saved = await dbUpsertTour(newTour, userBandId);
 
       const state = loadState();
-      state.tours = state.tours || [];
-      state.tours.push(saved);
+      state.tours = reemplazarDeBanda(state.tours, userBandId, saved.id, saved);
       saveState(state);
 
       res.json(saved);
@@ -63,8 +63,7 @@ export const toursController = {
       const saved = await dbUpsertTour(updatedTour, userBandId);
 
       const state = loadState();
-      state.tours = state.tours || [];
-      state.tours = state.tours.map((t: Tour) => t.id === id ? saved : t);
+      state.tours = reemplazarDeBanda(state.tours, userBandId, id, saved);
       saveState(state);
 
       res.json(saved);
@@ -84,8 +83,7 @@ export const toursController = {
       await dbDeleteTour(id, userBandId);
 
       const state = loadState();
-      state.tours = state.tours || [];
-      state.tours = state.tours.filter((t: Tour) => t.id !== id);
+      state.tours = quitarDeBanda(state.tours, userBandId, id);
       saveState(state);
 
       res.json({ success: true });
