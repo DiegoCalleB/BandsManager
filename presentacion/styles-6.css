@@ -59,3 +59,10 @@
 }
 @keyframes giraaviso { 0%, 85% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
 @media (prefers-reduced-motion: reduce) { body.pelicula::before { animation-duration: 1ms; animation-delay: 6s; } }
+
+/* Pantallas de 16:9 con poca altura (1600×900, portátiles): el bloque del héroe se subía bajo la barra de arriba; se compacta */
+@media (max-height: 960px) and (min-width: 1101px) {
+  .nx-titulo { font-size: clamp(48px, min(8vw, 7.8vh), 140px); margin: 10px 0 12px; }
+  .nx-sin { font-size: min(20px, 2.5vh); margin-top: 8px; }
+  .nx-hero .gate-btns { margin-top: 14px; } .nx-alt { margin-top: 12px; } .nx-meta { margin-top: 12px; } .nx-gen { margin-top: 8px; }
+}
