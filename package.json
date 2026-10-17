@@ -19,6 +19,7 @@
     "check:all": "node scripts/check-all.mjs",
     "graph:sync": "tsx scripts/generate_obsidian_graph.ts",
     "spotify:bandas": "tsx scripts/arreglar-spotify-bandas.ts",
+    "probar:senales": "tsx scripts/probar-senales.ts",
     "test:coverage": "vitest run --coverage",
     "coverage:ratchet": "node scripts/subir-umbral-cobertura.mjs",
     "test:e2e": "playwright test",
@@ -41,6 +42,7 @@
     "migrate": "tsx scripts/migrate.ts",
     "migrate:check": "tsx scripts/migrate.ts --check",
     "eval:acordes": "tsx scripts/evaluar-acordes.ts",
+    "eval:agentes": "tsx scripts/evaluar-agentes.ts",
     "verify:ciclos": "node scripts/ciclos.mjs",
     "audit:deps": "npm audit --omit=dev --audit-level=high"
   },

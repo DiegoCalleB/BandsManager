@@ -28,6 +28,7 @@ Sanitiza datos externos de salas y correos entrantes antes de inyectarlos en pro
 - [[agent_lector|Lector Agent (Listener)]] *(from #agent)*
 - [[route_leads_pitch|Leads Pitch Generation Route]] *(from #route)*
 - [[route_leads_reply|Leads Reply Route]] *(from #route)*
+- [[server_evals_redactorGolden|server/evals/redactorGolden.ts]] *(from #service)*
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
 - [[server_routes_campanaConcierto|server/routes/campanaConcierto.ts]] *(from #route)*
 - [[server_routes_deals|server/routes/deals.ts]] *(from #route)*

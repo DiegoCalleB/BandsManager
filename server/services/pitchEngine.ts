@@ -337,6 +337,14 @@ ${lead.pitch_generado ? `\n(Versión previa de referencia: "${sanitizeExternalTe
   /**
    * Genera múltiples propuestas con distintos proveedores, auditando y auto-saneando cada una
    */
+  /** Lo que el modelo sabía al redactar: cualquier cifra, fecha o contacto fuera de este texto es inventado. */
+  static hechosPermitidos(context: PitchContextResult, lead: Lead): string {
+    const { spotify, youtube, epk } = context.links;
+    return [context.systemPrompt, context.userPrompt, spotify, youtube, epk, context.contactEmail, lead.nombre_sala, lead.ciudad, lead.notas]
+      .filter(Boolean)
+      .join("\n");
+  }
+
   static async generateMultiPitch(params: GenerateMultiPitchParams) {
     const { leadId, userBandId, comentario, tono_rating, contenido_rating, providers, activeCampaign } = params;
     const state = loadState();
@@ -380,7 +388,8 @@ ${lead.pitch_generado ? `\n(Versión previa de referencia: "${sanitizeExternalTe
           leadCategory: lead.tipo || "sala",
           city: lead.ciudad,
           bandName: context.bandDna.bandName,
-          skipRefinement: false
+          skipRefinement: false,
+          hechos: PitchEngine.hechosPermitidos(context, lead)
         });
 
         return {
@@ -469,7 +478,8 @@ ${lead.pitch_generado ? `\n(Versión previa de referencia: "${sanitizeExternalTe
       leadCategory: lead.tipo || "sala",
       city: lead.ciudad,
       bandName: context.bandDna.bandName,
-      skipRefinement: false
+      skipRefinement: false,
+      hechos: PitchEngine.hechosPermitidos(context, lead)
     });
 
     const sanitizedPitchText = evaluation.refinedText || sanitizePitchDeterministically(newPitchText);

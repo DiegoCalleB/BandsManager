@@ -73,16 +73,6 @@ body.pelicula:not(.scroll):has(.slide.feat.active.mailscene) #reaccion { display
 #gate { background: #141414; }
 .nx-home { position: absolute; inset: 0; display: flex; align-items: flex-end; overflow: clip; }
 #gate[data-fase="perfiles"] .nx-home, #gate[data-fase="home"] .nx-perfiles { display: none; }
-.nx-perfiles { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 34px; font-family: 'Helvetica Neue', Arial, sans-serif; background: #141414; }
-.nx-perfiles .nx-logo-g { position: absolute; top: 44px; left: 64px; }
-.nx-perfiles h2 { font-size: 64px; font-weight: 500; margin: 0; letter-spacing: -.01em; }
-.nx-pf { display: flex; gap: 34px; }
-.nx-perfil { all: unset; display: flex; flex-direction: column; align-items: center; gap: 16px; cursor: pointer; width: 170px; color: #808080; font-size: 24px; }
-.nx-perfil .av { width: 170px; height: 170px; border-radius: 8px; border: 4px solid transparent; transition: border-color .15s, transform .15s; }
-.nx-perfil:hover, .nx-perfil:focus-visible, .nx-perfil.elegido { color: #fff; }
-.nx-perfil:hover .av, .nx-perfil:focus-visible .av { border-color: #fff; }
-.nx-perfil.elegido .av { border-color: #fff; transform: scale(1.08); }
-.nx-admin { font-size: 22px; letter-spacing: .14em; color: #808080; border: 1px solid #808080; padding: 12px 30px; margin-top: 8px; }
 .av { position: relative; display: block; box-sizing: border-box; background: #0071eb; overflow: hidden; }
 .av::before { content: ''; position: absolute; left: 26%; top: 34%; width: 11%; height: 11%; border-radius: 50%; background: #fff; box-shadow: calc(var(--av, 170px) * .0) 0 0 #fff, 0 0 0 0 #fff; }
 .av::after { content: ''; position: absolute; left: 26%; top: 56%; width: 48%; height: 20%; border-radius: 0 0 100px 100px / 0 0 100% 100%; border: 0 solid #fff; background: #fff; clip-path: ellipse(50% 100% at 50% 0); }
@@ -122,7 +112,6 @@ body.pelicula:not(.scroll):has(.slide.feat.active.mailscene) #reaccion { display
 #gate.trailer .nx-sin, #gate.trailer .nx-gen { opacity: 0; max-height: 0; margin: 0; overflow: hidden; }
 #gate.trailer .nx-titulo { font-size: clamp(40px, min(6.6vw, 7.6vh), 100px); transition: font-size .9s; }
 @media (max-height: 800px) and (min-width: 801px) {
-  .nx-perfiles h2 { font-size: 44px; } .nx-perfil, .nx-perfil .av { width: 120px; } .nx-perfil .av { height: 120px; } .nx-perfil { font-size: 18px; }
   .nx-hero { padding-bottom: 32vh !important; } .nx-titulo { font-size: min(6.4vw, 8vh); margin: 10px 0 12px; } .nx-gen, .nx-meta { display: none; } .nx-sin { font-size: 17px; margin-top: 10px; } .nx-top10 { margin-top: 12px; font-size: 22px; } .nx-alt, .nx-meta { margin-top: 10px; }
   .nx-top nav, .nx-der { font-size: 15px; } .nx-card b { font-size: 14px; } .nx-card em { font-size: 11px; } .nx-filas h3 { font-size: 20px; }
 }
@@ -152,8 +141,6 @@ body.pelicula:not(.scroll):has(.slide.feat.active.mailscene) #reaccion { display
 .av.pelaez.foto { background-size: 250%; background-position: 69% 16%; }
 .av.profes.foto { background-size: cover; }
 .av.brais.foto { background-position: 50% 20%; }
-.nx-perfil span { text-align: center; }
-.nx-perfil { flex: 0 0 170px; } .nx-perfil .av { flex: none; } .nx-perfil span { white-space: nowrap; }
 .av.foto { background-origin: border-box; }
 
 /* En la película el diálogo va subtitulado y lo dice el retrato de quien habla: nada de burbujas (la de reacción, la de la escena del local,
@@ -289,18 +276,30 @@ body.pelicula:not(.scroll) .mis-bandas .mb-foto img { filter: saturate(.84) brig
 body.pelicula:not(.scroll) :is(img[src*="gracias-mop"], img[src*="diego-bajista"]) { filter: saturate(.95) brightness(1.08) contrast(1.05); }
 
 /* ───────── Elige tu propia aventura (eleccion.js) ───────── */
-#eleccion { position: absolute; left: 0; right: 0; bottom: 80px; z-index: 70; display: flex; flex-direction: column; align-items: center; gap: 18px; font-family: 'Helvetica Neue', Arial, sans-serif; animation: elsube .5s cubic-bezier(.2, .8, .2, 1) both; }
+/* Elecciones al estilo de «Bandersnatch»: banda oscura abajo, dos cajas translúcidas, la elegida se rellena de blanco y una línea que se acorta marca el tiempo */
+#eleccion { position: absolute; left: 0; right: 0; bottom: 0; z-index: 70; display: flex; flex-direction: column; align-items: center; gap: 22px; padding: 120px 0 64px; background: linear-gradient(transparent, rgba(0,0,0,.86) 62%); font-family: 'Helvetica Neue', Arial, sans-serif; animation: elsube .5s cubic-bezier(.2, .8, .2, 1) both; }
 @keyframes elsube { from { opacity: 0; translate: 0 30px; } to { opacity: 1; translate: 0 0; } }
-#eleccion .el-q { margin: 0; color: #fff; font-size: 34px; font-weight: 700; text-shadow: 0 2px 14px #000; }
-#eleccion .el-ops { display: flex; gap: 22px; }
-#eleccion .el-op { min-width: 300px; max-width: 420px; padding: 20px 30px; border: 2px solid rgba(255,255,255,.55); border-radius: 6px; background: rgba(12,12,14,.82); color: #fff; font: 600 28px/1.2 'Helvetica Neue', Arial, sans-serif; cursor: pointer; backdrop-filter: blur(6px); transition: background .15s, color .15s, transform .15s; }
-#eleccion .el-op:hover, #eleccion .el-op:focus-visible { background: #fff; color: #000; outline: none; transform: scale(1.04); }
-#eleccion .el-tiempo { display: block; width: min(980px, 80vw); height: 5px; border-radius: 3px; background: linear-gradient(90deg, #e50914, #ff5a3c); transform-origin: left; transform: scaleX(var(--k, 1)); box-shadow: 0 0 14px rgba(229,9,20,.6); }
+#eleccion .el-q { margin: 0; max-width: 1200px; padding: 0 40px; color: #e8e8ec; font-size: 28px; font-weight: 500; text-align: center; text-shadow: 0 2px 14px #000; }
+#eleccion .el-ops { display: flex; gap: 18px; }
+#eleccion .el-op { display: flex; align-items: center; gap: 18px; width: 520px; padding: 26px 32px; border: 1px solid rgba(255,255,255,.5); border-radius: 3px; background: rgba(20,20,22,.7); color: #fff; font: 500 30px/1.2 'Helvetica Neue', Arial, sans-serif; text-align: left; cursor: pointer; backdrop-filter: blur(8px); transition: background .12s, color .12s, border-color .12s; }
+#eleccion .el-op kbd { flex: none; display: grid; place-items: center; width: 38px; height: 38px; border: 1px solid currentColor; border-radius: 50%; font: 600 20px/1 'Helvetica Neue', Arial, sans-serif; opacity: .7; }
+#eleccion .el-op:hover, #eleccion .el-op:focus-visible { background: #fff; color: #000; border-color: #fff; outline: none; }
+#eleccion .el-op.el-visto { opacity: .38; text-decoration: line-through; cursor: default; }
+#eleccion .el-tiempo { display: block; width: 1058px; max-width: 90vw; height: 4px; background: #fff; transform-origin: left; transform: scaleX(var(--k, 1)); box-shadow: 0 0 10px rgba(255,255,255,.5); }
+#eleccion .el-fin { color: #9a9aa3; font-size: 20px; letter-spacing: .06em; text-transform: uppercase; }
 #eleccion-carta { position: absolute; inset: 0; z-index: 72; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 26px; background: #000; text-align: center; padding: 0 12%; animation: elcarta .5s ease-out both; }
 @keyframes elcarta { from { opacity: 0; } to { opacity: 1; } }
-#eleccion-carta p { margin: 0; color: #fff; font: 400 min(5.4vw, 86px)/1.1 Anton, Oswald, Impact, sans-serif; text-transform: uppercase; letter-spacing: .01em; opacity: 0; animation: elcarta .9s ease-out var(--d, 0s) both; }
+#eleccion-carta p { margin: 0; color: #fff; font: 400 min(4.6vw, 74px)/1.12 Anton, Oswald, Impact, sans-serif; text-transform: uppercase; letter-spacing: .01em; opacity: 0; animation: elcarta .9s ease-out var(--d, 0s) both; }
 #eleccion-carta p:last-child { color: #e50914; }
-@media (prefers-reduced-motion: reduce) { #eleccion, #eleccion-carta, #eleccion-carta p { animation: none; opacity: 1; } }
+#eleccion-rebobina { position: absolute; inset: 0; z-index: 73; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; background: repeating-linear-gradient(0deg, #0b0b0e 0 3px, #15151a 3px 6px); color: #fff; animation: elreb 2.1s steps(14) both; }
+#eleccion-rebobina i { font: normal 130px/1 'Helvetica Neue', Arial, sans-serif; letter-spacing: -.1em; animation: elreb2 .5s steps(2) infinite; }
+#eleccion-rebobina b { font: 500 34px/1 'Courier New', monospace; letter-spacing: .12em; text-transform: uppercase; }
+@keyframes elreb { 0% { opacity: 0; transform: translateX(-30px) skewX(6deg); } 12% { opacity: 1; } 55% { transform: translateX(14px); filter: hue-rotate(90deg); } 100% { opacity: 1; transform: none; } }
+@keyframes elreb2 { 50% { transform: translateX(-12px); opacity: .6; } }
+@media (prefers-reduced-motion: reduce) { #eleccion, #eleccion-carta, #eleccion-carta p, #eleccion-rebobina, #eleccion-rebobina i { animation: none; opacity: 1; } }
+/* Aviso en la apertura: la película es interactiva */
+.ap-int { position: absolute; left: 0; right: 0; bottom: 130px; margin: 0; text-align: center; color: #bdb7ab; font: 500 30px/1 'Courier New', monospace; letter-spacing: .1em; text-transform: uppercase; opacity: 0; }
+.slide.apertura.active .ap-int { animation: aplin 1500ms var(--ease) 4.4s both, apout 700ms ease-in 6.7s both; }
 
 /* Pausa «Entra tú también» con el QR (eleccion.js) */
 #demo-qr { position: absolute; inset: 0; z-index: 71; display: grid; place-items: center; background: rgba(0,0,0,.82); backdrop-filter: blur(8px); font-family: 'Helvetica Neue', Arial, sans-serif; animation: elcarta .5s ease-out both; }
@@ -367,3 +366,4 @@ body.scroll .ap-l { opacity: 1; animation: none; }
 @media (prefers-reduced-motion: reduce) { #demo-qr .dq-glitch, #demo-qr .dq-caja, #demo-qr .dq-esp { animation: none; } }
 #demo-qr.dq-sinfan .dq-sis { color: #e5a53b; }
 #demo-qr.dq-sinfan .dq-esp { animation: none; color: #e5a53b; }
+body.eligiendo #subtitulo { display: none !important; }
