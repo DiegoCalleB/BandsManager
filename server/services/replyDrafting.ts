@@ -22,7 +22,7 @@ import type { Lead } from '../../src/types.js';
 // bajo "follow_up", porque decide una cosa distinta (si el estado pasa a "negociando"), más
 // amplia que "¿es esto una pregunta de precio?".
 export const PRICE_KEYWORDS = [
-  "precio", "cache", "caché", "presupuesto", "condiciones", "tarifa", "cuánto",
+  "precio", "cache", "caché", "presupuesto", "condiciones económicas", "condiciones economicas", "tarifa", "cuánto",
   "cuanto cobr", "cifra", "propuesta económica", "honorarios", "presupuestario", "euros", "ofrecer"
 ];
 

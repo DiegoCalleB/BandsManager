@@ -23,7 +23,7 @@ export const CASOS_LECTOR: CasoLector[] = [
   { id: "conf-02", texto: "Perfecto, nos encaja. Os mando el contrato mañana.", esperado: "confirmation" },
   { id: "conf-03", texto: "Genial, queda confirmado entonces. Un saludo.", esperado: "confirmation" },
   { id: "conf-04", texto: "De acuerdo, hacemos el concierto el sábado 20.", esperado: "confirmation" },
-  { id: "conf-05", texto: "Estamos de acuerdo con las condiciones. Cerramos la fecha.", esperado: "confirmation", conocido: "«condiciones» cuenta como palabra de precio y gana a «de acuerdo»; se arreglaría con una señal de IA o distinguiendo «condiciones económicas»" },
+  { id: "conf-05", texto: "Estamos de acuerdo con las condiciones. Cerramos la fecha.", esperado: "confirmation" },
   { id: "conf-06", lang: "en", texto: "Sounds great, we'd love to have you. Let's confirm the date.", esperado: "confirmation" },
   { id: "conf-07", texto: "Ok, adelante con el viernes 12.", esperado: "confirmation" },
   // Rechazo

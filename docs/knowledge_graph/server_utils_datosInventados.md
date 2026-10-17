@@ -24,6 +24,7 @@ _Sin dependencias salientes directas._
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_evals_redactorGolden|server/evals/redactorGolden.ts]] *(from #service)*
+- [[server_services_pitchJudge|server/services/pitchJudge.ts]] *(from #service)*
 
 ---
 
