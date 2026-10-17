@@ -24,4 +24,18 @@ describe('estado global en rutas y controladores', () => {
     }
     expect(infractores, 'usa fusionarColeccionDeBanda/reemplazarDeBanda/quitarDeBanda').toEqual([]);
   });
+
+  // Fase 2B: colecciones ya migradas a solo-Supabase. Se añade aquí cada una que se migre; ninguna
+  // ruta (salvo la semilla del arranque local, que usa `loadState().x`) vuelve a tocar `state.x`.
+  const MIGRADAS = ['tours'];
+  it.each(MIGRADAS)('state.%s ya no se lee ni se escribe desde rutas o controladores', (coleccion) => {
+    const uso = new RegExp(`\\bstate\\.${coleccion}\\b`);
+    const infractores: string[] = [];
+    for (const f of [...recorrer('server/routes'), ...recorrer('server/controllers')]) {
+      fs.readFileSync(f, 'utf8').split('\n').forEach((linea, i) => {
+        if (uso.test(linea) && !linea.trim().startsWith('//')) infractores.push(`${f}:${i + 1}: ${linea.trim()}`);
+      });
+    }
+    expect(infractores, `lee ${coleccion} de Supabase (db/${coleccion}.ts)`).toEqual([]);
+  });
 });

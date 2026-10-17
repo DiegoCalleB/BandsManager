@@ -90,6 +90,7 @@ Exporta: rolDeClaveSupabase, esSupabaseNoConfigurado, getSupabase, normalizePlan
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/controllers/__tests__/tours.controller.test.ts`
 - `server/db/__tests__/core.test.ts`
 - `server/db/__tests__/esSupabaseNoConfigurado.test.ts`
 - `server/db/__tests__/rolClaveSupabase.test.ts`

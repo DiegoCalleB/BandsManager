@@ -23,7 +23,6 @@ Operaciones sobre colecciones del estado en memoria (`state.tours`, `state.fans`
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[server_controllers_tours_controller|server/controllers/tours.controller.ts]] *(from #service)*
 - [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
 - [[server_routes_concerts|server/routes/concerts.ts]] *(from #route)*
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(from #route)*

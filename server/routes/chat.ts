@@ -8,7 +8,7 @@ import { loadState, getUserFromRequestLocal, getEpkConfigForBand, getAutonomyCon
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
 import { getGlobalPitchFeedbackSummary, formatGlobalPitchFeedbackForPrompt } from "./leads.js";
-import { dbGetRegisteredBandById, dbGetEpkConfig, dbGetActiveCampaign, dbGetSongs, dbGetSetlists } from "../db.js";
+import { dbGetRegisteredBandById, dbGetEpkConfig, dbGetActiveCampaign, dbGetSongs, dbGetSetlists, dbGetTours } from "../db.js";
 import { getTargetBandId, bandaDe } from "../utils/bandAccess.js";
 import { loadBandProfile, buildBandContextBlock, displayBandName, baseHashtags, emptyBandProfile } from "../utils/bandProfile.js";
 import { computeMusicalDna } from "../utils/musicalDna.js";
@@ -20,7 +20,6 @@ import { chatFunctionDeclarations, convertFunctionCallsToProposedActions } from 
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 import { registrarErrorInesperado } from '../utils/errorHttp.js';
 import type { AccionPropuesta, CancionParaChat, ParametrosAgenteChat, SetlistParaChat, TurnoChat, VistaRespuestaIA, ErrorDeFailover } from './tiposChat.js';
-
 
 const router = express.Router();
 
@@ -233,9 +232,10 @@ router.post("/chat", requireAuth, chatRateLimiter, async (req, res) => {
     // loadState() (ver comentario en repertorio.ts) — así que a diferencia de leads/conciertos,
     // state.songs/state.setlists son datos de semilla desactualizados, nunca lo que la banda
     // guarda de verdad. Se leen aquí en vivo para que el chatbot vea el repertorio real.
-    const [songsFromDb, setlistsFromDb] = await Promise.all([
+    const [songsFromDb, setlistsFromDb, toursFromDb] = await Promise.all([
       dbGetSongs(userBandId).catch(() => []),
-      dbGetSetlists(userBandId).catch(() => [])
+      dbGetSetlists(userBandId).catch(() => []),
+      dbGetTours(userBandId).catch(() => []) // las giras también viven solo en Supabase
     ]);
 
     const stateSummary: Record<string, unknown> = {
@@ -269,7 +269,7 @@ router.post("/chat", requireAuth, chatRateLimiter, async (req, res) => {
         icono: b.icono,
         imagen_url: b.imagen_url
       })),
-      tours: (state.tours || []).filter(matchBand).map((t) => ({
+      tours: toursFromDb.map((t) => ({
         id: t.id,
         nombre: t.nombre,
         vehiculo: t.vehiculo,
