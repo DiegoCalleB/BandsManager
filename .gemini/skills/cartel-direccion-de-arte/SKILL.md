@@ -45,7 +45,7 @@ Un estilo se describe con **vocabulario de oficio** (tintas, papel, técnica), n
 
 1. **Prompt** (`DIRECCION_DE_ARTE` en `server/utils/promptCartel.ts`): reduce el aspecto de IA. No lo garantiza.
 2. **Grano de papel** (`src/utils/cartel/grano.ts`): se aplica a los fondos de IA en el cliente, determinista. Completa al prompt aunque el modelo no obedezca.
-3. **Placas de papel** (`src/utils/cartel/placas.ts`): sobre un fondo de IA el texto va en dos bandas lisas (nombre arriba, datos abajo) con filete y orla, como un cartel impreso. El prompt reserva esas zonas (25 % arriba, 30 % abajo) y dibuja la ilustración en la ventana central; las placas garantizan la lectura aunque el modelo no obedezca.
+3. **Placas de papel y ventana** (`src/utils/cartel/placas.ts`, `ventana.ts`): sobre un fondo de IA el cartel es papel con dos bandas lisas (nombre arriba, datos abajo), filete y orla, y la ilustración va ENTERA en la ventana entre ellas (`encajarImagen`: llena la ventana si recorta ≤ 30 %, si no se pinta entera y centrada). El modelo dibuja una ilustración apaisada 4:3 —no un cartel vertical con huecos— porque un modelo de imagen no mide porcentajes: pedirle «deja sitio arriba y abajo» cortaba la ilustración. Con ilustración el nombre se hace menos grande (`compacto`) para dejarle sitio.
 4. **Tipografía y layout propios**: el texto lo pone el motor, no el modelo. Es lo que más delata a una imagen de IA y aquí nunca lo genera ella.
 5. **ADN de la banda** (`src/utils/cartel/adn.ts`): referencias y favoritos de la propia banda anclan el resultado a su identidad en lugar del estilo medio del modelo.
 

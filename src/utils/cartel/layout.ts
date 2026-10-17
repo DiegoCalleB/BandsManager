@@ -36,6 +36,11 @@ export interface OpcionesLayout {
    * Layout puro: no sabe de imágenes, solo reserva a cada logo un hueco con esa proporción.
    */
   logos?: number[];
+  /**
+   * Con una ilustración de IA entre el nombre y los datos, el nombre se hace menos grande para dejarle
+   * sitio: un nombre de dos palabras a tamaño máximo se comía casi la mitad del cartel.
+   */
+  compacto?: boolean;
 }
 
 export type Medidor = (texto: string, px: number, peso: number) => number;
@@ -142,7 +147,7 @@ export function calcularLayout(
   const titular = principales.map((b) => b.nombre.trim().toUpperCase());
   if (titular.length) {
     // Un nombre de una o dos palabras puede ir en dos líneas grandes; uno largo, en tres.
-    const { px, lineas: ls } = encajar(titular, ' + ', util, 3, Math.round(210 * u), Math.round(56 * u), 800, medir, '+ ');
+    const { px, lineas: ls } = encajar(titular, ' + ', util, 3, Math.round((opciones.compacto ? 150 : 210) * u), Math.round(56 * u), 800, medir, '+ ');
     for (const t of ls) {
       lineas.push({ texto: t, x: m, y, px, peso: 800, alinear: 'left' });
       y += px * INTERLINEA;

@@ -27,6 +27,7 @@ Dónde va cada cosa en el cartel. Puro: recibe un medidor de texto (en el navega
 - [[src_utils_cartel_datos|src/utils/cartel/datos.ts]] *(from #service)*
 - [[src_utils_cartel_placas|src/utils/cartel/placas.ts]] *(from #service)*
 - [[src_utils_cartel_render|src/utils/cartel/render.ts]] *(from #service)*
+- [[src_utils_cartel_ventana|src/utils/cartel/ventana.ts]] *(from #service)*
 
 ---
 

@@ -199,3 +199,28 @@ describe('fila de logos', () => {
     for (const g of L.logos) expect(g.y + g.h).toBeLessThanOrEqual(L.alto - def.seguroAbajo * L.alto + 0.5);
   });
 });
+
+describe('modo compacto (con ilustración de IA)', () => {
+  const compacto: OpcionesLayout = { ...sinNada, compacto: true };
+  const nombre = (L: ReturnType<typeof calcularLayout>) => L.lineas[0];
+
+  it('el nombre se hace menos grande para dejar sitio a la ilustración, nunca más', () => {
+    for (const f of ORDEN_FORMATOS) {
+      const def = FORMATOS[f];
+      const { ancho: w } = dimensiones(def);
+      const normal = calcularLayout(def, w, datos({ lineup: [{ nombre: 'Ruta', cabeza: true }] }), sinNada, medir);
+      const c = calcularLayout(def, w, datos({ lineup: [{ nombre: 'Ruta', cabeza: true }] }), compacto, medir);
+      expect(nombre(c).px).toBeLessThan(nombre(normal).px);
+      expect(nombre(c).px).toBeLessThanOrEqual(Math.round(150 * (w / 1080)));
+      expect(c.zonas.arriba.h).toBeLessThan(normal.zonas.arriba.h);
+    }
+  });
+
+  it('sin pedirlo no cambia nada, y un nombre ya pequeño tampoco se toca', () => {
+    const a = calcularLayout(FORMATOS.feed, 1080, datos(), sinNada, medir);
+    const b = calcularLayout(FORMATOS.feed, 1080, datos(), { ...sinNada, compacto: false }, medir);
+    expect(b.lineas.map((l) => l.px)).toEqual(a.lineas.map((l) => l.px));
+    const largo = datos({ lineup: [{ nombre: 'La Orquesta Sinfónica Experimental del Norte', cabeza: true }] });
+    expect(nombre(calcularLayout(FORMATOS.feed, 1080, largo, compacto, medir)).px).toBe(nombre(calcularLayout(FORMATOS.feed, 1080, largo, sinNada, medir)).px);
+  });
+});

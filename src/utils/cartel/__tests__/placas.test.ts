@@ -23,7 +23,7 @@ describe('planPlacas', () => {
       const plan = planPlacas(L, 0.7);
       for (const l of L.lineas) expect(plan.bandas.some((b) => dentro(l.y, l.px, b))).toBe(true);
       const ocupado = plan.bandas.reduce((s, b) => s + b.h, 0);
-      expect(ocupado).toBeLessThanOrEqual(0.7 * L.alto + 1);
+      expect(ocupado).toBeLessThanOrEqual(0.78 * L.alto + 1);
     });
   }
 
@@ -40,7 +40,7 @@ describe('planPlacas', () => {
     const largo: DatosCartel = { ...datos, lineup: [{ nombre: 'Los Increíbles Pijamas de la Muerte Súbita', cabeza: true }, { nombre: 'Otra Banda Muy Larga Tambien', cabeza: false }] };
     const L = calcularLayout(def, dimensiones(def).ancho, largo, todo, medir);
     const plan = planPlacas(L, 0.7);
-    expect(plan.bandas.length).toBe(L.zonas.arriba.h + L.zonas.abajo.h > 0.7 * L.alto ? 1 : 2);
+    expect(plan.bandas.length).toBe(L.zonas.arriba.h + L.zonas.abajo.h > 0.78 * L.alto || L.zonas.abajo.y - L.zonas.arriba.h < 0.22 * L.alto ? 1 : 2);
   });
 
   it('la orla rodea el cartel sin salirse del lienzo', () => {
@@ -52,5 +52,28 @@ describe('planPlacas', () => {
       expect(r.x + r.w).toBeLessThanOrEqual(L.ancho);
       expect(r.y + r.h).toBeLessThanOrEqual(L.alto);
     }
+  });
+
+  for (const f of ORDEN_FORMATOS) {
+    it(`${f}: la ventana de la ilustración queda entre las bandas, dentro de la orla y sin pisar ningún texto`, () => {
+      const def = FORMATOS[f];
+      const L = calcularLayout(def, dimensiones(def).ancho, datos, todo, medir);
+      const plan = planPlacas(L, 0.7);
+      const v = plan.ventana;
+      expect(v.h).toBeGreaterThan(0.25 * L.alto);
+      expect(v.x).toBeGreaterThan(0);
+      expect(v.x + v.w).toBeLessThan(L.ancho);
+      expect(v.y + v.h).toBeLessThanOrEqual(L.zonas.abajo.y + 0.5);
+      for (const b of plan.bandas) expect(v.y + v.h <= b.y + 0.5 || v.y >= b.y + b.h - 0.5).toBe(true);
+      for (const l of L.lineas) expect(l.y + l.px <= v.y + 0.5 || l.y >= v.y + v.h - 0.5, `"${l.texto}" cae en la ventana`).toBe(true);
+    });
+  }
+
+  it('sin placa de arriba la ventana empieza justo bajo la orla', () => {
+    const def = FORMATOS.feed;
+    const largo: DatosCartel = { ...datos, lineup: [{ nombre: 'Los Increíbles Pijamas de la Muerte Súbita', cabeza: true }, { nombre: 'Otra Banda Muy Larga Tambien', cabeza: false }] };
+    const L = calcularLayout(def, dimensiones(def).ancho, largo, todo, medir);
+    const plan = planPlacas(L, 0.7);
+    if (plan.bandas.length === 1) expect(plan.ventana.y).toBe(plan.orla[0].h);
   });
 });

@@ -1,7 +1,7 @@
 // Placas de papel: en un cartel impreso el texto no flota encima de la ilustración, tiene su sitio.
-// Sobre un fondo de IA se pintan dos bandas lisas (arriba el nombre, abajo los datos) con un filete
-// y una orla fina alrededor, así la ilustración respira en la ventana central y el texto se lee
-// siempre, aunque el modelo de imagen haya puesto detalle donde no debía.
+// Sobre un fondo de IA el cartel es papel con dos bandas lisas (arriba el nombre, abajo los datos), un
+// filete y una orla fina, y la ilustración va ENTERA en la ventana que queda entre las bandas: nunca
+// cortada por ellas, y el texto se lee siempre.
 //
 // `planPlacas` es puro (testeable sin canvas); `dibujarPlacas` solo pinta el plan.
 
@@ -12,7 +12,9 @@ export const PAPEL = { claro: '#EFE8D8', oscuro: '#16171B' } as const;
 const FILETE = { claro: '#16171B', oscuro: '#EFE8D8' } as const;
 
 /** Si las dos bandas juntas se comen más que esto del alto, la ilustración se quedaría sin ventana. */
-const MAX_OCUPADO = 0.7;
+const MAX_OCUPADO = 0.78;
+/** Y la ventana, al menos este tanto del alto: por debajo la ilustración sería un sello. */
+const MIN_VENTANA = 0.22;
 
 export interface PlanPlacas {
   color: string;
@@ -22,6 +24,8 @@ export interface PlanPlacas {
   filetes: Rect[];
   /** Orla de papel alrededor de todo el cartel (4 lados). */
   orla: Rect[];
+  /** El hueco para la ilustración: entre las bandas y dentro de la orla. */
+  ventana: Rect;
 }
 
 /** `luz`: luminosidad media del fondo (0 = negro, 1 = blanco). Un fondo claro lleva papel claro. */
@@ -33,7 +37,7 @@ export function planPlacas(L: LayoutCartel, luz: number): PlanPlacas {
   const orlaGrosor = Math.round(18 * u);
 
   // Abajo siempre (ahí está la fecha y el QR). Arriba solo si queda ventana para la ilustración.
-  const conArriba = arriba.h + abajo.h <= MAX_OCUPADO * L.alto;
+  const conArriba = arriba.h + abajo.h <= MAX_OCUPADO * L.alto && abajo.y - arriba.h >= MIN_VENTANA * L.alto;
   const bandas: Rect[] = [{ x: 0, y: abajo.y, w: L.ancho, h: L.alto - abajo.y }];
   const filetes: Rect[] = [{ x: 0, y: abajo.y, w: L.ancho, h: grosorFilete }];
   if (conArriba) {
@@ -47,7 +51,9 @@ export function planPlacas(L: LayoutCartel, luz: number): PlanPlacas {
     { x: 0, y: 0, w: orlaGrosor, h: L.alto },
     { x: L.ancho - orlaGrosor, y: 0, w: orlaGrosor, h: L.alto },
   ];
-  return { color: PAPEL[papel], filete: FILETE[papel], bandas, filetes, orla };
+  const arribaLibre = conArriba ? arriba.h : orlaGrosor;
+  const ventana: Rect = { x: orlaGrosor, y: arribaLibre, w: L.ancho - 2 * orlaGrosor, h: Math.max(1, abajo.y - arribaLibre) };
+  return { color: PAPEL[papel], filete: FILETE[papel], bandas, filetes, orla, ventana };
 }
 
 export function dibujarPlacas(ctx: CanvasRenderingContext2D, plan: PlanPlacas): void {
@@ -57,15 +63,15 @@ export function dibujarPlacas(ctx: CanvasRenderingContext2D, plan: PlanPlacas): 
   for (const r of plan.filetes) ctx.fillRect(r.x, r.y, r.w, r.h);
 }
 
-/** Luminosidad media (0-1) de lo que hay ahora en el canvas, muestreada en pequeño. Claro si no se puede medir. */
-export function luzMedia(canvas: HTMLCanvasElement): number {
+/** Luminosidad media (0-1) de una imagen, muestreada en pequeño. Claro si no se puede medir. */
+export function luzDeImagen(img: CanvasImageSource): number {
   try {
     const mini = document.createElement('canvas');
     mini.width = 24;
-    mini.height = 30;
+    mini.height = 24;
     const c = mini.getContext('2d', { willReadFrequently: true });
     if (!c) return 1;
-    c.drawImage(canvas, 0, 0, mini.width, mini.height);
+    c.drawImage(img, 0, 0, mini.width, mini.height);
     const d = c.getImageData(0, 0, mini.width, mini.height).data;
     let suma = 0;
     for (let i = 0; i < d.length; i += 4) suma += (0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2]) / 255;

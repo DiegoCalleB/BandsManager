@@ -9,7 +9,8 @@ import { decidirTinta, medirLuz, unirPixeles, type Tinta } from './contraste';
 import type { DefFormato } from './formatos';
 import type { FondoGuardado, PaletaId } from './config';
 import { aplicarGrano, semillaDeTexto } from './grano';
-import { dibujarPlacas, luzMedia, planPlacas } from './placas';
+import { dibujarPlacas, luzDeImagen, planPlacas } from './placas';
+import { encajarImagen } from './ventana';
 import { tintarLogo } from './logos';
 
 export const TINTAS = { clara: '#F4F1EA', oscura: '#17181C' } as const;
@@ -281,7 +282,8 @@ export async function renderCartel(
     return ctx.measureText(t).width;
   };
   const logos = await cargarLogos(piezas.logos ?? []);
-  const L = calcularLayout(def, ancho, piezas.datos, { ...piezas.opciones, logos: logos.map((l) => l.img.width / l.img.height) }, medir);
+  const conIlustracion = fondo.tipo === 'imagen' && fondo.origen === 'ia';
+  const L = calcularLayout(def, ancho, piezas.datos, { ...piezas.opciones, compacto: conIlustracion, logos: logos.map((l) => l.img.width / l.img.height) }, medir);
   canvas.width = L.ancho;
   canvas.height = L.alto;
   const u = L.ancho / 1080;
@@ -299,13 +301,20 @@ export async function renderCartel(
     };
     dibujarOnda(ctx, hueco, paleta.acento, piezas.semilla, u);
   } else if (imagen) {
-    dibujarFondoImagen(ctx, imagen, L.ancho, L.alto);
     if (fondo.tipo === 'imagen' && fondo.origen === 'ia') {
-      // Un fondo de IA lleva el texto en placas de papel (como un cartel impreso) y fibra por encima:
-      // sin ella tiene el aspecto liso de una imagen generada. La foto propia de la banda se deja
-      // como es. Todo antes de medir el contraste y de pintar el texto.
-      dibujarPlacas(ctx, planPlacas(L, luzMedia(canvas)));
+      // Un fondo de IA es una ilustración ENTERA dentro de un cartel de papel: va en la ventana que dejan
+      // las placas del texto y nada la corta. Lleva fibra por encima: sin ella tiene el aspecto liso de
+      // una imagen generada. Todo antes de medir el contraste y de pintar el texto.
+      const plan = planPlacas(L, luzDeImagen(imagen));
+      ctx.fillStyle = plan.color;
+      ctx.fillRect(0, 0, L.ancho, L.alto);
+      const e = encajarImagen(imagen.width, imagen.height, plan.ventana);
+      ctx.drawImage(imagen, e.sx, e.sy, e.sw, e.sh, e.dx, e.dy, e.dw, e.dh);
+      dibujarPlacas(ctx, plan);
       aplicarGrano(ctx, L.ancho, L.alto, semillaDeTexto(piezas.semilla));
+    } else {
+      // La foto propia de la banda se deja como es, a sangre.
+      dibujarFondoImagen(ctx, imagen, L.ancho, L.alto);
     }
   }
 
