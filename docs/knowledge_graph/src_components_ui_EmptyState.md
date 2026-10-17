@@ -24,6 +24,7 @@ Exporta: EmptyStateProps, EmptyState.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_reels_center_ResumenSemanalCard|src/components/reels_center/ResumenSemanalCard.tsx]] *(from #frontend)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(from #frontend)*
 
 ---

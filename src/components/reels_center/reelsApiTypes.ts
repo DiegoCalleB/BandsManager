@@ -191,3 +191,19 @@ export interface ProximoHuecoResponse {
   origenHora?: "datos" | "fallback";
   motivo?: string;
 }
+
+/** Respuesta de `/api/reels/resumen-semanal` (server/utils/resumenSemanalReels.ts). */
+export interface ResumenSemanalResponse {
+  success?: boolean;
+  reelsMedidos: number;
+  mejores: Array<{
+    postId: string;
+    texto: string;
+    formato: "loop_corto" | "corto" | "medio" | "largo";
+    rewatch: number;
+    tasaCompartir: number | null;
+    tasaGuardar: number | null;
+  }>;
+  patron: string | null;
+  proximo: string;
+}
