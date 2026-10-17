@@ -75,3 +75,8 @@ export function referenciasHuerfanas(antes: string[], enUso: string[], bandId: s
     .map((u) => rutaDeUrlCartel(u, bandId))
     .filter((r): r is string => !!r && r.startsWith(carpeta) && !usadas.has(r));
 }
+
+/** Carpeta del boceto o idea que la persona sube para que la IA se base en él (un solo fichero por banda). */
+export function rutaIdea(bandId: string): string {
+  return `${carpetaCartel(bandId)}idea/idea.jpg`;
+}

@@ -8,6 +8,7 @@ import { useEditorCartel } from './hooks/useEditorCartel';
 import { SelectorFondo } from './SelectorFondo';
 import { PreguntaCabeza } from './PreguntaCabeza';
 import { EstiloBanda } from './EstiloBanda';
+import { IdeaCartel } from './IdeaCartel';
 import { AjustesCartel } from './AjustesCartel';
 import { puedeQuitarMarcaCartel } from '../../utils/planPermissions';
 
@@ -80,6 +81,7 @@ const CarteleriaView: React.FC<Props> = ({ concerts, bandName, plan, banda, onCa
           generando={ed.generando}
           estiloInicial={ed.adn.estiloSugerido}
           paletaBanda={ed.adn.paletaBanda}
+          panelIdea={<IdeaCartel idea={ed.idea} />}
           panelBanda={
             <EstiloBanda
               referencias={ed.adn.adn.referencias}
@@ -127,6 +129,10 @@ const CarteleriaView: React.FC<Props> = ({ concerts, bandName, plan, banda, onCa
           tieneEnlace={ed.tieneEnlace}
           tieneLogo={ed.tieneLogo}
           puedeQuitarMarca={ed.puedeQuitarMarca}
+          logos={ed.logos}
+          subiendoLogo={ed.subiendoLogo}
+          onSubirLogo={ed.subirLogo}
+          onQuitarLogo={ed.quitarLogo}
         />
       </div>
     </div>
