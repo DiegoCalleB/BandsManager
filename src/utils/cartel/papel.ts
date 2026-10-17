@@ -21,6 +21,11 @@ export interface ArtePapel {
   limpio: boolean;
   /** Tinta del texto sacada del arte, o null si no hay una buena (se usa la tinta de siempre). */
   tinta: string | null;
+  /**
+   * Segunda tinta del arte (otro tono, distinto de la primera): el título se imprime también con ella,
+   * ligeramente desplazada, como el desregistro de una serigrafía. Null si el arte solo tiene una.
+   */
+  tinta2: string | null;
 }
 
 /** Fracción del lado que se mira como «borde». */
@@ -59,7 +64,7 @@ function ajustarContraste(c: RGB, papel: RGB, objetivo: number): RGB | null {
 
 export function analizarArte(rgba: Uint8ClampedArray, ancho: number, alto: number): ArtePapel {
   const n = ancho * alto;
-  const sinPapel: ArtePapel = { papel: '#EFE8D8', limpio: false, tinta: null };
+  const sinPapel: ArtePapel = { papel: '#EFE8D8', limpio: false, tinta: null, tinta2: null };
   if (n === 0 || ancho < 8 || alto < 8) return sinPapel;
 
   const grosor = Math.max(1, Math.round(Math.min(ancho, alto) * BORDE));
@@ -91,20 +96,27 @@ export function analizarArte(rgba: Uint8ClampedArray, ancho: number, alto: numbe
       cubos.set(k, cubo);
     }
   }
-  let mejor: { n: number; suma: RGB } | null = null;
-  for (const c of cubos.values()) if (!mejor || c.n > mejor.n) mejor = c;
+  const ordenados = [...cubos.entries()].sort((a, b) => b[1].n - a[1].n);
+  const media = (c: { n: number; suma: RGB }) => c.suma.map((v) => v / c.n) as RGB;
   let tinta: string | null = null;
-  if (mejor && mejor.n >= 40) {
-    const media = mejor.suma.map((v) => v / mejor!.n) as RGB;
-    const ajustada = ajustarContraste(media, papelRgb, CONTRASTE_TINTA);
-    if (ajustada) tinta = aHex(ajustada);
+  let tinta2: string | null = null;
+  const [primero, ...resto] = ordenados;
+  if (primero && primero[1].n >= 40) {
+    const ajustada = ajustarContraste(media(primero[1]), papelRgb, CONTRASTE_TINTA);
+    if (ajustada) {
+      tinta = aHex(ajustada);
+      // La segunda tinta: otro tono (≥ 60° de la primera), con presencia propia y que se vea sobre el papel.
+      const dTono = (a: number, b: number) => Math.min(Math.abs(a - b), 12 - Math.abs(a - b)) * 30;
+      const segundo = resto.find(([k, c]) => dTono(k, primero[0]) >= 60 && c.n >= Math.max(30, primero[1].n * 0.15) && contraste(lum(media(c)), lum(papelRgb)) >= 2.2);
+      if (segundo) tinta2 = aHex(media(segundo[1]));
+    }
   }
-  return { papel: aHex(papelRgb), limpio, tinta };
+  return { papel: aHex(papelRgb), limpio, tinta, tinta2 };
 }
 
 /** Lee el papel y la tinta de una imagen, muestreada a un tamaño pequeño. */
 export function leerArte(img: CanvasImageSource & { width: number; height: number }): ArtePapel {
-  const sinPapel: ArtePapel = { papel: '#EFE8D8', limpio: false, tinta: null };
+  const sinPapel: ArtePapel = { papel: '#EFE8D8', limpio: false, tinta: null, tinta2: null };
   try {
     const k = Math.min(1, 256 / Math.max(img.width, img.height));
     const w = Math.max(8, Math.round(img.width * k));

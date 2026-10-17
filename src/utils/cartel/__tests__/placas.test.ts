@@ -79,7 +79,7 @@ describe('planPlacas', () => {
   });
 
   describe('modo fundido (la ilustración está sobre un papel liso)', () => {
-    const arte: ArtePapel = { papel: '#EEE6D3', limpio: true, tinta: '#8A2C28' };
+    const arte: ArtePapel = { papel: '#EEE6D3', limpio: true, tinta: '#8A2C28', tinta2: null };
 
     it('el cartel es del papel de la ilustración, sin filetes ni orla, y la ventana llega de lado a lado', () => {
       const def = FORMATOS.feed;
@@ -91,6 +91,30 @@ describe('planPlacas', () => {
       expect(plan.orla).toEqual([]);
       expect(plan.ventana.x).toBe(0);
       expect(plan.ventana.w).toBe(L.ancho);
+    });
+
+    it('la ilustración sube y solapa parte del nombre, sin pasar de su comienzo', () => {
+      for (const f of ORDEN_FORMATOS) {
+        const def = FORMATOS[f];
+        const L = calcularLayout(def, dimensiones(def).ancho, datos, todo, medir);
+        const fundido = planPlacas(L, 0.8, arte);
+        const marco = planPlacas(L, 0.8, { ...arte, limpio: false });
+        if (fundido.bandas.length === 2 && L.titulo) {
+          expect(fundido.ventana.y, f).toBeLessThan(L.zonas.arriba.h);
+          expect(fundido.ventana.y, f).toBeGreaterThan(L.titulo.y);
+          expect(fundido.ventana.h, f).toBeGreaterThan(marco.ventana.h);
+          // Solapa el nombre, no la fecha: la ventana termina donde empiezan los datos.
+          expect(fundido.ventana.y + fundido.ventana.h).toBeCloseTo(marco.ventana.y + marco.ventana.h, 5);
+        }
+      }
+    });
+
+    it('si el nombre no deja sitio para una placa de arriba, no se solapa nada', () => {
+      const def = FORMATOS.feed;
+      const largo: DatosCartel = { ...datos, lineup: [{ nombre: 'Los Increíbles Pijamas de la Muerte Súbita', cabeza: true }, { nombre: 'Otra Banda Muy Larga Tambien', cabeza: false }] };
+      const L = calcularLayout(def, dimensiones(def).ancho, largo, todo, medir);
+      const plan = planPlacas(L, 0.8, arte);
+      if (plan.bandas.length === 1) expect(plan.ventana.y).toBe(0);
     });
 
     it('si el borde no está limpio se enmarca, como antes', () => {

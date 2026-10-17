@@ -46,7 +46,7 @@ export interface OpcionesLayout {
   voz?: VozCartel;
 }
 
-export type Medidor = (texto: string, px: number, peso: number, titulo?: boolean) => number;
+export type Medidor = (texto: string, px: number, peso: number, titulo?: boolean, tracking?: number) => number;
 
 export interface Linea {
   texto: string;
@@ -58,6 +58,8 @@ export interface Linea {
   alinear: 'left' | 'right';
   /** Va en la letra de exhibición de la voz (el nombre y el día), no en Onest. */
   titulo?: boolean;
+  /** Espaciado entre letras, en em: las versalitas pequeñas respiran (0 = el de la fuente). */
+  tracking?: number;
 }
 
 export interface Rect {
@@ -74,6 +76,8 @@ export interface LayoutCartel {
   qr: Rect | null;
   /** Un hueco por logo, en orden y centrados en vertical sobre la misma línea (vacío si no hay logos). */
   logos: Rect[];
+  /** La caja que ocupa el nombre (para que la ilustración pueda solaparlo). Null si no hay nombre. */
+  titulo: Rect | null;
   /** Zona superior (nombres) e inferior (datos): ahí se mide el fondo y, si hace falta, se vela. */
   zonas: { arriba: Rect; abajo: Rect };
 }
@@ -118,11 +122,11 @@ export function filaDeLogos(aspectos: number[], x0: number, yTecho: number, util
  * Mayor tamaño (entre `max` y `min`) con el que las piezas caben en `ancho` en como mucho
  * `maxLineas`. Un nombre corto crece hasta llenar el ancho: así es un cartel, no un formulario.
  */
-function encajar(piezas: string[], sep: string, ancho: number, maxLineas: number, max: number, min: number, peso: number, medir: Medidor, prefijo = '', titulo = false) {
+function encajar(piezas: string[], sep: string, ancho: number, maxLineas: number, max: number, min: number, peso: number, medir: Medidor, prefijo = '', titulo = false, tracking = 0) {
   let px = max;
   for (;;) {
-    const lineas = ajustarPiezas(piezas, sep, ancho, (t) => medir(t, px, peso, titulo), prefijo);
-    const cabe = lineas.length <= maxLineas && lineas.every((l) => medir(l, px, peso, titulo) <= ancho);
+    const lineas = ajustarPiezas(piezas, sep, ancho, (t) => medir(t, px, peso, titulo, tracking), prefijo);
+    const cabe = lineas.length <= maxLineas && lineas.every((l) => medir(l, px, peso, titulo, tracking) <= ancho);
     if (cabe || px <= min) return { px, lineas: lineas.slice(0, maxLineas) };
     px = Math.max(min, Math.floor(px * 0.92));
   }
@@ -148,6 +152,7 @@ export function calcularLayout(
   const secundarias = cabezas.length ? resto : [];
 
   let y = m + def.seguroArriba * alto;
+  const yTitulo = y;
   const titular = principales.map((b) => b.nombre.trim().toUpperCase());
   const voz = VOCES[opciones.voz ?? 'moderna'];
   if (titular.length) {
@@ -171,6 +176,8 @@ export function calcularLayout(
       y += px * voz.interlinea;
     }
   }
+  // Con bandas invitadas debajo del nombre no se solapa nada: sus letras son pequeñas y se leerían mal.
+  const titulo: Rect | null = titular.length && !secundarias.length ? { x: m, y: yTitulo, w: util, h: y - yTitulo } : null;
   if (secundarias.length) {
     y += 20 * u;
     const nombres = secundarias.map((b) => b.nombre.trim().toUpperCase());
@@ -188,8 +195,8 @@ export function calcularLayout(
   const pie = Math.round(26 * u);
   if (opciones.marca || opciones.urlCorta) {
     const yPie = fondo - pie;
-    if (opciones.marca) lineas.push({ texto: TEXTO_MARCA, x: m, y: yPie, px: pie, peso: 600, alinear: 'left' });
-    if (opciones.urlCorta) lineas.push({ texto: opciones.urlCorta, x: ancho - m, y: yPie, px: pie, peso: 600, alinear: 'right' });
+    if (opciones.marca) lineas.push({ texto: TEXTO_MARCA, x: m, y: yPie, px: pie, peso: 600, alinear: 'left', tracking: 0.03 });
+    if (opciones.urlCorta) lineas.push({ texto: opciones.urlCorta, x: ancho - m, y: yPie, px: pie, peso: 600, alinear: 'right', tracking: 0.03 });
     fondo = yPie - 28 * u;
   }
 
@@ -197,13 +204,13 @@ export function calcularLayout(
   const anchoDatos = opciones.qr ? util - ladoQr - 40 * u : util;
 
   // Se apilan hacia arriba desde `fondo`.
-  type Bloque = { piezas: string[]; px: number; peso: number; maxLineas: number; min: number; espacio: number };
+  type Bloque = { piezas: string[]; px: number; peso: number; maxLineas: number; min: number; espacio: number; tracking?: number };
   const lugar = [datos.sala, datos.ciudad].map((s) => s.trim().toUpperCase()).filter(Boolean);
   const bloques: Bloque[] = [
     { piezas: [datos.fecha], px: Math.round(78 * u), peso: 800, maxLineas: 1, min: Math.round(40 * u), espacio: 14 * u },
-    { piezas: datos.horario.split(' · '), px: Math.round(38 * u), peso: 600, maxLineas: 1, min: Math.round(24 * u), espacio: 18 * u },
-    { piezas: lugar, px: Math.round(46 * u), peso: 700, maxLineas: 2, min: Math.round(28 * u), espacio: 14 * u },
-    { piezas: [datos.extra.trim().toUpperCase()], px: Math.round(34 * u), peso: 600, maxLineas: 1, min: Math.round(22 * u), espacio: 0 },
+    { piezas: datos.horario.split(' · '), px: Math.round(38 * u), peso: 600, maxLineas: 1, min: Math.round(24 * u), espacio: 18 * u, tracking: 0.06 },
+    { piezas: lugar, px: Math.round(46 * u), peso: 700, maxLineas: 2, min: Math.round(28 * u), espacio: 14 * u, tracking: 0.05 },
+    { piezas: [datos.extra.trim().toUpperCase()], px: Math.round(34 * u), peso: 600, maxLineas: 1, min: Math.round(22 * u), espacio: 0, tracking: 0.06 },
   ].filter((b) => b.piezas.some((p) => p.trim()));
 
   // La fecha, con jerarquía: el día enorme y, a su lado, el mes y el año y el día de la semana. Si no se puede
@@ -217,7 +224,7 @@ export function calcularLayout(
         const [, dia, num, mes, anio] = partes;
         const ancNum = medir(num, numPx, voz.peso, true);
         const lado = `${mes} ${anio}`;
-        const ancLado = Math.max(medir(lado, pxMes, 800), medir(dia, pxDia, 600));
+        const ancLado = Math.max(medir(lado, pxMes, 800, false, 0.03), medir(dia, pxDia, 600, false, 0.18));
         const hueco = 28 * u;
         return ancNum + hueco + ancLado <= anchoDatos ? { dia, num, lado, ancNum, hueco } : null;
       })()
@@ -233,16 +240,16 @@ export function calcularLayout(
       yb -= altoNum;
       colocadas.unshift(
         { texto: compuesta.num, x: m, y: yb - numPx * 0.12, px: numPx, peso: voz.peso, alinear: 'left', titulo: true },
-        { texto: compuesta.lado, x: m + compuesta.ancNum + compuesta.hueco, y: yb + altoNum * 0.12, px: pxMes, peso: 800, alinear: 'left' },
-        { texto: compuesta.dia, x: m + compuesta.ancNum + compuesta.hueco, y: yb + altoNum * 0.12 + pxMes * 1.12, px: pxDia, peso: 600, alinear: 'left' }
+        { texto: compuesta.lado, x: m + compuesta.ancNum + compuesta.hueco, y: yb + altoNum * 0.12, px: pxMes, peso: 800, alinear: 'left', tracking: 0.03 },
+        { texto: compuesta.dia, x: m + compuesta.ancNum + compuesta.hueco, y: yb + altoNum * 0.12 + pxMes * 1.12, px: pxDia, peso: 600, alinear: 'left', tracking: 0.18 }
       );
       continue;
     }
-    const { px, lineas: ls } = encajar(b.piezas, ' · ', anchoDatos, b.maxLineas, b.px, b.min, b.peso, medir);
+    const { px, lineas: ls } = encajar(b.piezas, ' · ', anchoDatos, b.maxLineas, b.px, b.min, b.peso, medir, '', false, b.tracking ?? 0);
     yb -= b.espacio;
     for (const t of [...ls].reverse()) {
       yb -= px * 1.08;
-      colocadas.unshift({ texto: t, x: m, y: yb, px, peso: b.peso, alinear: 'left' });
+      colocadas.unshift({ texto: t, x: m, y: yb, px, peso: b.peso, alinear: 'left', tracking: b.tracking });
     }
   }
   lineas.push(...colocadas);
@@ -262,5 +269,5 @@ export function calcularLayout(
   const techoAbajo = techo - m * 0.6;
   const abajo: Rect = { x: 0, y: Math.max(0, techoAbajo), w: ancho, h: alto - Math.max(0, techoAbajo) };
 
-  return { ancho, alto, lineas, qr, logos, zonas: { arriba, abajo } };
+  return { ancho, alto, lineas, qr, logos, titulo, zonas: { arriba, abajo } };
 }

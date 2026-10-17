@@ -59,6 +59,12 @@ function resolverPaleta(id: PaletaId, banda?: PiezasCartel['paletaBanda']): Pale
 }
 
 const FAMILIA = '"Onest Variable", Onest, system-ui, sans-serif';
+/** Espaciado entre letras (en em). Si el navegador no lo soporta se ignora, y la medida y el pintado coinciden igual. */
+function conTracking(ctx: CanvasRenderingContext2D, px: number, tracking = 0) {
+  const c = ctx as CanvasRenderingContext2D & { letterSpacing?: string };
+  if ('letterSpacing' in c) c.letterSpacing = tracking ? `${(tracking * px).toFixed(2)}px` : '0px';
+}
+
 /** `voz` = la letra de exhibición (nombre y día); sin ella, Onest. Onest va siempre de reserva. */
 const fuente = (peso: number, px: number, voz?: VozCartel | null) =>
   voz ? `${VOCES[voz].peso} ${Math.round(px)}px ${VOCES[voz].familia}, ${FAMILIA}` : `${peso} ${Math.round(px)}px ${FAMILIA}`;
@@ -141,6 +147,7 @@ function tintaDeLineas(ctx: CanvasRenderingContext2D, lineas: Linea[], zona: Rec
     });
     const trozos = lineas.map((l) => {
       ctx.font = fuente(l.peso, l.px, l.titulo ? voz : null);
+      conTracking(ctx, l.px, l.tracking);
       const ancho = ctx.measureText(l.texto).width;
       const pad = 6 * u;
       const x = Math.max(0, Math.round((l.alinear === 'left' ? l.x : l.x - ancho) - pad));
@@ -227,7 +234,17 @@ function dibujarQr(ctx: CanvasRenderingContext2D, r: Rect, url: string) {
  * Pinta la ilustración. Con `difuminar` > 0 sus bordes se desvanecen contra el papel: así una ilustración
  * dibujada sobre su propio papel no se ve como un rectángulo pegado.
  */
-function dibujarIlustracion(ctx: CanvasRenderingContext2D, img: HTMLImageElement, e: Encaje, difuminar: number) {
+function dibujarIlustracion(ctx: CanvasRenderingContext2D, img: HTMLImageElement, e: Encaje, difuminar: number, mezcla: GlobalCompositeOperation = 'source-over') {
+  ctx.save();
+  ctx.globalCompositeOperation = mezcla;
+  try {
+    dibujarIlustracionSimple(ctx, img, e, difuminar);
+  } finally {
+    ctx.restore();
+  }
+}
+
+function dibujarIlustracionSimple(ctx: CanvasRenderingContext2D, img: HTMLImageElement, e: Encaje, difuminar: number) {
   if (difuminar <= 0) {
     ctx.drawImage(img, e.sx, e.sy, e.sw, e.sh, e.dx, e.dy, e.dw, e.dh);
     return;
@@ -316,8 +333,9 @@ export async function renderCartel(
   const ctx = canvas.getContext('2d', { willReadFrequently: true });
   if (!ctx) throw new Error('Tu navegador no puede dibujar el cartel.');
 
-  const medir = (t: string, px: number, peso: number, titulo?: boolean) => {
+  const medir = (t: string, px: number, peso: number, titulo?: boolean, tracking?: number) => {
     ctx.font = fuente(peso, px, titulo ? voz : null);
+    conTracking(ctx, px, tracking);
     return ctx.measureText(t).width;
   };
   const logos = await cargarLogos(piezas.logos ?? []);
@@ -329,6 +347,8 @@ export async function renderCartel(
 
   // 1. Fondo.
   let arte: ArtePapel | null = null;
+  // Una ilustración fundida con el papel se pinta DESPUÉS del nombre (lo solapa «oscureciendo»): se pospone.
+  let pintarArte: (() => void) | null = null;
   const paleta = fondo.tipo === 'paleta' ? resolverPaleta(fondo.id, piezas.paletaBanda) : null;
   if (paleta) {
     ctx.fillStyle = paleta.fondo;
@@ -351,8 +371,12 @@ export async function renderCartel(
       ctx.fillStyle = plan.color;
       ctx.fillRect(0, 0, L.ancho, L.alto);
       const e = encajarImagen(imagen.width, imagen.height, plan.ventana);
-      dibujarIlustracion(ctx, imagen, e, plan.modo === 'fundido' ? Math.round(Math.min(e.dw, e.dh) * 0.07) : 0);
-      dibujarPlacas(ctx, plan);
+      if (plan.modo === 'fundido') {
+        pintarArte = () => dibujarIlustracion(ctx, imagen, e, Math.round(Math.min(e.dw, e.dh) * 0.07), 'darken');
+      } else {
+        dibujarIlustracion(ctx, imagen, e, 0);
+        dibujarPlacas(ctx, plan);
+      }
     } else {
       // La foto propia de la banda se deja como es, a sangre.
       dibujarFondoImagen(ctx, imagen, L.ancho, L.alto);
@@ -362,23 +386,50 @@ export async function renderCartel(
   // 2. Tinta y velo, medidos sobre el fondo real de cada zona.
   const fundido = 120 * u;
   const enAbajo = (l: Linea) => l.y >= L.zonas.abajo.y;
-  const tArriba = tintaDeLineas(ctx, L.lineas.filter((l) => !enAbajo(l)), L.zonas.arriba, u, voz);
-  const tAbajo = tintaDeLineas(ctx, L.lineas.filter(enAbajo), L.zonas.abajo, u, voz, L.logos);
-  velar(ctx, L.zonas.arriba, tArriba, true, fundido);
-  velar(ctx, L.zonas.abajo, tAbajo, false, fundido);
-
-  // 3. Texto. Con una ilustración de IA la tinta es una de las suyas (la oscura y saturada dominante), no un
-  // negro de ordenador; solo si no hace falta velo: con velo se mantiene la tinta que garantiza el contraste.
+  const lineasArriba = L.lineas.filter((l) => !enAbajo(l));
+  const lineasAbajo = L.lineas.filter(enAbajo);
+  // Con una ilustración de IA la tinta es una de las suyas (la oscura y saturada dominante), no un negro de
+  // ordenador; solo si no hace falta velo: con velo se mantiene la tinta que garantiza el contraste.
   const tintaDe = (t: Tinta) => (t.tinta === 'oscura' && t.velo === 0 && arte?.tinta ? arte.tinta : TINTAS[t.tinta]);
   ctx.textBaseline = 'top';
-  for (const l of L.lineas) {
-    const t = enAbajo(l) ? tAbajo : tArriba;
-    ctx.fillStyle = tintaDe(t);
-    ctx.font = fuente(l.peso, l.px, l.titulo ? voz : null);
-    ctx.textAlign = l.alinear;
-    ctx.fillText(l.texto, l.x, l.y);
+  const pintar = (lineas: Linea[], t: Tinta) => {
+    for (const l of lineas) {
+      ctx.font = fuente(l.peso, l.px, l.titulo ? voz : null);
+      conTracking(ctx, l.px, l.tracking);
+      ctx.textAlign = l.alinear;
+      // Desregistro de serigrafía: el nombre y el día se imprimen antes con la segunda tinta, apenas desplazada.
+      if (l.titulo && t.tinta === 'oscura' && t.velo === 0 && arte?.tinta2) {
+        ctx.save();
+        ctx.globalCompositeOperation = 'multiply';
+        ctx.fillStyle = arte.tinta2;
+        ctx.fillText(l.texto, l.x + l.px * 0.035, l.y + l.px * 0.03);
+        ctx.restore();
+      }
+      ctx.fillStyle = tintaDe(t);
+      ctx.fillText(l.texto, l.x, l.y);
+    }
+    conTracking(ctx, 1, 0);
+  };
+
+  let tArriba: Tinta;
+  let tAbajo: Tinta;
+  if (pintarArte) {
+    // Fundido: el nombre se mide y se pinta sobre papel liso; luego entra la ilustración y se mide lo de abajo.
+    tArriba = tintaDeLineas(ctx, lineasArriba, L.zonas.arriba, u, voz);
+    pintar(lineasArriba, tArriba);
+    pintarArte();
+    tAbajo = tintaDeLineas(ctx, lineasAbajo, L.zonas.abajo, u, voz, L.logos);
+    velar(ctx, L.zonas.abajo, tAbajo, false, fundido);
+    pintar(lineasAbajo, tAbajo);
+  } else {
+    tArriba = tintaDeLineas(ctx, lineasArriba, L.zonas.arriba, u, voz);
+    tAbajo = tintaDeLineas(ctx, lineasAbajo, L.zonas.abajo, u, voz, L.logos);
+    velar(ctx, L.zonas.arriba, tArriba, true, fundido);
+    velar(ctx, L.zonas.abajo, tAbajo, false, fundido);
+    pintar(lineasArriba, tArriba);
+    pintar(lineasAbajo, tAbajo);
   }
-  // La fibra de papel, por encima de todo menos el QR (que tiene que escanear): fondo y letras impresos juntos.
+  // 3. La fibra de papel, por encima de todo menos el QR (que tiene que escanear): fondo y letras impresos juntos.
   if (conIlustracion) aplicarGrano(ctx, L.ancho, L.alto, semillaDeTexto(piezas.semilla));
 
   // 4. QR.

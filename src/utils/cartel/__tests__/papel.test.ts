@@ -19,6 +19,7 @@ function arte(ancho: number, alto: number, papel: RGB, motivo: RGB | null, aBord
 }
 const CREMA: RGB = [238, 230, 211];
 const GRANATE: RGB = [160, 52, 48];
+const AZUL_PETROLEO: RGB = [34, 96, 108];
 
 describe('analizarArte', () => {
   it('un motivo sobre un papel liso: el papel es el del borde y se puede fundir', () => {
@@ -75,5 +76,27 @@ describe('analizarArte', () => {
       d[i + 2] = Math.max(0, Math.min(255, d[i + 2] + n));
     }
     expect(analizarArte(d, 80, 60).limpio).toBe(true);
+  });
+
+  it('con dos tintas distintas en el arte, la segunda sale de otro tono y se ve sobre el papel', () => {
+    const d = arte(120, 80, CREMA, GRANATE);
+    // Un segundo motivo en otro tono (azul petróleo), con presencia propia.
+    for (let y = 30; y < 50; y++) for (let x = 78; x < 100; x++) d.set([...AZUL_PETROLEO, 255], (y * 120 + x) * 4);
+    const r = analizarArte(d, 120, 80);
+    expect(r.tinta2).not.toBeNull();
+    expect(r.tinta2).not.toBe(r.tinta);
+    const [a, b, c] = hexARgb(r.tinta2!);
+    expect(b + c).toBeGreaterThan(a * 2 * 0.8); // sigue siendo el azul, no el rojo
+    expect(contraste(luminancia(a, b, c), luminancia(...CREMA))).toBeGreaterThanOrEqual(2.2);
+  });
+
+  it('con una sola tinta no hay segunda', () => {
+    expect(analizarArte(arte(80, 60, CREMA, GRANATE), 80, 60).tinta2).toBeNull();
+  });
+
+  it('dos tonos casi iguales no cuentan como dos tintas', () => {
+    const d = arte(120, 80, CREMA, GRANATE);
+    for (let y = 30; y < 50; y++) for (let x = 78; x < 100; x++) d.set([172, 60, 40, 255], (y * 120 + x) * 4);
+    expect(analizarArte(d, 120, 80).tinta2).toBeNull();
   });
 });

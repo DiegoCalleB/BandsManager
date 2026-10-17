@@ -308,3 +308,31 @@ describe('el nombre con letra de exhibición', () => {
     }
   });
 });
+
+describe('la caja del nombre y el espaciado de las versalitas', () => {
+  it('con un nombre solo, el layout da su caja; con bandas invitadas debajo no (nada se solapa con letras pequeñas)', () => {
+    const solo = calcularLayout(FORMATOS.feed, 1080, datos(), sinNada, medir);
+    expect(solo.titulo).not.toBeNull();
+    const titulos = solo.lineas.filter((l) => l.titulo && l.texto !== '14');
+    expect(solo.titulo!.y).toBeLessThanOrEqual(titulos[0].y);
+    expect(solo.titulo!.y + solo.titulo!.h).toBeGreaterThanOrEqual(titulos[titulos.length - 1].y);
+    const con = calcularLayout(FORMATOS.feed, 1080, datos({ lineup: [{ nombre: 'Cabeza', cabeza: true }, { nombre: 'Invitada', cabeza: false }] }), sinNada, medir);
+    expect(con.titulo).toBeNull();
+    expect(calcularLayout(FORMATOS.feed, 1080, datos({ lineup: [] }), sinNada, medir).titulo).toBeNull();
+  });
+
+  it('las líneas pequeñas (horas, sala, extra, pie) llevan espaciado, y el nombre y el día no', () => {
+    const L = calcularLayout(FORMATOS.feed, 1080, datos(), todo, medir);
+    for (const t of ['PUERTAS 20:30 · SHOW 21:30', 'SALA EL SOL · MADRID', 'ANTICIPADA 10 €', TEXTO_MARCA]) {
+      expect(L.lineas.find((l) => l.texto === t)?.tracking, t).toBeGreaterThan(0);
+    }
+    for (const l of L.lineas.filter((x) => x.titulo)) expect(l.tracking ?? 0).toBe(0);
+  });
+
+  it('el espaciado se tiene en cuenta al medir: una línea con tracking que no cabe se reduce', () => {
+    const conTracking = (t: string, px: number, _p: number, _ti?: boolean, tr = 0) => t.length * px * (0.6 + tr);
+    const L = calcularLayout(FORMATOS.feed, 1080, datos({ horario: 'PUERTAS 20:30 · SHOW 21:30 · CIERRE 23:30 · FIESTA POSTERIOR' }), sinNada, conTracking);
+    const h = L.lineas.find((l) => l.texto.startsWith('PUERTAS'))!;
+    expect(h.x + conTracking(h.texto, h.px, 600, false, h.tracking)).toBeLessThanOrEqual(1080 - 72 + 0.5);
+  });
+});

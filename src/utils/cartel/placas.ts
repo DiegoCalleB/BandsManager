@@ -16,6 +16,8 @@ const FILETE = { claro: '#16171B', oscuro: '#EFE8D8' } as const;
 const MAX_OCUPADO = 0.78;
 /** Y la ventana, al menos este tanto del alto: por debajo la ilustración sería un sello. */
 const MIN_VENTANA = 0.22;
+/** Qué fracción de la altura del nombre solapa la ilustración (solo si está fundida con el papel). */
+const SOLAPE_TITULO = 0.38;
 
 export interface PlanPlacas {
   /**
@@ -62,7 +64,10 @@ export function planPlacas(L: LayoutCartel, luz: number, arte?: ArtePapel | null
       ];
   // Fundido: la ilustración llega de lado a lado (su borde se difumina contra el papel). Marco: dentro de la orla.
   const margen = fundido ? 0 : orlaGrosor;
-  const arribaLibre = conArriba ? arriba.h : margen;
+  // Fundido: la ilustración sube por encima del final del nombre y lo solapa (se imprime «oscureciendo» sobre
+  // las letras, sin tapar su papel): más cartel para el dibujo y las dos cosas enlazadas, como en un cartel de gira.
+  const solape = fundido && conArriba && L.titulo ? L.titulo.h * SOLAPE_TITULO : 0;
+  const arribaLibre = (conArriba ? arriba.h : margen) - solape;
   const ventana: Rect = { x: margen, y: arribaLibre, w: L.ancho - 2 * margen, h: Math.max(1, abajo.y - arribaLibre) };
   return {
     modo: fundido ? 'fundido' : 'marco',
