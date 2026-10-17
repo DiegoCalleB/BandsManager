@@ -34,6 +34,8 @@
 
 **Señales de público (detección de momentos):** en vídeos de música, la puntuación de cada ventana incorpora lo que la gente ya reproduce y comenta en YouTube: el gráfico de «lo más reproducido» (que ya trae `yt-dlp --dump-json`) pesa 0,4; los comentarios con marca de tiempo («2:34 🔥», vía Data API, 1 unidad de cuota) afinan o, si no hay gráfico, pesan 0,25 con al menos 5 marcas. Se ignora el pico de la intro, los índices de temas y todo lo que no sea música (`senalesPublico.ts`, `interesDelPublico.ts`). Sin datos suficientes no cambia nada. Siguiente paso acordado: pasar el vídeo entero a Gemini (imagen + sonido).
 
+**Probar las señales con un vídeo real sin red ni IA:** `npm run probar:senales -- ficha.json [comentarios.json] [segundosDelClip]` (la ficha es la salida de `yt-dlp --dump-json`, los comentarios la respuesta de `commentThreads`). Imprime si cuenta como música, qué datos trae y qué tramos saldrían por interés del público.
+
 **Pendiente** (en orden): YouTube Shorts y TikTok reales · ingesta de `online_followers` · aplicar la
 auditoría de copy también al análisis inicial · validar con una cuenta real los nombres de las
 métricas de Meta (`views`, `ig_reels_avg_watch_time`) ·

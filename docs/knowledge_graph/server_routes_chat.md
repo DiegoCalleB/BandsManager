@@ -48,6 +48,7 @@ Chatbot de la app (`/chat`) y generación de copys para Reels (`/write-reels-cop
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/routes/__tests__/chatAtajoAgentes.test.ts`
 - `server/routes/__tests__/chatErrorSeguro.test.ts`
 - `server/routes/__tests__/chatLimites.test.ts`
 - `server/routes/__tests__/chatPromptInyeccion.test.ts`

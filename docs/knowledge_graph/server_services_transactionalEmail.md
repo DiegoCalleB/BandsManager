@@ -35,6 +35,7 @@ Exporta: getProductionAppUrl, resolveResendApiKey, SendEmailOptions, sendTransac
 - [[server_services_avisoAltas|server/services/avisoAltas.ts]] *(from #service)*
 - [[server_services_calendarConflictService|server/services/calendarConflictService.ts]] *(from #service)*
 - [[server_services_emailsCicloVida|server/services/emailsCicloVida.ts]] *(from #service)*
+- [[server_services_gmailConexion|server/services/gmailConexion.ts]] *(from #service)*
 
 ---
 

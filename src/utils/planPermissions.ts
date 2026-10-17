@@ -107,7 +107,7 @@ export const PLANS: Record<'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gir
     name: 'Local',
     badge: 'Iniciación',
     color: '#94a3b8', // Slate / Silver
-    price: '15€ / mes',
+    price: '12€ / mes',
     credits: '300 créditos / mes',
     creditsSub: 'Booking guiado y generación de ideas',
     description: 'Bandas en activo que buscan arrancar su booking y difusión.',

@@ -76,6 +76,7 @@ Módulo sin exportaciones con nombre.
 - [[server_routes_concerts|server/routes/concerts.ts]] *(from #route)*
 - [[server_routes_donations|server/routes/donations.ts]] *(from #route)*
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(from #route)*
+- [[server_routes_fans_contador|server/routes/fans_contador.ts]] *(from #route)*
 - [[server_routes_leads_import|server/routes/leads/import.ts]] *(from #route)*
 - [[server_routes_leads_places|server/routes/leads/places.ts]] *(from #route)*
 - [[server_routes_metrics|server/routes/metrics.ts]] *(from #route)*

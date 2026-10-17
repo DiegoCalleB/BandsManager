@@ -24,6 +24,7 @@ _Sin dependencias salientes directas._
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[agent_enviador|Enviador Agent (Dispatcher)]] *(from #agent)*
+- [[route_leads_crud|Leads CRUD Route]] *(from #route)*
 - [[server_db_leadAprobacion|server/db/leadAprobacion.ts]] *(from #db)*
 
 ---

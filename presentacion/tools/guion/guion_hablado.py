@@ -132,7 +132,7 @@ SAY = [
  ('Las salas y los festivales no son clientes', 'Las salas y los festivales no son clientes: son el canal. Si trabajar con nosotros es fácil, contestan antes. Mirad El Faro.'),
  # Cap. 5 · dinero
  ('¿Y de qué vivimos, entonces?', '¿Y de qué vivimos, entonces? ¿De los aplausos?'),
- ('Dos motores.', 'De dos motores. El primero, una suscripción por banda, con cinco planes. Ya está construida, aunque de momento la tengo apagada a propósito. El segundo, una pequeña comisión de cada concierto que se cierra por la plataforma.'),
+ ('Dos motores.', 'De dos motores. El primero, una suscripción por banda, con seis planes. El segundo, una pequeña comisión de cada concierto que se cierra por la plataforma.'),
  ('¿Y esa comisión cuánto es?', '¿Y esa comisión cuánto es? Que te conozco.'),
  ('De momento, voluntaria', 'De momento, voluntaria. Si vosotros tocáis y cobráis, nosotros ganamos. Como tiene que ser.'),
  # Cap. 6 · arquitectura

@@ -15,7 +15,7 @@
   var ac = null, master = null, pistas = {}, actual = '';
   var crearAudio = function () {
     if (ac) return true;
-    try { var AC = window.AudioContext || window.webkitAudioContext; ac = new AC(); master = ac.createGain(); master.gain.value = 0; master.connect(ac.destination); return true; } catch { ac = null; return false; }
+    try { var AC = window.AudioContext || window.webkitAudioContext; ac = new AC(); master = ac.createGain(); master.gain.value = 0; if (window.CineMezcla) window.CineMezcla.cadena(ac, master); else master.connect(ac.destination); return true; } catch { ac = null; return false; }
   };
   ['pointerdown', 'keydown'].forEach(function (ev) { addEventListener(ev, function () {
     crearAudio(); if (ac && ac.state === 'suspended') ac.resume();
@@ -49,7 +49,7 @@
   var vol = 0;
   // Volumen general (ducking) y fundido entre piezas (~1,6 s)
   function paso() {
-    var o = objetivo(); vol += (o - vol) * 0.07; if (Math.abs(o - vol) < 0.003) vol = o;
+    var o = objetivo(); vol += (o - vol) * (window.CineMezcla ? window.CineMezcla.coef(o, vol) : 0.07); if (Math.abs(o - vol) < 0.003) vol = o;
     var q = activo() ? quiere() : '', antes = actual;
     if (q && q !== '-' && MUSICA[q]) actual = q; else if (q === '-') actual = '';
     if (actual && actual !== antes && actual in CANCION) { try { pista(actual).a.currentTime = CANCION[actual]; } catch { /* aún sin cargar */ } }
@@ -58,12 +58,13 @@
       var p = pistas[n]; if (!p && n !== actual) return; p = pista(n);
       var meta = n === actual && o > 0 ? 1 : 0;
       p.v += (meta - p.v) * 0.035; if (Math.abs(meta - p.v) < 0.004) p.v = meta;
-      if (p.g) p.g.gain.value = p.v * (n in CANCION ? CANCION_X : 1); else p.a.volume = Math.max(0, Math.min(1, p.v * vol * volGlobal));
+      if (p.g) p.g.gain.value = p.v * (n in CANCION ? CANCION_X : 1.4); else p.a.volume = Math.max(0, Math.min(1, p.v * vol * volGlobal));
       if (p.v > 0 && p.a.paused && !p.a.ended) p.a.play().catch(function () { /* sin gesto: no suena */ });
       if (p.v === 0 && !p.a.paused) p.a.pause();
       if (p.v > 0) vivo = true;
     });
     if (master) master.gain.value = vol * volGlobal;
+    if (window.CineMezcla) window.CineMezcla.dip(vol, ALTO, BAJO);
     if (!vivo && o === 0 && vol === 0) { raf = 0; return; }
     raf = requestAnimationFrame(paso);
   }
@@ -140,8 +141,9 @@
   // Subtítulos: español por defecto (en una película el diálogo va subtitulado, sin burbujas); también en inglés o desactivados.
   // La preferencia solo se guarda cuando el espectador la cambia (bm_subs2), así el valor por defecto manda mientras no toque nada.
   var SUBS_KEY = 'bm_subs2', subsLang = 'es', subsOn = true;
-  try { var guardado = localStorage.getItem(SUBS_KEY); if (guardado === 'es' || guardado === 'en' || guardado === 'off') { subsLang = guardado; subsOn = guardado !== 'off'; } } catch { /* sin almacenamiento: español */ }
-  var enIngles = function (t) { var m = window.SUBS_EN; return (m && m[t.replace(/\[[^\]]*\]\s*/g, '').trim()]) || ''; };
+  try { var guardado = localStorage.getItem(SUBS_KEY); if (guardado === 'es' || guardado === 'en' || guardado === 'gl' || guardado === 'off') { subsLang = guardado; subsOn = guardado !== 'off'; } } catch { /* sin almacenamiento: español */ }
+  var traduccion = function (mapa, t) { var m = window[mapa]; return (m && m[t.replace(/\[[^\]]*\]\s*/g, '').trim()]) || ''; };
+  var enIngles = function (t) { return traduccion('SUBS_EN', t); }, enGalego = function (t) { return traduccion('SUBS_GL', t); };
   // Plano y contraplano: en las escenas de la app, cuando pregunta un músico se corta a la banda mirando el portátil de Iago
   // (un solo clip, encuadrado en quien habla); cuando contesta Iago, vuelve la pantalla. El corte lo hace el CSS según quién habla.
   var rx = document.createElement('div'); rx.id = 'reaccion'; rx.setAttribute('aria-hidden', 'true');
@@ -202,7 +204,7 @@
     if (!hablan.length) { if (sub.childNodes.length) sub.textContent = ''; return; }
     var html = hablan.map(function (el) {
       var nom = window.REPARTO && window.REPARTO[el.dataset.who];
-      var frase = (subsLang === 'en' && enIngles(el.dataset.say || '')) || escrito(el.dataset.say || ''); if (!frase) return '';
+      var frase = (subsLang === 'en' && enIngles(el.dataset.say || '')) || (subsLang === 'gl' && enGalego(el.dataset.say || '')) || escrito(el.dataset.say || ''); if (!frase) return '';
       var ts = el._trozos && el._fr === frase ? el._trozos : (el._fr = frase, el._trozos = trozos(frase, hablan.length > 1 ? 52 : 84));
       // el trozo que toca: reparte la duración del audio según lo largo que es cada trozo
       var total = ts.join('').length, pasado = el._dur ? (performance.now() - el._t0) / el._dur * total : 0, k = 0, suma = 0;
@@ -258,7 +260,7 @@
     '<button class="nf-b" data-nf="vel" aria-label="Velocidad de reproducción" aria-haspopup="true">' + ico.vel + '</button>' +
     '<button class="nf-b" data-nf="fs" aria-label="Pantalla completa">' + ico.fs + '</button></div>' +
     '<div class="nf-menu nf-m-subs" role="menu"><div><h4>Audio</h4><p class="on">Español (original)</p></div><div><h4>Subtítulos</h4>' +
-    '<p role="menuitemradio" data-s="off">Desactivados</p><p role="menuitemradio" data-s="es">Español</p><p role="menuitemradio" data-s="en">English</p></div></div>' +
+    '<p role="menuitemradio" data-s="off">Desactivados</p><p role="menuitemradio" data-s="es">Español</p><p role="menuitemradio" data-s="en">English</p><p role="menuitemradio" data-s="gl">Galego</p></div></div>' +
     '<div class="nf-menu nf-m-vel" role="menu"><div><h4>Velocidad de reproducción</h4><div class="nf-vels">' +
     [0.75, 1, 1.25, 1.5].map(function (v) { return '<p role="menuitemradio" data-v="' + v + '">' + String(v).replace('.', ',') + '×' + (v === 1 ? ' (normal)' : '') + '</p>'; }).join('') + '</div></div></div>' +
     '<div class="nf-menu nf-m-caps" role="menu"><div><h4>Os Herdeiros do Código</h4><ol class="nf-lista"></ol></div></div>' +

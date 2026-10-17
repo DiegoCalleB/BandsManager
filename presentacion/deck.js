@@ -289,7 +289,7 @@
     clearTimeout(pelTimer); clearTimeout(rampaT); pelInfo = null; slides.forEach((x) => x.classList.remove('acelera'));
     if (!pelicula || pausado) return;
     const nx = proximo(cur);
-    const ir = () => { corteAuto = true; show(nx); };
+    const ir = () => { if (window.Eleccion && window.Eleccion.desvia(cur, nx, (k) => { corteAuto = true; if (k !== null) show(k); })) return; corteAuto = true; show(nx); };
     if (nx !== null && slides[nx].dataset.corte === 'rampa' && !isScroll()) {
       const total = window.CineMusica ? window.CineMusica.alPulso(ms + PRE_RAMPA) : ms + PRE_RAMPA;
       const sale = slides[cur];

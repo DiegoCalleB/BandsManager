@@ -46,8 +46,8 @@ _Sin dependencias salientes directas._
 - [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
 - [[server_routes_billing|server/routes/billing.ts]] *(from #route)*
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(from #route)*
-- [[server_routes_gmailOAuth|server/routes/gmailOAuth.ts]] *(from #security)*
 - [[server_services_emailAgentClient|server/services/emailAgentClient.ts]] *(from #agent)*
+- [[server_services_gmailConexion|server/services/gmailConexion.ts]] *(from #service)*
 - [[tabla_agent_execution_logs|tabla agent_execution_logs]] *(from #schema)*
 - [[tabla_agent_jobs_queue|tabla agent_jobs_queue]] *(from #schema)*
 - [[tabla_ai_token_ledger|tabla ai_token_ledger]] *(from #schema)*

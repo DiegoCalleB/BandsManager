@@ -44,9 +44,9 @@ const resFalso = () => {
   r.json = (b: any) => ((r.body = b), r);
   return r;
 };
-const put = async (body: any) => {
+const put = async (body: any, role = 'leader') => {
   const res = resFalso();
-  await manejador()({ params: { id: 'l1' }, body, headers: {}, query: {}, user: { id: 'u1', email: 'diego@banda.es', username: 'diego' } }, res);
+  await manejador()({ params: { id: 'l1' }, body, headers: {}, query: {}, user: { id: 'u1', email: 'diego@banda.es', username: 'diego', role } }, res);
   return res;
 };
 
@@ -83,5 +83,35 @@ describe('PUT /leads/:id: constancia de aprobación', () => {
   it('un cambio que no toca la aprobación no escribe ningún sello', async () => {
     await put({ telefono: '600' });
     expect(actualizaciones).toHaveLength(0);
+  });
+
+  it.each(['aprobado', 'aprobado_propuesta', 'aprobado_respuesta'])('un miembro no puede aprobar (%s): 403 y no se guarda nada', async (estado) => {
+    const res = await put({ estado }, 'member');
+    expect(res.code).toBe(403);
+    expect(dbUpsertLead).not.toHaveBeenCalled();
+    expect(actualizaciones).toHaveLength(0);
+  });
+
+  it('un miembro sí puede editar la sala sin aprobarla', async () => {
+    const res = await put({ notas: 'llamar el lunes' }, 'member');
+    expect(res.code).toBeUndefined();
+    expect(dbUpsertLead).toHaveBeenCalled();
+  });
+
+  it('el admin también puede aprobar', async () => {
+    const res = await put({ estado: 'aprobado_propuesta' }, 'admin');
+    expect(res.code).toBeUndefined();
+  });
+
+  it('un miembro tampoco puede crear una sala ya aprobada (POST /leads)', async () => {
+    const capa: any = (router as any).stack.find((x: any) => x.route && x.route.path === '/leads' && x.route.methods.post);
+    const pila = capa.route.stack;
+    const res = resFalso();
+    await pila[pila.length - 1].handle(
+      { body: { nombre_sala: 'Sala X', estado: 'aprobado_propuesta' }, headers: {}, query: {}, user: { id: 'u1', role: 'member' } },
+      res,
+    );
+    expect(res.code).toBe(403);
+    expect(dbUpsertLead).not.toHaveBeenCalled();
   });
 });

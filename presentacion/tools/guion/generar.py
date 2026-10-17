@@ -639,11 +639,11 @@ add(f'''<section class="slide scene biz" data-title="Cómo ganamos dinero" data-
   <span class="tag">Cómo lo hacemos · El dinero</span>
   <h2>Y de qué vivimos.</h2>
   <div class="biz-cols">
-    <div class="biz-col"><span class="badge">Construido, desactivado a propósito</span><h3>Suscripción por banda</h3><p>Seis planes, de gratis a 79 € al mes</p></div>
+    <div class="biz-col"><span class="badge">Ingresos recurrentes</span><h3>Suscripción por banda</h3><p>Seis planes, de gratis a 79 € al mes</p></div>
     <div class="biz-col"><span class="badge b2b">Ya habilitado, voluntario</span><h3>Apoyo de los usuarios</h3><p>Para pagar la IA, la base de datos y los servidores</p></div>
   </div>
   {dlg(m('alvaro', '¿Y de qué vivimos, entonces?'),
-       m('iago', 'Dos motores. Una suscripción por banda, que ya está construida aunque la tengo desactivada a propósito. Y el apoyo voluntario de quien use la app.'),
+       m('iago', 'Dos motores. Una suscripción por banda, con seis planes. Y el apoyo voluntario de quien use la app.'),
        m('brais', '¿Y cuánto es ese apoyo?', say='¿Y cuánto es ese apoyo? ¿Más o menos que Peláez?'),
        m('iago', 'Lo que cada uno quiera. Ya he habilitado que los usuarios apoyen el proyecto, para pagar la IA, la base de datos y los servidores.', say='Muchísimo menos: lo que cada uno quiera. Ya he habilitado que los usuarios apoyen el proyecto, para pagar la inteligencia artificial, la base de datos y los servidores. Si vosotros tocáis y cobráis, nosotros ganamos.'), cls='tight')}
 </section>
@@ -896,7 +896,7 @@ add('''<section class="slide giro-reloj" data-title="El reloj" data-transition="
   <p class="gr-c" style="--t:9.3s;--d:2.7s">También contaba para esto.</p>
   <div class="notif" aria-hidden="true"><i>🔔</i><div><small>BandManager · ahora</small><b>Alguien está viendo tu TFM</b><span>Ahora mismo. Desde el principio.</span></div></div>
   <p class="gr-c" style="--t:12.3s;--d:3s">Brais: en esta historia eras el batería.</p>
-  <p class="gr-c" style="--t:15.2s;--d:3s">Pero en la de verdad, el festival sois vosotros.</p>
+  <p class="gr-c" style="--t:15.2s;--d:3s">Pero en la realidad, el cartel lo cierras tú.</p>
   <p class="gr-c gr-ask" style="--t:18.4s">Y ahora… un reto.</p>
 </section>
 ''')
@@ -1032,7 +1032,7 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
     </dl>
     <h3>Modelos de negocio de BandManager.io</h3>
     <dl class="cr-dl">
-      <dt>B2C</dt><dd>Músicos, DJs, solistas y orquestas con su suscripción, de 0 a 79 € al mes. Construida y desactivada a propósito</dd>
+      <dt>B2C</dt><dd>Músicos, DJs, solistas y orquestas con su suscripción, de 0 a 79 € al mes</dd>
       <dt>B2B</dt><dd>Mánagers, agencias, salas, festivales y productoras, con planes para varias bandas</dd>
       <dt>B2B2C</dt><dd>La plataforma sirve a la banda y esta llega a su público: QR de fans, apoyo y entradas</dd>
       <dt>C2C</dt><dd>Entre bandas: Date Swap y bandas amigas, con intercambio de fechas</dd>
@@ -1449,7 +1449,7 @@ open(os.path.join(AQUI, '..', '..', 'DEFENSA.md'), 'w', encoding='utf-8').write(
 _tec = ''.join('<h3>' + _t + '</h3><dl class="cr-dl">' + ''.join('<dt>' + _a + '</dt><dd>' + _md(_b) + '</dd>' for _a, _b in _cs) + '</dl>' for _i, _t, _cs in _df.SECCIONES)
 html = html.replace('<!--TECNICA-->', _tec, 1)
 html = html.replace('<script src="sound.js"></script>', _panel + '\n<script src="sound.js"></script>', 1)
-html = html.replace('<script src="sound.js"></script>', '<script src="reparto.js"></script>\n<script src="sound.js"></script>\n<script src="voces.js"></script>\n<script src="subs-en.js"></script>\n<script src="cine.js"></script>\n<script src="cine-directo.js"></script>\n<script src="fin-home.js"></script>')
+html = html.replace('<script src="sound.js"></script>', '<script src="reparto.js"></script>\n<script src="sound.js"></script>\n<script src="voces.js"></script>\n<script src="subs-en.js"></script>\n<script src="subs-gl.js"></script>\n<script src="mezcla.js"></script>\n<script src="cine.js"></script>\n<script src="cine-directo.js"></script>\n<script src="fin-home.js"></script>\n<script src="eleccion.js"></script>\n<script src="aviso.js"></script>')
 for k, r, say in (('brais', 'bateria', EXTRA_SAY['cast_bateria']), ('xandre', 'voz', EXTRA_SAY['cast_voz']),
                   ('alvaro', 'guitarra', EXTRA_SAY['cast_guitarra']), ('iago', 'bajo', EXTRA_SAY['cast_bajo'])):
     html = html.replace(f'<figure><img src="img/miembro-{k}.jpg"', f'<figure data-who="{r}" data-say="{say}"><img src="img/miembro-{k}.jpg"', 1)
@@ -1473,6 +1473,11 @@ html = html.replace('data-title="El correo llega a la sala" data-corto', 'data-t
 html = html.replace('data-title="Date Swap" ', 'data-title="Date Swap" data-min="29500" ', 1)
 html = html.replace('data-title="Del directo al reel" ', 'data-title="Del directo al reel" data-min="26000" ', 1)
 html = html.replace('data-title="Del concierto al disco" ', 'data-title="Del concierto al disco" data-min="13500" ', 1)
+# «El sello de BandManager» (boca a boca y sello en todas las herramientas): fragmento aparte, justo antes de «Entrevista · Los fans»
+_sello = open(os.path.join(AQUI, 'sello.html'), encoding='utf-8').read()
+if 'data-title="El sello de BandManager"' not in html:
+    _i = html.rindex('<section', 0, html.index('data-title="Entrevista · Los fans"'))
+    html = html[:_i] + _sello + '\n' + html[_i:]
 # el móvil del generador de reels enseña a la banda tocando, en lugar del hueco «Band Clip Studio»
 html = html.replace('<img src="img/d-h-reels.jpg" alt="">', '<img src="img/d-h-reels.jpg" alt=""><div class="dr-reelvid"><video data-ambient data-restart muted loop playsinline preload="auto" poster="video/actores/concierto.jpg"><source src="video/actores/concierto.mp4" type="video/mp4"></video></div>', 1)
 html = html.replace('data-title="Cambio de perfil" ', 'data-title="Cambio de perfil" data-min="25500" ', 1)
