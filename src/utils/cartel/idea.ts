@@ -7,6 +7,15 @@
 
 export const MAX_CAMPO_IDEA = 200;
 
+/** Lo que se le pide a la IA, en inglés y por partes (lo calcula el servidor a partir de la idea). */
+export interface BriefIdea {
+  scene: string;
+  mood: string;
+  palette: string;
+  avoid: string;
+  composition: string;
+}
+
 export interface IdeaCartel {
   /** Qué se ve: un objeto, una escena. */
   escena: string;

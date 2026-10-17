@@ -82,6 +82,12 @@ export async function abrirCarteleria(page: Page, { compartido = false, estadoEs
       servidor.adn = { ...servidor.adn, referencias: [...servidor.adn.referencias, url].slice(-3) };
       return route.fulfill({ json: { url, adn: servidor.adn } });
     }
+    if (ruta.endsWith('/cartel/idea')) return route.fulfill({ json: { ok: true } });
+    if (ruta.endsWith('/cartel/brief')) {
+      return route.fulfill({
+        json: { brief: { scene: 'a winged guitar over a desert road', mood: '1970s, low sun', palette: 'rust red and cream', avoid: 'people', composition: '' }, traducido: true, conBoceto: false },
+      });
+    }
     if (ruta.endsWith('/cartel/fondo')) {
       return route.fulfill({ json: { url: `${CDN}/ia-1.png?v=1`, estilo: JSON.parse(cuerpo.toString()).estilo, referencias: servidor.adn.referencias.length } });
     }

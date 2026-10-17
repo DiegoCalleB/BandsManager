@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ImagePlus, Sparkles } from 'lucide-react';
-import { Button, Field, Textarea } from '../ui';
+import { Button } from '../ui';
 import { cn } from '../../utils/cn';
 import { PALETAS, type FondoCartel } from '../../utils/cartel/render';
 import { ESTILOS_CARTEL, ETIQUETA_ESTILO, type EstiloCartel } from '../../utils/cartel/estilos';
@@ -12,7 +12,7 @@ interface Props {
   foto: string | null;
   onFoto: (f: File | undefined) => void;
   fondosIa: string[];
-  onGenerarIa: (estilo: EstiloCartel, instrucciones: string) => Promise<boolean>;
+  onGenerarIa: (estilo: EstiloCartel) => Promise<boolean>;
   generando: boolean;
   /** Estilo con el que arranca el panel de IA (el de la banda: plantilla del dossier, género, favoritos). */
   estiloInicial: EstiloCartel;
@@ -20,6 +20,8 @@ interface Props {
   paletaBanda: PaletaBanda | null;
   /** El ADN de la banda (referencias, anteriores, favoritos), dentro del panel de IA. */
   panelBanda?: React.ReactNode;
+  /** «Tu idea»: lo que la persona imagina para este cartel (texto y boceto). */
+  panelIdea?: React.ReactNode;
 }
 
 /** Muestra de una paleta: color de fondo con unas barras de la Onda en el acento. */
@@ -46,12 +48,11 @@ function Muestra({ activa, etiqueta, onClick, children }: { activa: boolean; eti
   );
 }
 
-export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenerarIa, generando, estiloInicial, paletaBanda, panelBanda }: Props) {
+export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenerarIa, generando, estiloInicial, paletaBanda, panelBanda, panelIdea }: Props) {
   const [iaAbierta, setIaAbierta] = useState(false);
   // Hasta que la persona toca un estilo, manda el de su banda (que puede llegar tarde, al cargar su ADN).
   const [estiloElegido, setEstiloElegido] = useState<EstiloCartel | null>(null);
   const estilo = estiloElegido ?? estiloInicial;
-  const [instrucciones, setInstrucciones] = useState('');
   const esImagen = (url: string) => fondo.tipo === 'imagen' && fondo.url === url;
 
   return (
@@ -108,11 +109,9 @@ export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenera
               </Button>
             ))}
           </div>
+          {panelIdea}
           {panelBanda}
-          <Field label="Ambiente" optional>
-            <Textarea rows={2} maxLength={300} value={instrucciones} placeholder="Colores, objetos, la sala de noche…" onChange={(e) => setInstrucciones(e.target.value)} />
-          </Field>
-          <Button variant="soft" disabled={generando} onClick={async () => { if (await onGenerarIa(estilo, instrucciones)) setIaAbierta(false); }}>
+          <Button variant="soft" disabled={generando} onClick={async () => { if (await onGenerarIa(estilo)) setIaAbierta(false); }}>
             <Sparkles className="size-4" aria-hidden />
             {generando ? 'Pintando el fondo…' : 'Pintar fondo'}
           </Button>

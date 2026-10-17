@@ -6,6 +6,7 @@ import { ajustesDe, configDesdeEstado, CONFIG_INICIAL, conFondoIa, sanearConfigC
 import { lineaHorario } from '../../../utils/cartel/texto';
 import { sinVersion } from '../../../utils/cartel/adn';
 import { useAdnCartel, type DatosBandaCartel } from './useAdnCartel';
+import { useIdeaCartel } from './useIdeaCartel';
 import {
   canvasABlob,
   compartirODescargar,
@@ -89,6 +90,8 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
   const [error, setError] = useState<string | null>(null);
   // El ADN visual de la banda: «Tus colores» del logo, referencias, favoritos y estilo sugerido.
   const adn = useAdnCartel(banda ?? {}, setError);
+  // Su idea del cartel (texto y boceto): se manda al generar y el servidor la traduce y la ordena.
+  const idea = useIdeaCartel(setError);
   const logoUrl = banda?.logoUrl ?? null;
 
   // Lo guardado en el bolo (fondo, cabeza de cartel, historial de IA…), saneado.
@@ -262,17 +265,20 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
   };
 
   /** Devuelve si salió bien (la vista cierra el panel de IA para que Compartir vuelva a verse). */
-  const generarIa = async (estilo: EstiloCartel, instrucciones: string): Promise<boolean> => {
+  const generarIa = async (estilo: EstiloCartel): Promise<boolean> => {
     if (!id) return false;
     const bolo = id;
     setGenerando(true);
     setError(null);
     try {
-      const r = await generarFondoCartel({ concertId: bolo, estilo, instrucciones: instrucciones.trim() || undefined });
+      const { idea: contada, conBoceto } = idea.paraGenerar;
+      const r = await generarFondoCartel({ concertId: bolo, estilo, idea: contada, conBoceto });
       // El servidor ya lo añadió al historial guardado; aquí se refleja sin recargar.
       setFondosIaPorBolo((p) => ({ ...p, [bolo]: conFondoIa({ ...CONFIG_INICIAL, fondosIa: p[bolo] ?? fondosIa }, r.url).fondosIa }));
       setFondoPorBolo((p) => ({ ...p, [bolo]: { tipo: 'imagen', origen: 'ia', url: r.url } }));
-      setMetaIa((p) => ({ ...p, [r.url]: { estilo, ambiente: instrucciones.trim().slice(0, 300) } }));
+      // Lo que pidió, para repetirlo desde favoritos: la escena y el ambiente en una línea.
+      const ambiente = [contada?.escena, contada?.ambiente].filter(Boolean).join(' · ').slice(0, 300);
+      setMetaIa((p) => ({ ...p, [r.url]: { estilo, ambiente } }));
       marcar();
       return true;
     } catch (e) {
@@ -410,6 +416,7 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     tieneEnlace: !!enlace,
     puedeQuitarMarca,
     adn,
+    idea,
     anteriores,
     usarFavorito,
     tieneLogo: !!logoUrl,
