@@ -12,10 +12,15 @@ const visor = leerAtril();
 describe('Visor de acordes en móvil: siempre se puede llegar a la letra', () => {
   // Con la cabecera y el panel de acordes ocupando casi toda la pantalla, el cuerpo con flex-1 se
   // quedaba en 2 px y no había forma de bajar a la letra (captura del usuario).
-  it('el modal se desplaza en móvil y el cuerpo tiene altura propia', () => {
-    expect(visor).toContain('h-[92vh]');
-    expect(visor).toMatch(/flex flex-col overflow-y-auto overscroll-contain md:overflow-hidden/);
-    expect(visor).toMatch(/shrink-0 h-\[75vh\] md:h-auto md:flex-1 md:shrink overflow-hidden/);
+  it('en móvil el panel mide la pantalla y la letra hace su scroll dentro del cuerpo', () => {
+    expect(visor).toContain('h-[100dvh] sm:h-[92vh]');
+    expect(visor).toMatch(/flex flex-col overflow-hidden text-\[var\(--ink\)\]/);
+    expect(visor).toMatch(/flex-1 min-h-0 overflow-hidden flex flex-col md:flex-row/);
+  });
+
+  it('la barra del acorde y los diagramas van en el dock inferior en móvil, siempre a la vista', () => {
+    expect(visor.match(/max-md:order-last/g)?.length).toBeGreaterThanOrEqual(2);
+    expect(visor).toContain('max-md:max-h-[32dvh]');
   });
 
   it('los diagramas empiezan cerrados (la barra fija ya enseña el que suena)', () => {
