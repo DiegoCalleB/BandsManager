@@ -940,7 +940,7 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
     <h3>Reparto</h3>
     <dl>
       <dt>{bajo}</dt><dd>{bajo:cargo} · el que nadie oye</dd>
-      <dt>{bateria}</dt><dd>{bateria:cargo} · y las birras. En dos bandas, desde que lo ficharon</dd>
+      <dt>{bateria}</dt><dd>{bateria:cargo} · En dos bandas, desde que lo ficharon</dd>
       <dt>{voz}</dt><dd>{voz:cargo} · la cara bonita</dd>
       <dt>{guitarra}</dt><dd>{guitarra:cargo} · los solos y los riffs</dd>
       <dt>{manager}</dt><dd>Siempre al teléfono</dd>

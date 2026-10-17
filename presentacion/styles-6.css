@@ -1,0 +1,54 @@
+/* Entrada como la de Netflix en la tele: ident con rayos de luz, perfiles en una lista vertical con la ilustración de fondo, y el N con rueda de carga.
+   La lógica (perfil enfocado, flechas, carga, rayos) está en entrada-tv.js. Tamaños en vh/vw para que escale con la pantalla. */
+
+/* ── Perfiles ── */
+.nx-perfiles { position: absolute; inset: 0; display: block; overflow: hidden; background: #000; font-family: 'Helvetica Neue', Arial, sans-serif; color: #fff; }
+.tv-arte { position: absolute; inset: 0; opacity: 0; animation: tvarte 1.4s ease .9s forwards; }
+.tv-arte i { position: absolute; inset: -2%; background: var(--img) center / cover no-repeat; opacity: 0; transition: opacity .9s ease; animation: tvzoom 26s ease-in-out infinite alternate; }
+.tv-arte i.on { opacity: 1; }
+.tv-velo { position: absolute; inset: 0; background: linear-gradient(90deg, #000 0, rgba(0,0,0,.94) 14%, rgba(0,0,0,.55) 34%, rgba(0,0,0,.08) 58%, transparent 70%), linear-gradient(0deg, rgba(0,0,0,.7) 0, transparent 34%); }
+.nx-perfiles .nx-logo-g { position: absolute; top: 6.5vh; left: 7vw; font-size: 6.4vh; opacity: 0; animation: tvfade .9s ease 1.6s forwards; }
+.nx-perfiles h2 { position: absolute; top: 14.5vh; left: 7.3vw; margin: 0; font-size: 2.7vh; font-weight: 500; letter-spacing: .01em; color: #e5e5e5; opacity: 0; animation: tvfade .8s ease .2s forwards; }
+.nx-pf { position: absolute; left: 8.2vw; top: 22vh; display: flex; flex-direction: column; align-items: flex-start; gap: 2.4vh; }
+.nx-perfil { all: unset; box-sizing: border-box; display: flex; align-items: center; gap: 1.8vw; cursor: pointer; color: #fff; opacity: 0; animation: tvperfil .6s cubic-bezier(.2,.8,.2,1) calc(.25s + var(--i) * .13s) forwards; }
+.nx-perfil .lapiz { flex: none; width: 3.4vh; height: 3.4vh; margin-right: -.4vw; fill: none; stroke: #e5e5e5; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; opacity: 0; transition: opacity .2s; }
+.nx-perfil .av { flex: none; width: 10.5vh; height: 10.5vh; border-radius: 0; border: .45vh solid transparent; transition: width .3s cubic-bezier(.2,.8,.2,1), height .3s cubic-bezier(.2,.8,.2,1), border-color .2s; }
+.nx-perfil span { flex: none; white-space: nowrap; font-size: 4.4vh; font-weight: 700; letter-spacing: -.01em; opacity: 0; transform: translateX(-1vw); transition: opacity .25s, transform .3s; text-shadow: 0 .3vh 1.4vh rgba(0,0,0,.7); }
+.nx-perfil.sel .av, .nx-perfil:focus-visible .av { width: 17vh; height: 17vh; border-color: #fff; }
+.nx-perfil.sel .lapiz, .nx-perfil:focus-visible .lapiz { opacity: 1; }
+.nx-perfil.sel span, .nx-perfil:focus-visible span { opacity: 1; transform: none; }
+.nx-perfil.elegido .av { border-color: #fff; animation: tvpulso .5s ease; }
+.tv-titulo { position: absolute; right: 6vw; bottom: 10vh; max-width: 34vw; text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 1.2vh; opacity: 0; animation: tvfade 1s ease 2s forwards; text-shadow: 0 .4vh 2vh rgba(0,0,0,.8); }
+.tv-titulo small { font-size: 1.8vh; font-weight: 700; letter-spacing: .3em; color: #e50914; }
+.tv-titulo b { font: 400 7vh/1 Anton, Oswald, Impact, sans-serif; letter-spacing: .02em; text-transform: uppercase; }
+.tv-titulo span { font-size: 2.4vh; font-weight: 500; color: #ddd; }
+.tv-titulo em { margin-top: .6vh; font-style: normal; font-size: 2.6vh; font-weight: 700; color: #fff; }
+@keyframes tvarte { to { opacity: 1; } }
+@keyframes tvfade { to { opacity: 1; } }
+@keyframes tvzoom { from { transform: scale(1); } to { transform: scale(1.07) translateX(-1%); } }
+@keyframes tvperfil { from { opacity: 0; transform: translateX(-2.5vw); } to { opacity: 1; transform: none; } }
+@keyframes tvpulso { 50% { transform: scale(1.06); } }
+
+/* ── N con rueda de carga (al elegir perfil) ── */
+.nx-carga { position: absolute; inset: 0; z-index: 5; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 7vh; background: #000; }
+#gate.cargando .nx-carga { display: flex; animation: tvfade .35s ease both; opacity: 0; }
+.nx-carga svg { height: 22vh; filter: drop-shadow(0 0 3vh rgba(229,9,20,.35)); }
+.nx-carga .n1 { fill: #b1060f; } .nx-carga .n2 { fill: #e50914; }
+.nx-carga .rueda { width: 5.6vh; height: 5.6vh; border-radius: 50%; border: .5vh solid rgba(229,9,20,.25); border-top-color: #e50914; border-right-color: #ff6a4d; animation: tvgira 1s linear infinite; }
+@keyframes tvgira { to { transform: rotate(360deg); } }
+#gate.cargando .nx-perfiles { visibility: hidden; }
+
+/* ── Ident: la N y, detrás, los rayos de luz de colores (un fogonazo, que se funde en negro) ── */
+#ident .id-n { position: relative; z-index: 2; height: 40vh; opacity: 0; transform: scale(.7); filter: drop-shadow(0 0 5vh rgba(229,9,20,.55)); }
+#ident .id-n .n1 { fill: #b1060f; } #ident .id-n .n2 { fill: #e50914; }
+#ident.on .id-n { animation: idn 3.2s cubic-bezier(.2,.7,.2,1) both; }
+#ident .id-rayos { position: absolute; inset: 0; z-index: 1; overflow: hidden; opacity: 0; }
+#ident .id-rayos i { position: absolute; top: -10%; bottom: -10%; transform-origin: 50% 0; left: var(--x); width: var(--w); background: linear-gradient(180deg, transparent, var(--c) 18%, var(--c) 82%, transparent); filter: blur(.5vh); opacity: .92; transform: scaleY(.2) rotate(var(--r)); }
+#ident.on .id-rayos { animation: idrayos 3s ease .6s both; }
+#ident.on .id-rayos i { animation: idrayo 2.1s cubic-bezier(.2,.7,.2,1) calc(.7s + var(--d)) both; }
+@keyframes idn { 0% { opacity: 0; transform: scale(.7); } 22% { opacity: 1; transform: scale(1); } 60% { opacity: 1; transform: scale(1.04); } 100% { opacity: 0; transform: scale(1.5); } }
+@keyframes idrayos { 0% { opacity: 0; } 12% { opacity: 1; } 78% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes idrayo { from { transform: scaleY(.2) translateX(0) rotate(var(--r)); } to { transform: scaleY(1) translateX(var(--v)) rotate(var(--r)); } }
+#ident .id-mark { display: none; }
+@media (prefers-reduced-motion: reduce) { .tv-arte, .tv-arte i, .nx-perfil, .tv-titulo, .nx-perfiles h2, .nx-perfiles .nx-logo-g { animation: none; opacity: 1; } .tv-arte i:not(.on) { opacity: 0; } #ident .id-rayos i { animation: none; } }
+@media (orientation: portrait) { .tv-titulo { display: none; } .tv-velo { background: linear-gradient(90deg, #000 0, rgba(0,0,0,.85) 30%, rgba(0,0,0,.2) 80%), linear-gradient(0deg, rgba(0,0,0,.7) 0, transparent 34%); } }

@@ -18,7 +18,7 @@ SUBS_GL = {
         "Herdeiros. Escribinvos hai tres meses e ninguén contestou. Quedo co trinta por cento, e o repertorio decídoo eu. E fóra baladas.",
     "No firméis nada, chavales. Los bolos los llevamos nosotros. El sábado os lo demuestro.":
         "Non asinedes nada, rapaces. Os bolos levámolos nós. O sábado demóstrovolo.",
-    "Soy Brais, batería. El que marca el ritmo. Y el que se bebe las birras.":
+    "Soy Brais, batería. El que marca el ritmo. Y el que nunca pierde el compás.":
         "Son Brais, batería. O que marca o ritmo. E o que se bebe as birras.",
     "Alan. Voz y guitarra. Che, la cara bonita de la banda.":
         "Alan. Voz e guitarra. Che, a cara bonita da banda.",
@@ -246,7 +246,7 @@ SUBS_GL = {
         "Aquí está o que entra por cada bolo, os gastos, e o que lle toca a cada un.",
     "¡Las cuentas claras! ¡Y salen números positivos! ¡Por primera vez en la historia de esta banda!":
         "¡As contas claras! ¡E saen números positivos! ¡Por primeira vez na historia desta banda!",
-    "Y para las giras le meteré algo tipo Traicaunt, para que Brais no nos haga el lío de las birras.":
+    "Y para las giras le meteré algo tipo Traicaunt, para que Brais no nos haga el lío con las cuentas.":
         "E para as xiras métolle algo tipo Tricount, para que Brais non nos arme o lío das birras.",
     "¡Oye! ¡Que fue solo una vez!":
         "¡Oe! ¡Que foi só unha vez!",
@@ -276,7 +276,7 @@ SUBS_GL = {
         "Case sempre de noite, cando as nenas xa durmían. Pechaba o portátil, miraba para elas un momento… e volvía abrilo.",
     "Neno… no teníamos ni idea.":
         "Neno… non tiñamos nin idea.",
-    "Y nosotros, discutiendo por las birras.":
+    "Y nosotros, discutiendo por tonterías.":
         "E nós, discutindo polas birras.",
     "Gracias, Iago. De verdad.":
         "Grazas, Iago. De verdade.",
