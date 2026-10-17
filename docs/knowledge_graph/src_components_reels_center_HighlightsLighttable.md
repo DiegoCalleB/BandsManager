@@ -18,7 +18,9 @@ Mesa de luz con los highlights detectados y sus señales de energía.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_reels_center_RazonDelTramoPanel|src/components/reels_center/RazonDelTramoPanel.tsx]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_center_ReelsCenterContext|src/components/reels_center/ReelsCenterContext.ts]] *(Layer: #frontend, Domain: #social)*
+- [[src_components_reels_center_razonDelTramo|src/components/reels_center/razonDelTramo.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_center_reelsApiTypes|src/components/reels_center/reelsApiTypes.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_center_reelsHelpers|src/components/reels_center/reelsHelpers.ts]] *(Layer: #frontend, Domain: #social)*
 

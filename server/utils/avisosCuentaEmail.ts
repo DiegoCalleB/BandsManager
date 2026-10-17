@@ -36,7 +36,7 @@ export function destinatariosDeAvisos(e: EntradaDestinatarios): { conexion: stri
 
 interface Correo { subject: string; html: string }
 
-const envoltorio = (titulo: string, cuerpo: string, appUrl: string) => `<!DOCTYPE html>
+export const envoltorio = (titulo: string, cuerpo: string, appUrl: string) => `<!DOCTYPE html>
 <html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${titulo}</title></head>
 <body style="margin:0;padding:24px 16px;background:#f6f7f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#2a2e35;">
 <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:18px;padding:28px;">
@@ -46,7 +46,7 @@ ${cuerpo}
 <p style="margin:22px 0 0 0;"><a href="${escapeHtml(appUrl)}" style="display:inline-block;background:#d86e31;color:#ffffff;text-decoration:none;font-weight:700;padding:12px 22px;border-radius:999px;">Abrir BandManager</a></p>
 </div></body></html>`;
 
-const parrafo = (t: string) => `<p style="margin:0 0 12px 0;font-size:14.5px;line-height:1.6;">${t}</p>`;
+export const parrafo = (t: string) => `<p style="margin:0 0 12px 0;font-size:14.5px;line-height:1.6;">${t}</p>`;
 
 export function renderAvisoGmailConectado(d: { nombreBanda: string; gmailEmail: string; appUrl: string }): Correo {
   const banda = escapeHtml(d.nombreBanda);
