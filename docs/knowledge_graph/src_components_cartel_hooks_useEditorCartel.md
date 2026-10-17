@@ -19,11 +19,13 @@ Exporta: EnlaceCartel, useEditorCartel, EditorCartel.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_cartel_hooks_useAdnCartel|src/components/cartel/hooks/useAdnCartel.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_cartel_hooks_useIdeaCartel|src/components/cartel/hooks/useIdeaCartel.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_adn|src/utils/cartel/adn.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_config|src/utils/cartel/config.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_datos|src/utils/cartel/datos.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_formatos|src/utils/cartel/formatos.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_cartel_logos|src/utils/cartel/logos.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_render|src/utils/cartel/render.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_texto|src/utils/cartel/texto.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_promocionApi|src/utils/promocionApi.ts]] *(Layer: #service, Domain: #system)*

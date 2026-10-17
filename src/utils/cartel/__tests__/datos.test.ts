@@ -57,7 +57,7 @@ describe('datos del cartel', () => {
 });
 
 describe('configDesdeEstado', () => {
-  const base = { formato: 'feed' as const, ajustes: ajustesDe(CONFIG_INICIAL), fondosIa: [], anterior: CONFIG_INICIAL };
+  const base = { formato: 'feed' as const, ajustes: ajustesDe(CONFIG_INICIAL), fondosIa: [], logos: [] as string[], anterior: CONFIG_INICIAL };
 
   it('nunca guarda una URL local (blob:) de una foto que aún se está subiendo', () => {
     const c = configDesdeEstado({ ...base, fondo: { tipo: 'imagen', origen: 'foto', url: 'blob:http://x/1' }, fotoRemota: null });
