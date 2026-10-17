@@ -83,6 +83,7 @@ Resolución forzosa del band_id desde la sesión autenticada. Bloquea inyeccione
 - [[server_routes_users_rutasSalidaBanda|server/routes/users/rutasSalidaBanda.ts]] *(from #route)*
 - [[server_services_perfilDeLaPeticion|server/services/perfilDeLaPeticion.ts]] *(from #service)*
 - [[server_utils_bandDna|server/utils/bandDna.ts]] *(from #service)*
+- [[server_utils_estadoPorBanda|server/utils/estadoPorBanda.ts]] *(from #service)*
 - [[ui_leads_table|Leads Table & Actions]] *(from #frontend)*
 
 ---

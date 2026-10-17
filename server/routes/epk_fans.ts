@@ -45,7 +45,7 @@ import type { Concert, RegisteredBand, Song } from '../../src/types.js';
 import type { EpkLanguage } from '../../src/i18n/epkTranslations.js';
 import type { RespuestaTraduccionEpk } from '../tiposRespuestasIA.js';
 import { responderError } from '../utils/errorHttp.js';
-
+import { fusionarColeccionDeBanda } from '../utils/estadoPorBanda.js';
 const router = express.Router();
 
 // Get Autonomy Config
@@ -763,7 +763,7 @@ router.get('/fans', requireAuth, async (req, res) => {
   try {
     const fans = await dbGetFans(userBandId);
     const state = loadState();
-    state.fans = fans;
+    state.fans = fusionarColeccionDeBanda(state.fans, userBandId, fans);
     saveState(state);
     res.json(fans);
   } catch {

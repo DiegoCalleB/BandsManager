@@ -25,6 +25,7 @@ Conciertos y ensayos: CRUD de `/concerts` y `/rehearsals`. Capa de
 - [[server_routes_tiposCalendarioIcs|server/routes/tiposCalendarioIcs.ts]] *(Layer: #route, Domain: #system)*
 - [[server_services_calendarConflictService|server/services/calendarConflictService.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_estadoPorBanda|server/utils/estadoPorBanda.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 

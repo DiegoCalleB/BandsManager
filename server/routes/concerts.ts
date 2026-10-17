@@ -3,7 +3,7 @@
 
 import express from "express";
 import crypto from "crypto";
-import { Rehearsal, Concert, Payment, Message } from "../../src/types.js";
+import { Rehearsal, Concert, Payment } from "../../src/types.js";
 import { loadState, saveState, requireAuth, requireLeader } from "../state.js";
 import { getTargetBandId, puedeEscribirEnBanda, bandaDe } from "../utils/bandAccess.js";
 import {
@@ -14,6 +14,7 @@ import {
   dbUpsertConcert,
   dbDeleteConcert,
   dbGetPayments,
+  esSupabaseNoConfigurado,
   dbUpsertPayment,
   dbGetRunOfShow,
   dbSyncRunOfShowForDate,
@@ -27,6 +28,7 @@ import { programarRevisionDeBanda, choquesVisiblesPara } from "../services/calen
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 import type { CancionDeFeed, ConciertoDeFeed, EnsayoDeFeed, MaterialFeed, PuntoRunOfShowFeed, SalaDeFeed, SetlistDeFeed, TemaDeSetlistFeed } from './tiposCalendarioIcs.js';
 import { responderError } from '../utils/errorHttp.js';
+import { fusionarColeccionDeBanda } from '../utils/estadoPorBanda.js';
 
 const router = express.Router();
 
@@ -137,7 +139,10 @@ router.delete("/rehearsals/:id", requireAuth, async (req, res) => {
     try {
       await dbDeleteRehearsal(id, targetBand);
     } catch (err) {
-      console.warn("No se pudo eliminar el ensayo en Supabase:", err);
+      // Sin Supabase (arranque local) se borra solo en memoria; con Supabase, un fallo no se oculta:
+      // el registro reaparecería en la siguiente carga.
+      if (!esSupabaseNoConfigurado(err)) throw err;
+      console.warn("Supabase no configurado: ensayo borrado solo en memoria.");
     }
 
     if (state.rehearsals) {
@@ -220,7 +225,10 @@ router.delete("/concerts/:id", requireAuth, async (req, res) => {
     try {
       await dbDeleteConcert(id, targetBand);
     } catch (err) {
-      console.warn("No se pudo eliminar el concierto en Supabase:", err);
+      // Sin Supabase (arranque local) se borra solo en memoria; con Supabase, un fallo no se oculta:
+      // el registro reaparecería en la siguiente carga.
+      if (!esSupabaseNoConfigurado(err)) throw err;
+      console.warn("Supabase no configurado: concierto borrado solo en memoria.");
     }
 
     if (state.concerts) {
@@ -241,7 +249,7 @@ router.post("/concerts/sync", requireAuth, async (req, res) => {
   try {
     const dbConcerts = await dbGetConcerts(userBandId);
     const state = loadState();
-    state.concerts = dbConcerts;
+    state.concerts = fusionarColeccionDeBanda(state.concerts, userBandId, dbConcerts);
     saveState(state);
 
     res.json({
@@ -383,7 +391,7 @@ router.post("/payments/sync", requireAuth, requireLeader, async (req, res) => {
   try {
     const dbPayments = await dbGetPayments(userBandId);
     const state = loadState();
-    state.payments = dbPayments;
+    state.payments = fusionarColeccionDeBanda(state.payments, userBandId, dbPayments);
     saveState(state);
 
     res.json({
@@ -396,15 +404,6 @@ router.post("/payments/sync", requireAuth, requireLeader, async (req, res) => {
     console.error("Error in /api/payments/sync:", error);
     responderError(res, error, "Error al sincronizar con Supabase.");
   }
-});
-
-// Create logistics message
-router.post("/messages", requireAuth, (req, res) => {
-  const newMessage: Message = req.body;
-  const state = loadState();
-  state.messages.push(newMessage);
-  saveState(state);
-  res.json({ success: true, message: newMessage });
 });
 
 // Devuelve la URL firmada del feed para las bandas del usuario. Es lo que la aplicación

@@ -25,6 +25,7 @@ Copia en memoria de alta velocidad sincronizada con Supabase al arranque.
 - [[server_db_tiposRepertorio|server/db/tiposRepertorio.ts]] *(Layer: #db, Domain: #system)*
 - [[server_promptsManager|server/promptsManager.ts]] *(Layer: #service, Domain: #system)*
 - [[server_stateTypes|server/stateTypes.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_persistenciaEstado|server/utils/persistenciaEstado.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_slug|server/utils/slug.ts]] *(Layer: #service, Domain: #system)*
 - [[src_db_seed|src/db_seed.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
