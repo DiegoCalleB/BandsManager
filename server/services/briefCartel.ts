@@ -75,7 +75,8 @@ export async function construirBrief(
   const client = getAiClient();
   if (!client) return reserva ? { brief: reserva, traducido: false } : null;
 
-  const notas = JSON.stringify({ scene: idea.escena, mood_and_era: idea.ambiente, colours: idea.colores, avoid: idea.evitar, looks_like: idea.parecido });
+  // Sin `<` ni `>`: lo que escribe la persona no puede cerrar la etiqueta de datos ni abrir otra.
+  const notas = JSON.stringify({ scene: idea.escena, mood_and_era: idea.ambiente, colours: idea.colores, avoid: idea.evitar, looks_like: idea.parecido }).replace(/[<>]/g, '');
   const partes: Array<{ text: string } | { inlineData: { mimeType: string; data: string } }> = [{ text: `${INSTRUCCIONES}\n<client_notes>${notas}</client_notes>` }];
   if (boceto) partes.push({ inlineData: { mimeType: boceto.mimeType, data: boceto.data } });
 
