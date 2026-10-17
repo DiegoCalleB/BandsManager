@@ -61,3 +61,16 @@ describe('dbUpsertFan', () => {
     );
   });
 });
+
+describe('dbContarFans', () => {
+  it('cuenta solo los fans de la banda pedida y devuelve el número', async () => {
+    const eqMock = vi.fn().mockResolvedValue({ count: 8, error: null });
+    const selectMock = vi.fn(() => ({ eq: eqMock }));
+    fromMock.mockImplementation(() => ({ select: selectMock }));
+    const { dbContarFans } = await import('../fans');
+
+    expect(await dbContarFans('band-la-banda')).toBe(8);
+    expect(selectMock).toHaveBeenCalledWith('id', { count: 'exact', head: true });
+    expect(eqMock).toHaveBeenCalledWith('band_id', 'la-banda');
+  });
+});

@@ -666,8 +666,8 @@ _(escena visual, sin diálogo)_
 **46.1** · **Álvaro**: ¿Y de qué vivimos? ¿De los aplausos?  
    _Voz:_ ¿Y de qué vivimos, entonces? ¿De los aplausos?
 
-**46.2** · **Iago**: Dos motores: una suscripción por banda, ya construida pero apagada a propósito, y el apoyo voluntario de quien use la app.  
-   _Voz:_ De dos motores. Una suscripción por banda, ya construida pero apagada a propósito. Y el apoyo voluntario de quien use la app.
+**46.2** · **Iago**: Dos motores: una suscripción por banda, con seis planes, y el apoyo voluntario de quien use la app.  
+   _Voz:_ De dos motores. Una suscripción por banda, con seis planes. Y el apoyo voluntario de quien use la app.
 
 **46.3** · **Brais**: ¿Y cuánto es ese apoyo? ¿Más que Peláez?  
    _Voz:_ ¿Y cuánto es ese apoyo? ¿Más o menos que Peláez?
@@ -805,7 +805,7 @@ _(escena visual, sin diálogo)_
 - No solo contaba para el cierre del cartel del Resu.
 - También contaba para esto.
 - Brais: en esta historia eras el batería.
-- Pero en la de verdad, el festival sois vosotros.
+- Pero en la realidad, el cartel lo cierras tú.
 - Y ahora… un reto.
 
 ---

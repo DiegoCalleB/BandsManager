@@ -22,6 +22,7 @@ POST /ai-stem-separation: separa un tema en stems (voz, batería, bajo…) con e
 - [[server_db_stemsCache|server/db/stemsCache.ts]] *(Layer: #db, Domain: #repertoire)*
 - [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(Layer: #security, Domain: #system)*
 - [[server_routes_ai_music_cacheStems|server/routes/ai_music/cacheStems.ts]] *(Layer: #route, Domain: #repertoire)*
+- [[server_routes_ai_music_detalleTecnico|server/routes/ai_music/detalleTecnico.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_ai_music_formatoStems|server/routes/ai_music/formatoStems.ts]] *(Layer: #route, Domain: #repertoire)*
 - [[server_routes_ai_music_separacionContexto|server/routes/ai_music/separacionContexto.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_ai_music_separacionMotores|server/routes/ai_music/separacionMotores.ts]] *(Layer: #route, Domain: #system)*

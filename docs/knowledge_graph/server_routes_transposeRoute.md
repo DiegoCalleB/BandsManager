@@ -20,6 +20,7 @@ Transposición de audio (`/transpose-audio`).
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[db_state_sync|In-Memory State & Supabase Sync]] *(Layer: #db, Domain: #system)*
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
+- [[server_routes_ai_music_detalleTecnico|server/routes/ai_music/detalleTecnico.ts]] *(Layer: #route, Domain: #system)*
 - [[server_services_audioTransposeService|server/services/audioTransposeService.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
@@ -28,6 +29,11 @@ Transposición de audio (`/transpose-audio`).
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server|server.ts]] *(from #route)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/transposeErrorSeguro.test.ts`
 
 ---
 

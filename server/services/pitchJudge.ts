@@ -7,6 +7,7 @@
  */
 
 import { generateUnifiedAI } from "../ai.js";
+import { detectarDatosInventados } from "../utils/datosInventados.js";
 import { sanitizePitchDeterministically, auditPitchQuality, PitchQualityAudit, getRecommendedWordRange } from "../utils/promptSafety.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
@@ -30,8 +31,10 @@ export async function evaluateAndRefinePitch(params: {
   bandName: string;
   minCacheThreshold?: number;
   skipRefinement?: boolean;
+  /** Todo lo que se le dijo al modelo (prompt, enlaces, contacto): una cifra, fecha o contacto que no esté aquí es inventado. */
+  hechos?: string;
 }): Promise<JudgeEvaluation> {
-  const { pitchText, leadName, leadCategory, city, minCacheThreshold, skipRefinement = false } = params;
+  const { pitchText, leadName, leadCategory, city, minCacheThreshold, skipRefinement = false, hechos } = params;
 
   // 1. Auditoría heurística determinista (0ms)
   const audit = auditPitchQuality(pitchText, leadCategory);
@@ -142,8 +145,15 @@ export async function evaluateAndRefinePitch(params: {
     }
   }
 
+  // Datos inventados: precios, fechas, teléfonos, emails o enlaces que no constan en lo que se le dio al modelo
+  const inventados = hechos === undefined ? [] : detectarDatosInventados(pitchText, hechos);
+  if (inventados.length > 0) {
+    critique.push(`Datos inventados que no constan en el perfil ni en la campaña (elimínalos): ${inventados.map(d => d.texto).join(", ")}`);
+    heuristicScore -= 30;
+  }
+
   const finalScore = Math.max(0, Math.min(100, heuristicScore));
-  const passed = finalScore >= 80 && audit.bannedWordsFound.length === 0 && audit.emDashesFound === 0;
+  const passed = finalScore >= 80 && audit.bannedWordsFound.length === 0 && audit.emDashesFound === 0 && inventados.length === 0;
 
   // Si ya pasó con nota alta o se desactiva el refinamiento, devolver saneado determinista
   if (passed || skipRefinement) {
@@ -190,10 +200,11 @@ Responde ÚNICAMENTE con el texto final corregido:`;
 
     if (cleanRefined && cleanRefined.length > 30) {
       const refinedAudit = auditPitchQuality(cleanRefined, leadCategory);
+      const siguenInventados = hechos === undefined ? [] : detectarDatosInventados(cleanRefined, hechos);
       return {
         score: Math.max(finalScore, refinedAudit.antiAiScore),
-        passed: true,
-        critique,
+        passed: siguenInventados.length === 0,
+        critique: siguenInventados.length ? [...critique, `Tras refinar siguen datos inventados: ${siguenInventados.map(d => d.texto).join(", ")}`] : critique,
         requiresRefinement: true,
         refinedText: cleanRefined,
         audit: refinedAudit

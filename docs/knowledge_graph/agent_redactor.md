@@ -40,6 +40,7 @@ Redacta borradores de respuesta a salas. Nunca envía: el borrador pasa por apro
 - [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
 - [[route_leads_reply|Leads Reply Route]] *(from #route)*
 - [[sec_prompt_safety|Prompt Injection Sanitizer]] *(from #security)*
+- [[server_evals_lectorGolden|server/evals/lectorGolden.ts]] *(from #service)*
 - [[server_services_sentimentAnalysis|server/services/sentimentAnalysis.ts]] *(from #service)*
 - [[ui_venue_detail|Venue Detail & Pitch Simulator]] *(from #frontend)*
 

@@ -30,6 +30,7 @@ Exporta: ejecutar, COOKIES_FILE, banderasDeCookies, banderasAntiBot, rutaYtDlp, 
 - [[server_services_senalesVideo|server/services/senalesVideo.ts]] *(from #service)*
 - [[server_services_youtubeMeta|server/services/youtubeMeta.ts]] *(from #service)*
 - [[server_utils_audioEnergy|server/utils/audioEnergy.ts]] *(from #service)*
+- [[server_utils_informeSenalesPublico|server/utils/informeSenalesPublico.ts]] *(from #service)*
 - [[server_utils_viralSignals|server/utils/viralSignals.ts]] *(from #service)*
 
 ---

@@ -24,6 +24,7 @@ _Sin dependencias salientes directas._
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[agent_lector|Lector Agent (Listener)]] *(from #agent)*
+- [[server_evals_lectorGolden|server/evals/lectorGolden.ts]] *(from #service)*
 - [[server_services_emailAgentClient|server/services/emailAgentClient.ts]] *(from #agent)*
 - [[server_services_gmailApiClient|server/services/gmailApiClient.ts]] *(from #service)*
 

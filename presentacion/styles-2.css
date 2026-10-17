@@ -200,6 +200,7 @@ body.scroll .slide.scene.reveal .rv-photo { position: relative; right: auto; top
 .cast figcaption, .cameo figcaption { position: absolute; left: 0; right: 0; bottom: 0; padding: 60px 26px 22px; background: linear-gradient(180deg, transparent, rgba(5,7,13,.92)); }
 .cast figcaption b, .cameo figcaption b { display: block; font-size: 40px; font-weight: 600; }
 .cast figcaption span, .cameo figcaption span { font-size: 26px; color: rgba(255,255,255,.72); }
+.cast figcaption small.ig { display: block; margin-top: 6px; font-size: 24px; font-weight: 600; letter-spacing: .02em; color: #ffd596; }
 .cameo { position: absolute !important; right: 120px; top: 150px; width: 420px; height: 566px; margin: 0; border-radius: 26px; overflow: hidden; border: 1px solid rgba(255,255,255,.2); z-index: 3; }
 .cameo img { width: 100%; height: 100%; object-fit: cover; }
 body.scroll .cast { grid-template-columns: 1fr 1fr; gap: 12px; } body.scroll .cast figcaption b { font-size: 18px; } body.scroll .cast figcaption span { font-size: 14px; }
@@ -385,7 +386,7 @@ body.scroll .paperwrap { position: relative; right: auto; top: auto; width: 100%
 
 /* QR de la banda con su logo en el centro */
 .qrcard { position: absolute; z-index: 4; left: 1090px; top: 220px; width: 400px; padding: 26px 26px 20px; border-radius: 30px; background: #fff; color: #111; text-align: center; box-shadow: 0 30px 90px rgba(0,0,0,.6), 0 0 80px rgba(96,165,250,.25); transform: rotate(-3deg); }
-.qrcard svg { display: block; width: 100%; height: auto; }
+.qrcard svg, .qrcard img { display: block; width: 100%; height: auto; }
 .qrcard b { display: block; margin-top: 12px; font-size: 27px; font-weight: 600; letter-spacing: -.01em; }
 .qrcard span { font-size: 20px; color: #5a626e; }
 body.scroll .qrcard { position: relative; left: auto; top: auto; margin: 16px auto; width: 70%; transform: none; }

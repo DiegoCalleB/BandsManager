@@ -2,6 +2,7 @@
 // ejecuciones (`/agent-runs`) y diagnóstico del Scout. Reglas de envío y aprobación humana:
 // AGENTS.md §3.
 
+import { soloDireccionSalvoCron } from './agentePermisos.js';
 import express from 'express';
 import { urlFotoPlaces } from '../utils/placesPhoto.js';
 import { estadosARedactar, guardarPitchSiSigueRedactable } from '../utils/redactorAlcance.js';
@@ -95,7 +96,7 @@ function normalizeAgentName(name: string): string {
 }
 
 // Trigger agents (motor consolidado en Node, ver server/services/agentEngine.ts)
-router.post('/trigger-agent', requireCronOrAuth, async (req, res) => {
+router.post('/trigger-agent', requireCronOrAuth, soloDireccionSalvoCron, async (req, res) => {
   const { agentName, params } = req.body;
 
   if (!agentName) {
@@ -109,8 +110,7 @@ router.post('/trigger-agent', requireCronOrAuth, async (req, res) => {
       .status(403)
       .json({ error: 'No puedes lanzar agentes sobre otra banda.' });
   }
-  // Quién dispara sale de la sesión. Antes, sin usuario, se firmaba la auditoría con el email
-  // del dueño de la plataforma, que es justo lo contrario de lo que sirve un registro de auditoría.
+  // Quién dispara sale de la sesión; sin usuario, la auditoría no se firma con el email del dueño.
   const userEmail =
     usuarioDisparador?.email || usuarioDisparador?.username || 'cron@sistema';
   const userId = usuarioDisparador?.id || 'sistema-cron';

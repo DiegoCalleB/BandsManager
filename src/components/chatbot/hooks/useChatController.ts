@@ -40,14 +40,14 @@ export function useChatController({ userRole, currentUser, activeBandName, onLoa
 
   const { isListening, handleToggleMic, speechSupported } = useVoiceInput({ setInputText });
 
-  const { agentsEnabled, autonomyConfig, setActiveRun, setIsAutonomyModalOpen, setAgentsEnabled, activeRun, isAutonomyModalOpen } = useAgentRuns();
+  const { autonomyConfig, setActiveRun, activeRun } = useAgentRuns();
 
   const { accompanimentAudio, songPicker, setSongPicker, handleSaveAccompanimentToSong, handleGenerateAccompanimentAudio, melodicIdeaAudio, handleDownloadMelodicIdeaMidi, handleSaveMelodicIdeaToSong, handleGenerateMelodicIdeaAudio } = useChatAudioGeneration({ currentUser, cleanUserName });
 
 
-  const { handleSendMessage } = useChatSend({ inputText, isLoading, setInputText, setMessages, setIsLoading, currentUser, userRole, messages, agentsEnabled, autonomyConfig });
+  const { handleSendMessage } = useChatSend({ inputText, isLoading, setInputText, setMessages, setIsLoading, currentUser, userRole, messages });
 
   const { handleConfirmAllActions, handleConfirmAction, handleDismissAction, handleKeyDown } = useChatActions({ setMessages, leads, autonomyConfig, onUpdateLead, currentUser, onAddConcert, onAddRehearsal, onCreateLead, onNavigate, setActiveRun, inputText, isLoading, handleSendMessage });
 
-  return { bandDisplayName, isAdmin, setIsAutonomyModalOpen, autonomyConfig, cleanUserName, storageKey, setMessages, agentsEnabled, setAgentsEnabled, messages, parseMarkdown, handleConfirmAllActions, accompanimentAudio, songPicker, setSongPicker, handleSaveAccompanimentToSong, handleGenerateAccompanimentAudio, melodicIdeaAudio, handleDownloadMelodicIdeaMidi, handleSaveMelodicIdeaToSong, handleGenerateMelodicIdeaAudio, handleConfirmAction, handleDismissAction, isLoading, activeRun, setActiveRun, messagesEndRef, handleSendMessage, textareaRef, inputText, setInputText, handleKeyDown, isListening, handleToggleMic, speechSupported, isAutonomyModalOpen };
+  return { bandDisplayName, isAdmin, cleanUserName, storageKey, setMessages, messages, parseMarkdown, handleConfirmAllActions, accompanimentAudio, songPicker, setSongPicker, handleSaveAccompanimentToSong, handleGenerateAccompanimentAudio, melodicIdeaAudio, handleDownloadMelodicIdeaMidi, handleSaveMelodicIdeaToSong, handleGenerateMelodicIdeaAudio, handleConfirmAction, handleDismissAction, isLoading, activeRun, setActiveRun, messagesEndRef, handleSendMessage, textareaRef, inputText, setInputText, handleKeyDown, isListening, handleToggleMic, speechSupported };
 }

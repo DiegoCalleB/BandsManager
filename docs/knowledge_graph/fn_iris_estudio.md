@@ -30,6 +30,7 @@ Separación de pistas, mezcla, ideas de audio y descarga desde el estudio de can
 - [[server_routes_ai_music|server/routes/ai_music.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_ai_music_audioPublico|server/routes/ai_music/audioPublico.ts]] *(Layer: #route, Domain: #repertoire)*
 - [[server_routes_ai_music_cacheStems|server/routes/ai_music/cacheStems.ts]] *(Layer: #route, Domain: #repertoire)*
+- [[server_routes_ai_music_detalleTecnico|server/routes/ai_music/detalleTecnico.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_ai_music_diagnosticos|server/routes/ai_music/diagnosticos.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_ai_music_diagnosticosInfra|server/routes/ai_music/diagnosticosInfra.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_ai_music_ffmpegConfigurado|server/routes/ai_music/ffmpegConfigurado.ts]] *(Layer: #route, Domain: #system)*

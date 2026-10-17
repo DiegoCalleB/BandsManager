@@ -55,7 +55,7 @@
   "src/components/Dashboard.tsx": 753,
   "server/routes/upload.ts": 754,
   "src/utils/growthPlanEngine.ts": 746,
-  "server/routes/chat.ts": 698,
+  "server/routes/chat.ts": 697,
   "src/components/reels/SocialGrowthPlanView.tsx": 735,
   "src/components/booking/MultiModelPitchComparatorModal.tsx": 728,
   "src/utils/emailFormatter.ts": 721,

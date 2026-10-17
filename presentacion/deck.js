@@ -289,7 +289,7 @@
     clearTimeout(pelTimer); clearTimeout(rampaT); pelInfo = null; slides.forEach((x) => x.classList.remove('acelera'));
     if (!pelicula || pausado) return;
     const nx = proximo(cur);
-    const ir = () => { corteAuto = true; show(nx); };
+    const ir = () => { if (window.Eleccion && window.Eleccion.desvia(cur, nx, (k) => { corteAuto = true; if (k !== null) show(k); })) return; corteAuto = true; show(nx); };
     if (nx !== null && slides[nx].dataset.corte === 'rampa' && !isScroll()) {
       const total = window.CineMusica ? window.CineMusica.alPulso(ms + PRE_RAMPA) : ms + PRE_RAMPA;
       const sale = slides[cur];
@@ -427,11 +427,12 @@
       const aInicio = (btn) => {
         if (gate.dataset.fase !== 'perfiles') return;
         btn.classList.add('elegido'); nxAudio.tuc();
+        setTimeout(() => gate.classList.add('cargando'), 650);   // el N con la rueda, como al entrar en la plataforma
         setTimeout(() => {
-          gate.dataset.fase = 'home';
+          gate.classList.remove('cargando'); gate.dataset.fase = 'home';
           ($('#gatePeli') || $('#gateSound')).focus({ preventScroll: true });
           if (vid) setTimeout(() => { vid.play().then(() => { gate.classList.add('trailer'); }).catch(() => {}); }, 2600);
-        }, 700);
+        }, 1900);
       };
       $$('.nx-perfil').forEach((b) => { b.onclick = () => aInicio(b); });
       // «Más información»: la ficha de la película, como en la plataforma; el tráiler de fondo se queda como está
@@ -502,7 +503,7 @@
       if (ficha && !ficha.hidden) { if (e.key === 'Escape') { e.preventDefault(); $('#nxCerrar').click(); } return; } // con la ficha abierta, Enter pulsa el botón enfocado
       if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') {
         e.preventDefault();
-        if (gate && gate.dataset.fase === 'perfiles') ($('.nx-perfil.elegido') || $('.nx-perfil')).click();
+        if (gate && gate.dataset.fase === 'perfiles') ($('.nx-perfil.sel') || $('.nx-perfil.elegido') || $('.nx-perfil')).click();
         else ($('#gatePeli') || $('#gateSound')).click();
       }
       return;
