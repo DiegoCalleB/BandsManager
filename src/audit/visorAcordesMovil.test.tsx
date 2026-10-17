@@ -15,7 +15,9 @@ describe('Visor de acordes en móvil: siempre se puede llegar a la letra', () =>
   it('en móvil el panel mide la pantalla y la letra hace su scroll dentro del cuerpo', () => {
     expect(visor).toContain('h-[100dvh] sm:h-[92vh]');
     expect(visor).toMatch(/flex flex-col overflow-hidden text-\[var\(--ink\)\]/);
-    expect(visor).toMatch(/flex-1 min-h-0 overflow-hidden flex flex-col md:flex-row/);
+    expect(visor).toMatch(/flex-1 min-h-0 max-md:min-h-\[9\.5rem\] overflow-hidden flex flex-col md:flex-row/);
+    // Garantía: la letra nunca baja de ~2 líneas; la franja de arriba y los diagramas ceden sitio.
+    expect(visor).toContain('max-md:min-h-[9.5rem]');
   });
 
   it('la barra del acorde y los diagramas van en el dock inferior en móvil, siempre a la vista', () => {
