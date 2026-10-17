@@ -751,7 +751,7 @@ router.get("/bands/email-account/:bandId", requireAuth, async (req, res) => {
 
 router.post("/bands/email-account", requireAuth, async (req, res) => {
   try {
-    const targetBandId = getTargetBandId(req) || req.body.band_id;
+    const targetBandId = getTargetBandId(req);
     const { provider, email, app_password, smtp_host, smtp_port, smtp_secure, imap_host, imap_port } = req.body;
     if (!targetBandId || !email || !app_password || !smtp_host || !smtp_port || !imap_host) {
       return res.status(400).json({ error: "band_id, email, app_password, smtp_host, smtp_port e imap_host son requeridos" });
