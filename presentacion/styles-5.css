@@ -73,16 +73,6 @@ body.pelicula:not(.scroll):has(.slide.feat.active.mailscene) #reaccion { display
 #gate { background: #141414; }
 .nx-home { position: absolute; inset: 0; display: flex; align-items: flex-end; overflow: clip; }
 #gate[data-fase="perfiles"] .nx-home, #gate[data-fase="home"] .nx-perfiles { display: none; }
-.nx-perfiles { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 34px; font-family: 'Helvetica Neue', Arial, sans-serif; background: #141414; }
-.nx-perfiles .nx-logo-g { position: absolute; top: 44px; left: 64px; }
-.nx-perfiles h2 { font-size: 64px; font-weight: 500; margin: 0; letter-spacing: -.01em; }
-.nx-pf { display: flex; gap: 34px; }
-.nx-perfil { all: unset; display: flex; flex-direction: column; align-items: center; gap: 16px; cursor: pointer; width: 170px; color: #808080; font-size: 24px; }
-.nx-perfil .av { width: 170px; height: 170px; border-radius: 8px; border: 4px solid transparent; transition: border-color .15s, transform .15s; }
-.nx-perfil:hover, .nx-perfil:focus-visible, .nx-perfil.elegido { color: #fff; }
-.nx-perfil:hover .av, .nx-perfil:focus-visible .av { border-color: #fff; }
-.nx-perfil.elegido .av { border-color: #fff; transform: scale(1.08); }
-.nx-admin { font-size: 22px; letter-spacing: .14em; color: #808080; border: 1px solid #808080; padding: 12px 30px; margin-top: 8px; }
 .av { position: relative; display: block; box-sizing: border-box; background: #0071eb; overflow: hidden; }
 .av::before { content: ''; position: absolute; left: 26%; top: 34%; width: 11%; height: 11%; border-radius: 50%; background: #fff; box-shadow: calc(var(--av, 170px) * .0) 0 0 #fff, 0 0 0 0 #fff; }
 .av::after { content: ''; position: absolute; left: 26%; top: 56%; width: 48%; height: 20%; border-radius: 0 0 100px 100px / 0 0 100% 100%; border: 0 solid #fff; background: #fff; clip-path: ellipse(50% 100% at 50% 0); }
@@ -122,7 +112,6 @@ body.pelicula:not(.scroll):has(.slide.feat.active.mailscene) #reaccion { display
 #gate.trailer .nx-sin, #gate.trailer .nx-gen { opacity: 0; max-height: 0; margin: 0; overflow: hidden; }
 #gate.trailer .nx-titulo { font-size: clamp(40px, min(6.6vw, 7.6vh), 100px); transition: font-size .9s; }
 @media (max-height: 800px) and (min-width: 801px) {
-  .nx-perfiles h2 { font-size: 44px; } .nx-perfil, .nx-perfil .av { width: 120px; } .nx-perfil .av { height: 120px; } .nx-perfil { font-size: 18px; }
   .nx-hero { padding-bottom: 32vh !important; } .nx-titulo { font-size: min(6.4vw, 8vh); margin: 10px 0 12px; } .nx-gen, .nx-meta { display: none; } .nx-sin { font-size: 17px; margin-top: 10px; } .nx-top10 { margin-top: 12px; font-size: 22px; } .nx-alt, .nx-meta { margin-top: 10px; }
   .nx-top nav, .nx-der { font-size: 15px; } .nx-card b { font-size: 14px; } .nx-card em { font-size: 11px; } .nx-filas h3 { font-size: 20px; }
 }
@@ -152,8 +141,6 @@ body.pelicula:not(.scroll):has(.slide.feat.active.mailscene) #reaccion { display
 .av.pelaez.foto { background-size: 250%; background-position: 69% 16%; }
 .av.profes.foto { background-size: cover; }
 .av.brais.foto { background-position: 50% 20%; }
-.nx-perfil span { text-align: center; }
-.nx-perfil { flex: 0 0 170px; } .nx-perfil .av { flex: none; } .nx-perfil span { white-space: nowrap; }
 .av.foto { background-origin: border-box; }
 
 /* En la película el diálogo va subtitulado y lo dice el retrato de quien habla: nada de burbujas (la de reacción, la de la escena del local,

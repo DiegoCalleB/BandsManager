@@ -18,17 +18,21 @@
 <link rel="stylesheet" href="styles-3.css">
 <link rel="stylesheet" href="styles-4.css">
 <link rel="stylesheet" href="styles-5.css">
+<link rel="stylesheet" href="styles-6.css">
 <noscript><style>html,body{overflow:auto}#viewport{position:static;display:block}#stage{width:100%;height:auto;transform:none}.slide{position:relative;opacity:1;visibility:visible;transform:none;padding:40px 20px}.slide>*{opacity:1;transform:none}</style></noscript>
 <script>if (/[?&]inicio=1/.test(location.search)) document.documentElement.classList.add('ir-inicio');</script>
 </head>
 <body>
 <div id="gate" data-fase="perfiles" role="dialog" aria-modal="true" aria-label="Empezar la película">
   <div class="nx-perfiles">
+    <div class="tv-arte" aria-hidden="true"><i data-p="brais" style="--img:url(img/concierto-2.jpg)"></i><i data-p="profes" style="--img:url(img/concierto-1.jpg)"></i><i data-p="pelaez" style="--img:url(video/actores/pelaez.jpg)"></i><i data-p="diego" style="--img:url(img/diego-bajista.jpg)"></i></div>
+    <div class="tv-velo" aria-hidden="true"></div>
     <span class="nx-logo nx-logo-g">NETFLIX</span>
-    <h2>¿Quién está viendo ahora?</h2>
-    <div class="nx-pf"><button class="nx-perfil" data-p="brais"><i class="av brais foto" style="--foto:url(img/perfil-brais.jpg)"></i><span>{bateria}</span></button><button class="nx-perfil" data-p="profes"><i class="av profes foto" style="--foto:url(img/perfil-tbs.jpg)"></i><span>Profesorado</span></button><button class="nx-perfil" data-p="pelaez"><i class="av pelaez foto" style="--foto:url(video/actores/pelaez.jpg)"></i><span>Invitado Peláez</span></button><button class="nx-perfil" data-p="diego"><i class="av diego foto" style="--foto:url(img/historia/mop-gira.jpg)"></i><span>Diego</span></button></div>
-    <span class="nx-admin">ADMINISTRAR PERFILES</span>
+    <h2>Elige un perfil</h2>
+    <div class="nx-pf"><button class="nx-perfil" data-p="brais" style="--i:0"><svg class="lapiz" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1-4L16 5l3 3L8 19z M14 7l3 3"/></svg><i class="av brais foto" style="--foto:url(img/perfil-brais.jpg)"></i><span>{bateria}</span></button><button class="nx-perfil" data-p="profes" style="--i:1"><svg class="lapiz" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1-4L16 5l3 3L8 19z M14 7l3 3"/></svg><i class="av profes foto" style="--foto:url(img/perfil-tbs.jpg)"></i><span>Profesorado</span></button><button class="nx-perfil" data-p="pelaez" style="--i:2"><svg class="lapiz" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1-4L16 5l3 3L8 19z M14 7l3 3"/></svg><i class="av pelaez foto" style="--foto:url(video/actores/pelaez.jpg)"></i><span>Invitado Peláez</span></button><button class="nx-perfil" data-p="diego" style="--i:3"><svg class="lapiz" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1-4L16 5l3 3L8 19z M14 7l3 3"/></svg><i class="av diego foto" style="--foto:url(img/historia/mop-gira.jpg)"></i><span>Diego</span></button></div>
+    <div class="tv-titulo" aria-hidden="true"><small>PELÍCULA INTERACTIVA</small><b>Os Herdeiros do Código</b><span>Rock · Comedia · Tecnología</span><em>Ya disponible</em></div>
   </div>
+  <div class="nx-carga" aria-hidden="true"><svg viewBox="0 0 60 100"><path class="n1" d="M0 0h19v98L0 100z"/><path class="n1" d="M41 2L60 0v100H41z"/><path class="n2" d="M0 0h19l41 100H41z"/></svg><i class="rueda"></i></div>
   <div class="nx-home">
     <div class="nx-scroll"><div class="nx-pant">
     <div class="nx-bg" style="--img:url(img/concierto-2.jpg)"></div>
@@ -3655,6 +3659,7 @@
 <script src="eleccion.js"></script>
 <script src="aviso.js"></script>
 <script src="entrada.js"></script>
+<script src="entrada-tv.js"></script>
 <script src="deck.js"></script>
 </body>
 </html>
