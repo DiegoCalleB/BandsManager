@@ -175,10 +175,10 @@ window.SUBS_GL = {
 "Traidor.": "Traidor.",
 "El bajista soy yo. Necesito volver a tocar.": "O baixista son eu. Necesito volver tocar.",
 "Toqué en varios grupos, y los fui dejando uno a uno: sin organización, sin gestión y sin tiempo, no íbamos a ningún lado. Hice Band Mánayer para volver a subirme a un escenario, delante de miles de personas, y hacerlas disfrutar con nuestra música.": "Toquei en varios grupos, e fun deixándoos un a un: sen organización, sen xestión e sen tempo, non iamos a ningún lado. Fixen BandManager para volver subirme a un escenario, diante de miles de persoas, e facelas gozar coa nosa música.",
-"Y ya estamos montando un grupo de metal. Nos falta batería… Con muchísima ilusión, y sabiendo que con Band Mánayer toda la gestión va a ir rodada.": "E xa estamos montando un grupo de metal. Fáltanos batería… Con moitísima ilusión, e sabendo que con BandManager toda a xestión vai ir rodada.",
+"Y ya estamos montando un grupo de métal. Nos falta batería… Con muchísima ilusión, y sabiendo que con Band Mánayer toda la gestión va a ir rodada.": "E xa estamos montando un grupo de metal. Fáltanos batería… Con moitísima ilusión, e sabendo que con BandManager toda a xestión vai ir rodada.",
 "Y quién sabe si el día de mañana a mis hijas les da por formar sus grupos… y esto les ayuda a que los comienzos sean mucho más fáciles. Un sueño hecho realidad.": "E quen sabe se o día de mañá ás miñas fillas lles dá por formar os seus grupos… e isto lles axuda a que os comezos sexan moito máis doados. Un soño feito realidade.",
 "Y ahora, Brais, un reto. No para el batería de esta historia: para ti, el de verdad.": "E agora, Brais, un reto. Non para o batería desta historia: para ti, o de verdade.",
-"Te he preparado el sétlist del primer ensayo de Máster of Prompts. Metal, con letras de coña sobre programar.": "Preparei o setlist do primeiro ensaio de Master of Prompts. Metal, con letras de coña sobre programar.",
+"Te he preparado el sétlist del primer ensayo de Máster of Prompts. Métal, con letras de coña sobre programar.": "Preparei o setlist do primeiro ensaio de Master of Prompts. Metal, con letras de coña sobre programar.",
 "Y te lo mando como lo mandamos todo: la IA lo redacta, yo lo repaso, y… enviado.": "E mándoocho como o mandamos todo: a IA redáctao, eu revísoo, e… enviado.",
 "Yo había dejado de tocar. Este máster me devolvió las ganas.": "Eu deixara de tocar. Este máster devolveume as ganas.",
 "Nos falta batería, Brais. Y es tuya: solo tienes que decir que sí.": "Fáltanos batería, Brais. E é túa: só tes que dicir que si.",
@@ -248,5 +248,7 @@ window.SUBS_GL = {
 "¡Cada vez que una sala lea nuestro dossier, nos hace publicidad gratis, che!": "¡Cada vez que unha sala lea o noso dossier, fainos publicidade de balde, che!",
 "Exacto. Y encima, una gran campaña en redes, para que los músicos de todo el mundo sepan que esta app existe.": "Exacto. E ademais, unha gran campaña nas redes, para que os músicos de todo o mundo saiban que esta app existe.",
 "¿De todo el mundo? ¿Hasta los de gaita?": "¿De todo o mundo? ¿Ata os da gaita?",
-"Sobre todo los de gaita, tío. Esos conocen a todo el mundo.": "Sobre todo os da gaita, tío. Eses coñecen a todo o mundo."
+"Sobre todo los de gaita, tío. Esos conocen a todo el mundo.": "Sobre todo os da gaita, tío. Eses coñecen a todo o mundo.",
+"Y con esta peli en Netflix, seguro que se la descargan todos los grupos de K-Pop.": "E con esta peli en Netflix, seguro que a descargan todos os grupos de K-Pop.",
+"¡Los de K-Pop! Trece miembros y una coreografía… imagínate cuadrar el calendario de ensayos, che.": "Os de K-Pop! Trece membros e unha coreografía… imaxina cadrar o calendario de ensaios, che."
 };

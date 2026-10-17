@@ -131,17 +131,6 @@
   "v": "5067c7a57bab",
   "who": "bajo"
  },
- "0fc2ff2c": {
-  "d": 7.7,
-  "e": "03699931595793455427956544345622544332177421102454110797405979721444564100010101876655128288777511664311121566767615314453965447555456411000057978413210144421000100266767521453584231101111000",
-  "f": "0fc2ff2c.mp3",
-  "h": "55fc065d",
-  "oido": "Y ya estamos montando un grupo de metal, nos falta batería, con muchísima ilusión y sabiendo que con Band Manager toda la gestión va ir rodada.",
-  "qa": 0.94,
-  "say": "Y ya estamos montando un grupo de metal. Nos falta batería… [softly] Con muchísima ilusión, y sabiendo que con Band Mánayer toda la gestión va a ir rodada.",
-  "v": "2d296e53a1bc",
-  "who": "diego"
- },
  "10091bd2": {
   "d": 5.04,
   "e": "0541655654411998962999751547787847513951476641147541155545200000000000000043531445698663265553156455444564444432563243310000",
@@ -493,6 +482,15 @@
   "say": "¡Sí! Y pueden apoyarnos, comprar merchan, ver los próximos bolos y entrar en nuestra web.",
   "v": "ab2269a03538",
   "who": "bajo"
+ },
+ "28863b41": {
+  "d": 7.06,
+  "e": "011698258631100010010379993378610399943106998520000000000668724845588954459414656831775899685102457641000015655652145256239216854598565117655556956555543111856423311012876421",
+  "f": "28863b41.mp3",
+  "h": "55f715fb",
+  "say": "[laughs] ¡Los de K-Pop! Trece miembros y una coreografía… imagínate cuadrar el calendario de ensayos, che.",
+  "v": "b5396763a17d",
+  "who": "voz"
  },
  "29a58eb9": {
   "d": 4.9,
@@ -1011,6 +1009,15 @@
   "v": "84bfc6c06a63",
   "who": "guitarra"
  },
+ "5e116ea3": {
+  "d": 5.95,
+  "e": "111999289279797388511465211993145410010113662235466553106863552444466211445211354421110035922952100100007679437951462186444214344044453343310001111",
+  "f": "5e116ea3.mp3",
+  "h": "01591d50",
+  "say": "Te he preparado el sétlist del primer ensayo de Máster of Prompts. Métal, con letras de coña sobre programar.",
+  "v": "a65a79c8af96",
+  "who": "diego"
+ },
  "5e6a90bd": {
   "d": 2.18,
   "e": "07967666521753562009978966200686746421541563214842100",
@@ -1184,6 +1191,15 @@
   "say": "Yo había dejado de tocar. Este máster me devolvió las ganas.",
   "v": "707dce72120d",
   "who": "diego"
+ },
+ "68bd029b": {
+  "d": 4.3,
+  "e": "062496950691079558844487100169101003416969404403563231028552754310198427323532145810362043014542002221000",
+  "f": "68bd029b.mp3",
+  "h": "b20623e1",
+  "say": "Y con esta peli en Netflix, seguro que se la descargan todos los grupos de K-Pop.",
+  "v": "5555ab033d2a",
+  "who": "guitarra"
  },
  "68fd0b9b": {
   "d": 3.96,
@@ -1675,17 +1691,6 @@
   "say": "[excited] ¡Las cuentas claras! ¡Y salen números positivos! ¡Por primera vez en la historia de esta banda!",
   "v": "222a14915343",
   "who": "guitarra"
- },
- "9ac3a738": {
-  "d": 6.0,
-  "e": "1149966971677966973116971355311100023762345696772148656354458511345311365431111111111113699429642110110665992765215317977731153441343353343111111101",
-  "f": "9ac3a738.mp3",
-  "h": "4ae58c61",
-  "oido": "Te he preparado el setlist del primer ensayo de Master of Prompts, Metal, con letras de coña sobre programar.",
-  "qa": 1.0,
-  "say": "Te he preparado el sétlist del primer ensayo de Máster of Prompts. Metal, con letras de coña sobre programar.",
-  "v": "d6b0887a4b61",
-  "who": "diego"
  },
  "9afff17b": {
   "d": 4.34,
@@ -2533,6 +2538,15 @@
   "say": "Y con todo esto, ¿ni el mejor hacker del mundo nos va a tumbar la aplicación?",
   "v": "13b7b2cd7222",
   "who": "bateria"
+ },
+ "ef128b43": {
+  "d": 7.34,
+  "e": "0599941877982776531975577746661564433431253210003521198418998226466531111100165567214842778977721564321110142156576796163165539755674555653211147987811321145565996522353554332110010",
+  "f": "ef128b43.mp3",
+  "h": "a1994ff6",
+  "say": "Y ya estamos montando un grupo de métal. Nos falta batería… [softly] Con muchísima ilusión, y sabiendo que con Band Mánayer toda la gestión va a ir rodada.",
+  "v": "3b09f0721959",
+  "who": "diego"
  },
  "efed9c47": {
   "d": 2.45,

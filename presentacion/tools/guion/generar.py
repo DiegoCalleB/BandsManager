@@ -830,7 +830,7 @@ add('''<section class="slide scene reveal" data-title="El giro: el bajista soy y
   <div class="scene-bg" style="--bg-img:url(img/concierto-1.jpg);opacity:.5"></div>
   <span class="tag">Fin de la historia · Diego de la Calle</span>
   <figure class="rv-photo"><img src="img/historia/mop-gira.jpg" alt="Diego de la Calle tocando el bajo con Master of Prompts (imagen generada con IA)"><figcaption><b>Diego de la Calle</b><span>El bajista · imagen generada con IA</span></figcaption></figure>
-  <h2>Y ya estamos montando un grupo de metal. Nos falta batería…</h2>
+  <h2>Y ya estamos montando un grupo de métal. Nos falta batería…</h2>
   <p class="sub">Con muchísima ilusión, y sabiendo que con BandManager.io toda la gestión va a ir rodada.</p>
   <p class="sub sub2 hijas">Y quién sabe si el día de mañana a mis hijas les da por formar sus grupos… y les ayuda a que los comienzos sean mucho más fáciles.</p>
   <p class="sub sub3 dream-line">Un sueño hecho realidad.</p>
@@ -906,8 +906,8 @@ add(f'''<section class="slide feat dl reto" data-grupo="promocion" data-title="E
   <div class="ft-copy"><span class="tag">Fin de la historia · El reto</span><h2>Brais, un reto.</h2>
     {dlg(m('diego', 'Y ahora, Brais, un reto. No para el batería de esta historia: para ti, el de verdad. En casa le das caña a la batería.',
            say='Y ahora, {bateria}, un reto. No para el {bateria} de esta historia: para ti. El de verdad. En casa le das caña a la batería.'),
-         m('diego', 'Te he preparado el setlist del primer ensayo de Master of Prompts: metal, con letras de coña sobre programar.',
-           say='Te he preparado el sétlist del primer ensayo de Máster of Prompts. Metal, con letras de coña sobre programar.'),
+         m('diego', 'Te he preparado el setlist del primer ensayo de Master of Prompts: métal, con letras de coña sobre programar.',
+           say='Te he preparado el sétlist del primer ensayo de Máster of Prompts. Métal, con letras de coña sobre programar.'),
          m('diego', 'Y te lo mando como lo mandamos todo: la IA lo redacta, yo lo repaso y… enviado.',
            say='Y te lo mando como lo mandamos todo: la IA lo redacta, yo lo repaso, y… enviado.'))}
   </div>

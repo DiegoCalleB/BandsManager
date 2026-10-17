@@ -177,10 +177,10 @@ window.SUBS_EN = {
 "Traidor.": "Traitor.",
 "El bajista soy yo. Necesito volver a tocar.": "I'm the bassist. I need to play again.",
 "Toqué en varios grupos, y los fui dejando uno a uno: sin organización, sin gestión y sin tiempo, no íbamos a ningún lado. Hice Band Mánayer para volver a subirme a un escenario, delante de miles de personas, y hacerlas disfrutar con nuestra música.": "I played in several bands, and left them one by one: no organisation, no management, no time, we weren't going anywhere. I built BandManager to get back on a stage, in front of thousands of people, and make them enjoy our music.",
-"Y ya estamos montando un grupo de metal. Nos falta batería… Con muchísima ilusión, y sabiendo que con Band Mánayer toda la gestión va a ir rodada.": "And we're already putting together a metal band. We need a drummer… With huge excitement, and knowing that with BandManager the whole management side will run smoothly.",
+"Y ya estamos montando un grupo de métal. Nos falta batería… Con muchísima ilusión, y sabiendo que con Band Mánayer toda la gestión va a ir rodada.": "And we're already putting together a metal band. We need a drummer… With huge excitement, and knowing that with BandManager the whole management side will run smoothly.",
 "Y quién sabe si el día de mañana a mis hijas les da por formar sus grupos… y esto les ayuda a que los comienzos sean mucho más fáciles. Un sueño hecho realidad.": "And who knows, one day my daughters might want to start their own bands… and this makes their beginnings so much easier. A dream come true.",
 "Y ahora, Brais, un reto. No para el batería de esta historia: para ti, el de verdad.": "And now, Brais, a challenge. Not for the drummer of this story: for you, the real one.",
-"Te he preparado el sétlist del primer ensayo de Máster of Prompts. Metal, con letras de coña sobre programar.": "I've prepared the setlist for the first rehearsal of Master of Prompts. Metal, with joke lyrics about programming.",
+"Te he preparado el sétlist del primer ensayo de Máster of Prompts. Métal, con letras de coña sobre programar.": "I've prepared the setlist for the first rehearsal of Master of Prompts. Metal, with joke lyrics about programming.",
 "Y te lo mando como lo mandamos todo: la IA lo redacta, yo lo repaso, y… enviado.": "And I'm sending it the way we send everything: the AI writes it, I review it, and… sent.",
 "Yo había dejado de tocar. Este máster me devolvió las ganas.": "I'd stopped playing. This master's gave me the urge back.",
 "Nos falta batería, Brais. Y es tuya: solo tienes que decir que sí.": "We need a drummer, Brais. And it's yours: you just have to say yes.",
@@ -204,5 +204,7 @@ window.SUBS_EN = {
 "¡Cada vez que una sala lea nuestro dossier, nos hace publicidad gratis, che!": "Every time a venue reads our dossier, it's free advertising for us, che!",
 "Exacto. Y encima, una gran campaña en redes, para que los músicos de todo el mundo sepan que esta app existe.": "Exactly. And on top of that, a big social media campaign, so musicians all over the world know this app exists.",
 "¿De todo el mundo? ¿Hasta los de gaita?": "All over the world? Even the bagpipers?",
-"Sobre todo los de gaita, tío. Esos conocen a todo el mundo.": "Especially the bagpipers, man. They know everybody."
+"Sobre todo los de gaita, tío. Esos conocen a todo el mundo.": "Especially the bagpipers, man. They know everybody.",
+"Y con esta peli en Netflix, seguro que se la descargan todos los grupos de K-Pop.": "And with this movie on Netflix, every K-Pop group will surely download it.",
+"¡Los de K-Pop! Trece miembros y una coreografía… imagínate cuadrar el calendario de ensayos, che.": "The K-Pop ones! Thirteen members and one choreography… imagine syncing their rehearsal calendar, man."
 };
