@@ -32,7 +32,6 @@ _Sin dependencias salientes directas._
 - [[route_repertoire|Repertoire & Setlists Route]] *(from #route)*
 - [[server_ai|server/ai.ts]] *(from #service)*
 - [[server_routes_ai_music_generacionMusical|server/routes/ai_music/generacionMusical.ts]] *(from #route)*
-- [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
 - [[server_routes_concert_to_album|server/routes/concert_to_album.ts]] *(from #route)*
 - [[server_routes_songs_structureUpload|server/routes/songs/structureUpload.ts]] *(from #route)*
 - [[server_routes_tiposChat|server/routes/tiposChat.ts]] *(from #route)*

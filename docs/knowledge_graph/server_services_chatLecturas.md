@@ -19,8 +19,11 @@ Herramientas de LECTURA del chatbot. Las `propose_*` de chatTools.ts escriben y 
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[ext_gemini|Gemini (Google GenAI)]] *(Layer: #external, Domain: #system)*
+- [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
 - [[server_routes_tiposChat|server/routes/tiposChat.ts]] *(Layer: #route, Domain: #system)*
+- [[server_services_chatTools|server/services/chatTools.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_chatPromptBloques|server/utils/chatPromptBloques.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_conversacionChat|server/utils/conversacionChat.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---

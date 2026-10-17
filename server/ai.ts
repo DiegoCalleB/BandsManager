@@ -1,3 +1,4 @@
+import { textoDeParte } from "./utils/textoDeParteIA.js";
 import { GoogleGenAI, type ContentListUnion, type GenerateContentConfig } from "@google/genai";
 import { dbRecordAiUsage } from "./db/aiLedger.js";
 import type { EPKConfig } from "../src/types.js";
@@ -188,18 +189,11 @@ export function getAvailableAIProviders() {
 }
 
 /** Lo que se lee de un contenido o una parte del SDK de Gemini (o de un objeto suelto con `text`). */
-type ContenidoConTexto = { parts?: unknown; text?: unknown; functionResponse?: unknown };
+type ContenidoConTexto = { parts?: unknown; text?: unknown };
 
 const comoContenido = (valor: unknown): ContenidoConTexto =>
   typeof valor === "object" && valor !== null ? (valor as ContenidoConTexto) : {};
 
-const textoDeParte = (parte: unknown): string => {
-  const { text, functionResponse } = comoContenido(parte);
-  if (text) return String(text);
-  // El failover a DeepSeek solo lee texto: sin esto perdería el resultado de las herramientas de lectura del chat.
-  const { name, response } = comoContenido(functionResponse) as { name?: unknown; response?: unknown };
-  return response ? `[Resultado de ${String(name)}]: ${JSON.stringify(response)}` : "";
-};
 
 export function extractTextFromContents(contents: unknown): string {
   if (!contents) return "";
