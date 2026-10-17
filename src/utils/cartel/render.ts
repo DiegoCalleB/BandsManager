@@ -4,7 +4,7 @@
 // interfaz: por eso viven en este fichero y no salen de tokens.css.
 
 import QRCode from 'qrcode';
-import { calcularLayout, type DatosCartel, type LayoutCartel, type Linea, type OpcionesLayout, type Rect } from './layout';
+import { calcularLayout, type Adorno, type DatosCartel, type LayoutCartel, type Linea, type OpcionesLayout, type Rect } from './layout';
 import { decidirTinta, medirLuz, unirPixeles, type Tinta } from './contraste';
 import type { DefFormato } from './formatos';
 import type { FondoGuardado, PaletaId } from './config';
@@ -12,7 +12,7 @@ import { aplicarGrano, semillaDeTexto } from './grano';
 import { dibujarPlacas, luzDeImagen, planPlacas } from './placas';
 import { leerArte, type ArtePapel } from './papel';
 import { encajarImagen, type Encaje } from './ventana';
-import { VOCES, type VozCartel } from './voces';
+import { VOCES, type Composicion, type VozCartel } from './voces';
 import { tintarLogo } from './logos';
 
 export const TINTAS = { clara: '#F4F1EA', oscura: '#17181C' } as const;
@@ -44,6 +44,8 @@ export interface PiezasCartel {
   logos?: string[];
   /** La letra de exhibición del nombre y el día de la fecha. */
   voz?: VozCartel;
+  /** Cómo se reparte el cartel. */
+  composicion?: Composicion;
   /** Una sola tinta para todos los logos (como impresos). Si no, a color sobre una placa clara. */
   logosTinta?: boolean;
   opciones: OpcionesLayout;
@@ -150,7 +152,8 @@ function tintaDeLineas(ctx: CanvasRenderingContext2D, lineas: Linea[], zona: Rec
       conTracking(ctx, l.px, l.tracking);
       const ancho = ctx.measureText(l.texto).width;
       const pad = 6 * u;
-      const x = Math.max(0, Math.round((l.alinear === 'left' ? l.x : l.x - ancho) - pad));
+      const izq = l.alinear === 'left' ? l.x : l.alinear === 'right' ? l.x - ancho : l.x - ancho / 2;
+      const x = Math.max(0, Math.round(izq - pad));
       const y = Math.max(0, Math.round(l.y - pad));
       const w = Math.max(1, Math.min(Math.round(ancho + pad * 2), ctx.canvas.width - x));
       const h = Math.max(1, Math.min(Math.round(l.px * 1.15 + pad * 2), ctx.canvas.height - y));
@@ -272,6 +275,30 @@ function dibujarIlustracionSimple(ctx: CanvasRenderingContext2D, img: HTMLImageE
   ctx.drawImage(aparte, e.dx, e.dy, e.dw, e.dh);
 }
 
+/** Filetes (y el rombo del centro) en la tinta del texto. */
+function dibujarAdornos(ctx: CanvasRenderingContext2D, adornos: Adorno[], color: (a: Adorno) => string) {
+  for (const a of adornos) {
+    ctx.fillStyle = color(a);
+    const g = a.grosor;
+    if (!a.rombo) {
+      ctx.fillRect(a.x, a.y, a.w, g);
+      continue;
+    }
+    const cx = a.x + a.w / 2;
+    const r = g * 3.2;
+    const hueco = r + g * 4;
+    ctx.fillRect(a.x, a.y, a.w / 2 - hueco, g);
+    ctx.fillRect(cx + hueco, a.y, a.w / 2 - hueco, g);
+    ctx.beginPath();
+    ctx.moveTo(cx, a.y + g / 2 - r);
+    ctx.lineTo(cx + r, a.y + g / 2);
+    ctx.lineTo(cx, a.y + g / 2 + r);
+    ctx.lineTo(cx - r, a.y + g / 2);
+    ctx.closePath();
+    ctx.fill();
+  }
+}
+
 interface LogoCargado {
   url: string;
   img: HTMLImageElement;
@@ -340,7 +367,7 @@ export async function renderCartel(
   };
   const logos = await cargarLogos(piezas.logos ?? []);
   const conIlustracion = fondo.tipo === 'imagen' && fondo.origen === 'ia';
-  const L = calcularLayout(def, ancho, piezas.datos, { ...piezas.opciones, compacto: conIlustracion, voz, logos: logos.map((l) => l.img.width / l.img.height) }, medir);
+  const L = calcularLayout(def, ancho, piezas.datos, { ...piezas.opciones, compacto: conIlustracion, voz, composicion: piezas.composicion, logos: logos.map((l) => l.img.width / l.img.height) }, medir);
   canvas.width = L.ancho;
   canvas.height = L.alto;
   const u = L.ancho / 1080;
@@ -429,6 +456,7 @@ export async function renderCartel(
     pintar(lineasArriba, tArriba);
     pintar(lineasAbajo, tAbajo);
   }
+  dibujarAdornos(ctx, L.adornos, (a) => tintaDe(a.y >= L.zonas.abajo.y ? tAbajo : tArriba));
   // 3. La fibra de papel, por encima de todo menos el QR (que tiene que escanear): fondo y letras impresos juntos.
   if (conIlustracion) aplicarGrano(ctx, L.ancho, L.alto, semillaDeTexto(piezas.semilla));
 

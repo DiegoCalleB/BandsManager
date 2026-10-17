@@ -64,11 +64,14 @@ export function planPlacas(L: LayoutCartel, luz: number, arte?: ArtePapel | null
       ];
   // Fundido: la ilustración llega de lado a lado (su borde se difumina contra el papel). Marco: dentro de la orla.
   const margen = fundido ? 0 : orlaGrosor;
-  // Fundido: la ilustración sube por encima del final del nombre y lo solapa (se imprime «oscureciendo» sobre
-  // las letras, sin tapar su papel): más cartel para el dibujo y las dos cosas enlazadas, como en un cartel de gira.
-  const solape = fundido && conArriba && L.titulo ? L.titulo.h * SOLAPE_TITULO : 0;
-  const arribaLibre = (conArriba ? arriba.h : margen) - solape;
-  const ventana: Rect = { x: margen, y: arribaLibre, w: L.ancho - 2 * margen, h: Math.max(1, abajo.y - arribaLibre) };
+  // Fundido: la ilustración se solapa con el nombre (se imprime «oscureciendo» sobre las letras, sin tapar su
+  // papel): sube por encima del final del nombre si este va arriba y baja por encima de su comienzo si va abajo.
+  // Más cartel para el dibujo y las dos cosas enlazadas, como en un cartel de gira.
+  const tituloAbajo = !!L.titulo && L.titulo.y >= abajo.y;
+  const solape = fundido && L.titulo && (tituloAbajo || conArriba) ? L.titulo.h * SOLAPE_TITULO : 0;
+  const arribaLibre = (conArriba ? arriba.h : margen) - (tituloAbajo ? 0 : solape);
+  const finVentana = abajo.y + (tituloAbajo ? solape : 0);
+  const ventana: Rect = { x: margen, y: arribaLibre, w: L.ancho - 2 * margen, h: Math.max(1, finVentana - arribaLibre) };
   return {
     modo: fundido ? 'fundido' : 'marco',
     color: fundido ? arte!.papel : PAPEL[papel],

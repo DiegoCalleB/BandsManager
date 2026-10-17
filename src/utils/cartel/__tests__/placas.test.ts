@@ -109,6 +109,19 @@ describe('planPlacas', () => {
       }
     });
 
+    it('con el nombre ABAJO (composición base), la ilustración baja y solapa su comienzo, no el final de nada', () => {
+      for (const f of ORDEN_FORMATOS) {
+        const def = FORMATOS[f];
+        const L = calcularLayout(def, dimensiones(def).ancho, datos, { ...todo, composicion: 'base' }, medir);
+        const plan = planPlacas(L, 0.8, arte);
+        const marco = planPlacas(L, 0.8, { ...arte, limpio: false });
+        expect(L.titulo!.y).toBeGreaterThanOrEqual(L.zonas.abajo.y);
+        expect(plan.ventana.y + plan.ventana.h, f).toBeGreaterThan(L.zonas.abajo.y);
+        expect(plan.ventana.y + plan.ventana.h, f).toBeLessThanOrEqual(L.titulo!.y + L.titulo!.h);
+        expect(plan.ventana.y, f).toBe(marco.bandas.length === 2 ? L.zonas.arriba.h : 0);
+      }
+    });
+
     it('si el nombre no deja sitio para una placa de arriba, no se solapa nada', () => {
       const def = FORMATOS.feed;
       const largo: DatosCartel = { ...datos, lineup: [{ nombre: 'Los Increíbles Pijamas de la Muerte Súbita', cabeza: true }, { nombre: 'Otra Banda Muy Larga Tambien', cabeza: false }] };

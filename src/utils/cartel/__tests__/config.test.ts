@@ -52,3 +52,16 @@ describe('la letra del cartel en la configuración', () => {
     expect(ajustesDe({ ...CONFIG_INICIAL, letra: 'cartel' }).letra).toBe('cartel');
   });
 });
+
+describe('la composición del cartel en la configuración', () => {
+  it('por defecto es automática y solo valen las conocidas', () => {
+    expect(CONFIG_INICIAL.composicion).toBe('auto');
+    expect(sanearConfigCartel({}, ok)!.composicion).toBe('auto');
+    for (const k of ['auto', 'ventana', 'centrada', 'base']) expect(sanearConfigCartel({ composicion: k }, ok)!.composicion).toBe(k);
+    for (const k of ['diagonal', 5, null, ['base']]) expect(sanearConfigCartel({ composicion: k }, ok)!.composicion).toBe('auto');
+  });
+
+  it('es un ajuste del bolo y se guarda con él', () => {
+    expect(ajustesDe({ ...CONFIG_INICIAL, composicion: 'centrada' }).composicion).toBe('centrada');
+  });
+});

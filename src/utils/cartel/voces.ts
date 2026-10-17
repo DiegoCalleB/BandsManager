@@ -52,3 +52,29 @@ const VOZ_POR_ESTILO: Record<EstiloCartel, VozCartel> = {
 
 /** La voz que se usa: la elegida o, en automático, la del estilo de la banda. */
 export const resolverVoz = (letra: LetraCartel, estilo: EstiloCartel): VozCartel => (letra === 'auto' ? VOZ_POR_ESTILO[estilo] : letra);
+
+// ---------------------------------------------------------------------------------------------------------
+// Composición: cómo se reparte el cartel. La voz sugiere una; se puede elegir otra en Ajustes.
+// ---------------------------------------------------------------------------------------------------------
+
+export type Composicion = 'ventana' | 'centrada' | 'base';
+export type ComposicionElegida = 'auto' | Composicion;
+
+export const COMPOSICIONES_CARTEL: readonly Composicion[] = ['ventana', 'centrada', 'base'];
+export const ELECCIONES_COMPOSICION: readonly ComposicionElegida[] = ['auto', ...COMPOSICIONES_CARTEL];
+
+export const ETIQUETA_COMPOSICION: Record<ComposicionElegida, string> = {
+  auto: 'Automática, según la letra',
+  ventana: 'Clásica: nombre arriba, datos abajo',
+  centrada: 'Centrada, con filetes',
+  base: 'Nombre enorme abajo',
+};
+
+const COMPOSICION_POR_VOZ: Record<VozCartel, Composicion> = {
+  cartel: 'ventana',
+  clasica: 'centrada',
+  moderna: 'base',
+};
+
+/** La composición que se usa: la elegida o, en automático, la que pide la letra. */
+export const resolverComposicion = (elegida: ComposicionElegida, voz: VozCartel): Composicion => (elegida === 'auto' ? COMPOSICION_POR_VOZ[voz] : elegida);

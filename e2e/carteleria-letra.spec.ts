@@ -36,3 +36,17 @@ test('las tres letras dan tres carteles distintos y ninguno deja el lienzo en bl
   }
   expect(vistos.size).toBe(3);
 });
+
+test('la composición se elige en Ajustes, repinta el cartel y se guarda en el bolo', async ({ page }) => {
+  const { peticiones } = await abrirCarteleria(page);
+  const antes = await cartel(page);
+  await abrirAjustes(page);
+  const selector = page.getByLabel('Composición');
+  await expect(selector).toHaveValue('auto');
+  await selector.selectOption('centrada');
+  await expect.poll(() => cartel(page), { timeout: 10_000 }).not.toBe(antes);
+  await expect.poll(() => peticiones.some((p) => p.ruta.endsWith('/config') && JSON.parse(p.cuerpo.toString()).composicion === 'centrada'), { timeout: 8_000 }).toBe(true);
+  const centrada = await cartel(page);
+  await selector.selectOption('base');
+  await expect.poll(() => cartel(page), { timeout: 10_000 }).not.toBe(centrada);
+});

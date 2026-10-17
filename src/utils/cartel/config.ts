@@ -6,7 +6,7 @@
 // almacenamiento y de la carpeta de ESA banda (`esUrlDeCartel` en server/utils/cartelUrl.ts).
 
 import { ORDEN_FORMATOS, type FormatoCartel } from './formatos';
-import { LETRAS_CARTEL, type LetraCartel } from './voces';
+import { ELECCIONES_COMPOSICION, LETRAS_CARTEL, type ComposicionElegida, type LetraCartel } from './voces';
 
 /** `banda` = «Tus colores», sacados del logo al abrir la vista (no se guardan: dependen del logo actual). */
 export const PALETA_IDS = ['noche', 'amarillo', 'electrico', 'bosque', 'banda'] as const;
@@ -30,6 +30,8 @@ export interface CartelConfig {
   logo: boolean;
   /** La letra del nombre y del día: `auto` la saca del estilo de la banda. */
   letra: LetraCartel;
+  /** Cómo se reparte el cartel: `auto` lo decide la letra. */
+  composicion: ComposicionElegida;
   /** Logos en la tinta del cartel (como impresos) en vez de a color sobre una placa clara. */
   logosTinta: boolean;
   /** Logos de otras bandas del bolo (subidos para este cartel), en el orden en que salen. */
@@ -56,6 +58,7 @@ export const CONFIG_INICIAL: CartelConfig = {
   marca: true,
   logo: false,
   letra: 'auto',
+  composicion: 'auto',
   logosTinta: true,
   logos: [],
   fondosIa: [],
@@ -108,6 +111,7 @@ export function sanearConfigCartel(raw: unknown, esUrlPermitida: (url: string) =
     marca: booleano(r.marca, true),
     logo: booleano(r.logo, false),
     letra: (LETRAS_CARTEL as readonly string[]).includes(r.letra as string) ? (r.letra as LetraCartel) : 'auto',
+    composicion: (ELECCIONES_COMPOSICION as readonly string[]).includes(r.composicion as string) ? (r.composicion as ComposicionElegida) : 'auto',
     logosTinta: booleano(r.logosTinta, true),
     logos,
     fondosIa,
@@ -121,10 +125,10 @@ export function conFondoIa(config: CartelConfig, url: string): CartelConfig {
 }
 
 /** Lo que se decide por bolo y no es el fondo. */
-export type AjustesBolo = Pick<CartelConfig, 'cabeza' | 'extra' | 'horario' | 'qr' | 'marca' | 'logo' | 'logosTinta' | 'letra'>;
+export type AjustesBolo = Pick<CartelConfig, 'cabeza' | 'extra' | 'horario' | 'qr' | 'marca' | 'logo' | 'logosTinta' | 'letra' | 'composicion'>;
 
 export function ajustesDe(c: CartelConfig): AjustesBolo {
-  return { cabeza: c.cabeza, extra: c.extra, horario: c.horario, qr: c.qr, marca: c.marca, logo: c.logo, logosTinta: c.logosTinta, letra: c.letra };
+  return { cabeza: c.cabeza, extra: c.extra, horario: c.horario, qr: c.qr, marca: c.marca, logo: c.logo, logosTinta: c.logosTinta, letra: c.letra, composicion: c.composicion };
 }
 
 /**

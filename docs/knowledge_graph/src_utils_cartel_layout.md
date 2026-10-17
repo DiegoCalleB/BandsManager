@@ -18,9 +18,9 @@ Dónde va cada cosa en el cartel. Puro: recibe un medidor de texto (en el navega
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_utils_cartel_composiciones|src/utils/cartel/composiciones.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_formatos|src/utils/cartel/formatos.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_cartel_texto|src/utils/cartel/texto.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_cartel_voces|src/utils/cartel/voces.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_cartel_layoutBase|src/utils/cartel/layoutBase.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
@@ -33,6 +33,7 @@ Dónde va cada cosa en el cartel. Puro: recibe un medidor de texto (en el navega
 ---
 
 ## 🧪 Tests que lo cubren
+- `src/utils/cartel/__tests__/composiciones.test.ts`
 - `src/utils/cartel/__tests__/layout.test.ts`
 - `src/utils/cartel/__tests__/placas.test.ts`
 

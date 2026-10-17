@@ -4,7 +4,7 @@ import { FORMATOS, ORDEN_FORMATOS, type FormatoCartel } from '../../../utils/car
 import { bandasDelBolo, conciertosParaCartel, datosDesdeConcierto, esCompartido } from '../../../utils/cartel/datos';
 import { ajustesDe, configDesdeEstado, CONFIG_INICIAL, conFondoIa, MAX_LOGOS, sanearConfigCartel, type AjustesBolo } from '../../../utils/cartel/config';
 import { prepararLogo } from '../../../utils/cartel/logos';
-import { resolverVoz } from '../../../utils/cartel/voces';
+import { resolverComposicion, resolverVoz } from '../../../utils/cartel/voces';
 import { lineaHorario } from '../../../utils/cartel/texto';
 import { sinVersion } from '../../../utils/cartel/adn';
 import { useAdnCartel, type DatosBandaCartel } from './useAdnCartel';
@@ -150,6 +150,7 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     (f: FormatoCartel): PiezasCartel | null => {
       if (!concierto) return null;
       const conQr = !FORMATOS[f].digital && ajustes.qr && !!enlace;
+      const voz = resolverVoz(ajustes.letra, estiloArranque);
       return {
         datos: datosDesdeConcierto(concierto, bandName, ajustes),
         opciones: { qr: conQr, urlCorta: enlace?.corta ?? null, marca },
@@ -159,7 +160,8 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
         // La fila de logos: primero el de la banda (si está activado) y luego los subidos para este bolo.
         logos: [...(conLogo && logoUrl ? [logoUrl] : []), ...logosExtra],
         logosTinta: ajustes.logosTinta,
-        voz: resolverVoz(ajustes.letra, estiloArranque),
+        voz,
+        composicion: resolverComposicion(ajustes.composicion, voz),
       };
     },
     [concierto, bandName, ajustes, enlace, marca, conLogo, logoUrl, paletaBanda, logosExtra, estiloArranque]
