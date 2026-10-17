@@ -67,6 +67,16 @@ describe("lecturas del chatbot", () => {
     expect(r.mas_antiguos[0].id).toBe("l2");
   });
 
+  it("resumen_embudo no se deja manipular por un estado o tipo con nombre de propiedad reservado", () => {
+    const hostiles = [lead({ id: "h1", estado: "__proto__" as Lead["estado"], tipo: "constructor" as Lead["tipo"] }), lead({ id: "h2", estado: "__proto__" as Lead["estado"] })];
+    const r = ejecutarLectura("resumen_embudo", {}, hostiles) as { por_estado: Record<string, number>; por_tipo: Record<string, number> };
+    expect(Object.keys(r.por_estado)).toContain("__proto__");
+    expect(Object.getOwnPropertyDescriptor(r.por_estado, "__proto__")?.value).toBe(2);
+    expect(Object.getPrototypeOf(r.por_estado)).toBe(Object.prototype);
+    expect(({} as Record<string, unknown>).polluted).toBeUndefined();
+    expect(r.por_tipo.constructor).toBe(1);
+  });
+
   it("declara las tres herramientas", () => {
     expect(lecturasChatDeclaraciones.map((d) => d.name)).toEqual(["buscar_leads", "ver_lead", "resumen_embudo"]);
   });

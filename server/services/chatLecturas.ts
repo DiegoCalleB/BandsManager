@@ -116,17 +116,18 @@ function verLead(args: Argumentos, leads: Lead[]) {
 }
 
 function resumenEmbudo(leads: Lead[]) {
-  const porEstado: Record<string, number> = {};
-  const porTipo: Record<string, number> = {};
+  // Map y no un objeto suelto: estado y tipo vienen de datos de la banda y no deben poder ser claves como __proto__.
+  const porEstado = new Map<string, number>();
+  const porTipo = new Map<string, number>();
   for (const l of leads) {
-    porEstado[l.estado ?? "sin_estado"] = (porEstado[l.estado ?? "sin_estado"] ?? 0) + 1;
-    porTipo[l.tipo ?? "sin_tipo"] = (porTipo[l.tipo ?? "sin_tipo"] ?? 0) + 1;
+    porEstado.set(l.estado ?? "sin_estado", (porEstado.get(l.estado ?? "sin_estado") ?? 0) + 1);
+    porTipo.set(l.tipo ?? "sin_tipo", (porTipo.get(l.tipo ?? "sin_tipo") ?? 0) + 1);
   }
   const sinRespuesta = leads
     .filter((l) => l.fecha_envio && !l.fecha_ultima_respuesta && (diasDesde(l.fecha_envio) ?? 0) > 10)
     .map((l) => ({ ...fichaResumida(l), dias_sin_respuesta: diasDesde(l.fecha_envio) }))
     .sort((a, b) => (b.dias_sin_respuesta ?? 0) - (a.dias_sin_respuesta ?? 0));
-  return { total: leads.length, por_estado: porEstado, por_tipo: porTipo, enviados_sin_respuesta_mas_de_10_dias: sinRespuesta.length, mas_antiguos: sinRespuesta.slice(0, 5) };
+  return { total: leads.length, por_estado: Object.fromEntries(porEstado), por_tipo: Object.fromEntries(porTipo), enviados_sin_respuesta_mas_de_10_dias: sinRespuesta.length, mas_antiguos: sinRespuesta.slice(0, 5) };
 }
 
 export function ejecutarLectura(nombre: string, args: Argumentos | undefined, leads: Lead[]): Record<string, unknown> {
