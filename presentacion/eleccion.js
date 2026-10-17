@@ -45,6 +45,30 @@
   };
   var TOTAL_FINALES = 3, finales = {};
   var hechas = {}, activa = null;
+  // Efectos de sonido de la interfaz (solo con el sonido activado): golpe grave al aparecer la pregunta, clic al elegir y cinta que rebobina
+  var ac = null;
+  var sfx = function (tipo) {
+    try {
+      if (!(window.DeckSound && window.DeckSound.enabled)) return;
+      if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)();
+      if (ac.state === 'suspended') ac.resume();
+      var t = ac.currentTime, g = ac.createGain(); g.connect(ac.destination);
+      var tono = function (f0, f1, dur, vol, tipoOnda) {
+        var o = ac.createOscillator(); o.type = tipoOnda || 'sine'; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + dur);
+        g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur); o.connect(g); o.start(t); o.stop(t + dur);
+      };
+      if (tipo === 'sube') tono(170, 62, 0.45, 0.22);
+      else if (tipo === 'clic') tono(1250, 880, 0.07, 0.1, 'triangle');
+      else if (tipo === 'cinta') {
+        var n = ac.createBufferSource(), buf = ac.createBuffer(1, ac.sampleRate * 1.9, ac.sampleRate), d = buf.getChannelData(0);
+        for (var i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (0.5 + 0.5 * Math.sin(i / 900));
+        n.buffer = buf; var f = ac.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = 2.2;
+        f.frequency.setValueAtTime(3200, t); f.frequency.exponentialRampToValueAtTime(420, t + 1.8);
+        g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.16, t + 0.15); g.gain.exponentialRampToValueAtTime(0.001, t + 1.9);
+        n.connect(f); f.connect(g); n.start(t);
+      }
+    } catch { /* sin audio: la película sigue igual */ }
+  };
   var D = function () { return window.Deck; };
 
   var cierra = function () { document.body.classList.remove('eligiendo'); if (activa) { clearInterval(activa.reloj); activa.el.remove(); activa = null; } };
@@ -59,7 +83,7 @@
   var rebobina = function (fin) {
     var r = document.createElement('div'); r.id = 'eleccion-rebobina'; r.setAttribute('role', 'status');
     r.innerHTML = '<i aria-hidden="true">◀◀</i><b>Volviendo a la decisión</b>';
-    document.getElementById('stage').appendChild(r);
+    document.getElementById('stage').appendChild(r); sfx('cinta');
     setTimeout(function () { r.remove(); fin(); }, 2100);
   };
 
@@ -114,7 +138,7 @@
     var libres = cfg.opciones.filter(function (o) { return quitadas.indexOf(o) < 0; });
     var elige = function (op) {
       if (!activa) return;
-      cierra(); removeEventListener('keydown', teclas, true);
+      cierra(); removeEventListener('keydown', teclas, true); sfx('clic');
       var fin = function () {
         if (op.final) { finales[cfg.id] = true; rebobina(function () { pregunta(idx, cfg, quitadas.concat(op), siguiente, saltar); }); }
         else if (op.vuelve) pregunta(idx, cfg, quitadas.concat(op), siguiente, saltar);
@@ -134,7 +158,7 @@
       if (!visto) { b.addEventListener('click', function () { elige(op); }); if (op === libres[0]) setTimeout(function () { b.focus({ preventScroll: true }); }, 50); }
       caja.appendChild(b);
     });
-    document.getElementById('stage').appendChild(el); document.body.classList.add('eligiendo');
+    document.getElementById('stage').appendChild(el); document.body.classList.add('eligiendo'); sfx('sube');
     addEventListener('keydown', teclas, true);
     var t0 = performance.now();
     activa = { el: el, reloj: setInterval(function () {
