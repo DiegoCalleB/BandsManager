@@ -4,7 +4,7 @@
  * dejado los posts en «fallido» con su motivo.
  */
 import { dbGetAlertSettings } from "../db/alertSettings.js";
-import { dbGetRegisteredBandById } from "../db/bands.js";
+import { getSupabase } from "../db/core.js";
 import { destinatarioDeAvisoPublicacion, renderAvisoPublicacionesFallidas, type AjustesDeAvisos, type PostFallido } from "../utils/avisoPublicacionFallida.js";
 import { sendTransactionalEmail, getProductionAppUrl } from "./transactionalEmail.js";
 import { captureError } from "../utils/errorTracking.js";
@@ -18,7 +18,10 @@ export interface DepsAviso {
 
 const porDefecto: DepsAviso = {
   ajustes: (b) => dbGetAlertSettings(b),
-  banda: (b) => dbGetRegisteredBandById(b),
+  banda: async (b) => {
+    const { data } = await getSupabase().from("registered_bands").select("nombre_banda, email").eq("band_id", b).maybeSingle();
+    return data;
+  },
   enviar: (o) => sendTransactionalEmail(o),
   appUrl: () => getProductionAppUrl()
 };

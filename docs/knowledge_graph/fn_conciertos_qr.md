@@ -23,6 +23,7 @@ Bolos confirmados, calendario, página pública del concierto, QR y enlaces cort
 - [[ext_resend|Resend]] *(Layer: #external, Domain: #system)*
 - [[ext_supabase_storage|Supabase Storage]] *(Layer: #external, Domain: #system)*
 - [[server_db_alertSettings|server/db/alertSettings.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_calendarConflicts|server/db/calendarConflicts.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_cartelEstilo|server/db/cartelEstilo.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_concerts|server/db/concerts.ts]] *(Layer: #db, Domain: #system)*
@@ -33,6 +34,7 @@ Bolos confirmados, calendario, página pública del concierto, QR y enlaces cort
 - [[server_db_referidos|server/db/referidos.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_tiposAdn|server/db/tiposAdn.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_tolerantWrite|server/db/tolerantWrite.ts]] *(Layer: #db, Domain: #system)*
+- [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_campanaConcierto|server/routes/campanaConcierto.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_cartelria|server/routes/cartelria.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_concert_to_album|server/routes/concert_to_album.ts]] *(Layer: #route, Domain: #system)*
@@ -48,6 +50,7 @@ Bolos confirmados, calendario, página pública del concierto, QR y enlaces cort
 - [[src_components_CalendarView|src/components/CalendarView.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_QrExportModal|src/components/QrExportModal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[tabla_concerts|tabla concerts]] *(Layer: #schema, Domain: #system)*
+- [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
 
 ---
 

@@ -26,9 +26,17 @@ _Sin dependencias salientes directas._
 - [[agent_enviador|Enviador Agent (Dispatcher)]] *(from #agent)*
 - [[fn_acceso_sesion|Acceso y sesión]] *(from #feature)*
 - [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
+- [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
+- [[fn_ensayos|Ensayos]] *(from #feature)*
 - [[fn_fans_epk|Fans y EPK]] *(from #feature)*
 - [[fn_finanzas_planes|Finanzas, merchan y planes]] *(from #feature)*
+- [[fn_gira|Tour Manager]] *(from #feature)*
+- [[fn_iris_estudio|Estudio de canción e Iris (stems)]] *(from #feature)*
 - [[fn_metricas_panel|Panel y métricas]] *(from #feature)*
+- [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
+- [[fn_repertorio_setlists|Repertorio y setlists]] *(from #feature)*
+- [[fn_scout_salas|Búsqueda de salas y festivales]] *(from #feature)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 - [[server_db_bands|server/db/bands.ts]] *(from #db)*
 - [[server_db_epk|server/db/epk.ts]] *(from #db)*
@@ -38,6 +46,7 @@ _Sin dependencias salientes directas._
 - [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
 - [[server_routes_billing|server/routes/billing.ts]] *(from #route)*
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(from #route)*
+- [[server_services_avisosPublicacion|server/services/avisosPublicacion.ts]] *(from #service)*
 - [[server_services_emailAgentClient|server/services/emailAgentClient.ts]] *(from #agent)*
 - [[server_services_gmailConexion|server/services/gmailConexion.ts]] *(from #service)*
 - [[tabla_agent_execution_logs|tabla agent_execution_logs]] *(from #schema)*

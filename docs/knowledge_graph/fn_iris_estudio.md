@@ -24,7 +24,9 @@ Separación de pistas, mezcla, ideas de audio y descarga desde el estudio de can
 - [[ext_gemini|Gemini (Google GenAI)]] *(Layer: #external, Domain: #system)*
 - [[ext_replicate|Replicate]] *(Layer: #external, Domain: #system)*
 - [[ext_supabase_storage|Supabase Storage]] *(Layer: #external, Domain: #system)*
+- [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_stemsCache|server/db/stemsCache.ts]] *(Layer: #db, Domain: #repertoire)*
+- [[server_db_tiposAdn|server/db/tiposAdn.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_ai_music|server/routes/ai_music.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_ai_music_audioPublico|server/routes/ai_music/audioPublico.ts]] *(Layer: #route, Domain: #repertoire)*
 - [[server_routes_ai_music_cacheStems|server/routes/ai_music/cacheStems.ts]] *(Layer: #route, Domain: #repertoire)*
@@ -45,6 +47,7 @@ Separación de pistas, mezcla, ideas de audio y descarga desde el estudio de can
 - [[server_routes_ai_music_rutasWebhooks|server/routes/ai_music/rutasWebhooks.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_ai_music_separacionContexto|server/routes/ai_music/separacionContexto.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_ai_music_separacionMotores|server/routes/ai_music/separacionMotores.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_upload|server/routes/upload.ts]] *(Layer: #route, Domain: #system)*
 - [[server_services_audioSeparator_index|server/services/audioSeparator/index.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_services_stemPredictionReconciler|server/services/stemPredictionReconciler.ts]] *(Layer: #service, Domain: #repertoire)*
@@ -52,6 +55,7 @@ Separación de pistas, mezcla, ideas de audio y descarga desde el estudio de can
 - [[src_components_SongStudioModal|src/components/SongStudioModal.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_hooks_useSeparacionIris|src/hooks/useSeparacionIris.ts]] *(Layer: #hook, Domain: #repertoire)*
 - [[src_utils_separacionIris|src/utils/separacionIris.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
 - [[tabla_song_stems_cache|tabla song_stems_cache]] *(Layer: #schema, Domain: #repertoire)*
 - [[tabla_stem_prediction_jobs|tabla stem_prediction_jobs]] *(Layer: #schema, Domain: #repertoire)*
 - [[tabla_stem_storage_retry_queue|tabla stem_storage_retry_queue]] *(Layer: #schema, Domain: #repertoire)*
