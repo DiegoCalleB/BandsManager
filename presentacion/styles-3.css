@@ -8,7 +8,7 @@ body.pelicula:not(.scroll) .feat h2 { max-width: 1700px; }
 /* Subtítulos estilo Netflix (se activan en el menú de subtítulos del reproductor o con C): texto blanco con sombra, sin caja */
 #subtitulo { position: absolute; left: 50%; bottom: 70px; translate: -50% 0; z-index: 46; width: 1240px; text-align: center; pointer-events: none;
   color: #fff; font: 600 38px/1.28 'Netflix Sans', 'Helvetica Neue', Arial, sans-serif; text-shadow: 0 0 6px #000, 0 2px 4px #000, 0 0 2px #000; display: none; }
-#subtitulo p { margin: 0 0 4px; }
+#subtitulo p { margin: 0 auto 4px; width: fit-content; max-width: 100%; padding: 2px 18px 4px; border-radius: 6px; background: rgba(0,0,0,.55); }
 #subtitulo b { font-weight: 700; font-size: .78em; letter-spacing: .02em; }
 body.pelicula.subs:not(.scroll) #subtitulo { display: block; }
 body.nf-ver #subtitulo { bottom: 210px; transition: bottom 200ms; }
