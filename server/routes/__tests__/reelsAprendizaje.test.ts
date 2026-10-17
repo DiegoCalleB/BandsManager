@@ -9,7 +9,8 @@ vi.mock("../../state.js", () => ({
   }
 }));
 const aprendizajeDeBanda = vi.hoisted(() => vi.fn());
-vi.mock("../../services/metricasReels.js", () => ({ aprendizajeDeBanda }));
+const resumenSemanalDeBanda = vi.hoisted(() => vi.fn());
+vi.mock("../../services/metricasReels.js", () => ({ aprendizajeDeBanda, resumenSemanalDeBanda }));
 
 const { default: router } = await import("../reelsAprendizaje.js");
 const app = express();
@@ -35,6 +36,23 @@ describe("GET /api/reels/aprendizaje", () => {
   it("un fallo no filtra el error interno", async () => {
     aprendizajeDeBanda.mockRejectedValue(new Error("SECRETO de Supabase"));
     const { status, body } = await get("/api/reels/aprendizaje");
+    expect(status).toBe(500);
+    expect(JSON.stringify(body)).not.toContain("SECRETO");
+  });
+});
+
+describe("GET /api/reels/resumen-semanal", () => {
+  it("resume la banda de la SESIÓN, no la de la cabecera", async () => {
+    resumenSemanalDeBanda.mockResolvedValue({ reelsMedidos: 2, mejores: [], patron: null, proximo: "x" });
+    const { status, body } = await get("/api/reels/resumen-semanal?band_id=band-ajena");
+    expect(status).toBe(200);
+    expect(body).toMatchObject({ success: true, reelsMedidos: 2 });
+    expect(resumenSemanalDeBanda).toHaveBeenCalledWith("band-sesion");
+  });
+
+  it("un fallo no filtra el error interno", async () => {
+    resumenSemanalDeBanda.mockRejectedValue(new Error("SECRETO de Supabase"));
+    const { status, body } = await get("/api/reels/resumen-semanal");
     expect(status).toBe(500);
     expect(JSON.stringify(body)).not.toContain("SECRETO");
   });

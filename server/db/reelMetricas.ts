@@ -19,6 +19,8 @@ export interface FilaMetricaReel {
   saves: number | null;
   avg_watch_ms: number | null;
   total_watch_ms: number | null;
+  /** Lo pone la base al guardar; no se envía al escribir. */
+  medido_en?: string;
 }
 
 /** Idempotente por (post, medición): si se repite la pasada, actualiza la misma fila. */
@@ -69,4 +71,15 @@ export async function dbPostsPublicadosRecientes(): Promise<SocialPost[]> {
     .gte("published_at", desde);
   if (error) throw new Error(`Supabase Error (social_posts publicados): ${error.message}`);
   return (data || []) as SocialPost[];
+}
+
+/** Texto (copy) de cada post, para poner nombre a los Reels en el resumen. Solo de esta banda. */
+export async function dbTextosDePosts(bandId: string, postIds: string[]): Promise<Map<string, string>> {
+  const mapa = new Map<string, string>();
+  if (!postIds.length) return mapa;
+  const sb = getSupabase();
+  const { data, error } = await sb.from("social_posts").select("id, contenido").eq("band_id", cleanBandId(bandId)).in("id", postIds);
+  if (error) throw new Error(`Supabase Error (social_posts textos): ${error.message}`);
+  for (const f of data || []) mapa.set(f.id, String(f.contenido || ""));
+  return mapa;
 }
