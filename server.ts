@@ -9,6 +9,7 @@ import { resolveResendApiKey } from "./server/services/transactionalEmail.js";
 import { Lead, Concert, SocialPost, Payment, Rehearsal, Song, Setlist } from "./src/types";
 
 import { getUserFromRequest } from "./server/auth.js";
+import { guardiaBooking, puedeVerBooking, sinBooking } from "./server/utils/bookingHabilitado.js";
 import { jsonSegunSesion } from "./server/middleware/limiteCuerpo.js";
 import { paginaRateLimiter } from "./server/middleware/rateLimiter.js";
 import { mismaBanda, bandaDe } from "./server/utils/bandAccess.js";
@@ -109,8 +110,7 @@ app.use(express.urlencoded({ limit: "1mb", extended: true }));
 
 // Tras cualquier escritura correcta en /api se invalida la caché de estado de la banda: sin esto,
 // /api/state devolvía la versión anterior de lo que acababas de guardar (ver server/db/sync.ts).
-app.use("/api", avisarGuardadoParcial());
-app.use("/api", invalidarCachePorEscritura());
+app.use("/api", avisarGuardadoParcial(), invalidarCachePorEscritura(), guardiaBooking); // guardiaBooking: el booking es reservado
 
 // Mount modular Express routers
 app.use("/api", usersRouter);
@@ -529,7 +529,7 @@ app.get("/api/state", async (req, res) => {
       state.payments = [];
     }
 
-    res.json(state);
+    res.json(puedeVerBooking(user) ? state : sinBooking(state));
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error in /api/state:", err);

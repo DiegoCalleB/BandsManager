@@ -77,7 +77,7 @@ describe('tick del planificador', () => {
     vi.useFakeTimers();
     ejecutadas.clear();
     Object.values(mocks).forEach((m) => m.mockReset());
-    mocks.dbGetRegisteredBands.mockResolvedValue([{ band_id: 'b1', estado_cuenta: 'activo' }]);
+    mocks.dbGetRegisteredBands.mockResolvedValue([{ band_id: 'b1', estado_cuenta: 'activo', suscripcion_habilitada: true }]);
     mocks.dbGetBandSchedule.mockResolvedValue(horario);
     mocks.dbGetBandEmailAccount.mockResolvedValue({ email: 'a@b.es', imap_host: 'imap.b.es' });
     mocks.dbGetBandGmailOAuth.mockResolvedValue(null);
@@ -103,6 +103,15 @@ describe('tick del planificador', () => {
     vi.setSystemTime(new Date('2026-08-18T10:02:00Z')); // 12:02 Madrid: lector
     await triggerManualSchedulerTick();
     expect(tiposEncolados()).toEqual(['lector_inbox_check']);
+  });
+
+  it('una banda sin el interruptor de booking no recibe ni Enviador ni Lector', async () => {
+    mocks.dbGetRegisteredBands.mockResolvedValue([{ band_id: 'b1', estado_cuenta: 'activo', suscripcion_habilitada: false }, { band_id: 'b2', estado_cuenta: 'activo' }]);
+    vi.setSystemTime(new Date('2026-08-18T08:05:00Z'));
+    await triggerManualSchedulerTick();
+    vi.setSystemTime(new Date('2026-08-18T10:02:00Z'));
+    await triggerManualSchedulerTick();
+    expect(tiposEncolados()).toEqual([]);
   });
 
   it('fuera de toda ventana no consulta la cuenta de email (solo mira la hora)', async () => {

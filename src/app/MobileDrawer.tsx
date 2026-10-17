@@ -2,6 +2,7 @@
  * Cajón de navegación móvil.
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
+import { moduloDeBookingOculto } from "../utils/bookingVisible";
 import { LogOut,X,Zap } from "lucide-react";
 import { NavGroupSection } from "../components/common/NavGroupSection";
 import { NavItemButton } from "../components/common/NavItemButton";
@@ -19,7 +20,7 @@ import type { MainView } from "./appViews";
  * @returns Sección de interfaz.
  */
 export function MobileDrawer() {
-  const { isMobileMenuOpen, setIsMobileMenuOpen, currentActiveBandLogo, currentActiveBandName, syncStatus, grupoActivo, t, currentView, currentActiveBandPlan, navBadges, handleNavigate, shouldGroupNav, isAdmin, openNavGroupIds, toggleNavGroup, isPromoPlan, leads, posts, currentUser, setShowUserProfileModal, handleLogout } = useApp();
+  const { isMobileMenuOpen, setIsMobileMenuOpen, currentActiveBandLogo, currentActiveBandName, syncStatus, grupoActivo, t, currentView, currentActiveBandPlan, navBadges, handleNavigate, shouldGroupNav, isAdmin, bookingVisible, openNavGroupIds, toggleNavGroup, isPromoPlan, leads, posts, currentUser, setShowUserProfileModal, handleLogout } = useApp();
   return (
     <>
 {/* z-[9999], no z-50: mismo motivo que el resto de overlays de esta sesión — la barra del
@@ -102,6 +103,7 @@ export function MobileDrawer() {
                         currentView={currentView}
                         currentActiveBandPlan={currentActiveBandPlan}
                         isAdmin={isAdmin}
+                        bookingVisible={bookingVisible}
                         navBadges={navBadges}
                         onNavigate={(id) => handleNavigate(id as MainView)}
                         isOpen={!!openNavGroupIds[group.id]}
@@ -117,6 +119,7 @@ export function MobileDrawer() {
                       .filter(
                         (item) =>
                           (!item.adminOnly || isAdmin) &&
+                          !moduloDeBookingOculto(item.id, bookingVisible) &&
                           (!isPromoPlan ||
                             hasModuleAccess(currentActiveBandPlan, item.id)),
                       )

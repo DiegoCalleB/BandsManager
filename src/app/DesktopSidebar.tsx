@@ -2,6 +2,7 @@
  * Barra lateral de escritorio con navegación, campañas y perfil.
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
+import { moduloDeBookingOculto } from "../utils/bookingVisible";
 import { ChevronDown,ExternalLink,Guitar,LogOut,Sparkles,Target,Zap } from "lucide-react";
 import { NavGroupSection } from "../components/common/NavGroupSection";
 import { NavItemButton } from "../components/common/NavItemButton";
@@ -21,7 +22,7 @@ import type { MainView } from "./appViews";
  * @returns Sección de interfaz.
  */
 export function DesktopSidebar() {
-  const { setShowBandSwitcherModal, currentActiveBandLogo, currentActiveBandName, currentActiveBandPlan, setShowOnboardingModal, grupoActivo, t, currentView, navBadges, handleNavigate, shouldGroupNav, isAdmin, openNavGroupIds, toggleNavGroup, isPromoPlan, setShowCampaignModal, activeCampaign, leads, posts, currentUser, setShowUserProfileModal, handleLogout, notificationPermission, notificationConfig, notificationHistory, notificationUnreadCount, setShowNotificationSettingsModal, requestNotificationPermission, markAllNotificationsAsRead, markNotificationAsRead, clearNotificationHistory } = useApp();
+  const { setShowBandSwitcherModal, currentActiveBandLogo, currentActiveBandName, currentActiveBandPlan, setShowOnboardingModal, grupoActivo, t, currentView, navBadges, handleNavigate, shouldGroupNav, isAdmin, bookingVisible, openNavGroupIds, toggleNavGroup, isPromoPlan, setShowCampaignModal, activeCampaign, leads, posts, currentUser, setShowUserProfileModal, handleLogout, notificationPermission, notificationConfig, notificationHistory, notificationUnreadCount, setShowNotificationSettingsModal, requestNotificationPermission, markAllNotificationsAsRead, markNotificationAsRead, clearNotificationHistory } = useApp();
   return (
     <>
 <aside className="hidden lg:flex w-[240px] shrink-0 bg-[var(--surface)] flex-col h-screen sticky top-0 overflow-hidden border-r border-[var(--hair)]">
@@ -115,6 +116,7 @@ export function DesktopSidebar() {
                     currentView={currentView}
                     currentActiveBandPlan={currentActiveBandPlan}
                     isAdmin={isAdmin}
+                    bookingVisible={bookingVisible}
                     navBadges={navBadges}
                     onNavigate={(id) => handleNavigate(id as MainView)}
                     isOpen={!!openNavGroupIds[group.id]}
@@ -130,6 +132,7 @@ export function DesktopSidebar() {
                   .filter(
                     (item) =>
                       (!item.adminOnly || isAdmin) &&
+                      !moduloDeBookingOculto(item.id, bookingVisible) &&
                       (!isPromoPlan ||
                         hasModuleAccess(currentActiveBandPlan, item.id)),
                   )

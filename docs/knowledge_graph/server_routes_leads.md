@@ -43,6 +43,11 @@ Agregador del dominio leads: monta los sub-routers de `./leads/` y reexporta
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/utils/__tests__/bookingHabilitado.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

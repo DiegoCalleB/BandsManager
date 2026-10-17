@@ -73,6 +73,7 @@ Orquestación de los agentes de booking: disparo manual/cron (`/trigger-agent`),
 
 ## 🧪 Tests que lo cubren
 - `server/routes/__tests__/resetEstado.test.ts`
+- `server/utils/__tests__/bookingHabilitado.test.ts`
 
 ---
 

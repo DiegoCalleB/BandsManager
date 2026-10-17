@@ -18,6 +18,7 @@ import { iaRateLimiter, chatRateLimiter } from "../middleware/rateLimiter.js";
 import { acotarHistorial, agregarTurno, mensajeAceptable, MAX_TOKENS_RESPUESTA_CHAT } from "../utils/conversacionChat.js";
 import { chatFunctionDeclarations, convertFunctionCallsToProposedActions } from "../services/chatTools.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import { puedeVerBooking, sinBooking } from "../utils/bookingHabilitado.js";
 import { registrarErrorInesperado } from '../utils/errorHttp.js';
 import type { AccionPropuesta, CancionParaChat, ParametrosAgenteChat, SetlistParaChat, TurnoChat, VistaRespuestaIA, ErrorDeFailover } from './tiposChat.js';
 
@@ -31,10 +32,8 @@ router.post("/chat", requireAuth, chatRateLimiter, async (req, res) => {
   const { message, chatHistory } = req.body;
   if (!mensajeAceptable(message)) return res.status(400).json({ error: "El mensaje no es válido o es demasiado largo." });
   const userReq = getUserFromRequestLocal(req);
-  // requireAuth ya garantiza que hay banda activa (getUserFromRequest devuelve null si no la
-  // hay), pero esta ruta vuelve a resolver el usuario por su cuenta con getUserFromRequestLocal:
-  // se repite la comprobación aquí para no depender en silencio de esa garantía y caer en una
-  // banda por defecto más abajo si algún día dejara de cumplirse.
+  // requireAuth ya garantiza banda activa, pero esta ruta resuelve el usuario por su cuenta con
+  // getUserFromRequestLocal: se repite la comprobación para no caer en una banda por defecto.
   if (!userReq?.band_id) {
     return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
   }
@@ -43,7 +42,8 @@ router.post("/chat", requireAuth, chatRateLimiter, async (req, res) => {
   const userRole = userReq?.role || "member";
   const isLeader = userRole === "leader";
 
-  const state = loadState();
+  const bookingVisible = puedeVerBooking(userReq); // reservado: sin acceso, ni leads ni atajos de agentes
+  const state = bookingVisible ? loadState() : sinBooking(loadState());
   const lower = (message || "").toLowerCase().trim();
 
   // Intercept finance questions for non-leaders immediately
@@ -65,7 +65,7 @@ router.post("/chat", requireAuth, chatRateLimiter, async (req, res) => {
     (lower.includes("agente") || lower.includes("scout") || lower.includes("redactor") || lower.includes("enviador") || lower.includes("lector") || lower.includes("descubridor"))
   );
 
-  const isAgentQuery = !isNegativeAgentIntent && !isQuestionOrHypothetical && (isExplicitAgentTrigger || (lower.startsWith("agente ") && (lower.includes("scout") || lower.includes("redactor") || lower.includes("enviador") || lower.includes("lector") || lower.includes("descubridor"))));
+  const isAgentQuery = bookingVisible && !isNegativeAgentIntent && !isQuestionOrHypothetical && (isExplicitAgentTrigger || (lower.startsWith("agente ") && (lower.includes("scout") || lower.includes("redactor") || lower.includes("enviador") || lower.includes("lector") || lower.includes("descubridor"))));
 
   if (isAgentQuery) {
     let agentName = "Enviador";

@@ -1,3 +1,4 @@
+import { moduloDeBookingOculto } from "../../utils/bookingVisible";
 import React, { useState } from "react";
 import { Trash2, ArrowUp, ArrowDown, GripVertical, Info } from "lucide-react";
 import {
@@ -51,6 +52,8 @@ const isStitchLight = false;
 
 export interface DashboardWidgetGridProps {
   currentUser?: User;
+  /** El booking es reservado: sin acceso, sus widgets no existen en el panel. */
+  bookingVisible?: boolean;
   concerts: Concert[];
   rehearsals: Rehearsal[];
   leads: Lead[];
@@ -75,6 +78,7 @@ export interface DashboardWidgetGridProps {
 /** Id único de un widget recién añadido (a nivel de módulo: se llama solo desde handlers). */
 export function DashboardWidgetGrid({
   currentUser,
+  bookingVisible = true,
   concerts,
   rehearsals,
   leads,
@@ -94,6 +98,7 @@ export function DashboardWidgetGrid({
   viewDensityMode: externalDensityMode,
 }: DashboardWidgetGridProps) {
   const userPlan = currentUser?.plan;
+  const tieneModulo = (modulo: string) => hasModuleAccess(userPlan, modulo) && !moduloDeBookingOculto(modulo, bookingVisible);
 
   // Internal fallback state if props not passed
   const [internalDensityMode] = useState<
@@ -121,7 +126,7 @@ export function DashboardWidgetGrid({
     const withModuleAccess = list.filter((w) => {
       const meta = AVAILABLE_MODULE_WIDGETS.find((m) => m.type === w.type);
       if (meta && meta.requiredModule) {
-        return hasModuleAccess(userPlan, meta.requiredModule);
+        return tieneModulo(meta.requiredModule);
       }
       return true;
     });
@@ -294,7 +299,7 @@ export function DashboardWidgetGrid({
     const defaultAllowed = DEFAULT_DASHBOARD_WIDGETS.filter((w) => {
       const meta = AVAILABLE_MODULE_WIDGETS.find((m) => m.type === w.type);
       if (meta && meta.requiredModule) {
-        return hasModuleAccess(userPlan, meta.requiredModule);
+        return tieneModulo(meta.requiredModule);
       }
       return true;
     });
@@ -308,7 +313,7 @@ export function DashboardWidgetGrid({
 
     if (
       meta.requiredModule &&
-      !hasModuleAccess(userPlan, meta.requiredModule)
+      !tieneModulo(meta.requiredModule)
     ) {
       return;
     }
@@ -429,7 +434,7 @@ export function DashboardWidgetGrid({
       if (!w.visible) return false;
       const meta = AVAILABLE_MODULE_WIDGETS.find((m) => m.type === w.type);
       if (meta && meta.requiredModule) {
-        return hasModuleAccess(userPlan, meta.requiredModule);
+        return tieneModulo(meta.requiredModule);
       }
       return true;
     })
@@ -581,6 +586,7 @@ export function DashboardWidgetGrid({
         abierto={isAddModalOpen}
         onCerrar={() => setIsAddModalOpen(false)}
         userPlan={userPlan}
+        bookingVisible={bookingVisible}
         tiposEnPanel={new Set(widgets.filter((w) => w.visible).map((w) => w.type))}
         onAnadir={handleAddWidget}
       />

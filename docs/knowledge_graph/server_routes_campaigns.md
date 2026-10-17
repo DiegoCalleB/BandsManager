@@ -37,6 +37,7 @@ Campañas de booking masivas: CRUD, campaña activa y registro de entrenamiento 
 
 ## 🧪 Tests que lo cubren
 - `server/routes/__tests__/leadsCampanasRateLimit.test.ts`
+- `server/utils/__tests__/bookingHabilitado.test.ts`
 
 ---
 

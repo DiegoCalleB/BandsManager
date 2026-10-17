@@ -63,6 +63,7 @@ export type NavigationOptions = {
 };
 
 interface DashboardProps {
+  bookingVisible?: boolean; // el booking es reservado; por defecto visible
   leads: Lead[];
   colors: ThemeColors;
   onUpdateLead: (leadId: string, updatedFields: Partial<Lead>) => void;
@@ -89,6 +90,7 @@ interface DashboardProps {
 }
 
 export default function Dashboard({
+  bookingVisible = true,
   leads,
   colors,
   onUpdateLead,
@@ -358,10 +360,7 @@ export default function Dashboard({
     });
   });
 
-  // Antes, sin conciertos/ensayos reales todavía, se rellenaba la agenda con tres eventos
-  // inventados (un concierto en Sala Apolo con caché de 1.800€, un ensayo y un festival con
-  // caché de 3.500€) copiados de la banda insignia. Una agenda vacía es simplemente una agenda
-  // vacía: no se inventan conciertos que no existen.
+  // Sin conciertos ni ensayos reales la agenda queda vacía: no se inventan eventos de ejemplo.
   upcomingEvents.sort((a, b) => a.dateStr.localeCompare(b.dateStr));
 
 
@@ -608,6 +607,7 @@ export default function Dashboard({
 
       {/* WIDGET GRID PERSONALIZABLE Y PERSISTENTE EN BBDD (incluye Resumen Ejecutivo como widget más) */}
       <DashboardWidgetGrid
+        bookingVisible={bookingVisible}
         currentUser={currentUser}
         concerts={concerts}
         rehearsals={rehearsals}

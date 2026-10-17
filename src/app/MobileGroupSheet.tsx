@@ -2,6 +2,7 @@
  * Hoja de grupo de navegación móvil.
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
+import { moduloDeBookingOculto } from "../utils/bookingVisible";
 import { NavItemButton } from "../components/common/NavItemButton";
 import { NAV_GROUPS_MOBILE,NAV_ITEMS } from "../config/navGroups";
 import { hasModuleAccess } from "../utils/planPermissions";
@@ -13,7 +14,7 @@ import type { MainView } from "./appViews";
  * @returns Sección de interfaz.
  */
 export function MobileGroupSheet() {
-  const { openGroupSheetId, setOpenGroupSheetId, t, isAdmin, currentActiveBandPlan, currentView, navBadges, handleNavigate } = useApp();
+  const { openGroupSheetId, setOpenGroupSheetId, t, isAdmin, bookingVisible, currentActiveBandPlan, currentView, navBadges, handleNavigate } = useApp();
   return (
     <>
 {/* MOBILE GROUP SHEET (Música / Promoción): lista los itemIds del grupo tocado
@@ -40,6 +41,7 @@ export function MobileGroupSheet() {
                       .filter(
                         (id) =>
                           (!NAV_ITEMS[id].adminOnly || isAdmin) &&
+                          !moduloDeBookingOculto(id, bookingVisible) &&
                           hasModuleAccess(currentActiveBandPlan, id),
                       )
                       .map((id) => {

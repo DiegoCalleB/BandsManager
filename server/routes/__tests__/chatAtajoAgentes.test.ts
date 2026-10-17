@@ -1,12 +1,13 @@
 /**
- * El atajo de agentes del chat está siempre disponible (ya no hay interruptor): una orden
- * explícita propone la tarjeta de confirmación; una pregunta o una negación, no. Nunca lanza nada
- * por sí mismo: solo propone.
+ * El atajo de agentes del chat no tiene interruptor: una orden explícita propone la tarjeta de
+ * confirmación; una pregunta o una negación, no. Nunca lanza nada por sí mismo: solo propone.
+ * Es booking, así que solo existe para las bandas habilitadas.
  */
 import { describe, expect, it, vi } from 'vitest';
 
+let bandaHabilitada = true;
 vi.mock('../../state.js', () => ({
-  loadState: () => ({ leads: [], rehearsals: [], concerts: [], messages: [], payments: [], users: [], registeredBands: [] }),
+  loadState: () => ({ leads: [], rehearsals: [], concerts: [], messages: [], payments: [], users: [], registeredBands: [{ band_id: 'band-a', suscripcion_habilitada: bandaHabilitada }] }),
   getUserFromRequestLocal: () => ({ band_id: 'band-a', role: 'member', bandName: 'Los Test' }),
   getEpkConfigForBand: () => ({}),
   getAutonomyConfigForBand: () => ({ dispatchLevel: 'draft_only', negotiationDepth: 'outreach_only' }),
@@ -56,5 +57,16 @@ describe('chat: atajo de agentes siempre disponible', () => {
   it('una negación explícita no lo lanza', async () => {
     const r = await chatear('no lances el agente enviador');
     expect(r.proposedActions).toEqual([]);
+  });
+
+  it('una banda sin el interruptor no tiene el atajo: la orden cae al chat normal', async () => {
+    bandaHabilitada = false;
+    try {
+      const r = await chatear('lanza el scout en Sevilla');
+      expect(r.proposedActions).toEqual([]);
+      expect(r.text).toBe('respuesta de la IA');
+    } finally {
+      bandaHabilitada = true;
+    }
   });
 });

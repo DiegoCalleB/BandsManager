@@ -18,7 +18,7 @@ import { BandCRM,BookingCRM,CalendarView,CarteleriaView,Chatbot,EnsayosManager,E
  * @returns Sección de interfaz.
  */
 export function ActiveViewRouter() {
-  const { currentView, isLoading, leads, colors, handleUpdateLead, handleAddLeadWithLimitCheck, metrics, concerts, rehearsals, handleAddRehearsal, bandUsers, currentUser, currentActiveBandName, currentActiveBandId, availableBands, handleNavigate, setShowUserProfileModal, epkConfig, tours, fans, posts, payments, isPromoPlan, activeCampaign, handleSetActiveCampaign, handleDeleteLead, handleBulkDeleteLeads, handleUpdateEpkConfig, bookingOptions, handleCrmSectionChange, bandsCount, activeBandConcerts, handleDeleteBand, campaigns, handleUpdateRehearsal, handleUpdateConcert, handleCartelGuardado, handleDeleteRehearsal, handleDeleteConcert, handleAddConcert, currentActiveBandLogo, activeBandRehearsals, handleAddPost, handleUpdatePost, currentTheme, handleAddFanWithLimitCheck, handleUpdateFan, handleDeleteFan, handleUpdateIncentive, handleAddMetric, handleUpdateMetric, handleDeleteMetric, handleSaveTour, handleDeleteTour, handleAddPayment, isAdmin, handleUpdatePayment, handleChatLoadingChange, currentActiveBandPlan } = useApp();
+  const { currentView, isLoading, leads, colors, handleUpdateLead, handleAddLeadWithLimitCheck, metrics, concerts, rehearsals, handleAddRehearsal, bandUsers, currentUser, currentActiveBandName, currentActiveBandId, availableBands, handleNavigate, setShowUserProfileModal, epkConfig, tours, fans, posts, payments, isPromoPlan, activeCampaign, handleSetActiveCampaign, handleDeleteLead, handleBulkDeleteLeads, handleUpdateEpkConfig, bookingOptions, handleCrmSectionChange, bandsCount, activeBandConcerts, handleDeleteBand, campaigns, handleUpdateRehearsal, handleUpdateConcert, handleCartelGuardado, handleDeleteRehearsal, handleDeleteConcert, handleAddConcert, currentActiveBandLogo, activeBandRehearsals, handleAddPost, handleUpdatePost, currentTheme, handleAddFanWithLimitCheck, handleUpdateFan, handleDeleteFan, handleUpdateIncentive, handleAddMetric, handleUpdateMetric, handleDeleteMetric, handleSaveTour, handleDeleteTour, handleAddPayment, isAdmin, handleUpdatePayment, handleChatLoadingChange, currentActiveBandPlan, bookingVisible } = useApp();
   return (
     <>
 {/* Dynamic Views */}
@@ -38,6 +38,7 @@ export function ActiveViewRouter() {
               >
                 {currentView === "resumen" && (
                   <Dashboard
+                    bookingVisible={bookingVisible}
                     leads={leads}
                     colors={colors}
                     onUpdateLead={handleUpdateLead}
