@@ -88,6 +88,5 @@
   "src/components/repertorio/pdf_export/buildPrintStyles.ts": 617,
   "src/components/ensayos/GrabacionActaTab.tsx": 616,
   "src/utils/audioStorage.ts": 615,
-  "src/utils/qrExport.ts": 601,
   "src/utils/teoriaArmonica.ts": 602
 }

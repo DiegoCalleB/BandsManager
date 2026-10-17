@@ -54,6 +54,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
       if (selectedFormat === "svg") {
         await downloadQrAsSvg({
           svgElementId,
+          url,
           filename: `${baseFilename}-vectorial`,
           logoUrl: includeLogo ? logoUrl : undefined,
         });
@@ -63,6 +64,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
       } else if (selectedFormat === "png-4k") {
         await downloadQrAsHighResPng({
           svgElementId,
+          url,
           filename: baseFilename,
           template: "qr-only",
           logoUrl: includeLogo ? logoUrl : undefined,
