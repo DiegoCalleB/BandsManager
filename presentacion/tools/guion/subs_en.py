@@ -127,7 +127,7 @@ EN = {
     "No more surprises on gig day!",
 "Chicos, soy el programador de la Sala El Faro. Me ha llegado vuestro correo: ¡el catorce de noviembre es vuestro!":
     "Guys, I'm the programmer at Sala El Faro. Your email reached me: the 14th of November is yours!",
-"¡La sala del catorce! ¡Y encima el día catorce!":
+"¡La sala del catorce, che! ¡Y encima el día catorce!":
     "The room on the 14th! And on the 14th, too!",
 "¿En treinta y cinco minutos? La última vez tardaron tres semanas. Y era para decir que no.":
     "In thirty-five minutes? Last time they took three weeks. And it was to say no.",
@@ -165,7 +165,7 @@ EN = {
     "I told you! Google Calendar!",
 "Cada fecha tiene su ficha, con la meteo y el aviso de puente o festivo.":
     "Every date has its sheet, with the weather and a warning for long weekends or holidays.",
-"¡Por fin sé cuándo ensayamos y cuándo tocamos!":
+"¡Por fin sé cuándo ensayamos y cuándo tocamos, boludo!":
     "Finally I know when we rehearse and when we play!",
 "Y ahora, que nos conozca más gente.":
     "And now, let's get more people to know us.",
@@ -185,7 +185,7 @@ EN = {
     "And they leave their email, with their permission, and get a gift: a discount or a download.",
 "¿Una lista de gente que nos quiere de verdad? ¡Dónde firmo, che!":
     "A list of people who really love us? Where do I sign, che!",
-"¿Y esto qué es?":
+"¿Y esto qué es, che?":
     "And what's this?",
 "Un generador de reels para Instagram, TikTok y Yutub, hecho con inteligencia artificial.":
     "A reel generator for Instagram, TikTok and YouTube, made with artificial intelligence.",
@@ -199,7 +199,7 @@ EN = {
     "No way. You schedule every reel on every network, with its day and time.",
 "Con la grabación entera del bolo de la Ribeira, la inteligencia artificial separa las canciones de lo que hablamos con el público.":
     "With the full recording of the Ribeira gig, the AI separates the songs from what we say to the crowd.",
-"¡Un disco en vivo, sin mis chistes malos! ¡Qué genio!":
+"¡Un disco en vivo, sin mis chistes malos! ¡Qué genio, che!":
     "A live album without my bad jokes! What a genius!",
 "Y sin la balada que vació el bar.":
     "And without the ballad that emptied the bar.",
@@ -241,7 +241,7 @@ EN = {
     "And we were arguing about beers.",
 "Gracias, Iago. De verdad.":
     "Thank you, Iago. Truly.",
-"Iago, esto es una locura. Lo necesitan todos los grupos, los mánayers, las productoras.":
+"Iago, esto es una locura, che. Lo necesitan todos los grupos, los mánayers, las productoras.":
     "Iago, this is crazy. Every band needs it, every manager, every production company.",
 "¡Pero neno, te vas a forrar! Ya te veo en Miami, en descapotable.":
     "But neno, you're going to be rich! I can already see you in Miami, in a convertible.",
@@ -255,7 +255,7 @@ EN = {
     "First, let everyone know. That's why I just enrolled in The Big School's Digital Marketing master's.",
 "¿Otro máster? Pero home, ¿tú cuándo duermes?":
     "Another master's? Home, when do you sleep?",
-"Dormir está en mi lista de pendientes, neno. Y sale más barato que darle el treinta por ciento a Peláez.":
+"Dormir está en mi lista de pendientes, tío. Y sale más barato que darle el treinta por ciento a Peláez.":
     "Sleeping is on my to-do list, neno. And it's cheaper than giving thirty percent to Peláez.",
 "Hay dos tipos de cliente. El primero, be tu ci: las bandas, los músicos, los deyeis y los solistas. O sea, nosotros.":
     "There are two kinds of customer. First, B2C: bands, musicians, DJs and solo artists. That is, us.",
@@ -285,13 +285,13 @@ EN = {
     "Iago, it's Peláez. I'm watching you from the mixing desk. My offer still stands: thirty percent.",
 "Gracias, Peláez. Pero los bolos ya los llevamos nosotros. Y el repertorio, también.":
     "Thanks, Peláez. But we already run our own gigs. And our own setlist, too.",
-"Escuchad ahí fuera. La app organiza, chavales. Pero esto lo hacéis vosotros.":
+"Escuchad, los de ahí fuera. La aplicación organiza, chavales. Pero esto lo hacéis vosotros.":
     "Listen out there. The app organises, guys. But this you do yourselves.",
 "Hace seis meses no sabíamos ni quién contestaba a las salas. Y miradnos ahora. ¡Un, dos, tres, cuatro!":
     "Six months ago we didn't even know who was answering the venues. Look at us now. One, two, three, four!",
 "Buenos días, rockeros. Esto es Radio Riff. Una banda que casi se separa por no saber ni quién contestaba el correo acaba de tocar en el Resurrécshon Fest. ¿El secreto? Su bajista, Iago, y la app que ha creado: Band Mánayer punto io.":
     "Good morning, rockers. This is Radio Riff. A band that nearly split up because nobody knew who was answering the email has just played Resurrection Fest. The secret? Their bassist, Iago, and the app he built: BandManager dot io.",
-"¿Alguien ha contestado a la sala del catorce?":
+"¿Alguien ha contestado a la sala del catorce, che?":
     "Has anyone answered the room on the 14th?",
 "Cerrao y bien cerrao, chaval. Mirad el calendario.":
     "All sorted, mate. Look at the calendar.",
@@ -321,7 +321,7 @@ EN = {
     "Splitting costs is on my to-do list, Brais. Right below charging you for the beers.",
 "¡Pues que las pague la inteligencia artificial!":
     "Let the AI pay for them!",
-"Propuesta: las paga Brais. Pero tú decides, Iago.":
+"Propuesta: que pague Brais. Pero decides tú, Iago.":
     "Proposal: Brais pays. But you decide, Iago.",
 "Idea loca: que las pague Peláez. Con su treinta por ciento.":
     "Crazy idea: let Peláez pay. With his thirty percent.",
@@ -427,13 +427,13 @@ EN = {
     "A list of people who really love us? Where do I sign, che! This is pure gold!",
 "¿O sea que le subes el concierto entero y te saca los trozos más virales? ¿Incluido mi solo de batería? ¡Ai, mi madriña!":
     "So you upload the whole gig and it picks out the most viral bits? Including my drum solo? Oh my goodness!",
-"¡Esto es tener un equipo de marketing entero metido en el bolsillo!":
+"¡Esto es tener un equipo de marketing entero metido en el bolsillo, boludo!":
     "This is having a whole marketing team in your pocket!",
 "¡Las cuentas claras! ¡Y salen números positivos! ¡Por primera vez en la historia de esta banda!":
     "The books are clear! And the numbers are positive! For the first time in this band's history!",
 "¡Pero si no le falta de nada! ¡Es la navaja suiza de las bandas!":
     "It's missing nothing! It's the Swiss army knife of bands!",
-"Iago, esto es una locura. Lo necesitan todos los grupos, los mánayers, las productoras. ¡Todos!":
+"Iago, esto es una locura, che. Lo necesitan todos los grupos, los mánayers, las productoras. ¡Todos!":
     "Iago, this is crazy. Every band needs it, the managers, the production companies. Everyone!",
 "¿Y si no sé qué escala tocar encima? Porque yo improviso por intuición. Y mi intuición desafina.":
     "What if I don't know which scale to play over it? I improvise by instinct. And my instinct is out of tune.",
@@ -451,7 +451,7 @@ EN = {
     "The calendar warns you. If two events overlap, if you can't make it from one place to the other, or if you're cutting it fine to set up.",
 "¡Ai, mi madriña! ¡Me acaba de salvar el miércoles! ¡Esto vale su peso en oro, neno!":
     "Oh my goodness! It just saved my Wednesday! This is worth its weight in gold, mate!",
-"El miércoles. El de los metaleros, ¿no, traidor?":
+"El miércoles, che. El de los metaleros, ¿no, traidor?":
     "Wednesday. The metalheads' one, right, traitor?",
 "Y solo avisa cuando hay una persona en los dos sitios. Si no, no te molesta.":
     "And it only warns you when the same person is in both places. Otherwise, it doesn't bother you.",
