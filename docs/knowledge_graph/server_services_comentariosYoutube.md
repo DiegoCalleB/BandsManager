@@ -24,6 +24,7 @@ Comentarios más relevantes de un vídeo de YouTube, para sacar las marcas de ti
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_services_interesDelPublico|server/services/interesDelPublico.ts]] *(from #service)*
+- [[server_utils_informeSenalesPublico|server/utils/informeSenalesPublico.ts]] *(from #service)*
 
 ---
 

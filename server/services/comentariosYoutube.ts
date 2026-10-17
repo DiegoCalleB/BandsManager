@@ -13,11 +13,20 @@ export interface ComentarioVideo {
   likes: number;
 }
 
-interface RespuestaComentarios {
+export interface RespuestaComentarios {
   items?: Array<{ snippet?: { topLevelComment?: { snippet?: { textDisplay?: string; textOriginal?: string; likeCount?: number } } } }>;
 }
 
 const TIMEOUT_MS = 6_000;
+
+/** Comentarios de una respuesta de `commentThreads` de la Data API. Pura: también la usa el script de pruebas. */
+export function comentariosDeRespuesta(j: RespuestaComentarios | null | undefined): ComentarioVideo[] {
+  return (j?.items ?? []).flatMap((i) => {
+    const c = i.snippet?.topLevelComment?.snippet;
+    const texto = String(c?.textOriginal ?? c?.textDisplay ?? "");
+    return texto ? [{ texto, likes: Number(c?.likeCount) || 0 }] : [];
+  });
+}
 
 export async function comentariosDelVideo(videoId: string, fetchFn: typeof fetch = fetch): Promise<ComentarioVideo[]> {
   const clave = (process.env.YOUTUBE_API_KEY || process.env.YT_API_KEY || "").trim();
@@ -32,12 +41,7 @@ export async function comentariosDelVideo(videoId: string, fetchFn: typeof fetch
       console.log("[YouTube] Comentarios no disponibles (HTTP %s) para %s", res.status, videoId);
       return [];
     }
-    const j = (await res.json()) as RespuestaComentarios;
-    return (j.items ?? []).flatMap((i) => {
-      const c = i.snippet?.topLevelComment?.snippet;
-      const texto = String(c?.textOriginal ?? c?.textDisplay ?? "");
-      return texto ? [{ texto, likes: Number(c?.likeCount) || 0 }] : [];
-    });
+    return comentariosDeRespuesta((await res.json()) as RespuestaComentarios);
   } catch (e) {
     console.log("[YouTube] No se pudieron leer los comentarios de %s:", videoId, comoErrorCapturado(e).message);
     return [];
