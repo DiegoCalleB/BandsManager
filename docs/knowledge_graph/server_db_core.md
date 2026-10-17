@@ -13,7 +13,7 @@ tags: ["db", "system", "auto"]
 > **Capa:** `#layer/db` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: rolDeClaveSupabase, getSupabase, normalizePlan, cleanBandId.
+Exporta: rolDeClaveSupabase, esSupabaseNoConfigurado, getSupabase, normalizePlan, cleanBandId.
 
 ---
 
@@ -90,6 +90,7 @@ Exporta: rolDeClaveSupabase, getSupabase, normalizePlan, cleanBandId.
 
 ## 🧪 Tests que lo cubren
 - `server/db/__tests__/core.test.ts`
+- `server/db/__tests__/esSupabaseNoConfigurado.test.ts`
 - `server/db/__tests__/rolClaveSupabase.test.ts`
 - `server/routes/__tests__/billing.test.ts`
 - `server/routes/__tests__/buildAvailableBandsForUser.test.ts`

@@ -73,7 +73,7 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 
 ## 🤖 Mapa automático (generado desde los imports reales)
 
-1669 nodos: 53 agent · 48 db · 12 external · 14 feature · 942 frontend · 43 hook · 89 route · 65 schema · 12 security · 391 service.
+1670 nodos: 53 agent · 48 db · 12 external · 14 feature · 942 frontend · 43 hook · 89 route · 65 schema · 12 security · 392 service.
 No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el test `grafoConocimiento` falla si queda desfasado.
 
 ### 🔥 Los 20 ficheros más importados
@@ -86,7 +86,7 @@ No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el t
 - [[tabla_registered_bands|tabla registered_bands]] — 70 ficheros dependen de él
 - [[db_state_sync|In-Memory State & Supabase Sync]] — 68 ficheros dependen de él
 - [[server_db_core|server/db/core.ts]] — 62 ficheros dependen de él
-- [[sec_trust_boundary|Trust Boundary & Band Scoping]] — 57 ficheros dependen de él
+- [[sec_trust_boundary|Trust Boundary & Band Scoping]] — 58 ficheros dependen de él
 - [[server_db|server/db.ts]] — 51 ficheros dependen de él
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] — 49 ficheros dependen de él
 - [[server_ai|server/ai.ts]] — 45 ficheros dependen de él

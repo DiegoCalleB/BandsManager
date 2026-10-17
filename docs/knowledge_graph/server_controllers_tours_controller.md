@@ -22,6 +22,7 @@ Exporta: toursController.
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
 - [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_estadoPorBanda|server/utils/estadoPorBanda.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
@@ -30,6 +31,11 @@ Exporta: toursController.
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_gira|Tour Manager]] *(from #feature)*
 - [[server_routes_tours|server/routes/tours.ts]] *(from #route)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/controllers/__tests__/tours.controller.test.ts`
 
 ---
 
