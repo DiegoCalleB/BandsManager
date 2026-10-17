@@ -4,7 +4,7 @@
  */
 import React, { Dispatch, SetStateAction } from "react";
 import type { User } from "../../../types";
-import type { ChatAutonomyConfig, ChatMessage, ProposedAction } from "../chatTypes";
+import type { ChatMessage, ProposedAction } from "../chatTypes";
 import { leerTokenDeSesion } from '../../../services/sesionLocal';
 
 
@@ -18,8 +18,6 @@ export interface ChatSendParams {
   currentUser: User;
   userRole: string;
   messages: ChatMessage[];
-  agentsEnabled: boolean;
-  autonomyConfig: ChatAutonomyConfig;
 }
 
 /**
@@ -27,7 +25,7 @@ export interface ChatSendParams {
  * @param params Estado y callbacks del contenedor ({@link ChatSendParams}).
  * @returns Estado derivado y handlers expuestos al contenedor.
  */
-export function useChatSend({ inputText, isLoading, setInputText, setMessages, setIsLoading, currentUser, userRole, messages, agentsEnabled, autonomyConfig }: ChatSendParams) {
+export function useChatSend({ inputText, isLoading, setInputText, setMessages, setIsLoading, currentUser, userRole, messages }: ChatSendParams) {
   const handleSendMessage = async (e: React.FormEvent | React.KeyboardEvent) => {
     e.preventDefault();
     if (!inputText.trim() || isLoading) return;
@@ -62,9 +60,7 @@ export function useChatSend({ inputText, isLoading, setInputText, setMessages, s
           message: userMsgText,
           chatHistory: messages.slice(-8).map((m) => ({ sender: m.sender, text: m.text })),
           userRole: userRole || 'member',
-          agentsEnabled: agentsEnabled,
           band_id: activeBandId,
-          autonomyConfig,
         }),
       });
 

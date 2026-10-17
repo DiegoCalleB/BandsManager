@@ -26,6 +26,7 @@ Orquestación de los agentes de booking: disparo manual/cron (`/trigger-agent`),
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
+- [[server_routes_agentePermisos|server/routes/agentePermisos.ts]] *(Layer: #agent, Domain: #system)*
 - [[server_routes_leads|server/routes/leads.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_routes_leads_places|server/routes/leads/places.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_routes_leads_tiposScout|server/routes/leads/tiposScout.ts]] *(Layer: #route, Domain: #booking)*

@@ -2,7 +2,7 @@
 
 > Generado automáticamente por `scripts/generate-openapi.mjs` a partir del código. No se edita a mano: ejecuta `npm run docs:api`.
 
-**369 rutas HTTP** (318 declaraciones de handler; el resto son alias) en 31 dominios. Contrato máquina-legible: [`openapi.json`](./openapi.json) (OpenAPI 3.1). Visor interactivo: [`index.html`](./index.html) (hay que abrirlo en un navegador; GitHub no lo renderiza). Decisión de diseño: [ADR 0012](../adr/0012-contrato-api-openapi-por-ast.md).
+**370 rutas HTTP** (319 declaraciones de handler; el resto son alias) en 31 dominios. Contrato máquina-legible: [`openapi.json`](./openapi.json) (OpenAPI 3.1). Visor interactivo: [`index.html`](./index.html) (hay que abrirlo en un navegador; GitHub no lo renderiza). Decisión de diseño: [ADR 0012](../adr/0012-contrato-api-openapi-por-ast.md).
 
 ## Cómo leerla
 
@@ -16,7 +16,7 @@
 | Sesión (comprobada en el handler) | 6 |
 | Sesión opcional | 3 |
 | Firma o secreto | 7 |
-| Pública | 31 |
+| Pública | 32 |
 
 ## Rutas sin sesión de middleware
 
@@ -51,6 +51,7 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `POST` | `/api/public/deals/{token}/sign` | Pública | — | ★ | [`server/routes/deals.ts:307`](../../server/routes/deals.ts#L307) |
 | `GET` | `/api/public/epk` | Pública | — |  | [`server/routes/epk_fans.ts:462`](../../server/routes/epk_fans.ts#L462) |
 | `POST` | `/api/public/fans` | Pública | publicoRateLimiter | ★ | [`server/routes/epk_fans.ts:867`](../../server/routes/epk_fans.ts#L867) |
+| `GET` | `/api/public/fans/contador` | Pública | publicoRateLimiter |  | [`server/routes/fans_contador.ts:13`](../../server/routes/fans_contador.ts#L13) |
 | `GET` | `/api/public/insignia` | Pública | publicoRateLimiter |  | [`server/routes/referidos.ts:76`](../../server/routes/referidos.ts#L76) |
 | `POST` | `/api/public/musicians-waitlist` | Pública | publicoRateLimiter |  | [`server/routes/epk_fans.ts:1113`](../../server/routes/epk_fans.ts#L1113) |
 | `POST` | `/api/public/track-click` | Pública | publicoRateLimiter |  | [`server/routes/epk_fans.ts:979`](../../server/routes/epk_fans.ts#L979) |
@@ -64,12 +65,12 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `GET` | `/api/tracking/pdf` | Pública | — |  | [`server/routes/tracking.ts:328`](../../server/routes/tracking.ts#L328) |
 | `POST` | `/api/webhooks/replicate-stems` | Firma o secreto | webhookRateLimiter |  | [`server/routes/ai_music/rutasWebhooks.ts:17`](../../server/routes/ai_music/rutasWebhooks.ts#L17) |
 | `POST` | `/api/webhooks/resend` | Firma o secreto | publicoRateLimiter |  | [`server/routes/tracking.ts:464`](../../server/routes/tracking.ts#L464) |
-| `GET` | `/e/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:44`](../../server/routes/paginaConcierto.ts#L44) |
+| `GET` | `/e/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:46`](../../server/routes/paginaConcierto.ts#L46) |
 | `GET` | `/health` | Pública | — |  | [`server.ts:168`](../../server.ts#L168) |
 | `GET` | `/privacy` | Pública | — |  | [`server.ts:182`](../../server.ts#L182) |
 | `GET` | `/r/{code}` | Pública | publicoRateLimiter |  | [`server/routes/enlacesCortos.ts:49`](../../server/routes/enlacesCortos.ts#L49) |
-| `GET` | `/robots.txt` | Pública | — |  | [`server/routes/paginaConcierto.ts:159`](../../server/routes/paginaConcierto.ts#L159) |
-| `GET` | `/sitemap.xml` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:141`](../../server/routes/paginaConcierto.ts#L141) |
+| `GET` | `/robots.txt` | Pública | — |  | [`server/routes/paginaConcierto.ts:161`](../../server/routes/paginaConcierto.ts#L161) |
+| `GET` | `/sitemap.xml` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:143`](../../server/routes/paginaConcierto.ts#L143) |
 | `GET` | `/terms` | Pública | — |  | [`server.ts:224`](../../server.ts#L224) |
 
 ## Operaciones con esquema documentado
@@ -97,7 +98,7 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `POST` | `/api/agents/test-intel` | Sesión | — |  | [`server/routes/agent.ts:975`](../../server/routes/agent.ts#L975) |
 | `POST` | `/api/internal/agents/responder-hilo` | Sesión | — |  | [`server/routes/agent.ts:932`](../../server/routes/agent.ts#L932) |
 | `POST` | `/api/reset` | Sesión + líder | — |  | [`server/routes/agent.ts:1179`](../../server/routes/agent.ts#L1179) |
-| `POST` | `/api/trigger-agent` | Sesión | — |  | [`server/routes/agent.ts:98`](../../server/routes/agent.ts#L98) |
+| `POST` | `/api/trigger-agent` | Sesión | — |  | [`server/routes/agent.ts:99`](../../server/routes/agent.ts#L99) |
 
 ### agentQueue
 
@@ -112,13 +113,13 @@ Son las que un revisor de seguridad querrá mirar primero.
 
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
-| `POST` | `/api/ai-generate-instrument-track` | Sesión | iaRateLimiter |  | [`server/routes/ai_music/rutasGeneracion.ts:120`](../../server/routes/ai_music/rutasGeneracion.ts#L120) |
-| `POST` | `/api/ai-stem-separation` | Sesión | iaRateLimiter |  | [`server/routes/ai_music/rutaSeparacion.ts:119`](../../server/routes/ai_music/rutaSeparacion.ts#L119) |
+| `POST` | `/api/ai-generate-instrument-track` | Sesión | iaRateLimiter |  | [`server/routes/ai_music/rutasGeneracion.ts:121`](../../server/routes/ai_music/rutasGeneracion.ts#L121) |
+| `POST` | `/api/ai-stem-separation` | Sesión | iaRateLimiter |  | [`server/routes/ai_music/rutaSeparacion.ts:120`](../../server/routes/ai_music/rutaSeparacion.ts#L120) |
 | `GET` | `/api/ai-stem-separation/fal-diagnostic` | Sesión | — |  | [`server/routes/ai_music/rutasEstadoStems.ts:112`](../../server/routes/ai_music/rutasEstadoStems.ts#L112) |
 | `GET` | `/api/ai-stem-separation/status` | Sesión | — |  | [`server/routes/ai_music/rutasEstadoStems.ts:20`](../../server/routes/ai_music/rutasEstadoStems.ts#L20) |
 | `POST` | `/api/api/webhooks/replicate-stems` | Firma o secreto | webhookRateLimiter |  | [`server/routes/ai_music/rutasWebhooks.ts:17`](../../server/routes/ai_music/rutasWebhooks.ts#L17) |
-| `POST` | `/api/generate` | Sesión | iaRateLimiter |  | [`server/routes/ai_music/rutasGeneracion.ts:20`](../../server/routes/ai_music/rutasGeneracion.ts#L20) |
-| `POST` | `/api/generate-music` | Sesión | iaRateLimiter |  | [`server/routes/ai_music/rutasGeneracion.ts:20`](../../server/routes/ai_music/rutasGeneracion.ts#L20) |
+| `POST` | `/api/generate` | Sesión | iaRateLimiter |  | [`server/routes/ai_music/rutasGeneracion.ts:21`](../../server/routes/ai_music/rutasGeneracion.ts#L21) |
+| `POST` | `/api/generate-music` | Sesión | iaRateLimiter |  | [`server/routes/ai_music/rutasGeneracion.ts:21`](../../server/routes/ai_music/rutasGeneracion.ts#L21) |
 | `POST` | `/api/webhooks/replicate-stems` | Firma o secreto | webhookRateLimiter |  | [`server/routes/ai_music/rutasWebhooks.ts:17`](../../server/routes/ai_music/rutasWebhooks.ts#L17) |
 
 ### bandMusic
@@ -210,7 +211,7 @@ Son las que un revisor de seguridad querrá mirar primero.
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
 | `POST` | `/api/chat` | Sesión | chatRateLimiter |  | [`server/routes/chat.ts:30`](../../server/routes/chat.ts#L30) |
-| `POST` | `/api/write-reels-copy` | Sesión | iaRateLimiter |  | [`server/routes/chat.ts:641`](../../server/routes/chat.ts#L641) |
+| `POST` | `/api/write-reels-copy` | Sesión | iaRateLimiter |  | [`server/routes/chat.ts:640`](../../server/routes/chat.ts#L640) |
 
 ### concert_to_album
 
@@ -324,7 +325,7 @@ Salas, festivales y contactos del CRM de booking. Los agentes (Scout, Redactor, 
 
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
-| `GET` | `/api/ai/providers` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/leads/crud.ts:26`](../../server/routes/leads/crud.ts#L26) |
+| `GET` | `/api/ai/providers` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/leads/crud.ts:27`](../../server/routes/leads/crud.ts#L27) |
 | `POST` | `/api/batch-enrich-campaign` | Sesión | enriquecimientoRateLimiter |  | [`server/routes/leads/enrichment.ts:953`](../../server/routes/leads/enrichment.ts#L953) |
 | `POST` | `/api/campaign-mass-search` | Sesión | — |  | [`server/routes/leads/places.ts:412`](../../server/routes/leads/places.ts#L412) |
 | `POST` | `/api/detect-all-dates` | Sesión | enriquecimientoRateLimiter |  | [`server/routes/leads/enrichment.ts:876`](../../server/routes/leads/enrichment.ts#L876) |
@@ -336,12 +337,12 @@ Salas, festivales y contactos del CRM de booking. Los agentes (Scout, Redactor, 
 | `POST` | `/api/generate-simulated-email` | Sesión | — |  | [`server/routes/leads/simulation.ts:10`](../../server/routes/leads/simulation.ts#L10) |
 | `POST` | `/api/import-excel` | Sesión | — |  | [`server/routes/leads/import.ts:14`](../../server/routes/leads/import.ts#L14) |
 | `POST` | `/api/import-places` | Sesión | — |  | [`server/routes/leads/places.ts:951`](../../server/routes/leads/places.ts#L951) |
-| `GET` | `/api/leads` | Sesión | apiAutenticadaRateLimiter | ★ | [`server/routes/leads/crud.ts:43`](../../server/routes/leads/crud.ts#L43) |
-| `POST` | `/api/leads` | Sesión | apiAutenticadaRateLimiter | ★ | [`server/routes/leads/crud.ts:210`](../../server/routes/leads/crud.ts#L210) |
+| `GET` | `/api/leads` | Sesión | apiAutenticadaRateLimiter | ★ | [`server/routes/leads/crud.ts:44`](../../server/routes/leads/crud.ts#L44) |
+| `POST` | `/api/leads` | Sesión | apiAutenticadaRateLimiter | ★ | [`server/routes/leads/crud.ts:217`](../../server/routes/leads/crud.ts#L217) |
 | `POST` | `/api/leads/ai-lookup` | Sesión | enriquecimientoRateLimiter |  | [`server/routes/leads/enrichment.ts:217`](../../server/routes/leads/enrichment.ts#L217) |
 | `POST` | `/api/leads/audit-pitch` | Sesión | — |  | [`server/routes/leads/pitch.ts:16`](../../server/routes/leads/pitch.ts#L16) |
 | `POST` | `/api/leads/batch-enrich-campaign` | Sesión | enriquecimientoRateLimiter |  | [`server/routes/leads/enrichment.ts:953`](../../server/routes/leads/enrichment.ts#L953) |
-| `POST` | `/api/leads/bulk-delete` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/leads/crud.ts:342`](../../server/routes/leads/crud.ts#L342) |
+| `POST` | `/api/leads/bulk-delete` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/leads/crud.ts:353`](../../server/routes/leads/crud.ts#L353) |
 | `POST` | `/api/leads/campaign-mass-search` | Sesión | — |  | [`server/routes/leads/places.ts:412`](../../server/routes/leads/places.ts#L412) |
 | `POST` | `/api/leads/detect-all-dates` | Sesión | enriquecimientoRateLimiter |  | [`server/routes/leads/enrichment.ts:876`](../../server/routes/leads/enrichment.ts#L876) |
 | `POST` | `/api/leads/enrich-addresses` | Sesión | enriquecimientoRateLimiter |  | [`server/routes/leads/enrichment.ts:618`](../../server/routes/leads/enrichment.ts#L618) |
@@ -352,12 +353,12 @@ Salas, festivales y contactos del CRM de booking. Los agentes (Scout, Redactor, 
 | `POST` | `/api/leads/multi-source-venues` | Sesión | — |  | [`server/routes/leads/places.ts:1105`](../../server/routes/leads/places.ts#L1105) |
 | `POST` | `/api/leads/places-search` | Sesión | — |  | [`server/routes/leads/places.ts:39`](../../server/routes/leads/places.ts#L39) |
 | `POST` | `/api/leads/public-cultural-radar` | Sesión | — |  | [`server/routes/leads/places.ts:1163`](../../server/routes/leads/places.ts#L1163) |
-| `POST` | `/api/leads/realign-headers` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/leads/crud.ts:38`](../../server/routes/leads/crud.ts#L38) |
+| `POST` | `/api/leads/realign-headers` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/leads/crud.ts:39`](../../server/routes/leads/crud.ts#L39) |
 | `POST` | `/api/leads/similar-artists-venues` | Sesión | — |  | [`server/routes/leads/places.ts:1127`](../../server/routes/leads/places.ts#L1127) |
 | `POST` | `/api/leads/train-tone-dna` | Sesión | — |  | [`server/routes/leads/pitch.ts:162`](../../server/routes/leads/pitch.ts#L162) |
-| `GET` | `/api/leads/{id}` | Sesión | apiAutenticadaRateLimiter | ★ | [`server/routes/leads/crud.ts:104`](../../server/routes/leads/crud.ts#L104) |
-| `PUT` | `/api/leads/{id}` | Sesión | apiAutenticadaRateLimiter | ★ | [`server/routes/leads/crud.ts:139`](../../server/routes/leads/crud.ts#L139) |
-| `DELETE` | `/api/leads/{id}` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/leads/crud.ts:368`](../../server/routes/leads/crud.ts#L368) |
+| `GET` | `/api/leads/{id}` | Sesión | apiAutenticadaRateLimiter | ★ | [`server/routes/leads/crud.ts:105`](../../server/routes/leads/crud.ts#L105) |
+| `PUT` | `/api/leads/{id}` | Sesión | apiAutenticadaRateLimiter | ★ | [`server/routes/leads/crud.ts:140`](../../server/routes/leads/crud.ts#L140) |
+| `DELETE` | `/api/leads/{id}` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/leads/crud.ts:379`](../../server/routes/leads/crud.ts#L379) |
 | `POST` | `/api/leads/{id}/analyze-sentiment` | Sesión | — |  | [`server/routes/leads/reply.ts:76`](../../server/routes/leads/reply.ts#L76) |
 | `POST` | `/api/leads/{id}/calculate-break-even` | Sesión | enriquecimientoRateLimiter |  | [`server/routes/leads/enrichment.ts:1533`](../../server/routes/leads/enrichment.ts#L1533) |
 | `POST` | `/api/leads/{id}/detect-dates` | Sesión | enriquecimientoRateLimiter |  | [`server/routes/leads/enrichment.ts:825`](../../server/routes/leads/enrichment.ts#L825) |
@@ -375,7 +376,7 @@ Salas, festivales y contactos del CRM de booking. Los agentes (Scout, Redactor, 
 | `POST` | `/api/leads/{id}/enrich-spotify` | Sesión | enriquecimientoRateLimiter |  | [`server/routes/leads/enrichment.ts:1106`](../../server/routes/leads/enrichment.ts#L1106) |
 | `POST` | `/api/leads/{id}/generate-multi-pitch` | Sesión | — |  | [`server/routes/leads/pitch.ts:35`](../../server/routes/leads/pitch.ts#L35) |
 | `POST` | `/api/leads/{id}/generate-reply` | Sesión | — |  | [`server/routes/leads/reply.ts:20`](../../server/routes/leads/reply.ts#L20) |
-| `GET` | `/api/leads/{id}/messages` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/leads/crud.ts:125`](../../server/routes/leads/crud.ts#L125) |
+| `GET` | `/api/leads/{id}/messages` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/leads/crud.ts:126`](../../server/routes/leads/crud.ts#L126) |
 | `POST` | `/api/leads/{id}/regenerate-pitch` | Sesión | — |  | [`server/routes/leads/pitch.ts:66`](../../server/routes/leads/pitch.ts#L66) |
 | `POST` | `/api/leads/{id}/regenerate-reply` | Sesión | — |  | [`server/routes/leads/reply.ts:156`](../../server/routes/leads/reply.ts#L156) |
 | `POST` | `/api/leads/{id}/revert-pitch` | Sesión | — |  | [`server/routes/leads/pitch.ts:101`](../../server/routes/leads/pitch.ts#L101) |
@@ -432,9 +433,10 @@ Salas, festivales y contactos del CRM de booking. Los agentes (Scout, Redactor, 
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
 | `GET` | `/api/emails/baja` | Pública | publicoRateLimiter |  | [`server/routes/emailsCicloVida.ts:13`](../../server/routes/emailsCicloVida.ts#L13) |
-| `GET` | `/e/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:44`](../../server/routes/paginaConcierto.ts#L44) |
-| `GET` | `/robots.txt` | Pública | — |  | [`server/routes/paginaConcierto.ts:159`](../../server/routes/paginaConcierto.ts#L159) |
-| `GET` | `/sitemap.xml` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:141`](../../server/routes/paginaConcierto.ts#L141) |
+| `GET` | `/api/public/fans/contador` | Pública | publicoRateLimiter |  | [`server/routes/fans_contador.ts:13`](../../server/routes/fans_contador.ts#L13) |
+| `GET` | `/e/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:46`](../../server/routes/paginaConcierto.ts#L46) |
+| `GET` | `/robots.txt` | Pública | — |  | [`server/routes/paginaConcierto.ts:161`](../../server/routes/paginaConcierto.ts#L161) |
+| `GET` | `/sitemap.xml` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:143`](../../server/routes/paginaConcierto.ts#L143) |
 
 ### posts
 
@@ -565,8 +567,8 @@ Salud del servicio, estado de la sesión y páginas legales servidas por server.
 
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
-| `POST` | `/api/transpose-audio` | Sesión | — |  | [`server/routes/transposeRoute.ts:12`](../../server/routes/transposeRoute.ts#L12) |
-| `POST` | `/transpose-audio` | Sesión | — |  | [`server/routes/transposeRoute.ts:12`](../../server/routes/transposeRoute.ts#L12) |
+| `POST` | `/api/transpose-audio` | Sesión | — |  | [`server/routes/transposeRoute.ts:13`](../../server/routes/transposeRoute.ts#L13) |
+| `POST` | `/transpose-audio` | Sesión | — |  | [`server/routes/transposeRoute.ts:13`](../../server/routes/transposeRoute.ts#L13) |
 
 ### upload
 
