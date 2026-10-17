@@ -6,6 +6,7 @@ const db = vi.hoisted(() => ({
   tomadas: new Map<string, number[]>(),
   guardadas: [] as Array<{ fila: Record<string, unknown>; bandId: string }>,
   ultimas: [] as Array<Record<string, unknown>>,
+  textos: new Map<string, string>(),
   cred: { token: "EAA", igUserId: "1" } as null | { token: string; igUserId: string },
   insights: vi.fn()
 }));
@@ -13,13 +14,14 @@ vi.mock("../../db/reelMetricas.js", () => ({
   dbPostsPublicadosRecientes: async () => db.posts,
   dbMedicionesTomadas: async () => db.tomadas,
   dbGuardarMetricaReel: async (fila: Record<string, unknown>, bandId: string) => { db.guardadas.push({ fila, bandId }); },
-  dbUltimasMetricasDeBanda: async () => db.ultimas
+  dbUltimasMetricasDeBanda: async () => db.ultimas,
+  dbTextosDePosts: async () => db.textos
 }));
 vi.mock("../../db/reelClips.js", () => ({ dbBuscarReelClip: async () => ({ duracion_seg: 11.6, loop_perfecto: true }) }));
 vi.mock("../credencialesInstagram.js", () => ({ credencialesInstagram: async () => db.cred }));
 vi.mock("../publicadores/instagramInsights.js", () => ({ leerInsightsReel: db.insights }));
 
-const { tickMetricas, aprendizajeDeBanda, reelMedidoDe } = await import("../metricasReels.js");
+const { tickMetricas, aprendizajeDeBanda, resumenSemanalDeBanda, reelMedidoDe } = await import("../metricasReels.js");
 
 const post = (p: Partial<SocialPost> = {}): SocialPost => ({
   id: "p1", band_id: "band-a", fecha: "2026-10-10", plataforma: "Instagram", contenido: "", estado: "publicado", responsable: "",
@@ -76,5 +78,17 @@ describe("aprendizaje", () => {
     expect(a.resumen.reelsMedidos).toBe(4);
     expect(a.resumen.rewatchMediano).toBeCloseTo(1.8, 5);
     expect(a.recomendacion).toMatchObject({ modo: "aprovechando", formato: "loop_corto" });
+  });
+});
+
+describe("resumen semanal", () => {
+  it("junta métricas, textos y recomendación: solo cuenta lo medido esta semana", async () => {
+    const fila = (id: string, avg: number, medido: string) => ({ post_id: id, duracion_seg: 10, loop_perfecto: true, avg_watch_ms: avg, reach: 1000, shares: 20, saves: 5, views: 3000, medido_en: medido });
+    db.ultimas = [fila("a", 18_000, "2026-10-15T10:00:00Z"), fila("b", 25_000, "2026-10-16T10:00:00Z"), fila("viejo", 30_000, "2026-08-01T10:00:00Z")];
+    db.textos = new Map([["a", "Directo en Sala X"], ["b", "Ensayo con la furgo"]]);
+    const r = await resumenSemanalDeBanda("band-a", new Date("2026-10-17T10:00:00Z"), () => 0.5);
+    expect(r.reelsMedidos).toBe(2);
+    expect(r.mejores.map((m) => [m.postId, m.texto])).toEqual([["b", "Ensayo con la furgo"], ["a", "Directo en Sala X"]]);
+    expect(r.patron).toMatch(/loop corto/);
   });
 });

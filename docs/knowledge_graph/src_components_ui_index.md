@@ -291,6 +291,7 @@ BandManager UI Component Library
 - [[src_components_reels_center_EditorActions|src/components/reels_center/EditorActions.tsx]] *(from #frontend)*
 - [[src_components_reels_center_PublicationsCalendar|src/components/reels_center/PublicationsCalendar.tsx]] *(from #frontend)*
 - [[src_components_reels_center_ReelsCenterHeader|src/components/reels_center/ReelsCenterHeader.tsx]] *(from #frontend)*
+- [[src_components_reels_center_RevisionFinalDialog|src/components/reels_center/RevisionFinalDialog.tsx]] *(from #frontend)*
 - [[src_components_reels_center_SchedulerInputs|src/components/reels_center/SchedulerInputs.tsx]] *(from #frontend)*
 - [[src_components_reels_center_SoulWriterCard|src/components/reels_center/SoulWriterCard.tsx]] *(from #frontend)*
 - [[src_components_reels_center_VideoInputArea|src/components/reels_center/VideoInputArea.tsx]] *(from #frontend)*

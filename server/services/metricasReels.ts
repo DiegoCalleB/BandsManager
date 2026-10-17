@@ -5,7 +5,7 @@
  * medición (1 h, 24 h, 72 h, 7 días), lee sus insights con el token de SU banda y la guarda.
  * La duración y el loop del clip se copian al medir para que el aprendizaje lea una sola tabla.
  */
-import { dbPostsPublicadosRecientes, dbMedicionesTomadas, dbGuardarMetricaReel, dbUltimasMetricasDeBanda, type FilaMetricaReel } from "../db/reelMetricas.js";
+import { dbPostsPublicadosRecientes, dbMedicionesTomadas, dbGuardarMetricaReel, dbUltimasMetricasDeBanda, dbTextosDePosts, type FilaMetricaReel } from "../db/reelMetricas.js";
 import { dbBuscarReelClip } from "../db/reelClips.js";
 import { cleanBandId } from "../db/core.js";
 import { credencialesInstagram } from "./credencialesInstagram.js";
@@ -20,6 +20,7 @@ import {
   type Recomendacion,
   type ResumenAprendizaje
 } from "../utils/aprendizajeReels.js";
+import { resumenSemanal, type ResumenSemanal, type ReelSemana } from "../utils/resumenSemanalReels.js";
 import { captureError } from "../utils/errorTracking.js";
 import type { SocialPost } from "../../src/types.js";
 
@@ -114,4 +115,24 @@ export interface AprendizajeBanda {
 export async function aprendizajeDeBanda(bandId: string, rng: () => number = Math.random): Promise<AprendizajeBanda> {
   const historial = (await dbUltimasMetricasDeBanda(bandId)).map(reelMedidoDe).filter((r): r is ReelMedido => r !== null);
   return { resumen: resumirAprendizaje(historial), recomendacion: recomendarFormato(historial, rng) };
+}
+
+export async function resumenSemanalDeBanda(bandId: string, ahora = new Date(), rng: () => number = Math.random): Promise<ResumenSemanal> {
+  const filas = await dbUltimasMetricasDeBanda(bandId);
+  const medidos = filas.flatMap((f) => {
+    const m = reelMedidoDe(f);
+    return m && f.medido_en ? [{ f, m }] : [];
+  });
+  const textos = await dbTextosDePosts(bandId, medidos.map(({ f }) => f.post_id));
+  const reels: ReelSemana[] = medidos.map(({ f, m }) => ({
+    postId: f.post_id,
+    texto: textos.get(f.post_id) || "Reel sin texto",
+    medidoEn: f.medido_en as string,
+    formato: m.formato,
+    rewatch: m.rewatch,
+    tasaCompartir: m.tasaCompartir,
+    tasaGuardar: m.tasaGuardar
+  }));
+  const recomendacion = recomendarFormato(medidos.map(({ m }) => m), rng);
+  return resumenSemanal(reels, recomendacion, ahora);
 }

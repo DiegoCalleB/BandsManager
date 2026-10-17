@@ -2,7 +2,7 @@
 
 > Generado automáticamente por `scripts/generate-openapi.mjs` a partir del código. No se edita a mano: ejecuta `npm run docs:api`.
 
-**374 rutas HTTP** (323 declaraciones de handler; el resto son alias) en 31 dominios. Contrato máquina-legible: [`openapi.json`](./openapi.json) (OpenAPI 3.1). Visor interactivo: [`index.html`](./index.html) (hay que abrirlo en un navegador; GitHub no lo renderiza). Decisión de diseño: [ADR 0012](../adr/0012-contrato-api-openapi-por-ast.md).
+**375 rutas HTTP** (324 declaraciones de handler; el resto son alias) en 31 dominios. Contrato máquina-legible: [`openapi.json`](./openapi.json) (OpenAPI 3.1). Visor interactivo: [`index.html`](./index.html) (hay que abrirlo en un navegador; GitHub no lo renderiza). Decisión de diseño: [ADR 0012](../adr/0012-contrato-api-openapi-por-ast.md).
 
 ## Cómo leerla
 
@@ -12,7 +12,7 @@
 
 | Acceso | Rutas |
 |---|---|
-| Sesión | 326 |
+| Sesión | 327 |
 | Sesión (comprobada en el handler) | 6 |
 | Sesión opcional | 3 |
 | Firma o secreto | 7 |
@@ -471,6 +471,7 @@ Salas, festivales y contactos del CRM de booking. Los agentes (Scout, Redactor, 
 | `GET` | `/api/reels/aprendizaje` | Sesión | — |  | [`server/routes/reelsAprendizaje.ts:16`](../../server/routes/reelsAprendizaje.ts#L16) |
 | `POST` | `/api/reels/copy-perfecto` | Sesión | iaRateLimiter |  | [`server/routes/reelsTexto.ts:55`](../../server/routes/reelsTexto.ts#L55) |
 | `GET` | `/api/reels/proximo-hueco` | Sesión | — |  | [`server/routes/reelsProgramacion.ts:21`](../../server/routes/reelsProgramacion.ts#L21) |
+| `GET` | `/api/reels/resumen-semanal` | Sesión | — |  | [`server/routes/reelsAprendizaje.ts:29`](../../server/routes/reelsAprendizaje.ts#L29) |
 | `GET` | `/api/youtube-meta` | Sesión | — |  | [`server/routes/reels.ts:151`](../../server/routes/reels.ts#L151) |
 
 ### referidos
