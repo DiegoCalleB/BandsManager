@@ -9,7 +9,7 @@ import { previewDeBanda } from "../services/musicPreviewService.js";
 import { artistaSpotifyExiste, resolverUrlSpotifyDeBanda } from "../services/spotifyService.js";
 import { spotifyArtistId } from "../../src/utils/spotifyEmbed.js";
 import { estadoSpotifyBanda, planificarSpotifyBanda, PlanSpotifyBanda } from "../utils/spotifyMatch.js";
-import { periodoMensual } from "../utils/metricasBanda.js";
+import { periodoMensual, validarSeguidores } from "../utils/metricasBanda.js";
 import { capturarMetricasBanda, guardarMetricasBanda } from "../services/metricasBandaService.js";
 import { getSupabase } from "../db/core.js";
 import { cargarEnlacesDeContactos, guardarEnlace } from "../db/enlacesBandas.js";
@@ -170,6 +170,25 @@ router.post("/bands/metricas/actualizar", requireAuth, async (req, res) => {
   } catch (err) {
     console.error("[BandMusic] metricas/actualizar error:", err);
     res.status(500).json({ error: "No se pudieron actualizar las métricas." });
+  }
+});
+
+/**
+ * PUT /api/bands/:id/metricas/seguidores — anota a mano los seguidores de Spotify del mes.
+ * Spotify no entrega seguidores a esta app (modo desarrollo), así que se apuntan una vez al mes.
+ */
+router.put("/bands/:id/metricas/seguidores", requireAuth, async (req, res) => {
+  try {
+    const bandId = getTargetBandId(req);
+    const seguidores = validarSeguidores(req.body?.seguidores);
+    if (seguidores === null) return res.status(400).json({ error: "Los seguidores deben ser un número entero válido." });
+    const banda = ((await dbGetBandContacts(bandId)) as BandaCuenta[]).find((b) => b.id === req.params.id);
+    if (!banda) return res.status(404).json({ error: "Banda no encontrada." });
+    await guardarMetricasBanda({ id: banda.id, band_id: bandId }, periodoMensual(), [{ fuente: "spotify", seguidores }]);
+    res.json({ success: true, seguidores });
+  } catch (err) {
+    console.error("[BandMusic] seguidores manuales error:", err);
+    res.status(500).json({ error: "No se pudieron guardar los seguidores." });
   }
 });
 

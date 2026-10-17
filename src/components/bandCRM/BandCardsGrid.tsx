@@ -13,13 +13,14 @@ import { ActionMenu, Button } from "../ui";
 import { useBandCrm } from "./BandCrmContext";
 import { formatoCompacto } from "./bandMetrics";
 import { BandStatusBadge } from "./BandStatusBadge";
+import { SeguidoresSpotifyManual } from "./SeguidoresSpotifyManual";
 
 /**
  * Vista de tarjetas de las bandas con selección y acciones.
  * @returns Sección de interfaz.
  */
 export function BandCardsGrid() {
-  const { filteredBands, selectedBandIds, colors, handleToggleSelectBand, handleUpdateBandFavorite, metricas, disponibles, escuchar, setCustomPitchText, setSelectedPitchBand, setIsPitchModalOpen, handleAnalyzeTone, handleOpenEditModal, handleDeleteBand } = useBandCrm();
+  const { filteredBands, selectedBandIds, colors, handleToggleSelectBand, handleUpdateBandFavorite, metricas, disponibles, escuchar, cargarMetricas, setCustomPitchText, setSelectedPitchBand, setIsPitchModalOpen, handleAnalyzeTone, handleOpenEditModal, handleDeleteBand } = useBandCrm();
     return (
 
   /* GRID CARDS VIEW */
@@ -191,6 +192,8 @@ export function BandCardsGrid() {
                 <span className="text-[var(--ink-2)]">· {metricas[band.id].periodo}</span>
               </div>
             )}
+
+          <SeguidoresSpotifyManual bandId={band.id} actual={metricas[band.id]?.spotify?.seguidores} onGuardado={cargarMetricas} />
 
           {/* Card Footer Actions */}
           <div className="pt-3 space-y-3">

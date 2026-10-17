@@ -20,6 +20,7 @@ Vista de tarjetas de las bandas con selección y acciones.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_bandCRM_BandCrmContext|src/components/bandCRM/BandCrmContext.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_bandCRM_BandStatusBadge|src/components/bandCRM/BandStatusBadge.tsx]] *(Layer: #frontend, Domain: #booking)*
+- [[src_components_bandCRM_SeguidoresSpotifyManual|src/components/bandCRM/SeguidoresSpotifyManual.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_bandCRM_bandMetrics|src/components/bandCRM/bandMetrics.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_BandListenEmbed|src/components/booking/BandListenEmbed.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_common_FavoriteButton|src/components/common/FavoriteButton.tsx]] *(Layer: #frontend, Domain: #system)*
