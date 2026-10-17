@@ -390,9 +390,11 @@
   // ── Final de película (estilo Netflix): negro, la N y «Más como esta»; se para todo (voces, música y vídeos) ──
   var finEl = document.createElement('div'); finEl.id = 'nf-fin'; finEl.setAttribute('aria-hidden', 'true');
   finEl.innerHTML = '<span class="nff-n">N</span><p class="nff-t">Más como esta</p><div class="nff-fila"></div><button type="button" class="nff-otra">↺ Ver otra vez</button>'+
-    '<p class="nff-mus-t">Escucha las canciones</p><div class="nff-mus">'+
-    '<a href="audio/musica/compila.mp3" target="_blank" rel="noopener"><b>▶ Compila nu bravu</b><small>Os Herdeiros do Código</small></a>'+
-    '<a href="audio/musica/cabalga.mp3" target="_blank" rel="noopener"><b>▶ Cabalga o lóstrego</b><small>Master of Prompts</small></a></div>'+
+    '<p class="nff-mus-t">Escucha y descarga las canciones</p><div class="nff-mus">'+
+    '<div class="nff-can"><a href="audio/musica/compila.mp3" target="_blank" rel="noopener"><b>▶ Compila nu bravu</b><small>Os Herdeiros do Código</small></a>'+
+    '<a class="nff-dl" href="audio/musica/compila.mp3" download="Os Herdeiros do Código - Compila nu bravu.mp3">⬇ Descargar</a></div>'+
+    '<div class="nff-can"><a href="audio/musica/cabalga.mp3" target="_blank" rel="noopener"><b>▶ Cabalga o lóstrego</b><small>Master of Prompts</small></a>'+
+    '<a class="nff-dl" href="audio/musica/cabalga.mp3" download="Master of Prompts - Cabalga o lóstrego.mp3">⬇ Descargar</a></div></div>'+
     '<a class="nff-web" href="'+WEB+'" target="_blank" rel="noopener">Accede a tu perfil o crea tu banda → bandmanager.io</a>';
   if (stage) stage.appendChild(finEl);
   var ANEXO_FIN = ['Arquitectura', 'Cómo se construyó con IA', 'Seguridad', 'Calidad en cifras'];
