@@ -28,11 +28,13 @@ _Sin dependencias salientes directas._
 - [[src_components_cartel_hooks_useEditorCartel|src/components/cartel/hooks/useEditorCartel.ts]] *(from #frontend)*
 - [[src_utils_cartel_config|src/utils/cartel/config.ts]] *(from #service)*
 - [[src_utils_cartel_layout|src/utils/cartel/layout.ts]] *(from #service)*
+- [[src_utils_cartel_layoutBase|src/utils/cartel/layoutBase.ts]] *(from #service)*
 - [[src_utils_cartel_render|src/utils/cartel/render.ts]] *(from #service)*
 
 ---
 
 ## 🧪 Tests que lo cubren
+- `src/utils/cartel/__tests__/composiciones.test.ts`
 - `src/utils/cartel/__tests__/layout.test.ts`
 - `src/utils/cartel/__tests__/placas.test.ts`
 
