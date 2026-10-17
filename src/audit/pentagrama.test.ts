@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { duracionAcorde } from '../utils/relojAcorde';
-import { claveParaMidi, midiDeEscala, notaDeMidi, prefiereBemoles } from '../utils/pentagrama';
+import { claveDeVista, claveParaMidi, midiDeEscala, midiEscrito, notaDeMidi, prefiereBemoles } from '../utils/pentagrama';
 
 describe('pentagrama', () => {
   it('traduce MIDI a claves de VexFlow', () => {
@@ -13,6 +13,16 @@ describe('pentagrama', () => {
     expect(claveParaMidi([36])).toBe('bass');
     expect(claveParaMidi([48, 52, 55])).toBe('bass');
     expect(claveParaMidi([60, 64, 67])).toBe('treble');
+  });
+  it('la clave la fija el instrumento, no la altura', () => {
+    expect(claveDeVista('bajo')).toBe('bass');
+    expect(claveDeVista('teclado')).toBe('treble');
+    expect(claveDeVista('guitarra')).toBe('treble');
+  });
+  it('bajo y guitarra se escriben una octava por encima de lo que suenan', () => {
+    expect(midiEscrito([40, 43, 48], 'bajo')).toEqual([52, 55, 60]);
+    expect(midiEscrito([52, 59], 'guitarra')).toEqual([64, 71]);
+    expect(midiEscrito([48, 52, 55], 'teclado')).toEqual([48, 52, 55]);
   });
   it('escribe con bemoles las tonalidades de bemoles', () => {
     expect(prefiereBemoles('Bb')).toBe(true);
