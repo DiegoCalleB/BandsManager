@@ -250,5 +250,7 @@ window.SUBS_GL = {
 "¿De todo el mundo? ¿Hasta los de gaita?": "¿De todo o mundo? ¿Ata os da gaita?",
 "Sobre todo los de gaita, tío. Esos conocen a todo el mundo.": "Sobre todo os da gaita, tío. Eses coñecen a todo o mundo.",
 "Y con esta peli en Netflix, seguro que se la descargan todos los grupos de K-Pop.": "E con esta peli en Netflix, seguro que a descargan todos os grupos de K-Pop.",
-"¡Los de K-Pop! Trece miembros y una coreografía… imagínate cuadrar el calendario de ensayos, che.": "Os de K-Pop! Trece membros e unha coreografía… imaxina cadrar o calendario de ensaios, che."
+"¡Los de K-Pop! Trece miembros y una coreografía… imagínate cuadrar el calendario de ensayos, che.": "Os de K-Pop! Trece membros e unha coreografía… imaxina cadrar o calendario de ensaios, che.",
+"Oye, Iago, que mi primo jura que te vio en Miami. En un descapotable.": "Oe, Iago, que o meu curmán xura que te viu en Miami. Nun descapotable.",
+"Sin comentarios, Brais. Sin comentarios.": "Sen comentarios, Brais. Sen comentarios."
 };

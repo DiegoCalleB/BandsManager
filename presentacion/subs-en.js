@@ -252,5 +252,7 @@ window.SUBS_EN = {
 "¿Y eso es lo que hace que no nos hackeen?": "And is that what keeps us from getting hacked?",
 "Es una parte. Tú toca la guitarra, que de lo demás me encargo yo. Como siempre: el bajo sujetándolo todo.": "It's part of it. You play the guitar, I'll handle the rest. As always: the bass holding everything together.",
 "¡Madre mía! ¡Esto tiene más pruebas que en la época del Covid!": "Good grief! This has more tests than the Covid era!",
-"Más de dos mil. Y se ejecutan solos: en cada commit, en cada push. Y en producción, un control de salud y Séntri vigilando los errores. Como un roadie que nunca duerme.": "Over two thousand. And they run on their own: on every commit, on every push. And in production, a health check and Sentry watching for errors. Like a roadie who never sleeps."
+"Más de dos mil. Y se ejecutan solos: en cada commit, en cada push. Y en producción, un control de salud y Séntri vigilando los errores. Como un roadie que nunca duerme.": "Over two thousand. And they run on their own: on every commit, on every push. And in production, a health check and Sentry watching for errors. Like a roadie who never sleeps.",
+"Oye, Iago, que mi primo jura que te vio en Miami. En un descapotable.": "Hey, Iago, my cousin swears he saw you in Miami. In a convertible.",
+"Sin comentarios, Brais. Sin comentarios.": "No comment, Brais. No comment."
 };
