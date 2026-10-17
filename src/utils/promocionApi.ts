@@ -84,6 +84,13 @@ export const subirImagenCartel = (concertId: string, png: Blob) =>
 export const subirFotoCartel = (concertId: string, jpeg: Blob) =>
   apiFetch<{ url: string }>(rutaCartel(concertId, 'foto'), { method: 'POST', body: jpeg, headers: { 'Content-Type': 'image/jpeg' } });
 
+/** Un logo de otra banda del bolo (PNG ya reescalado): entra en la fila de logos del cartel. */
+export const subirLogoCartel = (concertId: string, png: Blob) =>
+  apiFetch<{ url: string; logos: string[] }>(rutaCartel(concertId, 'logo'), { method: 'POST', body: png, headers: { 'Content-Type': 'image/png' } });
+
+export const quitarLogoCartel = (concertId: string, url: string) =>
+  apiFetch<{ logos: string[] }>(rutaCartel(concertId, 'logo'), { method: 'DELETE', body: JSON.stringify({ url }) });
+
 export const obtenerAdnCartel = () => apiFetch<{ adn: AdnCartel }>('/api/cartel/adn');
 
 export const guardarAdnCartel = (adn: AdnCartel) =>

@@ -21,7 +21,7 @@ import { idSeguro } from '../utils/trackingSeguro.js';
 import { captureError } from '../utils/errorTracking.js';
 import { esConciertoPublicable } from '../utils/paginaConcierto.js';
 import { construirPromptFondo, esEstiloCartel } from '../utils/promptCartel.js';
-import { carpetaCartel, carpetaReferencias, esUrlDeCartel, nombreSeguro, referenciasHuerfanas, rutaIdea } from '../utils/cartelUrl.js';
+import { carpetaCartel, carpetaReferencias, esUrlDeCartel, nombreSeguro, referenciasHuerfanas, rutaDeUrlCartel, rutaIdea } from '../utils/cartelUrl.js';
 import { borrarDeAlmacenamiento, descargarDeAlmacenamiento, uploadBufferToSupabase } from '../utils/storage.js';
 import { validarMagicBytes } from './upload.js';
 import { generarFondoCartel } from '../services/imagenCartel.js';
@@ -30,7 +30,7 @@ import { construirBrief } from '../services/briefCartel.js';
 import { dbGetAdnCartel, dbGuardarAdnCartel } from '../db/cartelEstilo.js';
 import { isSpendCapOrQuotaError } from '../ai.js';
 import { loadBandProfile } from '../utils/bandProfile.js';
-import { CONFIG_INICIAL, conFondoIa, sanearConfigCartel, type CartelConfig } from '../../src/utils/cartel/config.js';
+import { CONFIG_INICIAL, MAX_LOGOS, conFondoIa, sanearConfigCartel, type CartelConfig } from '../../src/utils/cartel/config.js';
 import { FORMATOS } from '../../src/utils/cartel/formatos.js';
 import { conReferencia, referenciasParaIa, sanearAdn, type AdnCartel } from '../../src/utils/cartel/adn.js';
 import { IDEA_VACIA, sanearIdea } from '../../src/utils/cartel/idea.js';
@@ -40,6 +40,9 @@ export const cartelriaRouter = express.Router();
 const NO_PUBLICO = 'Este bolo no es público (es privado o está sin confirmar).';
 const subidaPng = express.raw({ type: 'image/png', limit: '6mb' });
 const subidaJpeg = express.raw({ type: 'image/jpeg', limit: '4mb' });
+/** Un logo es pequeño: el cliente lo reescala a 512 px; aquí se admite hasta 1024 px y 2 MB. */
+const subidaLogo = express.raw({ type: 'image/png', limit: '2mb' });
+const MAX_LADO_LOGO = 1024;
 
 /** Solo se aceptan carteles con las medidas exactas de un formato: nada de imágenes arbitrarias. */
 const MEDIDAS_VALIDAS = new Set(Object.values(FORMATOS).map((f) => `${f.ancho}x${Math.round(f.ancho * f.proporcion)}`));
@@ -218,6 +221,62 @@ cartelriaRouter.post('/cartel/:concertId/foto', requireAuth, ficherosRateLimiter
     res.json({ url });
   } catch (e) {
     fallo(res, 'POST /cartel/:concertId/foto', e, 'No se pudo guardar la foto.');
+  }
+});
+
+// ---------------------------------------------------------------------------------------------
+// Logos de las otras bandas del bolo
+// ---------------------------------------------------------------------------------------------
+
+cartelriaRouter.post('/cartel/:concertId/logo', requireAuth, ficherosRateLimiter, subidaLogo, async (req, res) => {
+  try {
+    const bolo = await boloDeLaBanda(req, res);
+    if (!bolo) return;
+
+    const buf = cuerpoBinario(req.body);
+    // El cliente reescala y recodifica siempre a PNG (conserva la transparencia): aquí no entra otra cosa.
+    if (!buf || !validarMagicBytes(buf, 'png')) return res.status(400).json({ error: 'Eso no es un PNG.' });
+    const medidas = medidasPng(buf);
+    if (!medidas || medidas.ancho < 1 || medidas.alto < 1 || medidas.ancho > MAX_LADO_LOGO || medidas.alto > MAX_LADO_LOGO) {
+      return res.status(400).json({ error: 'El logo es demasiado grande.' });
+    }
+
+    const config = configDe(bolo.concierto, bolo.bandId);
+    if (config.logos.length >= MAX_LOGOS) return res.status(409).json({ error: `Caben como mucho ${MAX_LOGOS} logos.` });
+
+    const url = await subir(buf, `${carpetaCartel(bolo.bandId)}${nombreSeguro(req.params.concertId)}-logo-${randomUUID().slice(0, 8)}.png`, 'image/png');
+    if (!url) return res.status(503).json({ error: 'No se pudo guardar el logo ahora mismo.' });
+    const logos = [...config.logos, url];
+    try {
+      await dbGuardarCartel(req.params.concertId, bolo.bandId, { cartel_config: { ...config, logos } });
+    } catch (e) {
+      // Sin la fila no hay quien lo use: no se deja el fichero huérfano.
+      const ruta = rutaDeUrlCartel(url, bolo.bandId);
+      if (ruta) await borrarDeAlmacenamiento([ruta]);
+      throw e;
+    }
+    res.json({ url, logos });
+  } catch (e) {
+    fallo(res, 'POST /cartel/:concertId/logo', e, 'No se pudo guardar el logo.');
+  }
+});
+
+/** Solo se borra un logo que este bolo tiene en su cartel: la ruta sale de su configuración, no de lo que mande el cliente. */
+cartelriaRouter.delete('/cartel/:concertId/logo', requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
+  try {
+    const bolo = await boloDeLaBanda(req, res);
+    if (!bolo) return;
+    const url = typeof req.body?.url === 'string' ? req.body.url : '';
+    const config = configDe(bolo.concierto, bolo.bandId);
+    if (!config.logos.includes(url)) return res.status(404).json({ error: 'Ese logo no está en el cartel.' });
+
+    const logos = config.logos.filter((u) => u !== url);
+    await dbGuardarCartel(req.params.concertId, bolo.bandId, { cartel_config: { ...config, logos } });
+    const ruta = rutaDeUrlCartel(url, bolo.bandId);
+    if (ruta) await borrarDeAlmacenamiento([ruta]);
+    res.json({ logos });
+  } catch (e) {
+    fallo(res, 'DELETE /cartel/:concertId/logo', e, 'No se pudo quitar el logo.');
   }
 });
 

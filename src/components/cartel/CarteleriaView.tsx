@@ -129,6 +129,10 @@ const CarteleriaView: React.FC<Props> = ({ concerts, bandName, plan, banda, onCa
           tieneEnlace={ed.tieneEnlace}
           tieneLogo={ed.tieneLogo}
           puedeQuitarMarca={ed.puedeQuitarMarca}
+          logos={ed.logos}
+          subiendoLogo={ed.subiendoLogo}
+          onSubirLogo={ed.subirLogo}
+          onQuitarLogo={ed.quitarLogo}
         />
       </div>
     </div>

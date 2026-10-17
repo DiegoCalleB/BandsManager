@@ -2,7 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState, type RefObject } fro
 import type { Concert } from '../../../types';
 import { FORMATOS, ORDEN_FORMATOS, type FormatoCartel } from '../../../utils/cartel/formatos';
 import { bandasDelBolo, conciertosParaCartel, datosDesdeConcierto, esCompartido } from '../../../utils/cartel/datos';
-import { ajustesDe, configDesdeEstado, CONFIG_INICIAL, conFondoIa, sanearConfigCartel, type AjustesBolo } from '../../../utils/cartel/config';
+import { ajustesDe, configDesdeEstado, CONFIG_INICIAL, conFondoIa, MAX_LOGOS, sanearConfigCartel, type AjustesBolo } from '../../../utils/cartel/config';
+import { prepararLogo } from '../../../utils/cartel/logos';
 import { lineaHorario } from '../../../utils/cartel/texto';
 import { sinVersion } from '../../../utils/cartel/adn';
 import { useAdnCartel, type DatosBandaCartel } from './useAdnCartel';
@@ -22,6 +23,8 @@ import {
   generarFondoCartel,
   guardarConfigCartel,
   subirFotoCartel,
+  quitarLogoCartel,
+  subirLogoCartel,
   subirImagenCartel,
   type EstiloCartel,
 } from '../../../utils/promocionApi';
@@ -80,6 +83,8 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
   const [fondosIaPorBolo, setFondosIaPorBolo] = useState<PorBolo<string[]>>({});
   const [fotoLocalPorBolo, setFotoLocalPorBolo] = useState<PorBolo<string>>({});
   const [fotoRemotaPorBolo, setFotoRemotaPorBolo] = useState<PorBolo<string>>({});
+  const [logosPorBolo, setLogosPorBolo] = useState<PorBolo<string[]>>({});
+  const [subiendoLogo, setSubiendoLogo] = useState(false);
   const [enlaces, setEnlaces] = useState<PorBolo<EnlaceCartel | null>>({});
   const [sucios, setSucios] = useState<PorBolo<boolean>>({});
   const [publicados, setPublicados] = useState<PorBolo<boolean>>({});
@@ -102,6 +107,7 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
   const ajustesGuardados = useMemo(() => ajustesDe(guardada), [guardada]);
   const ajustes = ajustesPorBolo[id] ?? ajustesGuardados;
   const fondosIa = useMemo(() => (fondosIaPorBolo[id] ?? guardada.fondosIa).filter((u) => !rotas[u]), [fondosIaPorBolo, id, guardada, rotas]);
+  const logosExtra = useMemo(() => (logosPorBolo[id] ?? guardada.logos).filter((u) => !rotas[u]), [logosPorBolo, id, guardada, rotas]);
   const fotoRemota = fotoRemotaPorBolo[id] ?? guardada.foto;
   const fotoCandidata = fotoLocalPorBolo[id] ?? fotoRemota;
   const foto = fotoCandidata && !rotas[fotoCandidata] ? fotoCandidata : null;
@@ -144,14 +150,16 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
       const conQr = !FORMATOS[f].digital && ajustes.qr && !!enlace;
       return {
         datos: datosDesdeConcierto(concierto, bandName, ajustes),
-        opciones: { qr: conQr, urlCorta: enlace?.corta ?? null, marca, logo: conLogo },
+        opciones: { qr: conQr, urlCorta: enlace?.corta ?? null, marca },
         qrUrl: conQr ? enlace!.url : null,
         semilla: `${concierto.id}|${bandName}`,
         paletaBanda,
-        logoUrl: conLogo ? logoUrl : null,
+        // La fila de logos: primero el de la banda (si está activado) y luego los subidos para este bolo.
+        logos: [...(conLogo && logoUrl ? [logoUrl] : []), ...logosExtra],
+        logosTinta: ajustes.logosTinta,
       };
     },
-    [concierto, bandName, ajustes, enlace, marca, conLogo, logoUrl, paletaBanda]
+    [concierto, bandName, ajustes, enlace, marca, conLogo, logoUrl, paletaBanda, logosExtra]
   );
 
   // Vista previa: se pinta fuera de pantalla y se copia al final, así no parpadea ni se mezclan
@@ -188,8 +196,8 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
   // Guardado en el bolo solo si la persona ha tocado algo (abrir no escribe nada) y con espera,
   // para no mandar una petición por tecla en la línea extra.
   const configActual = useMemo(
-    () => configDesdeEstado({ formato, fondo, ajustes, fondosIa, fotoRemota, anterior: guardada }),
-    [formato, fondo, ajustes, fondosIa, fotoRemota, guardada]
+    () => configDesdeEstado({ formato, fondo, ajustes, fondosIa, fotoRemota, logos: logosExtra, anterior: guardada }),
+    [formato, fondo, ajustes, fondosIa, fotoRemota, logosExtra, guardada]
   );
   const sucio = !!sucios[id];
   useEffect(() => {
@@ -262,6 +270,41 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
       console.warn('[Cartelería] Foto no válida:', e);
       setError(mensajeDe(e, 'No podemos usar esa foto.'));
     }
+  };
+
+  /** Un logo de otra banda del bolo: se reescala a PNG, se sube y entra en la fila de logos. */
+  const subirLogo = async (archivo: File | undefined) => {
+    if (!archivo || !id) return;
+    if (!archivo.type.startsWith('image/')) return setError('Eso no es una imagen.');
+    if (archivo.size > MAX_FOTO_BYTES) return setError('El logo pesa demasiado.');
+    if (logosExtra.length >= MAX_LOGOS) return setError(`Caben como mucho ${MAX_LOGOS} logos más.`);
+    const bolo = id;
+    setSubiendoLogo(true);
+    setError(null);
+    try {
+      const r = await subirLogoCartel(bolo, await prepararLogo(archivo));
+      setLogosPorBolo((p) => ({ ...p, [bolo]: r.logos }));
+      setSucios((p) => ({ ...p, [bolo]: true }));
+    } catch (e) {
+      console.warn('[Cartelería] No se pudo guardar el logo:', e);
+      setError(mensajeDe(e, 'No pudimos guardar ese logo.'));
+    } finally {
+      setSubiendoLogo(false);
+    }
+  };
+
+  /** Quita el logo de la fila al instante; el servidor borra el fichero y, si falla, se deshace. */
+  const quitarLogo = (url: string) => {
+    if (!id) return;
+    const bolo = id;
+    const antes = logosExtra;
+    setLogosPorBolo((p) => ({ ...p, [bolo]: antes.filter((u) => u !== url) }));
+    marcar();
+    quitarLogoCartel(bolo, url).catch((e) => {
+      console.warn('[Cartelería] No se pudo quitar el logo del servidor:', e);
+      setLogosPorBolo((p) => ({ ...p, [bolo]: antes }));
+      setError(mensajeDe(e, 'No pudimos quitar ese logo.'));
+    });
   };
 
   /** Devuelve si salió bien (la vista cierra el panel de IA para que Compartir vuelva a verse). */
@@ -420,6 +463,10 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     anteriores,
     usarFavorito,
     tieneLogo: !!logoUrl,
+    logos: logosExtra,
+    subirLogo,
+    quitarLogo,
+    subiendoLogo,
     /** El bolo ya tiene cartel en su página pública (de antes o de esta sesión). */
     publicado: !!publicados[id] || !!concierto?.cartel_url || !!concierto?.cartelUrl,
     compartir,

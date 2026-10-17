@@ -407,3 +407,67 @@ describe('La idea de la persona: boceto y brief', () => {
     expect((await llamar('post', '/cartel/brief', { body: { idea: 'x' } })).code).toBe(400);
   });
 });
+
+describe('logos de las otras bandas del bolo', () => {
+  const subirLogo = (concertId: string, body: any, bandId?: string) => llamar('post', '/cartel/:concertId/logo', { params: { concertId }, body, bandId });
+  const quitarLogo = (concertId: string, url: unknown, bandId?: string) => llamar('delete', '/cartel/:concertId/logo', { params: { concertId }, body: { url }, bandId });
+  const logoEn = (n: number, banda = 'band-a') => `${PUB}/carteles/${banda}/c1-logo-0000000${n}.png?v=1`;
+
+  it('un PNG pequeño se guarda en la carpeta de la banda de la sesión y entra en la configuración del bolo', async () => {
+    const res = await subirLogo('c1', png(400, 200));
+    expect(res.code).toBeUndefined();
+    expect(subidas).toHaveLength(1);
+    expect(subidas[0].ruta).toMatch(/^carteles\/band-a\/c1-logo-[0-9a-f-]{8}\.png$/);
+    expect(subidas[0].tipo).toBe('image/png');
+    expect(res.body.logos).toEqual([res.body.url]);
+    expect(fila('c1').cartel_config.logos).toEqual([res.body.url]);
+  });
+
+  it('los logos se van sumando sin pisar lo que el bolo ya tenía', async () => {
+    fila('c1').cartel_config = { v: 1, formato: 'historia', extra: 'Entrada libre', logos: [logoEn(1)] };
+    const res = await subirLogo('c1', png(100, 100));
+    expect(res.body.logos).toHaveLength(2);
+    expect(fila('c1').cartel_config.extra).toBe('Entrada libre');
+    expect(fila('c1').cartel_config.formato).toBe('historia');
+  });
+
+  it('un bolo de otra banda es un 404 y no sube nada', async () => {
+    expect((await subirLogo('cb', png(100, 100))).code).toBe(404);
+    expect(subidas).toEqual([]);
+    expect(fila('cb').cartel_config).toBeUndefined();
+  });
+
+  it('solo entra un PNG de verdad y de tamaño razonable: lo demás es un 400 sin subir nada', async () => {
+    expect((await subirLogo('c1', jpeg())).code).toBe(400);
+    expect((await subirLogo('c1', 'texto')).code).toBe(400);
+    expect((await subirLogo('c1', {})).code).toBe(400);
+    expect((await subirLogo('c1', png(4000, 100))).code).toBe(400);
+    expect((await subirLogo('c1', png(100, 0))).code).toBe(400);
+    expect(subidas).toEqual([]);
+  });
+
+  it('el quinto logo es un 409 y no sube nada', async () => {
+    fila('c1').cartel_config = { v: 1, logos: [logoEn(1), logoEn(2), logoEn(3), logoEn(4)] };
+    expect((await subirLogo('c1', png(100, 100))).code).toBe(409);
+    expect(subidas).toEqual([]);
+  });
+
+  it('quitar un logo lo saca de la configuración y borra su fichero', async () => {
+    fila('c1').cartel_config = { v: 1, logos: [logoEn(1), logoEn(2)] };
+    const res = await quitarLogo('c1', logoEn(1));
+    expect(res.body.logos).toEqual([logoEn(2)]);
+    expect(fila('c1').cartel_config.logos).toEqual([logoEn(2)]);
+    expect(borrados).toEqual([['carteles/band-a/c1-logo-00000001.png']]);
+  });
+
+  it('solo se borra un logo que el bolo tiene en su cartel: ni otro fichero, ni de otra banda', async () => {
+    fila('c1').cartel_config = { v: 1, logos: [logoEn(1)] };
+    for (const url of [`${PUB}/carteles/band-a/ref/secreta.jpg`, logoEn(1, 'band-b'), '../../etc/passwd', 5, undefined]) {
+      expect((await quitarLogo('c1', url)).code, String(url)).toBe(404);
+    }
+    expect(borrados).toEqual([]);
+    expect(fila('c1').cartel_config.logos).toEqual([logoEn(1)]);
+    // Y un bolo ajeno ni se mira.
+    expect((await quitarLogo('cb', logoEn(1))).code).toBe(404);
+  });
+});

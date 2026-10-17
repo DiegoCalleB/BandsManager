@@ -31,8 +31,11 @@ export interface OpcionesLayout {
   /** Texto de la URL corta, sin protocolo: `bandmanager.io/r/ab3k9x2`. */
   urlCorta: string | null;
   marca: boolean;
-  /** Reserva la esquina superior derecha para el logo de la banda. */
-  logo?: boolean;
+  /**
+   * Fila de logos de las bandas, encima de los datos: la proporción ancho/alto de cada uno, en orden.
+   * Layout puro: no sabe de imágenes, solo reserva a cada logo un hueco con esa proporción.
+   */
+  logos?: number[];
 }
 
 export type Medidor = (texto: string, px: number, peso: number) => number;
@@ -59,13 +62,46 @@ export interface LayoutCartel {
   alto: number;
   lineas: Linea[];
   qr: Rect | null;
-  /** Hueco del logo (arriba a la derecha) si se pidió. */
-  logo: Rect | null;
+  /** Un hueco por logo, en orden y centrados en vertical sobre la misma línea (vacío si no hay logos). */
+  logos: Rect[];
   /** Zona superior (nombres) e inferior (datos): ahí se mide el fondo y, si hace falta, se vela. */
   zonas: { arriba: Rect; abajo: Rect };
 }
 
 export const TEXTO_MARCA = 'Hecho con BandManager.io';
+
+/** Como mucho tantos logos en la fila (el de la banda y los subidos para el bolo). */
+export const MAX_LOGOS_FILA = 5;
+
+/**
+ * Huecos de una fila de logos con el mismo «peso» óptico: un logo cuadrado y un nombre larguísimo no miden
+ * lo mismo en alto, pero sí ocupan una superficie parecida. Se centran en vertical y, si no caben en
+ * `util`, se reducen todos por igual (también los huecos).
+ */
+export function filaDeLogos(aspectos: number[], x0: number, yTecho: number, util: number, u: number): { rects: Rect[]; alto: number } {
+  const validos = aspectos.filter((a) => Number.isFinite(a) && a > 0).slice(0, MAX_LOGOS_FILA);
+  if (!validos.length) return { rects: [], alto: 0 };
+  const base = 92 * u;
+  const dims = validos.map((a) => {
+    // Superficie constante (w·h = base²) y topes: ni una tira ni una torre.
+    let h = base / Math.sqrt(a);
+    let w = h * a;
+    if (w > base * 2.4) { w = base * 2.4; h = w / a; }
+    if (h > base * 1.1) { h = base * 1.1; w = h * a; }
+    return { w, h };
+  });
+  const hueco = 44 * u;
+  const total = dims.reduce((s, d) => s + d.w, 0) + hueco * (dims.length - 1);
+  const k = total > util ? util / total : 1;
+  const alto = Math.max(...dims.map((d) => d.h)) * k;
+  let x = x0;
+  const rects = dims.map((d) => {
+    const r = { x, y: yTecho + (alto - d.h * k) / 2, w: d.w * k, h: d.h * k };
+    x += d.w * k + hueco * k;
+    return r;
+  });
+  return { rects, alto };
+}
 
 const INTERLINEA = 0.94;
 
@@ -103,14 +139,10 @@ export function calcularLayout(
   const secundarias = cabezas.length ? resto : [];
 
   let y = m + def.seguroArriba * alto;
-  // Con logo, los nombres se estrechan para no pisarlo.
-  const ladoLogo = opciones.logo ? Math.round(150 * u) : 0;
-  const utilArriba = opciones.logo ? util - ladoLogo - 28 * u : util;
-  const logo: Rect | null = opciones.logo ? { x: ancho - m - ladoLogo, y, w: ladoLogo, h: ladoLogo } : null;
   const titular = principales.map((b) => b.nombre.trim().toUpperCase());
   if (titular.length) {
     // Un nombre de una o dos palabras puede ir en dos líneas grandes; uno largo, en tres.
-    const { px, lineas: ls } = encajar(titular, ' + ', utilArriba, 3, Math.round(210 * u), Math.round(56 * u), 800, medir, '+ ');
+    const { px, lineas: ls } = encajar(titular, ' + ', util, 3, Math.round(210 * u), Math.round(56 * u), 800, medir, '+ ');
     for (const t of ls) {
       lineas.push({ texto: t, x: m, y, px, peso: 800, alinear: 'left' });
       y += px * INTERLINEA;
@@ -120,7 +152,7 @@ export function calcularLayout(
     y += 20 * u;
     const nombres = secundarias.map((b) => b.nombre.trim().toUpperCase());
     nombres[0] = `CON ${nombres[0]}`;
-    const { px, lineas: ls } = encajar(nombres, ' · ', utilArriba, 2, Math.round(50 * u), Math.round(30 * u), 700, medir);
+    const { px, lineas: ls } = encajar(nombres, ' · ', util, 2, Math.round(50 * u), Math.round(30 * u), 700, medir);
     for (const t of ls) {
       lineas.push({ texto: t, x: m, y, px, peso: 700, alinear: 'left' });
       y += px * 1.1;
@@ -164,8 +196,19 @@ export function calcularLayout(
   lineas.push(...colocadas);
 
   const qr: Rect | null = opciones.qr ? { x: ancho - m - ladoQr, y: fondo - ladoQr, w: ladoQr, h: ladoQr } : null;
-  const techoAbajo = Math.min(yb, qr ? qr.y : yb) - m * 0.6;
+
+  // La fila de logos va justo encima de lo más alto de los datos (o del QR, si sobresale).
+  let techo = Math.min(yb, qr ? qr.y : yb);
+  const fila = filaDeLogos(opciones.logos ?? [], m, 0, util, u);
+  let logos: Rect[] = [];
+  if (fila.rects.length) {
+    const yFila = techo - 34 * u - fila.alto;
+    logos = fila.rects.map((r) => ({ ...r, y: r.y + yFila }));
+    techo = yFila;
+  }
+
+  const techoAbajo = techo - m * 0.6;
   const abajo: Rect = { x: 0, y: Math.max(0, techoAbajo), w: ancho, h: alto - Math.max(0, techoAbajo) };
 
-  return { ancho, alto, lineas, qr, logo, zonas: { arriba, abajo } };
+  return { ancho, alto, lineas, qr, logos, zonas: { arriba, abajo } };
 }
