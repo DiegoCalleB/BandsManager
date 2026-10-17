@@ -134,7 +134,7 @@
 
   // Flechas para desplazar cada fila de lado a lado (como en Netflix; con el ratón solo no se puede ir hacia el lado)
   document.querySelectorAll('#gate .nx-filas2').forEach(function (bloque) {
-    var row = bloque.querySelector('.nx-row'); if (!row) return;
+    var row = bloque.querySelector('.nx-row, .nx-games'); if (!row) return;
     bloque.classList.add('con-flechas');
     [['ant', '‹', -1], ['sig', '›', 1]].forEach(function (f) {
       var b = document.createElement('button'); b.type = 'button'; b.className = 'nx-flecha-fila ' + f[0]; b.setAttribute('aria-label', f[0] === 'ant' ? 'Anterior' : 'Siguiente'); b.textContent = f[1];
