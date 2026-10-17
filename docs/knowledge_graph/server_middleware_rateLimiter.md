@@ -36,6 +36,7 @@ Exporta: _vaciarRateLimitStore, ipDelCliente, createRateLimiter, loginRateLimite
 - [[server_routes_cartelria|server/routes/cartelria.ts]] *(from #route)*
 - [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
 - [[server_routes_concert_to_album|server/routes/concert_to_album.ts]] *(from #route)*
+- [[server_routes_contactoEmpresas|server/routes/contactoEmpresas.ts]] *(from #route)*
 - [[server_routes_deals|server/routes/deals.ts]] *(from #route)*
 - [[server_routes_donations|server/routes/donations.ts]] *(from #route)*
 - [[server_routes_emailsCicloVida|server/routes/emailsCicloVida.ts]] *(from #route)*
@@ -43,8 +44,10 @@ Exporta: _vaciarRateLimitStore, ipDelCliente, createRateLimiter, loginRateLimite
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(from #route)*
 - [[server_routes_fans_contador|server/routes/fans_contador.ts]] *(from #route)*
 - [[server_routes_gmailOAuth|server/routes/gmailOAuth.ts]] *(from #security)*
+- [[server_routes_interesados|server/routes/interesados.ts]] *(from #route)*
 - [[server_routes_leads_placesPhoto|server/routes/leads/placesPhoto.ts]] *(from #route)*
 - [[server_routes_paginaConcierto|server/routes/paginaConcierto.ts]] *(from #route)*
+- [[server_routes_pegatinas|server/routes/pegatinas.ts]] *(from #route)*
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
 - [[server_routes_reelsTexto|server/routes/reelsTexto.ts]] *(from #route)*
 - [[server_routes_referidos|server/routes/referidos.ts]] *(from #route)*

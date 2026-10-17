@@ -56,6 +56,7 @@ Esquema relacional de tablas, índices pgvector, funciones y políticas RLS.
 - [[tabla_metricas_bandas_amigas|tabla metricas_bandas_amigas]] *(Layer: #schema, Domain: #system)*
 - [[tabla_musicians_waitlist|tabla musicians_waitlist]] *(Layer: #schema, Domain: #system)*
 - [[tabla_payments|tabla payments]] *(Layer: #schema, Domain: #finances)*
+- [[tabla_pegatinas_pedidos|tabla pegatinas_pedidos]] *(Layer: #schema, Domain: #system)*
 - [[tabla_pitch_example_threads|tabla pitch_example_threads]] *(Layer: #schema, Domain: #booking)*
 - [[tabla_pitch_learning_examples|tabla pitch_learning_examples]] *(Layer: #schema, Domain: #booking)*
 - [[tabla_pitch_vector_store|tabla pitch_vector_store]] *(Layer: #schema, Domain: #booking)*

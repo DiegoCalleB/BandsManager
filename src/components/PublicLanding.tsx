@@ -4,6 +4,7 @@ import { Button } from './ui';
 import { useLanguage, SupportedLanguage } from '../context/idioma';
 import { registrarEvento } from '../utils/analitica';
 import { LandingChatWidget } from './LandingChatWidget';
+import { FormularioInteres } from './landing/FormularioInteres';
 
 interface PublicLandingProps {
   onEntrar: () => void;
@@ -68,8 +69,8 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
   const es = language === 'es';
 
   useEffect(() => {
-    const title = t('landing.title');
-    const description = t('landing.description');
+    const title = t('landing.meta.title');
+    const description = t('landing.meta.description');
     const url = 'https://bandmanager.io/';
     const image = 'https://bandmanager.io/og-cover.png';
 
@@ -231,18 +232,15 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
           </div>
 
           <div className="relative mt-14">
-            <div className="rounded-[var(--r-xl)] bg-[var(--sunken)] p-2 sm:p-3">
-              <Captura
-                nombre="panel"
-                movil="movil-panel"
-                alt={
-                  language === 'es'
-                    ? 'Panel de BandManager con alertas del mánager y la agenda de bolos'
-                    : 'BandManager dashboard with manager alerts and gig agenda'
-                }
-                eager
-              />
-            </div>
+            <img
+              src="/landing/hero-directo.jpg"
+              alt={es ? 'Bajista tocando en directo con su banda' : 'Bassist playing live with the band'}
+              width={1024}
+              height={559}
+              loading="eager"
+              decoding="async"
+              className="h-auto w-full rounded-[var(--r-xl)] object-cover"
+            />
           </div>
         </section>
 
@@ -281,14 +279,6 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
               </li>
             ))}
           </ol>
-
-          <div className="mt-14 rounded-[var(--r-xl)] bg-[var(--surface)] p-2 sm:p-3">
-            <Captura
-              nombre="booking"
-              movil="m-booking"
-              alt="Lista de escenarios con su estado de contacto y el agente de booking"
-            />
-          </div>
         </section>
 
         {/* ESTUDIO IA DE PISTAS (IRIS) */}
@@ -544,6 +534,8 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
                 {t('landing.cta.note')}
               </span>
             </p>
+
+            <FormularioInteres es={es} />
           </div>
         </section>
       </main>

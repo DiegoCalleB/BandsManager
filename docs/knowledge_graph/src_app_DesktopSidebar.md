@@ -19,6 +19,7 @@ Barra lateral de escritorio con navegación, campañas y perfil.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_app_AppContext|src/app/AppContext.ts]] *(Layer: #service, Domain: #system)*
+- [[src_app_EntradaPlanes|src/app/EntradaPlanes.tsx]] *(Layer: #service, Domain: #system)*
 - [[src_app_appViews|src/app/appViews.ts]] *(Layer: #service, Domain: #system)*
 - [[src_components_common_NavGroupSection|src/components/common/NavGroupSection.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_common_NavItemButton|src/components/common/NavItemButton.tsx]] *(Layer: #frontend, Domain: #system)*

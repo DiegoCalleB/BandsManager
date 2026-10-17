@@ -72,6 +72,7 @@ Copia en memoria de alta velocidad sincronizada con Supabase al arranque.
 - [[server_routes_leads_simulation|server/routes/leads/simulation.ts]] *(from #route)*
 - [[server_routes_leads_templates|server/routes/leads/templates.ts]] *(from #route)*
 - [[server_routes_metrics|server/routes/metrics.ts]] *(from #route)*
+- [[server_routes_pegatinas|server/routes/pegatinas.ts]] *(from #route)*
 - [[server_routes_posts|server/routes/posts.ts]] *(from #route)*
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
 - [[server_routes_reelsAprendizaje|server/routes/reelsAprendizaje.ts]] *(from #route)*

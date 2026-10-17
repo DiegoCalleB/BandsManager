@@ -13,7 +13,7 @@ tags: ["schema", "tabla", "auto"]
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Tabla de Supabase `musicians_waitlist` (16 columnas).
+Tabla de Supabase `musicians_waitlist` (20 columnas).
 
 ---
 
@@ -26,6 +26,7 @@ _Sin dependencias salientes directas._
 - [[fn_fans_epk|Fans y EPK]] *(from #feature)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 - [[server_db_fans|server/db/fans.ts]] *(from #db)*
+- [[server_db_interesados|server/db/interesados.ts]] *(from #db)*
 
 ---
 
@@ -44,10 +45,14 @@ _Sin dependencias salientes directas._
 - `idioma`
 - `banda_origen`
 - `concierto_origen`
+- `origen`
+- `consentimiento_at`
+- `confirmado_at`
+- `baja_at`
 - `created_at`
 - `updated_at`
 
-**Definida en:** `supabase_schema.sql`, `supabase/migration_musicians_waitlist.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migration_musicians_waitlist.sql`, `supabase/migrations/20261108_waitlist_confirmacion.sql`
 
 ---
 

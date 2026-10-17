@@ -57,6 +57,7 @@ _Sin dependencias salientes directas._
 - `server/utils/__tests__/referidos.test.ts`
 - `src/components/onboarding/__tests__/onboardingPlanGating.test.ts`
 - `src/utils/__tests__/documentacionPlanes.test.ts`
+- `src/utils/__tests__/pegatinasPlanes.test.ts`
 - `src/utils/__tests__/planPermissions.test.ts`
 - `src/utils/__tests__/roiBanda.test.ts`
 - `src/utils/cartel/__tests__/marca.test.ts`

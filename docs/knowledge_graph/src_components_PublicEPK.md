@@ -18,7 +18,9 @@ Exporta: PublicEPK.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[server_routes_contactoEmpresas|server/routes/contactoEmpresas.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(Layer: #route, Domain: #epk)*
+- [[server_routes_interesados|server/routes/interesados.ts]] *(Layer: #route, Domain: #system)*
 - [[src_components_SocialPlatformsList|src/components/SocialPlatformsList.tsx]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_epk_epkTemplates|src/components/epk/epkTemplates.ts]] *(Layer: #frontend, Domain: #epk)*
 - [[src_components_ui_InsigniaBandManager|src/components/ui/InsigniaBandManager.tsx]] *(Layer: #frontend, Domain: #system)*
