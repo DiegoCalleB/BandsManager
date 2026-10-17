@@ -4,20 +4,20 @@
  */
 import { useSyncExternalStore } from 'react';
 
-const CLAVE = 'bm_modo_ensayo_acordes';
-const oyentes = new Set<() => void>();
-
-const leer = (): boolean => {
-  try { return localStorage.getItem(CLAVE) === '1'; } catch { return false; }
-};
-let activo = leer();
-
-export function fijarModoEnsayo(v: boolean): void {
-  activo = v;
-  try { localStorage.setItem(CLAVE, v ? '1' : '0'); } catch { /* vale solo esta sesión */ }
-  oyentes.forEach((fn) => fn());
+/** Ajuste booleano guardado en el dispositivo y compartido por todas las fichas. */
+function crearAjuste(clave: string): [() => [boolean, (v: boolean) => void], (v: boolean) => void] {
+  const oyentes = new Set<() => void>();
+  let activo = false;
+  try { activo = localStorage.getItem(clave) === '1'; } catch { /* sin almacenamiento */ }
+  const fijar = (v: boolean): void => {
+    activo = v;
+    try { localStorage.setItem(clave, v ? '1' : '0'); } catch { /* vale solo esta sesión */ }
+    oyentes.forEach((fn) => fn());
+  };
+  const suscribir = (fn: () => void): (() => void) => { oyentes.add(fn); return () => { oyentes.delete(fn); }; };
+  return [() => [useSyncExternalStore(suscribir, () => activo, () => false), fijar], fijar];
 }
 
-const suscribir = (fn: () => void): (() => void) => { oyentes.add(fn); return () => { oyentes.delete(fn); }; };
-
-export const useModoEnsayo = (): [boolean, (v: boolean) => void] => [useSyncExternalStore(suscribir, () => activo, () => false), fijarModoEnsayo];
+export const [useModoEnsayo, fijarModoEnsayo] = crearAjuste('bm_modo_ensayo_acordes');
+/** Pentagrama abierto de entrada en todas las fichas (opcional; por defecto cada una lo abre con su botón). */
+export const [usePentagramaSiempre] = crearAjuste('bm_pentagrama_siempre');

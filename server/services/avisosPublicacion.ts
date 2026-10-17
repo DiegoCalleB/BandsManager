@@ -38,12 +38,12 @@ export async function avisarPublicacionesFallidas(bandId: string, posts: PostFal
     const { subject, html } = renderAvisoPublicacionesFallidas({ nombreBanda: banda?.nombre_banda || "tu banda", posts, appUrl: deps.appUrl() });
     const r = await deps.enviar({ to: para, subject, html });
     if (!r.success) {
-      console.warn(`[Avisos publicación] No se pudo avisar a la banda ${bandId}: ${r.error}`);
+      console.warn("[Avisos publicación] No se pudo avisar a la banda:", bandId, r.error);
       return { enviado: false, motivo: "error_envio" };
     }
     return { enviado: true };
   } catch (e) {
-    console.warn(`[Avisos publicación] Fallo avisando a la banda ${bandId}:`, e);
+    console.warn("[Avisos publicación] Fallo avisando a la banda:", bandId, e);
     captureError(e, { contexto: "avisosPublicacion", bandId });
     return { enviado: false, motivo: "error" };
   }

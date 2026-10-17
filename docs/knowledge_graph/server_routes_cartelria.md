@@ -26,6 +26,7 @@ Cartelería: el cartel de un bolo.
 - [[server_db_concerts|server/db/concerts.ts]] *(Layer: #db, Domain: #system)*
 - [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(Layer: #security, Domain: #system)*
 - [[server_routes_upload|server/routes/upload.ts]] *(Layer: #route, Domain: #system)*
+- [[server_services_briefCartel|server/services/briefCartel.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_imagenCartel|server/services/imagenCartel.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_referenciasCartel|server/services/referenciasCartel.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_bandProfile|server/utils/bandProfile.ts]] *(Layer: #service, Domain: #system)*
@@ -38,6 +39,7 @@ Cartelería: el cartel de un bolo.
 - [[src_utils_cartel_adn|src/utils/cartel/adn.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_config|src/utils/cartel/config.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_formatos|src/utils/cartel/formatos.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_cartel_idea|src/utils/cartel/idea.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

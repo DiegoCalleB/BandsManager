@@ -6,6 +6,7 @@ import { apiFetch } from './api';
 import type { CanalPublicacion, HitoId } from './campanaConcierto';
 import type { CartelConfig } from './cartel/config';
 import type { AdnCartel } from './cartel/adn';
+import type { BriefIdea, IdeaCartel } from './cartel/idea';
 
 export type DestinoEnlace = 'entradas' | 'concierto' | 'epk' | 'fans';
 export type CanalEnlace = 'instagram' | 'tiktok' | 'whatsapp' | 'facebook' | 'youtube' | 'email' | 'cartel' | 'web' | 'otro';
@@ -68,7 +69,7 @@ export const atribuirReferido = (codigo: string) =>
 import type { EstiloCartel } from './cartel/estilos';
 export type { EstiloCartel };
 
-export const generarFondoCartel = (datos: { concertId: string; estilo: EstiloCartel; instrucciones?: string }) =>
+export const generarFondoCartel = (datos: { concertId: string; estilo: EstiloCartel; instrucciones?: string; idea?: IdeaCartel; conBoceto?: boolean }) =>
   apiFetch<{ url: string; estilo: EstiloCartel }>('/api/cartel/fondo', { method: 'POST', body: JSON.stringify(datos) });
 
 const rutaCartel = (concertId: string, tramo: string) => `/api/cartel/${encodeURIComponent(concertId)}/${tramo}`;
@@ -83,6 +84,13 @@ export const subirImagenCartel = (concertId: string, png: Blob) =>
 export const subirFotoCartel = (concertId: string, jpeg: Blob) =>
   apiFetch<{ url: string }>(rutaCartel(concertId, 'foto'), { method: 'POST', body: jpeg, headers: { 'Content-Type': 'image/jpeg' } });
 
+/** Un logo de otra banda del bolo (PNG ya reescalado): entra en la fila de logos del cartel. */
+export const subirLogoCartel = (concertId: string, png: Blob) =>
+  apiFetch<{ url: string; logos: string[] }>(rutaCartel(concertId, 'logo'), { method: 'POST', body: png, headers: { 'Content-Type': 'image/png' } });
+
+export const quitarLogoCartel = (concertId: string, url: string) =>
+  apiFetch<{ logos: string[] }>(rutaCartel(concertId, 'logo'), { method: 'DELETE', body: JSON.stringify({ url }) });
+
 export const obtenerAdnCartel = () => apiFetch<{ adn: AdnCartel }>('/api/cartel/adn');
 
 export const guardarAdnCartel = (adn: AdnCartel) =>
@@ -91,3 +99,13 @@ export const guardarAdnCartel = (adn: AdnCartel) =>
 /** Una imagen de referencia (JPEG ya reescalado): la IA la mira para parecerse a la banda. */
 export const subirReferenciaCartel = (jpeg: Blob) =>
   apiFetch<{ url: string; adn: AdnCartel }>('/api/cartel/referencias', { method: 'POST', body: jpeg, headers: { 'Content-Type': 'image/jpeg' } });
+
+/** El boceto de la persona (JPEG ya reescalado): un solo fichero por banda; subir otro sustituye al anterior. */
+export const subirBocetoCartel = (jpeg: Blob) =>
+  apiFetch<{ ok: true }>('/api/cartel/idea', { method: 'POST', body: jpeg, headers: { 'Content-Type': 'image/jpeg' } });
+
+export const quitarBocetoCartel = () => apiFetch<{ ok: true }>('/api/cartel/idea', { method: 'DELETE' });
+
+/** Lo que se le va a pedir a la IA, en inglés, sin generar ninguna imagen (no cuesta una imagen). */
+export const previsualizarBriefCartel = (datos: { idea: IdeaCartel; conBoceto: boolean }) =>
+  apiFetch<{ brief: BriefIdea | null; traducido: boolean; conBoceto: boolean }>('/api/cartel/brief', { method: 'POST', body: JSON.stringify(datos) });
