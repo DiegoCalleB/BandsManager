@@ -36,7 +36,7 @@
                 tts: { motor: 'elevenlabs', voz: 'Gffipq2YbMiqOFEtgMO6', estabilidad: 0.5 } },
     voz:      { nombre: 'Alan',    rol: 'voz',       cargo: 'Voz y guitarra',  ig: '@alan.herdeiros', foto: 'img/miembro-xandre.jpg',  color: '#ff9ec4',
                 mov: 'diva',
-                tts: { motor: 'elevenlabs', voz: 'SxiIZdPt3fsiAenlubTX', estabilidad: 0 } },
+                tts: { motor: 'elevenlabs', voz: 'SxiIZdPt3fsiAenlubTX', estabilidad: 0.4 } },
     guitarra: { nombre: 'Álvaro',  rol: 'guitarra',  cargo: 'Guitarra solista', ig: '@alvaro.solos', foto: 'img/miembro-alvaro.jpg', color: '#8be0a4',
                 mov: 'cabeceo',
                 tts: { motor: 'elevenlabs', voz: 'ozbKZapo4Cy6jU7KTHtp', estabilidad: 0.35 } },
