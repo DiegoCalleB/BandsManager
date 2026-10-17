@@ -8,6 +8,7 @@ import { puedeEntrarEnColaDeEnvio } from "../../utils/email.js";
 import { Lead } from "../../../src/types.js";
 import { loadState, saveState, requireAuth } from "../../state.js";
 import type { PaginatedLeadsResult } from "../../db/leads.js";
+import { esEstadoDeAprobacion } from "../../utils/aprobacionLead.js";
 import { dbGetLeads, dbGetLeadsPaginated, dbGetLeadById, dbUpsertLead, dbDeleteLead, dbBulkDeleteLeads, dbCheckDeletedLead, dbGetLeadMessages, dbGetActiveCampaign, aplicarAprobacionTrasGuardar } from "../../db.js";
 import { getAvailableAIProviders } from "../../ai.js";
 import { autoEnrichLead, extractFestivalDates } from "../../auto_enrichment.js";
@@ -143,6 +144,12 @@ router.put("/leads/:id", requireAuth, apiAutenticadaRateLimiter, async (req, res
     // `expectedStatus` es una condición de la petición, no un campo del lead: no debe guardarse.
     const { expectedStatus, aprobado_por: _a, aprobado_at: _b, pitch_aprobado_hash: _c, ...updatedFields } = req.body || {};
 
+    // Aprobar pone un correo real en la cola de envío: solo la dirección de la banda, igual que
+    // lanzar agentes. El resto de ediciones de una sala siguen abiertas a todos los miembros.
+    if (esEstadoDeAprobacion(updatedFields.estado) && req.user?.role !== "leader" && req.user?.role !== "admin") {
+      return res.status(403).json({ error: "Solo la dirección de la banda puede aprobar envíos." });
+    }
+
     const existing = await dbGetLeadById(id, userBandId);
 
     // Control de concurrencia: el cliente dice «estaba en tal estado cuando decidí esto» (aprobar,
@@ -212,6 +219,10 @@ router.post("/leads", requireAuth, apiAutenticadaRateLimiter, async (req, res) =
     const userBandId = getTargetBandId(req);
 
     const newLead: Lead = req.body;
+    // Crear una sala ya «aprobada» sería saltarse la misma regla que en PUT /leads/:id.
+    if (esEstadoDeAprobacion(newLead?.estado) && req.user?.role !== "leader" && req.user?.role !== "admin") {
+      return res.status(403).json({ error: "Solo la dirección de la banda puede aprobar envíos." });
+    }
     if (!newLead.band_id) {
       newLead.band_id = userBandId;
     }

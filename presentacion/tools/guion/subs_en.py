@@ -267,8 +267,8 @@ EN = {
     "And if we're easy to work with, they answer sooner. Look at El Faro: thirty-five minutes.",
 "¿Y de qué vivimos, entonces? ¿De los aplausos?":
     "So what do we live on, then? Applause?",
-"De dos motores. Una suscripción por banda, ya construida pero apagada a propósito. Y el apoyo voluntario de quien use la app.":
-    "Two engines. A per-band subscription, already built but switched off on purpose. And voluntary support from whoever uses the app.",
+"De dos motores. Una suscripción por banda, con seis planes. Y el apoyo voluntario de quien use la app.":
+    "Two engines. A per-band subscription, with six plans. And voluntary support from whoever uses the app.",
 "¿Y cuánto es ese apoyo? ¿Más o menos que Peláez?":
     "And how much is that support? More or less than Peláez?",
 "Muchísimo menos: lo que cada uno quiera. Ya lo he habilitado, para pagar la inteligencia artificial y los servidores.":
@@ -465,6 +465,22 @@ EN = {
     "And it tells you what's left clean from each gig, after petrol, meals and hotel.",
 "¡Ni una discusión más en la gasolinera! ¡Esto es amor, tío, amor!":
     "Not one more argument at the petrol station! This is love, mate, love!",
+"Vale, pero tengo una duda. Si esto es tan bueno… ¿cómo se entera el resto de bandas?":
+    "Okay, but I have a question. If this is so good… how do the other bands find out?",
+"De boca a oreja, tío. Una banda se lo cuenta a otra, y esa a otra. Como pasa con los buenos pedales.":
+    "Word of mouth. One band tells another, and that one tells the next. Just like good pedals.",
+"Y le damos un empujón: todo lo que sale de la app lleva el sello de Band Mánayer. El cú-erre de los fans, el dossier, el acuerdo con la sala, el sétlist…":
+    "And we give it a push: everything that comes out of the app carries the BandManager seal. The fans' QR, the dossier, the agreement with the venue, the setlist…",
+"¿Mi hoja de batería también? ¡Ya me veo en la portada, neno!":
+    "My drum sheet too? I can already see myself on the cover!",
+"¡Cada vez que una sala lea nuestro dossier, nos hace publicidad gratis, che!":
+    "Every time a venue reads our dossier, it's free advertising for us, che!",
+"Exacto. Y encima, una gran campaña en redes, para que los músicos de todo el mundo sepan que esta app existe.":
+    "Exactly. And on top of that, a big social media campaign, so musicians all over the world know this app exists.",
+"¿De todo el mundo? ¿Hasta los de gaita?":
+    "All over the world? Even the bagpipers?",
+"Sobre todo los de gaita, tío. Esos conocen a todo el mundo.":
+    "Especially the bagpipers, man. They know everybody.",
 }
 
 def main():

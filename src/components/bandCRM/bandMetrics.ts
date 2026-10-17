@@ -11,6 +11,7 @@ export interface MetricasBanda {
   periodo: string;
   spotify?: MetricaFuente;
   youtube?: MetricaFuente;
+  deezer?: MetricaFuente;
 }
 
 export const formatoCompacto = (n: number) =>

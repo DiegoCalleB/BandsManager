@@ -1,0 +1,525 @@
+"""Subtítulos en galego: cada frase que se dice en la película (clave: el español, sin las etiquetas [..]) con su traducción.
+
+Se escriben ya en su forma final (BandManager, Resurrection Fest, rider…), sin las correcciones de pronunciación del español.
+Tras tocar este archivo: python3 presentacion/tools/guion/subs_gl.py  (regenera subs-gl.js y avisa de las frases sin traducir).
+"""
+SUBS_GL = {
+    "Casi nos separamos. Y no fue por la música. Ni por las birras… Bueno, un poco por las birras.":
+        "Case nos separamos. E non foi pola música. Nin polas birras… Bo, un pouco polas birras.",
+    "Fue por un correo, che. Un correo que no contestó nadie.":
+        "Foi por un correo, che. Un correo que non contestou ninguén.",
+    "¿Alguien le ha contestado a la sala del catorce? Che, que yo soy la voz, no la secretaria.":
+        "¿Alguén lle contestou á sala do catorce? Che, que eu son a voz, non a secretaria.",
+    "¿Sala del catorce? Yo pensaba que el catorce era el día del bolo.":
+        "¿Sala do catorce? Eu pensaba que o catorce era o día do bolo.",
+    "Y yo pensaba que éramos una banda. No cuatro tíos que se pasan la pelota. Ya he dejado varios grupos por esto. Con vosotros, no.":
+        "E eu pensaba que eramos unha banda. Non catro tíos que se pasan a pelota. Xa deixei varios grupos por isto. Convosco, non.",
+    "Herdeiros. Os escribí hace tres meses, y nadie contestó. Me quedo el treinta por ciento, y el repertorio lo decido yo. Y fuera baladas.":
+        "Herdeiros. Escribinvos hai tres meses e ninguén contestou. Quedo co trinta por cento, e o repertorio decídoo eu. E fóra baladas.",
+    "No firméis nada, chavales. Los bolos los llevamos nosotros. El sábado os lo demuestro.":
+        "Non asinedes nada, rapaces. Os bolos levámolos nós. O sábado demóstrovolo.",
+    "Soy Brais, batería. El que marca el ritmo. Y el que se bebe las birras.":
+        "Son Brais, batería. O que marca o ritmo. E o que se bebe as birras.",
+    "Alan. Voz y guitarra. Che, la cara bonita de la banda.":
+        "Alan. Voz e guitarra. Che, a cara bonita da banda.",
+    "Álvaro, guitarra solista. Nunca fallo.":
+        "Álvaro, guitarra solista. Nunca fallo.",
+    "Y yo, Iago, el bajo. Ese instrumento que nadie oye. Hasta hoy.":
+        "E eu, Iago, o baixo. Ese instrumento que ninguén oe. Ata hoxe.",
+    "Treinta por ciento, tío. Y elegir lo que tocamos. Eso no es un mánayer: es un okupa.":
+        "Trinta por cento, tío. E elixir o que tocamos. Iso non é un manager: é un okupa.",
+    "Vale. Para acabar el máster necesito un proyecto. Mi banda necesita un milagro. Y yo, un café.":
+        "Vale. Para acabar o máster necesito un proxecto. A miña banda necesita un milagre. E eu, un café.",
+    "¿Y si el proyecto es el milagro, Iago? Tú decides: nosotros proponemos, y tú revisas.":
+        "¿E se o proxecto é o milagre, Iago? Ti decides: nós propoñemos, e ti revisas.",
+    "Yo pongo las ideas locas. Claudio las discute.":
+        "Eu poño as ideas tolas. Claudio discútenas.",
+    "Hecho, tronco. Empezamos esta noche. Y no se lo decimos a nadie.":
+        "Feito, tronco. Comezamos esta noite. E non llo dicimos a ninguén.",
+    "No se lo conté a nadie. Si salía mal, mejor que siguieran pensando que el bajo no se oye.":
+        "Non llo contei a ninguén. Se saía mal, mellor que seguisen pensando que o baixo non se oe.",
+    "Chavales, mañana a las once en el local. Tengo que enseñaros algo que flipáis.":
+        "Rapaces, mañá ás once no local. Teño que ensinarvos algo que flipades.",
+    "Seguro que es una base de datos de salas.":
+        "Seguro que é unha base de datos de salas.",
+    "O el calendario compartido, neno.":
+        "Ou o calendario compartido, neno.",
+    "Y ojo: mañana a las dos cierran el cartel del Resurrécshon Fest. Si no mandamos nada, no tocamos.":
+        "E ollo: mañá ás dúas pechan o cartel do Resurrection Fest. Se non mandamos nada, non tocamos.",
+    "Esto es Band Mánayer. Os voy a enseñar lo que hace por cada uno.":
+        "Isto é BandManager. Vouvos ensinar o que fai por cada un.",
+    "A ver, neno, enséñanos eso que ni tú te crees.":
+        "A ver, neno, ensínanos iso que nin ti te cres.",
+    "Empezamos por la herida: la sala del catorce.":
+        "Comezamos pola ferida: a sala do catorce.",
+    "¡Pará, pará, pará! ¿Esto lo hiciste vos? ¿El bajista? ¡Pero esto es de empresa grande, boludo!":
+        "¡Para, para, para! ¿Isto fixéchelo vos? ¿O baixista? ¡Pero isto é de empresa grande, boludo!",
+    "Con un poco de ayuda. Aquí están las salas y festivales, y cada conversación queda guardada. Ni una sala se pierde ya.":
+        "Cun pouco de axuda. Aquí están as salas e os festivais, e cada conversa queda gardada. Xa non se perde nin unha sala.",
+    "¡Una base de datos de salas! ¡Te lo dije, tío! ¡Te lo dije! ¡Soy un vidente, soy Nostradamus con pedales!":
+        "¡Unha base de datos de salas! ¡Dixéchello, tío! ¡Dixéchello! ¡Son un vidente, son Nostradamus con pedais!",
+    "Casi. Y un agente, el Scaut, busca salas y festivales nuevos por nosotros.":
+        "Case. E un axente, o Scout, busca salas e festivais novos por nós.",
+    "Y todos, en el mapa de toda España.":
+        "E todas, no mapa de toda España.",
+    "¡Todas las salas de España en un mapa! ¡Y yo, con el Excel de las siete versiones, llorando!":
+        "¡Todas as salas de España nun mapa! ¡E eu, co Excel das sete versións, chorando!",
+    "¡Ha escrito a tres salas y al Resurrécshon Fest mientras yo afinaba! ¡Mientras yo afinaba, tío! ¡Esto es magia negra!":
+        "¡Escribiu a tres salas e ao Resurrection Fest mentres eu afinaba! ¡Mentres eu afinaba, tío! ¡Isto é maxia negra!",
+    "Cada correo suena a nosotros, y la inteligencia artificial lo adapta a cada sala.":
+        "Cada correo soa a nós, e a intelixencia artificial adáptao a cada sala.",
+    "¿Y si le escribe una burrada al de la sala?":
+        "¿E se lle escribe unha burrada ao da sala?",
+    "Nada sale sin mi visto bueno. Y cuando la sala contesta, otro agente me avisa.":
+        "Nada sae sen o meu visto e prace. E cando a sala contesta, outro axente avísame.",
+    "¿Y cómo sabemos si lo han leído?":
+        "¿E como sabemos se o leron?",
+    "La app te avisa cuando abren el correo o el dossier. Y a la inteligencia artificial la entrenas con estrellas.":
+        "A app avísate cando abren o correo ou o dossier. E á intelixencia artificial adéstrasa con estrelas.",
+    "Así le llega a la sala: en su bandeja, con vuestro logo y el botón al dossier.":
+        "Así lle chega á sala: na súa caixa de entrada, co voso logo e o botón ao dossier.",
+    "¡Pero qué bonito! ¡Si parece el correo de una agencia de verdad! ¡De las que cobran el treinta por ciento!":
+        "¡Pero que bonito! ¡Se parece o correo dunha axencia de verdade! ¡Das que cobran o trinta por cento!",
+    "¡Y yo, que firmaba los correos con un besito, boludo! ¡Ahora tengo hasta cargo!":
+        "¡E eu, que asinaba os correos cun biquiño, boludo! ¡Agora teño ata cargo!",
+    "Esto es Deit Suap. Le propongo a otra banda cambiar fechas: nosotros en su ciudad, y ellos en la nuestra.":
+        "Isto é Date Swap. Propóñolle a outra banda cambiar datas: nós na súa cidade, e eles na nosa.",
+    "Os leo, Herdeiros. Nosotros vamos a Santiago, y vosotros venís a Vigo. ¡Cartel doble!":
+        "Léovos, Herdeiros. Nós imos a Santiago, e vós vides a Vigo. ¡Cartel dobre!",
+    "Y oye, Brais: nos falta batería. ¿Te vienes a Máster of Prompts?":
+        "E oe, Brais: fáltanos batería. ¿Veste a Master of Prompts?",
+    "¿Yo? Pero si ya tengo banda… Bueno, los miércoles libro.":
+        "¿Eu? Pero se xa teño banda… Bo, os mércores libro.",
+    "¡Traidor! ¡Nos deja por unos metaleros, che!":
+        "¡Traidor! ¡Déixanos por uns metaleiros, che!",
+    "Tranquilo, Alan: Brais toca en las dos bandas, sin liarse. Mirad su cuenta.":
+        "Tranquilo, Alan: Brais toca nas dúas bandas, sen liarse. Mirade a súa conta.",
+    "Un momento… ahí arriba pone Brais Moure. ¿Esa es mi cuenta?":
+        "Un momento… aí arriba pon Brais Moure. ¿Esa é a miña conta?",
+    "Sí, Brais: una cuenta, y varias bandas. Se cambia como los perfiles de una plataforma de cine. ¿Quién toca hoy? Máster of Prompts.":
+        "Si, Brais: unha conta e varias bandas. Cámbiase coma os perfís dunha plataforma de cine. ¿Quen toca hoxe? Master of Prompts.",
+    "¡Ché, cambió todo! ¡El logo, el calendario, hasta las salas! ¡Esto es magia, boludo, magia!":
+        "¡Che, cambiou todo! ¡O logo, o calendario, ata as salas! ¡Isto é maxia, boludo, maxia!",
+    "Y lo de una banda no se ve nunca en la otra. Primera regla de la casa.":
+        "E o dunha banda non se ve nunca na outra. Primeira regra da casa.",
+    "¿Y si la sala nos cambia el caché el mismo día del bolo? Que acabamos cobrando en croquetas.":
+        "¿E se a sala nos cambia o caché o mesmo día do bolo? Que acabamos cobrando en croquetas.",
+    "Por eso el acuerdo se cierra desde la plataforma: fecha, caché, ráider y camerino, por escrito.":
+        "Por iso o acordo péchase desde a plataforma: data, caché, rider e camarino, por escrito.",
+    "¿Y la sala tiene que instalarse algo?":
+        "¿E a sala ten que instalar algo?",
+    "Nada. Abrir un enlace y firmar con el dedo.":
+        "Nada. Abrir unha ligazón e asinar co dedo.",
+    "¡Se acabaron las sorpresas el día del bolo! ¡Todo firmado, todo por escrito! ¡Ya no cobramos en croquetas!":
+        "¡Acabáronse as sorpresas o día do bolo! ¡Todo asinado, todo por escrito! ¡Xa non cobramos en croquetas!",
+    "Chicos, soy el programador de la Sala El Faro. Me ha llegado vuestro correo: ¡el catorce de noviembre es vuestro!":
+        "Rapaces, son o programador da Sala El Faro. Chegou o voso correo: ¡o catorce de novembro é voso!",
+    "¡La sala del catorce! ¡Y encima el día catorce!":
+        "¡A sala do catorce! ¡E ademais o día catorce!",
+    "¿En treinta y cinco minutos? La última vez tardaron tres semanas. Y era para decir que no.":
+        "¿En trinta e cinco minutos? A última vez tardaron tres semanas. E era para dicir que non.",
+    "Me llegan cien correos a la semana. Ese era el único con fecha, dossier y ráider. Contesté antes de acabarme el café.":
+        "Chéganme cen correos á semana. Ese era o único con data, dossier e rider. Contestei antes de rematar o café.",
+    "Y la app me avisó en el momento en que lo abrió. Yo, mirando el móvil como un adolescente, che.":
+        "E a app avisoume no momento en que o abriu. Eu, mirando o móbil coma un adolescente, che.",
+    "Treinta y cinco minutos, neno. Yo tardo más en contestar al guasap de mi madre.":
+        "Trinta e cinco minutos, neno. Eu tardo máis en contestar ao WhatsApp da miña nai.",
+    "Y ahora, lo bueno: la música.":
+        "E agora, o bo: a música.",
+    "Vale, ¿y los ensayos? Llevamos tres sin saber qué tocamos.":
+        "Vale, ¿e os ensaios? Levamos tres sen saber que tocamos.",
+    "Cada tema tiene su energía. La app dibuja la curva del concierto, y te propone el setlist perfecto.":
+        "Cada tema ten a súa enerxía. A app debuxa a curva do concerto e proponche o setlist perfecto.",
+    "Y al imprimirlo, sale una hoja distinta para cada uno.":
+        "E ao imprimilo, sae unha folla distinta para cada un.",
+    "¡Y la mía, con el tono de cada tema, che! ¡Esto es de banda de estadio!":
+        "¡E a miña, co ton de cada tema, che! ¡Isto é de banda de estadio!",
+    "¡Mi hoja, con mis notas! ¡Solo las mías! ¡Nunca había tenido una hoja propia en mi vida!":
+        "¡A miña folla, coas miñas notas! ¡Só as miñas! ¡Nunca tiven unha folla propia na vida!",
+    "Dale al play, Álvaro. Los acordes y la letra siguen la canción solos.":
+        "Dálle ao play, Álvaro. Os acordes e a letra seguen a canción sós.",
+    "¡Pero tío! ¡Es como Últimeit Guitar, pero con nuestras canciones! ¡Pellízcame! ¡Esto es mejor que un solo de Eslash!":
+        "¡Pero tío! ¡É coma Ultimate Guitar, pero coas nosas cancións! ¡Belisca! ¡Isto é mellor ca un solo de Slash!",
+    "Espera, chaval, que esto es solo la intro. ¡Todavía no ha entrado la batería!":
+        "Espera, rapaz, que isto é só a intro. ¡Aínda non entrou a batería!",
+    "¿Y si no sé qué escala tocar encima? Porque yo improviso por intuición. Y mi intuición desafina.":
+        "¿E se non sei que escala tocar enriba? Porque eu improviso por intuición. E a miña intuición desafina.",
+    "Para eso está el profesor de armonía. Lee los acordes de la canción, y te explica cómo funciona.":
+        "Para iso está o profesor de harmonía. Le os acordes da canción e explícache como funciona.",
+    "Le dices tu nivel y tu instrumento, y te sugiere qué escala usar para improvisar. Y cómo componer encima.":
+        "Dis o teu nivel e o teu instrumento, e suxírelle que escala usar para improvisar. E como compoñer enriba.",
+    "¡Pentatónica menor de Mi, y a volar! ¡Me acaba de arreglar el solo! ¡Me acaba de arreglar la vida!":
+        "¡Pentatónica menor de Mi, e a voar! ¡Acábame de arranxar o solo! ¡Acábame de arranxar a vida!",
+    "Eso sí: te lo marca como idea, no como verdad. Las notas las saca la app. La inteligencia artificial solo te las explica.":
+        "Iso si: márcao como idea, non como verdade. As notas sácaas a app. A intelixencia artificial só llas explica.",
+    "Subo una canción, e Iris separa la voz, la batería, el bajo y las guitarras.":
+        "Subo unha canción, e Iris separa a voz, a batería, o baixo e as guitarras.",
+    "¡Mi voz sola! ¡Canto como un ángel, boludo!":
+        "¡A miña voz solita! ¡Canto coma un anxo, boludo!",
+    "¡Espera! ¿Esto no será un Moisés?":
+        "¡Espera! ¿Isto non será un Moises?",
+    "¡Sí, tío! Por fin aciertas una. Y encima, ¡por fin se oye el bajo!":
+        "¡Si, tío! Por fin acertas unha. E ademais, ¡por fin se oe o baixo!",
+    "Y aquí se juntan las bandas: un calendario con los ensayos y los bolos de todas, sincronizado con Gúgel Calendar.":
+        "E aquí xúntanse as bandas: un calendario cos ensaios e os bolos de todas, sincronizado con Google Calendar.",
+    "¡Te lo dije! ¡Gúgel Calendar!":
+        "¡Dixéchello! ¡Google Calendar!",
+    "Cada fecha tiene su ficha, con la meteo y el aviso de puente o festivo.":
+        "Cada data ten a súa ficha, coa meteoroloxía e o aviso de ponte ou festivo.",
+    "¡Por fin sé cuándo ensayamos y cuándo tocamos!":
+        "¡Por fin sei cando ensaiamos e cando tocamos!",
+    "Oye… ¿y si me coinciden dos ensayos a la vez? Uno con cada banda.":
+        "Oe… ¿e se me coinciden dous ensaios á vez? Un con cada banda.",
+    "El calendario te avisa. Si dos eventos se pisan, si no da tiempo a llegar de un sitio a otro, o si vas justo para montar.":
+        "O calendario avísate. Se dous eventos se pisan, se non dá tempo a chegar dun sitio a outro, ou se vas xusto para montar.",
+    "¡Ai, mi madriña! ¡Me acaba de salvar el miércoles! ¡Esto vale su peso en oro, neno!":
+        "¡Ai, miña madriña! ¡Acábame de salvar o mércores! ¡Isto vale o seu peso en ouro, neno!",
+    "El miércoles. El de los metaleros, ¿no, traidor?":
+        "O mércores. O dos metaleiros, ¿non, traidor?",
+    "Y solo avisa cuando hay una persona en los dos sitios. Si no, no te molesta.":
+        "E só avisa cando hai unha persoa nos dous sitios. Se non, non te molesta.",
+    "Doce años cantando, che. Y me vengo a enterar en un local de ensayo de en qué tono canto.":
+        "Doce anos cantando, che. E teño que enterarme nun local de ensaio de en que ton canto.",
+    "Sigue cantando en el que le da la gana. Pero ahora, por lo menos, sale en la hoja.":
+        "Segue cantando no que lle dá a gana. Pero agora, polo menos, sae na folla.",
+    "El calendario me avisa si mis dos bandas se pisan. Es el mejor mánayer que he tenido.":
+        "O calendario avísame se as miñas dúas bandas se pisan. É o mellor manager que tiven.",
+    "Y ahora, que nos conozca más gente.":
+        "E agora, que nos coñeza máis xente.",
+    "¿Que ahora tenemos una web? ¡Como los de verdad!":
+        "¿Que agora temos unha web? ¡Coma os de verdade!",
+    "¡Pero si está guapísima! ¡Salgo con mi mejor perfil!":
+        "¡Pero se está guapísima! ¡Saio co meu mellor perfil!",
+    "Es el dossier de la banda: fotos, formación y contacto. Se edita desde la aplicación.":
+        "É o dossier da banda: fotos, formación e contacto. Edítase desde a aplicación.",
+    "Esto ya no es un local de ensayo, es una discográfica. ¡Una que no se queda el treinta por ciento! ¡Que alguien me pellizque!":
+        "Isto xa non é un local de ensaio, é unha discográfica. ¡Unha que non queda co trinta por cento! ¡Que alguén me belisque!",
+    "¿Cómo? ¿Que ponemos este cú-erre y la gente nos sigue en redes?":
+        "¿Como? ¿Que poñemos este QR e a xente síguenos nas redes?",
+    "¡Sí! Y pueden apoyarnos, comprar merchan, ver los próximos bolos y entrar en nuestra web.":
+        "¡Si! E poden apoiarnos, mercar merchan, ver os próximos bolos e entrar na nosa web.",
+    "Y dejan su correo, con su permiso, y se llevan un regalo: un descuento o una descarga.":
+        "E deixan o seu correo, co seu permiso, e levan un agasallo: un desconto ou unha descarga.",
+    "¿Una lista de gente que nos quiere de verdad? ¡Dónde firmo, che! ¡Esto es oro puro!":
+        "¿Unha lista de xente que nos quere de verdade? ¡Onde asino, che! ¡Isto é ouro puro!",
+    "¿Y esto qué es?":
+        "¿E isto que é?",
+    "Un generador de reels para Instagram, TikTok y Yutub, hecho con inteligencia artificial.":
+        "Un xerador de reels para Instagram, TikTok e YouTube, feito con intelixencia artificial.",
+    "¿O sea que le subes el concierto entero y te saca los trozos más virales? ¿Incluido mi solo de batería? ¡Ai, mi madriña!":
+        "¿Ou sexa que lle subes o concerto enteiro e saca os anacos máis virais? ¿Incluído o meu solo de batería? ¡Ai, miña madriña!",
+    "¡Eso es! Y los deja listos, con el formato de cada red.":
+        "¡Iso é! E déixaos listos, co formato de cada rede.",
+    "¿Y luego los subimos a mano?":
+        "¿E logo subímolos a man?",
+    "Qué va. Programas cada reel en cada red, con su día y su hora.":
+        "Que va. Programas cada reel en cada rede, co seu día e a súa hora.",
+    "¡Esto es tener un equipo de marketing entero metido en el bolsillo!":
+        "¡Isto é ter un equipo de márketing enteiro no peto!",
+    "Con la grabación entera del bolo de la Ribeira, la inteligencia artificial separa las canciones de lo que hablamos con el público.":
+        "Coa gravación enteira do bolo da Ribeira, a intelixencia artificial separa as cancións do que falamos co público.",
+    "¡Un disco en vivo, sin mis chistes malos! ¡Qué genio!":
+        "¡Un disco en directo, sen as miñas bromas malas! ¡Que xenio!",
+    "Y sin la balada que vació el bar.":
+        "E sen a balada que baleirou o bar.",
+    "¿Y las otras bandas? Siempre terminamos llamando a los mismos tres amigos del celular.":
+        "¿E as outras bandas? Sempre acabamos chamando aos mesmos tres amigos do celular.",
+    "Aquí las tengo todas: su estilo, su ciudad, el contacto y el público que llevan.":
+        "Aquí teño todas: o seu estilo, a súa cidade, o contacto e o público que levan.",
+    "¿Y puedo escucharlas antes de proponerles nada?":
+        "¿E podo escoitalas antes de propoñerlles nada?",
+    "Sí. Le das a escuchar, y suena abajo, desde su Spótifai, sin salir de la app.":
+        "Si. Dáslle a escoitar, e soa abaixo, desde o seu Spotify, sen saír da app.",
+    "¿Y cómo les va? ¿Llevan público de verdad, o solo a sus madres?":
+        "¿E como lles vai? ¿Levan público de verdade, ou só ás súas nais?",
+    "Ves sus métricas del mes, en Spótifai y en Yutub.":
+        "Ves as súas métricas do mes, en Spotify e en YouTube.",
+    "¡Esto es como Tinder, pero para bandas! ¡Y sin tener que hablar con nadie!":
+        "¡Isto é coma Tinder, pero para bandas! ¡E sen ter que falar con ninguén!",
+    "Antes, nuestra única fan era mi madre. Ahora tenemos una lista entera. Ella sigue siendo la más pesada.":
+        "Antes, a nosa única fan era miña nai. Agora temos unha lista enteira. Ela segue sendo a máis pesada.",
+    "Y los reels: subes el concierto entero, y la inteligencia artificial te saca los mejores trozos. Yo solo tuve que salir guapo.":
+        "E os reels: subes o concerto enteiro, e a intelixencia artificial sácache os mellores anacos. Eu só tiven que saír guapo.",
+    "Y al final, lo que nunca nos cuadra: las cuentas.":
+        "E ao final, o que nunca nos cadra: as contas.",
+    "Aquí está lo que entra por cada bolo, los gastos, y lo que le toca a cada uno.":
+        "Aquí está o que entra por cada bolo, os gastos, e o que lle toca a cada un.",
+    "¡Las cuentas claras! ¡Y salen números positivos! ¡Por primera vez en la historia de esta banda!":
+        "¡As contas claras! ¡E saen números positivos! ¡Por primeira vez na historia desta banda!",
+    "Y para las giras le meteré algo tipo Traicaunt, para que Brais no nos haga el lío de las birras.":
+        "E para as xiras métolle algo tipo Tricount, para que Brais non nos arme o lío das birras.",
+    "¡Oye! ¡Que fue solo una vez!":
+        "¡Oe! ¡Que foi só unha vez!",
+    "Home, ¿y la gasolina de la furgo y de mi coche? Que la última gira la puse yo. Creo.":
+        "Home, ¿e a gasolina da furgoneta e do meu coche? Que a última xira púxena eu. Creo.",
+    "Metes los coches que van en ruta, con su consumo, y te calcula la gasolina de cada parada.":
+        "Metes os coches que van en ruta, co seu consumo, e calcúlache a gasolina de cada parada.",
+    "Y te dice lo que queda limpio de cada bolo, después de gasolina, dietas y hotel.":
+        "E dicha o que queda limpo de cada bolo, despois de gasolina, dietas e hotel.",
+    "¡Ni una discusión más en la gasolinera! ¡Esto es amor, tío, amor!":
+        "¡Nin unha discusión máis na gasolineira! ¡Isto é amor, tío, amor!",
+    "Y hay más, chavales: los medios de comunicación, las métricas de redes, tu discografía de Spótifai, las ideas de cada canción, la ficha de cada bolo… Todo en la misma app.":
+        "E hai máis, rapaces: os medios de comunicación, as métricas de redes, a túa discografía de Spotify, as ideas de cada canción, a ficha de cada bolo… Todo na mesma app.",
+    "Vale, ya lo tengo: es una base de datos de salas. Con cosas.":
+        "Vale, xa o teño: é unha base de datos de salas. Con cousas.",
+    "Casi, tío. Casi.":
+        "Case, tío. Case.",
+    "¡Pero si no le falta de nada! ¡Es la navaja suiza de las bandas!":
+        "¡Pero se non lle falta de nada! ¡É a navalla suíza das bandas!",
+    "¿Pero cuándo has podido hacer todo esto, Iago? Con el curro, y dos niñas en casa.":
+        "¿Pero cando puideches facer todo isto, Iago? Co traballo, e dúas nenas na casa.",
+    "Han sido unos meses duros, la verdad.":
+        "Foron uns meses duros, a verdade.",
+    "Pero, ¿cuándo, Iago? ¿A qué hora, si no paras?":
+        "Pero, ¿cando, Iago? ¿A que hora, se non paras?",
+    "Casi siempre de noche, cuando las niñas ya dormían. Cerraba el portátil, las miraba un momento… y volvía a abrirlo.":
+        "Case sempre de noite, cando as nenas xa durmían. Pechaba o portátil, miraba para elas un momento… e volvía abrilo.",
+    "Neno… no teníamos ni idea.":
+        "Neno… non tiñamos nin idea.",
+    "Y nosotros, discutiendo por las birras.":
+        "E nós, discutindo polas birras.",
+    "Gracias, Iago. De verdad.":
+        "Grazas, Iago. De verdade.",
+    "Luego miré el historial del código. La hora de cada cambio. Las dos… Las tres… Las cinco menos diez. Y el sábado a las once estaba en el local. El primero. Con los cafés.":
+        "Despois mirei o historial do código. A hora de cada cambio. As dúas… As tres… As cinco menos dez. E o sábado ás once estaba no local. O primeiro. Cos cafés.",
+    "Iago, esto es una locura. Lo necesitan todos los grupos, los mánayers, las productoras. ¡Todos!":
+        "Iago, isto é unha loucura. Necesítano todos os grupos, os managers, as produtoras. ¡Todos!",
+    "¡Pero neno, te vas a forrar! Ya te veo en Miami, en descapotable.":
+        "¡Pero neno, vaste forrar! Xa te vexo en Miami, en descapotable.",
+    "Si me hago rico, una buena parte va para la banda. ¡Os Herdeiros do Código lo va a petar, chavales!":
+        "Se me fago rico, unha boa parte vai para a banda. ¡Os Herdeiros do Código vano petar, rapaces!",
+    "¿Una buena parte de cuánto? Que yo de porcentajes ya sé un rato.":
+        "¿Unha boa parte de canto? Que eu de porcentaxes xa sei un anaco.",
+    "Vamos por partes, chavales.":
+        "Imos por partes, rapaces.",
+    "Primero, que se entere todo el mundo. Por eso me acabo de apuntar al máster de Marketing Digital de la Big Scul.":
+        "Primeiro, que se decate todo o mundo. Por iso acabo de apuntarme ao máster de Márketing Dixital da Big School.",
+    "¿Otro máster? Pero home, ¿tú cuándo duermes?":
+        "¿Outro máster? Pero home, ¿ti cando durmes?",
+    "Dormir está en mi lista de pendientes, neno. Y sale más barato que darle el treinta por ciento a Peláez.":
+        "Durmir está na miña lista de pendentes, neno. E sae máis barato que lle dar o trinta por cento a Peláez.",
+    "Hay dos tipos de cliente. El primero, be tu ci: las bandas, los músicos, los deyeis y los solistas. O sea, nosotros.":
+        "Hai dous tipos de cliente. O primeiro, B2C: as bandas, os músicos, os DJs e os solistas. Ou sexa, nós.",
+    "¿Y el be tu bi? ¿Eso qué es, un grupo coreano?":
+        "¿E o B2B? ¿Iso que é, un grupo coreano?",
+    "No, Brais: los que llevan a varias bandas. Mánayers, agencias y productoras. Para ellos, una cuenta con todas sus bandas, y planes de empresa, más caros.":
+        "Non, Brais: os que levan varias bandas. Managers, axencias e produtoras. Para eles, unha conta con todas as súas bandas, e plans de empresa, máis caros.",
+    "Las salas y los festivales no son clientes: son el canal. Si trabajar con nosotros es fácil, contestan antes. Mirad El Faro.":
+        "As salas e os festivais non son clientes: son o canal. Se traballar connosco é doado, contestan antes. Mirade El Faro.",
+    "¿Y de qué vivimos, entonces? ¿De los aplausos?":
+        "¿E de que vivimos, entón? ¿Dos aplausos?",
+    "De dos motores. Una suscripción por banda, con seis planes. Y el apoyo voluntario de quien use la app.":
+        "De dous motores. Unha subscrición por banda, con seis plans. E o apoio voluntario de quen use a app.",
+    "¿Y cuánto es ese apoyo? ¿Más o menos que Peláez?":
+        "¿E canto é ese apoio? ¿Máis ou menos ca Peláez?",
+    "Muchísimo menos: lo que cada uno quiera. Ya lo he habilitado, para pagar la inteligencia artificial y los servidores.":
+        "Moitísimo menos: o que cada un queira. Xa o habilitei, para pagar a intelixencia artificial e os servidores.",
+    "Y ahora, lo que viene: probarlo con una banda real. La nuestra.":
+        "E agora, o que vén: probalo cunha banda real. A nosa.",
+    "¡Iago! ¡El móvil! ¡El Resurrécshon Fest acaba de abrir el dossier!":
+        "¡Iago! ¡O móbil! ¡O Resurrection Fest acaba de abrir o dossier!",
+    "Tres veces en una hora. Eso es que están leyendo. Y el cartel cierra… ahora.":
+        "Tres veces nunha hora. Iso é que están lendo. E o cartel péchase… agora.",
+    "¡Iago! ¡Nos han contestado! ¡Estamos dentro!":
+        "¡Iago! ¡Contestáronnos! ¡Estamos dentro!",
+    "¡¿Escenario principal?! ¡Che, escenario principal!":
+        "¡¿Escenario principal?! ¡Che, escenario principal!",
+    "Vale. Pero que haya croquetas en el camerino.":
+        "Vale. Pero que haxa croquetas no camarino.",
+    "Esta vez, nos han contestado.":
+        "Esta vez, contestáronnos.",
+    "Cinco minutos, chicos. Me han pedido que os avise yo: fui el primero en contestaros. El ráider, en el camerino, como firmamos. Y croquetas.":
+        "Cinco minutos, rapaces. Pedíronme que vos avise eu: fun o primeiro en contestarvos. O rider, no camarino, como asinamos. E croquetas.",
+    "Iago, soy Peláez. Os estoy viendo desde la mesa de mezclas. Mi oferta sigue en pie: el treinta por ciento.":
+        "Iago, son Peláez. Estouvos vendo desde a mesa de mestura. A miña oferta segue en pé: o trinta por cento.",
+    "Gracias, Peláez. Pero los bolos ya los llevamos nosotros. Y el repertorio, también.":
+        "Grazas, Peláez. Pero os bolos xa os levamos nós. E o repertorio, tamén.",
+    "Y esta noche, che… abrimos con la balada.":
+        "E esta noite, che… abrimos coa balada.",
+    "Escuchad ahí fuera. La app organiza, chavales. Pero esto lo hacéis vosotros.":
+        "Escoitade aí fóra. A app organiza, rapaces. Pero isto fadelo vós.",
+    "Hace seis meses no sabíamos ni quién contestaba a las salas. Y miradnos ahora. ¡Un, dos, tres, cuatro!":
+        "Hai seis meses non sabiamos nin quen contestaba ás salas. E mirádesnos agora. ¡Un, dous, tres, catro!",
+    "Buenos días, rockeros. Esto es Radio Riff. Una banda que casi se separa por no saber ni quién contestaba el correo acaba de tocar en el Resurrécshon Fest. ¿El secreto? Su bajista, Iago, y la app que ha creado: Band Mánayer punto io.":
+        "Bos días, rockeiros. Isto é Radio Riff. Unha banda que case se separa por non saber nin quen contestaba o correo acaba de tocar no Resurrection Fest. ¿O segredo? O seu baixista, Iago, e a app que creou: BandManager punto io.",
+    "Sigo pensando que el treinta por ciento era un precio justo. Por cierto… ¿esa app cómo se descarga?":
+        "Sigo pensando que o trinta por cento era un prezo xusto. Por certo… ¿esa app como se descarga?",
+    "¿Alguien ha contestado a la sala del catorce?":
+        "¿Alguén contestou á sala do catorce?",
+    "Cerrao y bien cerrao, chaval. Mirad el calendario.":
+        "Pechado e ben pechado, rapaz. Mirade o calendario.",
+    "Entonces, ensayamos el sábado. Y el miércoles, con los metaleros. ¡Rocanrol!":
+        "Entón, ensaiamos o sábado. E o mércores, cos metaleiros. ¡Rock and roll!",
+    "Traidor.":
+        "Traidor.",
+    "El bajista soy yo. Necesito volver a tocar.":
+        "O baixista son eu. Necesito volver tocar.",
+    "Toqué en varios grupos, y los fui dejando uno a uno: sin organización, sin gestión y sin tiempo, no íbamos a ningún lado. Hice Band Mánayer para volver a subirme a un escenario, delante de miles de personas, y hacerlas disfrutar con nuestra música.":
+        "Toquei en varios grupos, e fun deixándoos un a un: sen organización, sen xestión e sen tempo, non iamos a ningún lado. Fixen BandManager para volver subirme a un escenario, diante de miles de persoas, e facelas gozar coa nosa música.",
+    "Y ya estamos montando un grupo de metal. Nos falta batería… Con muchísima ilusión, y sabiendo que con Band Mánayer toda la gestión va a ir rodada.":
+        "E xa estamos montando un grupo de metal. Fáltanos batería… Con moitísima ilusión, e sabendo que con BandManager toda a xestión vai ir rodada.",
+    "Y quién sabe si el día de mañana a mis hijas les da por formar sus grupos… y esto les ayuda a que los comienzos sean mucho más fáciles. Un sueño hecho realidad.":
+        "E quen sabe se o día de mañá ás miñas fillas lles dá por formar os seus grupos… e isto lles axuda a que os comezos sexan moito máis doados. Un soño feito realidade.",
+    "Y ahora, Brais, un reto. No para el batería de esta historia: para ti, el de verdad.":
+        "E agora, Brais, un reto. Non para o batería desta historia: para ti, o de verdade.",
+    "Te he preparado el sétlist del primer ensayo de Máster of Prompts. Metal, con letras de coña sobre programar.":
+        "Preparei o setlist do primeiro ensaio de Master of Prompts. Metal, con letras de coña sobre programar.",
+    "Y te lo mando como lo mandamos todo: la IA lo redacta, yo lo repaso, y… enviado.":
+        "E mándoocho como o mandamos todo: a IA redáctao, eu revísoo, e… enviado.",
+    "Yo había dejado de tocar. Este máster me devolvió las ganas.":
+        "Eu deixara de tocar. Este máster devolveume as ganas.",
+    "Nos falta batería, Brais. Y es tuya: solo tienes que decir que sí.":
+        "Fáltanos batería, Brais. E é túa: só tes que dicir que si.",
+    "Gracias, Brais. Y gracias a todo el profesorado de la Big Scul, por un máster que acaba en una aplicación de verdad.":
+        "Grazas, Brais. E grazas a todo o profesorado da Big School, por un máster que remata nunha aplicación de verdade.",
+    "Y la invitación sigue en pie. Y es solo para ti. Un batería tan bueno no se deja escapar.":
+        "E o convite segue en pé. E é só para ti. Un batería tan bo non se deixa escapar.",
+    "Ensayamos el sábado. Te llevo tu sétlist. Tu hoja, con tus notas. Solo las tuyas.":
+        "Ensaiamos o sábado. Lévoche o teu setlist. A túa folla, coas túas notas. Só as túas.",
+    "¿Ya se ha acabado la peli? ¿Y quién paga las birras de la fiesta?":
+        "¿Xa se acabou a peli? ¿E quen paga as birras da festa?",
+    "Lo de dividir gastos está en mi lista de pendientes, Brais. Justo debajo de cobrarte las birras.":
+        "O de dividir gastos está na miña lista de pendentes, Brais. Xusto debaixo de cobrarche as birras.",
+    "¡Pues que las pague la inteligencia artificial!":
+        "¡Pois que as pague a intelixencia artificial!",
+    "Propuesta: las paga Brais. Pero tú decides, Iago.":
+        "Proposta: pagaas Brais. Pero ti decides, Iago.",
+    "Idea loca: que las pague Peláez. Con su treinta por ciento.":
+        "Idea tola: que as pague Peláez. Co seu trinta por cento.",
+    "Acaba de escribirme Netflix. Quieren más planos del batería y menos del bajista.":
+        "Acaba de escribirme Netflix. Queren máis plans do batería e menos do baixista.",
+    "¡Estos de Netflix tienen ojo, chaval!":
+        "¡Estes de Netflix teñen ollo, rapaz!",
+    "Brais… la peli va de mí.":
+        "Brais… a peli vai de min.",
+    "Por cierto, el miércoles ensayo con Máster of Prompts. ¿A qué hora era?":
+        "Por certo, o mércores ensaio con Master of Prompts. ¿A que hora era?",
+    "Mira el calendario, Brais. Mira el calendario.":
+        "Mira o calendario, Brais. Mira o calendario.",
+    "¿Y cómo hacemos para que hablen de nosotros? ¿La radio, la tele, las webs de música?":
+        "¿E como facemos para que falen de nós? ¿A radio, a tele, as webs de música?",
+    "Tengo también la base de datos de medios: radios, webs, prensa y pódcasts. Y el mismo redactor de la inteligencia artificial les escribe con el tono de la banda. Nada sale sin tu visto bueno.":
+        "Teño tamén a base de datos de medios: radios, webs, prensa e podcasts. E o mesmo redactor da intelixencia artificial escríbelles co ton da banda. Nada sae sen o teu visto e prace.",
+    "¡Yo ya estoy ensayando la entrevista, che!":
+        "¡Eu xa estou ensaiando a entrevista, che!",
+    "¿Y si el correo me suena demasiado serio, tío?":
+        "¿E se o correo me soa demasiado serio, tío?",
+    "Le escribes una instrucción sencilla, como: hazlo más directo. Y la inteligencia artificial lo reescribe.":
+        "Escribes unha instrución sinxela, como: fai máis directo. E a intelixencia artificial reescríbeo.",
+    "¿Y se acuerda para la próxima vez, che?":
+        "¿E acórdase para a próxima vez, che?",
+    "Sí. Lo calificas con estrellas, y aprende cómo hablamos. Cada vez escribe más como vosotros.":
+        "Si. Puntúao con estrelas, e aprende como falamos. Cada vez escribe máis como vós.",
+    "¿Y cómo sabemos si todo esto funciona? ¿Si de verdad nos sigue más gente?":
+        "¿E como sabemos se todo isto funciona? ¿Se de verdade nos segue máis xente?",
+    "Con este panel. Apuntas los seguidores de cada red, cada mes. Mirad cómo se rellena la curva.":
+        "Con este panel. Apuntas os seguidores de cada rede, cada mes. Mirade como se enche a curva.",
+    "¡Y la curva sube, tío! ¡Instagram, de mil trescientos a más de cuatro mil quinientos!":
+        "¡E a curva sobe, tío! ¡Instagram, de mil trescentos a máis de catro mil cincocentos!",
+    "Mirad, chavales: cada tema tiene su energía, y la app dibuja la curva del concierto entero.":
+        "Mirade, rapaces: cada tema ten a súa enerxía, e a app debuxa a curva do concerto enteiro.",
+    "¿Y si a mitad del bolo la curva se cae?":
+        "¿E se a metade do bolo a curva cae?",
+    "Le das a optimizar orden, y te propone el setlist perfecto. Tú decides si lo aplicas.":
+        "Dáslle a optimizar orde, e proponche o setlist perfecto. Ti decides se o aplicas.",
+    "Y la inteligencia artificial vigila las transiciones: que no choquen ni la energía ni el tono de un tema al siguiente.":
+        "E a intelixencia artificial vixía as transicións: que non choquen nin a enerxía nin o ton dun tema ao seguinte.",
+    "¡Ché, un setlist que sube como un cohete!":
+        "¡Che, un setlist que sobe coma un foguete!",
+    "¿Merchan? ¡Pero si no tenemos, boludo!":
+        "¿Merchan? ¡Pero se non temos, boludo!",
+    "Ahora sí, chaval: camisetas y pegatinas con nuestro logo y el cú-erre de los fans. Listas para imprimir.":
+        "Agora si, rapaz: camisetas e pegatinas co noso logo e o QR dos fans. Listas para imprimir.",
+    "¡Yo quiero la roja!":
+        "¡Eu quero a vermella!",
+    "Y yo, una con mi cara. Para los fans. Y para que me reconozcan por la calle.":
+        "E eu, unha coa miña cara. Para os fans. E para que me recoñezan pola rúa.",
+    "Neno, ¿y el break de batería que grabé el otro día en el móvil?":
+        "Neno, ¿e o break de batería que gravei o outro día no móbil?",
+    "Va a su canción y a su sección: intro, verso, estribillo o solo. Con tu nombre, tronco.":
+        "Vai á súa canción e á súa sección: intro, verso, estribillo ou solo. Co teu nome, tronco.",
+    "¡Y encima le podemos dejar comentarios a cada idea! ¡Me encanta, boludo!":
+        "¡E ademais podemos deixarlle comentarios a cada idea! ¡Encántame, boludo!",
+    "¡Se acabó el audio perdido en el guasap!":
+        "¡Acabouse o audio perdido no WhatsApp!",
+    "¿Y esto? ¿También sabe qué tiempo va a hacer en el bolo?":
+        "¿E isto? ¿Tamén sabe que tempo vai facer no bolo?",
+    "Cada bolo tiene su ficha. El aviso si cae en puente, y la ciudad se vacía. El tiempo que va a hacer. La logística, el rider, los contactos, el merchan… Y cuánto os queda limpio. Todo, en un clic.":
+        "Cada bolo ten a súa ficha. O aviso se cae en ponte, e a cidade se baleira. O tempo que vai facer. A loxística, o rider, os contactos, o merchan… E canto vos queda limpo. Todo, nun clic.",
+    "Y yo, sin enterarme nunca del puente.":
+        "E eu, sen decatarme nunca da ponte.",
+    "¿Y eso qué es? ¿Un plato de espaguetis? ¿O el cableado de mi pedalera?":
+        "¿E iso que é? ¿Un prato de espaguetes? ¿Ou a cablaxe da miña pedaleira?",
+    "Es el mapa de nuestro código: setecientos setenta y seis módulos y más de tres mil conexiones, sacadas del código real. Claudio y Guglio lo leen antes de tocar nada, para no romper lo que ya suena bien.":
+        "É o mapa do noso código: setecentos setenta e seis módulos e máis de tres mil conexións, sacadas do código real. Claudio e Guglio lérono antes de tocar nada, para non romper o que xa soa ben.",
+    "¡Qué listos! Más que el técnico de sonido.":
+        "¡Que listos! Máis que o técnico de son.",
+    "Los puntos dorados son las funciones clave, como el buquin o Iris. Cada una enlaza la pantalla, la ruta, el servicio, la tabla y el proveedor.":
+        "Os puntos dourados son as funcións clave, como o booking ou Iris. Cada unha enlaza a pantalla, a ruta, o servizo, a táboa e o provedor.",
+    "Vale, pero, ¿y por dentro cómo funciona este monstruo?":
+        "Vale, pero, ¿e por dentro como funciona este monstro?",
+    "Delante, Riact con Vit. Detrás, Express y Taipscript. Supabeis guarda todos los datos, y la inteligencia artificial solo vive en los bordes.":
+        "Diante, React con Vite. Detrás, Express e TypeScript. Supabase garda todos os datos, e a intelixencia artificial só vive nos bordos.",
+    "Pues como si me hablas en chino. O en jevi metal noruego.":
+        "Pois coma se me falas en chinés. Ou en heavy metal noruegués.",
+    "Yo no entiendo nada de nada. Y eso que leo partituras.":
+        "Eu non entendo nada de nada. E iso que leo partituras.",
+    "Yo tampoco tenía ni pajolera idea. Pero desde que hago el máster de Mure Dev, lo entiendo casi todo. ¡Flipante! Aunque, la verdad, casi todo esto lo ha tocado mi colega Claudio.":
+        "Eu tampouco tiña nin idea. Pero desde que fago o máster de MoureDev, entendo case todo. ¡Flipante! Aínda que, a verdade, case todo isto o tocou o meu colega Claudio.",
+    "Y si Claudio y Guglio programan, ¿quién manda aquí? ¿Quién es el líder de la banda?":
+        "E se Claudio e Guglio programan, ¿quen manda aquí? ¿Quen é o líder da banda?",
+    "Manda un fichero: agents punto eme de. Es el contrato que leen antes de tocar nada. Y tiene tres reglas que no se negocian: ningún dato de una banda visible para otra, ningún correo automático sin aprobación humana, y cero errores nuevos de Taipscript.":
+        "Manda un ficheiro: agents punto md. É o contrato que len antes de tocar nada. E ten tres regras que non se negocian: ningún dato dunha banda visible para outra, ningún correo automático sen aprobación humana, e cero erros novos de TypeScript.",
+    "¿Y si se las saltan? Porque nosotros nos las saltamos todas.":
+        "¿E se as saltan? Porque nós saltámolas todas.",
+    "Se rompe el bild. Hay un test que lo vigila en cada commit, veintidós skills, y un hook que avisa en cuanto alguien toca algo sensible.":
+        "Rompe o build. Hai un test que o vixía en cada commit, vinte e dúas skills, e un hook que avisa en canto alguén toca algo sensible.",
+    "Y con todo esto, ¿ni el mejor hacker del mundo nos va a tumbar la aplicación?":
+        "¿E con todo isto, nin o mellor hacker do mundo nos vai tumbar a aplicación?",
+    "Esa es la idea. Hay varias capas, y ninguna es la única barrera: si una falla, queda otra detrás. Como llevar cuerdas de repuesto.":
+        "Esa é a idea. Hai varias capas, e ningunha é a única barreira: se unha falla, queda outra detrás. Coma levar cordas de reposto.",
+    "La banda se saca de la sesión, en el servidor, nunca de lo que manda el navegador. Y lo que llega de las salas se trata como un dato, nunca como una orden.":
+        "A banda sácase da sesión, no servidor, nunca do que manda o navegador. E o que chega das salas trátase como un dato, nunca como unha orde.",
+    "¿Y eso es lo que hace que no nos hackeen?":
+        "¿E iso é o que fai que non nos hackeen?",
+    "Es una parte. Tú toca la guitarra, que de lo demás me encargo yo. Como siempre: el bajo sujetándolo todo.":
+        "É unha parte. Ti toca a guitarra, que do demais encárgome eu. Como sempre: o baixo suxeitándoo todo.",
+    "¡Madre mía! ¡Esto tiene más pruebas que en la época del Covid!":
+        "¡Madre miña! ¡Isto ten máis probas ca na época do Covid!",
+    "Más de dos mil. Y se ejecutan solos: en cada commit, en cada push. Y en producción, un control de salud y Séntri vigilando los errores. Como un roadie que nunca duerme.":
+        "Máis de dúas mil. E execútanse soas: en cada commit, en cada push. E en produción, un control de saúde e Sentry vixiando os erros. Coma un roadie que nunca dorme.",
+    "Vale, pero tengo una duda. Si esto es tan bueno… ¿cómo se entera el resto de bandas?":
+        "Vale, pero teño unha dúbida. Se isto é tan bo… ¿como se decata o resto de bandas?",
+    "De boca a oreja, tío. Una banda se lo cuenta a otra, y esa a otra. Como pasa con los buenos pedales.":
+        "De boca a orella, tío. Unha banda cóntallo a outra, e esa a outra. Coma pasa cos bos pedais.",
+    "Y le damos un empujón: todo lo que sale de la app lleva el sello de Band Mánayer. El cú-erre de los fans, el dossier, el acuerdo con la sala, el sétlist…":
+        "E dámoslle un empurrón: todo o que sae da app leva o selo de BandManager. O QR dos fans, o dossier, o acordo coa sala, o setlist…",
+    "¿Mi hoja de batería también? ¡Ya me veo en la portada, neno!":
+        "¿A miña folla de batería tamén? ¡Xa me vexo na portada, neno!",
+    "¡Cada vez que una sala lea nuestro dossier, nos hace publicidad gratis, che!":
+        "¡Cada vez que unha sala lea o noso dossier, fainos publicidade de balde, che!",
+    "Exacto. Y encima, una gran campaña en redes, para que los músicos de todo el mundo sepan que esta app existe.":
+        "Exacto. E ademais, unha gran campaña nas redes, para que os músicos de todo o mundo saiban que esta app existe.",
+    "¿De todo el mundo? ¿Hasta los de gaita?":
+        "¿De todo o mundo? ¿Ata os da gaita?",
+    "Sobre todo los de gaita, tío. Esos conocen a todo el mundo.":
+        "Sobre todo os da gaita, tío. Eses coñecen a todo o mundo.",
+}
+
+
+if __name__ == '__main__':
+    import html, json, os, re, sys
+    aqui = os.path.dirname(os.path.abspath(__file__))
+    deck = os.path.dirname(os.path.dirname(aqui))
+    sys.path.insert(0, os.path.dirname(aqui))
+    import voces  # noqa: E402
+    R = voces.leer_reparto()
+    p = voces.Frases(); p.feed(open(os.path.join(deck, 'index.html'), encoding='utf-8').read())
+    dichas = {re.sub(r'\[[^\]]*\]\s*', '', voces.sustituir(html.unescape(s), R)).strip() for _, s, _ in p.frases}
+    faltan = sorted(dichas - set(SUBS_GL))
+    sobran = sorted(set(SUBS_GL) - dichas)
+    for k in faltan: print('SIN TRADUCIR:', k[:90])
+    for k in sobran: print('YA NO SE DICE:', k[:90])
+    with open(os.path.join(deck, 'subs-gl.js'), 'w', encoding='utf-8') as o:
+        o.write('window.SUBS_GL = {\n' + ',\n'.join(f'{json.dumps(k, ensure_ascii=False)}: {json.dumps(v, ensure_ascii=False)}' for k, v in SUBS_GL.items()) + '\n};\n')
+    print(f'{len(SUBS_GL)} frases en galego, {len(faltan)} sin traducir, {len(sobran)} sobrantes')

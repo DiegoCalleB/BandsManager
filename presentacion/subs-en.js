@@ -153,7 +153,7 @@ window.SUBS_EN = {
 "No, Brais: los que llevan a varias bandas. Mánayers, agencias y productoras. Para ellos, una cuenta con todas sus bandas, y planes de empresa, más caros.": "No, Brais: the ones who run several bands. Managers, agencies and production companies. For them, one account with all their bands, and business plans at a higher price.",
 "Las salas y los festivales no son clientes: son el canal. Si trabajar con nosotros es fácil, contestan antes. Mirad El Faro.": "Venues and festivals aren't customers: they're the channel. If we're easy to work with, they answer sooner. Look at El Faro.",
 "¿Y de qué vivimos, entonces? ¿De los aplausos?": "So what do we live on, then? Applause?",
-"De dos motores. Una suscripción por banda, ya construida pero apagada a propósito. Y el apoyo voluntario de quien use la app.": "Two engines. A per-band subscription, already built but switched off on purpose. And voluntary support from whoever uses the app.",
+"De dos motores. Una suscripción por banda, con seis planes. Y el apoyo voluntario de quien use la app.": "Two engines. A per-band subscription, with six plans. And voluntary support from whoever uses the app.",
 "¿Y cuánto es ese apoyo? ¿Más o menos que Peláez?": "And how much is that support? More or less than Peláez?",
 "Muchísimo menos: lo que cada uno quiera. Ya lo he habilitado, para pagar la inteligencia artificial y los servidores.": "A lot less: whatever each person wants. I've already enabled it, to pay for the AI and the servers.",
 "Y ahora, lo que viene: probarlo con una banda real. La nuestra.": "And now, what's next: trying it with a real band. Ours.",
@@ -196,5 +196,13 @@ window.SUBS_EN = {
 "¡Estos de Netflix tienen ojo, chaval!": "Those Netflix people have an eye, mate!",
 "Brais… la peli va de mí.": "Brais… the movie is about me.",
 "Por cierto, el miércoles ensayo con Máster of Prompts. ¿A qué hora era?": "By the way, on Wednesday I rehearse with Master of Prompts. What time was it?",
-"Mira el calendario, Brais. Mira el calendario.": "Check the calendar, Brais. Check the calendar."
+"Mira el calendario, Brais. Mira el calendario.": "Check the calendar, Brais. Check the calendar.",
+"Vale, pero tengo una duda. Si esto es tan bueno… ¿cómo se entera el resto de bandas?": "Okay, but I have a question. If this is so good… how do the other bands find out?",
+"De boca a oreja, tío. Una banda se lo cuenta a otra, y esa a otra. Como pasa con los buenos pedales.": "Word of mouth. One band tells another, and that one tells the next. Just like good pedals.",
+"Y le damos un empujón: todo lo que sale de la app lleva el sello de Band Mánayer. El cú-erre de los fans, el dossier, el acuerdo con la sala, el sétlist…": "And we give it a push: everything that comes out of the app carries the BandManager seal. The fans' QR, the dossier, the agreement with the venue, the setlist…",
+"¿Mi hoja de batería también? ¡Ya me veo en la portada, neno!": "My drum sheet too? I can already see myself on the cover!",
+"¡Cada vez que una sala lea nuestro dossier, nos hace publicidad gratis, che!": "Every time a venue reads our dossier, it's free advertising for us, che!",
+"Exacto. Y encima, una gran campaña en redes, para que los músicos de todo el mundo sepan que esta app existe.": "Exactly. And on top of that, a big social media campaign, so musicians all over the world know this app exists.",
+"¿De todo el mundo? ¿Hasta los de gaita?": "All over the world? Even the bagpipers?",
+"Sobre todo los de gaita, tío. Esos conocen a todo el mundo.": "Especially the bagpipers, man. They know everybody."
 };

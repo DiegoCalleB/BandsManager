@@ -56,6 +56,17 @@ export interface EntradaMusicoEnEspera {
   created_at?: string;
 }
 
+/** Cuántos fans tiene la banda. Solo el número: lo usa la película del TFM para saber cuándo alguien se ha hecho fan. */
+export async function dbContarFans(bandId: string): Promise<number> {
+  const sb = getSupabase();
+  const { count, error } = await sb
+    .from("fans")
+    .select("id", { count: "exact", head: true })
+    .eq("band_id", cleanBandId(bandId));
+  if (error) throw new Error(`Supabase Error (fans): ${error.message}`);
+  return count ?? 0;
+}
+
 export async function dbGetFans(bandId: string) {
   const sb = getSupabase();
   const cleanId = cleanBandId(bandId);

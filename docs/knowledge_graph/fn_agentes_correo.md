@@ -28,6 +28,7 @@ Scheduler, lector (Gmail/IMAP) y enviador con humano en el bucle.
 - [[ext_gemini|Gemini (Google GenAI)]] *(Layer: #external, Domain: #system)*
 - [[ext_google_oauth_gmail|Google OAuth / Gmail API]] *(Layer: #external, Domain: #system)*
 - [[ext_replicate|Replicate]] *(Layer: #external, Domain: #system)*
+- [[ext_resend|Resend]] *(Layer: #external, Domain: #system)*
 - [[ext_spotify|Spotify]] *(Layer: #external, Domain: #system)*
 - [[route_leads_crud|Leads CRUD Route]] *(Layer: #route, Domain: #booking)*
 - [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(Layer: #route, Domain: #booking)*

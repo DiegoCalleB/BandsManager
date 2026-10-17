@@ -65,6 +65,17 @@
   "v": "d29937706a43",
   "who": "bajo"
  },
+ "0659af7f": {
+  "d": 6.38,
+  "e": "48224851125210000000000000005776414999752000078863678737661777656268444210000000000004341356526993182784551998986899988632672276620366620154671173212541024431",
+  "f": "0659af7f.mp3",
+  "h": "ec897bb9",
+  "oido": "Exacto. Y encima, una gran campaña en redes, para que los músicos de todo el mundo sepan que esta app existe.",
+  "qa": 1.0,
+  "say": "Exacto. Y encima, una gran campaña en redes, para que los músicos de todo el mundo sepan que esta app existe.",
+  "v": "f816aefeb7d3",
+  "who": "bajo"
+ },
  "0692e513": {
   "d": 5.81,
   "e": "011999310000000000005932555228285229854106984653220003684178996816998757765433100000000000000000001546679727421597866776312776255325413433200000",
@@ -107,6 +118,17 @@
   "qa": 0.63,
   "say": "Ves sus métricas del mes, en Spótifai y en Yutub.",
   "v": "503b1d118a92",
+  "who": "bajo"
+ },
+ "0e735b18": {
+  "d": 5.47,
+  "e": "559399169759725403663110000000003675546785515562176741657711465311235541355441224210000000000000000019995287155199864287743134233333200",
+  "f": "0e735b18.mp3",
+  "h": "7095e5db",
+  "oido": "De boca breja, tío. Una banda se lo cuenta otra y esa otra. ¿Cómo pasa con los buenos Perales?",
+  "qa": 0.83,
+  "say": "De boca a oreja, tío. Una banda se lo cuenta a otra, y esa a otra. Como pasa con los buenos pedales.",
+  "v": "5067c7a57bab",
   "who": "bajo"
  },
  "0fc2ff2c": {
@@ -240,6 +262,17 @@
   "say": "Vamos por partes, chavales.",
   "v": "41bd3e671f59",
   "who": "bajo"
+ },
+ "1aa0c1f2": {
+  "d": 4.78,
+  "e": "2679867204969202978699776631321222100000000016620077303955369666652000000000001395641455415856542365104637265532333100",
+  "f": "1aa0c1f2.mp3",
+  "h": "81e4b33a",
+  "oido": "Vale, pero tengo una duda, si esto es tan bueno, ¿cómo se entera el resto de bandas?",
+  "qa": 1.0,
+  "say": "Vale, pero tengo una duda. Si esto es tan bueno… ¿cómo se entera el resto de bandas?",
+  "v": "58238fd382fa",
+  "who": "guitarra"
  },
  "1ab3a46b": {
   "d": 3.14,
@@ -438,17 +471,6 @@
   "say": "[softly] Neno, ¿y el break de batería que grabé el otro día en el móvil?",
   "v": "5e3406bb0d99",
   "who": "bateria"
- },
- "26d7ccf6": {
-  "d": 8.06,
-  "e": "0659498499416533321000000000000000000000000009997358314821199971665466533310000023541455201356884660375751453464564244046314214320000000000000000000001476563059899499876416646894772135456621654333310",
-  "f": "26d7ccf6.mp3",
-  "h": "3a7ca9fe",
-  "oido": "de dos motores. Una suscripción por Danda, ya construida pero apagada a propósito. Y el apoyo voluntario de quien ose la app.",
-  "qa": 0.91,
-  "say": "De dos motores. Una suscripción por banda, ya construida pero apagada a propósito. Y el apoyo voluntario de quien use la app.",
-  "v": "ed9974e04c0a",
-  "who": "bajo"
  },
  "2841abbd": {
   "d": 10.42,
@@ -670,17 +692,6 @@
   "v": "e1bbae2004b9",
   "who": "bajo"
  },
- "3f0ba94f": {
-  "d": 2.45,
-  "e": "03113999710332102542000000000002899855921058555114424783100",
-  "f": "3f0ba94f.mp3",
-  "h": "5ac402de",
-  "oido": "¿Y quién es ese? ¿Tiene más pelo que yo?",
-  "qa": 1.0,
-  "say": "[curious] ¿Y quién es ese? ¿Tiene más pelo que yo?",
-  "v": "65e367738a02",
-  "who": "voz"
- },
  "406be4f0": {
   "d": 2.23,
   "e": "156678999995575343200000000000000000066755653133123320",
@@ -735,6 +746,17 @@
   "say": "Con la grabación entera del bolo de la Ribeira, la inteligencia artificial separa las canciones de lo que hablamos con el público.",
   "v": "5be02aacae62",
   "who": "bajo"
+ },
+ "4297c599": {
+  "d": 4.37,
+  "e": "04869666610016555412874544567875433100488452117996310000003641751282135767315459820239775510332100199944210",
+  "f": "4297c599.mp3",
+  "h": "947e5120",
+  "oido": "Cada vez que una sala lea nuestro dossier, nos hace publicidad gratis, Che.",
+  "qa": 1.0,
+  "say": "¡Cada vez que una sala lea nuestro dossier, nos hace publicidad gratis, che!",
+  "v": "15059bad7914",
+  "who": "voz"
  },
  "42a113d7": {
   "d": 3.62,
@@ -1381,6 +1403,17 @@
   "v": "ba9e780258c7",
   "who": "bajo"
  },
+ "81561aa2": {
+  "d": 8.78,
+  "e": "09898299995499981361155332100000000003829796064146664644565000022791454113759467256676655442444210000000000000000045552016799898978631376554311000005652431488772310000564312885572566453168765441000003422138832344431000",
+  "f": "81561aa2.mp3",
+  "h": "9fa79e57",
+  "oido": "y le damos un empujón, todo lo que sale de la app lleva al sello de band manager. El cuero de los fans, el dossier, el acuerdo con la sala, el setlist.",
+  "qa": 0.89,
+  "say": "Y le damos un empujón: todo lo que sale de la app lleva el sello de Band Mánayer. El cú-erre de los fans, el dossier, el acuerdo con la sala, el sétlist…",
+  "v": "15225fa638e3",
+  "who": "bajo"
+ },
  "819f7f95": {
   "d": 2.26,
   "e": "034552895038996201631013127966576117335631388211211000",
@@ -1676,16 +1709,16 @@
   "v": "f10723a49cef",
   "who": "bateria"
  },
- "a04e6e4b": {
-  "d": 3.77,
-  "e": "05542679669991956566662046651016843221100000000006555435999329678897453200000144374654255321",
-  "f": "a04e6e4b.mp3",
-  "h": "75a188ef",
-  "oido": "El cantante de Master of Proms, guardaos el nombre que da volver.",
-  "qa": 0.8,
-  "say": "El cantante de Máster of Prompts. Guardaos el nombre, que va a volver.",
-  "v": "fe2cbca131c9",
-  "who": "bajo"
+ "9fa54719": {
+  "d": 3.7,
+  "e": "0122210000003458931586669528247714421222211110000000001159547959984357126212765342222222100",
+  "f": "9fa54719.mp3",
+  "h": "e5025efe",
+  "oido": "¡Mi hoja de batería también! Ya me veo en la portada, neno.",
+  "qa": 1.0,
+  "say": "[gasps] ¿Mi hoja de batería también? ¡Ya me veo en la portada, neno!",
+  "v": "f95397233f3e",
+  "who": "bateria"
  },
  "a15920bc": {
   "d": 2.33,
@@ -1730,6 +1763,17 @@
   "say": "¿Alguien le ha contestado a la sala del catorce? Che, que yo soy la voz, no la secretaria.",
   "v": "4400292cbde0",
   "who": "voz"
+ },
+ "a6173ea3": {
+  "d": 6.7,
+  "e": "0866739956994165343210000000000000000000299942941583204987258546554333200000000034421664105655432100000000000000000000001465541499893987665166698584026666315554434210",
+  "f": "a6173ea3.mp3",
+  "h": "e9d01b2c",
+  "oido": "de dos motores, una suscripción por banda con seis planes y el apoyo voluntario de Kenusela app.",
+  "qa": 0.89,
+  "say": "De dos motores. Una suscripción por banda, con seis planes. Y el apoyo voluntario de quien use la app.",
+  "v": "b5a106fafb85",
+  "who": "bajo"
  },
  "a617749f": {
   "d": 7.25,
@@ -1829,6 +1873,17 @@
   "say": "[laughs] ¡Un disco en vivo, sin mis chistes malos! ¡Qué genio!",
   "v": "6f6d02c8867d",
   "who": "voz"
+ },
+ "af087b9f": {
+  "d": 1.94,
+  "e": "02530583995687755520000000551055462054599407841",
+  "f": "af087b9f.mp3",
+  "h": "aecf2a15",
+  "oido": "Le todo el mundo hasta los de Gaita.",
+  "qa": 0.88,
+  "say": "¿De todo el mundo? ¿Hasta los de gaita?",
+  "v": "05d7b9c89f56",
+  "who": "guitarra"
  },
  "b02171d4": {
   "d": 1.99,
@@ -2071,6 +2126,17 @@
   "say": "¡Pero tío! ¡Es como Últimeit Guitar, pero con nuestras canciones! ¡Pellízcame! ¡Esto es mejor que un solo de Eslash!",
   "v": "cfff4d951ef1",
   "who": "guitarra"
+ },
+ "c0a6619c": {
+  "d": 3.19,
+  "e": "033485473178398994149449951043002233200000043437721044241052530854521111111110",
+  "f": "c0a6619c.mp3",
+  "h": "985636fe",
+  "oido": "sobre todo los de Gaita Tio, esos conocen a todo el mundo.",
+  "qa": 1.0,
+  "say": "[mischievously] Sobre todo los de gaita, tío. Esos conocen a todo el mundo.",
+  "v": "56b3c1d2e6d2",
+  "who": "bateria"
  },
  "c322b3fe": {
   "d": 4.66,
