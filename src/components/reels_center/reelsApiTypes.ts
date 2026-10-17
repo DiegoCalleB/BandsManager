@@ -21,6 +21,8 @@ export interface ViralWindow {
   energia: number;
   arranque: number;
   dinamismo: number;
+  /** Cuánto vuelve a ver la gente este tramo. Ausente si no hay datos del público. */
+  publico?: number;
   score: number;
   motivo: string;
 }
