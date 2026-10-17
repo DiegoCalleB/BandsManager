@@ -21,7 +21,7 @@ EN = {
     "Herdeiros. I wrote to you three months ago and nobody answered. I take thirty percent, and I pick the setlist.",
 "No firméis nada, chavales. Los bolos los llevamos nosotros. El sábado os lo demuestro.":
     "Don't sign anything, guys. We book our own gigs. Saturday, I'll prove it.",
-"Soy Brais, batería. El que marca el ritmo. Y el que se bebe las birras.":
+"Soy Brais, batería. El que marca el ritmo. Y el que nunca pierde el compás.":
     "I'm Brais, drums. The one who keeps the beat. And drinks the beers.",
 "Alan. Voz y guitarra. Che, la cara bonita de la banda.":
     "Alan. Vocals and guitar. Che, the pretty face of the band.",
@@ -209,7 +209,7 @@ EN = {
     "Here's what comes in from each gig, the expenses, and what each one gets. On a single screen.",
 "¡Las cuentas claras! ¡Y salen números positivos!":
     "Clear accounts! And they're positive! For the first time in this band's history!",
-"Y para las giras le meteré algo tipo Traicaunt, para que Brais no nos haga el lío de las birras.":
+"Y para las giras le meteré algo tipo Traicaunt, para que Brais no nos haga el lío con las cuentas.":
     "And for tours, I'll add something like Tricount, so Brais doesn't mess up the beer money like always.",
 "¡Oye! ¡Que fue solo una vez!":
     "Hey! That only happened once!",
@@ -237,7 +237,7 @@ EN = {
     "Almost always at night, when the girls were already asleep. I'd close the laptop, look at them for a moment… and open it again.",
 "Neno… no teníamos ni idea.":
     "Neno… we had no idea.",
-"Y nosotros, discutiendo por las birras.":
+"Y nosotros, discutiendo por tonterías.":
     "And we were arguing about beers.",
 "Gracias, Iago. De verdad.":
     "Thank you, Iago. Truly.",

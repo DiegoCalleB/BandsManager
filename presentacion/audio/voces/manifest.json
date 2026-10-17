@@ -120,6 +120,24 @@
   "v": "503b1d118a92",
   "who": "bajo"
  },
+ "0d803991": {
+  "d": 4.94,
+  "e": "07719999971169899348788256797876384027610663034541167643321000000000002444126359987524665424654544467721554431044321442100",
+  "f": "0d803991.mp3",
+  "h": "1782606b",
+  "say": "Y para las giras le meteré algo tipo Traicaunt, para que Brais no nos haga el lío con las cuentas.",
+  "v": "99faa9625418",
+  "who": "bajo"
+ },
+ "0d95afa4": {
+  "d": 3.98,
+  "e": "0364996257411010000179116233410000006631863764179322211111000002693128343329614844441121102112331",
+  "f": "0d95afa4.mp3",
+  "h": "a6fa41c8",
+  "say": "Soy Brais, batería. El que marca el ritmo. Y el que nunca pierde el compás.",
+  "v": "449f9315bc35",
+  "who": "bateria"
+ },
  "0e735b18": {
   "d": 5.83,
   "e": "123559817979931541676431000000000000000000016888789995833798259773455542134320023589712865650234420000000000003444238615427756527655412646655421",
@@ -129,17 +147,6 @@
   "qa": 0.95,
   "say": "De boca a oreja, tío. Una banda se lo cuenta a otra, y esa a otra. Como pasa con los buenos pedales.",
   "v": "5067c7a57bab",
-  "who": "bajo"
- },
- "10091bd2": {
-  "d": 5.04,
-  "e": "0541655654411998962999751547787847513951476641147541155545200000000000000043531445698663265553156455444564444432563243310000",
-  "f": "10091bd2.mp3",
-  "h": "7cd516d7",
-  "oido": "y para las giras le meteré algo tipo \"tri-count\" para que Brice no nos haga el lío de las bir",
-  "qa": 0.83,
-  "say": "Y para las giras le meteré algo tipo Traicaunt, para que Brais no nos haga el lío de las birras.",
-  "v": "481b0a5081f2",
   "who": "bajo"
  },
  "1037ab93": {
@@ -1397,17 +1404,6 @@
   "v": "15225fa638e3",
   "who": "bajo"
  },
- "819f7f95": {
-  "d": 2.26,
-  "e": "034552895038996201631013127966576117335631388211211000",
-  "f": "819f7f95.mp3",
-  "h": "00c4198c",
-  "oido": "y nosotros discutiendo por las birras.",
-  "qa": 1.0,
-  "say": "[sighs] Y nosotros, discutiendo por las birras.",
-  "v": "a9834757b122",
-  "who": "guitarra"
- },
  "82b4a778": {
   "d": 5.38,
   "e": "1898579349922198951897873254332000000003723824641899877531486257851018430341014321000000000000000000000996951583543455403431233310000",
@@ -1639,6 +1635,15 @@
   "v": "943170eb9cc3",
   "who": "bateria"
  },
+ "98034c5e": {
+  "d": 2.3,
+  "e": "0176882297101443105620292189557506730775159697422100000",
+  "f": "98034c5e.mp3",
+  "h": "a7bcee57",
+  "say": "[sighs] Y nosotros, discutiendo por tonterías.",
+  "v": "3a89cbc36083",
+  "who": "guitarra"
+ },
  "99d9ad1f": {
   "d": 10.97,
   "e": "06998971999796766848741647388407735655423333210000000026358846986313468870111004487951455117500244410000000000000000000000025645899689957577212987969981765308961982074262069898410035525531389492587552177755766455544430000000000000000027798587317775267715556312634544431000",
@@ -1825,17 +1830,6 @@
   "say": "[curious] ¿Y si a mitad del bolo la curva se cae?",
   "v": "3e8d4377050a",
   "who": "guitarra"
- },
- "ab24b1fe": {
-  "d": 3.72,
-  "e": "0227995467521011015920523332000002931393784079523510111000002772163126778553422133312210000",
-  "f": "ab24b1fe.mp3",
-  "h": "83b88ff1",
-  "oido": "Soy Bryce, batería, el que marca el ritmo y el que se bebe las birras",
-  "qa": 0.93,
-  "say": "Soy Brais, batería. El que marca el ritmo. Y el que se bebe las birras.",
-  "v": "5c16459f57e3",
-  "who": "bateria"
  },
  "ae321d12": {
   "d": 4.51,
