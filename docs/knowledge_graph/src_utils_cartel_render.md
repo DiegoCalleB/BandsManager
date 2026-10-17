@@ -23,6 +23,7 @@ Pinta el cartel en un canvas a partir del layout puro. Es la única pieza con DO
 - [[src_utils_cartel_formatos|src/utils/cartel/formatos.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_grano|src/utils/cartel/grano.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_layout|src/utils/cartel/layout.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_cartel_logos|src/utils/cartel/logos.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_placas|src/utils/cartel/placas.ts]] *(Layer: #service, Domain: #system)*
 
 ---
@@ -30,6 +31,7 @@ Pinta el cartel en un canvas a partir del layout puro. Es la única pieza con DO
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_cartel_hooks_useAdnCartel|src/components/cartel/hooks/useAdnCartel.ts]] *(from #frontend)*
 - [[src_components_cartel_hooks_useEditorCartel|src/components/cartel/hooks/useEditorCartel.ts]] *(from #frontend)*
+- [[src_components_cartel_hooks_useIdeaCartel|src/components/cartel/hooks/useIdeaCartel.ts]] *(from #frontend)*
 - [[src_components_cartel_SelectorFondo|src/components/cartel/SelectorFondo.tsx]] *(from #frontend)*
 
 ---

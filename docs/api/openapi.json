@@ -3,7 +3,7 @@
   "info": {
     "title": "BandManager.io API",
     "version": "3.0.0",
-    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (369) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
+    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (374) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
     "license": {
       "name": "AGPL-3.0-only",
       "identifier": "AGPL-3.0-only"
@@ -1368,7 +1368,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:55",
+        "x-source": "server/routes/epk_fans.ts:54",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -1401,7 +1401,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:73",
+        "x-source": "server/routes/epk_fans.ts:72",
         "x-autenticacion": "middleware"
       },
       "put": {
@@ -1433,7 +1433,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:104",
+        "x-source": "server/routes/epk_fans.ts:103",
         "x-autenticacion": "middleware"
       }
     },
@@ -3261,7 +3261,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:212",
+        "x-source": "server/routes/cartelria.ts:331",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -3299,10 +3299,51 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:223",
+        "x-source": "server/routes/cartelria.ts:342",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
+        ]
+      }
+    },
+    "/api/cartel/brief": {
+      "post": {
+        "tags": [
+          "campanaConcierto"
+        ],
+        "operationId": "postApiCartelBrief",
+        "description": "Comentario en el código: Lo que se le va a pedir a la IA, en inglés, sin generar ninguna imagen: para que la persona lo vea antes de gastar.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BandIdActiva"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "cookieAuth": []
+          },
+          {
+            "authTokenHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "401": {
+            "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/cartelria.ts:312",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "iaRateLimiter"
         ]
       }
     },
@@ -3339,10 +3380,88 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:94",
+        "x-source": "server/routes/cartelria.ts:106",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "imagenRateLimiter"
+        ]
+      }
+    },
+    "/api/cartel/idea": {
+      "post": {
+        "tags": [
+          "campanaConcierto"
+        ],
+        "operationId": "postApiCartelIdea",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BandIdActiva"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "cookieAuth": []
+          },
+          {
+            "authTokenHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "401": {
+            "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/cartelria.ts:287",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "ficherosRateLimiter"
+        ]
+      },
+      "delete": {
+        "tags": [
+          "campanaConcierto"
+        ],
+        "operationId": "deleteApiCartelIdea",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BandIdActiva"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "cookieAuth": []
+          },
+          {
+            "authTokenHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "401": {
+            "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/cartelria.ts:302",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "apiAutenticadaRateLimiter"
         ]
       }
     },
@@ -3379,7 +3498,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:239",
+        "x-source": "server/routes/cartelria.ts:358",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "ficherosRateLimiter"
@@ -3427,7 +3546,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:152",
+        "x-source": "server/routes/cartelria.ts:173",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -3475,7 +3594,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:187",
+        "x-source": "server/routes/cartelria.ts:208",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "ficherosRateLimiter"
@@ -3523,10 +3642,105 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:165",
+        "x-source": "server/routes/cartelria.ts:186",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "ficherosRateLimiter"
+        ]
+      }
+    },
+    "/api/cartel/{concertId}/logo": {
+      "post": {
+        "tags": [
+          "campanaConcierto"
+        ],
+        "operationId": "postApiCartelConcertIdLogo",
+        "parameters": [
+          {
+            "name": "concertId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/BandIdActiva"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "cookieAuth": []
+          },
+          {
+            "authTokenHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "401": {
+            "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/cartelria.ts:231",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "ficherosRateLimiter"
+        ]
+      },
+      "delete": {
+        "tags": [
+          "campanaConcierto"
+        ],
+        "operationId": "deleteApiCartelConcertIdLogo",
+        "description": "Comentario en el código: Solo se borra un logo que este bolo tiene en su cartel: la ruta sale de su configuración, no de lo que mande el cliente.",
+        "parameters": [
+          {
+            "name": "concertId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/BandIdActiva"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "cookieAuth": []
+          },
+          {
+            "authTokenHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "401": {
+            "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/cartelria.ts:265",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "apiAutenticadaRateLimiter"
         ]
       }
     },
@@ -4717,7 +4931,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:138",
+        "x-source": "server/routes/epk_fans.ts:137",
         "x-autenticacion": "middleware"
       },
       "put": {
@@ -4750,7 +4964,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:158",
+        "x-source": "server/routes/epk_fans.ts:157",
         "x-autenticacion": "middleware"
       }
     },
@@ -4785,7 +4999,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:1072",
+        "x-source": "server/routes/epk_fans.ts:1071",
         "x-autenticacion": "middleware"
       }
     },
@@ -4820,7 +5034,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:234",
+        "x-source": "server/routes/epk_fans.ts:233",
         "x-autenticacion": "middleware"
       }
     },
@@ -5039,7 +5253,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:762",
+        "x-source": "server/routes/epk_fans.ts:761",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -5072,7 +5286,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:781",
+        "x-source": "server/routes/epk_fans.ts:780",
         "x-autenticacion": "middleware"
       }
     },
@@ -5115,7 +5329,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:820",
+        "x-source": "server/routes/epk_fans.ts:819",
         "x-autenticacion": "middleware"
       },
       "delete": {
@@ -5156,7 +5370,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:854",
+        "x-source": "server/routes/epk_fans.ts:853",
         "x-autenticacion": "middleware"
       }
     },
@@ -5232,7 +5446,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/metrics.ts:731",
+        "x-source": "server/routes/metrics.ts:730",
         "x-autenticacion": "middleware"
       }
     },
@@ -8110,7 +8324,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/metrics.ts:15",
+        "x-source": "server/routes/metrics.ts:14",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -8143,7 +8357,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/metrics.ts:27",
+        "x-source": "server/routes/metrics.ts:26",
         "x-autenticacion": "middleware"
       }
     },
@@ -8178,7 +8392,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/metrics.ts:229",
+        "x-source": "server/routes/metrics.ts:228",
         "x-autenticacion": "middleware"
       }
     },
@@ -8213,7 +8427,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/metrics.ts:461",
+        "x-source": "server/routes/metrics.ts:460",
         "x-autenticacion": "middleware"
       }
     },
@@ -8248,7 +8462,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/metrics.ts:578",
+        "x-source": "server/routes/metrics.ts:577",
         "x-autenticacion": "middleware"
       }
     },
@@ -8283,7 +8497,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/metrics.ts:362",
+        "x-source": "server/routes/metrics.ts:361",
         "x-autenticacion": "middleware"
       }
     },
@@ -8318,7 +8532,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/metrics.ts:107",
+        "x-source": "server/routes/metrics.ts:106",
         "x-autenticacion": "middleware"
       }
     },
@@ -8353,7 +8567,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/metrics.ts:605",
+        "x-source": "server/routes/metrics.ts:604",
         "x-autenticacion": "middleware"
       }
     },
@@ -8388,7 +8602,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/metrics.ts:80",
+        "x-source": "server/routes/metrics.ts:79",
         "x-autenticacion": "middleware"
       }
     },
@@ -8431,7 +8645,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/metrics.ts:40",
+        "x-source": "server/routes/metrics.ts:39",
         "x-autenticacion": "middleware"
       },
       "delete": {
@@ -8475,7 +8689,7 @@
             "$ref": "#/components/responses/SoloLider"
           }
         },
-        "x-source": "server/routes/metrics.ts:59",
+        "x-source": "server/routes/metrics.ts:58",
         "x-autenticacion": "middleware",
         "x-requires-leader": true
       }
@@ -8546,7 +8760,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:1182",
+        "x-source": "server/routes/epk_fans.ts:1181",
         "x-autenticacion": "middleware"
       }
     },
@@ -9249,7 +9463,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/epk_fans.ts:463",
+        "x-source": "server/routes/epk_fans.ts:462",
         "x-autenticacion": "ninguna"
       }
     },
@@ -9301,7 +9515,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:868",
+        "x-source": "server/routes/epk_fans.ts:867",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -9422,7 +9636,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:1114",
+        "x-source": "server/routes/epk_fans.ts:1113",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -9445,7 +9659,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:980",
+        "x-source": "server/routes/epk_fans.ts:979",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -13110,7 +13324,7 @@
             "$ref": "#/components/responses/SoloLider"
           }
         },
-        "x-source": "server/routes/users/rutasMiembrosEdicion.ts:228",
+        "x-source": "server/routes/users/rutasMiembrosEdicion.ts:197",
         "x-autenticacion": "middleware",
         "x-requires-leader": true
       }

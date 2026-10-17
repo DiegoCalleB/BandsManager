@@ -13,6 +13,8 @@ import { dbGetBandSchedule } from "../db/schedule.js";
 import { dbBuscarReelClip, type ReelClip } from "../db/reelClips.js";
 import { cleanBandId } from "../db/core.js";
 import { publicarReelInstagram, type CredencialesInstagram } from "./publicadores/instagramReels.js";
+import { avisarPublicacionesFallidas } from "./avisosPublicacion.js";
+import type { PostFallido } from "../utils/avisoPublicacionFallida.js";
 import { credencialesInstagram } from "./credencialesInstagram.js";
 import { postsVencidos, estaColgadoPublicando } from "../utils/programacionPosts.js";
 import { captureError } from "../utils/errorTracking.js";
@@ -28,6 +30,8 @@ export interface PublishResult {
   error?: string;
   /** 'asistido' = no se puede publicar solo; `error` dice por qué y qué hacer. */
   modo?: "publicado" | "asistido" | "fallido";
+  /** El post no falló: otro proceso lo tiene o ya no estaba pendiente. No merece un aviso a la banda. */
+  sinAviso?: boolean;
 }
 
 /** Log siempre (Sentry puede estar apagado) y a Sentry si está activo. */
@@ -100,7 +104,7 @@ async function publicar(
 
   const reclamado = await dbReclamarPostParaPublicar(post.id, bandId, desde);
   if (!reclamado) {
-    return { success: false, postId: post.id, platform, modo: "fallido", error: "Este post ya se está publicando o ya no está pendiente." };
+    return { success: false, postId: post.id, platform, modo: "fallido", sinAviso: true, error: "Este post ya se está publicando o ya no está pendiente." };
   }
 
   try {
@@ -137,12 +141,13 @@ export async function publishSocialPostNow(postId: string, bandId: string): Prom
 async function publicarVencidosDeBanda(bandId: string, posts: SocialPost[], ahora: Date): Promise<PublishResult[]> {
   const zona = (await dbGetBandSchedule(bandId).catch(() => null))?.timezone;
   const resultados: PublishResult[] = [];
+  const fallos: PostFallido[] = [];
+  const comoFallo = (p: SocialPost, motivo: string, asistido: boolean): PostFallido => ({ plataforma: p.plataforma || "Instagram", fecha: p.fecha, hora: p.hora_programada, motivo, asistido });
 
   for (const colgado of posts.filter((p) => estaColgadoPublicando(p, ahora))) {
-    await dbUpsertSocialPost(
-      { ...colgado, estado: "fallido", publish_error: "La publicación se interrumpió. Comprueba en Instagram si llegó a salir antes de reintentarla." },
-      bandId
-    );
+    const motivo = "La publicación se interrumpió. Comprueba en Instagram si llegó a salir antes de reintentarla.";
+    await dbUpsertSocialPost({ ...colgado, estado: "fallido", publish_error: motivo }, bandId);
+    fallos.push(comoFallo(colgado, motivo, false));
   }
 
   for (const post of postsVencidos(posts, zona, ahora)) {
@@ -150,8 +155,12 @@ async function publicarVencidosDeBanda(bandId: string, posts: SocialPost[], ahor
     if (r.modo === "asistido") {
       await dbUpsertSocialPost({ ...post, estado: "fallido", publish_error: r.error }, bandId);
     }
+    if (!r.success && !r.sinAviso) fallos.push(comoFallo(post, r.error || "No se pudo publicar.", r.modo === "asistido"));
     resultados.push(r);
   }
+
+  // Un solo correo por banda y pasada, y nunca bloquea ni rompe el worker.
+  if (fallos.length) await avisarPublicacionesFallidas(bandId, fallos).catch((e: unknown) => avisar("aviso de publicación fallida", e, { bandId }));
   return resultados;
 }
 

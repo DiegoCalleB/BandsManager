@@ -126,36 +126,76 @@ describe('calcularLayout', () => {
   });
 });
 
-describe('logo de la banda', () => {
-  const conLogo: OpcionesLayout = { qr: false, urlCorta: null, marca: false, logo: true };
+describe('fila de logos', () => {
+  const conLogos = (aspectos: number[], qr = false): OpcionesLayout => ({ qr, urlCorta: null, marca: true, logos: aspectos });
+  const solapan = (a: { x: number; y: number; w: number; h: number }, b: { x: number; y: number; w: number; h: number }) =>
+    a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
 
   for (const f of ORDEN_FORMATOS) {
-    it(`${f}: el logo cabe en el lienzo y ningún nombre lo pisa`, () => {
-      const def = FORMATOS[f];
-      const { ancho: w } = dimensiones(def);
-      const L = calcularLayout(def, w, datos({ lineup: [{ nombre: 'La Orquesta Sinfónica Experimental', cabeza: true }, { nombre: 'Los Pijamas', cabeza: false }] }), conLogo, medir);
-      const g = L.logo!;
-      expect(g).not.toBeNull();
-      expect(g.x + g.w).toBeLessThanOrEqual(w);
-      expect(g.y + g.h).toBeLessThanOrEqual(L.alto);
-      for (const l of L.lineas) {
-        const izq = l.alinear === 'left' ? l.x : l.x - ancho(l);
-        const solapa = izq < g.x + g.w && izq + ancho(l) > g.x && l.y < g.y + g.h && l.y + l.px > g.y;
-        expect(solapa, `"${l.texto}" pisa el logo`).toBe(false);
-      }
-    });
+    for (const qr of [false, true]) {
+      it(`${f}${qr ? ' con QR' : ''}: los logos caben, no pisan texto ni QR y quedan en la zona de abajo`, () => {
+        const def = FORMATOS[f];
+        const { ancho: w } = dimensiones(def);
+        const L = calcularLayout(def, w, datos({ lineup: [{ nombre: 'La Orquesta Sinfónica Experimental', cabeza: true }, { nombre: 'Los Pijamas', cabeza: false }] }), conLogos([1, 3, 0.8, 4, 1.5], qr), medir);
+        expect(L.logos).toHaveLength(5);
+        for (const g of L.logos) {
+          expect(g.x).toBeGreaterThanOrEqual(0);
+          expect(g.x + g.w).toBeLessThanOrEqual(w);
+          expect(g.y).toBeGreaterThanOrEqual(L.zonas.abajo.y);
+          expect(g.y + g.h).toBeLessThanOrEqual(L.alto);
+          if (L.qr) expect(solapan(g, L.qr)).toBe(false);
+          for (const l of L.lineas) {
+            const izq = l.alinear === 'left' ? l.x : l.x - ancho(l);
+            expect(solapan(g, { x: izq, y: l.y, w: ancho(l), h: l.px }), `"${l.texto}" pisa un logo`).toBe(false);
+          }
+        }
+      });
+    }
   }
 
-  it('sin pedirlo no se reserva hueco, y con él los nombres se estrechan', () => {
-    const sin = calcularLayout(FORMATOS.feed, 1080, datos(), sinNada, medir);
-    expect(sin.logo).toBeNull();
-    const con = calcularLayout(FORMATOS.feed, 1080, datos(), conLogo, medir);
-    expect(con.lineas[0].px).toBeLessThanOrEqual(sin.lineas[0].px);
+  it('sin logos no hay fila ni cambia nada de lo demás', () => {
+    const sin = calcularLayout(FORMATOS.feed, 1080, datos(), todo, medir);
+    expect(sin.logos).toEqual([]);
+    expect(calcularLayout(FORMATOS.feed, 1080, datos(), { ...todo, logos: [] }, medir).zonas).toEqual(sin.zonas);
   });
 
-  it('en una historia el logo respeta la franja segura de Instagram', () => {
+  it('van en orden, de izquierda a derecha, sin pisarse y centrados en la misma línea', () => {
+    const L = calcularLayout(FORMATOS.feed, 1080, datos(), conLogos([1, 3, 0.6]), medir);
+    const c = L.logos.map((g) => g.y + g.h / 2);
+    expect(Math.max(...c) - Math.min(...c)).toBeLessThan(1);
+    for (let i = 1; i < L.logos.length; i++) expect(L.logos[i].x).toBeGreaterThan(L.logos[i - 1].x + L.logos[i - 1].w);
+  });
+
+  it('cada hueco respeta la proporción del logo', () => {
+    const L = calcularLayout(FORMATOS.feed, 1080, datos(), conLogos([1, 2, 0.5]), medir);
+    expect(L.logos[0].w / L.logos[0].h).toBeCloseTo(1, 1);
+    expect(L.logos[1].w / L.logos[1].h).toBeCloseTo(2, 1);
+    expect(L.logos[2].w / L.logos[2].h).toBeCloseTo(0.5, 1);
+  });
+
+  it('un logo muy apaisado y uno cuadrado pesan parecido: superficie similar, no la misma altura', () => {
+    const L = calcularLayout(FORMATOS.feed, 1080, datos(), conLogos([1, 2.2]), medir);
+    const [a, b] = L.logos.map((g) => g.w * g.h);
+    expect(b / a).toBeGreaterThan(0.8);
+    expect(b / a).toBeLessThan(1.25);
+    expect(L.logos[1].h).toBeLessThan(L.logos[0].h);
+  });
+
+  it('si no caben en el ancho útil se reducen todos por igual, sin salirse', () => {
+    const L = calcularLayout(FORMATOS.feed, 1080, datos(), conLogos([2.4, 2.4, 2.4, 2.4, 2.4]), medir);
+    const fin = L.logos[4].x + L.logos[4].w;
+    expect(fin).toBeLessThanOrEqual(1080 - 72 + 0.5);
+    expect(new Set(L.logos.map((g) => Math.round(g.w))).size).toBe(1);
+  });
+
+  it('como mucho 5 logos, y los aspectos inválidos no rompen nada', () => {
+    expect(calcularLayout(FORMATOS.feed, 1080, datos(), conLogos([1, 1, 1, 1, 1, 1, 1]), medir).logos).toHaveLength(5);
+    expect(calcularLayout(FORMATOS.feed, 1080, datos(), conLogos([0, -1, NaN, Infinity, 1]), medir).logos).toHaveLength(1);
+  });
+
+  it('en una historia la fila respeta la franja segura de abajo', () => {
     const def = FORMATOS.historia;
-    const L = calcularLayout(def, 1080, datos(), conLogo, medir);
-    expect(L.logo!.y).toBeGreaterThanOrEqual(def.seguroArriba * L.alto);
+    const L = calcularLayout(def, 1080, datos(), conLogos([1, 2]), medir);
+    for (const g of L.logos) expect(g.y + g.h).toBeLessThanOrEqual(L.alto - def.seguroAbajo * L.alto + 0.5);
   });
 });
