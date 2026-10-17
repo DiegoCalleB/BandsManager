@@ -3,7 +3,7 @@
    de Netflix, con un acceso fijo a la app en la barra superior. Sale de cine.js para no pasar de 600 líneas. */
 (function () {
   'use strict';
-  var WEB = 'https://bandmanager.io';
+  var WEB = 'https://bandmanager.io/tfm'; // landing del TFM
   // [icono SVG (trazo), nombre, subtítulo, colores del degradado, captura de fondo, encuadre]
   var ICONOS = {
     swap: '<path d="M17 3l4 4-4 4M21 7H8a4 4 0 00-4 4M7 21l-4-4 4-4M3 17h13a4 4 0 004-4"/>',
