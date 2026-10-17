@@ -115,8 +115,8 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
       {/* ── HEADER ────────────────────────────────────────────────────── */}
       <header className="sticky top-0 z-30 bg-[var(--bg)]/95">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-          <div className="flex items-center gap-3">
-            <a href="/" className="flex items-center gap-2.5" aria-label="BandManager, inicio">
+          <div className="flex shrink-0 items-center gap-3">
+            <a href="/" className="flex shrink-0 items-center gap-2.5" aria-label="BandManager, inicio">
               <img
                 src="/logo_bandmanager_symbol.png?v=4"
                 alt=""
@@ -124,22 +124,23 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
                 height={32}
                 className="size-8 rounded-[var(--r-s)]"
               />
-              <span className="font-display text-base font-bold tracking-tight">BandManager</span>
+              <span className="hidden whitespace-nowrap font-display text-base font-bold tracking-tight min-[430px]:inline">BandManager</span>
             </a>
-            <span className="rounded-[var(--r-pill)] bg-[var(--acc)]/10 px-2.5 py-0.5 text-xs font-bold text-[var(--ink)]">
+            <span className="hidden whitespace-nowrap rounded-[var(--r-pill)] bg-[var(--acc)]/10 px-2.5 py-0.5 text-xs font-bold text-[var(--ink)] xl:inline">
               TFM Demo Edition
             </span>
           </div>
 
-          <nav aria-label="Secciones" className="hidden items-center gap-6 text-sm text-[var(--ink-2)] md:flex">
-            <a href="#escrow" className="hover:text-[var(--ink)]">{es ? 'Contratos y Escrow' : 'Contracts y Escrow'}</a>
-            <a href="#multibanda-iris" className="hover:text-[var(--ink)]">{es ? 'Multibanda e Iris' : 'Multi-band e Iris'}</a>
-            <a href="#como-funciona" className="hover:text-[var(--ink)]">{es ? 'Flujo de Trabajo' : 'Workflow'}</a>
-            <a href="#planes" className="hover:text-[var(--ink)]">{es ? 'Planes' : 'Pricing'}</a>
+          <nav aria-label="Secciones" className="hidden items-center gap-8 whitespace-nowrap text-sm text-[var(--ink-2)] lg:flex">
+            <a href="#como-funciona" className="hover:text-[var(--ink)]">{es ? 'Cómo funciona' : 'How it works'}</a>
+            <a href="#planes" className="hover:text-[var(--ink)]">{es ? 'Precios' : 'Pricing'}</a>
             <a href="#preguntas" className="hover:text-[var(--ink)]">{es ? 'Preguntas' : 'FAQs'}</a>
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex shrink-0 items-center gap-3">
+            <a href="#planes" className="hidden whitespace-nowrap text-sm font-medium text-[var(--ink-2)] hover:text-[var(--ink)] sm:inline lg:hidden">
+              {es ? 'Precios' : 'Pricing'}
+            </a>
             <select
               data-raw
               value={language === 'es' || language === 'en' ? language : 'es'}
