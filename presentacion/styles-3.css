@@ -244,8 +244,13 @@ body.pelicula[data-corte="j"]:not(.scroll) .slide.active, body.pelicula[data-cor
 body.pelicula:not(.scroll) #etalon { display: block; z-index: 44; mix-blend-mode: soft-light;
   background: linear-gradient(180deg, rgba(20, 70, 90, .38) 0%, rgba(20, 50, 70, .18) 45%, rgba(255, 150, 70, .22) 100%); }
 body.pelicula:not(.scroll) #grano { display: block; z-index: 46; inset: -40px; opacity: .07; mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 1.4 -.2'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-image: url(img/grano.png); background-size: 192px 192px;
   animation: grano 900ms steps(6) infinite; }
+/* En móviles y tabletas (puntero táctil) no hay grano ni mezclas de capas: algunas GPU de móvil pintan basura con mix-blend-mode sobre vídeo */
+@media (pointer: coarse) {
+  body.pelicula:not(.scroll) #grano { display: none; }
+  body.pelicula:not(.scroll) #etalon { mix-blend-mode: normal; opacity: .35; }
+}
 @keyframes grano { 0% { translate: 0 0; } 20% { translate: -18px 12px; } 40% { translate: 14px -20px; } 60% { translate: -10px -8px; } 80% { translate: 20px 16px; } 100% { translate: 0 0; } }
 body.pelicula:not(.scroll) .slide.active { filter: contrast(1.04) saturate(.92); }
 @media (prefers-reduced-motion: reduce) { #grano { animation: none; } }
