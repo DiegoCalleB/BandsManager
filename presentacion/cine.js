@@ -564,7 +564,7 @@
 
   new MutationObserver(despertar).observe(body, { attributes: true, attributeFilter: ['class'] });
   addEventListener('voz', despertar);
-  document.addEventListener('visibilitychange', function () { if (document.hidden) Object.keys(pistas).forEach(function (n) { pistas[n].a.pause(); }); else despertar(); });
+  document.addEventListener('visibilitychange', function () { if (document.hidden) Object.keys(pistas).forEach(function (n) { if (pistas[n] && pistas[n].a) pistas[n].a.pause(); }); else despertar(); });
 })();
 
 // La ficha de cada función (modo película) entra con un golpe grave suave
