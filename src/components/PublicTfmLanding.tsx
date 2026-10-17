@@ -4,6 +4,7 @@ import { ArrowRight, Check, ChevronDown, Layers, Rocket, ShieldCheck, Sliders, S
 import { Button } from './ui';
 import { useLanguage, SupportedLanguage } from '../context/idioma';
 import { LandingChatWidget } from './LandingChatWidget';
+import { FormularioInteres } from './landing/FormularioInteres';
 import { PreciosTfm } from './landing/PreciosTfm';
 
 interface PublicTfmLandingProps {
@@ -553,6 +554,8 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
                   : 'Stripe escrow guarantee · No commitment · 120-second setup'}
               </span>
             </p>
+
+            <FormularioInteres es={es} />
           </div>
         </section>
       </main>

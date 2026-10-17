@@ -26,6 +26,7 @@ Exporta: FormularioInteres.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_PublicLanding|src/components/PublicLanding.tsx]] *(from #frontend)*
+- [[src_components_PublicTfmLanding|src/components/PublicTfmLanding.tsx]] *(from #frontend)*
 
 ---
 
