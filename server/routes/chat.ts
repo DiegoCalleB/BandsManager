@@ -15,8 +15,9 @@ import { computeMusicalDna } from "../utils/musicalDna.js";
 import { sanearIdeasMelodicas } from "../utils/melodicIdeaValidator.js";
 import { textoDeDatos, nombreEnPrompt, umbralSeguro, bloqueAutonomiaPrompt } from "../utils/chatPromptBloques.js";
 import { iaRateLimiter, chatRateLimiter } from "../middleware/rateLimiter.js";
-import { acotarHistorial, agregarTurno, mensajeAceptable, MAX_TOKENS_RESPUESTA_CHAT } from "../utils/conversacionChat.js";
-import { chatFunctionDeclarations, convertFunctionCallsToProposedActions } from "../services/chatTools.js";
+import { acotarHistorial, agregarTurno, mensajeAceptable } from "../utils/conversacionChat.js";
+import { convertFunctionCallsToProposedActions } from "../services/chatTools.js";
+import { consultarConLecturas, REGLA_LECTURAS } from "../services/chatLecturas.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 import { registrarErrorInesperado } from '../utils/errorHttp.js';
 import type { AccionPropuesta, CancionParaChat, ParametrosAgenteChat, SetlistParaChat, TurnoChat, VistaRespuestaIA, ErrorDeFailover } from './tiposChat.js';
@@ -453,7 +454,7 @@ Al final de tu respuesta conversacional (en el campo 'text'), SIEMPRE que identi
 REGLA IMPORTANTE: Si el usuario te pide agendar, añadir o programar un concierto o bolo (por ejemplo "añade concierto en Sala Villanos" o "hemos cerrado bolo"), SIEMPRE debes incluir una acción 'propose_concert' con el objeto 'concert' relleno. No te limites solo a cambiar el estado del lead, crea la acción 'propose_concert' para que el concierto se guarde en la tabla 'conciertos' de Supabase.
 
 Si no hay ninguna acción lógica que proponer, devuelve 'proposedActions' como una lista vacía [].
-Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON de estado, indícale amablemente que no tienes registro de ello.`;
+Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON de estado, indícale amablemente que no tienes registro de ello.${REGLA_LECTURAS}`;
 
     const contents: TurnoChat[] = [];
     for (const h of acotarHistorial(chatHistory)) {
@@ -463,18 +464,13 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
     agregarTurno(contents, 'user', message);
 
     let response: VistaRespuestaIA | null = null;
+    let accionesDeRondasPrevias: VistaRespuestaIA["functionCalls"] = [];
     let lastError: ErrorDeFailover | null = null;
 
     try {
-      response = await generateContentWithFallback(client, {
-        contents: contents,
-        bandId: userReq.band_id,
-        config: {
-          systemInstruction: systemPrompt,
-          maxOutputTokens: MAX_TOKENS_RESPUESTA_CHAT,
-          tools: [{ functionDeclarations: chatFunctionDeclarations }]
-        }
-      });
+      const resultado = await consultarConLecturas(client, { contents, systemPrompt, bandId: userReq.band_id, leads: state.leads.filter(matchBand) });
+      response = resultado.response;
+      accionesDeRondasPrevias = resultado.accionesPrevias;
     } catch (errCapturado) {
       const err = comoErrorCapturado(errCapturado);
       lastError = err;
@@ -574,8 +570,9 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
     try {
       const functionCalls = response.functionCalls || 
         response.candidates?.[0]?.content?.parts?.filter((p) => p.functionCall)?.map((p) => p.functionCall);
-      if (Array.isArray(functionCalls) && functionCalls.length > 0) {
-        nativeProposedActions = convertFunctionCallsToProposedActions(functionCalls).map((accion) => ({ ...accion }));
+      const todasLasLlamadas = [...(accionesDeRondasPrevias ?? []), ...(Array.isArray(functionCalls) ? functionCalls : [])];
+      if (todasLasLlamadas.length > 0) {
+        nativeProposedActions = convertFunctionCallsToProposedActions(todasLasLlamadas).map((accion) => ({ ...accion }));
       }
     } catch (fcErr) {
       console.warn("[Gemini API] Error al extraer functionCalls nativas:", fcErr);

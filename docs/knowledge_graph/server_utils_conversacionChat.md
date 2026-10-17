@@ -24,6 +24,7 @@ Preparación de la conversación del chat del Mánager Virtual antes de enviarla
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
+- [[server_services_chatLecturas|server/services/chatLecturas.ts]] *(from #service)*
 
 ---
 
