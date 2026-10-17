@@ -90,7 +90,7 @@ body.pelicula:not(.scroll) .tech-vis .pn h3, body.pelicula:not(.scroll) .biz-col
 body.pelicula:not(.scroll) .tech-vis .pn p, body.pelicula:not(.scroll) .biz-col p, body.pelicula:not(.scroll) .tech-vis.mini p { font-size: 33px; margin-top: 12px; }
 body.pelicula:not(.scroll) .slide.scene > pre.tech-vis { left: 160px; right: 160px; top: 290px; width: auto; font-size: 32px; line-height: 1.5; padding: 36px 48px; max-height: 640px; overflow: hidden; }
 body.pelicula:not(.scroll) .slide.scene > .tech-vis.graphbox { left: 660px; right: 660px; top: 270px; width: auto; padding: 12px 16px; }
-body.pelicula:not(.scroll) .slide.scene.tech .scene-foot { font-size: 30px; }
+body.pelicula:not(.scroll) .slide.scene.tech .scene-foot { font-size: 30px; bottom: 150px; }
 body.pelicula:not(.scroll) .tech-vis .chips2 span { font-size: 30px; padding: 8px 20px; }
 body.pelicula:not(.scroll) .slide.scene > .tech-vis:not(.mini):not(.graphbox):not(pre) { grid-template-columns: 1fr 1fr; align-content: center; top: 320px; bottom: 140px; }
 body.pelicula:not(.scroll) .slide.scene > .tech-vis.mini, body.pelicula:not(.scroll) .slide.scene > .biz-cols { top: 360px; }
