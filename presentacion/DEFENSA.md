@@ -22,30 +22,21 @@ Tiempos medidos en un pase completo a tiempo real, con la voz y la música activ
 
 La película de verdad termina hacia el minuto **16**. Los créditos son solo para quien quiera quedarse.
 
-## Tres formas de usarla (según el tiempo que tengas)
+## Plan recomendado (sin límite de tiempo)
 
-La duración exacta de la defensa no la sé. Elige la que más se acerque.
+La película de verdad dura unos 16 minutos y, con los créditos, unos 19. Encaja con lo que buscas: unos 15 minutos más los créditos, y si se alarga un poco no pasa nada.
 
-**A. Defensa corta (10 minutos)**
-1. Corte de 5 minutos desde el inicio de Netflix («Corte de 5 min»).
-2. 3 minutos de demo en vivo de la app real: registro de un fan desde el QR, dossier y calendario.
-3. 2 minutos de preguntas, con el panel de «Defensa técnica» (tecla **D**).
+1. **Película entera, con sonido (≈ 16 min).** Pulsa «Reproducir» desde el inicio de Netflix. Las elecciones y la pausa del QR van solas; no hay que tocar nada.
+2. **Créditos (≈ 2 min 30).** Déjalos correr: llevan la música y los nombres. Si ves que el tribunal se cansa, salta a «Gracias» o pulsa la flecha →.
+3. **Demo en vivo de la app real (5-8 min).** Después de la película, no durante ella. Registro de un fan desde el QR, dossier, calendario y un correo a una sala.
+4. **Preguntas con el panel «Defensa técnica» (tecla D).** Arquitectura, seguridad, costes de IA, modelo de negocio y por qué no lo hace ChatGPT.
 
-**B. Defensa media (15-20 minutos)**
-1. Película larga hasta el final del Capítulo 3 (minuto 10). Salta a los capítulos con el menú del reproductor.
-2. Pausa y demo en vivo (4 minutos).
-3. Capítulos 4 y 5 en el menú del reproductor (3 minutos), con el modelo de negocio.
-4. Preguntas con el panel de «Defensa técnica».
+Si en algún momento quieres acortar, hay un «Corte de 5 min» en el inicio de Netflix, pero no hace falta.
 
-**C. Defensa larga (25 minutos o más)**
-1. Película entera sin los créditos (16 minutos), con las elecciones.
-2. Demo y preguntas con el resto del tiempo.
+### Si quieres pararla a mitad (opcional)
 
-## Dónde parar para la demo en vivo
-
-- **Tras el Capítulo 1 (≈ minuto 5):** salas, correo y acuerdo.
-- **En «Un QR y el público se hace fan» (≈ minuto 7:40):** la película ya se para sola esperando un fan. Es el momento ideal para que el tribunal escanee el QR.
-- **Antes del Capítulo 5 (≈ minuto 11:40):** el negocio y los costes.
+- **En «Un QR y el público se hace fan» (≈ minuto 7:40):** la película ya se para sola esperando un fan. Es el único momento en que se detiene por sí misma, y el mejor para que el tribunal escanee el QR.
+- **Tras el Capítulo 1 (≈ minuto 5), antes del Capítulo 5 (≈ minuto 11:40):** si prefieres enseñar la app antes de que acabe, pulsa pausa y vuelve con la barra espaciadora.
 
 ## Atajos del reproductor
 
