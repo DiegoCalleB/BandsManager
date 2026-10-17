@@ -66,7 +66,7 @@ export const FormularioInteres: React.FC<Props> = ({ es }) => {
           value={email}
           onChange={(ev) => setEmail(ev.target.value)}
           placeholder={es ? 'tu@email.com' : 'you@email.com'}
-          className="h-11 min-w-0 flex-1 rounded-[var(--r-pill)] bg-[var(--surface)] px-4 text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] focus:outline-none"
+          className="h-11 min-w-0 w-full rounded-[var(--r-pill)] sm:flex-1 bg-[var(--surface)] px-4 text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] focus:outline-none"
         />
         <Button type="submit" variant="neutral" size="md" disabled={estado === 'enviando' || !acepta}>
           <Mail className="size-4" aria-hidden />
