@@ -26,6 +26,7 @@ Cajón de navegación móvil.
 - [[src_components_dashboard_AiUsageSupportWidget|src/components/dashboard/AiUsageSupportWidget.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_config_navGroups|src/config/navGroups.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_bookingVisible|src/utils/bookingVisible.ts]] *(Layer: #service, Domain: #booking)*
 - [[src_utils_contrastText|src/utils/contrastText.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_planPermissions|src/utils/planPermissions.ts]] *(Layer: #service, Domain: #system)*
 

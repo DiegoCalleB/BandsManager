@@ -38,6 +38,7 @@ Exporta: EstadoDeSesion, ACTIVE_SESSIONS, hashPassword, verifyPassword, getSafeU
 - [[server_routes_users_rutasRegistro|server/routes/users/rutasRegistro.ts]] *(from #route)*
 - [[server_routes_users_rutasSalidaBanda|server/routes/users/rutasSalidaBanda.ts]] *(from #route)*
 - [[server_routes_users_rutasSesion|server/routes/users/rutasSesion.ts]] *(from #route)*
+- [[server_utils_bookingHabilitado|server/utils/bookingHabilitado.ts]] *(from #service)*
 
 ---
 

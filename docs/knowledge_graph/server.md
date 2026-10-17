@@ -60,6 +60,7 @@ Módulo sin exportaciones con nombre.
 - [[server_services_socialRadarService|server/services/socialRadarService.ts]] *(Layer: #service, Domain: #social)*
 - [[server_services_transactionalEmail|server/services/transactionalEmail.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_workersReels|server/services/workersReels.ts]] *(Layer: #service, Domain: #social)*
+- [[server_utils_bookingHabilitado|server/utils/bookingHabilitado.ts]] *(Layer: #service, Domain: #booking)*
 - [[server_utils_cabeceraIdioma|server/utils/cabeceraIdioma.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_errorTracking|server/utils/errorTracking.ts]] *(Layer: #service, Domain: #system)*

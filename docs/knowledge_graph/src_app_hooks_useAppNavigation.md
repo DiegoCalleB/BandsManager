@@ -24,6 +24,7 @@ Vista actual, navegación, notificaciones y sección del CRM.
 - [[src_hooks_useBrowserPushNotifications|src/hooks/useBrowserPushNotifications.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_services_api|src/services/api.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_bookingVisible|src/utils/bookingVisible.ts]] *(Layer: #service, Domain: #booking)*
 - [[src_utils_moduloGlobal|src/utils/moduloGlobal.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_planPermissions|src/utils/planPermissions.ts]] *(Layer: #service, Domain: #system)*
 

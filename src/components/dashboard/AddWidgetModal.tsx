@@ -1,3 +1,4 @@
+import { moduloDeBookingOculto } from "../../utils/bookingVisible";
 import React, { useState } from "react";
 import { Plus, Check, X } from "lucide-react";
 import { AVAILABLE_MODULE_WIDGETS, type WidgetType } from "../../types/dashboardWidgets";
@@ -20,13 +21,15 @@ interface AddWidgetModalProps {
   abierto: boolean;
   onCerrar: () => void;
   userPlan: string | undefined;
+  /** Si la banda puede ver el booking (reservado); los widgets que lo necesitan no se ofrecen. */
+  bookingVisible?: boolean;
   /** Tipos que ya están visibles en el panel: no se pueden añadir dos veces. */
   tiposEnPanel: ReadonlySet<WidgetType>;
   onAnadir: (tipo: WidgetType) => void;
 }
 
 /** Catálogo para añadir widgets al panel. Se queda abierto para añadir varios seguidos. */
-export function AddWidgetModal({ abierto, onCerrar, userPlan, tiposEnPanel, onAnadir }: AddWidgetModalProps) {
+export function AddWidgetModal({ abierto, onCerrar, userPlan, bookingVisible = true, tiposEnPanel, onAnadir }: AddWidgetModalProps) {
   useScrollLock(abierto);
   const addModalOverlayStyle = useVisualViewportOverlayStyle();
   const [selectedCategory, setSelectedCategory] = useState<string>("Todos");
@@ -34,7 +37,7 @@ export function AddWidgetModal({ abierto, onCerrar, userPlan, tiposEnPanel, onAn
   if (!abierto) return null;
 
   // Solo lo que el plan permite, filtrado por la categoría elegida.
-  const allowedLibrary = AVAILABLE_MODULE_WIDGETS.filter((item) => !item.requiredModule || hasModuleAccess(userPlan, item.requiredModule));
+  const allowedLibrary = AVAILABLE_MODULE_WIDGETS.filter((item) => !item.requiredModule || (hasModuleAccess(userPlan, item.requiredModule) && !moduloDeBookingOculto(item.requiredModule, bookingVisible)));
   const filteredLibrary = allowedLibrary.filter((item) => selectedCategory === "Todos" || item.category === selectedCategory);
 
   // z-[9999], no z-50: en móvil la barra del reproductor y la nav inferior van a z-40, pero
