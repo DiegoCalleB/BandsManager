@@ -52,3 +52,17 @@
 #ident .id-mark { display: none; }
 @media (prefers-reduced-motion: reduce) { .tv-arte, .tv-arte i, .nx-perfil, .tv-titulo, .nx-perfiles h2, .nx-perfiles .nx-logo-g { animation: none; opacity: 1; } .tv-arte i:not(.on) { opacity: 0; } #ident .id-rayos i { animation: none; } }
 @media (orientation: portrait) { .tv-titulo { display: none; } .tv-velo { background: linear-gradient(90deg, #000 0, rgba(0,0,0,.85) 30%, rgba(0,0,0,.2) 80%), linear-gradient(0deg, rgba(0,0,0,.7) 0, transparent 34%); } }
+
+/* Móvil en vertical: la película es apaisada y se ve pequeña; un aviso de «gira el móvil» que se retira solo */
+@media (orientation: portrait) and (max-width: 700px) {
+  body.pelicula:not(.fin-peli)::before { content: '↻  Gira el móvil para ver la película a pantalla completa'; position: fixed; left: 50%; top: 14px; translate: -50% 0; z-index: 60; width: max-content; max-width: 88vw; padding: 10px 16px; border-radius: 999px; background: rgba(20,20,20,.92); color: #fff; font: 600 13px/1.25 'Helvetica Neue', Arial, sans-serif; text-align: center; box-shadow: 0 6px 22px #000a; pointer-events: none; animation: giraaviso 7s ease both; }
+}
+@keyframes giraaviso { 0%, 85% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
+@media (prefers-reduced-motion: reduce) { body.pelicula::before { animation-duration: 1ms; animation-delay: 6s; } }
+
+/* Pantallas de 16:9 con poca altura (1600×900, portátiles): el bloque del héroe se subía bajo la barra de arriba; se compacta */
+@media (max-height: 960px) and (min-width: 1101px) {
+  .nx-titulo { font-size: clamp(48px, min(8vw, 7.8vh), 140px); margin: 10px 0 12px; }
+  .nx-sin { font-size: min(20px, 2.5vh); margin-top: 8px; }
+  .nx-hero .gate-btns { margin-top: 14px; } .nx-alt { margin-top: 12px; } .nx-meta { margin-top: 12px; } .nx-gen { margin-top: 8px; }
+}
