@@ -22,8 +22,10 @@ Publicación de posts sociales en las plataformas reales.
 - [[server_db_reelClips|server/db/reelClips.ts]] *(Layer: #db, Domain: #social)*
 - [[server_db_schedule|server/db/schedule.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_social|server/db/social.ts]] *(Layer: #db, Domain: #social)*
+- [[server_services_avisosPublicacion|server/services/avisosPublicacion.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_credencialesInstagram|server/services/credencialesInstagram.ts]] *(Layer: #service, Domain: #social)*
 - [[server_services_publicadores_instagramReels|server/services/publicadores/instagramReels.ts]] *(Layer: #service, Domain: #social)*
+- [[server_utils_avisoPublicacionFallida|server/utils/avisoPublicacionFallida.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_errorTracking|server/utils/errorTracking.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_programacionPosts|server/utils/programacionPosts.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*

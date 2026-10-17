@@ -25,6 +25,7 @@ Recogida de métricas reales de los Reels publicados y aprendizaje por banda (Fa
 - [[server_services_publicadores_instagramInsights|server/services/publicadores/instagramInsights.ts]] *(Layer: #service, Domain: #social)*
 - [[server_utils_aprendizajeReels|server/utils/aprendizajeReels.ts]] *(Layer: #service, Domain: #social)*
 - [[server_utils_errorTracking|server/utils/errorTracking.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_resumenSemanalReels|server/utils/resumenSemanalReels.ts]] *(Layer: #service, Domain: #social)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---

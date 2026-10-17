@@ -9,6 +9,7 @@ const db = vi.hoisted(() => ({
   clip: null as null | { derechos: string | null; control_calidad: unknown }
 }));
 const publicarReelInstagram = vi.hoisted(() => vi.fn());
+const avisarPublicacionesFallidas = vi.hoisted(() => vi.fn());
 
 vi.mock("../../db/social.js", () => ({
   dbGetSocialPosts: vi.fn(async () => db.posts),
@@ -20,6 +21,7 @@ vi.mock("../../db/epk.js", () => ({ dbGetEpkConfig: vi.fn(async () => db.epk) })
 vi.mock("../../db/schedule.js", () => ({ dbGetBandSchedule: vi.fn(async () => ({ timezone: "Europe/Madrid" })) }));
 vi.mock("../../db/reelClips.js", () => ({ dbBuscarReelClip: vi.fn(async () => db.clip) }));
 vi.mock("../publicadores/instagramReels.js", () => ({ publicarReelInstagram }));
+vi.mock("../avisosPublicacion.js", () => ({ avisarPublicacionesFallidas }));
 
 const { publishSocialPostNow, tickPublicador, motivoParaNoAutopublicar } = await import("../socialPublisher.js");
 
@@ -46,6 +48,7 @@ beforeEach(() => {
   db.epk = { enlacesRedes: { instagram_access_token: "EAAtok", instagram_account_id: "1789" } };
   db.clip = { derechos: "canal_de_la_banda", control_calidad: CALIDAD_OK };
   publicarReelInstagram.mockReset().mockResolvedValue({ publishedId: "media-9", permalink: "https://instagram.com/reel/x" });
+  avisarPublicacionesFallidas.mockReset().mockResolvedValue({ enviado: true });
 });
 
 describe("publishSocialPostNow", () => {
@@ -100,6 +103,67 @@ describe("tickPublicador", () => {
   it("rescata un 'publicando' colgado", async () => {
     db.posts = [post({ estado: "publicando", publish_started_at: "2026-10-14T17:00:00Z" })];
     await tickPublicador(new Date("2026-10-14T18:31:00Z"));
+    expect(db.upserts.at(-1)).toMatchObject({ estado: "fallido" });
+  });
+});
+
+describe("aviso a la banda cuando el worker no publica", () => {
+  const AHORA = new Date("2026-10-14T18:31:00Z");
+
+  it("un Reel que no se puede publicar solo avisa con el motivo y marcado como 'a mano'", async () => {
+    db.clip = { derechos: null, control_calidad: CALIDAD_OK };
+    await tickPublicador(AHORA);
+    expect(avisarPublicacionesFallidas).toHaveBeenCalledTimes(1);
+    const [bandId, fallos] = avisarPublicacionesFallidas.mock.calls[0];
+    expect(bandId).toBe("band-a");
+    expect(fallos).toEqual([expect.objectContaining({ plataforma: "Instagram", fecha: "2026-10-14", hora: "20:30", asistido: true })]);
+    expect(fallos[0].motivo).toMatch(/copyright/);
+  });
+
+  it("si Instagram falla al publicar, avisa con el error y como reintentable", async () => {
+    publicarReelInstagram.mockRejectedValue(new Error("Meta rechazó el vídeo"));
+    await tickPublicador(AHORA);
+    const [, fallos] = avisarPublicacionesFallidas.mock.calls[0];
+    expect(fallos).toEqual([expect.objectContaining({ asistido: false, motivo: "Meta rechazó el vídeo" })]);
+  });
+
+  it("un 'publicando' colgado también avisa", async () => {
+    db.posts = [post({ estado: "publicando", publish_started_at: "2026-10-14T17:00:00Z" })];
+    await tickPublicador(AHORA);
+    const [, fallos] = avisarPublicacionesFallidas.mock.calls[0];
+    expect(fallos[0].motivo).toMatch(/interrumpió/);
+    expect(fallos[0].asistido).toBe(false);
+  });
+
+  it("varios fallos de la misma banda en una pasada: un solo aviso con todos", async () => {
+    db.clip = { derechos: null, control_calidad: CALIDAD_OK };
+    db.posts = [post({ id: "a" }), post({ id: "b", fecha: "2026-10-13" })];
+    await tickPublicador(AHORA);
+    expect(avisarPublicacionesFallidas).toHaveBeenCalledTimes(1);
+    expect(avisarPublicacionesFallidas.mock.calls[0][1]).toHaveLength(2);
+  });
+
+  it("si todo sale bien no se avisa de nada", async () => {
+    await tickPublicador(AHORA);
+    expect(avisarPublicacionesFallidas).not.toHaveBeenCalled();
+  });
+
+  it("si otro proceso ya lo estaba publicando no es un fallo: no se avisa", async () => {
+    db.reclamo.mockResolvedValue(null);
+    await tickPublicador(AHORA);
+    expect(avisarPublicacionesFallidas).not.toHaveBeenCalled();
+  });
+
+  it("'publicar ya' desde la app no manda correo: la persona ya ve el error en pantalla", async () => {
+    db.epk = null;
+    await publishSocialPostNow("p1", "band-a");
+    expect(avisarPublicacionesFallidas).not.toHaveBeenCalled();
+  });
+
+  it("si el aviso falla, la pasada del worker no se rompe", async () => {
+    db.clip = { derechos: null, control_calidad: CALIDAD_OK };
+    avisarPublicacionesFallidas.mockRejectedValue(new Error("Resend caído"));
+    await expect(tickPublicador(AHORA)).resolves.toBeUndefined();
     expect(db.upserts.at(-1)).toMatchObject({ estado: "fallido" });
   });
 });
