@@ -36,8 +36,8 @@ export function AtrilView() {
 
   return (
     <ModalPortal isOpen={true} onClose={onClose}>
-      <div className={`fixed inset-0 z-[9999] bg-[var(--scrim)]/85 flex items-center justify-center overflow-y-auto overscroll-contain ${pantallaCompleta ? "p-0" : "p-2 sm:p-4"}`}>
-  <div className={`relative bg-[var(--surface)] w-full ${pantallaCompleta ? "max-w-none rounded-none h-[100dvh]" : "max-w-5xl rounded-[var(--r-l)] h-[92vh]"} flex flex-col overflow-y-auto overscroll-contain md:overflow-hidden text-[var(--ink)] my-auto`}>
+      <div className={`fixed inset-0 z-[9999] bg-[var(--scrim)]/85 flex items-center justify-center overflow-y-auto overscroll-contain ${pantallaCompleta ? "p-0" : "p-0 sm:p-4"}`}>
+  <div className={`relative bg-[var(--surface)] w-full ${pantallaCompleta ? "max-w-none rounded-none h-[100dvh]" : "max-w-5xl rounded-none sm:rounded-[var(--r-l)] h-[100dvh] sm:h-[92vh]"} flex flex-col overflow-hidden text-[var(--ink)] my-auto`}>
     {/* CLOSE BUTTON — fixed to the modal's top-right corner, independent of header actions */}
     <Button
       variant="neutral"
@@ -62,49 +62,54 @@ export function AtrilView() {
       {pantallaCompleta ? <Minimize2 className="w-5 h-5" /> : <Maximize2 className="w-5 h-5" />}
     </Button>
 
-    {/* MODAL HEADER */}
-    <AtrilHeader />
+    {/* MODAL HEADER, TOOLBAR y AVISO. En móvil son una franja con tope de altura y scroll propio (el
+        cuerpo y el dock de acordes no se quedan sin sitio); en md+ no existe: `contents`. */}
+    <div className="shrink-0 max-md:shrink max-md:min-h-0 max-md:max-h-[26dvh] max-md:overflow-y-auto max-md:overscroll-contain md:contents">
+      <AtrilHeader />
+      {/* TOOLBAR CONTROLS BAR (LaCuerda / Ultimate Guitar Toolbar) */}
+      <AtrilToolbar />
+      {/* AI SUCCESS NOTIFICATION BANNER */}
+      <AiSuccessBanner />
+      {/* ACORDES DETECTADOS DEL AUDIO (en móvil dentro de la franja, para no robarle sitio a la letra) */}
+      <DetectedChordsPanel />
+    </div>
 
-    {/* TOOLBAR CONTROLS BAR (LaCuerda / Ultimate Guitar Toolbar) */}
-    <AtrilToolbar />
-
-    {/* AI SUCCESS NOTIFICATION BANNER */}
-    <AiSuccessBanner />
-
-    {/* ACORDE ACTUAL: barra fija con play y el que viene; los diagramas van debajo de la línea de acordes */}
+    {/* ACORDE ACTUAL: barra con play y el que viene. En móvil va en el dock inferior (order-last),
+        siempre a la vista mientras la letra hace su propio scroll. */}
     {activeTab === "chords" && (
-      <BarraAcordeActual
-        estado={estadoActual}
-        proximos={proximos}
-        reproduciendo={isPlayingAudio}
-        onToggle={audioUrl ? handleToggleAudio : undefined}
-      />
+      <div className="shrink-0 max-md:order-last max-md:pb-1">
+        <BarraAcordeActual
+          estado={estadoActual}
+          proximos={proximos}
+          reproduciendo={isPlayingAudio}
+          onToggle={audioUrl ? handleToggleAudio : undefined}
+        />
+      </div>
     )}
 
-    {/* ACORDES DETECTADOS DEL AUDIO */}
-    <DetectedChordsPanel />
-
+    {/* DIAGRAMAS: en móvil, justo bajo la barra en el dock; con tope de altura y scroll interno */}
     {activeTab === "chords" && (
-      <DiagramasAcordeActual
-        estado={estadoActual}
-        sonando={acordeSonando}
-        proximos={proximos}
-        contexto={contextoAcordes}
-        vista={vistaAcordes}
-        onVista={setVistaAcordes}
-        nivel={nivelAcordes}
-        onNivel={setNivelAcordes}
-        estiloArmonia={estiloArmonia}
-        indices={proximosIndices}
-        onIr={sincronizado && audioUrl ? irAlAcorde : undefined}
-        reloj={proximos && analisisAcordes ? { indice: acordeActivo, tiempos: tiemposAcordes, duracion: analisisAcordes.duracionSegundos, audioRef } : undefined}
-      />
+      <div className="shrink-0 max-md:shrink max-md:min-h-0 max-md:order-last max-md:max-h-[32dvh] max-md:overflow-y-auto max-md:overscroll-contain max-md:pb-[env(safe-area-inset-bottom)]">
+        <DiagramasAcordeActual
+          estado={estadoActual}
+          sonando={acordeSonando}
+          proximos={proximos}
+          contexto={contextoAcordes}
+          vista={vistaAcordes}
+          onVista={setVistaAcordes}
+          nivel={nivelAcordes}
+          onNivel={setNivelAcordes}
+          estiloArmonia={estiloArmonia}
+          indices={proximosIndices}
+          onIr={sincronizado && audioUrl ? irAlAcorde : undefined}
+          reloj={proximos && analisisAcordes ? { indice: acordeActivo, tiempos: tiemposAcordes, duracion: analisisAcordes.duracionSegundos, audioRef } : undefined}
+        />
+      </div>
     )}
 
     {/* MODAL BODY */}
-    {/* En móvil la cabecera y los paneles de acordes ocupan casi toda la pantalla: el cuerpo tiene
-        altura propia (75vh, con su scroll interno) y es el modal entero el que se desplaza hasta
-        él. Con flex-1 el cuerpo se quedaba con una rendija y no se podía bajar a la letra. */}
+    {/* En móvil el panel mide la pantalla (100dvh) y no se desplaza: la letra hace su propio scroll
+        dentro del cuerpo (flex-1 min-h-0) y la barra y los diagramas viven en el dock de abajo. */}
     <AtrilBody />
   </div>
 

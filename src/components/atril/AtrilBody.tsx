@@ -19,7 +19,7 @@ export function AtrilBody() {
   const { buscarEnAudio, scrollContainerRef, activeTab, guiaSustituto, setActiveTab, armonia, estiloArmonia, cambiarEstiloArmonia, funcionesPresentes, acordesPorFuncion, nombreTonalidadVista, processedText, lineasConLetra, letraTranscrita, seguirEnCifrado, letraActiva, audioRef, sincronizado, alineacion, analisisAcordes, tiemposAcordes, acordeActivo, transpose, song, notation, pedirProfesor, handleSaveEdits, cifradoTexto, setCifradoTexto, setGuiaSustituto, showChordDiagrams, uniqueChords, contextoAcordes, vistaAcordes, setVistaAcordes, nivelAcordes, setNivelAcordes, setShowChordDiagrams, acordeSonando } = useAtril();
   return (
     <>
-      <div className="shrink-0 h-[75vh] md:h-auto md:flex-1 md:shrink overflow-hidden flex flex-col md:flex-row relative">
+      <div className="flex-1 min-h-0 max-md:min-h-[9.5rem] overflow-hidden flex flex-col md:flex-row relative">
         {/* MAIN CONTENT AREA */}
         <div
           ref={scrollContainerRef}
