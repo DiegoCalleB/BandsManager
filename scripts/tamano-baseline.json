@@ -23,7 +23,7 @@
   "server/services/transactionalEmail.ts": 1096,
   "src/services/api.ts": 1070,
   "src/components/repertorio/SetlistAIAnalysisModal.tsx": 1023,
-  "server/state.ts": 1020,
+  "server/state.ts": 1015,
   "src/components/SpotifyPlayerBar.tsx": 1004,
   "server/routes/repertorio.ts": 1003,
   "server/routes/billing.ts": 991,
