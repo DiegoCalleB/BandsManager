@@ -11,6 +11,7 @@
 import { dbGetRegisteredBands, dbGetCampaigns, dbGetLeads, dbUpsertLead } from "../db.js";
 import { detectVenueEventsAndFreeDates } from "./venueEventsRadarService.js";
 import { captureError } from "../utils/errorTracking.js";
+import { bandaConBooking } from "../utils/bookingHabilitado.js";
 
 // Mapa en memoria para evitar re-esccanear el mismo lead en ciclos muy seguidos
 const lastScanTimestampByLead: Record<string, number> = {};
@@ -29,9 +30,11 @@ export async function syncActiveCampaignsRadar(targetBandId?: string): Promise<{
   let updatedDatesCount = 0;
 
   try {
+    // El booking es reservado: el barrido global solo cubre las bandas con el interruptor encendido.
+    // Con `targetBandId` (ruta de campañas, ya tras el guardia) se trabaja solo esa banda.
     const bands = targetBandId 
       ? [{ band_id: targetBandId }] 
-      : await dbGetRegisteredBands();
+      : (await dbGetRegisteredBands()).filter(bandaConBooking);
 
     for (const band of bands) {
       const bandId = band.band_id;

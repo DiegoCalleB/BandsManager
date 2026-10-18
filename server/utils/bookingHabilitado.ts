@@ -18,8 +18,8 @@ export const BOOKING_NO_HABILITADO = {
 } as const;
 
 /** `true` si la fila de `registered_bands` tiene el booking encendido (los procesos de fondo no tienen sesión). */
-export function bandaConBooking(banda: { suscripcion_habilitada?: unknown } | null | undefined): boolean {
-  return banda?.suscripcion_habilitada === true;
+export function bandaConBooking(banda: object | null | undefined): boolean {
+  return (banda as { suscripcion_habilitada?: unknown } | null | undefined)?.suscripcion_habilitada === true;
 }
 
 /** `true` si esta persona, con la banda que tiene activa, puede usar el booking. */

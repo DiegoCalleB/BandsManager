@@ -20,6 +20,7 @@ CAMPAIGN RADAR SCHEDULER
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
 - [[server_services_venueEventsRadarService|server/services/venueEventsRadarService.ts]] *(Layer: #service, Domain: #booking)*
+- [[server_utils_bookingHabilitado|server/utils/bookingHabilitado.ts]] *(Layer: #service, Domain: #booking)*
 - [[server_utils_errorTracking|server/utils/errorTracking.ts]] *(Layer: #service, Domain: #system)*
 
 ---
@@ -27,6 +28,11 @@ CAMPAIGN RADAR SCHEDULER
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_routes_campaigns|server/routes/campaigns.ts]] *(from #route)*
 - [[server_services_agentQueueWorker|server/services/agentQueueWorker.ts]] *(from #agent)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/services/__tests__/campaignRadarSoloHabilitadas.test.ts`
 
 ---
 

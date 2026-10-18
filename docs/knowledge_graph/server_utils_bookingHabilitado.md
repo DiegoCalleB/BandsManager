@@ -29,6 +29,7 @@ El booking (salas, medios, management, grupos aliados, agentes y campañas) es r
 - [[server|server.ts]] *(from #route)*
 - [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
 - [[server_services_agentQueueWorker|server/services/agentQueueWorker.ts]] *(from #agent)*
+- [[server_services_campaignRadarScheduler|server/services/campaignRadarScheduler.ts]] *(from #service)*
 
 ---
 
