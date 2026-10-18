@@ -50,6 +50,8 @@ export const CASOS_PRIVACIDAD: CasoPrivacidad[] = [
   { id: 'pri-04', tipo: 'email', entrada: 'jorge@sala.es', permitido: false },
   { id: 'pri-05', tipo: 'email', entrada: 'info@gmail.com', permitido: false },
   { id: 'pri-06', tipo: 'email', entrada: 'programacion@hotmail.es', permitido: false },
+  { id: 'pri-15', tipo: 'email', entrada: 'contact@example.com', permitido: false },
+  { id: 'pri-16', tipo: 'email', entrada: 'info@sala.invalid', permitido: false },
   { id: 'pri-07', tipo: 'telefono', entrada: '934 424 000', permitido: true },
   { id: 'pri-08', tipo: 'telefono', entrada: '+34 912345678', permitido: true },
   { id: 'pri-09', tipo: 'telefono', entrada: '612 345 678', permitido: false },

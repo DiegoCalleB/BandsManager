@@ -116,6 +116,11 @@ describe('datos de contacto: solo los de la sala, nunca los de una persona', () 
     expect(emailDeRol('programación@sala.es')).toBe('programación@sala.es');
     expect(emailDeRol('maria.lopez@salaapolo.com')).toBeNull();
     expect(emailDeRol('info@gmail.com')).toBeNull();
+    // Relleno que dejan los scrapers y las plantillas: parece de rol pero no es de ninguna sala.
+    expect(emailDeRol('contact@example.com')).toBeNull();
+    expect(emailDeRol('info@ejemplo.com')).toBeNull();
+    expect(emailDeRol('booking@sala.test')).toBeNull();
+    expect(emailDeRol('booking@example.salaapolo.com')).toBe('booking@example.salaapolo.com');
     expect(emailDeRol('no es un email')).toBeNull();
     expect(emailDeRol(undefined)).toBeNull();
   });

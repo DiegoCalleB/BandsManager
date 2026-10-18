@@ -81,6 +81,10 @@ const LOCALES_DE_ROL = new Set([
   'direccion', 'teatro', 'club', 'oficina', 'reservas', 'gestion', 'cultura', 'musica',
 ]);
 
+/** Emails de relleno que los scrapers y las plantillas dejan en los leads («contact@example.com»). */
+const DOMINIOS_DE_RELLENO = new Set(['example.com', 'example.org', 'example.net', 'test.com', 'ejemplo.com', 'ejemplo.es', 'email.com', 'domain.com', 'dominio.com', 'yourdomain.com', 'correo.com']);
+const TLDS_RESERVADOS = ['.example', '.test', '.invalid', '.localhost'];
+
 const DOMINIOS_PERSONALES = new Set([
   'gmail.com', 'googlemail.com', 'hotmail.com', 'hotmail.es', 'outlook.com', 'outlook.es', 'yahoo.com', 'yahoo.es',
   'icloud.com', 'live.com', 'msn.com', 'protonmail.com', 'proton.me', 'telefonica.net', 'terra.es',
@@ -156,7 +160,7 @@ export function emailDeRol(valor: unknown): string | null {
   const email = valor.trim().toLowerCase();
   if (!isValidEmailSyntax(email)) return null;
   const [local, dominio] = email.split('@');
-  if (DOMINIOS_PERSONALES.has(dominio)) return null;
+  if (DOMINIOS_PERSONALES.has(dominio) || DOMINIOS_DE_RELLENO.has(dominio) || TLDS_RESERVADOS.some((t) => dominio.endsWith(t))) return null;
   return LOCALES_DE_ROL.has(sinAcentos(local)) ? email : null;
 }
 
