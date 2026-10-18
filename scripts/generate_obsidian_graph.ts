@@ -1,9 +1,7 @@
 /**
  * Generator of Obsidian-Compatible Architecture & Dependency Graph
- * Generates an interactive Markdown Knowledge Graph with Bidirectional Wikilinks ([[Node]])
- * Compatible with Obsidian Graph View, Foam, and Agentic Navigation.
+ * Interactive Markdown Knowledge Graph with Bidirectional Wikilinks ([[Node]]) for Obsidian, Foam and Agentic Navigation.
  */
-
 import fs from 'node:fs';
 import path from 'node:path';
 import { INDICE_CALENDARIO, NODOS_CALENDARIO } from './graph_nodes_calendario';
