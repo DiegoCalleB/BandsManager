@@ -43,6 +43,7 @@
     "migrate:check": "tsx scripts/migrate.ts --check",
     "eval:acordes": "tsx scripts/evaluar-acordes.ts",
     "eval:agentes": "tsx scripts/evaluar-agentes.ts",
+    "catalogo:salas": "tsx scripts/catalogo-salas.ts",
     "verify:ciclos": "node scripts/ciclos.mjs",
     "audit:deps": "npm audit --omit=dev --audit-level=high"
   },

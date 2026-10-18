@@ -50,6 +50,7 @@ Usamos el formato [plantilla](./0000-plantilla.md) (inspirado en MADR).
 | [0041](./0041-modularizacion-song-transition-preview.md) | Modularización de SongTransitionPreviewModal (1596 → 58 líneas) y rules-of-hooks a cero en CI | Aceptada | nueva |
 | [0042](./0042-modularizacion-ai-music.md) | Modularización de server/routes/ai_music.ts (4183 → 48 líneas) en sub-routers y motores; fuera una llamada a Gemini que no se usaba | Aceptada | nueva |
 | [0043](./0043-modularizacion-users.md) | Modularización de server/routes/users.ts (3652 → 42 líneas) en once sub-routers montados en el orden original | Aceptada | nueva |
+| [0044](./0044-catalogo-compartido-de-salas.md) | Compartir entre bandas un catálogo de salas con solo datos públicos, fiabilidad calculada y contacto revelado al añadir | Aceptada | nueva |
 
 ## Cómo añadir uno
 

@@ -56,6 +56,7 @@ Módulo sin exportaciones con nombre.
 - [[server_routes_upload|server/routes/upload.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_users|server/routes/users.ts]] *(Layer: #route, Domain: #system)*
 - [[server_services_calendarConflictService|server/services/calendarConflictService.ts]] *(Layer: #service, Domain: #system)*
+- [[server_services_catalogoScheduler|server/services/catalogoScheduler.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_colaLetras|server/services/colaLetras.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_services_socialRadarService|server/services/socialRadarService.ts]] *(Layer: #service, Domain: #social)*
 - [[server_services_transactionalEmail|server/services/transactionalEmail.ts]] *(Layer: #service, Domain: #system)*

@@ -13,7 +13,7 @@ tags: ["route", "social", "auto"]
 > **Capa:** `#layer/route` | **Dominio:** `#domain/social`
 
 ## 📖 Descripción
-Número de fans de una banda, sin datos personales. La película del TFM lo consulta para saber cuándo
+Número de fans de una banda. La película del TFM lo consulta para saber cuándo alguien se ha hecho fan desde el QR
 
 ---
 

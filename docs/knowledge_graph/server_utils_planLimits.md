@@ -24,6 +24,7 @@ _Sin dependencias salientes directas._
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[route_leads_crud|Leads CRUD Route]] *(from #route)*
+- [[server_routes_catalogo|server/routes/catalogo.ts]] *(from #route)*
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(from #route)*
 
 ---

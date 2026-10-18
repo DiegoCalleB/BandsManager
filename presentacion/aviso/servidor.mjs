@@ -29,20 +29,22 @@ const correo = (escena) => ({
 // Cuántos fans tiene Os Herdeiros do Código en BandManager (solo el número). La película lo consulta cada pocos segundos durante la pausa del QR
 // para saber cuándo alguien se ha hecho fan. Va por aquí (servidor a servidor) y con la banda fija: desde el navegador no se puede pedir otra.
 const FANS_URL = process.env.FANS_CONTADOR_URL || 'https://bandmanager.io/api/public/fans/contador?b=t_AAAAAEAOHUwPAAA7FgwRGgFIOxxMDxs7W1dd';
-let contado = { t: 0, total: null };
+let contado = { t: 0, total: null, ultimo: null };
+// Devuelve el número de fans y, si el servidor lo permite para esta banda, el nombre de pila de quien se ha hecho fan hace menos de tres minutos
 const fansTotal = async () => {
-  if (Date.now() - contado.t < 1500) return contado.total;
+  if (Date.now() - contado.t < 1500) return contado;
   try {
     const r = await fetch(FANS_URL, { signal: AbortSignal.timeout(4000) });
     const j = r.ok ? await r.json() : null;
-    contado = { t: Date.now(), total: j && Number.isInteger(j.total) ? j.total : null };
-  } catch { contado = { t: Date.now(), total: null }; }
-  return contado.total;
+    const nombre = j && j.ultimo && typeof j.ultimo.nombre === 'string' ? j.ultimo.nombre.replace(/[^\p{L}'-]/gu, '').slice(0, 24) : '';
+    contado = { t: Date.now(), total: j && Number.isInteger(j.total) ? j.total : null, ultimo: nombre ? { nombre } : null };
+  } catch { contado = { t: Date.now(), total: null, ultimo: null }; }
+  return contado;
 };
 
 const servidor = http.createServer(async (req, res) => {
   const fin = (codigo, cuerpo = '') => { res.writeHead(codigo, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }); res.end(JSON.stringify(cuerpo)); };
-  if (req.method === 'GET' && req.url.startsWith('/fans-contador')) return fin(200, { total: await fansTotal() });
+  if (req.method === 'GET' && req.url.startsWith('/fans-contador')) { const c = await fansTotal(); return fin(200, { total: c.total, ultimo: c.ultimo }); }
   if (req.method !== 'POST' || !req.url.startsWith('/aviso')) return fin(404);
   const m = modo();
   if (m === 'apagado') return fin(200, { enviado: false, motivo: 'apagado' }); // el estado por defecto

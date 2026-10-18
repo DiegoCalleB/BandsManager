@@ -2,9 +2,10 @@
  * Celda de contacto directo de la fila: email, teléfonos e Instagram.
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
-import { AlertCircle,Instagram,Phone,Smartphone } from "lucide-react";
+import { AlertCircle,AlertTriangle,Instagram,Phone,Smartphone } from "lucide-react";
 import { getEmailStatus,isBouncedLead } from "../../../hooks/useEmailValidation";
 import { Lead } from "../../../types";
+import { avisoDeEmail } from "../../../utils/avisoDeEmail";
 import { useLeadsTable } from "./LeadsTableContext";
 
 /** Datos propios de cada instancia (el resto sale del contexto del flujo). */
@@ -62,6 +63,11 @@ export function LeadRowContact({ lead, hasMovil, hasFijo, rawMovil, rawFijo }: L
                   >
                     <AlertCircle className="w-3 h-3 text-[var(--alert)] shrink-0" />
                   </div>
+                )}
+                {!broken && avisoDeEmail(lead) && (
+                  <span title={avisoDeEmail(lead) ?? undefined} role="img" aria-label="Comprueba este email">
+                    <AlertTriangle className="w-3 h-3 text-[var(--acc)] shrink-0" />
+                  </span>
                 )}
               </>
             );

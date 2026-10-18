@@ -19,6 +19,7 @@ Exporta: chatFunctionDeclarations, convertFunctionCallsToProposedActions.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[ext_gemini|Gemini (Google GenAI)]] *(Layer: #external, Domain: #system)*
+- [[server_services_chatCatalogo|server/services/chatCatalogo.ts]] *(Layer: #service, Domain: #system)*
 - [[src_components_chatbot_chatTypes|src/components/chatbot/chatTypes.ts]] *(Layer: #frontend, Domain: #system)*
 
 ---
@@ -26,6 +27,12 @@ Exporta: chatFunctionDeclarations, convertFunctionCallsToProposedActions.
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
 - [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
+- [[server_services_chatLecturas|server/services/chatLecturas.ts]] *(from #service)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/services/__tests__/chatCatalogo.test.ts`
 
 ---
 
