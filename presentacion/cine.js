@@ -127,7 +127,7 @@
   // ── Subtítulos estilo Netflix ──
   // Siguen a lo que se oye: salen mientras suena cada frase (con dos a la vez, dos líneas con guion, como en el cine)
   // y dicen lo que dice la voz, escrito bien (el guion hablado escribe algunas marcas como suenan).
-  var ESCRITO = [[/Band Mánayer/g, 'BandManager'], [/mánayers/gi, 'mánagers'], [/Mánayer/g, 'Mánager'], [/\bmánayer\b/g, 'mánager'], [/Spótifai/g, 'Spotify'], [/Yutub/g, 'YouTube'],
+  var ESCRITO = [[/Band Mánayer/g, 'BandManager'], [/mánayers/gi, 'mánagers'], [/Mánayer/g, 'Mánager'], [/\bmánayer\b/g, 'mánager'], [/Espotifái/g, 'Spotify'], [/Yutub/g, 'YouTube'],
     [/Taipscript/g, 'TypeScript'], [/Riact/g, 'React'], [/\bVit\b/g, 'Vite'], [/Supabeis/g, 'Supabase'], [/Séntri/g, 'Sentry'], [/\bbild\b/g, 'build'],
     [/Traicaunt/g, 'Tricount'], [/Splitguais/g, 'Splitwise'], [/Scaut/g, 'Scout'], [/Deit Suap/g, 'Date Swap'], [/buquin/g, 'booking'],
     [/ráider/g, 'rider'], [/Resurrécshon/g, 'Resurrection'], [/Big Scul/g, 'Big School'], [/Mure Dev/g, 'MoureDev'], [/Gúgel/g, 'Google'],
@@ -246,7 +246,7 @@
     fs: '<svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>'
   };
   var nf = document.createElement('div'); nf.id = 'nf'; nf.setAttribute('aria-label', 'Controles de la película');
-  nf.innerHTML = '<div class="nf-top"><span class="nf-n">N</span><span class="nf-serie">Os Herdeiros do Código</span><span class="nf-cap"></span><a class="nf-ir" href="https://bandmanager.io" target="_blank" rel="noopener" aria-label="Ir a BandManager.io (se abre en una pestaña nueva)">BandManager.io ↗</a><button type="button" class="nf-def" aria-label="Defensa técnica (tecla D)">Defensa técnica · D</button></div>' +
+  nf.innerHTML = '<div class="nf-top"><span class="nf-n">N</span><span class="nf-serie">Os Herdeiros do Código</span><span class="nf-cap"></span><a class="nf-ir" href="https://bandmanager.io/tfm" target="_blank" rel="noopener" aria-label="Ir a BandManager.io (se abre en una pestaña nueva)">BandManager.io ↗</a><button type="button" class="nf-def" aria-label="Defensa técnica (tecla D)">Defensa técnica · D</button></div>' +
     '<div class="nf-bar"><div class="nf-prog" role="slider" aria-label="Tiempo de la película" tabindex="0"><div class="nf-buffer"></div><div class="nf-lleno"></div><div class="nf-caps"></div><div class="nf-bola"></div><div class="nf-tip"></div></div><span class="nf-cuenta"></span></div>' +
     '<div class="nf-centro"><button class="nf-c" data-nf="menos" aria-label="Retroceder 15 segundos">' + ico.menos + '</button><button class="nf-c gran" data-nf="play" aria-label="Pausa"></button><button class="nf-c" data-nf="mas" aria-label="Avanzar 15 segundos">' + ico.mas + '</button></div>' +
     '<div class="nf-ctrl"><button class="nf-b" data-nf="play" aria-label="Pausa"></button>' +
@@ -274,7 +274,7 @@
   var saltarBtn = nf.querySelector('.nf-saltar'); if (stage) stage.appendChild(saltarBtn);
   saltarBtn.addEventListener('click', function () { var d = D(); if (d) d.show(+saltarBtn.dataset.i); });
   // Botón a la web (créditos y post-créditos): BandManager.io, para que Brais entre a su perfil
-  var WEB = 'https://bandmanager.io';
+  var WEB = 'https://bandmanager.io/tfm'; // landing del TFM
   var webBtn = document.createElement('a'); webBtn.className = 'nf-web'; webBtn.href = WEB; webBtn.target = '_blank'; webBtn.rel = 'noopener';
   webBtn.innerHTML = '<b>Ir a BandManager.io</b><small>Accede a tu perfil o crea tu banda</small>';
   if (stage) stage.appendChild(webBtn);
@@ -390,9 +390,11 @@
   // ── Final de película (estilo Netflix): negro, la N y «Más como esta»; se para todo (voces, música y vídeos) ──
   var finEl = document.createElement('div'); finEl.id = 'nf-fin'; finEl.setAttribute('aria-hidden', 'true');
   finEl.innerHTML = '<span class="nff-n">N</span><p class="nff-t">Más como esta</p><div class="nff-fila"></div><button type="button" class="nff-otra">↺ Ver otra vez</button>'+
-    '<p class="nff-mus-t">Escucha las canciones</p><div class="nff-mus">'+
-    '<a href="audio/musica/compila.mp3" target="_blank" rel="noopener"><b>▶ Compila nu bravu</b><small>Os Herdeiros do Código</small></a>'+
-    '<a href="audio/musica/cabalga.mp3" target="_blank" rel="noopener"><b>▶ Cabalga o lóstrego</b><small>Master of Prompts</small></a></div>'+
+    '<p class="nff-mus-t">Escucha y descarga las canciones</p><div class="nff-mus">'+
+    '<div class="nff-can"><a href="audio/musica/compila.mp3" target="_blank" rel="noopener"><b>▶ Compila nu bravu</b><small>Os Herdeiros do Código</small></a>'+
+    '<a class="nff-dl" href="audio/musica/compila.mp3" download="Os Herdeiros do Código - Compila nu bravu.mp3">⬇ Descargar</a></div>'+
+    '<div class="nff-can"><a href="audio/musica/cabalga.mp3" target="_blank" rel="noopener"><b>▶ Cabalga o lóstrego</b><small>Master of Prompts</small></a>'+
+    '<a class="nff-dl" href="audio/musica/cabalga.mp3" download="Master of Prompts - Cabalga o lóstrego.mp3">⬇ Descargar</a></div></div>'+
     '<a class="nff-web" href="'+WEB+'" target="_blank" rel="noopener">Accede a tu perfil o crea tu banda → bandmanager.io</a>';
   if (stage) stage.appendChild(finEl);
   var ANEXO_FIN = ['Arquitectura', 'Cómo se construyó con IA', 'Seguridad', 'Calidad en cifras'];
@@ -461,11 +463,23 @@
   };
   var dfCerrar = function () {
     if (!df || df.hidden) return; df.dataset.ult = (df.querySelector('.df-tabs .on') || {}).dataset ? df.querySelector('.df-tabs .on').dataset.df : 'arq';
+    if (df.dfCalla) df.dfCalla();
     df.hidden = true; document.body.classList.remove('df-abierto'); var d = D(); if (dfPausada && d) d.pausar(false); dfPausada = false;
   };
   if (df) {
     df.querySelectorAll('.df-tabs button').forEach(function (b) { b.addEventListener('click', function () { dfPestana(b.dataset.df); }); });
     df.querySelector('.df-x').addEventListener('click', dfCerrar);
+    // «Que conteste Iago»: la respuesta suena con su voz sin tocar la película (que está en pausa); se corta al volver a pulsar o al cerrar
+    var dfAudio = new Audio(), dfBoton = null;
+    var dfCalla = function () { dfAudio.pause(); if (dfBoton) { dfBoton.classList.remove('habla'); dfBoton.textContent = '▶ Que conteste Iago'; } dfBoton = null; };
+    df.addEventListener('click', function (e) {
+      var b = e.target.closest && e.target.closest('.df-voz'); if (!b || !window.DeckVoces) return;
+      var suena = dfBoton === b; dfCalla(); if (suena) return;
+      var src = window.DeckVoces.archivo(b); if (!src) return;
+      dfBoton = b; b.classList.add('habla'); b.textContent = '■ Parar'; dfAudio.src = src; dfAudio.onended = dfCalla;
+      var pr = dfAudio.play(); if (pr && pr.catch) pr.catch(dfCalla);
+    });
+    df.dfCalla = dfCalla;
     var dfBtn = nf.querySelector('.nf-def'); if (dfBtn) dfBtn.addEventListener('click', function (e) { e.stopPropagation(); dfAbrir(); });
     addEventListener('keydown', function (e) {
       if (e.ctrlKey || e.metaKey || e.altKey || /input|textarea/i.test((e.target || {}).tagName || '')) return;

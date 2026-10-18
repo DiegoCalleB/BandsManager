@@ -31,7 +31,10 @@ export function LandingTabSwitcher() {
             onClick={() => setActiveTab("form")}
             className="flex-1 items-center justify-center gap-1.5 px-2"
           >
-            <span className="truncate">{t("tabJoin")}</span>
+            <span className={`truncate ${activeTab === "form" ? "" : "text-[var(--acc-ink)]"}`}>{t("tabJoin")}</span>
+            {activeTab !== "form" && (
+              <span aria-hidden="true" className="w-2 h-2 shrink-0 rounded-[var(--r-pill)] bg-[var(--acc)] animate-heartbeat" />
+            )}
           </Button>
         </div>
     </>

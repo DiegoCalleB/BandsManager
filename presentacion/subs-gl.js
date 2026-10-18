@@ -111,9 +111,9 @@ window.SUBS_GL = {
 "¿Y las otras bandas? Siempre terminamos llamando a los mismos tres amigos del celular.": "¿E as outras bandas? Sempre acabamos chamando aos mesmos tres amigos do celular.",
 "Aquí las tengo todas: su estilo, su ciudad, el contacto y el público que llevan.": "Aquí teño todas: o seu estilo, a súa cidade, o contacto e o público que levan.",
 "¿Y puedo escucharlas antes de proponerles nada?": "¿E podo escoitalas antes de propoñerlles nada?",
-"Sí. Le das a escuchar, y suena abajo, desde su Spótifai, sin salir de la app.": "Si. Dáslle a escoitar, e soa abaixo, desde o seu Spotify, sen saír da app.",
+"Sí. Le das a escuchar, y suena abajo, desde su Espotifái, sin salir de la app.": "Si. Dáslle a escoitar, e soa abaixo, desde o seu Spotify, sen saír da app.",
 "¿Y cómo les va? ¿Llevan público de verdad, o solo a sus madres?": "¿E como lles vai? ¿Levan público de verdade, ou só ás súas nais?",
-"Ves sus métricas del mes, en Spótifai y en Yutub.": "Ves as súas métricas do mes, en Spotify e en YouTube.",
+"Ves sus métricas del mes, en Espotifái y en Yutub.": "Ves as súas métricas do mes, en Spotify e en YouTube.",
 "¡Esto es como Tinder, pero para bandas! ¡Y sin tener que hablar con nadie!": "¡Isto é coma Tinder, pero para bandas! ¡E sen ter que falar con ninguén!",
 "Antes, nuestra única fan era mi madre. Ahora tenemos una lista entera. Ella sigue siendo la más pesada.": "Antes, a nosa única fan era miña nai. Agora temos unha lista enteira. Ela segue sendo a máis pesada.",
 "Y los reels: subes el concierto entero, y la inteligencia artificial te saca los mejores trozos. Yo solo tuve que salir guapo.": "E os reels: subes o concerto enteiro, e a intelixencia artificial sácache os mellores anacos. Eu só tiven que saír guapo.",
@@ -126,7 +126,7 @@ window.SUBS_GL = {
 "Metes los coches que van en ruta, con su consumo, y te calcula la gasolina de cada parada.": "Metes os coches que van en ruta, co seu consumo, e calcúlache a gasolina de cada parada.",
 "Y te dice lo que queda limpio de cada bolo, después de gasolina, dietas y hotel.": "E dicha o que queda limpo de cada bolo, despois de gasolina, dietas e hotel.",
 "¡Ni una discusión más en la gasolinera! ¡Esto es amor, tío, amor!": "¡Nin unha discusión máis na gasolineira! ¡Isto é amor, tío, amor!",
-"Y hay más, chavales: los medios de comunicación, las métricas de redes, tu discografía de Spótifai, las ideas de cada canción, la ficha de cada bolo… Todo en la misma app.": "E hai máis, rapaces: os medios de comunicación, as métricas de redes, a túa discografía de Spotify, as ideas de cada canción, a ficha de cada bolo… Todo na mesma app.",
+"Y hay más, chavales: los medios de comunicación, las métricas de redes, tu discografía de Espotifái, las ideas de cada canción, la ficha de cada bolo… Todo en la misma app.": "E hai máis, rapaces: os medios de comunicación, as métricas de redes, a túa discografía de Spotify, as ideas de cada canción, a ficha de cada bolo… Todo na mesma app.",
 "Vale, ya lo tengo: es una base de datos de salas. Con cosas.": "Vale, xa o teño: é unha base de datos de salas. Con cousas.",
 "Casi, tío. Casi.": "Case, tío. Case.",
 "¡Pero si no le falta de nada! ¡Es la navaja suiza de las bandas!": "¡Pero se non lle falta de nada! ¡É a navalla suíza das bandas!",
@@ -167,7 +167,7 @@ window.SUBS_GL = {
 "Y esta noche, che… abrimos con la balada.": "E esta noite, che… abrimos coa balada.",
 "Escuchad, los de ahí fuera. La aplicación organiza, chavales. Pero esto lo hacéis vosotros.": "Escoitade aí fóra. A app organiza, rapaces. Pero isto fadelo vós.",
 "Hace seis meses no sabíamos ni quién contestaba a las salas. Y miradnos ahora. ¡Un, dos, tres, cuatro!": "Hai seis meses non sabiamos nin quen contestaba ás salas. E mirádesnos agora. ¡Un, dous, tres, catro!",
-"Buenos días, rockeros. Esto es Radio Riff. Una banda que casi se separa por no saber ni quién contestaba el correo acaba de tocar en el Resurrécshon Fest. ¿El secreto? Su bajista, Iago, y la app que ha creado: Band Mánayer punto io.": "Bos días, rockeiros. Isto é Radio Riff. Unha banda que case se separa por non saber nin quen contestaba o correo acaba de tocar no Resurrection Fest. ¿O segredo? O seu baixista, Iago, e a app que creou: BandManager punto io.",
+"Buenos días, rockeros. Esto es Radio Riff. Una banda que casi se separa por no saber ni quién contestaba el correo acaba de tocar en el Resurrécshon Fest. ¿El secreto? Su bajista, Iago, y la app que ha creado: Band Mánayer punto io. Hoy la usan miles de bandas de todo el mundo, y cientos de mánayers y productoras ya no pueden vivir sin ella.": "Bos días, rockeiros. Isto é Radio Riff. Unha banda que case se separa por non saber nin quen contestaba o correo acaba de tocar no Resurrection Fest. ¿O segredo? O seu baixista, Iago, e a app que creou: BandManager punto io. Hoxe úsana miles de bandas de todo o mundo, e centos de mánagers e produtoras xa non poden vivir sen ela.",
 "Sigo pensando que el treinta por ciento era un precio justo. Por cierto… ¿esa app cómo se descarga?": "Sigo pensando que o trinta por cento era un prezo xusto. Por certo… ¿esa app como se descarga?",
 "¿Alguien ha contestado a la sala del catorce, che?": "¿Alguén contestou á sala do catorce?",
 "Cerrao y bien cerrao, chaval. Mirad el calendario.": "Pechado e ben pechado, rapaz. Mirade o calendario.",
@@ -250,5 +250,7 @@ window.SUBS_GL = {
 "¿De todo el mundo? ¿Hasta los de gaita?": "¿De todo o mundo? ¿Ata os da gaita?",
 "Sobre todo los de gaita, tío. Esos conocen a todo el mundo.": "Sobre todo os da gaita, tío. Eses coñecen a todo o mundo.",
 "Y con esta peli en Netflix, seguro que se la descargan todos los grupos de K-Pop.": "E con esta peli en Netflix, seguro que a descargan todos os grupos de K-Pop.",
-"¡Los de K-Pop! Trece miembros y una coreografía… imagínate cuadrar el calendario de ensayos, che.": "Os de K-Pop! Trece membros e unha coreografía… imaxina cadrar o calendario de ensaios, che."
+"¡Los de K-Pop! Trece miembros y una coreografía… imagínate cuadrar el calendario de ensayos, che.": "Os de K-Pop! Trece membros e unha coreografía… imaxina cadrar o calendario de ensaios, che.",
+"Oye, Iago, que mi primo jura que te vio en Miami. En un descapotable.": "Oe, Iago, que o meu curmán xura que te viu en Miami. Nun descapotable.",
+"Sin comentarios, Brais. Sin comentarios.": "Sen comentarios, Brais. Sen comentarios."
 };
