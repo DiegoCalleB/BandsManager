@@ -22,12 +22,18 @@ Exporta: VenuePitchComposerProps, VenuePitchComposer.
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_avisoDeEmail|src/utils/avisoDeEmail.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_bookingTourContext|src/utils/bookingTourContext.ts]] *(Layer: #service, Domain: #booking)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_booking_venue_panel_VenuePlaybookBanner|src/components/booking/venue_panel/VenuePlaybookBanner.tsx]] *(from #frontend)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `src/components/booking/venue_panel/__tests__/VenuePitchComposer.aviso.test.tsx`
 
 ---
 
