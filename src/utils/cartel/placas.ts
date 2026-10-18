@@ -50,6 +50,14 @@ export function planPlacas(L: LayoutCartel, luz: number): PlanPlacas {
   return { color: PAPEL[papel], filete: FILETE[papel], bandas, filetes, orla };
 }
 
+/**
+ * Texto integrado: la ilustración llega de borde a borde y el texto se imprime encima (el velo de
+ * contraste lo garantiza). Solo se conserva la orla de papel alrededor, como el margen de un cartel.
+ */
+export function plantillaIntegrada(plan: PlanPlacas): PlanPlacas {
+  return { ...plan, bandas: [], filetes: [] };
+}
+
 export function dibujarPlacas(ctx: CanvasRenderingContext2D, plan: PlanPlacas): void {
   ctx.fillStyle = plan.color;
   for (const r of [...plan.bandas, ...plan.orla]) ctx.fillRect(r.x, r.y, r.w, r.h);

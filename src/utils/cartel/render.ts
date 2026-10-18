@@ -9,7 +9,7 @@ import { decidirTinta, medirLuz, unirPixeles, type Tinta } from './contraste';
 import type { DefFormato } from './formatos';
 import type { FondoGuardado, PaletaId } from './config';
 import { aplicarGrano, semillaDeTexto } from './grano';
-import { dibujarPlacas, luzMedia, planPlacas } from './placas';
+import { dibujarPlacas, luzMedia, planPlacas, plantillaIntegrada } from './placas';
 import { tintarLogo } from './logos';
 
 export const TINTAS = { clara: '#F4F1EA', oscura: '#17181C' } as const;
@@ -301,10 +301,11 @@ export async function renderCartel(
   } else if (imagen) {
     dibujarFondoImagen(ctx, imagen, L.ancho, L.alto);
     if (fondo.tipo === 'imagen' && fondo.origen === 'ia') {
-      // Un fondo de IA lleva el texto en placas de papel (como un cartel impreso) y fibra por encima:
-      // sin ella tiene el aspecto liso de una imagen generada. La foto propia de la banda se deja
+      // Un fondo de IA llena el cartel y el texto se imprime sobre la propia ilustración (integrado,
+      // sin bandas); solo queda la orla de papel y la fibra por encima: sin ella tiene el aspecto
+      // liso de una imagen generada. La foto propia de la banda se deja
       // como es. Todo antes de medir el contraste y de pintar el texto.
-      dibujarPlacas(ctx, planPlacas(L, luzMedia(canvas)));
+      dibujarPlacas(ctx, plantillaIntegrada(planPlacas(L, luzMedia(canvas))));
       aplicarGrano(ctx, L.ancho, L.alto, semillaDeTexto(piezas.semilla));
     }
   }
