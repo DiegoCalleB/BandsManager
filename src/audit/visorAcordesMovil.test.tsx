@@ -22,7 +22,7 @@ describe('Visor de acordes en móvil: siempre se puede llegar a la letra', () =>
 
   it('la barra del acorde y los diagramas van en el dock inferior en móvil, siempre a la vista', () => {
     expect(visor.match(/max-md:order-last/g)?.length).toBeGreaterThanOrEqual(2);
-    expect(visor).toContain('max-md:max-h-[32dvh]');
+    expect(visor).toContain('max-md:max-h-[24dvh]');
   });
 
   it('los diagramas empiezan cerrados (la barra fija ya enseña el que suena)', () => {

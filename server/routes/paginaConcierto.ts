@@ -31,12 +31,18 @@ import { obtenerPerfilPublicoBandaCacheado } from '../services/perfilPublicoBand
 import { captureError } from '../utils/errorTracking.js';
 
 import emailsCicloVidaRouter from './emailsCicloVida.js';
+import interesadosRouter from './interesados.js';
+import contactoEmpresasRouter from './contactoEmpresas.js';
+import pegatinasRouter from './pegatinas.js';
 import fansContadorRouter from './fans_contador.js';
 import paginasSeoRouter from './paginasSeo.js';
 export { startEmailsCicloVidaScheduler } from '../services/emailsCicloVida.js';
 
 const router = express.Router();
 router.use(emailsCicloVidaRouter); // baja de los emails de onboarding (/api/emails/baja)
+router.use(interesadosRouter); // lista de novedades de la landing (/api/public/interesados)
+router.use(contactoEmpresasRouter); // consultas de empresas, planes B2B (/api/public/contacto-empresas)
+router.use(pegatinasRouter); // regalo de pegatinas en la primera suscripción (/api/billing/pegatinas)
 router.use(paginasSeoRouter); // guías de SEO (/guias)
 router.use(fansContadorRouter); // número de fans para la película del TFM (/api/public/fans/contador)
 

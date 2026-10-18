@@ -20,6 +20,8 @@ Sincronización periódica del catálogo compartido de salas.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_db_salasCatalogo|server/db/salasCatalogo.ts]] *(Layer: #db, Domain: #system)*
 - [[server_services_catalogoSalas|server/services/catalogoSalas.ts]] *(Layer: #service, Domain: #system)*
+- [[server_services_consultaMapsSala|server/services/consultaMapsSala.ts]] *(Layer: #service, Domain: #system)*
+- [[server_services_verificarSalasEnMaps|server/services/verificarSalasEnMaps.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_errorTracking|server/utils/errorTracking.ts]] *(Layer: #service, Domain: #system)*
 
 ---

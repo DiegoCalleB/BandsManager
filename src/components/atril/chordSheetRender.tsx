@@ -61,7 +61,7 @@ export function renderFormattedChordSheet(text: string, letra?: SincronizacionLe
       id: `letra-linea-${k}`,
       onClick: () => letra.onSeek(letra.lineas[k].t0),
       title: "Saltar a esta frase",
-      className: `${k === letra.activa ? "bg-[var(--acc-soft)] rounded-[var(--r-s)] ring-1 ring-[var(--acc)]" : "hover:bg-[var(--surface)] rounded-[var(--r-s)]"} cursor-pointer transition-ui py-0.5`,
+      className: `${k === letra.activa ? "bg-[var(--acc-soft)] rounded-[var(--r-m)]" : "hover:bg-[var(--surface)] rounded-[var(--r-m)]"} cursor-pointer transition-ui py-1 px-2 -mx-2`,
     };
   };
 
@@ -112,7 +112,7 @@ export function renderFormattedChordSheet(text: string, letra?: SincronizacionLe
                 sync.onSeek(instante);
               }}
               title={`Saltar a ${Math.floor(instante / 60)}:${String(Math.floor(instante % 60)).padStart(2, "0")}${par.coincide ? "" : " · en el audio suena otro acorde"}${funcionTitulo}`}
-              className={`font-bold px-1 rounded text-xs leading-5 cursor-pointer transition-ui ${
+              className={`font-bold px-1.5 rounded-[var(--r-s)] text-sm leading-5 cursor-pointer transition-ui ${
                 k === sync.activo
                   ? "bg-[var(--surface)] text-[var(--ink)]"
                   : `${clasePasiva} hover:brightness-95`
@@ -124,7 +124,7 @@ export function renderFormattedChordSheet(text: string, letra?: SincronizacionLe
           );
         }
         return (
-          <span key={key} title={funcionTitulo ? funcionTitulo.slice(3) : undefined} className={`font-bold ${clasePasiva} px-1 rounded mr-0.5 text-xs leading-5`}>
+          <span key={key} title={funcionTitulo ? funcionTitulo.slice(3) : undefined} className={`font-bold ${clasePasiva} px-1.5 rounded-[var(--r-s)] mr-0.5 text-sm leading-5`}>
             {contenido}
           </span>
         );
@@ -154,7 +154,7 @@ export function renderFormattedChordSheet(text: string, letra?: SincronizacionLe
                 {piezas.map((pz, i) => (
                   <span key={i} className="inline-flex flex-col align-bottom">
                     <span className="h-7 leading-7 mr-0.5">{pz.acorde ?? "\u00A0"}</span>
-                    <span className="whitespace-pre text-[var(--ink-2)]">{pz.texto || "\u00A0"}</span>
+                    <span className="whitespace-pre text-[var(--ink)]">{pz.texto || "\u00A0"}</span>
                   </span>
                 ))}
               </span>
@@ -176,7 +176,7 @@ export function renderFormattedChordSheet(text: string, letra?: SincronizacionLe
       return (
         <div
           key={idx}
-          className="font-bold text-[var(--acc)] text-sm py-0.5 leading-none select-none"
+          className="font-bold text-[var(--acc-ink)] text-sm py-0.5 leading-none select-none"
         >
           {line}
         </div>
@@ -185,7 +185,7 @@ export function renderFormattedChordSheet(text: string, letra?: SincronizacionLe
 
     // Standard lyrics line
     return (
-      <div key={idx} className="text-[var(--ink-2)] py-0.5" {...propsDeLetra(idx)}>
+      <div key={idx} className="text-[var(--ink)] py-0.5" {...propsDeLetra(idx)}>
         {line || "\u00A0"}
       </div>
     );

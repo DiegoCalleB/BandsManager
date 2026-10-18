@@ -8,6 +8,7 @@ import { ACTIVE_SESSIONS, verifyPassword, hashPassword } from '../../auth.js';
 import { loadState, saveState, requireAuth, ensureValidUserEmails } from '../../state.js';
 import { dbGetUsers, dbUpsertUser, dbUpsertUserBand, dbGetRegisteredBands, dbUpsertRegisteredBand } from '../../db.js';
 import { sendWelcomeEmail } from '../../services/transactionalEmail.js';
+import { avisarAlta } from '../../services/avisoAltas.js';
 import { registroRateLimiter } from '../../middleware/rateLimiter.js';
 import { generateUniqueSlugId, slugify } from '../../utils/slug.js';
 import { cleanBandId, buildAvailableBandsForUser } from './bandasDisponibles.js';
@@ -273,6 +274,8 @@ router.post('/auth/register', registroRateLimiter, async (req, res) => {
       );
     }
   }
+
+  void avisarAlta({ tipo: 'registro', email: cleanEmail, nombre: rawBandName, origen: 'registro en la app' });
 
   const { passwordHash, salt: _, ...safeUser } = userToUse;
   res.status(201).json({

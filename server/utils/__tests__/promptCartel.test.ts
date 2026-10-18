@@ -35,6 +35,7 @@ describe('promptCartel', () => {
   });
 
   it('el coste por imagen es positivo y acotado', () => {
+    expect(costeImagenEur(true)).toBeGreaterThan(costeImagenEur());
     const c = costeImagenEur();
     expect(c).toBeGreaterThan(0.01);
     expect(c).toBeLessThan(0.1);

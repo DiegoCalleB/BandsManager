@@ -4,6 +4,7 @@
 import { getSupabase } from './core.js';
 import type { LeadParaCatalogo } from '../utils/salaCatalogo.js';
 import type { PuertoCatalogo, SalaAGuardar, SalaGuardada } from '../services/catalogoSalas.js';
+import type { PuertoVerificacion } from '../services/verificarSalasEnMaps.js';
 
 const PAGINA = 1000;
 
@@ -20,9 +21,13 @@ export function leadParaCatalogo({ notas, ...resto }: FilaLeadCatalogo): LeadPar
   return { ...resto, rebotado: typeof notas === 'string' && notas.includes(MARCA_REBOTE) };
 }
 
-type FilaSala = Omit<SalaGuardada, 'verificada_en'> & { verificada_en: string | null };
+type FilaSala = Omit<SalaGuardada, 'verificada_en' | 'estado_negocio_en'> & { verificada_en: string | null; estado_negocio_en?: string | null };
 
-export const salaDeFila = (fila: FilaSala): SalaGuardada => ({ ...fila, verificada_en: fila.verificada_en ? new Date(fila.verificada_en) : null });
+export const salaDeFila = (fila: FilaSala): SalaGuardada => ({
+  ...fila,
+  verificada_en: fila.verificada_en ? new Date(fila.verificada_en) : null,
+  estado_negocio_en: fila.estado_negocio_en ? new Date(fila.estado_negocio_en) : null,
+});
 
 const COLUMNAS_LEAD = 'id,band_id,nombre_sala,ciudad,region,direccion,tipo,aforo,genero,website,instagram,email_contacto,telefono,telefono_fijo,place_id,es_verificado,estado,fecha_envio,notas,sala_id';
 
@@ -69,5 +74,24 @@ export const puertoCatalogoSupabase: PuertoCatalogo = {
       const { error } = await getSupabase().from('leads').update({ sala_id: salaId }).in('id', ids);
       if (error) throw new Error(`No se pudo enlazar leads con la sala ${salaId}: ${error.message}`);
     }
+  },
+};
+
+export const puertoVerificacionSupabase: PuertoVerificacion = {
+  async salasPendientes(limite, antesDe) {
+    const { data, error } = await getSupabase()
+      .from('salas_catalogo')
+      .select('*')
+      .eq('no_contactar', false)
+      .or(`estado_negocio_en.is.null,estado_negocio_en.lt.${antesDe.toISOString()}`)
+      .order('estado_negocio_en', { ascending: true, nullsFirst: true })
+      .limit(limite);
+    if (error) throw new Error(`No se pudieron leer las salas por verificar: ${error.message}`);
+    return ((data ?? []) as FilaSala[]).map(salaDeFila);
+  },
+
+  async guardarEstado(salaId, estado, en) {
+    const { error } = await getSupabase().from('salas_catalogo').update({ estado_negocio: estado, estado_negocio_en: en.toISOString() }).eq('id', salaId);
+    if (error) throw new Error(`No se pudo guardar el estado de la sala ${salaId}: ${error.message}`);
   },
 };

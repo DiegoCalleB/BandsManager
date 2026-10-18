@@ -95,7 +95,7 @@
   var sting = function () {
     try {
       var AC = window.AudioContext || window.webkitAudioContext, c = new AC(), t = c.currentTime + 0.05, out = c.createGain();
-      out.gain.value = 0.9; out.connect(c.destination);
+      out.gain.value = 0.58; out.connect(c.destination);
       var golpe = function (t0, f0, f1, dur, g) {
         var o = c.createOscillator(), a = c.createGain();
         o.type = 'sine'; o.frequency.setValueAtTime(f0, t0); o.frequency.exponentialRampToValueAtTime(f1, t0 + dur * 0.6);
@@ -109,8 +109,17 @@
         b.buffer = nb; var lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 900;
         var ga = c.createGain(); ga.gain.value = g; b.connect(lp); lp.connect(ga); ga.connect(out); b.start(t0);
       };
-      golpe(t, 98, 49, 1.1, 0.8); golpe(t, 196, 98, 0.5, 0.3); ataque(t, 0.5);
-      golpe(t + 0.36, 73, 36, 2.8, 1.0); golpe(t + 0.36, 146, 73, 1.4, 0.35); golpe(t + 0.36, 293, 146, 0.8, 0.12); ataque(t + 0.36, 0.7);
+      // Un bajo de verdad (el instrumento de Iago): diente de sierra con filtro que se cierra, saturado y con la octava de abajo. Se oye hasta en un altavoz pequeño
+      var curva = new Float32Array(512); for (var q = 0; q < 512; q++) { var xq = q / 255.5 - 1; curva[q] = Math.tanh(2.4 * xq); }
+      var bajo = function (t0, f, dur, g) {
+        var o = c.createOscillator(), so = c.createOscillator(), lp = c.createBiquadFilter(), ws = c.createWaveShaper(), a = c.createGain(), sg = c.createGain();
+        o.type = 'sawtooth'; o.frequency.value = f; so.type = 'sine'; so.frequency.value = f / 2; sg.gain.value = 0.9; ws.curve = curva;
+        lp.type = 'lowpass'; lp.Q.value = 3; lp.frequency.setValueAtTime(f * 16, t0); lp.frequency.exponentialRampToValueAtTime(f * 2.2, t0 + 0.28);
+        a.gain.setValueAtTime(0.0001, t0); a.gain.exponentialRampToValueAtTime(g, t0 + 0.01); a.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+        o.connect(lp); lp.connect(ws); so.connect(sg); sg.connect(ws); ws.connect(a); a.connect(out); o.start(t0); so.start(t0); o.stop(t0 + dur + 0.05); so.stop(t0 + dur + 0.05);
+      };
+      bajo(t, 82.4, 0.6, 0.55); golpe(t, 98, 49, 0.9, 0.5); ataque(t, 0.4);
+      bajo(t + 0.36, 82.4, 2.7, 0.7); golpe(t + 0.36, 73, 36, 2.4, 0.8); golpe(t + 0.36, 293, 146, 0.8, 0.1); ataque(t + 0.36, 0.6);
       var ruido = c.createBufferSource(), n = c.createBuffer(1, c.sampleRate * 2.6, c.sampleRate), d = n.getChannelData(0);
       for (var i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 2);
       ruido.buffer = n; var f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.setValueAtTime(500, t + 0.4); f.frequency.exponentialRampToValueAtTime(2400, t + 2.2);

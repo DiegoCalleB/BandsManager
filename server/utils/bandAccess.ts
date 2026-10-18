@@ -143,3 +143,4 @@ export function bandaFacturableDelUsuario(req: express.Request): { bandId: strin
 export function bandaDe(registro: { band_id?: string; bandId?: string } | null | undefined): string | undefined {
   return registro?.band_id || registro?.bandId;
 }
+export { suscripcionHabilitada, SUSCRIPCION_NO_HABILITADA } from "./suscripcion.js";
