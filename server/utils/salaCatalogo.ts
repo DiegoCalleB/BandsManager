@@ -96,6 +96,12 @@ const TIPOS_CATALOGABLES = new Set(['sala', 'festival', 'ayuntamiento', 'discote
 /** Leads de prueba que se cuelan en las bases reales («Test», «Test 178652...», «Prueba»). */
 const NOMBRE_DE_PRUEBA = /^(test|prueba)(\s|\d|$)/i;
 
+/** Agencias, mánagers y similares: contactan con las salas, pero no son una sala donde tocar. */
+const NOMBRE_DE_AGENCIA = /\b(booking agency|management|agencia|agency)\b/i;
+
+/** Palabras que no identifican a una sala y que una cuenta personal también podría llevar. */
+const PALABRAS_GENERICAS = new Set(['sala', 'club', 'teatro', 'festival', 'music', 'live', 'cafe', 'rock', 'bar', 'fest']);
+
 const sinAcentos = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
 /** Texto de comparación: minúsculas, sin acentos ni signos, espacios colapsados. */
@@ -154,6 +160,17 @@ export function instagramPublico(valor: unknown): string | null {
   return /^[a-z0-9._]{1,30}$/.test(usuario) ? usuario : null;
 }
 
+/**
+ * La cuenta de Instagram solo se publica si su usuario se parece al nombre de la sala: una cuenta que no tiene nada que
+ * ver (el perfil personal de un músico que figuraba en una ficha) podría ser de una persona y no se difunde (RGPD).
+ */
+export function instagramDeLaSala(usuario: string | null, nombreSala: string): string | null {
+  if (!usuario) return null;
+  const compacto = usuario.replace(/[._]/g, '');
+  const palabras = normalizarTexto(nombreSala).split(' ').filter((p) => p.length >= 4 && !PALABRAS_GENERICAS.has(p));
+  return palabras.some((p) => compacto.includes(p)) ? usuario : null;
+}
+
 /** Email de la sala (rol: info@, booking@...), nunca de una persona ni de un correo personal (RGPD). */
 export function emailDeRol(valor: unknown): string | null {
   if (typeof valor !== 'string') return null;
@@ -173,10 +190,11 @@ export function telefonoFijoEs(valor: unknown): string | null {
 
 export type MotivoExclusion = 'tipo' | 'prueba' | 'sin_clave';
 
-/** Por qué un lead no entra al catálogo, o null si puede entrar. */
+/** Por qué un lead no entra al catálogo, o null si puede entrar. `tipo` = no es un recinto (medio, agencia...). */
 export function motivoExclusion(lead: LeadParaCatalogo): MotivoExclusion | null {
   if (!TIPOS_CATALOGABLES.has((lead.tipo ?? '').trim().toLowerCase() || 'sala')) return 'tipo';
   if (NOMBRE_DE_PRUEBA.test((lead.nombre_sala ?? '').trim())) return 'prueba';
+  if (NOMBRE_DE_AGENCIA.test(lead.nombre_sala ?? '')) return 'tipo';
   return claveSala({ placeId: lead.place_id, nombre: lead.nombre_sala, ciudad: lead.ciudad }) ? null : 'sin_clave';
 }
 
@@ -198,7 +216,7 @@ export function camposPublicos(lead: LeadParaCatalogo): CamposPublicosSala | nul
     aforo: typeof lead.aforo === 'number' && Number.isFinite(lead.aforo) && lead.aforo > 0 ? Math.round(lead.aforo) : null,
     genero: textoPublico(lead.genero, 80),
     website: urlPublica(lead.website),
-    instagram: instagramPublico(lead.instagram),
+    instagram: instagramDeLaSala(instagramPublico(lead.instagram), nombre),
     email_contacto: emailDeRol(lead.email_contacto),
     telefono: telefonoFijoEs(lead.telefono_fijo) ?? telefonoFijoEs(lead.telefono),
   };

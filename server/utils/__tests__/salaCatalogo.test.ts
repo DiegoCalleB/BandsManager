@@ -8,6 +8,7 @@ import {
   emailDeRol,
   fusionarConExistente,
   idDeSala,
+  instagramDeLaSala,
   instagramPublico,
   motivoExclusion,
   senalesDeLeads,
@@ -298,5 +299,45 @@ describe('siguienteVerificadaEn', () => {
     expect(siguienteVerificadaEn(null, senales({ bandasConRespuesta: 1 }), 'probable', AHORA)).toEqual(AHORA);
     expect(siguienteVerificadaEn(previa, senales({ bandasConEntrega: 1, bandasConRespuesta: 1 }), 'probable', AHORA)).toEqual(previa.verificadaEn);
     expect(siguienteVerificadaEn(previa, senales({ bandasConEntrega: 2, bandasConRespuesta: 1 }), 'probable', AHORA)).toEqual(AHORA);
+  });
+});
+
+describe('instagramDeLaSala: solo cuentas que se parecen a la sala', () => {
+  it('acepta el usuario que contiene una palabra con contenido del nombre', () => {
+    expect(instagramDeLaSala('sirocosala', 'Siroco')).toBe('sirocosala');
+    expect(instagramDeLaSala('ferrarabuskersfestival', 'Ferrara Buskers Festival')).toBe('ferrarabuskersfestival');
+    expect(instagramDeLaSala('sala.apolo', 'Sala Apolo')).toBe('sala.apolo');
+    expect(instagramDeLaSala('cotton_club_bilbao', 'Cotton Club Bilbao')).toBe('cotton_club_bilbao');
+  });
+
+  it('descarta una cuenta sin relación con el nombre: podría ser de una persona', () => {
+    expect(instagramDeLaSala('alex.leon.music', 'Honky Tonk Bar')).toBeNull();
+    expect(instagramDeLaSala('dipuhu', 'Foro Iberoamericano de La Rábida')).toBeNull();
+  });
+
+  it('una palabra genérica (sala, club, teatro...) no basta para dar por buena una cuenta', () => {
+    expect(instagramDeLaSala('mi.club.personal', 'Club')).toBeNull();
+    expect(instagramDeLaSala('teatro_de_juan', 'Sala Teatro')).toBeNull();
+  });
+
+  it('sin usuario devuelve null', () => {
+    expect(instagramDeLaSala(null, 'Siroco')).toBeNull();
+  });
+
+  it('camposPublicos aplica la regla al lead', () => {
+    expect(camposPublicos(lead({ nombre_sala: 'Honky Tonk Bar', instagram: '@alex.leon.music' }))?.instagram).toBeNull();
+    expect(camposPublicos(lead({ nombre_sala: 'Siroco', instagram: '@sirocosala' }))?.instagram).toBe('sirocosala');
+  });
+});
+
+describe('motivoExclusion: las agencias no son salas', () => {
+  it.each(['Kasba Music (Management & Booking)', 'Propaganda Pel Fet (Booking Agency)', 'Agencia Sonora'])('«%s» no entra', (nombre_sala) => {
+    expect(motivoExclusion(lead({ nombre_sala }))).toBe('tipo');
+    expect(camposPublicos(lead({ nombre_sala }))).toBeNull();
+  });
+
+  it('un nombre que solo se parece no se excluye', () => {
+    expect(motivoExclusion(lead({ nombre_sala: 'Sala Mánager' }))).toBeNull();
+    expect(motivoExclusion(lead({ nombre_sala: 'Booking Club' }))).toBeNull();
   });
 });
