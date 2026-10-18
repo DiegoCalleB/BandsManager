@@ -30,7 +30,6 @@ EPK y captación de fans: configuración de autonomía de agentes, EPK editable/
 - [[server_utils_bandHash|server/utils/bandHash.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_enlacesPublicos|server/utils/enlacesPublicos.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
-- [[server_utils_estadoPorBanda|server/utils/estadoPorBanda.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_fanIncentive|server/utils/fanIncentive.ts]] *(Layer: #service, Domain: #social)*
 - [[server_utils_planLimits|server/utils/planLimits.ts]] *(Layer: #service, Domain: #system)*
 - [[src_i18n_epkTranslations|src/i18n/epkTranslations.ts]] *(Layer: #service, Domain: #epk)*
@@ -60,6 +59,7 @@ EPK y captación de fans: configuración de autonomía de agentes, EPK editable/
 
 ## 🧪 Tests que lo cubren
 - `server/routes/__tests__/auditoriaSeguridadPR2.test.ts`
+- `server/routes/__tests__/fansSoloSupabase.test.ts`
 - `server/routes/__tests__/seguridadAutorizacion.test.ts`
 
 ---

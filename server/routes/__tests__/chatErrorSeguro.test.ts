@@ -34,6 +34,7 @@ vi.mock('../../db.js', () => ({
   dbGetSongs: async () => [],
   dbGetSetlists: async () => [],
   dbGetTours: async () => [],
+  dbContarFans: async () => 0,
 }));
 vi.mock('../../utils/errorTracking.js', () => ({ captureError: vi.fn() }));
 

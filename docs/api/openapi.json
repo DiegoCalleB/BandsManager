@@ -1368,7 +1368,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:54",
+        "x-source": "server/routes/epk_fans.ts:52",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -1401,7 +1401,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:72",
+        "x-source": "server/routes/epk_fans.ts:70",
         "x-autenticacion": "middleware"
       },
       "put": {
@@ -1433,7 +1433,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:103",
+        "x-source": "server/routes/epk_fans.ts:101",
         "x-autenticacion": "middleware"
       }
     },
@@ -5099,7 +5099,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:137",
+        "x-source": "server/routes/epk_fans.ts:135",
         "x-autenticacion": "middleware"
       },
       "put": {
@@ -5132,7 +5132,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:157",
+        "x-source": "server/routes/epk_fans.ts:155",
         "x-autenticacion": "middleware"
       }
     },
@@ -5167,7 +5167,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:1071",
+        "x-source": "server/routes/epk_fans.ts:1028",
         "x-autenticacion": "middleware"
       }
     },
@@ -5202,7 +5202,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:233",
+        "x-source": "server/routes/epk_fans.ts:231",
         "x-autenticacion": "middleware"
       }
     },
@@ -5396,7 +5396,7 @@
           "epk_fans"
         ],
         "operationId": "getApiFans",
-        "description": "Comentario en el código: Get Fans List (Authenticated)",
+        "description": "Comentario en el código: Get Fans List (Authenticated). Los fans viven solo en Supabase: nunca se sirve una copia en memoria.",
         "parameters": [
           {
             "$ref": "#/components/parameters/BandIdActiva"
@@ -5421,7 +5421,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:761",
+        "x-source": "server/routes/epk_fans.ts:759",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -5454,7 +5454,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:780",
+        "x-source": "server/routes/epk_fans.ts:768",
         "x-autenticacion": "middleware"
       }
     },
@@ -5464,7 +5464,7 @@
           "epk_fans"
         ],
         "operationId": "patchApiFansId",
-        "description": "Comentario en el código: Update Fan (Authenticated)",
+        "description": "Comentario en el código: Update Fan (Authenticated). Se busca entre los fans de la banda activa: el de otra banda es un 404.",
         "parameters": [
           {
             "name": "id",
@@ -5497,7 +5497,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:819",
+        "x-source": "server/routes/epk_fans.ts:802",
         "x-autenticacion": "middleware"
       },
       "delete": {
@@ -5538,7 +5538,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:853",
+        "x-source": "server/routes/epk_fans.ts:819",
         "x-autenticacion": "middleware"
       }
     },
@@ -8928,7 +8928,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:1181",
+        "x-source": "server/routes/epk_fans.ts:1138",
         "x-autenticacion": "middleware"
       }
     },
@@ -9631,7 +9631,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/epk_fans.ts:462",
+        "x-source": "server/routes/epk_fans.ts:460",
         "x-autenticacion": "ninguna"
       }
     },
@@ -9683,7 +9683,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:867",
+        "x-source": "server/routes/epk_fans.ts:829",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -9804,7 +9804,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:1113",
+        "x-source": "server/routes/epk_fans.ts:1070",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -9827,7 +9827,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:979",
+        "x-source": "server/routes/epk_fans.ts:936",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -13653,7 +13653,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/chat.ts:520",
+        "x-source": "server/routes/chat.ts:521",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"

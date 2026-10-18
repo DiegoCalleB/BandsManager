@@ -27,7 +27,7 @@ describe('estado global en rutas y controladores', () => {
 
   // Fase 2B: colecciones ya migradas a solo-Supabase. Se añade aquí cada una que se migre; ninguna
   // ruta (salvo la semilla del arranque local, que usa `loadState().x`) vuelve a tocar `state.x`.
-  const MIGRADAS = ['tours'];
+  const MIGRADAS = ['tours', 'fans'];
   it.each(MIGRADAS)('state.%s ya no se lee ni se escribe desde rutas o controladores', (coleccion) => {
     const uso = new RegExp(`\\bstate\\.${coleccion}\\b`);
     const infractores: string[] = [];

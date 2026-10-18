@@ -49,12 +49,12 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `GET` | `/api/public/deals/{token}` | Pública | — |  | [`server/routes/deals.ts:227`](../../server/routes/deals.ts#L227) |
 | `POST` | `/api/public/deals/{token}/resend-email` | Pública | reenvioEmailRateLimiter |  | [`server/routes/deals.ts:454`](../../server/routes/deals.ts#L454) |
 | `POST` | `/api/public/deals/{token}/sign` | Pública | — | ★ | [`server/routes/deals.ts:307`](../../server/routes/deals.ts#L307) |
-| `GET` | `/api/public/epk` | Pública | — |  | [`server/routes/epk_fans.ts:462`](../../server/routes/epk_fans.ts#L462) |
-| `POST` | `/api/public/fans` | Pública | publicoRateLimiter | ★ | [`server/routes/epk_fans.ts:867`](../../server/routes/epk_fans.ts#L867) |
+| `GET` | `/api/public/epk` | Pública | — |  | [`server/routes/epk_fans.ts:460`](../../server/routes/epk_fans.ts#L460) |
+| `POST` | `/api/public/fans` | Pública | publicoRateLimiter | ★ | [`server/routes/epk_fans.ts:829`](../../server/routes/epk_fans.ts#L829) |
 | `GET` | `/api/public/fans/contador` | Pública | publicoRateLimiter |  | [`server/routes/fans_contador.ts:19`](../../server/routes/fans_contador.ts#L19) |
 | `GET` | `/api/public/insignia` | Pública | publicoRateLimiter |  | [`server/routes/referidos.ts:76`](../../server/routes/referidos.ts#L76) |
-| `POST` | `/api/public/musicians-waitlist` | Pública | publicoRateLimiter |  | [`server/routes/epk_fans.ts:1113`](../../server/routes/epk_fans.ts#L1113) |
-| `POST` | `/api/public/track-click` | Pública | publicoRateLimiter |  | [`server/routes/epk_fans.ts:979`](../../server/routes/epk_fans.ts#L979) |
+| `POST` | `/api/public/musicians-waitlist` | Pública | publicoRateLimiter |  | [`server/routes/epk_fans.ts:1070`](../../server/routes/epk_fans.ts#L1070) |
+| `POST` | `/api/public/track-click` | Pública | publicoRateLimiter |  | [`server/routes/epk_fans.ts:936`](../../server/routes/epk_fans.ts#L936) |
 | `GET` | `/api/r/{code}` | Pública | publicoRateLimiter |  | [`server/routes/enlacesCortos.ts:49`](../../server/routes/enlacesCortos.ts#L49) |
 | `GET` | `/api/spotify/status` | Pública | — |  | [`server/routes/spotify.ts:16`](../../server/routes/spotify.ts#L16) |
 | `GET` | `/api/state` | Sesión (comprobada en el handler) | — |  | [`server.ts:511`](../../server.ts#L511) |
@@ -219,7 +219,7 @@ Son las que un revisor de seguridad querrá mirar primero.
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
 | `POST` | `/api/chat` | Sesión | chatRateLimiter |  | [`server/routes/chat.ts:31`](../../server/routes/chat.ts#L31) |
-| `POST` | `/api/write-reels-copy` | Sesión | iaRateLimiter |  | [`server/routes/chat.ts:520`](../../server/routes/chat.ts#L520) |
+| `POST` | `/api/write-reels-copy` | Sesión | iaRateLimiter |  | [`server/routes/chat.ts:521`](../../server/routes/chat.ts#L521) |
 
 ### concert_to_album
 
@@ -300,22 +300,22 @@ EPK público de la banda y registro de fans con consentimiento RGPD.
 
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
-| `GET` | `/api/autonomy` | Sesión | — |  | [`server/routes/epk_fans.ts:54`](../../server/routes/epk_fans.ts#L54) |
-| `POST` | `/api/autonomy` | Sesión | — |  | [`server/routes/epk_fans.ts:72`](../../server/routes/epk_fans.ts#L72) |
-| `PUT` | `/api/autonomy` | Sesión | — |  | [`server/routes/epk_fans.ts:103`](../../server/routes/epk_fans.ts#L103) |
-| `GET` | `/api/epk` | Sesión | — |  | [`server/routes/epk_fans.ts:137`](../../server/routes/epk_fans.ts#L137) |
-| `PUT` | `/api/epk` | Sesión | — |  | [`server/routes/epk_fans.ts:157`](../../server/routes/epk_fans.ts#L157) |
-| `GET` | `/api/epk/clicks` | Sesión | — |  | [`server/routes/epk_fans.ts:1071`](../../server/routes/epk_fans.ts#L1071) |
-| `POST` | `/api/epk/traducir` | Sesión | — |  | [`server/routes/epk_fans.ts:233`](../../server/routes/epk_fans.ts#L233) |
-| `GET` | `/api/fans` | Sesión | — |  | [`server/routes/epk_fans.ts:761`](../../server/routes/epk_fans.ts#L761) |
-| `POST` | `/api/fans` | Sesión | — |  | [`server/routes/epk_fans.ts:780`](../../server/routes/epk_fans.ts#L780) |
-| `PATCH` | `/api/fans/{id}` | Sesión | — |  | [`server/routes/epk_fans.ts:819`](../../server/routes/epk_fans.ts#L819) |
-| `DELETE` | `/api/fans/{id}` | Sesión | — |  | [`server/routes/epk_fans.ts:853`](../../server/routes/epk_fans.ts#L853) |
-| `GET` | `/api/musicians-waitlist` | Sesión | — |  | [`server/routes/epk_fans.ts:1181`](../../server/routes/epk_fans.ts#L1181) |
-| `GET` | `/api/public/epk` | Pública | — |  | [`server/routes/epk_fans.ts:462`](../../server/routes/epk_fans.ts#L462) |
-| `POST` | `/api/public/fans` | Pública | publicoRateLimiter | ★ | [`server/routes/epk_fans.ts:867`](../../server/routes/epk_fans.ts#L867) |
-| `POST` | `/api/public/musicians-waitlist` | Pública | publicoRateLimiter |  | [`server/routes/epk_fans.ts:1113`](../../server/routes/epk_fans.ts#L1113) |
-| `POST` | `/api/public/track-click` | Pública | publicoRateLimiter |  | [`server/routes/epk_fans.ts:979`](../../server/routes/epk_fans.ts#L979) |
+| `GET` | `/api/autonomy` | Sesión | — |  | [`server/routes/epk_fans.ts:52`](../../server/routes/epk_fans.ts#L52) |
+| `POST` | `/api/autonomy` | Sesión | — |  | [`server/routes/epk_fans.ts:70`](../../server/routes/epk_fans.ts#L70) |
+| `PUT` | `/api/autonomy` | Sesión | — |  | [`server/routes/epk_fans.ts:101`](../../server/routes/epk_fans.ts#L101) |
+| `GET` | `/api/epk` | Sesión | — |  | [`server/routes/epk_fans.ts:135`](../../server/routes/epk_fans.ts#L135) |
+| `PUT` | `/api/epk` | Sesión | — |  | [`server/routes/epk_fans.ts:155`](../../server/routes/epk_fans.ts#L155) |
+| `GET` | `/api/epk/clicks` | Sesión | — |  | [`server/routes/epk_fans.ts:1028`](../../server/routes/epk_fans.ts#L1028) |
+| `POST` | `/api/epk/traducir` | Sesión | — |  | [`server/routes/epk_fans.ts:231`](../../server/routes/epk_fans.ts#L231) |
+| `GET` | `/api/fans` | Sesión | — |  | [`server/routes/epk_fans.ts:759`](../../server/routes/epk_fans.ts#L759) |
+| `POST` | `/api/fans` | Sesión | — |  | [`server/routes/epk_fans.ts:768`](../../server/routes/epk_fans.ts#L768) |
+| `PATCH` | `/api/fans/{id}` | Sesión | — |  | [`server/routes/epk_fans.ts:802`](../../server/routes/epk_fans.ts#L802) |
+| `DELETE` | `/api/fans/{id}` | Sesión | — |  | [`server/routes/epk_fans.ts:819`](../../server/routes/epk_fans.ts#L819) |
+| `GET` | `/api/musicians-waitlist` | Sesión | — |  | [`server/routes/epk_fans.ts:1138`](../../server/routes/epk_fans.ts#L1138) |
+| `GET` | `/api/public/epk` | Pública | — |  | [`server/routes/epk_fans.ts:460`](../../server/routes/epk_fans.ts#L460) |
+| `POST` | `/api/public/fans` | Pública | publicoRateLimiter | ★ | [`server/routes/epk_fans.ts:829`](../../server/routes/epk_fans.ts#L829) |
+| `POST` | `/api/public/musicians-waitlist` | Pública | publicoRateLimiter |  | [`server/routes/epk_fans.ts:1070`](../../server/routes/epk_fans.ts#L1070) |
+| `POST` | `/api/public/track-click` | Pública | publicoRateLimiter |  | [`server/routes/epk_fans.ts:936`](../../server/routes/epk_fans.ts#L936) |
 
 ### gmailOAuth
 
