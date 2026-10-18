@@ -52,4 +52,11 @@ section.seccion{margin:1.5rem 0}
 .barra a{color:var(--ink);text-decoration:none;font-weight:650}
 .barra .idioma{color:var(--ink-2);font-weight:500;padding:.35rem .8rem;border-radius:999px;background:var(--sunken)}
 .lectura{font-size:13px;color:var(--ink-2);margin:-.25rem 0 .9rem}
+
+.resumen{background:var(--surface);border-radius:24px;padding:1.1rem 1.25rem;margin:0 0 1.25rem}
+.resumen h2{font-size:15px;margin:0 0 .5rem;color:var(--acc-ink)}
+.resumen ul{margin:0;padding-left:1.1rem}.resumen li{margin:0 0 .35rem}
+.toc{margin:0 0 1.25rem;font-size:15px}.toc p{margin:0 0 .35rem;font-weight:650;color:var(--ink-2)}
+.toc ol{margin:0;padding-left:1.2rem}.toc a{color:var(--acc-ink);text-decoration:none}.toc a:hover{text-decoration:underline}
+h2[id]{scroll-margin-top:1rem}
 `;

@@ -8,6 +8,7 @@ export const GUIAS_DIRECTO_EN: GuiaSeoEn[] = [
     h1: 'How to make a setlist for a gig',
     descripcion: 'Criteria for ordering the songs of a live set: opener, energy curve, keys, transitions and closer. With steps to build it in one afternoon.',
     intro: 'A good setlist is not your best songs in a row. It is a journey with a start, tension and an ending, fitted to the time you are given.',
+    resumen: ['Start from the real length of your slot and keep songs in reserve.', 'Draw an energy curve: a hooky opener, a breather mid-set and a strong closer.', 'Mind keys and tempos between songs, and print a setlist that is readable on stage.'],
     secciones: [
       {
         h2: 'Start with the time you have',
@@ -41,6 +42,7 @@ export const GUIAS_DIRECTO_EN: GuiaSeoEn[] = [
     h1: 'Tour day sheet: what to include',
     descripcion: 'How to prepare the day sheet for a show or a tour: times, contacts, load-in, sound and accommodation. With a checklist.',
     intro: 'The day sheet is the document that prevents phone calls at two in the morning. Every band member should be able to open it and know what to do and when.',
+    resumen: ['One sheet per day with venue, contacts, times, food and accommodation.', 'On tour, add realistic travel times and one person in charge of each date.', 'Share it in a live document, not a PDF lost in the group chat.'],
     secciones: [
       {
         h2: 'What a one-day sheet includes',
@@ -70,6 +72,7 @@ export const GUIAS_DIRECTO_EN: GuiaSeoEn[] = [
     h1: 'Hospitality rider: what to ask a venue for',
     descripcion: 'What a hospitality rider is, what an independent band can reasonably ask for and how to present it without sounding demanding.',
     intro: 'The hospitality rider lists what you need to be comfortable during the show: dressing room, food, drinks and logistics. For an independent band, less is more.',
+    resumen: ['Ask only for the basics: dressing room, water, food, parking and guest list.', 'Keep it apart from the technical rider and mark what is essential.', 'Ask first what the venue provides: many already have it covered.'],
     secciones: [
       {
         h2: 'What is usually requested',
@@ -99,6 +102,7 @@ export const GUIAS_DIRECTO_EN: GuiaSeoEn[] = [
     h1: 'How to run band rehearsals',
     descripcion: 'How to plan rehearsals that get results: frequency, a goal for each session, a shared calendar and how to stop wasting time.',
     intro: 'A rehearsal with no goal turns into a chat with noise. With a simple structure, two hours get more done than four with no plan.',
+    resumen: ['One goal per rehearsal, written down at the start and reviewed at the end.', 'Structure: setup, warm-up, work, full run-through and a plan for the next one.', 'Two weeks before a show, move from working on songs to working on the live set.'],
     secciones: [
       {
         h2: 'One goal per rehearsal',
@@ -132,6 +136,7 @@ export const GUIAS_DIRECTO_EN: GuiaSeoEn[] = [
     h1: 'How to promote a gig',
     descripcion: 'A week-by-week promotion plan for a gig: poster, socials, trackable links, local press and how to fill the room.',
     intro: 'Filling a room does not depend on the venue alone. With four weeks, a clear poster and a link you can share, you already have a campaign.',
+    resumen: ['Four weeks are enough: base, noise, countdown and measurement.', 'One single page for the show to share on every channel.', 'A different link per channel tells you which one brings the most people.'],
     secciones: [
       {
         h2: 'Week 4: set the base',
