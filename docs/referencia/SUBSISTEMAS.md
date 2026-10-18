@@ -110,6 +110,7 @@ Documentación técnica y operativa de los 13 subsistemas clave de la plataforma
 * Un único detector puro, compartido por cliente (banner en `CalendarView`) y servidor (email). Exige una PERSONA en los dos sitios a la vez: misma banda = intersección de convocados; bandas distintas = solo los músicos que están en ambas. Solape de horas = `choque`; mismo día sin horas o margen corto = `aviso`.
 * **Viabilidad de desplazamiento (`src/utils/viajeEstimado.ts`):** tabla de ciudades + fórmula determinista (sin red ni IA). Margen menor que viaje estimado = `choque` (`viaje_inviable`); sin 45 min para montar = `aviso` (`viaje_justo`); sin horas y ≥3 h de viaje = `aviso` (`distancia_dia`).
 * **Email solo por `choque`:** una vez por persona y huella (`calendar_conflict_notifications`), programado 20 s tras guardar evento con barrido diario (`CALENDAR_CONFLICT_SWEEP_MS`).
+* **Dónde se ve:** banner del calendario, triángulo en el día (mes y semana) y sección «Choque/Aviso» arriba del Resumen de la ficha del evento (`CalendarEventConflicts`, texto de `describirDesdeEvento`). Los textos añaden la ciudad si el título no la trae.
 * **Aislamiento multi-tenancy (§2.1):** el músico en dos bandas ve ambos eventos; el líder de una solo ve "otro compromiso en otra banda". La redacción se hace en el DATO (`redactarChoque`), cubierto por tests (`calendarConflicts.test.ts`, `calendarConflictService.test.ts`).
 
 ---

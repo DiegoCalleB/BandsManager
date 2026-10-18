@@ -30,10 +30,10 @@ Usuarios (`users`) y su pertenencia a bandas (`user_bands`).
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[db_calendar_conflicts|Persistencia de avisos de choque]] *(from #db)*
 - [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
 - [[fn_fans_epk|Fans y EPK]] *(from #feature)*
 - [[server_db|server/db.ts]] *(from #db)*
-- [[server_db_calendarConflicts|server/db/calendarConflicts.ts]] *(from #db)*
 - [[server_db_sync|server/db/sync.ts]] *(from #db)*
 - [[server_routes_deals|server/routes/deals.ts]] *(from #route)*
 

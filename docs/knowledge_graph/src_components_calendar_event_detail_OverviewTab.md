@@ -19,6 +19,7 @@ Pestaña de resumen general y detalles del evento.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_DirectionsCard|src/components/DirectionsCard.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_calendar_CalendarEventConflicts|src/components/calendar/CalendarEventConflicts.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_calendar_event_detail_EventDetailContext|src/components/calendar/event_detail/EventDetailContext.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
 

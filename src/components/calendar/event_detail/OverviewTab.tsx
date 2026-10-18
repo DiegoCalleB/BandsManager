@@ -5,6 +5,7 @@
 import { Clock,MapPin,Navigation,Phone,ShieldCheck,Shirt,Ticket,Users,Wrench } from "lucide-react";
 import DirectionsCard from "../../DirectionsCard";
 import { ShowIcon } from "../../ui/ShowIcon";
+import { CalendarEventConflicts } from "../CalendarEventConflicts";
 import { useEventDetail } from "./EventDetailContext";
 
 /**
@@ -12,12 +13,19 @@ import { useEventDetail } from "./EventDetailContext";
  * @returns Sección de interfaz.
  */
 export function OverviewTab() {
-  const { modalActiveTab, textSub, selectedEventDetails, textTitle, isStitchLight, isPromoPlan, selectedConcert, selectedRehearsal, setModalActiveTab, modalRoadbook } = useEventDetail();
+  const { modalActiveTab, textSub, selectedEventDetails, textTitle, isStitchLight, isPromoPlan, selectedConcert, selectedRehearsal, setModalActiveTab, modalRoadbook, choquesEvento = [] } = useEventDetail();
   return (
     <>
 {/* TAB 1: RESUMEN GENERAL & DETALLES */}
             {modalActiveTab === 'resumen' && (
               <div className="space-y-4">
+                {(selectedConcert || selectedRehearsal) && (
+                  <CalendarEventConflicts
+                    choques={choquesEvento}
+                    tipo={selectedConcert ? 'concierto' : 'ensayo'}
+                    eventoId={(selectedConcert || selectedRehearsal)!.id}
+                  />
+                )}
                 <div
                   className={`space-y-3 rounded-[var(--r-m)] p-4 ${'bg-[var(--sunken)]'}`}
                 >

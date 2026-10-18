@@ -2,7 +2,9 @@
  * Barra lateral de logística, modales de alta/edición/recordatorio/ficha y modo escenario.
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
+import { useMemo } from "react";
 import type { User } from "../../../types";
+import { choquesDeEvento } from "../../../utils/calendarConflicts";
 import { SetlistPerformanceView } from "../../SetlistPerformanceView";
 import { useCalendar } from "../CalendarContext";
 import { CalendarCreateEventModal } from "../CalendarCreateEventModal";
@@ -19,7 +21,16 @@ import { LogisticsSidebar } from "../logistics/LogisticsSidebar";
  * @returns Sección de interfaz.
  */
 export function CalendarOverlays() {
-  const { selectedDate, selectedDateKey, selectedConcert, selectedRehearsal, monthNames, activeBandId, activeBandName, getBandIdentity, isPromoPlan, currentUser, setShowCreateModal, setShowEventFichaModal, setShowReminderModal, setViewingConcert, setViewingRehearsal, onDeleteConcert, onDeleteRehearsal, setReminderNotes, setModalActiveTab, allRoadbooks, getCurrentRoadbook, updateRoadbookField, getDefaultRoadbook, handleToggleCierreItem, handleToggleAllCierreItems, handleAddCierreItem, handleDeleteCierreItem, newContactNombre, setNewContactNombre, newContactRol, setNewContactRol, newContactEmail, setNewContactEmail, handleAddKeyContact, handleDeleteKeyContact, openWhatsAppContact, handleUpdateMerchItem, handleAddMerchItem, handleDeleteMerchItem, handleUpdateMerchTotals, handleCopyMerchSummary, newMerchNombre, setNewMerchNombre, newMerchTalla, setNewMerchTalla, newMerchPrecio, setNewMerchPrecio, setSelectedDate, onUpdateConcert, onUpdateRehearsal, availableSetlists, setActiveStageSetlist, showCreateModal, effectiveBandsList, effectiveBandMembers, onAddRehearsal, onAddConcert, setSyncSuccessMessage, viewingConcert, editDraft, setEditDraft, viewingRehearsal, editRehearsalDraft, setEditRehearsalDraft, showSyncModal, setShowSyncModal, host, webCalFeed, rutaFeed, showReminderModal, reminderNotes, reminderSendPush, setReminderSendPush, reminderSendEmail, setReminderSendEmail, reminderSending, reminderSuccessMsg, reminderErrorMsg, handleSendEventReminder, showEventFichaModal, allChronologicalEvents, activeChronoIndex, goToAdjacentEvent, modalActiveTab, handleDeleteEventFromModal, deletingEventConfirmId, setDeletingEventConfirmId, availableSongs, modalWeatherAlerts, handleShareEventWhatsApp, handleNotifyBandMembers, handleCopyEventFicha, activeStageSetlist, activeStageInitialMode, onNavigate } = useCalendar();
+  const { selectedDate, selectedDateKey, selectedConcert, selectedRehearsal, monthNames, activeBandId, activeBandName, getBandIdentity, isPromoPlan, currentUser, setShowCreateModal, setShowEventFichaModal, setShowReminderModal, setViewingConcert, setViewingRehearsal, onDeleteConcert, onDeleteRehearsal, setReminderNotes, setModalActiveTab, allRoadbooks, getCurrentRoadbook, updateRoadbookField, getDefaultRoadbook, handleToggleCierreItem, handleToggleAllCierreItems, handleAddCierreItem, handleDeleteCierreItem, newContactNombre, setNewContactNombre, newContactRol, setNewContactRol, newContactEmail, setNewContactEmail, handleAddKeyContact, handleDeleteKeyContact, openWhatsAppContact, handleUpdateMerchItem, handleAddMerchItem, handleDeleteMerchItem, handleUpdateMerchTotals, handleCopyMerchSummary, newMerchNombre, setNewMerchNombre, newMerchTalla, setNewMerchTalla, newMerchPrecio, setNewMerchPrecio, setSelectedDate, onUpdateConcert, onUpdateRehearsal, availableSetlists, setActiveStageSetlist, showCreateModal, effectiveBandsList, effectiveBandMembers, onAddRehearsal, onAddConcert, setSyncSuccessMessage, viewingConcert, editDraft, setEditDraft, viewingRehearsal, editRehearsalDraft, setEditRehearsalDraft, showSyncModal, setShowSyncModal, host, webCalFeed, rutaFeed, showReminderModal, reminderNotes, reminderSendPush, setReminderSendPush, reminderSendEmail, setReminderSendEmail, reminderSending, reminderSuccessMsg, reminderErrorMsg, handleSendEventReminder, showEventFichaModal, allChronologicalEvents, activeChronoIndex, goToAdjacentEvent, modalActiveTab, handleDeleteEventFromModal, deletingEventConfirmId, setDeletingEventConfirmId, availableSongs, modalWeatherAlerts, handleShareEventWhatsApp, handleNotifyBandMembers, handleCopyEventFicha, activeStageSetlist, activeStageInitialMode, onNavigate, choquesCalendario } = useCalendar();
+  const choquesEvento = useMemo(
+    () =>
+      selectedConcert
+        ? choquesDeEvento(choquesCalendario, 'concierto', selectedConcert.id)
+        : selectedRehearsal
+          ? choquesDeEvento(choquesCalendario, 'ensayo', selectedRehearsal.id)
+          : [],
+    [choquesCalendario, selectedConcert, selectedRehearsal],
+  );
   return (
     <>
       {/* RIGHT: LOGISTICS & CHECKLISTS SIDEBAR (1/3 width) */}
@@ -101,6 +112,7 @@ export function CalendarOverlays() {
 
       {/* Ficha Modal Emergente y Centrada del Evento */}
       <CalendarEventDetailModal
+      choquesEvento={choquesEvento}
       showEventFichaModal={showEventFichaModal}
       setShowEventFichaModal={setShowEventFichaModal}
       selectedConcert={selectedConcert}
