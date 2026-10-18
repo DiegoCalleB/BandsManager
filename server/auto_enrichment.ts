@@ -9,6 +9,7 @@ import { limpiarCampoContacto } from "./utils/scoutLeads.js";
 import { enrichVenueDetailsWithSerper } from "./services/venueIntelligenceService.js";
 import { resolverUrlSpotifyDeBanda } from "./services/spotifyService.js";
 import { comoErrorCapturado } from '../src/utils/errorCapturado.js';
+import { elegirInstagram, usuariosDeInstagram } from "./utils/instagramEnWeb.js";
 import { instagramConocido } from "./utils/instagramConocido.js";
 import { camposDesdeCatalogo } from "./utils/camposDesdeCatalogo.js";
 import { anotarProcedencia, camposRellenados, instantanea, type CamposDeEnriquecimiento, type FuenteDato } from "./utils/procedenciaDatos.js";
@@ -150,10 +151,16 @@ Ejemplo para festival del 5 al 6 de julio de 2026:
   return {};
 }
 
-export async function scrapeWebsiteForContact(websiteUrl: string): Promise<{ email?: string; phone?: string; instagram?: string }> {
+/**
+ * `nombreSala` afina el Instagram: una web enlaza a varias cuentas (patrocinadores, promotoras, el perfil de un
+ * músico) y la primera no tiene por qué ser la de la sala; con el nombre se elige la que se le parece y, si ninguna,
+ * no se apunta ninguna.
+ */
+export async function scrapeWebsiteForContact(websiteUrl: string, nombreSala?: string): Promise<{ email?: string; phone?: string; instagram?: string }> {
   if (!websiteUrl || !websiteUrl.startsWith("http")) return {};
 
   const results: { email?: string; phone?: string; instagram?: string } = {};
+  const candidatosInstagram: string[] = [];
   const urlsToTry = [websiteUrl];
 
   try {
@@ -211,17 +218,8 @@ export async function scrapeWebsiteForContact(websiteUrl: string): Promise<{ ema
         }
       }
 
-      // 2. Extract Instagram
-      if (!results.instagram) {
-        const instaMatch = html.match(/https?:\/\/(?:www\.)?instagram\.com\/([a-zA-Z0-9_.-]+)\/?/i);
-        if (instaMatch) {
-          const handle = instaMatch[1].toLowerCase();
-          const reserved = ['p', 'reel', 'reels', 'stories', 'explore', 'accounts', 'privacy', 'legal', 'about', 'help', 'terms', 'direct', 'login', 'signup', 'developer', 'static'];
-          if (!reserved.includes(handle)) {
-            results.instagram = `@${instaMatch[1].replace(/^@/, '')}`;
-          }
-        }
-      }
+      // 2. Extract Instagram (todas las cuentas enlazadas; se elige al terminar)
+      candidatosInstagram.push(...usuariosDeInstagram(html));
 
       // 3. Extract Phone
       if (!results.phone) {
@@ -237,6 +235,8 @@ export async function scrapeWebsiteForContact(websiteUrl: string): Promise<{ ema
     }
   }
 
+  const instagram = elegirInstagram(candidatosInstagram, nombreSala);
+  if (instagram) results.instagram = instagram;
   return results;
 }
 
@@ -437,7 +437,7 @@ export async function autoEnrichLead<L extends object>(entrada: L, userBandId: s
       console.warn(`[AutoEnrich Jina] Aviso en consulta Jina Reader:`, jinaErr?.message || jinaErr);
     }
 
-    const scrapedInfo = await scrapeWebsiteForContact(lead.website);
+    const scrapedInfo = await scrapeWebsiteForContact(lead.website, lead.nombre_sala);
     if (scrapedInfo.email && !lead.email_contacto) {
       lead.email_contacto = scrapedInfo.email;
       modified = true;
