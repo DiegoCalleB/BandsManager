@@ -128,3 +128,52 @@ describe('POST /catalogo/salas/:id/anadir', () => {
     expect(m.guardados).toHaveLength(0);
   });
 });
+
+describe('GET /catalogo/sugerencias', () => {
+  it('sugiere por ciudad y género, sin contacto, y deja fuera lo que la banda ya tiene', async () => {
+    const res = resFalso();
+    await manejador('/catalogo/sugerencias', 'get')(peticion({ query: { ciudad: 'Madrid, España', genero: 'Rock' } }), res);
+    const cuerpo = res.body as { sugerencias: Array<{ id: string; motivos: string[] }> };
+    expect(cuerpo.sugerencias.map((s) => s.id)).toEqual(['sala-1']);
+    expect(cuerpo.sugerencias[0].motivos).toContain('En tu ciudad');
+    expect(JSON.stringify(res.body)).not.toContain('booking@ejemplo.es');
+
+    m.agenda = [{ id: 'l1', sala_id: 'sala-1', nombre_sala: 'Alfa', ciudad: 'Madrid', place_id: null }];
+    const res2 = resFalso();
+    await manejador('/catalogo/sugerencias', 'get')(peticion({ query: { ciudad: 'Madrid', genero: 'Rock' } }), res2);
+    expect((res2.body as { sugerencias: unknown[] }).sugerencias).toEqual([]);
+  });
+
+  it('ignora parámetros que no son texto en vez de fallar', async () => {
+    const res = resFalso();
+    await manejador('/catalogo/sugerencias', 'get')(peticion({ query: { ciudad: ['a', 'b'], genero: { x: 1 }, limite: 'abc' } }), res);
+    expect(res.code).toBe(200);
+  });
+});
+
+describe('POST /catalogo/salas/anadir-varias', () => {
+  it('añade en la banda de la sesión, ignora el band_id del cuerpo y devuelve el informe', async () => {
+    const res = resFalso();
+    await manejador('/catalogo/salas/anadir-varias', 'post')(peticion({ body: { salaIds: ['sala-1', 'sala-fantasma'], band_id: 'banda-ajena' } }), res);
+    expect(res.body).toEqual({ success: true, anadidas: 1, yaEnAgenda: 0, noDisponibles: 1, limiteAlcanzado: false });
+    expect(m.guardados).toHaveLength(1);
+    expect(m.guardados[0].bandId).toBe('banda-sesion');
+  });
+
+  it('400 si no hay ids, si no son texto o si son demasiados', async () => {
+    for (const body of [{}, { salaIds: [] }, { salaIds: [1, { a: 1 }] }, { salaIds: Array.from({ length: 11 }, (_, i) => `sala-${i}`) }]) {
+      const res = resFalso();
+      await manejador('/catalogo/salas/anadir-varias', 'post')(peticion({ body }), res);
+      expect(res.code).toBe(400);
+    }
+    expect(m.guardados).toHaveLength(0);
+  });
+
+  it('respeta el límite del plan: sin plazas no guarda nada y avisa', async () => {
+    m.leadsDeLaBanda = Array.from({ length: 5000 }, (_, i) => ({ id: `l${i}`, tipo: 'sala' }));
+    const res = resFalso();
+    await manejador('/catalogo/salas/anadir-varias', 'post')(peticion({ body: { salaIds: ['sala-1'] } }), res);
+    expect((res.body as { limiteAlcanzado: boolean; anadidas: number })).toMatchObject({ limiteAlcanzado: true, anadidas: 0 });
+    expect(m.guardados).toHaveLength(0);
+  });
+});

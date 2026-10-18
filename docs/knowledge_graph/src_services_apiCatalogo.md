@@ -25,10 +25,13 @@ Catálogo compartido de salas: alta en la agenda de la banda. El email y el tel�
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_chatbot_hooks_useCatalogoActions|src/components/chatbot/hooks/useCatalogoActions.ts]] *(from #frontend)*
+- [[src_components_onboarding_steps_StepSalasSugeridas|src/components/onboarding/steps/StepSalasSugeridas.tsx]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useSalasSugeridasStep|src/components/onboarding/wizard/hooks/useSalasSugeridasStep.ts]] *(from #frontend)*
 
 ---
 
 ## 🧪 Tests que lo cubren
+- `src/components/onboarding/__tests__/StepSalasSugeridas.behavior.test.tsx`
 - `src/services/__tests__/apiCatalogo.test.ts`
 
 ---
