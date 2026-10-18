@@ -13,7 +13,7 @@ tags: ["service", "system", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: QrExportOptions, urlToDataUrl, getCleanSvgString, downloadQrAsSvg, downloadQrAsHighResPng, printHighQualityFlyer.
+Exporta: QrExportOptions, urlToDataUrl, downloadQrAsSvg, downloadQrAsHighResPng, printHighQualityFlyer.
 
 ---
 

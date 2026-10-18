@@ -74,6 +74,7 @@ export function useQrSharing({ qrConcertUrl, selectedConcert, effectiveBandName,
         : effectiveBandName;
       await downloadQrAsSvg({
         svgElementId: "qr-code-svg-container",
+        url: qrConcertUrl,
         filename: `qr-${effectiveBandName.toLowerCase().replace(/[^a-z0-9]/g, "-")}-${concertTitle.toLowerCase().replace(/[^a-z0-9]/g, "-")}-vectorial`,
         logoUrl: effectiveBandLogo,
       });
@@ -92,6 +93,7 @@ export function useQrSharing({ qrConcertUrl, selectedConcert, effectiveBandName,
         : effectiveBandName;
       await downloadQrAsHighResPng({
         svgElementId: "qr-code-svg-container",
+        url: qrConcertUrl,
         filename: `qr-${effectiveBandName.toLowerCase().replace(/[^a-z0-9]/g, "-")}-${concertTitle.toLowerCase().replace(/[^a-z0-9]/g, "-")}-4k`,
         template: "qr-only",
         logoUrl: effectiveBandLogo,

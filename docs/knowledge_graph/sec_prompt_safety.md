@@ -19,7 +19,6 @@ Sanitiza datos externos de salas y correos entrantes antes de inyectarlos en pro
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[agent_lector|Lector Agent (Listener)]] *(Layer: #agent, Domain: #booking)*
-- [[agent_redactor|Agente Redactor (borradores de respuesta)]] *(Layer: #agent, Domain: #booking)*
 - [[service_pitch_engine|Pitch Engine & Multi-Model Routing]] *(Layer: #service, Domain: #booking)*
 
 ---

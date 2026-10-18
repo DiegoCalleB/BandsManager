@@ -8,6 +8,7 @@ import {
   describirEvento,
   redactarChoque,
   peorSeveridadPorDia,
+  describirDesdeEvento,
   type ContextoConflictos,
 } from '../calendarConflicts';
 import type { Concert, Rehearsal } from '../../types';
@@ -337,5 +338,40 @@ describe('peorSeveridadPorDia', () => {
 
   it('sin choques, vacío', () => {
     expect(peorSeveridadPorDia([])).toEqual({});
+  });
+});
+
+describe('describirDesdeEvento', () => {
+  const boloCiudad = (id: string, ciudad: string, llegada: string, cierre: string) =>
+    concierto(id, '2026-11-07', { ciudad, logisticaTecnica: { horaLlegada: llegada, horaCierreToque: cierre } });
+
+  it('cuenta el viaje inviable desde cada lado: "vienes de" y "después tienes"', () => {
+    const [c] = choques([boloCiudad('c1', 'Madrid', '17:00', '20:00'), boloCiudad('c2', 'Sevilla', '21:00', '23:30')], []);
+    const desdeSevilla = describirDesdeEvento(c, 'concierto', 'c2')!;
+    const desdeMadrid = describirDesdeEvento(c, 'concierto', 'c1')!;
+    expect(desdeSevilla).toContain('vienes de');
+    expect(desdeSevilla).toContain('Madrid');
+    expect(desdeMadrid).toContain('después tienes');
+    expect(desdeMadrid).toContain('Sevilla');
+  });
+
+  it('un evento ajeno al choque recibe null, y concierto y ensayo con el mismo id no se confunden', () => {
+    const [c] = choques([concierto('x', '2026-11-05')], [ensayo('x', '2026-11-05', '')]);
+    expect(describirDesdeEvento(c, 'ensayo', 'otro')).toBeNull();
+    expect(describirDesdeEvento(c, 'concierto', 'x')).toContain('ensayo');
+    expect(describirDesdeEvento(c, 'ensayo', 'x')).toContain('concierto');
+  });
+
+  it('el solape se cuenta como "se pisa con" y no revela bandas ajenas', () => {
+    const [c] = choques(
+      [
+        concierto('c1', '2026-11-07', { band_id: 'A', sala: 'Sala Pública', logisticaTecnica: { horaLlegada: '18:00', horaCierreToque: '22:00' } }),
+        concierto('c2', '2026-11-07', { band_id: 'B', sala: 'Sala Secreta', logisticaTecnica: { horaLlegada: '20:00', horaCierreToque: '23:00' } }),
+      ],
+      [],
+    );
+    const texto = describirDesdeEvento(c, 'concierto', 'c1', new Set(['A']))!;
+    expect(texto).toContain('Se pisa con otro compromiso en otra banda');
+    expect(texto).not.toContain('Sala Secreta');
   });
 });
