@@ -8,6 +8,7 @@
 
 export type EventoAnalitica =
   | 'CTA Landing' // pulsa "Empezar/Entrar" en la landing
+  | 'Interesado Landing' // deja su email en la landing sin registrarse
   | 'Registro' // cuenta creada
   | 'Fan Suscrito' // un fan deja su email en la página de una banda
   | 'Invitacion Recibida' // llega con ?ref= de otra banda

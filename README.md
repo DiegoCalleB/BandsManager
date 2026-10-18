@@ -174,7 +174,7 @@ Se trata como parte del producto, no como un añadido. Las medidas están en [Se
 |---|---|---|---|
 | Promo / Promo+ | 0 € | 0 | EPK, QR, fans, calendario y repertorio (Promo+ añade setlists y discografía). |
 | Ensayo | 0 € | 100 | Primer contacto con booking y agentes (10 leads). |
-| Local | 15 € | 300 | Booking con 50 leads y contactos de medios. |
+| Local | 12 € | 300 | Booking con 50 leads y contactos de medios. |
 | De Gira | 29 € | 800 | Todo ilimitado en una banda, más Tour Manager y Reels. |
 | Cabeza de Cartel | 79 € | 2.500 | Hasta 5 bandas, finanzas y agentes en paralelo. |
 
@@ -372,7 +372,7 @@ El mapa detallado está en [AGENTS.md §7](./AGENTS.md). El backlog de producto,
 
 *Situación a 6 de octubre de 2026.* La aplicación es completa y funciona de punta a punta; lo que queda es validar con bandas reales, reactivar el cobro y cerrar riesgos legales.
 
-**Tamaño del proyecto:** unas 270.000 líneas de TypeScript (≈197.000 en `src/`, ≈76.000 en `server/`), 386 rutas HTTP (335 declaraciones de handler; el resto son alias, ver [docs/api](./docs/api/index.html)), 57 tablas en producción (con RLS activo en todas), 60 migraciones SQL en el runner, 692 componentes React y 3.901 tests unitarios declarados (casos `it`/`test` del código; Vitest ejecuta más por los parametrizados), además de los E2E de Playwright y 15 capturas de regresión visual. Las cifras las comprueba `npm run verify:docs` en cada cambio de documentación.
+**Tamaño del proyecto:** unas 270.000 líneas de TypeScript (≈197.000 en `src/`, ≈76.000 en `server/`), 392 rutas HTTP (341 declaraciones de handler; el resto son alias, ver [docs/api](./docs/api/index.html)), 57 tablas en producción (con RLS activo en todas), 63 migraciones SQL en el runner, 697 componentes React y 3.960 tests unitarios declarados (casos `it`/`test` del código; Vitest ejecuta más por los parametrizados), además de los E2E de Playwright y 15 capturas de regresión visual. Las cifras las comprueba `npm run verify:docs` en cada cambio de documentación.
 
 ### Construido y funcionando
 

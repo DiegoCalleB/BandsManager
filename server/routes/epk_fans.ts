@@ -1,10 +1,11 @@
 // EPK y captación de fans: configuración de autonomía de agentes, EPK editable/traducible, listas de
 // fans y su telemetría.
 
+import { avisarAlta } from '../services/avisoAltas.js';
 import { publicoRateLimiter } from '../middleware/rateLimiter.js';
 import express from 'express';
 import { loadState, saveState, requireAuth, getEpkConfigForBand, getAutonomyConfigForBand } from '../state.js';
-import { EPKConfig, Fan } from '../../src/types.js';
+import { EPKConfig, Fan, type Concert, type RegisteredBand, type Song } from '../../src/types.js';
 import {
   dbGetAutonomyConfig,
   dbUpsertAutonomyConfig,
@@ -30,7 +31,7 @@ import {
   CLAVES_DATOS_TRADUCIBLES,
   IDIOMA_ORIGEN,
 } from '../../src/utils/epkTraducciones.js';
-import { EPK_LANGUAGES } from '../../src/i18n/epkTranslations.js';
+import { EPK_LANGUAGES, type EpkLanguage } from '../../src/i18n/epkTranslations.js';
 import {
   getTargetBandId,
   puedeEscribirEnBanda,
@@ -41,8 +42,6 @@ import { checkRecordLimit } from '../utils/planLimits.js';
 import { buildFanIncentive } from '../utils/fanIncentive.js';
 import { decodeBandId } from '../utils/bandHash.js';
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
-import type { Concert, RegisteredBand, Song } from '../../src/types.js';
-import type { EpkLanguage } from '../../src/i18n/epkTranslations.js';
 import type { RespuestaTraduccionEpk } from '../tiposRespuestasIA.js';
 import { responderError } from '../utils/errorHttp.js';
 
@@ -1158,6 +1157,7 @@ router.post('/public/musicians-waitlist', publicoRateLimiter, async (req, res) =
     };
 
     const saved = await dbUpsertMusicianWaitlist(waitlistItem);
+    void avisarAlta({ tipo: 'espera', email: waitlistItem.email, nombre: waitlistItem.nombreBanda, origen: 'formulario de músicos' });
 
     const state = loadState();
     if (!state.musiciansWaitlist) state.musiciansWaitlist = [];

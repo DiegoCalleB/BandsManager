@@ -28,9 +28,11 @@ Exporta: getProductionAppUrl, resolveResendApiKey, SendEmailOptions, sendTransac
 - [[server|server.ts]] *(from #route)*
 - [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
 - [[server_routes_deals|server/routes/deals.ts]] *(from #route)*
+- [[server_routes_interesados|server/routes/interesados.ts]] *(from #route)*
 - [[server_routes_users_rutasMiembros|server/routes/users/rutasMiembros.ts]] *(from #route)*
 - [[server_routes_users_rutasRecuperacion|server/routes/users/rutasRecuperacion.ts]] *(from #route)*
 - [[server_routes_users_rutasRegistro|server/routes/users/rutasRegistro.ts]] *(from #route)*
+- [[server_services_avisoAltas|server/services/avisoAltas.ts]] *(from #service)*
 - [[server_services_avisosPublicacion|server/services/avisosPublicacion.ts]] *(from #service)*
 - [[server_services_emailsCicloVida|server/services/emailsCicloVida.ts]] *(from #service)*
 - [[server_services_gmailConexion|server/services/gmailConexion.ts]] *(from #service)*

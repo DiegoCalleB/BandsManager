@@ -50,7 +50,9 @@ Exporta: rolDeClaveSupabase, getSupabase, normalizePlan, cleanBandId.
 - [[server_db_exampleThreads|server/db/exampleThreads.ts]] *(from #db)*
 - [[server_db_fans|server/db/fans.ts]] *(from #db)*
 - [[server_db_gmailOAuth|server/db/gmailOAuth.ts]] *(from #security)*
+- [[server_db_interesados|server/db/interesados.ts]] *(from #db)*
 - [[server_db_leadAprobacion|server/db/leadAprobacion.ts]] *(from #db)*
+- [[server_db_pegatinas|server/db/pegatinas.ts]] *(from #db)*
 - [[server_db_pitchLearning|server/db/pitchLearning.ts]] *(from #db)*
 - [[server_db_printSettings|server/db/printSettings.ts]] *(from #db)*
 - [[server_db_production|server/db/production.ts]] *(from #db)*
