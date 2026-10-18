@@ -533,7 +533,6 @@ const coincideRuta = (url: string, patron: string[]): boolean => {
   return seg.length === patron.length && patron.every((p, i) => p.includes(':') || seg[i].includes(':') || seg[i] === p);
 };
 
-
 // Servicios externos: un nodo ext_* por proveedor, enlazado desde todo fichero cuyo código lo usa.
 const PROVEEDORES: { id: string; title: string; descripcion: string; re: RegExp }[] = [
   { id: 'ext_gemini', title: 'Gemini (Google GenAI)', descripcion: 'Modelos de Google para pitch, chat, scouting y análisis musical.', re: /@google\/genai|generativelanguage\.googleapis\.com/ },
@@ -881,6 +880,4 @@ ${mapaAuto}
 }
 
 // Auto-run if executed directly
-if (process.argv[1]?.includes('generate_obsidian_graph.ts')) {
-  generateObsidianGraph();
-}
+if (process.argv[1]?.includes('generate_obsidian_graph.ts')) { generateObsidianGraph(); }
