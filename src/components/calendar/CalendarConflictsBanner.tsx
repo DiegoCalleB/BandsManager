@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AlertCircle, ChevronDown } from 'lucide-react';
-import { Chip } from '../ui';
-import { describirChoque, type Choque } from '../../utils/calendarConflicts';
+import type { Choque } from '../../utils/calendarConflicts';
+import { ChoqueCard } from './ChoqueCard';
 
 interface CalendarConflictsBannerProps {
   choques: Choque[];
@@ -59,15 +59,9 @@ export const CalendarConflictsBanner: React.FC<CalendarConflictsBannerProps> = (
               <button
                 type="button"
                 onClick={() => onSelectDate(c.fecha)}
-                className="flex w-full flex-col gap-1 rounded-[var(--r-s)] bg-[var(--surface)] px-3 py-2 text-left text-sm hover:bg-[var(--sunken)]"
+                className="block w-full rounded-[var(--r-s)] bg-[var(--surface)] px-3 py-3 text-left hover:bg-[var(--sunken)]"
               >
-                <span className="flex items-center gap-2">
-                  <Chip tone={c.severidad === 'choque' ? 'alert' : 'neutral'}>
-                    {c.severidad === 'choque' ? 'Choque' : 'Aviso'}
-                  </Chip>
-                  <span className="text-xs font-medium text-[var(--ink-2)]">{fechaCorta(c.fecha)}</span>
-                </span>
-                <span className="text-[var(--ink)]">{describirChoque(c)}</span>
+                <ChoqueCard choque={c} derecha={fechaCorta(c.fecha)} />
               </button>
             </li>
           ))}

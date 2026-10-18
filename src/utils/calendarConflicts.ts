@@ -333,13 +333,13 @@ export function choquesDeEvento(choques: Choque[], tipo: TipoEventoCalendario, i
   return choques.filter((c) => coincide(c.a) || coincide(c.b));
 }
 
-function hhmm(min?: number): string {
+export function hhmm(min?: number): string {
   if (min === undefined) return '';
   const m = ((min % 1440) + 1440) % 1440;
   return `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
 }
 
-const ETIQUETA_TIPO: Record<TipoEventoCalendario, string> = {
+export const ETIQUETA_TIPO: Record<TipoEventoCalendario, string> = {
   concierto: 'concierto',
   ensayo: 'ensayo',
   reunion: 'reunión',
@@ -359,7 +359,7 @@ export function describirEvento(ev: EventoCalendario, bandasVisibles?: Set<strin
   return `${ETIQUETA_TIPO[ev.tipo]} «${ev.titulo}»${lugar}${banda}${hora}`;
 }
 
-function duracion(min?: number): string {
+export function duracion(min?: number): string {
   if (min === undefined) return '';
   const h = Math.floor(Math.abs(min) / 60);
   const m = Math.round(Math.abs(min) % 60);

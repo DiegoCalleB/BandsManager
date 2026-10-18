@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, Clock, ChevronRight, Plus, Edit, Target, Guitar, Handshake, Drum, AlertTriangle, List, CheckCircle2 } from 'lucide-react';
+import { Calendar, Clock, ChevronRight, Plus, Edit, Target, Guitar, Handshake, Drum, List, CheckCircle2 } from 'lucide-react';
 import { Concert, Rehearsal, BookingCampaign } from '../../types';
 import { RoadbookInfo, BandIdentity, EventoConAlias, FichaEventoTab, CalendarNavigationOptions } from './calendarTypes';
 import { CalendarWeatherBadge } from './AnimatedWeatherIcon';
@@ -16,8 +16,15 @@ const MarcaChoqueDia: React.FC<{ severidad?: SeveridadDia }> = ({ severidad }) =
   const esChoque = severidad === 'choque';
   const texto = esChoque ? 'Choque de calendario este día' : 'Aviso de calendario este día';
   return (
-    <span role="img" aria-label={texto} title={texto} className="inline-flex shrink-0">
-      <AlertTriangle className={`size-3.5 ${esChoque ? 'text-[var(--alert)]' : 'text-[var(--ink-2)]'}`} aria-hidden="true" />
+    <span
+      role="img"
+      aria-label={texto}
+      title={texto}
+      className={`inline-flex size-4 shrink-0 items-center justify-center rounded-full ${esChoque ? 'bg-[var(--alert)]' : 'bg-[var(--sunken)]'}`}
+    >
+      <span className={`text-micro font-bold leading-none ${esChoque ? 'text-[var(--surface)]' : 'text-[var(--ink-2)]'}`} aria-hidden="true">
+        !
+      </span>
     </span>
   );
 };
