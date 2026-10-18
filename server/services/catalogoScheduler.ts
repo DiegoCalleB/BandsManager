@@ -12,6 +12,7 @@ import { puertoCatalogoSupabase, puertoVerificacionSupabase } from "../db/salasC
 import { captureError } from "../utils/errorTracking.js";
 import { sincronizarCatalogo, type InformeCatalogo } from "./catalogoSalas.js";
 import { crearConsultaMaps } from "./consultaMapsSala.js";
+import { descargarOsmSalas, importarSalasDeOsm } from "./importarSalasOsm.js";
 import { verificarSalasEnMaps } from "./verificarSalasEnMaps.js";
 
 const PERIODO_MS = Number(process.env.CATALOGO_SYNC_MS) || 24 * 60 * 60 * 1000;
@@ -20,6 +21,7 @@ const RETRASO_INICIAL_MS = 5 * 60 * 1000;
 let intervalo: ReturnType<typeof setInterval> | null = null;
 let primera: ReturnType<typeof setTimeout> | null = null;
 let enCurso = false;
+let importacion: ReturnType<typeof setTimeout> | null = null;
 
 /** Una pasada. Nunca lanza: un fallo se registra y la siguiente pasada lo reintenta. Devuelve null si falló o ya había una en curso. */
 export async function sincronizarCatalogoAhora(sincronizar: () => Promise<InformeCatalogo> = () => sincronizarCatalogo(puertoCatalogoSupabase)): Promise<InformeCatalogo | null> {
@@ -63,6 +65,20 @@ async function verificarEnMapsAhora(): Promise<void> {
   }
 }
 
+/**
+ * Importa al catálogo las salas de España de OpenStreetMap. Es opt-in (`CATALOGO_IMPORTAR_OSM=true`) porque descarga
+ * miles de elementos de un servicio público; solo añade salas nuevas y rellena huecos, así que repetirla es inofensivo.
+ */
+export async function importarSalasOsmAhora(): Promise<void> {
+  try {
+    const r = await importarSalasDeOsm({ puerto: puertoCatalogoSupabase, descargar: descargarOsmSalas });
+    console.log(`[Catálogo] Importación OSM: ${r.salasEnOsm} salas en OSM, ${r.nuevas} nuevas, ${r.completadas} completadas, ${r.sinCambios} sin cambios.`);
+  } catch (e) {
+    console.warn("[Catálogo] La importación de OSM falló:", e instanceof Error ? e.message : e);
+    captureError(e, { fase: "importarSalasOsm" });
+  }
+}
+
 export function iniciarSincronizacionDelCatalogo(): void {
   if (intervalo || primera || process.env.CATALOGO_SYNC === "false") return;
   console.log(`[Catálogo] Sincronización del catálogo de salas cada ${Math.round(PERIODO_MS / 3_600_000)} h.`);
@@ -73,11 +89,18 @@ export function iniciarSincronizacionDelCatalogo(): void {
   intervalo = setInterval(() => void sincronizarCatalogoAhora(), PERIODO_MS);
   primera.unref?.();
   intervalo.unref?.();
+  if (process.env.CATALOGO_IMPORTAR_OSM === "true") {
+    // Después de la primera sincronización, para que las salas de las bandas ya estén y no se dupliquen.
+    importacion = setTimeout(() => void importarSalasOsmAhora(), 15 * 60 * 1000);
+    importacion.unref?.();
+  }
 }
 
 export function detenerSincronizacionDelCatalogo(): void {
   if (primera) clearTimeout(primera);
   if (intervalo) clearInterval(intervalo);
+  if (importacion) clearTimeout(importacion);
+  importacion = null;
   primera = null;
   intervalo = null;
 }

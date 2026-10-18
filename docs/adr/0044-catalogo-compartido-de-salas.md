@@ -43,3 +43,14 @@ comprobarse; se repite cada 90 días) y anota `estado_negocio`. Solo es no destr
 salir en consultas, sugerencias y altas, pero no se borra ni se toca la agenda de ninguna banda. Una sala solo se marca como
 cerrada si Maps devuelve, con seguridad, la misma (por `place_id` o por nombre); un fallo de red o de cuota no escribe nada.
 `CATALOGO_VERIFICAR_MAPS=false` la apaga. Los leads de las bandas no se verifican ni se borran por esta vía.
+
+## Actualización: importación de salas de España desde OpenStreetMap
+
+Para ampliar el catálogo más allá de las salas que ya tienen las bandas, `importarSalasDeOsm` descarga de Overpass los
+recintos de música en directo de España (`music_venue`, `concert_hall`, `nightclub` y bares con `live_music=yes`). Se usa
+OpenStreetMap (ODbL) y no Google Places porque Google no permite guardar sus fichas de forma masiva. Es opt-in
+(`CATALOGO_IMPORTAR_OSM=true`) y solo añade: las salas nuevas entran como «sin verificar», a las existentes solo se les
+rellenan los campos vacíos y nunca se toca una verificada. Aplica las mismas reglas de privacidad (email de rol, teléfono fijo,
+Instagram que se parezca a la sala). La región sale del código postal. **Atribución obligatoria por la ODbL: «© colaboradores de
+OpenStreetMap»** donde se muestren estos datos. Nota: la sincronización desde los leads sigue mandando sobre una sala si
+una banda la tiene en su agenda.
