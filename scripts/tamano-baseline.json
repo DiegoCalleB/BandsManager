@@ -70,7 +70,6 @@
   "src/components/common/ModuleTutorialModal.tsx": 691,
   "src/components/TunerModal.tsx": 690,
   "src/components/repertorio/SetlistSongRow.tsx": 681,
-  "src/i18n/fansTranslations.ts": 672,
   "src/components/booking/venue_panel/VenueLeadInfoEditForm.tsx": 665,
   "src/components/EmailAccountConfig.tsx": 619,
   "server.ts": 654,
