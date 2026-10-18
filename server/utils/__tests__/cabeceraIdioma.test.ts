@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { htmlConIdioma, idiomaDeRuta, servirIndex } from '../cabeceraIdioma.js';
+import { htmlConIdioma, htmlConMetadatos, idiomaDeRuta, metadatosDeRuta, servirIndex } from '../cabeceraIdioma.js';
 
 const HTML = `<!doctype html>
 <html lang="es" class="x">
@@ -77,5 +77,46 @@ describe('servirIndex', () => {
     manejador({ path: '/login' } as never, otra as never);
     expect(otra.archivo).toBe(path.join(dir, 'index.html'));
     expect(otra.cuerpo).toBe('');
+  });
+});
+
+describe('servirIndex en /musicos', () => {
+  it('sirve el HTML con metadatos propios y respeta ?lang=en', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'idx-m-'));
+    fs.writeFileSync(path.join(dir, 'index.html'), HTML);
+    const r = { cuerpo: '', setHeader: () => undefined, type() { return this; }, send(b: string) { this.cuerpo = b; }, sendFile: () => undefined };
+    servirIndex(dir, BASE)({ path: '/para-musicos', query: { lang: 'en' } } as never, r as never);
+    expect(r.cuerpo).toContain(`<link rel="canonical" href="${BASE}/musicos?lang=en" />`);
+    expect(r.cuerpo).toContain('<html lang="en"');
+  });
+});
+
+describe('landing de músicos: metadatos propios y canónica única', () => {
+  it.each(['/musicos', '/musicians', '/para-musicos', '/waitlist-musicos/', '/MUSICOS'])('%s apunta al mismo canónico', (ruta) => {
+    const m = metadatosDeRuta(ruta, undefined, BASE)!;
+    expect(m.ruta).toBe('/musicos');
+    const out = htmlConMetadatos(HTML, m, BASE);
+    expect(out).toContain(`<link rel="canonical" href="${BASE}/musicos" />`);
+    expect(out).toContain('<title>BandManager.io para músicos y bandas independientes');
+  });
+
+  it('?lang=en cambia idioma, textos y canónica, y el par hreflang es recíproco', () => {
+    const out = htmlConMetadatos(HTML, metadatosDeRuta('/musicos', 'en', BASE)!, BASE);
+    expect(out).toContain('<html lang="en"');
+    expect(out).toContain('property="og:locale" content="en_US"');
+    expect(out).toContain(`<link rel="canonical" href="${BASE}/musicos?lang=en" />`);
+    expect(out).toContain(`hreflang="es" href="${BASE}/musicos"`);
+    expect(out).toContain(`hreflang="x-default" href="${BASE}/musicos"`);
+  });
+
+  it('un lang raro o con intento de inyección nunca llega al HTML', () => {
+    const m = metadatosDeRuta('/musicos', '"><script>alert(1)</script>', BASE)!;
+    expect(m.idioma).toBe('es');
+    expect(htmlConMetadatos(HTML, m, BASE)).not.toContain('<script>');
+  });
+
+  it('no toca otras rutas', () => {
+    expect(metadatosDeRuta('/epk', undefined, BASE)).toBeNull();
+    expect(metadatosDeRuta('/musicos/otra', undefined, BASE)).toBeNull();
   });
 });
