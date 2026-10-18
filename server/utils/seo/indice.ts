@@ -2,6 +2,8 @@
 import { GUIAS_BOOKING } from './guiasBooking.js';
 import { GUIAS_BOOKING_EN } from './guiasBookingEn.js';
 import { GUIAS_DIRECTO } from './guiasDirecto.js';
+import { GUIAS_EXTRA } from './guiasExtra.js';
+import { GUIAS_EXTRA_EN } from './guiasExtraEn.js';
 import { GUIAS_DIRECTO_EN } from './guiasDirectoEn.js';
 import { GUIAS_NEGOCIO } from './guiasNegocio.js';
 import { GUIAS_NEGOCIO_EN } from './guiasNegocioEn.js';
@@ -9,8 +11,8 @@ import { RUTAS, type IdiomaSeo } from './rutas.js';
 import { TEXTOS } from './textos.js';
 import type { GuiaSeo, GuiaSeoEn } from './tipos.js';
 
-export const GUIAS: GuiaSeo[] = [...GUIAS_BOOKING, ...GUIAS_DIRECTO, ...GUIAS_NEGOCIO];
-export const GUIAS_EN: GuiaSeoEn[] = [...GUIAS_BOOKING_EN, ...GUIAS_DIRECTO_EN, ...GUIAS_NEGOCIO_EN];
+export const GUIAS: GuiaSeo[] = [...GUIAS_BOOKING, ...GUIAS_DIRECTO, ...GUIAS_NEGOCIO, ...GUIAS_EXTRA];
+export const GUIAS_EN: GuiaSeoEn[] = [...GUIAS_BOOKING_EN, ...GUIAS_DIRECTO_EN, ...GUIAS_NEGOCIO_EN, ...GUIAS_EXTRA_EN];
 
 const POR_IDIOMA: Record<IdiomaSeo, GuiaSeo[]> = { es: GUIAS, en: GUIAS_EN };
 const POR_SLUG: Record<IdiomaSeo, Map<string, GuiaSeo>> = {
