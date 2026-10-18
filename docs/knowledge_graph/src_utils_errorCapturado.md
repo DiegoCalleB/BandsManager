@@ -65,6 +65,7 @@ Vista tipada de un valor capturado en un `catch`.
 - [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
 - [[server_routes_billing|server/routes/billing.ts]] *(from #route)*
 - [[server_routes_campaigns|server/routes/campaigns.ts]] *(from #route)*
+- [[server_routes_catalogo|server/routes/catalogo.ts]] *(from #route)*
 - [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
 - [[server_routes_concert_to_album|server/routes/concert_to_album.ts]] *(from #route)*
 - [[server_routes_concerts|server/routes/concerts.ts]] *(from #route)*

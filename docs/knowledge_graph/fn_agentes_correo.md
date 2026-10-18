@@ -36,13 +36,16 @@ Scheduler, lector (Gmail/IMAP) y enviador con humano en el bucle.
 - [[route_leads_reply|Leads Reply Route]] *(Layer: #route, Domain: #booking)*
 - [[server_db_autonomy|server/db/autonomy.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_consultaCatalogoSupabase|server/db/consultaCatalogoSupabase.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_emailAccounts|server/db/emailAccounts.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_enriquecimientoLead|server/db/enriquecimientoLead.ts]] *(Layer: #db, Domain: #booking)*
 - [[server_db_epk|server/db/epk.ts]] *(Layer: #db, Domain: #epk)*
 - [[server_db_pitchLearning|server/db/pitchLearning.ts]] *(Layer: #db, Domain: #booking)*
 - [[server_db_sync|server/db/sync.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_tiposEpk|server/db/tiposEpk.ts]] *(Layer: #db, Domain: #epk)*
 - [[server_db_tolerantWrite|server/db/tolerantWrite.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_agent|server/routes/agent.ts]] *(Layer: #agent, Domain: #system)*
+- [[server_routes_catalogo|server/routes/catalogo.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_gmailOAuth|server/routes/gmailOAuth.ts]] *(Layer: #security, Domain: #auth)*
 - [[server_routes_leads|server/routes/leads.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_routes_leads_emailValidation|server/routes/leads/emailValidation.ts]] *(Layer: #route, Domain: #booking)*

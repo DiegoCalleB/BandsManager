@@ -70,6 +70,8 @@ _Sin dependencias salientes directas._
 - [[server_routes_tracking|server/routes/tracking.ts]] *(from #route)*
 - [[server_services_acordesCancion|server/services/acordesCancion.ts]] *(from #service)*
 - [[server_services_agentIntelligence|server/services/agentIntelligence.ts]] *(from #agent)*
+- [[server_services_chatLecturas|server/services/chatLecturas.ts]] *(from #service)*
+- [[server_services_chatPrompt|server/services/chatPrompt.ts]] *(from #service)*
 - [[server_services_letraCancion|server/services/letraCancion.ts]] *(from #service)*
 - [[server_services_metricasReels|server/services/metricasReels.ts]] *(from #service)*
 - [[server_services_socialPublisher|server/services/socialPublisher.ts]] *(from #service)*
@@ -602,6 +604,7 @@ _Sin dependencias salientes directas._
 
 ## 🧪 Tests que lo cubren
 - `server/services/__tests__/calendarConflictService.test.ts`
+- `server/services/__tests__/chatLecturas.test.ts`
 - `server/services/__tests__/metricasReels.test.ts`
 - `server/services/__tests__/socialPublisher.test.ts`
 - `server/utils/__tests__/cadenciaReels.test.ts`
@@ -618,8 +621,10 @@ _Sin dependencias salientes directas._
 - `src/components/booking/__tests__/ReinicioPorLead.behavior.test.tsx`
 - `src/components/booking/__tests__/VenueEmailThread.behavior.test.tsx`
 - `src/components/booking/crm/__tests__/leadTypeMatchers.test.ts`
+- `src/components/booking/leads_table/__tests__/LeadRowContact.aviso.test.tsx`
 - `src/components/booking/leads_table/__tests__/leadsTableContracts.test.ts`
 - `src/components/booking/leads_table/hooks/__tests__/useLeadsBatchDateScan.behavior.test.ts`
+- `src/components/booking/venue_panel/__tests__/VenuePitchComposer.aviso.test.tsx`
 - `src/components/booking/venue_panel/__tests__/venuePanelSections.test.tsx`
 - `src/components/dashboard/widgets/__tests__/MarketingWidget.test.tsx`
 - `src/components/ensayos/__tests__/ensayosAgenda.test.ts`

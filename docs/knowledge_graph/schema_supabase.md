@@ -65,6 +65,7 @@ Esquema relacional de tablas, índices pgvector, funciones y políticas RLS.
 - [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
 - [[tabla_rehearsals|tabla rehearsals]] *(Layer: #schema, Domain: #system)*
 - [[tabla_run_of_show|tabla run_of_show]] *(Layer: #schema, Domain: #system)*
+- [[tabla_salas_catalogo|tabla salas_catalogo]] *(Layer: #schema, Domain: #system)*
 - [[tabla_saved_filters|tabla saved_filters]] *(Layer: #schema, Domain: #system)*
 - [[tabla_schema_migrations|tabla schema_migrations]] *(Layer: #schema, Domain: #system)*
 - [[tabla_setlist_shortcuts|tabla setlist_shortcuts]] *(Layer: #schema, Domain: #repertoire)*

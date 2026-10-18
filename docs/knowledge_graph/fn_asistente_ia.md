@@ -25,7 +25,10 @@ Chatbot con herramientas que lee y actúa sobre los datos de la banda.
 - [[route_leads_pitch|Leads Pitch Generation Route]] *(Layer: #route, Domain: #booking)*
 - [[route_leads_reply|Leads Reply Route]] *(Layer: #route, Domain: #booking)*
 - [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
+- [[server_db_consultaCatalogoSupabase|server/db/consultaCatalogoSupabase.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_salasCatalogo|server/db/salasCatalogo.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_tiposAdn|server/db/tiposAdn.ts]] *(Layer: #db, Domain: #system)*
+- [[server_routes_catalogo|server/routes/catalogo.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_chat|server/routes/chat.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_leads|server/routes/leads.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_routes_leads_emailValidation|server/routes/leads/emailValidation.ts]] *(Layer: #route, Domain: #booking)*

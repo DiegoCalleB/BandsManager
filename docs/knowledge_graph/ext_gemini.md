@@ -36,6 +36,8 @@ _Sin dependencias salientes directas._
 - [[server_routes_songs_structureUpload|server/routes/songs/structureUpload.ts]] *(from #route)*
 - [[server_routes_tiposChat|server/routes/tiposChat.ts]] *(from #route)*
 - [[server_services_agentIntelligence|server/services/agentIntelligence.ts]] *(from #agent)*
+- [[server_services_chatCatalogo|server/services/chatCatalogo.ts]] *(from #service)*
+- [[server_services_chatLecturas|server/services/chatLecturas.ts]] *(from #service)*
 - [[server_services_chatTools|server/services/chatTools.ts]] *(from #service)*
 - [[server_services_pitchVectorStore|server/services/pitchVectorStore.ts]] *(from #service)*
 - [[server_utils_conversacionChat|server/utils/conversacionChat.ts]] *(from #service)*

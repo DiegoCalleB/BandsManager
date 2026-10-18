@@ -58,10 +58,13 @@ export interface ProposedAction {
     | 'propose_send_email'
     | 'propose_draft_email'
     | 'propose_add_lead'
+    | 'propose_add_from_catalog'
     | 'propose_update_lead'
     | 'propose_accompaniment'
     | 'propose_melodic_idea';
   leadId?: string;
+  /** Id de la sala del catálogo compartido (propose_add_from_catalog). */
+  salaId?: string;
   bandId?: string;
   targetType?: 'lead' | 'band';
   targetName?: string;

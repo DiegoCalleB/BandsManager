@@ -270,6 +270,7 @@ BandManager UI Component Library
 - [[src_components_onboarding_steps_StepPhotos|src/components/onboarding/steps/StepPhotos.tsx]] *(from #frontend)*
 - [[src_components_onboarding_steps_StepPressProof|src/components/onboarding/steps/StepPressProof.tsx]] *(from #frontend)*
 - [[src_components_onboarding_steps_StepRider|src/components/onboarding/steps/StepRider.tsx]] *(from #frontend)*
+- [[src_components_onboarding_steps_StepSalasSugeridas|src/components/onboarding/steps/StepSalasSugeridas.tsx]] *(from #frontend)*
 - [[src_components_onboarding_steps_StepSocialsMerch|src/components/onboarding/steps/StepSocialsMerch.tsx]] *(from #frontend)*
 - [[src_components_onboarding_steps_StepVideos|src/components/onboarding/steps/StepVideos.tsx]] *(from #frontend)*
 - [[src_components_onboarding_wizard_WizardFooter|src/components/onboarding/wizard/WizardFooter.tsx]] *(from #frontend)*
