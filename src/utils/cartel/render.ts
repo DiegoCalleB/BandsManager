@@ -10,6 +10,7 @@ import type { DefFormato } from './formatos';
 import type { FondoGuardado, PaletaId } from './config';
 import { aplicarGrano, semillaDeTexto } from './grano';
 import { dibujarPlacas, luzMedia, planPlacas } from './placas';
+import { tintarLogo } from './logos';
 
 export const TINTAS = { clara: '#F4F1EA', oscura: '#17181C' } as const;
 
@@ -36,8 +37,10 @@ export interface PiezasCartel {
   datos: DatosCartel;
   /** «Tus colores» (del logo), para el fondo `banda`. Sin ellos ese fondo cae a la primera paleta. */
   paletaBanda?: { fondo: string; acento: string } | null;
-  /** Logo de la banda; solo se dibuja si el layout reservó su hueco. */
-  logoUrl?: string | null;
+  /** Logos de la fila (el de la banda primero, luego los subidos para el bolo). Los que no cargan se saltan. */
+  logos?: string[];
+  /** Una sola tinta para todos los logos (como impresos). Si no, a color sobre una placa clara. */
+  logosTinta?: boolean;
   opciones: OpcionesLayout;
   /** URL completa que codifica el QR (solo si `opciones.qr`). */
   qrUrl: string | null;
@@ -122,8 +125,13 @@ function dibujarFondoImagen(ctx: CanvasRenderingContext2D, img: HTMLImageElement
  * círculo oscuro detrás de una sola palabra es invisible para la media de la zona y deja esa
  * palabra ilegible. Se tolera solo un 3 % de píxeles peor que lo medido.
  */
-function tintaDeLineas(ctx: CanvasRenderingContext2D, lineas: Linea[], zona: Rect, u: number): Tinta {
+function tintaDeLineas(ctx: CanvasRenderingContext2D, lineas: Linea[], zona: Rect, u: number, rects: Rect[] = []): Tinta {
   try {
+    const deRects = rects.map((r) => {
+      const x = Math.max(0, Math.round(r.x));
+      const y = Math.max(0, Math.round(r.y));
+      return ctx.getImageData(x, y, Math.max(1, Math.min(Math.round(r.w), ctx.canvas.width - x)), Math.max(1, Math.min(Math.round(r.h), ctx.canvas.height - y))).data;
+    });
     const trozos = lineas.map((l) => {
       ctx.font = fuente(l.peso, l.px);
       const ancho = ctx.measureText(l.texto).width;
@@ -134,7 +142,8 @@ function tintaDeLineas(ctx: CanvasRenderingContext2D, lineas: Linea[], zona: Rec
       const h = Math.max(1, Math.min(Math.round(l.px * 1.15 + pad * 2), ctx.canvas.height - y));
       return ctx.getImageData(x, y, w, h).data;
     });
-    return trozos.length ? decidirTinta(medirLuz(unirPixeles(trozos), 2, 0.03)) : tintaDeZona(ctx, zona);
+    const todos = [...trozos, ...deRects];
+    return todos.length ? decidirTinta(medirLuz(unirPixeles(todos), 2, 0.03)) : tintaDeZona(ctx, zona);
   } catch (e) {
     console.warn('[Cartel] No se pudo medir el fondo bajo el texto:', e);
     return { tinta: 'clara', velo: 0.45 };
@@ -207,24 +216,47 @@ function dibujarQr(ctx: CanvasRenderingContext2D, r: Rect, url: string) {
   }
 }
 
-/** El logo sobre una placa clara redondeada: un logo oscuro sobre un fondo oscuro no se vería. */
-async function dibujarLogo(ctx: CanvasRenderingContext2D, r: Rect, url: string, u: number) {
-  let img: HTMLImageElement;
-  try {
-    img = await cargarImagen(url);
-  } catch (e) {
-    console.warn('[Cartel] No se pudo cargar el logo; el cartel sale sin él:', e);
-    return;
-  }
-  ctx.fillStyle = TINTAS.clara;
-  ctx.beginPath();
-  ctx.roundRect(r.x, r.y, r.w, r.h, r.w * 0.18);
-  ctx.fill();
-  const pad = 16 * u;
-  const k = Math.min((r.w - pad * 2) / img.width, (r.h - pad * 2) / img.height);
-  const w = img.width * k;
-  const h = img.height * k;
-  ctx.drawImage(img, r.x + (r.w - w) / 2, r.y + (r.h - h) / 2, w, h);
+interface LogoCargado {
+  url: string;
+  img: HTMLImageElement;
+}
+
+/** Los logos que cargan, en orden. Uno que no carga (borrado, sin CORS) se salta: el cartel sale igual. */
+async function cargarLogos(urls: string[]): Promise<LogoCargado[]> {
+  const hechos = await Promise.all(
+    urls.map((url) =>
+      cargarImagen(url).then(
+        (img) => ({ url, img }),
+        (e) => {
+          console.warn('[Cartel] No se pudo cargar un logo; el cartel sale sin él:', e);
+          return null;
+        }
+      )
+    )
+  );
+  return hechos.filter((l): l is LogoCargado => !!l && l.img.width > 0 && l.img.height > 0);
+}
+
+/**
+ * La fila de logos. En tinta (lo normal) cada logo es una silueta de la misma tinta que el texto, con
+ * desgaste leve: como impreso junto al resto. A color, cada uno va sobre su placa clara redondeada.
+ */
+function dibujarLogos(ctx: CanvasRenderingContext2D, rects: Rect[], logos: LogoCargado[], tinta: Tinta, tintaEnTinta: boolean, u: number) {
+  ctx.imageSmoothingQuality = 'high';
+  rects.forEach((r, i) => {
+    const logo = logos[i];
+    if (!logo) return;
+    if (tintaEnTinta) {
+      ctx.drawImage(tintarLogo(logo.img, logo.url, TINTAS[tinta.tinta]), r.x, r.y, r.w, r.h);
+      return;
+    }
+    const pad = 14 * u;
+    ctx.fillStyle = TINTAS.clara;
+    ctx.beginPath();
+    ctx.roundRect(r.x - pad, r.y - pad, r.w + pad * 2, r.h + pad * 2, 18 * u);
+    ctx.fill();
+    ctx.drawImage(logo.img, r.x, r.y, r.w, r.h);
+  });
 }
 
 /**
@@ -248,7 +280,8 @@ export async function renderCartel(
     ctx.font = fuente(peso, px);
     return ctx.measureText(t).width;
   };
-  const L = calcularLayout(def, ancho, piezas.datos, piezas.opciones, medir);
+  const logos = await cargarLogos(piezas.logos ?? []);
+  const L = calcularLayout(def, ancho, piezas.datos, { ...piezas.opciones, logos: logos.map((l) => l.img.width / l.img.height) }, medir);
   canvas.width = L.ancho;
   canvas.height = L.alto;
   const u = L.ancho / 1080;
@@ -280,7 +313,7 @@ export async function renderCartel(
   const fundido = 120 * u;
   const enAbajo = (l: Linea) => l.y >= L.zonas.abajo.y;
   const tArriba = tintaDeLineas(ctx, L.lineas.filter((l) => !enAbajo(l)), L.zonas.arriba, u);
-  const tAbajo = tintaDeLineas(ctx, L.lineas.filter(enAbajo), L.zonas.abajo, u);
+  const tAbajo = tintaDeLineas(ctx, L.lineas.filter(enAbajo), L.zonas.abajo, u, L.logos);
   velar(ctx, L.zonas.arriba, tArriba, true, fundido);
   velar(ctx, L.zonas.abajo, tAbajo, false, fundido);
 
@@ -297,8 +330,8 @@ export async function renderCartel(
   // 4. QR.
   if (L.qr && piezas.qrUrl) dibujarQr(ctx, L.qr, piezas.qrUrl);
 
-  // 5. Logo. Es opcional: si no carga (borrado, sin CORS) el cartel sale igual, sin él.
-  if (L.logo && piezas.logoUrl) await dibujarLogo(ctx, L.logo, piezas.logoUrl, u);
+  // 5. Logos de las bandas, en la tinta de abajo (donde están). Son opcionales.
+  dibujarLogos(ctx, L.logos, logos, tAbajo, piezas.logosTinta !== false, u);
 
   return L;
 }

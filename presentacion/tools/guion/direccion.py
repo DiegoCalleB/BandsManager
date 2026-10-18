@@ -591,7 +591,7 @@ DIRECCION = {
                ('marca', '3', '3+4', .23, .46, .74, .45, 'Cada bolo: caché, gastos y margen'),
                ('zoom', '3+3.8', .73, .58, 1.75), ('ir', '3+4.2', .73, .575), ('marca', '3+4.3', 'fin-0.4', .695, .52, .10, .38, 'Y lo que le toca a cada músico'),
                ('clic', '4-0.3', .925, .551), ('pulsar', '4-0.3', .893, .54, .065, .022),
-               ('aviso', '4', 'fin-0.2', '🍺 Birras de la gira · <b>Brais</b> · 48 € · <i>pendiente de dividir</i>')]),
+               ('aviso', '4', 'fin-0.2', '🧾 Cuentas de la gira · <b>Brais</b> · 48 € · <i>pendiente de dividir</i>')]),
 
     # el acuerdo en el móvil de la sala: lo repasa con el dedo, escribe su nombre, marca la casilla, firma y le llega la copia
     'El acuerdo, firmado desde BandManager': dict(

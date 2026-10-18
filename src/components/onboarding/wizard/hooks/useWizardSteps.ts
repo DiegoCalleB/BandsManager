@@ -104,6 +104,13 @@ export function useWizardSteps({ bandPlan, currentUser }: WizardStepsParams) {
             iconName: "DollarSign",
             description: "Caché estimado, gastos de gira y contacto de booking",
           },
+          {
+            key: "salas_sugeridas",
+            title: "Salas para empezar",
+            shortTitle: "Salas",
+            iconName: "MapPin",
+            description: "Salas que otras bandas ya han encontrado y encajan con la tuya",
+          },
         ]
       : []),
     ...(hasAiAgentAccess

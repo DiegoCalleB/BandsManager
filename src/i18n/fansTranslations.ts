@@ -2,6 +2,8 @@
 // Idiomas soportados hoy: español, inglés, italiano, checo. Añadir uno nuevo es
 // solo añadir una entrada más aquí y en FAN_FORM_LANGUAGES.
 
+import type { FanFormDict } from './fansTranslationsTipos';
+
 export type FanFormLanguage = 'es' | 'en' | 'it' | 'cs';
 
 export const DEFAULT_FAN_FORM_LANGUAGE: FanFormLanguage = 'es';
@@ -34,129 +36,6 @@ export function idiomasDisponiblesParaConcierto(idiomaConcierto: FanFormLanguage
   return [idiomaConcierto, 'en', 'es'];
 }
 
-type FanFormDict = {
-  officialChannel: string;
-  joinTitle: string; // {bandName}
-  thanksConcertWithName: string; // {concertName}
-  thanksConcertGeneric: string;
-  thanksSupport: string;
-  supportIntro: string;
-  tabFollow: string;
-  tabJoin: string;
-  followHelpTitle: string;
-  followHelpBody: string;
-  followCTA: string;
-  errorRequiredFields: string;
-  errorGenericSignup: string;
-  labelName: string;
-  placeholderName: string;
-  labelEmail: string;
-  labelCity: string;
-  placeholderCity: string;
-  labelHowFound: string;
-  optionSelect: string;
-  optionConcert: string;
-  optionSocial: string;
-  optionFriend: string;
-  optionSpotify: string;
-  optionOther: string;
-  labelFavSong: string; // {bandName}
-  placeholderFavSong: string;
-  labelInstagram: string;
-  placeholderInstagram: string;
-  labelMessage: string;
-  placeholderMessage: string;
-  consentPrefix: string;
-  consentPrivacyLink: string;
-  consentMiddle: string;
-  consentExplicit: string;
-  consentSuffix: string;
-  submitJoin: string; // {bandName}
-  submitting: string;
-  followUsAlso: string;
-  bookingTitle: string;
-  bookingBadgeLive: string;
-  bookingQuestion: string; // {bandName}
-  bookingEmailSubject: string; // {bandName}
-  bookingWhatsappText: string; // {bandName}
-  backHome: string;
-  welcomeTitle: string; // {bandName}
-  registeredDefaultMessage: string; // {bandName}
-  benefitsTitle: string;
-  downloadExclusive: string;
-  merchCode: string;
-  followUsPlatforms: string;
-  epkCardTitle: string;
-  epkCardSubtitle: string;
-  epkSuccessLink: string; // {bandName}
-  economicSupportTitle: string; // {bandName}
-  economicSupportSubtitle: string;
-  openButton: string;
-  clickSingular: string;
-  clickPlural: string;
-  revolutButton: string;
-  revolutCopied: string;
-  revolutHandle: string;
-  revolutSuccessPrompt: string; // {bandName}
-  revolutStepTitle: string;
-  revolutBadge: string;
-  revolutSecureDirect: string;
-  paypalButton: string;
-  paypalCopied: string;
-  paypalHandle: string;
-  paypalBadge: string;
-  bizumButton: string;
-  bizumHandle: string;
-  payWithBizum: string;
-  payWithRevolut: string;
-  payWithPaypal: string;
-  selectPaymentMethod: string;
-  privacyModalTitle: string;
-  privacyPara1: string; // {bandName} x2
-  privacyPara2: string;
-  privacyPara3: string; // {bandName}
-  privacyPara4: string;
-  understood: string;
-  interactiveSimulation: string;
-  backToForm: string;
-  previewModalTitle: string;
-  previewMobile: string;
-  previewDesktop: string;
-  previewTabForm: string;
-  previewTabSuccess: string;
-  previewLanguageLabel: string;
-  previewConcertLabel: string;
-  previewGeneralConcert: string;
-  previewReset: string;
-  previewClose: string;
-  previewProductionSyncBadge: string;
-  previewDisclaimer: string;
-  // Nuevas mejoras: Incentivo, compartir y próximos bolos
-  incentiveBannerTitle: string;
-  incentiveItemTickets: string;
-  incentiveItemTrack: string;
-  incentiveItemMerch: string;
-  shareWithFriend: string;
-  shareSuccessText: string;
-  shareCopied: string;
-  upcomingConcertsTitle: string;
-  buyTickets: string;
-  optionalFieldsToggle: string;
-  hideOptionalFields: string;
-  quickJoinSubtitle: string;
-  audioPreviewPlaying: string;
-  audioPreviewPrompt: string;
-  audioPreviewPlay: string;
-  audioPreviewPause: string;
-  bizumCopiedNotification: string;
-  shareCardPrompt: string;
-  whatsappShareMessage: string;
-  upcomingShowsTitle: string;
-  // Banner para músicos y bandas al final del formulario
-  musicianBannerTitle: string;
-  musicianBannerSubtitle: string;
-  musicianBannerCTA: string;
-};
 
 const es: FanFormDict = {
   officialChannel: 'Canal Oficial',
@@ -166,10 +45,13 @@ const es: FanFormDict = {
   thanksSupport: '¡Gracias por tu apoyo! 🎶',
   supportIntro: 'Apóyanos como prefieras: **síguenos directamente en tus redes favoritas** o **recibe información en tu correo**.',
   tabFollow: '📱 Redes sociales',
-  tabJoin: '✉️ Novedades',
+  tabJoin: "💌 Avísame por email",
   followHelpTitle: '⚡ ¡Ayúdanos a crecer!',
   followHelpBody: 'Elige tu plataforma preferida y **síguenos**. ¡Es la mejor forma de apoyar la música independiente!',
   followCTA: '✨ ¿Quieres info directa en tu correo? Apúntate aquí →',
+  teaserTitle: '💌 No te pierdas nada',
+  teaserBody: 'Fechas de conciertos, música nueva y sorpresas. Un correo de vez en cuando, sin spam.',
+  teaserButton: 'Avísame',
   errorRequiredFields: 'Por favor, rellena los campos obligatorios y acepta la política.',
   errorGenericSignup: 'Error al registrarte.',
   labelName: 'Nombre *',
@@ -293,10 +175,13 @@ const en: FanFormDict = {
   thanksSupport: 'Thanks for your support! 🎶',
   supportIntro: 'Support us however you like: **follow us on your favorite social platform** or **get updates by email**.',
   tabFollow: '📱 Follow Us',
-  tabJoin: '✉️ Get Updates',
+  tabJoin: "💌 Notify me by email",
   followHelpTitle: '⚡ Help us grow!',
   followHelpBody: "Pick your favorite platform and **follow us**. It's the best way to support independent music!",
   followCTA: '✨ Want updates straight to your inbox? Sign up here →',
+  teaserTitle: '💌 Don\'t miss a thing',
+  teaserBody: 'Show dates, new music and surprises. One email now and then, no spam.',
+  teaserButton: 'Notify me',
   errorRequiredFields: 'Please fill in the required fields and accept the privacy policy.',
   errorGenericSignup: 'Something went wrong while signing you up.',
   labelName: 'Name *',
@@ -419,10 +304,13 @@ const it: FanFormDict = {
   thanksSupport: 'Grazie per il tuo supporto! 🎶',
   supportIntro: 'Sostienici come preferisci: **seguici direttamente sui tuoi social preferiti** oppure **ricevi le novità via email**.',
   tabFollow: '📱 Seguici sui Social',
-  tabJoin: '✉️ Ricevi Novità',
+  tabJoin: "💌 Avvisami via email",
   followHelpTitle: '⚡ Aiutaci a crescere!',
   followHelpBody: 'Scegli la tua piattaforma preferita e **seguici**. È il modo migliore per sostenere la musica indipendente!',
   followCTA: '✨ Vuoi ricevere le novità via email? Iscriviti qui →',
+  teaserTitle: '💌 Non perderti niente',
+  teaserBody: 'Date dei concerti, musica nuova e sorprese. Una mail ogni tanto, niente spam.',
+  teaserButton: 'Avvisami',
   errorRequiredFields: "Compila i campi obbligatori e accetta l'informativa sulla privacy.",
   errorGenericSignup: 'Si è verificato un errore durante la registrazione.',
   labelName: 'Nome *',
@@ -545,10 +433,13 @@ const cs: FanFormDict = {
   thanksSupport: 'Díky za tvou podporu! 🎶',
   supportIntro: 'Podpoř nás, jak chceš: **sleduj nás na oblíbené sociální síti** nebo **dostávej novinky e-mailem**.',
   tabFollow: '📱 Sleduj nás',
-  tabJoin: '✉️ Chci novinky',
+  tabJoin: "💌 Dej mi vědět e-mailem",
   followHelpTitle: '⚡ Pomoz nám růst!',
   followHelpBody: 'Vyber si oblíbenou platformu a **sleduj nás**. Je to nejlepší způsob, jak podpořit nezávislou hudbu!',
   followCTA: '✨ Chceš novinky přímo do e-mailu? Přihlas se zde →',
+  teaserTitle: '💌 Nic si nenech ujít',
+  teaserBody: 'Termíny koncertů, nová hudba a překvapení. Občas e-mail, žádný spam.',
+  teaserButton: 'Chci vědět',
   errorRequiredFields: 'Vyplň prosím povinná pole a přijmi zásady ochrany osobních údajů.',
   errorGenericSignup: 'Při registraci došlo k chybě.',
   labelName: 'Jméno *',

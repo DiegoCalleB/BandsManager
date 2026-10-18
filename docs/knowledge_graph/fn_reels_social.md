@@ -19,7 +19,9 @@ Generación de reels virales, publicaciones y plan de crecimiento.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[ext_ffmpeg|FFmpeg]] *(Layer: #external, Domain: #system)*
+- [[ext_resend|Resend]] *(Layer: #external, Domain: #system)*
 - [[ext_supabase_storage|Supabase Storage]] *(Layer: #external, Domain: #system)*
+- [[server_db_alertSettings|server/db/alertSettings.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_epk|server/db/epk.ts]] *(Layer: #db, Domain: #epk)*
 - [[server_db_reelAnalyses|server/db/reelAnalyses.ts]] *(Layer: #db, Domain: #social)*

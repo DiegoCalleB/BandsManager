@@ -76,20 +76,25 @@ describe('chat: coste', () => {
     expect(llamadas).toHaveLength(0);
   });
 
+  // El último turno lleva delante los datos de la banda (chatPrompt.ts); lo que escribió el usuario va tras esta marca.
+  const soloMensaje = (texto?: string) => (texto ?? '').split('MENSAJE DEL USUARIO:\n').pop();
+
   it('acota el historial a los últimos turnos', async () => {
     const chatHistory = Array.from({ length: 200 }, (_, i) => ({ sender: i % 2 ? 'bot' : 'user', text: `turno ${i}` }));
     const r = await llamarChat({ message: 'hola', chatHistory });
     expect(r.codigo).toBe(200);
     const enviados = llamadas[0].contents.flatMap((c) => c.parts.map((p) => p.text));
     expect(enviados.length).toBeLessThanOrEqual(MAX_TURNOS_HISTORIAL + 1);
-    expect(enviados[enviados.length - 1]).toBe('hola');
+    expect(soloMensaje(enviados[enviados.length - 1])).toBe('hola');
     expect(enviados).not.toContain('turno 0');
   });
 
   it('un historial que no es una lista ya no tumba la ruta', async () => {
     const r = await llamarChat({ message: 'hola', chatHistory: 'esto no es una lista' });
     expect(r.codigo).toBe(200);
-    expect(llamadas[0].contents).toEqual([{ role: 'user', parts: [{ text: 'hola' }] }]);
+    expect(llamadas[0].contents).toHaveLength(1);
+    expect(llamadas[0].contents[0].role).toBe('user');
+    expect(soloMensaje(llamadas[0].contents[0].parts[0].text)).toBe('hola');
   });
 
   it('pide un tope de tokens de salida y atribuye la llamada a la banda', async () => {
@@ -107,8 +112,9 @@ describe('chat: coste', () => {
         { sender: 'user', text: 'segunda' },
       ],
     });
-    expect(llamadas[0].contents).toEqual([
-      { role: 'user', parts: [{ text: 'primera' }, { text: 'segunda' }, { text: 'tercera' }] },
-    ]);
+    expect(llamadas[0].contents).toHaveLength(1);
+    const [turno] = llamadas[0].contents;
+    expect(turno.role).toBe('user');
+    expect(turno.parts.map((p) => soloMensaje(p.text))).toEqual(['primera', 'segunda', 'tercera']);
   });
 });

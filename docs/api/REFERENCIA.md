@@ -2,7 +2,7 @@
 
 > Generado automáticamente por `scripts/generate-openapi.mjs` a partir del código. No se edita a mano: ejecuta `npm run docs:api`.
 
-**376 rutas HTTP** (325 declaraciones de handler; el resto son alias) en 31 dominios. Contrato máquina-legible: [`openapi.json`](./openapi.json) (OpenAPI 3.1). Visor interactivo: [`index.html`](./index.html) (hay que abrirlo en un navegador; GitHub no lo renderiza). Decisión de diseño: [ADR 0012](../adr/0012-contrato-api-openapi-por-ast.md).
+**386 rutas HTTP** (335 declaraciones de handler; el resto son alias) en 31 dominios. Contrato máquina-legible: [`openapi.json`](./openapi.json) (OpenAPI 3.1). Visor interactivo: [`index.html`](./index.html) (hay que abrirlo en un navegador; GitHub no lo renderiza). Decisión de diseño: [ADR 0012](../adr/0012-contrato-api-openapi-por-ast.md).
 
 ## Cómo leerla
 
@@ -12,7 +12,7 @@
 
 | Acceso | Rutas |
 |---|---|
-| Sesión | 324 |
+| Sesión | 334 |
 | Sesión (comprobada en el handler) | 6 |
 | Sesión opcional | 3 |
 | Firma o secreto | 7 |
@@ -52,7 +52,7 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `POST` | `/api/public/deals/{token}/sign` | Pública | — | ★ | [`server/routes/deals.ts:307`](../../server/routes/deals.ts#L307) |
 | `GET` | `/api/public/epk` | Pública | — |  | [`server/routes/epk_fans.ts:461`](../../server/routes/epk_fans.ts#L461) |
 | `POST` | `/api/public/fans` | Pública | publicoRateLimiter | ★ | [`server/routes/epk_fans.ts:866`](../../server/routes/epk_fans.ts#L866) |
-| `GET` | `/api/public/fans/contador` | Pública | publicoRateLimiter |  | [`server/routes/fans_contador.ts:13`](../../server/routes/fans_contador.ts#L13) |
+| `GET` | `/api/public/fans/contador` | Pública | publicoRateLimiter |  | [`server/routes/fans_contador.ts:19`](../../server/routes/fans_contador.ts#L19) |
 | `GET` | `/api/public/insignia` | Pública | publicoRateLimiter |  | [`server/routes/referidos.ts:76`](../../server/routes/referidos.ts#L76) |
 | `POST` | `/api/public/interesados` | Pública | publicoRateLimiter, altaRateLimiter |  | [`server/routes/interesados.ts:35`](../../server/routes/interesados.ts#L35) |
 | `GET` | `/api/public/interesados/baja` | Pública | publicoRateLimiter |  | [`server/routes/interesados.ts:90`](../../server/routes/interesados.ts#L90) |
@@ -202,20 +202,25 @@ Son las que un revisor de seguridad querrá mirar primero.
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
 | `POST` | `/api/campana-concierto/redactar` | Sesión | iaRateLimiter |  | [`server/routes/campanaConcierto.ts:105`](../../server/routes/campanaConcierto.ts#L105) |
-| `GET` | `/api/cartel/adn` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:212`](../../server/routes/cartelria.ts#L212) |
-| `PUT` | `/api/cartel/adn` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:223`](../../server/routes/cartelria.ts#L223) |
-| `POST` | `/api/cartel/fondo` | Sesión | imagenRateLimiter |  | [`server/routes/cartelria.ts:94`](../../server/routes/cartelria.ts#L94) |
-| `POST` | `/api/cartel/referencias` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:239`](../../server/routes/cartelria.ts#L239) |
-| `PUT` | `/api/cartel/{concertId}/config` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:152`](../../server/routes/cartelria.ts#L152) |
-| `POST` | `/api/cartel/{concertId}/foto` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:187`](../../server/routes/cartelria.ts#L187) |
-| `PUT` | `/api/cartel/{concertId}/imagen` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:165`](../../server/routes/cartelria.ts#L165) |
+| `GET` | `/api/cartel/adn` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:331`](../../server/routes/cartelria.ts#L331) |
+| `PUT` | `/api/cartel/adn` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:342`](../../server/routes/cartelria.ts#L342) |
+| `POST` | `/api/cartel/brief` | Sesión | iaRateLimiter |  | [`server/routes/cartelria.ts:312`](../../server/routes/cartelria.ts#L312) |
+| `POST` | `/api/cartel/fondo` | Sesión | imagenRateLimiter |  | [`server/routes/cartelria.ts:106`](../../server/routes/cartelria.ts#L106) |
+| `POST` | `/api/cartel/idea` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:287`](../../server/routes/cartelria.ts#L287) |
+| `DELETE` | `/api/cartel/idea` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:302`](../../server/routes/cartelria.ts#L302) |
+| `POST` | `/api/cartel/referencias` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:358`](../../server/routes/cartelria.ts#L358) |
+| `PUT` | `/api/cartel/{concertId}/config` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:173`](../../server/routes/cartelria.ts#L173) |
+| `POST` | `/api/cartel/{concertId}/foto` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:208`](../../server/routes/cartelria.ts#L208) |
+| `PUT` | `/api/cartel/{concertId}/imagen` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:186`](../../server/routes/cartelria.ts#L186) |
+| `POST` | `/api/cartel/{concertId}/logo` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:231`](../../server/routes/cartelria.ts#L231) |
+| `DELETE` | `/api/cartel/{concertId}/logo` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:265`](../../server/routes/cartelria.ts#L265) |
 
 ### chat
 
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
-| `POST` | `/api/chat` | Sesión | chatRateLimiter |  | [`server/routes/chat.ts:30`](../../server/routes/chat.ts#L30) |
-| `POST` | `/api/write-reels-copy` | Sesión | iaRateLimiter |  | [`server/routes/chat.ts:640`](../../server/routes/chat.ts#L640) |
+| `POST` | `/api/chat` | Sesión | chatRateLimiter |  | [`server/routes/chat.ts:32`](../../server/routes/chat.ts#L32) |
+| `POST` | `/api/write-reels-copy` | Sesión | iaRateLimiter |  | [`server/routes/chat.ts:520`](../../server/routes/chat.ts#L520) |
 
 ### concert_to_album
 
@@ -332,6 +337,10 @@ Salas, festivales y contactos del CRM de booking. Los agentes (Scout, Redactor, 
 | `GET` | `/api/ai/providers` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/leads/crud.ts:27`](../../server/routes/leads/crud.ts#L27) |
 | `POST` | `/api/batch-enrich-campaign` | Sesión | enriquecimientoRateLimiter |  | [`server/routes/leads/enrichment.ts:953`](../../server/routes/leads/enrichment.ts#L953) |
 | `POST` | `/api/campaign-mass-search` | Sesión | — |  | [`server/routes/leads/places.ts:412`](../../server/routes/leads/places.ts#L412) |
+| `GET` | `/api/catalogo/salas` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/catalogo.ts:31`](../../server/routes/catalogo.ts#L31) |
+| `POST` | `/api/catalogo/salas/anadir-varias` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/catalogo.ts:85`](../../server/routes/catalogo.ts#L85) |
+| `POST` | `/api/catalogo/salas/{id}/anadir` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/catalogo.ts:42`](../../server/routes/catalogo.ts#L42) |
+| `GET` | `/api/catalogo/sugerencias` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/catalogo.ts:68`](../../server/routes/catalogo.ts#L68) |
 | `POST` | `/api/detect-all-dates` | Sesión | enriquecimientoRateLimiter |  | [`server/routes/leads/enrichment.ts:876`](../../server/routes/leads/enrichment.ts#L876) |
 | `GET` | `/api/example-threads` | Sesión | — |  | [`server/routes/leads/exampleThreads.ts:32`](../../server/routes/leads/exampleThreads.ts#L32) |
 | `POST` | `/api/example-threads` | Sesión | — |  | [`server/routes/leads/exampleThreads.ts:45`](../../server/routes/leads/exampleThreads.ts#L45) |
@@ -440,7 +449,7 @@ Salas, festivales y contactos del CRM de booking. Los agentes (Scout, Redactor, 
 | `POST` | `/api/billing/pegatinas` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/pegatinas.ts:27`](../../server/routes/pegatinas.ts#L27) |
 | `GET` | `/api/emails/baja` | Pública | publicoRateLimiter |  | [`server/routes/emailsCicloVida.ts:13`](../../server/routes/emailsCicloVida.ts#L13) |
 | `POST` | `/api/public/contacto-empresas` | Pública | publicoRateLimiter, consultaRateLimiter |  | [`server/routes/contactoEmpresas.ts:23`](../../server/routes/contactoEmpresas.ts#L23) |
-| `GET` | `/api/public/fans/contador` | Pública | publicoRateLimiter |  | [`server/routes/fans_contador.ts:13`](../../server/routes/fans_contador.ts#L13) |
+| `GET` | `/api/public/fans/contador` | Pública | publicoRateLimiter |  | [`server/routes/fans_contador.ts:19`](../../server/routes/fans_contador.ts#L19) |
 | `POST` | `/api/public/interesados` | Pública | publicoRateLimiter, altaRateLimiter |  | [`server/routes/interesados.ts:35`](../../server/routes/interesados.ts#L35) |
 | `GET` | `/api/public/interesados/baja` | Pública | publicoRateLimiter |  | [`server/routes/interesados.ts:90`](../../server/routes/interesados.ts#L90) |
 | `GET` | `/api/public/interesados/confirmar` | Pública | publicoRateLimiter |  | [`server/routes/interesados.ts:71`](../../server/routes/interesados.ts#L71) |
@@ -477,6 +486,7 @@ Salas, festivales y contactos del CRM de booking. Los agentes (Scout, Redactor, 
 | `GET` | `/api/reels/aprendizaje` | Sesión | — |  | [`server/routes/reelsAprendizaje.ts:16`](../../server/routes/reelsAprendizaje.ts#L16) |
 | `POST` | `/api/reels/copy-perfecto` | Sesión | iaRateLimiter |  | [`server/routes/reelsTexto.ts:55`](../../server/routes/reelsTexto.ts#L55) |
 | `GET` | `/api/reels/proximo-hueco` | Sesión | — |  | [`server/routes/reelsProgramacion.ts:21`](../../server/routes/reelsProgramacion.ts#L21) |
+| `GET` | `/api/reels/resumen-semanal` | Sesión | — |  | [`server/routes/reelsAprendizaje.ts:29`](../../server/routes/reelsAprendizaje.ts#L29) |
 | `GET` | `/api/youtube-meta` | Sesión | — |  | [`server/routes/reels.ts:151`](../../server/routes/reels.ts#L151) |
 
 ### referidos

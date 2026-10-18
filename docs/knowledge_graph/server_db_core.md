@@ -61,6 +61,7 @@ Exporta: rolDeClaveSupabase, getSupabase, normalizePlan, cleanBandId.
 - [[server_db_reelMetricas|server/db/reelMetricas.ts]] *(from #db)*
 - [[server_db_referidos|server/db/referidos.ts]] *(from #db)*
 - [[server_db_rehearsals|server/db/rehearsals.ts]] *(from #db)*
+- [[server_db_salasCatalogo|server/db/salasCatalogo.ts]] *(from #db)*
 - [[server_db_schedule|server/db/schedule.ts]] *(from #db)*
 - [[server_db_social|server/db/social.ts]] *(from #db)*
 - [[server_db_stemsCache|server/db/stemsCache.ts]] *(from #db)*
@@ -75,6 +76,7 @@ Exporta: rolDeClaveSupabase, getSupabase, normalizePlan, cleanBandId.
 - [[server_routes_users_adminInicial|server/routes/users/adminInicial.ts]] *(from #route)*
 - [[server_services_agentIntelligence|server/services/agentIntelligence.ts]] *(from #agent)*
 - [[server_services_agentQueueService|server/services/agentQueueService.ts]] *(from #agent)*
+- [[server_services_avisosPublicacion|server/services/avisosPublicacion.ts]] *(from #service)*
 - [[server_services_calendarConflictService|server/services/calendarConflictService.ts]] *(from #service)*
 - [[server_services_colaLetras|server/services/colaLetras.ts]] *(from #service)*
 - [[server_services_emailAgentClient|server/services/emailAgentClient.ts]] *(from #agent)*

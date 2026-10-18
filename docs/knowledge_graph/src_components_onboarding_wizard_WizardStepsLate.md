@@ -26,6 +26,7 @@ Pasos 7 a 13 del asistente (rider, prensa, booking, agente, eventos, fotos, fans
 - [[src_components_onboarding_steps_StepPhotos|src/components/onboarding/steps/StepPhotos.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_onboarding_steps_StepPressProof|src/components/onboarding/steps/StepPressProof.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_onboarding_steps_StepRider|src/components/onboarding/steps/StepRider.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_onboarding_steps_StepSalasSugeridas|src/components/onboarding/steps/StepSalasSugeridas.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_onboarding_wizard_OnboardingWizardContext|src/components/onboarding/wizard/OnboardingWizardContext.ts]] *(Layer: #frontend, Domain: #system)*
 
 ---

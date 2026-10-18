@@ -5,7 +5,7 @@
    Cómo se usa en index.html:
    - Mensaje de chat:  <li data-who="bateria" data-t="23:58">Texto del mensaje</li>
    - Nombre o rol en cualquier texto:  {bateria} → nombre, {bateria:rol} → «batería», {bateria:Rol} → «Batería»,
-     {bateria:cargo} → cargo largo (para el reparto).
+     {bateria:cargo} → cargo largo (para el reparto), {bateria:ig} → su Instagram.
    - Foto:  <img data-foto="bateria" alt="{bateria}">
 
    Las claves son papeles (bajo, bateria, voz, guitarra), no nombres, para que sobrevivan a un cambio de músico.
@@ -28,16 +28,16 @@
    'cabeceo' (headbang) · 'cool' (asiente tranquilo) · 'calma' (por defecto). Si cambia el músico, se cambia aquí. */
 (function () {
   var R = window.REPARTO = {
-    bajo:     { nombre: 'Iago',    pron: 'Yago',    rol: 'bajo',      cargo: 'Bajo',            foto: 'img/miembro-iago.jpg',    color: '#8fb6ff', yo: true,
+    bajo:     { nombre: 'Iago',    pron: 'Yago',    rol: 'bajo',      cargo: 'Bajo',            ig: '@iago.bajo.hdc', foto: 'img/miembro-iago.jpg',    color: '#8fb6ff', yo: true,
                 mov: 'cool',
                 tts: { motor: 'elevenlabs', voz: 'QmP1sd0PqJY98PkCbohx', estabilidad: 0.5 } }, // voz diseñada: madrileño de San Blas
-    bateria:  { nombre: 'Brais',   rol: 'batería',   cargo: 'Batería',         foto: 'img/miembro-brais.jpg',   color: '#ffd596',
+    bateria:  { nombre: 'Brais',   rol: 'batería',   cargo: 'Batería',         ig: '@mouredev', foto: 'img/miembro-brais.jpg',   color: '#ffd596',
                 mov: 'bombo',
                 tts: { motor: 'elevenlabs', voz: 'Gffipq2YbMiqOFEtgMO6', estabilidad: 0.5 } },
-    voz:      { nombre: 'Alan',    rol: 'voz',       cargo: 'Voz y guitarra',  foto: 'img/miembro-xandre.jpg',  color: '#ff9ec4',
+    voz:      { nombre: 'Alan',    rol: 'voz',       cargo: 'Voz y guitarra',  ig: '@alan.herdeiros', foto: 'img/miembro-xandre.jpg',  color: '#ff9ec4',
                 mov: 'diva',
-                tts: { motor: 'elevenlabs', voz: 'SxiIZdPt3fsiAenlubTX', estabilidad: 0 } },
-    guitarra: { nombre: 'Álvaro',  rol: 'guitarra',  cargo: 'Guitarra solista', foto: 'img/miembro-alvaro.jpg', color: '#8be0a4',
+                tts: { motor: 'elevenlabs', voz: 'SxiIZdPt3fsiAenlubTX', estabilidad: 0.4 } },
+    guitarra: { nombre: 'Álvaro',  rol: 'guitarra',  cargo: 'Guitarra solista', ig: '@alvaro.solos', foto: 'img/miembro-alvaro.jpg', color: '#8be0a4',
                 mov: 'cabeceo',
                 tts: { motor: 'elevenlabs', voz: 'ozbKZapo4Cy6jU7KTHtp', estabilidad: 0.35 } },
     manager:  { nombre: 'Programador', rol: 'Sala El Faro', cargo: 'Programador de sala', foto: 'img/personaje-manager.jpg', color: '#c9a6ff',
@@ -66,6 +66,7 @@
     if (f === 'rol') return m.rol;
     if (f === 'Rol') return cap(m.rol);
     if (f === 'cargo') return m.cargo;
+    if (f === 'ig') return m.ig;
     return null;
   };
   var sustituir = function (s) {

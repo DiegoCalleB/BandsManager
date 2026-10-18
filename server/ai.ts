@@ -1,3 +1,4 @@
+import { textoDeParte } from "./utils/textoDeParteIA.js";
 import { GoogleGenAI, type ContentListUnion, type GenerateContentConfig } from "@google/genai";
 import { dbRecordAiUsage } from "./db/aiLedger.js";
 import type { EPKConfig } from "../src/types.js";
@@ -193,10 +194,6 @@ type ContenidoConTexto = { parts?: unknown; text?: unknown };
 const comoContenido = (valor: unknown): ContenidoConTexto =>
   typeof valor === "object" && valor !== null ? (valor as ContenidoConTexto) : {};
 
-const textoDeParte = (parte: unknown): string => {
-  const { text } = comoContenido(parte);
-  return text ? String(text) : "";
-};
 
 export function extractTextFromContents(contents: unknown): string {
   if (!contents) return "";

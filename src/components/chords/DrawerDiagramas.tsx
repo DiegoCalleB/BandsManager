@@ -35,7 +35,7 @@ export const DrawerDiagramas: React.FC<Props> = ({ acordes, contexto, vista, onV
     <div
       translate="no"
       className={lateral
-        ? "notranslate w-full md:w-64 bg-[var(--sunken)] p-4 overflow-y-auto shrink-0 space-y-4"
+        ? "notranslate w-full md:w-64 max-md:max-h-[45%] bg-[var(--sunken)] p-4 overflow-y-auto shrink-0 space-y-4"
         : "notranslate p-3.5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-2 animate-fade-in shrink-0"}
     >
       <div className="flex items-center justify-between gap-2 text-xs font-sans font-bold text-[var(--acc)]">

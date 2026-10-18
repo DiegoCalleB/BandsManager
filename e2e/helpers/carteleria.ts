@@ -31,7 +31,7 @@ export const URL_CDN = CDN;
 
 export async function abrirCarteleria(page: Page, { compartido = false, estadoEstatico = false, conCartelAnterior = false, conLogo = false }: OpcionesCarteleria = {}) {
   const peticiones: PeticionCartel[] = [];
-  const servidor = { config: null as unknown, adn: { v: 1, referencias: [] as string[], favoritos: [] as Array<{ url: string; estilo: string }>, aprender: true } };
+  const servidor = { config: null as unknown, logos: [] as string[], adn: { v: 1, referencias: [] as string[], favoritos: [] as Array<{ url: string; estilo: string }>, aprender: true } };
   let banda: string | undefined;
 
   page.on('response', async (res) => {
@@ -61,8 +61,9 @@ export async function abrirCarteleria(page: Page, { compartido = false, estadoEs
   // Imágenes del «almacenamiento» y del logo, con CORS como el bucket real: sin él el canvas no exporta.
   await page.route('https://logo.test/**', (r) => r.fulfill({ body: fs.readFileSync(path.join(FIXTURES, 'logo.png')), contentType: 'image/png', headers: CORS }));
   await page.route(`${CDN}/**`, (r) => {
-    const ia = r.request().url().includes('/ia-');
-    return r.fulfill({ body: fs.readFileSync(path.join(FIXTURES, ia ? 'fondo-ia.png' : 'ref.jpg')), contentType: ia ? 'image/png' : 'image/jpeg', headers: CORS });
+    const url = r.request().url();
+    const fichero = url.includes('/ia-') ? 'fondo-ia.png' : url.includes('-logo-') ? 'logo.png' : 'ref.jpg';
+    return r.fulfill({ body: fs.readFileSync(path.join(FIXTURES, fichero)), contentType: fichero.endsWith('.png') ? 'image/png' : 'image/jpeg', headers: CORS });
   });
   await page.route('**/api/short-links', (route) =>
     route.request().method() === 'POST'
@@ -81,6 +82,22 @@ export async function abrirCarteleria(page: Page, { compartido = false, estadoEs
       const url = `${CDN}/ref/${servidor.adn.referencias.length + 1}.jpg?v=1`;
       servidor.adn = { ...servidor.adn, referencias: [...servidor.adn.referencias, url].slice(-3) };
       return route.fulfill({ json: { url, adn: servidor.adn } });
+    }
+    if (ruta.endsWith('/logo')) {
+      if (req.method() === 'POST') {
+        const url = `${CDN}/e2e-c1-logo-${servidor.logos.length + 1}.png?v=1`;
+        servidor.logos.push(url);
+        return route.fulfill({ json: { url, logos: [...servidor.logos] } });
+      }
+      const { url } = JSON.parse(cuerpo.toString());
+      servidor.logos = servidor.logos.filter((u) => u !== url);
+      return route.fulfill({ json: { logos: servidor.logos } });
+    }
+    if (ruta.endsWith('/cartel/idea')) return route.fulfill({ json: { ok: true } });
+    if (ruta.endsWith('/cartel/brief')) {
+      return route.fulfill({
+        json: { brief: { scene: 'a winged guitar over a desert road', mood: '1970s, low sun', palette: 'rust red and cream', avoid: 'people', composition: '' }, traducido: true, conBoceto: false },
+      });
     }
     if (ruta.endsWith('/cartel/fondo')) {
       return route.fulfill({ json: { url: `${CDN}/ia-1.png?v=1`, estilo: JSON.parse(cuerpo.toString()).estilo, referencias: servidor.adn.referencias.length } });

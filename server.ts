@@ -19,7 +19,7 @@ import { startSocialRadarScheduler } from "./server/services/socialRadarService.
 import { startAgentScheduler } from "./server/services/agentScheduler.js";
 import { startCalendarConflictScheduler } from "./server/services/calendarConflictService.js";
 import { iniciarWorkersDeReels } from "./server/services/workersReels.js";
-import { iniciarColaLetras } from "./server/services/colaLetras.js";
+import { iniciarColaLetras } from "./server/services/colaLetras.js"; import { iniciarSincronizacionDelCatalogo } from "./server/services/catalogoScheduler.js";
 import { initErrorTracking, captureError } from "./server/utils/errorTracking.js";
 import { responderError } from "./server/utils/errorHttp.js";
 import { getAppInfo } from "./server/utils/version.js";
@@ -631,7 +631,7 @@ async function startServer() {
     }
     // Cola de letras del audio en segundo plano (ver server/services/colaLetras.ts)
     try {
-      iniciarColaLetras();
+      iniciarColaLetras(); iniciarSincronizacionDelCatalogo(); // el 2.º pone al día el catálogo compartido de salas
     } catch (e) {
       console.error("Error starting Letras Queue:", e);
     }

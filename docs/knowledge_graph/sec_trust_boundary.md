@@ -55,6 +55,7 @@ Resolución forzosa del band_id desde la sesión autenticada. Bloquea inyeccione
 - [[server_routes_campaigns|server/routes/campaigns.ts]] *(from #route)*
 - [[server_routes_campanaConcierto|server/routes/campanaConcierto.ts]] *(from #route)*
 - [[server_routes_cartelria|server/routes/cartelria.ts]] *(from #route)*
+- [[server_routes_catalogo|server/routes/catalogo.ts]] *(from #route)*
 - [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
 - [[server_routes_concerts|server/routes/concerts.ts]] *(from #route)*
 - [[server_routes_deals|server/routes/deals.ts]] *(from #route)*

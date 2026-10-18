@@ -18,7 +18,7 @@ Traducciones del formulario público "Únete" (FansLanding.tsx).
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[src_i18n_fansTranslationsTipos|src/i18n/fansTranslationsTipos.ts]] *(Layer: #service, Domain: #social)*
 
 ---
 

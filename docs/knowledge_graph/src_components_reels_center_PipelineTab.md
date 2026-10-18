@@ -19,6 +19,7 @@ Pestaña del pipeline: tablero Kanban y escritor de copy con IA.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_reels_center_KanbanBoard|src/components/reels_center/KanbanBoard.tsx]] *(Layer: #frontend, Domain: #social)*
+- [[src_components_reels_center_ResumenSemanalCard|src/components/reels_center/ResumenSemanalCard.tsx]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_center_SoulWriterCard|src/components/reels_center/SoulWriterCard.tsx]] *(Layer: #frontend, Domain: #social)*
 
 ---

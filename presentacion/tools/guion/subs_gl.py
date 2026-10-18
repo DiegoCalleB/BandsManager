@@ -18,7 +18,7 @@ SUBS_GL = {
         "Herdeiros. Escribinvos hai tres meses e ninguén contestou. Quedo co trinta por cento, e o repertorio decídoo eu. E fóra baladas.",
     "No firméis nada, chavales. Los bolos los llevamos nosotros. El sábado os lo demuestro.":
         "Non asinedes nada, rapaces. Os bolos levámolos nós. O sábado demóstrovolo.",
-    "Soy Brais, batería. El que marca el ritmo. Y el que se bebe las birras.":
+    "Soy Brais, batería. El que marca el ritmo. Y el que nunca pierde el compás.":
         "Son Brais, batería. O que marca o ritmo. E o que se bebe as birras.",
     "Alan. Voz y guitarra. Che, la cara bonita de la banda.":
         "Alan. Voz e guitarra. Che, a cara bonita da banda.",
@@ -114,7 +114,7 @@ SUBS_GL = {
         "¡Acabáronse as sorpresas o día do bolo! ¡Todo asinado, todo por escrito! ¡Xa non cobramos en croquetas!",
     "Chicos, soy el programador de la Sala El Faro. Me ha llegado vuestro correo: ¡el catorce de noviembre es vuestro!":
         "Rapaces, son o programador da Sala El Faro. Chegou o voso correo: ¡o catorce de novembro é voso!",
-    "¡La sala del catorce! ¡Y encima el día catorce!":
+    "¡La sala del catorce, che! ¡Y encima el día catorce!":
         "¡A sala do catorce! ¡E ademais o día catorce!",
     "¿En treinta y cinco minutos? La última vez tardaron tres semanas. Y era para decir que no.":
         "¿En trinta e cinco minutos? A última vez tardaron tres semanas. E era para dicir que non.",
@@ -166,7 +166,7 @@ SUBS_GL = {
         "¡Dixéchello! ¡Google Calendar!",
     "Cada fecha tiene su ficha, con la meteo y el aviso de puente o festivo.":
         "Cada data ten a súa ficha, coa meteoroloxía e o aviso de ponte ou festivo.",
-    "¡Por fin sé cuándo ensayamos y cuándo tocamos!":
+    "¡Por fin sé cuándo ensayamos y cuándo tocamos, boludo!":
         "¡Por fin sei cando ensaiamos e cando tocamos!",
     "Oye… ¿y si me coinciden dos ensayos a la vez? Uno con cada banda.":
         "Oe… ¿e se me coinciden dous ensaios á vez? Un con cada banda.",
@@ -174,7 +174,7 @@ SUBS_GL = {
         "O calendario avísate. Se dous eventos se pisan, se non dá tempo a chegar dun sitio a outro, ou se vas xusto para montar.",
     "¡Ai, mi madriña! ¡Me acaba de salvar el miércoles! ¡Esto vale su peso en oro, neno!":
         "¡Ai, miña madriña! ¡Acábame de salvar o mércores! ¡Isto vale o seu peso en ouro, neno!",
-    "El miércoles. El de los metaleros, ¿no, traidor?":
+    "El miércoles, che. El de los metaleros, ¿no, traidor?":
         "O mércores. O dos metaleiros, ¿non, traidor?",
     "Y solo avisa cuando hay una persona en los dos sitios. Si no, no te molesta.":
         "E só avisa cando hai unha persoa nos dous sitios. Se non, non te molesta.",
@@ -202,7 +202,7 @@ SUBS_GL = {
         "E deixan o seu correo, co seu permiso, e levan un agasallo: un desconto ou unha descarga.",
     "¿Una lista de gente que nos quiere de verdad? ¡Dónde firmo, che! ¡Esto es oro puro!":
         "¿Unha lista de xente que nos quere de verdade? ¡Onde asino, che! ¡Isto é ouro puro!",
-    "¿Y esto qué es?":
+    "¿Y esto qué es, che?":
         "¿E isto que é?",
     "Un generador de reels para Instagram, TikTok y Yutub, hecho con inteligencia artificial.":
         "Un xerador de reels para Instagram, TikTok e YouTube, feito con intelixencia artificial.",
@@ -214,11 +214,11 @@ SUBS_GL = {
         "¿E logo subímolos a man?",
     "Qué va. Programas cada reel en cada red, con su día y su hora.":
         "Que va. Programas cada reel en cada rede, co seu día e a súa hora.",
-    "¡Esto es tener un equipo de marketing entero metido en el bolsillo!":
+    "¡Esto es tener un equipo de marketing entero metido en el bolsillo, boludo!":
         "¡Isto é ter un equipo de márketing enteiro no peto!",
     "Con la grabación entera del bolo de la Ribeira, la inteligencia artificial separa las canciones de lo que hablamos con el público.":
         "Coa gravación enteira do bolo da Ribeira, a intelixencia artificial separa as cancións do que falamos co público.",
-    "¡Un disco en vivo, sin mis chistes malos! ¡Qué genio!":
+    "¡Un disco en vivo, sin mis chistes malos! ¡Qué genio, che!":
         "¡Un disco en directo, sen as miñas bromas malas! ¡Que xenio!",
     "Y sin la balada que vació el bar.":
         "E sen a balada que baleirou o bar.",
@@ -246,7 +246,7 @@ SUBS_GL = {
         "Aquí está o que entra por cada bolo, os gastos, e o que lle toca a cada un.",
     "¡Las cuentas claras! ¡Y salen números positivos! ¡Por primera vez en la historia de esta banda!":
         "¡As contas claras! ¡E saen números positivos! ¡Por primeira vez na historia desta banda!",
-    "Y para las giras le meteré algo tipo Traicaunt, para que Brais no nos haga el lío de las birras.":
+    "Y para las giras le meteré algo tipo Traicaunt, para que Brais no nos haga el lío con las cuentas.":
         "E para as xiras métolle algo tipo Tricount, para que Brais non nos arme o lío das birras.",
     "¡Oye! ¡Que fue solo una vez!":
         "¡Oe! ¡Que foi só unha vez!",
@@ -276,13 +276,13 @@ SUBS_GL = {
         "Case sempre de noite, cando as nenas xa durmían. Pechaba o portátil, miraba para elas un momento… e volvía abrilo.",
     "Neno… no teníamos ni idea.":
         "Neno… non tiñamos nin idea.",
-    "Y nosotros, discutiendo por las birras.":
+    "Y nosotros, discutiendo por tonterías.":
         "E nós, discutindo polas birras.",
     "Gracias, Iago. De verdad.":
         "Grazas, Iago. De verdade.",
     "Luego miré el historial del código. La hora de cada cambio. Las dos… Las tres… Las cinco menos diez. Y el sábado a las once estaba en el local. El primero. Con los cafés.":
         "Despois mirei o historial do código. A hora de cada cambio. As dúas… As tres… As cinco menos dez. E o sábado ás once estaba no local. O primeiro. Cos cafés.",
-    "Iago, esto es una locura. Lo necesitan todos los grupos, los mánayers, las productoras. ¡Todos!":
+    "Iago, esto es una locura, che. Lo necesitan todos los grupos, los mánayers, las productoras. ¡Todos!":
         "Iago, isto é unha loucura. Necesítano todos os grupos, os managers, as produtoras. ¡Todos!",
     "¡Pero neno, te vas a forrar! Ya te veo en Miami, en descapotable.":
         "¡Pero neno, vaste forrar! Xa te vexo en Miami, en descapotable.",
@@ -296,7 +296,7 @@ SUBS_GL = {
         "Primeiro, que se decate todo o mundo. Por iso acabo de apuntarme ao máster de Márketing Dixital da Big School.",
     "¿Otro máster? Pero home, ¿tú cuándo duermes?":
         "¿Outro máster? Pero home, ¿ti cando durmes?",
-    "Dormir está en mi lista de pendientes, neno. Y sale más barato que darle el treinta por ciento a Peláez.":
+    "Dormir está en mi lista de pendientes, tío. Y sale más barato que darle el treinta por ciento a Peláez.":
         "Durmir está na miña lista de pendentes, neno. E sae máis barato que lle dar o trinta por cento a Peláez.",
     "Hay dos tipos de cliente. El primero, be tu ci: las bandas, los músicos, los deyeis y los solistas. O sea, nosotros.":
         "Hai dous tipos de cliente. O primeiro, B2C: as bandas, os músicos, os DJs e os solistas. Ou sexa, nós.",
@@ -336,7 +336,7 @@ SUBS_GL = {
         "Grazas, Peláez. Pero os bolos xa os levamos nós. E o repertorio, tamén.",
     "Y esta noche, che… abrimos con la balada.":
         "E esta noite, che… abrimos coa balada.",
-    "Escuchad ahí fuera. La app organiza, chavales. Pero esto lo hacéis vosotros.":
+    "Escuchad, los de ahí fuera. La aplicación organiza, chavales. Pero esto lo hacéis vosotros.":
         "Escoitade aí fóra. A app organiza, rapaces. Pero isto fadelo vós.",
     "Hace seis meses no sabíamos ni quién contestaba a las salas. Y miradnos ahora. ¡Un, dos, tres, cuatro!":
         "Hai seis meses non sabiamos nin quen contestaba ás salas. E mirádesnos agora. ¡Un, dous, tres, catro!",
@@ -344,7 +344,7 @@ SUBS_GL = {
         "Bos días, rockeiros. Isto é Radio Riff. Unha banda que case se separa por non saber nin quen contestaba o correo acaba de tocar no Resurrection Fest. ¿O segredo? O seu baixista, Iago, e a app que creou: BandManager punto io.",
     "Sigo pensando que el treinta por ciento era un precio justo. Por cierto… ¿esa app cómo se descarga?":
         "Sigo pensando que o trinta por cento era un prezo xusto. Por certo… ¿esa app como se descarga?",
-    "¿Alguien ha contestado a la sala del catorce?":
+    "¿Alguien ha contestado a la sala del catorce, che?":
         "¿Alguén contestou á sala do catorce?",
     "Cerrao y bien cerrao, chaval. Mirad el calendario.":
         "Pechado e ben pechado, rapaz. Mirade o calendario.",
@@ -356,13 +356,13 @@ SUBS_GL = {
         "O baixista son eu. Necesito volver tocar.",
     "Toqué en varios grupos, y los fui dejando uno a uno: sin organización, sin gestión y sin tiempo, no íbamos a ningún lado. Hice Band Mánayer para volver a subirme a un escenario, delante de miles de personas, y hacerlas disfrutar con nuestra música.":
         "Toquei en varios grupos, e fun deixándoos un a un: sen organización, sen xestión e sen tempo, non iamos a ningún lado. Fixen BandManager para volver subirme a un escenario, diante de miles de persoas, e facelas gozar coa nosa música.",
-    "Y ya estamos montando un grupo de metal. Nos falta batería… Con muchísima ilusión, y sabiendo que con Band Mánayer toda la gestión va a ir rodada.":
+    "Y ya estamos montando un grupo de métal. Nos falta batería… Con muchísima ilusión, y sabiendo que con Band Mánayer toda la gestión va a ir rodada.":
         "E xa estamos montando un grupo de metal. Fáltanos batería… Con moitísima ilusión, e sabendo que con BandManager toda a xestión vai ir rodada.",
     "Y quién sabe si el día de mañana a mis hijas les da por formar sus grupos… y esto les ayuda a que los comienzos sean mucho más fáciles. Un sueño hecho realidad.":
         "E quen sabe se o día de mañá ás miñas fillas lles dá por formar os seus grupos… e isto lles axuda a que os comezos sexan moito máis doados. Un soño feito realidade.",
     "Y ahora, Brais, un reto. No para el batería de esta historia: para ti, el de verdad.":
         "E agora, Brais, un reto. Non para o batería desta historia: para ti, o de verdade.",
-    "Te he preparado el sétlist del primer ensayo de Máster of Prompts. Metal, con letras de coña sobre programar.":
+    "Te he preparado el sétlist del primer ensayo de Máster of Prompts. Métal, con letras de coña sobre programar.":
         "Preparei o setlist do primeiro ensaio de Master of Prompts. Metal, con letras de coña sobre programar.",
     "Y te lo mando como lo mandamos todo: la IA lo redacta, yo lo repaso, y… enviado.":
         "E mándoocho como o mandamos todo: a IA redáctao, eu revísoo, e… enviado.",
@@ -382,7 +382,7 @@ SUBS_GL = {
         "O de dividir gastos está na miña lista de pendentes, Brais. Xusto debaixo de cobrarche as birras.",
     "¡Pues que las pague la inteligencia artificial!":
         "¡Pois que as pague a intelixencia artificial!",
-    "Propuesta: las paga Brais. Pero tú decides, Iago.":
+    "Propuesta: que pague Brais. Pero decides tú, Iago.":
         "Proposta: pagaas Brais. Pero ti decides, Iago.",
     "Idea loca: que las pague Peláez. Con su treinta por ciento.":
         "Idea tola: que as pague Peláez. Co seu trinta por cento.",
@@ -432,7 +432,7 @@ SUBS_GL = {
         "Agora si, rapaz: camisetas e pegatinas co noso logo e o QR dos fans. Listas para imprimir.",
     "¡Yo quiero la roja!":
         "¡Eu quero a vermella!",
-    "Y yo, una con mi cara. Para los fans. Y para que me reconozcan por la calle.":
+    "Y yo, una con mi cara, che. Para los fans. Y para que me reconozcan por la calle.":
         "E eu, unha coa miña cara. Para os fans. E para que me recoñezan pola rúa.",
     "Neno, ¿y el break de batería que grabé el otro día en el móvil?":
         "Neno, ¿e o break de batería que gravei o outro día no móbil?",
@@ -442,7 +442,7 @@ SUBS_GL = {
         "¡E ademais podemos deixarlle comentarios a cada idea! ¡Encántame, boludo!",
     "¡Se acabó el audio perdido en el guasap!":
         "¡Acabouse o audio perdido no WhatsApp!",
-    "¿Y esto? ¿También sabe qué tiempo va a hacer en el bolo?":
+    "¿Y esto? ¿También sabe qué tiempo va a hacer en el bolo, che?":
         "¿E isto? ¿Tamén sabe que tempo vai facer no bolo?",
     "Cada bolo tiene su ficha. El aviso si cae en puente, y la ciudad se vacía. El tiempo que va a hacer. La logística, el rider, los contactos, el merchan… Y cuánto os queda limpio. Todo, en un clic.":
         "Cada bolo ten a súa ficha. O aviso se cae en ponte, e a cidade se baleira. O tempo que vai facer. A loxística, o rider, os contactos, o merchan… E canto vos queda limpo. Todo, nun clic.",
@@ -470,7 +470,7 @@ SUBS_GL = {
         "E se Claudio e Guglio programan, ¿quen manda aquí? ¿Quen é o líder da banda?",
     "Manda un fichero: agents punto eme de. Es el contrato que leen antes de tocar nada. Y tiene tres reglas que no se negocian: ningún dato de una banda visible para otra, ningún correo automático sin aprobación humana, y cero errores nuevos de Taipscript.":
         "Manda un ficheiro: agents punto md. É o contrato que len antes de tocar nada. E ten tres regras que non se negocian: ningún dato dunha banda visible para outra, ningún correo automático sen aprobación humana, e cero erros novos de TypeScript.",
-    "¿Y si se las saltan? Porque nosotros nos las saltamos todas.":
+    "¿Y si se las saltan, che? Porque nosotros nos las saltamos todas.":
         "¿E se as saltan? Porque nós saltámolas todas.",
     "Se rompe el bild. Hay un test que lo vigila en cada commit, veintidós skills, y un hook que avisa en cuanto alguien toca algo sensible.":
         "Rompe o build. Hai un test que o vixía en cada commit, vinte e dúas skills, e un hook que avisa en canto alguén toca algo sensible.",
@@ -504,6 +504,10 @@ SUBS_GL = {
         "¿De todo o mundo? ¿Ata os da gaita?",
     "Sobre todo los de gaita, tío. Esos conocen a todo el mundo.":
         "Sobre todo os da gaita, tío. Eses coñecen a todo o mundo.",
+    "Y con esta peli en Netflix, seguro que se la descargan todos los grupos de K-Pop.":
+        "E con esta peli en Netflix, seguro que a descargan todos os grupos de K-Pop.",
+    "¡Los de K-Pop! Trece miembros y una coreografía… imagínate cuadrar el calendario de ensayos, che.":
+        "Os de K-Pop! Trece membros e unha coreografía… imaxina cadrar o calendario de ensaios, che.",
 }
 
 

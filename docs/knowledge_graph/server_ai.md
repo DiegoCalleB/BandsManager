@@ -20,6 +20,7 @@ Exporta: GEMINI_MODEL, TIMEOUT_IA_MS, TIMEOUT_IA_LARGO_MS, FALLBACK_MODELS, getA
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[db_ai_ledger|AI Token Ledger]] *(Layer: #db, Domain: #system)*
 - [[ext_gemini|Gemini (Google GenAI)]] *(Layer: #external, Domain: #system)*
+- [[server_utils_textoDeParteIA|server/utils/textoDeParteIA.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
@@ -50,6 +51,8 @@ Exporta: GEMINI_MODEL, TIMEOUT_IA_MS, TIMEOUT_IA_LARGO_MS, FALLBACK_MODELS, getA
 - [[server_routes_songs_structureUpload|server/routes/songs/structureUpload.ts]] *(from #route)*
 - [[server_services_agentIntelligence|server/services/agentIntelligence.ts]] *(from #agent)*
 - [[server_services_bandsintownVenueService|server/services/bandsintownVenueService.ts]] *(from #service)*
+- [[server_services_briefCartel|server/services/briefCartel.ts]] *(from #service)*
+- [[server_services_chatLecturas|server/services/chatLecturas.ts]] *(from #service)*
 - [[server_services_copyPerfecto|server/services/copyPerfecto.ts]] *(from #service)*
 - [[server_services_googlePlacesVenueService|server/services/googlePlacesVenueService.ts]] *(from #service)*
 - [[server_services_hookDoctor|server/services/hookDoctor.ts]] *(from #service)*
@@ -77,6 +80,7 @@ Exporta: GEMINI_MODEL, TIMEOUT_IA_MS, TIMEOUT_IA_LARGO_MS, FALLBACK_MODELS, getA
 ## 🧪 Tests que lo cubren
 - `server/__tests__/ai_fallback.test.ts`
 - `server/utils/__tests__/enrichCoversWithoutAudio.test.ts`
+- `server/utils/__tests__/textoDeParteIA.test.ts`
 
 ---
 

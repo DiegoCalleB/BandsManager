@@ -56,6 +56,13 @@ Un estilo se describe con **vocabulario de oficio** (tintas, papel, técnica), n
 - **Favoritos:** los fondos de IA que la banda acaba compartiendo. Se reutilizan gratis en otros bolos, fijan el estilo preferido y rellenan las referencias.
 - Pedir ejemplos es **opcional**: una banda sin material previo tiene que poder hacer su cartel igual.
 
+## 6b. La idea de la persona y los logos
+
+- **Idea (`src/utils/cartel/idea.ts`, `server/services/briefCartel.ts`):** cinco campos cortos opcionales (escena, ambiente, colores, qué evitar, «se parece a…») y un boceto. El servidor los traduce al inglés y los ordena con una llamada barata de texto (`construirBrief`); el resultado entra en el prompt como datos etiquetados (`<scene>`, `<palette>`…) **después** de las reglas, que nada de lo que escribe la persona puede cambiar. Si la IA de texto no responde, se usa lo escrito, saneado, y la imagen sale igual.
+- **Boceto:** guía de composición, no de color ni de texto. Va a Gemini como primera imagen y el prompt lo dice. Lo lee el servidor de la carpeta de la banda (`rutaIdea`); el cliente solo dice «úsalo».
+- **Vista previa:** `POST /api/cartel/brief` enseña el brief en inglés sin generar imagen: la persona ve qué se le pide a la IA antes de gastar una imagen.
+- **Logos:** nunca los dibuja la IA (los deforma). Los pone el motor (`src/utils/cartel/logos.ts`): silueta de UNA tinta —la del texto— con desgaste leve y determinista, en una fila encima de los datos, con peso óptico parecido entre ellos. A color solo si la persona lo pide, sobre una placa clara.
+
 ## 7. Evaluar un cambio (antes de dar un estilo por bueno)
 
 Genera 6 fondos con ese estilo y respóndete, sin ser amable:

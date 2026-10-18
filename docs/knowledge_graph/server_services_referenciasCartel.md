@@ -26,6 +26,7 @@ Imágenes de referencia de la banda para la IA: se leen de SU carpeta de nuestro
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_routes_cartelria|server/routes/cartelria.ts]] *(from #route)*
+- [[server_services_briefCartel|server/services/briefCartel.ts]] *(from #service)*
 - [[server_services_imagenCartel|server/services/imagenCartel.ts]] *(from #service)*
 
 ---

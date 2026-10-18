@@ -22,8 +22,8 @@ import type { Lead } from '../../src/types.js';
 // bajo "follow_up", porque decide una cosa distinta (si el estado pasa a "negociando"), más
 // amplia que "¿es esto una pregunta de precio?".
 export const PRICE_KEYWORDS = [
-  "precio", "cache", "caché", "presupuesto", "condiciones", "tarifa", "cuánto",
-  "cuanto cobr", "cifra", "propuesta económica", "honorarios", "presupuestario"
+  "precio", "cache", "caché", "presupuesto", "condiciones económicas", "condiciones economicas", "tarifa", "cuánto",
+  "cuanto cobr", "cifra", "propuesta económica", "honorarios", "presupuestario", "euros", "ofrecer"
 ];
 
 interface ResponseKeywordSet {
@@ -52,7 +52,8 @@ const KEYWORDS_BY_LANGUAGE: Record<string, ResponseKeywordSet> = {
       "nos encanta", "os parece bien"],
     rejection: ["no nos interesa", "no encaja", "no podemos", "no disponible", "rechaz",
       "no es posible", "desafortunadamente", "lamentablemente",
-      "no tenemos disponibilidad", "no procede", "no aplica"],
+      "no tenemos disponibilidad", "no procede", "no aplica", "no estamos interesad",
+      "no contratamos", "programación completa", "programacion completa", "agenda completa"],
     followUp: ["cuándo", "cuando", "fecha", "disponibilidad", "directo", "show",
       "más información", "preguntas", "detalles", "cómo"],
     negotiationExtra: ["fecha", "disponibilidad", "cuándo", "cuando podéis", "contrato", "rider"]
@@ -77,7 +78,7 @@ const KEYWORDS_BY_LANGUAGE: Record<string, ResponseKeywordSet> = {
   fr: {
     price: ["prix", "cachet", "budget", "tarif", "combien", "conditions financières", "devis", "honoraires"],
     confirmation: ["confirmons", "parfait", "génial", "d'accord", "avec plaisir", "oui", "excellent", "ça nous va"],
-    rejection: ["ne nous intéresse pas", "malheureusement", "ce n'est pas possible", "pas disponible",
+    rejection: ["ne nous intéresse pas", "pas intéressé", "malheureusement", "ce n'est pas possible", "pas disponible",
       "nous ne pouvons pas", "ne correspond pas"],
     followUp: ["quand", "disponibilité", "date", "plus d'informations", "questions", "détails", "comment"],
     negotiationExtra: ["date", "disponibilité", "quand pouvez-vous", "contrat", "rider"]

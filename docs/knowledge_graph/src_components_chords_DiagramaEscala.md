@@ -19,6 +19,7 @@ Exporta: DiagramaEscala.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_chords_Pentagrama|src/components/chords/Pentagrama.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_chords_modoEnsayo|src/components/chords/modoEnsayo.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_utils_guiasArmonia|src/utils/guiasArmonia.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_pentagrama|src/utils/pentagrama.ts]] *(Layer: #service, Domain: #system)*
 

@@ -67,6 +67,33 @@ export async function dbContarFans(bandId: string): Promise<number> {
   return count ?? 0;
 }
 
+/**
+ * Nombre de pila del último fan, solo si se hizo fan hace menos de `ventanaSeg` segundos. Lo usa la película del TFM para saludar
+ * a quien acaba de escanear el QR. Nunca devuelve el apellido, el correo ni nada anterior a la ventana.
+ */
+export async function dbUltimoFanReciente(bandId: string, ventanaSeg: number): Promise<{ nombre: string; hace: number } | null> {
+  const sb = getSupabase();
+  const { data, error } = await sb
+    .from("fans")
+    .select("nombre, created_at")
+    .eq("band_id", cleanBandId(bandId))
+    .order("created_at", { ascending: false })
+    .limit(1);
+  if (error) throw new Error(`Supabase Error (fans): ${error.message}`);
+  const fila = data?.[0];
+  if (!fila?.created_at) return null;
+  const hace = (Date.now() - new Date(fila.created_at).getTime()) / 1000;
+  if (!(hace >= -5 && hace <= ventanaSeg)) return null;
+  const nombre = nombreDePilaPublico(fila.nombre);
+  return nombre ? { nombre, hace: Math.max(0, Math.round(hace)) } : null;
+}
+
+/** Primera palabra del nombre, solo letras (con tildes), guion y apóstrofo, hasta 24 caracteres. Vacío si no queda nada. */
+export function nombreDePilaPublico(nombre: unknown): string {
+  const primera = String(nombre ?? "").trim().split(/\s+/)[0] ?? "";
+  return primera.replace(/[^\p{L}'-]/gu, "").slice(0, 24);
+}
+
 export async function dbGetFans(bandId: string) {
   const sb = getSupabase();
   const cleanId = cleanBandId(bandId);

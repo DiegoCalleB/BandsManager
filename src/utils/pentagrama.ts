@@ -25,6 +25,13 @@ export function claveParaMidi(midi: number[]): Clave {
   return midi.length && Math.max(...midi) < 60 ? 'bass' : 'treble';
 }
 
+/** Clave por instrumento: el bajo lee en Fa; piano y guitarra, en Sol. */
+export const claveDeVista = (vista: string): Clave => (vista === 'bajo' ? 'bass' : 'treble');
+
+/** Altura escrita: bajo y guitarra suenan una octava por debajo de lo que se escribe. */
+export const midiEscrito = (midi: number[], vista: string): number[] =>
+  vista === 'bajo' || vista === 'guitarra' ? midi.map((m) => m + 12) : midi;
+
 /** La escala ascendente desde la tónica (octava `base`) hasta la octava siguiente, con las notas dadas por clase. */
 export function midiDeEscala(raiz: number, notas: number[], base = 60): number[] {
   const r = ((raiz % 12) + 12) % 12;

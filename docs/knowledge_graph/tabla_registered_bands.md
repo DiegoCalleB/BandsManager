@@ -46,6 +46,7 @@ _Sin dependencias salientes directas._
 - [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
 - [[server_routes_billing|server/routes/billing.ts]] *(from #route)*
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(from #route)*
+- [[server_services_avisosPublicacion|server/services/avisosPublicacion.ts]] *(from #service)*
 - [[server_services_emailAgentClient|server/services/emailAgentClient.ts]] *(from #agent)*
 - [[server_services_gmailConexion|server/services/gmailConexion.ts]] *(from #service)*
 - [[tabla_agent_execution_logs|tabla agent_execution_logs]] *(from #schema)*

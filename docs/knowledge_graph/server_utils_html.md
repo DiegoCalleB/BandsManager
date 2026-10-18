@@ -26,6 +26,7 @@ _Sin dependencias salientes directas._
 - [[server_services_calendarConflictService|server/services/calendarConflictService.ts]] *(from #service)*
 - [[server_services_transactionalEmail|server/services/transactionalEmail.ts]] *(from #service)*
 - [[server_utils_avisoAltas|server/utils/avisoAltas.ts]] *(from #service)*
+- [[server_utils_avisoPublicacionFallida|server/utils/avisoPublicacionFallida.ts]] *(from #service)*
 - [[server_utils_avisosCuentaEmail|server/utils/avisosCuentaEmail.ts]] *(from #service)*
 - [[server_utils_emailsCicloVida|server/utils/emailsCicloVida.ts]] *(from #service)*
 - [[server_utils_interesados|server/utils/interesados.ts]] *(from #service)*
