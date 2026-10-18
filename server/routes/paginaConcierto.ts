@@ -24,6 +24,7 @@ import {
   type EntradaSitemap,
 } from '../utils/paginaConcierto.js';
 import { alternativasLanding } from '../utils/cabeceraIdioma.js';
+import { RUTA_PLANTILLA_RIDER, renderizarPaginaRider } from '../utils/paginaRider.js';
 import { urlInsignia } from '../utils/referidos.js';
 import { obtenerPerfilPublicoBandaCacheado } from '../services/perfilPublicoBanda.js';
 import { captureError } from '../utils/errorTracking.js';
@@ -42,6 +43,11 @@ function responderHtml(res: express.Response, status: number, html: string, cach
   res.setHeader('Cache-Control', cache);
   res.send(html);
 }
+
+// Página de SEO con contenido fijo (sin datos de ninguna banda): ver server/utils/paginaRider.ts.
+router.get('/plantilla-rider-tecnico', publicoRateLimiter, (_req, res) => {
+  responderHtml(res, 200, renderizarPaginaRider(baseUrlPublica()), 'public, max-age=3600, s-maxage=86400');
+});
 
 router.get('/e/:slug', publicoRateLimiter, async (req, res) => {
   const base = baseUrlPublica();
@@ -131,6 +137,7 @@ async function construirSitemap(base: string): Promise<string> {
   const entradas: EntradaSitemap[] = [
     { loc: `${base}/`, alternativas },
     { loc: `${base}/en`, alternativas },
+    { loc: `${base}${RUTA_PLANTILLA_RIDER}` },
   ];
   for (const c of filas as Array<FilaConcierto & { id: string; sala: string; fecha: string }>) {
     const nombre = nombres.get(String(c.band_id));
