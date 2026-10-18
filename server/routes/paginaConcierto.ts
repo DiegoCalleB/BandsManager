@@ -25,16 +25,20 @@ import {
 } from '../utils/paginaConcierto.js';
 import { alternativasLanding } from '../utils/cabeceraIdioma.js';
 import { RUTA_PLANTILLA_RIDER, renderizarPaginaRider } from '../utils/paginaRider.js';
+import { GUIAS } from '../utils/seo/indice.js';
+import { RUTA_GUIAS } from '../utils/seo/render.js';
 import { urlInsignia } from '../utils/referidos.js';
 import { obtenerPerfilPublicoBandaCacheado } from '../services/perfilPublicoBanda.js';
 import { captureError } from '../utils/errorTracking.js';
 
 import emailsCicloVidaRouter from './emailsCicloVida.js';
 import fansContadorRouter from './fans_contador.js';
+import paginasSeoRouter from './paginasSeo.js';
 export { startEmailsCicloVidaScheduler } from '../services/emailsCicloVida.js';
 
 const router = express.Router();
 router.use(emailsCicloVidaRouter); // baja de los emails de onboarding (/api/emails/baja)
+router.use(paginasSeoRouter); // guías de SEO (/guias)
 router.use(fansContadorRouter); // número de fans para la película del TFM (/api/public/fans/contador)
 
 function responderHtml(res: express.Response, status: number, html: string, cache: string) {
@@ -138,6 +142,8 @@ async function construirSitemap(base: string): Promise<string> {
     { loc: `${base}/`, alternativas },
     { loc: `${base}/en`, alternativas },
     { loc: `${base}${RUTA_PLANTILLA_RIDER}` },
+    { loc: `${base}${RUTA_GUIAS}` },
+    ...GUIAS.map((g) => ({ loc: `${base}${RUTA_GUIAS}/${g.slug}` })),
   ];
   for (const c of filas as Array<FilaConcierto & { id: string; sala: string; fecha: string }>) {
     const nombre = nombres.get(String(c.band_id));

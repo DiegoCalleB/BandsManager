@@ -23,7 +23,7 @@ const FAQ: Array<{ q: string; a: string }> = [
   { q: '¿Cuántas páginas debe tener?', a: 'Una o dos. Si la sala tiene que buscar el dato entre cinco páginas, no lo va a leer. Pon primero lo imprescindible y deja el detalle para quien lo pida.' },
 ];
 
-const ESTILOS = `
+export const ESTILOS_PAGINA_PUBLICA = `
 :root{--bg:#F6F7F9;--surface:#FFFFFF;--sunken:#E8EBEF;--ink:#2A2E35;--ink-2:#5A626E;--acc:#2158DC;--on-acc:#FFFFFF;--acc-ink:#1D4ED8;color-scheme:light}
 @media (prefers-color-scheme:dark){:root{--bg:#101216;--surface:#191C21;--sunken:#0B0D10;--ink:#E3E7EC;--ink-2:#A6AEB9;--acc:#60A5FA;--on-acc:#0A1F3D;--acc-ink:#60A5FA;color-scheme:dark}}
 *{box-sizing:border-box}
@@ -107,7 +107,7 @@ export function renderizarPaginaRider(base: string): string {
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#F6F7F9">
 <script type="application/ld+json">${jsonLdSeguro(jsonLd)}</script>
-<style>${ESTILOS}</style>
+<style>${ESTILOS_PAGINA_PUBLICA}</style>
 </head>
 <body>
 <main>
