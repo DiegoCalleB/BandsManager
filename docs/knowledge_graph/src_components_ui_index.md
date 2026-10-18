@@ -139,6 +139,7 @@ BandManager UI Component Library
 - [[src_components_calendar_CalendarCreateEventModal|src/components/calendar/CalendarCreateEventModal.tsx]] *(from #frontend)*
 - [[src_components_calendar_CalendarEditConcertModal|src/components/calendar/CalendarEditConcertModal.tsx]] *(from #frontend)*
 - [[src_components_calendar_CalendarEditRehearsalModal|src/components/calendar/CalendarEditRehearsalModal.tsx]] *(from #frontend)*
+- [[src_components_calendar_CalendarEventConflicts|src/components/calendar/CalendarEventConflicts.tsx]] *(from #frontend)*
 - [[src_components_calendar_CalendarReminderModal|src/components/calendar/CalendarReminderModal.tsx]] *(from #frontend)*
 - [[src_components_calendar_CalendarSyncModal|src/components/calendar/CalendarSyncModal.tsx]] *(from #frontend)*
 - [[src_components_calendar_CalendarViewsContainer|src/components/calendar/CalendarViewsContainer.tsx]] *(from #frontend)*

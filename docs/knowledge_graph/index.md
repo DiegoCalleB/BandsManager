@@ -53,6 +53,14 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 - [[agent_lector|Lector Agent (Gmail OAuth2/IMAP)]]
 - [[service_pitch_engine|Motor Multi-Modelo (Gemini / DeepSeek / OpenAI)]]
 
+### 📅 Calendario & Choques
+- [[ui_calendar_conflicts|Avisos en el calendario]]
+- [[util_calendar_conflicts|Detector de choques]]
+- [[util_viaje_estimado|Estimador de viaje]]
+- [[service_calendar_conflicts|Avisos por email]]
+- [[db_calendar_conflicts|Persistencia de avisos]]
+- [[route_calendar_conflicts|GET /api/calendar/conflicts]]
+
 ### 🔒 2. Seguridad & Trust Boundary
 - [[sec_trust_boundary|Límite de Confianza (getTargetBandId)]]
 - [[sec_ssrf_guard|Protección SSRF (esUrlExternaSegura)]]
@@ -73,12 +81,12 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 
 ## 🤖 Mapa automático (generado desde los imports reales)
 
-1721 nodos: 53 agent · 52 db · 12 external · 14 feature · 958 frontend · 43 hook · 93 route · 67 schema · 12 security · 417 service.
+1754 nodos: 53 agent · 53 db · 12 external · 14 feature · 959 frontend · 43 hook · 94 route · 67 schema · 12 security · 447 service.
 No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el test `grafoConocimiento` falla si queda desfasado.
 
 ### 🔥 Los 20 ficheros más importados
 - [[src_types|src/types.ts]] — 576 ficheros dependen de él
-- [[src_components_ui_index|src/components/ui/index.ts]] — 363 ficheros dependen de él
+- [[src_components_ui_index|src/components/ui/index.ts]] — 364 ficheros dependen de él
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] — 180 ficheros dependen de él
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] — 173 ficheros dependen de él
 - [[src_utils_api|src/utils/api.ts]] — 95 ficheros dependen de él
@@ -86,14 +94,14 @@ No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el t
 - [[tabla_registered_bands|tabla registered_bands]] — 72 ficheros dependen de él
 - [[db_state_sync|In-Memory State & Supabase Sync]] — 71 ficheros dependen de él
 - [[server_db_core|server/db/core.ts]] — 66 ficheros dependen de él
-- [[sec_trust_boundary|Trust Boundary & Band Scoping]] — 59 ficheros dependen de él
-- [[server_db|server/db.ts]] — 52 ficheros dependen de él
+- [[sec_trust_boundary|Trust Boundary & Band Scoping]] — 61 ficheros dependen de él
+- [[server_db|server/db.ts]] — 53 ficheros dependen de él
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] — 49 ficheros dependen de él
-- [[server_ai|server/ai.ts]] — 47 ficheros dependen de él
+- [[server_ai|server/ai.ts]] — 48 ficheros dependen de él
 - [[src_services_api|src/services/api.ts]] — 45 ficheros dependen de él
 - [[server_utils_errorHttp|server/utils/errorHttp.ts]] — 39 ficheros dependen de él
 - [[server_db_bands|server/db/bands.ts]] — 37 ficheros dependen de él
-- [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] — 35 ficheros dependen de él
+- [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] — 36 ficheros dependen de él
 - [[ext_ffmpeg|FFmpeg]] — 34 ficheros dependen de él
 - [[server_routes_bands|server/routes/bands.ts]] — 34 ficheros dependen de él
 - [[src_utils_errorMessage|src/utils/errorMessage.ts]] — 33 ficheros dependen de él

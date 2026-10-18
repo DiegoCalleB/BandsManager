@@ -36,7 +36,9 @@ Scheduler, lector (Gmail/IMAP) y enviador con humano en el bucle.
 - [[route_leads_reply|Leads Reply Route]] *(Layer: #route, Domain: #booking)*
 - [[server_db_autonomy|server/db/autonomy.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_consultaCatalogoSupabase|server/db/consultaCatalogoSupabase.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_emailAccounts|server/db/emailAccounts.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_enriquecimientoLead|server/db/enriquecimientoLead.ts]] *(Layer: #db, Domain: #booking)*
 - [[server_db_epk|server/db/epk.ts]] *(Layer: #db, Domain: #epk)*
 - [[server_db_pitchLearning|server/db/pitchLearning.ts]] *(Layer: #db, Domain: #booking)*
 - [[server_db_sync|server/db/sync.ts]] *(Layer: #db, Domain: #system)*

@@ -3,7 +3,7 @@
   "info": {
     "title": "BandManager.io API",
     "version": "3.0.0",
-    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (386) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
+    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (392) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
     "license": {
       "name": "AGPL-3.0-only",
       "identifier": "AGPL-3.0-only"
@@ -1128,7 +1128,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/users/rutasSesion.ts:321",
+        "x-source": "server/routes/users/rutasSesion.ts:301",
         "x-autenticacion": "handler-opcional",
         "x-comprobaciones-handler": [
           "lee el token de sesión"
@@ -1166,7 +1166,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users/rutasSesion.ts:14",
+        "x-source": "server/routes/users/rutasSesion.ts:15",
         "x-autenticacion": "handler",
         "x-comprobaciones-handler": [
           "lee el token de sesión"
@@ -1295,7 +1295,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users/rutasSesion.ts:136",
+        "x-source": "server/routes/users/rutasSesion.ts:137",
         "x-autenticacion": "handler",
         "x-comprobaciones-handler": [
           "lee el token de sesión"
@@ -1891,7 +1891,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bandMusic.ts:177",
+        "x-source": "server/routes/bandMusic.ts:180",
         "x-autenticacion": "middleware"
       }
     },
@@ -1926,7 +1926,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bandMusic.ts:152",
+        "x-source": "server/routes/bandMusic.ts:154",
         "x-autenticacion": "middleware"
       }
     },
@@ -1961,7 +1961,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bandMusic.ts:56",
+        "x-source": "server/routes/bandMusic.ts:58",
         "x-autenticacion": "middleware"
       }
     },
@@ -2176,7 +2176,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bandMusic.ts:116",
+        "x-source": "server/routes/bandMusic.ts:118",
         "x-autenticacion": "middleware"
       }
     },
@@ -2507,7 +2507,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bandMusic.ts:36",
+        "x-source": "server/routes/bandMusic.ts:38",
         "x-autenticacion": "middleware"
       }
     },
@@ -4703,7 +4703,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bandMusic.ts:205",
+        "x-source": "server/routes/bandMusic.ts:208",
         "x-autenticacion": "middleware"
       }
     },
@@ -14657,7 +14657,137 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginaConcierto.ts:52",
+        "x-source": "server/routes/paginaConcierto.ts:64",
+        "x-autenticacion": "ninguna",
+        "x-rate-limiters": [
+          "publicoRateLimiter"
+        ]
+      }
+    },
+    "/en/guides": {
+      "get": {
+        "tags": [
+          "paginaConcierto"
+        ],
+        "operationId": "getEnGuides",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/paginasSeo.ts:33",
+        "x-autenticacion": "ninguna",
+        "x-rate-limiters": [
+          "publicoRateLimiter"
+        ]
+      }
+    },
+    "/en/guides/{slug}": {
+      "get": {
+        "tags": [
+          "paginaConcierto"
+        ],
+        "operationId": "getEnGuidesSlug",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/paginasSeo.ts:34",
+        "x-autenticacion": "ninguna",
+        "x-rate-limiters": [
+          "publicoRateLimiter"
+        ]
+      }
+    },
+    "/en/technical-rider-template": {
+      "get": {
+        "tags": [
+          "paginaConcierto"
+        ],
+        "operationId": "getEnTechnicalRiderTemplate",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/paginaConcierto.ts:60",
+        "x-autenticacion": "ninguna",
+        "x-rate-limiters": [
+          "publicoRateLimiter"
+        ]
+      }
+    },
+    "/guias": {
+      "get": {
+        "tags": [
+          "paginaConcierto"
+        ],
+        "operationId": "getGuias",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/paginasSeo.ts:31",
+        "x-autenticacion": "ninguna",
+        "x-rate-limiters": [
+          "publicoRateLimiter"
+        ]
+      }
+    },
+    "/guias/{slug}": {
+      "get": {
+        "tags": [
+          "paginaConcierto"
+        ],
+        "operationId": "getGuiasSlug",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/paginasSeo.ts:32",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -14679,6 +14809,29 @@
         },
         "x-source": "server.ts:168",
         "x-autenticacion": "ninguna"
+      }
+    },
+    "/plantilla-rider-tecnico": {
+      "get": {
+        "tags": [
+          "paginaConcierto"
+        ],
+        "operationId": "getPlantillaRiderTecnico",
+        "description": "Comentario en el código: Página de SEO con contenido fijo (sin datos de ninguna banda): ver server/utils/paginaRider.ts.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/paginaConcierto.ts:57",
+        "x-autenticacion": "ninguna",
+        "x-rate-limiters": [
+          "publicoRateLimiter"
+        ]
       }
     },
     "/privacy": {
@@ -14742,7 +14895,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/paginaConcierto.ts:167",
+        "x-source": "server/routes/paginaConcierto.ts:180",
         "x-autenticacion": "ninguna"
       }
     },
@@ -14881,7 +15034,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginaConcierto.ts:149",
+        "x-source": "server/routes/paginaConcierto.ts:162",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"

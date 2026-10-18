@@ -29,6 +29,7 @@ Catálogo compartido de salas (`salas_catalogo`): adaptador de Supabase del puer
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
 - [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
+- [[fn_scout_salas|Búsqueda de salas y festivales]] *(from #feature)*
 - [[server_db_consultaCatalogoSupabase|server/db/consultaCatalogoSupabase.ts]] *(from #db)*
 - [[server_routes_catalogo|server/routes/catalogo.ts]] *(from #route)*
 - [[server_services_catalogoScheduler|server/services/catalogoScheduler.ts]] *(from #service)*

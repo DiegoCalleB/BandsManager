@@ -90,6 +90,7 @@ Esquema relacional de tablas, índices pgvector, funciones y políticas RLS.
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[db_agent_schedule|Estado del Scheduler de agentes]] *(from #db)*
 - [[db_ai_ledger|AI Token Ledger]] *(from #db)*
+- [[db_calendar_conflicts|Persistencia de avisos de choque]] *(from #db)*
 - [[db_lead_messages|Lead Messages & Thread DB]] *(from #db)*
 - [[db_leads|Leads DB Handlers]] *(from #db)*
 - [[db_payments|Pagos y suscripciones (Stripe)]] *(from #db)*

@@ -3,7 +3,7 @@
 
 import { escrituraTolerante } from './tolerantWrite.js';
 import { getSupabase, cleanBandId } from './core.js';
-import { ensureRegisteredBandExists } from './bands.js';
+import { ensureRegisteredBandExists } from './bands.js'; import { columnasDeEnriquecimiento } from './enriquecimientoLead.js';
 import type { InteractionLog, Lead } from '../../src/types.js';
 
 /**
@@ -615,10 +615,8 @@ export async function dbUpsertLead(lead: EntradaLead, bandId: string, opciones: 
       null,
     estrategia_playbook:
       lead.estrategia_playbook || existingRecord?.estrategia_playbook || null,
-    ultimo_mensaje_recibido:
-      lead.ultimo_mensaje_recibido ||
-      existingRecord?.ultimo_mensaje_recibido ||
-      '',
+    ultimo_mensaje_recibido: lead.ultimo_mensaje_recibido || existingRecord?.ultimo_mensaje_recibido || '',
+    ...columnasDeEnriquecimiento(lead, existingRecord),
   };
 
   // Primer intento tolerante: si falta una columna se guarda sin ella y se avisa (tolerantWrite.ts).

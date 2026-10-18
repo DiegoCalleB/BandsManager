@@ -14,6 +14,8 @@ import { capturarMetricasBanda, guardarMetricasBanda } from "../services/metrica
 import { getSupabase } from "../db/core.js";
 import { cargarEnlacesDeContactos, guardarEnlace } from "../db/enlacesBandas.js";
 import { EnlacesPorPlataforma } from "../utils/enlacesBandas.js";
+import { enlacesParaMetricas } from "../utils/redesBanda.js";
+import { CredencialesInstagram, credencialesInstagram } from "../services/instagramDescubrimiento.js";
 
 const router = express.Router();
 
@@ -156,8 +158,9 @@ router.post("/bands/metricas/actualizar", requireAuth, async (req, res) => {
     const periodo = periodoMensual();
     let filas = 0;
     const motivos: Record<string, number> = {};
+    const instagram = await credencialesInstagram(bandId);
     for (const b of bandas) {
-      const { filas: capturadas, motivos: fallos } = await capturarMetricasBanda(String(b.nombre_banda), spotifyDe(b));
+      const { filas: capturadas, motivos: fallos } = await capturarMetricasBanda(String(b.nombre_banda), enlacesParaMetricas(b.enlaces), instagram);
       filas += await guardarMetricasBanda({ id: b.id, band_id: bandId }, periodo, capturadas);
       for (const f of fallos) {
         const clave = `${f.fuente}: ${f.motivo}`;
@@ -184,12 +187,12 @@ router.get("/bands/metricas", requireAuth, async (req, res) => {
       .order("periodo", { ascending: false });
     if (error) throw new Error(error.message);
 
-    const porBanda: Record<string, { periodo: string; spotify?: unknown; youtube?: unknown; deezer?: unknown }> = {};
+    const porBanda: Record<string, { periodo: string; spotify?: unknown; youtube?: unknown; deezer?: unknown; instagram?: unknown }> = {};
     for (const fila of data || []) {
       const actual = porBanda[fila.band_contact_id] || (porBanda[fila.band_contact_id] = { periodo: fila.periodo });
       // Solo el periodo más reciente de cada banda (las filas vienen ordenadas por periodo desc).
       if (actual.periodo !== fila.periodo) continue;
-      actual[fila.fuente as "spotify" | "youtube" | "deezer"] = fila;
+      actual[fila.fuente as "spotify" | "youtube" | "deezer" | "instagram"] = fila;
     }
     res.json({ success: true, metricas: porBanda });
   } catch (err) {
@@ -209,10 +212,16 @@ router.post("/cron/metricas-mensual", requireCronOrAuth, async (_req, res) => {
     const enlacesPorContacto = await cargarEnlacesDeContactos((data || []).map((b) => b.id));
     const periodo = periodoMensual();
     let filas = 0;
+    // Una consulta de credenciales por banda activa, no por contacto.
+    const instagramPorBanda = new Map<string, Promise<CredencialesInstagram>>();
     for (const b of (data || []) as (BandaCuenta & { band_id: string })[]) {
       if (!b.nombre_banda) continue;
-      const spotify = enlacesPorContacto.get(b.id)?.spotify?.url || "";
-      const { filas: capturadas } = await capturarMetricasBanda(String(b.nombre_banda), spotify);
+      if (!instagramPorBanda.has(b.band_id)) instagramPorBanda.set(b.band_id, credencialesInstagram(b.band_id));
+      const { filas: capturadas } = await capturarMetricasBanda(
+        String(b.nombre_banda),
+        enlacesParaMetricas(enlacesPorContacto.get(b.id)),
+        await (instagramPorBanda.get(b.band_id) as Promise<CredencialesInstagram>),
+      );
       filas += await guardarMetricasBanda({ id: b.id, band_id: b.band_id }, periodo, capturadas);
       await sleep(PAUSA_METRICAS_MS);
     }

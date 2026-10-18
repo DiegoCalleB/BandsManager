@@ -5,6 +5,7 @@
  * cambia poco, así que se lee entero y se filtra en memoria con una caché corta; si crece, el filtrado se
  * mueve a SQL sin cambiar quien lo llama.
  */
+import { claveSala } from '../utils/salaCatalogo.js';
 import { consultarSalas, leadDesdeSala, parsearFiltros, salasEnAgenda, type ResultadoCatalogo } from '../utils/consultaCatalogo.js';
 import { sugerirSalas, type PerfilBanda, type Sugerencia } from '../utils/sugerenciasCatalogo.js';
 import type { PuertoCatalogo, SalaGuardada } from './catalogoSalas.js';
@@ -73,6 +74,16 @@ export function crearConsultaCatalogo(puerto: PuertoConsulta, ahora: () => numbe
     },
 
     anadir,
+
+    /** La sala del catálogo que corresponde a un lead (por `place_id` o por nombre y ciudad), o null si no se conoce. */
+    async buscar(p: { placeId?: string | null; nombre?: unknown; ciudad?: unknown }): Promise<SalaGuardada | null> {
+      const place = typeof p.placeId === 'string' ? p.placeId.trim() : '';
+      const nc = claveSala({ nombre: p.nombre, ciudad: p.ciudad });
+      if (!place && !nc) return null;
+      return (
+        (await salas()).find((s) => (place && s.place_id === place) || (nc && (s.clave === nc || claveSala({ nombre: s.nombre, ciudad: s.ciudad }) === nc))) ?? null
+      );
+    },
 
     /**
      * Añade varias seguidas. `plazas` es cuántas más admite el plan de la banda: al agotarse se detiene y lo dice, en

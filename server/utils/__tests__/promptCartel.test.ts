@@ -11,8 +11,9 @@ describe('promptCartel', () => {
   it('prohíbe texto en la imagen y reserva espacio para componerlo', () => {
     const p = construirPromptFondo({ estilo: 'gigposter' });
     expect(p).toContain('no text');
-    expect(p).toMatch(/top 25%.*bottom 30%/);
-    expect(p).toContain('central window');
+    expect(p).toContain('landscape 4:3');
+    expect(p).toMatch(/central 65%/);
+    expect(p).toMatch(/complete and not cut off/);
   });
 
   it('cada estilo produce un prompt distinto', () => {
@@ -34,6 +35,7 @@ describe('promptCartel', () => {
   });
 
   it('el coste por imagen es positivo y acotado', () => {
+    expect(costeImagenEur(true)).toBeGreaterThan(costeImagenEur());
     const c = costeImagenEur();
     expect(c).toBeGreaterThan(0.01);
     expect(c).toBeLessThan(0.1);
@@ -70,6 +72,15 @@ describe('promptCartel', () => {
       expect(p, e).toMatch(/paper|ink|print|film|toner|offset|xerox/i);
       expect(p, e).not.toMatch(/vibrant|epic|stunning|breathtaking|ultra.?detailed|hyper.?realistic|8k|masterpiece/i);
     }
+  });
+
+  it('pide una ilustración apaisada y no un cartel entero, y veta el emblema y los iconos de relleno', () => {
+    const p = construirPromptFondo({ estilo: 'gigposter' });
+    expect(p).toContain('ONE framed illustration');
+    expect(p).not.toMatch(/9:16/);
+    expect(p).toMatch(/emblem, badge, crest or circular-frame/);
+    expect(p).toMatch(/radial rays/);
+    expect(p).toMatch(/microphones, beer glasses, raised fists/);
   });
 
   it('las reglas siguen mandando aunque las indicaciones libres intenten cambiarlas', () => {

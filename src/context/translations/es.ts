@@ -128,6 +128,7 @@ export const es: Record<string, string> = {
   'landing.nav.faq': 'Preguntas',
   'landing.nav.enter': 'Entrar',
   'landing.footer.copy': '© {year} BandManager · De músico a músico.',
+  'landing.footer.guides': 'Guías para bandas',
   'landing.author.label': 'De músico a músico',
   'landing.author.h2': 'Construido desde el local de ensayo.',
   'landing.author.p1': 'Hola, soy Diego. He tocado el teclado y el bajo en varios grupos y en una big band de jazz.',

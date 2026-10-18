@@ -19,7 +19,6 @@ Resolución forzosa del band_id desde la sesión autenticada. Bloquea inyeccione
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[db_leads|Leads DB Handlers]] *(Layer: #db, Domain: #booking)*
-- [[db_payments|Pagos y suscripciones (Stripe)]] *(Layer: #db, Domain: #finances)*
 - [[db_repertoire|Repertoire DB Handlers]] *(Layer: #db, Domain: #repertoire)*
 - [[sec_ssrf_guard|SSRF URL Validator]] *(Layer: #security, Domain: #system)*
 - [[server_utils_email|server/utils/email.ts]] *(Layer: #service, Domain: #system)*
@@ -33,6 +32,7 @@ Resolución forzosa del band_id desde la sesión autenticada. Bloquea inyeccione
 - [[db_repertoire|Repertoire DB Handlers]] *(from #db)*
 - [[hook_app_data|useAppData Hook]] *(from #hook)*
 - [[hook_booking_pipeline|useBookingPipeline Hook]] *(from #hook)*
+- [[route_calendar_conflicts|GET /api/calendar/conflicts]] *(from #route)*
 - [[route_leads_crud|Leads CRUD Route]] *(from #route)*
 - [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(from #route)*
 - [[route_leads_pitch|Leads Pitch Generation Route]] *(from #route)*
@@ -57,7 +57,6 @@ Resolución forzosa del band_id desde la sesión autenticada. Bloquea inyeccione
 - [[server_routes_cartelria|server/routes/cartelria.ts]] *(from #route)*
 - [[server_routes_catalogo|server/routes/catalogo.ts]] *(from #route)*
 - [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
-- [[server_routes_concerts|server/routes/concerts.ts]] *(from #route)*
 - [[server_routes_deals|server/routes/deals.ts]] *(from #route)*
 - [[server_routes_donations|server/routes/donations.ts]] *(from #route)*
 - [[server_routes_enlacesCortos|server/routes/enlacesCortos.ts]] *(from #route)*
@@ -86,7 +85,9 @@ Resolución forzosa del band_id desde la sesión autenticada. Bloquea inyeccione
 - [[server_routes_users_rutasSalidaBanda|server/routes/users/rutasSalidaBanda.ts]] *(from #route)*
 - [[server_services_perfilDeLaPeticion|server/services/perfilDeLaPeticion.ts]] *(from #service)*
 - [[server_utils_bandDna|server/utils/bandDna.ts]] *(from #service)*
+- [[service_calendar_conflicts|Avisos de choques por email]] *(from #service)*
 - [[ui_leads_table|Leads Table & Actions]] *(from #frontend)*
+- [[util_calendar_conflicts|Detector de choques del calendario]] *(from #service)*
 
 ---
 
