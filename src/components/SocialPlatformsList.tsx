@@ -288,10 +288,9 @@ const PLATFORM_CONFIG: Record<
   facebook: {
     label: "Facebook",
     colorClass: "text-[var(--acc)]",
-    bgClass: "bg-[var(--tentative)]",
+    bgClass: "bg-[var(--acc)]/10",
     borderClass: "",
-    hoverClass:
-      "hover:bg-[var(--tentative)]/50 hover:text-[var(--acc)]/80",
+    hoverClass: "hover:bg-[var(--acc)]/20 hover:text-[var(--ink-2)]",
   },
   twitter: {
     label: "X / Twitter",
