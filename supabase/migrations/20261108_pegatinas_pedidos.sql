@@ -18,3 +18,8 @@ CREATE TABLE IF NOT EXISTS pegatinas_pedidos (
 ALTER TABLE pegatinas_pedidos ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Permitir acceso total al backend" ON pegatinas_pedidos;
 CREATE POLICY "Permitir acceso total al backend" ON pegatinas_pedidos FOR ALL USING (true);
+
+-- Defensa en profundidad: la tabla guarda nombre, dirección y teléfono y solo se accede desde el servidor
+-- (service role). La política de arriba es abierta como en el resto de tablas, así que se le quita el
+-- acceso directo por PostgREST a los roles anon y authenticated.
+REVOKE ALL ON TABLE pegatinas_pedidos FROM anon, authenticated;
