@@ -13,6 +13,7 @@ describe('promptCartel', () => {
     expect(p).toContain('no text');
     expect(p).toMatch(/top 25%.*bottom 30%/);
     expect(p).toContain('central window');
+    expect(p).toContain('edge to edge');
   });
 
   it('cada estilo produce un prompt distinto', () => {

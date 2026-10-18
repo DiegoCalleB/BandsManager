@@ -30,6 +30,7 @@ _Sin dependencias salientes directas._
 - [[server_utils_emailsCicloVida|server/utils/emailsCicloVida.ts]] *(from #service)*
 - [[server_utils_paginaConcierto|server/utils/paginaConcierto.ts]] *(from #service)*
 - [[server_utils_paginaRider|server/utils/paginaRider.ts]] *(from #service)*
+- [[server_utils_seo_cabeza|server/utils/seo/cabeza.ts]] *(from #service)*
 - [[server_utils_seo_render|server/utils/seo/render.ts]] *(from #service)*
 
 ---
