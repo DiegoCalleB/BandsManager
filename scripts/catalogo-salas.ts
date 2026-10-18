@@ -13,6 +13,7 @@ const r = await sincronizarCatalogo(puertoCatalogoSupabase, { simulacion: !aplic
 console.log(`\nCatálogo de salas (${r.simulacion ? "SIMULACIÓN, no se ha escrito nada" : "APLICADO"})`);
 console.log(`  Leads leídos:            ${r.leadsLeidos}`);
 console.log(`  Sin nombre o ciudad:     ${r.leadsSinClave} (no entran)`);
+console.log(`  No son salas / pruebas:  ${r.leadsFueraDeCatalogo.tipo} de otro tipo · ${r.leadsFueraDeCatalogo.prueba} de prueba (no entran)`);
 console.log(`  Salas resultantes:       ${r.salasResultantes}`);
 console.log(`  Duplicados fusionados:   ${r.duplicadosFusionados}`);
 console.log(`  Salas nuevas:            ${r.salasNuevas}`);

@@ -15,6 +15,7 @@ import {
   consolidarCampos,
   fusionarConExistente,
   idDeSala,
+  motivoExclusion,
   senalesDeLeads,
   siguienteVerificadaEn,
   type CamposPublicosSala,
@@ -48,6 +49,8 @@ export interface InformeCatalogo {
   leadsLeidos: number;
   /** Leads sin nombre o sin ciudad (y sin place_id): no se pueden identificar y no entran. */
   leadsSinClave: number;
+  /** Leads que no son una sala (medios, agencias, bandas amigas...) o son de prueba: no entran. */
+  leadsFueraDeCatalogo: { tipo: number; prueba: number };
   salasResultantes: number;
   salasNuevas: number;
   salasActualizadas: number;
@@ -105,11 +108,12 @@ export async function sincronizarCatalogo(
   const porClave = new Map(guardadas.map((s) => [s.clave, s]));
 
   const grupos = new Map<string, Miembro[]>();
-  let leadsSinClave = 0;
+  const excluidos = { tipo: 0, prueba: 0, sin_clave: 0 };
   for (const lead of leads) {
-    const ficha = camposPublicos(lead);
+    const motivo = motivoExclusion(lead);
+    const ficha = motivo ? null : camposPublicos(lead);
     if (!ficha) {
-      leadsSinClave++;
+      excluidos[motivo ?? 'sin_clave']++;
       continue;
     }
     const grupo = grupos.get(ficha.clave) ?? [];
@@ -173,12 +177,13 @@ export async function sincronizarCatalogo(
   return {
     simulacion,
     leadsLeidos: leads.length,
-    leadsSinClave,
+    leadsSinClave: excluidos.sin_clave,
+    leadsFueraDeCatalogo: { tipo: excluidos.tipo, prueba: excluidos.prueba },
     salasResultantes: grupos.size,
     salasNuevas: nuevas,
     salasActualizadas: actualizadas,
     salasSinCambios: sinCambios,
-    duplicadosFusionados: leads.length - leadsSinClave - grupos.size,
+    duplicadosFusionados: leads.length - excluidos.tipo - excluidos.prueba - excluidos.sin_clave - grupos.size,
     leadsEnlazados: enlaces.length,
     porNivel,
   };
