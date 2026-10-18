@@ -1,7 +1,6 @@
 /**
  * Generator of Obsidian-Compatible Architecture & Dependency Graph
- * Generates an interactive Markdown Knowledge Graph with Bidirectional Wikilinks ([[Node]])
- * Compatible with Obsidian Graph View, Foam, and Agentic Navigation.
+ * Interactive Markdown Knowledge Graph with Bidirectional Wikilinks ([[Node]]), compatible with Obsidian, Foam and agentic navigation.
  */
 
 import fs from 'node:fs';
@@ -532,7 +531,6 @@ const coincideRuta = (url: string, patron: string[]): boolean => {
   const seg = url.split('/');
   return seg.length === patron.length && patron.every((p, i) => p.includes(':') || seg[i].includes(':') || seg[i] === p);
 };
-
 
 // Servicios externos: un nodo ext_* por proveedor, enlazado desde todo fichero cuyo código lo usa.
 const PROVEEDORES: { id: string; title: string; descripcion: string; re: RegExp }[] = [
