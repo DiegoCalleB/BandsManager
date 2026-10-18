@@ -25,7 +25,7 @@ beforeEach(() => {
 
 describe('getUserFromRequest: a qué banda entra cada quien', () => {
   it('un usuario sin ninguna banda asociada NO tiene sesión válida', () => {
-    // Antes se le daba 'band-bakandeya' por defecto, así que una cuenta a la que le faltara su
+    // Antes se le daba 'band-ejemplo' por defecto, así que una cuenta a la que le faltara su
     // vínculo acababa dentro de la banda insignia viendo sus leads y sus finanzas.
     const state = estado({ users: [{ id: 'user-ana', username: 'ana' }] });
     expect(getUserFromRequest(peticion(TOKEN), () => state)).toBeNull();
@@ -36,12 +36,12 @@ describe('getUserFromRequest: a qué banda entra cada quien', () => {
     const user = getUserFromRequest(peticion(TOKEN), () => state);
     expect(user?.band_id).toBe('band-la-vanda');
     expect(user?.allowedBandIds).toContain('band-la-vanda');
-    expect(user?.allowedBandIds).not.toContain('band-bakandeya');
+    expect(user?.allowedBandIds).not.toContain('band-ejemplo');
   });
 
   it('no acepta la cabecera x-band-id de una banda ajena', () => {
     const state = estado({ users: [{ id: 'user-ana', username: 'ana', band_id: 'band-la-vanda' }] });
-    const req = peticion(TOKEN, { headers: { 'x-band-id': 'band-bakandeya' } });
+    const req = peticion(TOKEN, { headers: { 'x-band-id': 'band-ejemplo' } });
     expect(getUserFromRequest(req, () => state)?.band_id).toBe('band-la-vanda');
   });
 });

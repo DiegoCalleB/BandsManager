@@ -15,13 +15,15 @@ test('una banda nueva se registra, ve el asistente de bienvenida y llega al pane
   const sufijo = `${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
   await page.goto('/');
-  await page.getByRole('button', { name: 'Crea tu cuenta gratis' }).click();
+  // La landing lleva al login; desde ahí se abre el registro.
+  await page.getByRole('button', { name: /crear cuenta gratis/i }).first().click();
+  await page.getByText('Crea tu cuenta gratis').click();
 
   await page.getByPlaceholder('Nombre de tu banda').fill(`E2E Test Band ${sufijo}`);
   await page.getByPlaceholder('Tu nombre').fill('E2E Tester');
   await page.getByPlaceholder('Correo electrónico').fill(`e2e-${sufijo}@example.com`);
   await page.getByPlaceholder('Contraseña').fill('e2eTestPass123');
-  await page.getByRole('button', { name: 'Crear mi Dossier y QR' }).click();
+  await page.getByRole('button', { name: /Crear mi dossier y QR/i }).click();
 
   const asistente = page.getByText('Configuración Inicial ·');
   await expect(asistente).toBeVisible({ timeout: 15_000 });

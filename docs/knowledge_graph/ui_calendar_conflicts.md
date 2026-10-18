@@ -18,13 +18,15 @@ Hook (detección local + cruce de bandas del servidor), banner, triángulo por d
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[util_calendar_conflicts|Detector de choques del calendario]] *(Layer: #service, Domain: #booking)*
 - [[route_calendar_conflicts|GET /api/calendar/conflicts]] *(Layer: #route, Domain: #booking)*
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
+- [[util_calendar_conflicts|Detector de choques del calendario]] *(Layer: #service, Domain: #booking)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-_Sin llamadas entrantes indexadas._
+- [[src_components_calendar_hooks_useCalendarFilters|src/components/calendar/hooks/useCalendarFilters.ts]] *(from #frontend)*
 
 ---
 

@@ -1,4 +1,9 @@
-import { FunctionDeclaration, Type } from "@google/genai";
+import { FunctionCall, FunctionDeclaration, Type } from "@google/genai";
+import type { ProposedAction } from "../../src/components/chatbot/chatTypes.js";
+import { accionAnadirDeCatalogo } from "./chatCatalogo.js";
+
+/** Argumentos que Gemini rellena según `chatFunctionDeclarations` (los mismos campos que la acción propuesta). */
+type ArgumentosAccionPropuesta = Partial<Omit<ProposedAction, "type" | "status">>;
 
 /**
  * Declaraciones de Function Calling nativas para Gemini en BandManager.io.
@@ -426,17 +431,18 @@ export const chatFunctionDeclarations: FunctionDeclaration[] = [
  * Convierte llamadas a funciones generadas por Gemini Function Calling
  * en la estructura ProposedAction reconocida por la UI.
  */
-export function convertFunctionCallsToProposedActions(functionCalls: any[]): any[] {
+export function convertFunctionCallsToProposedActions(functionCalls: FunctionCall[]): ProposedAction[] {
   if (!Array.isArray(functionCalls) || functionCalls.length === 0) {
     return [];
   }
 
-  const proposedActions: any[] = [];
+  const proposedActions: ProposedAction[] = [];
 
   for (const call of functionCalls) {
     if (!call || typeof call !== "object") continue;
     const name = call.name;
-    const args = call.args || {};
+    // El esquema de cada función (chatFunctionDeclarations) fija estos campos; la UI valida antes de aplicar.
+    const args = (call.args || {}) as ArgumentosAccionPropuesta;
 
     switch (name) {
       case "propose_lead_approval":
@@ -573,6 +579,12 @@ export function convertFunctionCallsToProposedActions(functionCalls: any[]): any
           melodicIdea: args.melodicIdea
         });
         break;
+
+      case "propose_add_from_catalog": {
+        const accion = accionAnadirDeCatalogo(args as { description?: string; salaId?: string; salaName?: string });
+        if (accion) proposedActions.push(accion);
+        break;
+      }
 
       default:
         console.warn(`[chatTools] Función no reconocida: ${name}`, args);

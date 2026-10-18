@@ -18,15 +18,27 @@ Detector puro y determinista (cliente + servidor): solapes, margen corto, viaje 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[util_viaje_estimado|Estimador de viaje offline]] *(Layer: #service, Domain: #booking)*
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[util_viaje_estimado|Estimador de viaje offline]] *(Layer: #service, Domain: #booking)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[service_calendar_conflicts|Avisos de choques por email]] *(from #service)*
 - [[route_calendar_conflicts|GET /api/calendar/conflicts]] *(from #route)*
+- [[service_calendar_conflicts|Avisos de choques por email]] *(from #service)*
+- [[src_components_calendar_CalendarConflictsBanner|src/components/calendar/CalendarConflictsBanner.tsx]] *(from #frontend)*
+- [[src_components_calendar_CalendarEventConflicts|src/components/calendar/CalendarEventConflicts.tsx]] *(from #frontend)*
+- [[src_components_calendar_CalendarEventDetailModal|src/components/calendar/CalendarEventDetailModal.tsx]] *(from #frontend)*
+- [[src_components_calendar_hooks_useCalendarFilters|src/components/calendar/hooks/useCalendarFilters.ts]] *(from #frontend)*
+- [[src_components_calendar_views_CalendarOverlays|src/components/calendar/views/CalendarOverlays.tsx]] *(from #frontend)*
 - [[ui_calendar_conflicts|Avisos de choque en el calendario]] *(from #frontend)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/services/__tests__/calendarConflictService.test.ts`
+- `src/utils/__tests__/calendarConflicts.test.ts`
 
 ---
 

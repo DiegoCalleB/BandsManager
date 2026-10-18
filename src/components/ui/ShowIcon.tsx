@@ -1,19 +1,5 @@
 import React from 'react';
-import {
-  Mic, Megaphone, Drum, Guitar, Wrench, MessageCircle, Pause, Bomb, Pin, Zap, Circle,
-  Target, AlertTriangle, Lightbulb, Star, Music, Music2, MapPin, Flame, Landmark, Disc3, Tent,
-  Briefcase, Sparkles, User, Users, Smartphone, Calendar, Timer, PenLine, Truck, Handshake,
-  RefreshCw, Radio, Clapperboard, SlidersHorizontal, FileText, Lock, ClipboardList, Hourglass,
-  Car, Search, X, Gift, Tv, Clock, Settings, Ticket, Headphones, Shuffle, Rocket, Mail,
-  AlarmClock, Undo2, Tag, CheckCircle2, Check, Trophy, Globe, Camera, Video, Image, Link2,
-  Coins, Heart, Eye, Upload, Download, Play, ArrowRight, Info, Bell, Share2, TrendingUp, Crown,
-  Brain, Phone, Building2, Scissors, Footprints, ArrowUpRight, Activity, SlidersVertical, Save, DoorOpen,
-  Inbox, Pencil, Shield, HelpCircle, Trash2, BarChart3, Folder, FlaskConical, RefreshCcw, Leaf, Bird,
-  FolderOpen, Package, Moon, Plus, Hand, BedDouble, ChevronLeft, Square, Ruler, Satellite, Umbrella,
-  Drama, CloudSun, Snowflake, Bot, ScrollText, Coffee, Palette, ArrowLeft, KeyRound, Sprout, Armchair,
-  Wand2, BookOpen, Music4, Wind,
-  type LucideIcon,
-} from 'lucide-react';
+import { Mic, Megaphone, Drum, Guitar, Wrench, MessageCircle, Pause, Bomb, Pin, Zap, Circle, Target, AlertTriangle, Lightbulb, Star, Music, Music2, MapPin, Flame, Landmark, Disc3, Tent, Briefcase, Sparkles, User, Users, Smartphone, Calendar, Timer, PenLine, Truck, Handshake, RefreshCw, Radio, Clapperboard, SlidersHorizontal, FileText, Lock, ClipboardList, Hourglass, Car, Search, X, Gift, Tv, Clock, Settings, Ticket, Headphones, Shuffle, Rocket, Mail, AlarmClock, Undo2, Tag, CheckCircle2, Check, Trophy, Globe, Camera, Video, Image, Link2, Coins, Heart, Eye, Upload, Download, Play, ArrowRight, Info, Bell, TrendingUp, Crown, Brain, Phone, Building2, Scissors, Footprints, ArrowUpRight, Activity, SlidersVertical, Save, DoorOpen, Inbox, Pencil, Shield, HelpCircle, Trash2, BarChart3, Folder, FlaskConical, RefreshCcw, Leaf, Bird, FolderOpen, Package, Moon, Plus, Hand, BedDouble, ChevronLeft, Square, Ruler, Satellite, Umbrella, Drama, CloudSun, Snowflake, Bot, ScrollText, Coffee, Palette, ArrowLeft, KeyRound, Sprout, Armchair, Wand2, BookOpen, Music4, type LucideIcon } from 'lucide-react';
 
 /**
  * Tabla única emoji → icono. La interfaz no pinta emojis (craft-interfaces §6): los que

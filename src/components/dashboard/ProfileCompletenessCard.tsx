@@ -9,32 +9,20 @@ import {
   Tour,
   User,
 } from "../../types";
-import {
-  Sparkles,
-  CheckCircle2,
-  AlertCircle,
-  ArrowRight,
-  ShieldCheck,
-  HelpCircle,
-  ChevronDown,
-  ChevronUp,
-  Bot,
-  FileText,
-  Disc3,
-  Calendar,
-  Activity,
-  Heart,
-  Truck,
-  X,
-  BookOpen,
-  Layers,
-  Sliders,
-  Clock,
-  Mail,
-  Key,
-} from "lucide-react";
+import { CheckCircle2, AlertCircle, HelpCircle, ChevronDown, ChevronUp, Bot, FileText, Disc3, X, Sliders, Mail } from "lucide-react";
 import { api } from "../../services/api";
 import { Button, IconButton } from '../ui';
+import type { NavigationOptions } from '../Dashboard';
+
+/**
+ * Campos opcionales que el chequeo de perfil busca en el usuario o en el EPK aunque no formen
+ * parte de sus tipos: la configuración de autonomía y el ADN de tono pueden venir adjuntos.
+ */
+type UsuarioConExtras = User & {
+  autonomy_config?: { minCacheByType?: Record<string, unknown>; min_cache?: number | string };
+  bandToneDna?: unknown;
+};
+type EpkConTono = Partial<EPKConfig> & { toneDna?: unknown };
 
 interface ProfileCompletenessCardProps {
   epkConfig?: Partial<EPKConfig>;
@@ -46,7 +34,7 @@ interface ProfileCompletenessCardProps {
   tours?: Tour[];
   bandName?: string;
   currentUser?: User | null;
-  onNavigate?: (view: any, options?: any) => void;
+  onNavigate?: (view: string, options?: NavigationOptions) => void;
   onOpenAutonomyModal?: () => void;
   onOpenProfileModal?: () => void;
 }
@@ -56,23 +44,19 @@ export const ProfileCompletenessCard: React.FC<
 > = ({
   epkConfig,
   leads = [],
-  concerts = [],
-  rehearsals = [],
   metrics = [],
   fans = [],
-  tours = [],
   bandName = "Tu Banda",
   currentUser,
   onNavigate,
   onOpenAutonomyModal,
-  onOpenProfileModal,
+  onOpenProfileModal
 }) => {
   const [showAuditModal, setShowAuditModal] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [hasScheduleConfigured, setHasScheduleConfigured] = useState(false);
   const [hasEmailAccountConnected, setHasEmailAccountConnected] =
     useState(false);
-  const [hasMinCacheConfigured, setHasMinCacheConfigured] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -129,20 +113,13 @@ export const ProfileCompletenessCard: React.FC<
     };
   }, [currentUser]);
 
-  useEffect(() => {
-    // Check if autonomy config / min cache is configured
-    const autonomy = (currentUser as any)?.autonomy_config;
-    if (
+  // Autonomía / caché mínimo configurado: se deriva del usuario, sin estado ni efecto.
+  const autonomy = (currentUser as UsuarioConExtras | null | undefined)?.autonomy_config;
+  const hasMinCacheConfigured =
+    Boolean(
       autonomy?.minCacheByType &&
-      Object.values(autonomy.minCacheByType).some((v: any) => Number(v) > 0)
-    ) {
-      setHasMinCacheConfigured(true);
-    } else if (autonomy?.min_cache && Number(autonomy.min_cache) > 0) {
-      setHasMinCacheConfigured(true);
-    } else {
-      setHasMinCacheConfigured(false);
-    }
-  }, [currentUser]);
+        Object.values(autonomy.minCacheByType).some((v) => Number(v) > 0),
+    ) || Boolean(autonomy?.min_cache && Number(autonomy.min_cache) > 0);
 
   const [storedSongsCount, setStoredSongsCount] = useState(0);
 
@@ -196,7 +173,6 @@ export const ProfileCompletenessCard: React.FC<
       (l) => l.email_contacto && l.email_contacto.includes("@"),
     );
     const hasSongs = storedSongsCount > 0;
-    const hasAgenda = concerts.length > 0 || rehearsals.length > 0;
     const hasMetrics = metrics.length > 0;
     const hasFans =
       fans.length > 0 ||
@@ -205,8 +181,8 @@ export const ProfileCompletenessCard: React.FC<
         epkConfig?.incentivoFans?.codigoDescuento,
       );
     const hasToneDna = Boolean(
-      (epkConfig as any)?.toneDna ||
-      (currentUser as any)?.bandToneDna ||
+      (epkConfig as EpkConTono | undefined)?.toneDna ||
+      (currentUser as UsuarioConExtras | null | undefined)?.bandToneDna ||
       (epkConfig?.biografia && epkConfig.biografia.length > 120),
     );
 
@@ -316,8 +292,6 @@ export const ProfileCompletenessCard: React.FC<
     epkConfig,
     leads,
     storedSongsCount,
-    concerts,
-    rehearsals,
     metrics,
     fans,
     hasScheduleConfigured,

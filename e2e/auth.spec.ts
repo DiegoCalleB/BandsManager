@@ -9,16 +9,19 @@ test.use({ viewport: { width: 390, height: 844 } });
 
 const SELECTOR_PANEL_AUTENTICADO = '[title*="cambiar de banda"]';
 
-test('sin sesión, la raíz muestra el login, no el panel', async ({ page }) => {
+// Sin sesión, la raíz es la landing pública: el login se abre desde «Entrar».
+test('sin sesión, la raíz muestra la landing con acceso al login, no el panel', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByPlaceholder('Correo electrónico o Usuario')).toBeVisible();
   await expect(page.locator(SELECTOR_PANEL_AUTENTICADO)).toHaveCount(0);
+  await page.getByRole('button', { name: 'Entrar', exact: true }).first().click();
+  await expect(page.getByPlaceholder('Correo electrónico o Usuario')).toBeVisible();
 });
 
 test('login con un usuario semilla lleva al panel de la banda', async ({ page }) => {
   await page.goto('/');
+  await page.getByRole('button', { name: 'Entrar', exact: true }).first().click();
   await page.getByPlaceholder('Correo electrónico o Usuario').fill('diego');
-  await page.getByPlaceholder('Contraseña').fill('bakandeya2026');
+  await page.getByPlaceholder('Contraseña').fill('demo2026');
   await page.getByRole('button', { name: 'Entrar a mi cuenta' }).click();
 
   await expect(page.locator(SELECTOR_PANEL_AUTENTICADO).first()).toBeVisible({ timeout: 15_000 });

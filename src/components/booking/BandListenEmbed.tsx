@@ -27,11 +27,11 @@ export const BandListenEmbed: React.FC<BandListenEmbedProps> = ({ spotifyUrl, ba
         size="xs"
         onClick={() => setAbierto((v) => !v)}
         aria-expanded={abierto}
-        title={abierto ? 'Cerrar reproductor' : `Escuchar a ${bandName} en Spotify`}
+        title={abierto ? 'Cerrar reproductor' : `Escuchar completo a ${bandName} en Spotify`}
         className="gap-1.5 text-[var(--acc-ink)]"
       >
         {abierto ? <X className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-        <span>{abierto ? 'Cerrar' : 'Escuchar'}</span>
+        <span>{abierto ? 'Cerrar' : 'Completo en Spotify'}</span>
       </Button>
 
       {abierto && (

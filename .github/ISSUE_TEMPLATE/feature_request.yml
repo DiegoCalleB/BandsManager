@@ -1,0 +1,47 @@
+name: "✨ Propuesta de Funcionalidad o Mejora"
+description: "Propón una nueva capacidad o refactorización arquitectónica para el sistema"
+title: "[Feat]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        BandManager.io sigue principios estrictos de **simplicidad (KISS)**, **anti-god components** y **human-in-the-loop**. Lee **[AGENTS.md](https://github.com/DiegoCalleB/BandsManager/blob/main/AGENTS.md)** antes de proponer funcionalidades que añadan complejidad excesiva.
+  - type: textarea
+    id: problema
+    attributes:
+      label: Problema o necesidad de negocio
+      description: ¿Qué fricción o necesidad del músico/banda resuelve esta propuesta?
+      placeholder: Actualmente para coordinar X se necesita hacer Y manualmente...
+    validations:
+      required: true
+  - type: textarea
+    id: solucion
+    attributes:
+      label: Solución propuesta
+      description: Describe cómo debería funcionar la nueva capacidad.
+      placeholder: Implementar un nuevo flujo donde...
+    validations:
+      required: true
+  - type: dropdown
+    id: modulo
+    attributes:
+      label: Subsistema involucrado
+      options:
+        - "CRM Booking & Leads"
+        - "Agentes de Booking (Scout, Redactor, Enviador, Lector)"
+        - "Repertorio, Canciones y Setlists"
+        - "Audio & IA Musical (Stems, Acordes, Transcripción)"
+        - "EPK & Dossier Web Público"
+        - "Finanzas, Pagos & Stripe"
+        - "Calendario, Rutas & Giras"
+        - "Arquitectura, DevEx & Infraestructura"
+    validations:
+      required: true
+  - type: textarea
+    id: alternativas
+    attributes:
+      label: Alternativas consideradas
+      description: ¿Se valoraron otras soluciones más sencillas o sin código?
+    validations:
+      required: false

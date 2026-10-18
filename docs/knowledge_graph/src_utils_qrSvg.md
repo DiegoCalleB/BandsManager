@@ -1,0 +1,38 @@
+---
+id: src_utils_qrSvg
+title: "src/utils/qrSvg.ts"
+layer: service
+domain: system
+file: "src/utils/qrSvg.ts"
+tags: ["service", "system", "auto"]
+---
+
+# 📌 src/utils/qrSvg.ts
+
+> **Ubicación:** `src/utils/qrSvg.ts`  
+> **Capa:** `#layer/service` | **Dominio:** `#domain/system`
+
+## 📖 Descripción
+Exporta: buildQrSvg.
+
+---
+
+## 🔗 Conexiones Salientes (Dependencies / Calls)
+_Sin dependencias salientes directas._
+
+---
+
+## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_repertorio_pdf_export_buildHeaderFooter|src/components/repertorio/pdf_export/buildHeaderFooter.ts]] *(from #frontend)*
+- [[src_utils_qrExport|src/utils/qrExport.ts]] *(from #service)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `src/utils/__tests__/qrSvg.test.ts`
+
+---
+
+## 🛡️ Reglas de Aislamiento & Calidad
+- [ ] ¿Respeta el trust boundary de `band_id`?
+- [ ] ¿Tiene pruebas unitarias o de integración asociadas?

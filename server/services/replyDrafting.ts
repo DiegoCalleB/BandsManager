@@ -13,6 +13,8 @@ import { mapLeadTipoToTemplateCategory } from "../promptsManager.js";
 import { detectPitchLanguage } from "../utils/leadLanguage.js";
 import { analyzeIncomingMessageSentiment, type MessageSentimentAnalysis } from "./sentimentAnalysis.js";
 import { getBandOperationalContext, evaluateIncomingTactics, type TacticalEvaluation } from "./agentIntelligence.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { Lead } from '../../src/types.js';
 
 // Palabras clave para detectar el tipo de respuesta entrante. Se comparten con lectorAgent.ts
 // (PALABRAS_NEGOCIACION) las que son específicamente de precio, para que ambos clasificadores no
@@ -20,8 +22,8 @@ import { getBandOperationalContext, evaluateIncomingTactics, type TacticalEvalua
 // bajo "follow_up", porque decide una cosa distinta (si el estado pasa a "negociando"), más
 // amplia que "¿es esto una pregunta de precio?".
 export const PRICE_KEYWORDS = [
-  "precio", "cache", "caché", "presupuesto", "condiciones", "tarifa", "cuánto",
-  "cuanto cobr", "cifra", "propuesta económica", "honorarios", "presupuestario"
+  "precio", "cache", "caché", "presupuesto", "condiciones económicas", "condiciones economicas", "tarifa", "cuánto",
+  "cuanto cobr", "cifra", "propuesta económica", "honorarios", "presupuestario", "euros", "ofrecer"
 ];
 
 interface ResponseKeywordSet {
@@ -49,8 +51,9 @@ const KEYWORDS_BY_LANGUAGE: Record<string, ResponseKeywordSet> = {
       "vale", "de acuerdo", "acuerdo", "date confirmed", "fecha confirmada", "será genial",
       "nos encanta", "os parece bien"],
     rejection: ["no nos interesa", "no encaja", "no podemos", "no disponible", "rechaz",
-      "disculpa", "lo siento", "no es posible", "desafortunadamente", "lamentablemente",
-      "no tenemos disponibilidad", "no procede", "no aplica"],
+      "no es posible", "desafortunadamente", "lamentablemente",
+      "no tenemos disponibilidad", "no procede", "no aplica", "no estamos interesad",
+      "no contratamos", "programación completa", "programacion completa", "agenda completa"],
     followUp: ["cuándo", "cuando", "fecha", "disponibilidad", "directo", "show",
       "más información", "preguntas", "detalles", "cómo"],
     negotiationExtra: ["fecha", "disponibilidad", "cuándo", "cuando podéis", "contrato", "rider"]
@@ -60,14 +63,14 @@ const KEYWORDS_BY_LANGUAGE: Record<string, ResponseKeywordSet> = {
     confirmation: ["confirm", "great", "perfect", "sounds good", "agreed", "yes", "awesome",
       "sounds great", "we'd love", "works for us"],
     rejection: ["not interested", "doesn't fit", "we can't", "not available", "decline",
-      "unfortunately", "we're sorry", "not possible", "no longer"],
+      "unfortunately", "not possible", "no longer"],
     followUp: ["when", "availability", "show", "more information", "questions", "details", "how"],
     negotiationExtra: ["date", "availability", "when can you", "contract", "rider"]
   },
   it: {
     price: ["prezzo", "cachet", "budget", "tariffa", "quanto", "condizioni economiche", "compenso", "preventivo"],
     confirmation: ["confermiamo", "perfetto", "ottimo", "d'accordo", "va bene", "sì", "grande", "ci piace"],
-    rejection: ["non ci interessa", "non è possibile", "purtroppo", "siamo spiacenti",
+    rejection: ["non ci interessa", "non è possibile", "purtroppo",
       "non disponibile", "non possiamo", "non rientra"],
     followUp: ["quando", "disponibilità", "data", "maggiori informazioni", "domande", "dettagli", "come"],
     negotiationExtra: ["data", "disponibilità", "quando potete", "contratto", "rider"]
@@ -75,8 +78,8 @@ const KEYWORDS_BY_LANGUAGE: Record<string, ResponseKeywordSet> = {
   fr: {
     price: ["prix", "cachet", "budget", "tarif", "combien", "conditions financières", "devis", "honoraires"],
     confirmation: ["confirmons", "parfait", "génial", "d'accord", "avec plaisir", "oui", "excellent", "ça nous va"],
-    rejection: ["ne nous intéresse pas", "malheureusement", "ce n'est pas possible", "pas disponible",
-      "nous ne pouvons pas", "désolé", "ne correspond pas"],
+    rejection: ["ne nous intéresse pas", "pas intéressé", "malheureusement", "ce n'est pas possible", "pas disponible",
+      "nous ne pouvons pas", "ne correspond pas"],
     followUp: ["quand", "disponibilité", "date", "plus d'informations", "questions", "détails", "comment"],
     negotiationExtra: ["date", "disponibilité", "quand pouvez-vous", "contrat", "rider"]
   },
@@ -84,7 +87,7 @@ const KEYWORDS_BY_LANGUAGE: Record<string, ResponseKeywordSet> = {
     price: ["preço", "cachê", "orçamento", "tarifa", "quanto", "condições financeiras", "honorários"],
     confirmation: ["confirmamos", "perfeito", "ótimo", "combinado", "sim", "excelente", "adoramos"],
     rejection: ["não nos interessa", "infelizmente", "não é possível", "não disponível",
-      "não podemos", "lamentamos", "não se encaixa"],
+      "não podemos", "não se encaixa"],
     followUp: ["quando", "disponibilidade", "data", "mais informações", "perguntas", "detalhes", "como"],
     negotiationExtra: ["data", "disponibilidade", "quando podem", "contrato", "rider"]
   },
@@ -92,7 +95,7 @@ const KEYWORDS_BY_LANGUAGE: Record<string, ResponseKeywordSet> = {
     price: ["preis", "gage", "budget", "honorar", "wie viel", "konditionen", "kostenvoranschlag"],
     confirmation: ["bestätigen", "perfekt", "super", "einverstanden", "gerne", "ja", "ausgezeichnet", "passt für uns"],
     rejection: ["kein interesse", "leider", "nicht möglich", "nicht verfügbar", "können wir nicht",
-      "tut uns leid", "passt nicht"],
+      "passt nicht"],
     followUp: ["wann", "verfügbarkeit", "termin", "weitere informationen", "fragen", "details", "wie"],
     negotiationExtra: ["termin", "verfügbarkeit", "wann könnt ihr", "vertrag", "rider"]
   },
@@ -100,7 +103,7 @@ const KEYWORDS_BY_LANGUAGE: Record<string, ResponseKeywordSet> = {
     price: ["prijs", "gage", "budget", "tarief", "hoeveel", "financiële voorwaarden", "offerte"],
     confirmation: ["bevestigen", "perfect", "geweldig", "akkoord", "ja", "uitstekend", "past ons goed"],
     rejection: ["geen interesse", "helaas", "niet mogelijk", "niet beschikbaar", "kunnen we niet",
-      "sorry", "past niet"],
+      "past niet"],
     followUp: ["wanneer", "beschikbaarheid", "datum", "meer informatie", "vragen", "details", "hoe"],
     negotiationExtra: ["datum", "beschikbaarheid", "wanneer kunnen jullie", "contract", "rider"]
   }
@@ -172,7 +175,7 @@ export interface DraftReplyResult {
 
 export async function generarBorradorRespuesta(
   bandId: string,
-  lead: any,
+  lead: Lead,
   incomingMessage: string,
   threadSoFar: Array<{ remitente: "sala" | "banda"; mensaje: string }>,
   provider?: string,
@@ -212,7 +215,7 @@ export async function generarBorradorRespuesta(
   // ver AgentAutonomySettingsModal.tsx > "Estrategias de Respuesta"). Si no hay ninguna, cae a
   // la guía automática fija de código dentro de buildReplySystemPrompt.
   let responseStrategy = null;
-  let autonomyConfig: any = null;
+  let autonomyConfig: Awaited<ReturnType<typeof dbGetAutonomyConfig>> = null;
   try {
     autonomyConfig = await dbGetAutonomyConfig(bandId);
     if (autonomyConfig?.responseStrategies?.[responseType]) {
@@ -266,7 +269,7 @@ export async function generarBorradorRespuesta(
   }
 
   // [TACTICAL EVALUATION]: Evaluación estructurada de intenciones y ofertas económicas
-  let tacticalEval: TacticalEvaluation | null = null;
+  let tacticalEval: TacticalEvaluation | null;
   try {
     tacticalEval = await evaluateIncomingTactics(incomingMessage, {
       name: lead?.nombre_sala,
@@ -320,7 +323,8 @@ ${tacticalEval.propuesta_economica_sala_eur ? `- Oferta económica explícita de
       contactEmail: bandDna.contactoEmail
     });
     if (unifiedRes?.text) draftReply = unifiedRes.text.trim();
-  } catch (aiErr: any) {
+  } catch (aiErrCapturado) {
+    const aiErr = comoErrorCapturado(aiErrCapturado);
     console.warn("Fallo IA al generar respuesta:", aiErr?.message || aiErr);
   }
 
@@ -332,7 +336,7 @@ ${tacticalEval.propuesta_economica_sala_eur ? `- Oferta económica explícita de
   return { draftReply, isSimulated, sentimentAnalysis };
 }
 
-function generateFallbackReply(lead: any, incomingMessage: string, responseType: ResponseType): string {
+function generateFallbackReply(lead: Pick<Lead, "contacto_nombre" | "nombre_sala">, incomingMessage: string, responseType: ResponseType): string {
   const name = lead.contacto_nombre ? lead.contacto_nombre.split(" ")[0] : "equipo";
   const sala = lead.nombre_sala || "la sala";
 

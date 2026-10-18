@@ -64,7 +64,7 @@ export function autoCalcularGastosViajeConcierto(
   const ciudadDestino = (concert.ciudad || 'Madrid').trim().toLowerCase();
   const esMismaCiudad = ciudadOrigen === ciudadDestino;
 
-  let distanciaKm = 300;
+  let distanciaKm: number;
   if (esMismaCiudad) {
     distanciaKm = 40; // Bolo local
   } else {
@@ -83,7 +83,7 @@ export function autoCalcularGastosViajeConcierto(
   if (vehiculoTipo === 'coches_2') consumoL100km = 13.0;
   if (vehiculoTipo === 'tren_bus') consumoL100km = 0;
 
-  let costeGasolina = 0;
+  let costeGasolina: number;
   if (vehiculoTipo === 'tren_bus') {
     costeGasolina = Math.round(numPersonas * 45);
   } else {
@@ -91,7 +91,7 @@ export function autoCalcularGastosViajeConcierto(
   }
 
   // Dietas según distancia
-  let costeDietas = 0;
+  let costeDietas: number;
   if (esMismaCiudad) {
     costeDietas = numPersonas * 12;
   } else if (distanciaKm <= 200) {
@@ -151,8 +151,8 @@ export function calcularBreakEvenConcierto(
   const ingresoBrutoTaquillaEstimado = entradasVendidasActuales * precioEntradaSugerido;
   const beneficioNetoEstimado = cacheFijoGarantizado + ingresoBrutoTaquillaEstimado - gastosTotalesEstimados;
 
-  let estadoRentabilidad: BreakEvenAnalysis['estadoRentabilidad'] = 'cubierto';
-  let mensajeStatus = '';
+  let estadoRentabilidad: BreakEvenAnalysis['estadoRentabilidad'];
+  let mensajeStatus: string;
 
   if (beneficioNetoEstimado >= 100) {
     estadoRentabilidad = 'beneficio';

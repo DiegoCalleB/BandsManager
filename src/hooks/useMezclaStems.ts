@@ -2,6 +2,7 @@ import { useEffect, useRef, type RefObject } from 'react';
 import type { AudioTrack } from '../types';
 import { resolveAudioUrl } from '../utils/audioStorage';
 import { aplicarTono, tonoConectado } from './useTonePitchShift';
+import { factorDucking, suscribirDucking } from '../utils/ducking';
 import { hayPistaEnSolo, volumenEfectivo, type AjustesPistas } from '../utils/mezclaStems';
 
 const DERIVA_MAX_S = 0.15;
@@ -19,19 +20,31 @@ export function useMezclaStems(audioRef: RefObject<HTMLAudioElement | null>, pis
   const pistasRef = useRef(pistas);
   const mapaRef = useRef(new Map<string, HTMLAudioElement>());
   const semitonosRef = useRef(semitonos);
-  semitonosRef.current = semitonos;
-  ajustesRef.current = ajustes;
-  pistasRef.current = pistas;
+  // Primero de los efectos: los demás leen los valores más recientes a través de estos refs.
+  useEffect(() => {
+    semitonosRef.current = semitonos;
+    ajustesRef.current = ajustes;
+    pistasRef.current = pistas;
+  });
 
   const aplicarVolumenes = () => {
     const solo = hayPistaEnSolo(pistasRef.current, ajustesRef.current);
     for (const p of pistasRef.current) {
       const el = mapaRef.current.get(p.id);
-      if (el) el.volume = volumenEfectivo(p, ajustesRef.current, solo);
+      if (el) el.volume = volumenEfectivo(p, ajustesRef.current, solo) * factorDucking();
     }
   };
 
   useEffect(aplicarVolumenes, [ajustes]);
+
+  // Ducking: al sonar un acorde de muestra baja la canción, sean stems o el audio principal (que va mudo si hay stems).
+  const aplicarRef = useRef(aplicarVolumenes);
+  useEffect(() => { aplicarRef.current = aplicarVolumenes; });
+  useEffect(() => suscribirDucking(() => {
+    aplicarRef.current();
+    const maestro = audioRef.current;
+    if (maestro && !maestro.muted) maestro.volume = factorDucking();
+  }), [audioRef]);
 
   const aplicarTonos = () => {
     for (const el of mapaRef.current.values()) {
@@ -44,13 +57,14 @@ export function useMezclaStems(audioRef: RefObject<HTMLAudioElement | null>, pis
     const maestro = audioRef.current;
     if (!maestro || pistas.length === 0) return;
     let vivo = true;
+    const mapa = mapaRef.current;
     maestro.muted = true;
     const esclavos: HTMLAudioElement[] = [];
 
     const alinear = () => {
       for (const el of esclavos) if (Math.abs(el.currentTime - maestro.currentTime) > DERIVA_MAX_S) el.currentTime = maestro.currentTime;
     };
-    const tocar = () => { alinear(); esclavos.forEach((el) => { void el.play().catch(() => {}); }); };
+    const tocar = () => { alinear(); esclavos.forEach((el) => { void el.play().catch(() => { /* autoplay bloqueado sin gesto del usuario: queda en pausa y se reproduce al pulsar */ }); }); };
     const parar = () => esclavos.forEach((el) => el.pause());
     const ritmo = () => esclavos.forEach((el) => { el.playbackRate = maestro.playbackRate; });
 
@@ -68,7 +82,7 @@ export function useMezclaStems(audioRef: RefObject<HTMLAudioElement | null>, pis
         try { el.src = (await resolveAudioUrl(p.audioUrl)) || p.audioUrl; } catch { el.src = p.audioUrl; }
         if (!vivo) return;
         esclavos.push(el);
-        mapaRef.current.set(p.id, el);
+        mapa.set(p.id, el);
       }
       aplicarVolumenes();
       aplicarTonos();
@@ -78,7 +92,7 @@ export function useMezclaStems(audioRef: RefObject<HTMLAudioElement | null>, pis
 
     return () => {
       vivo = false;
-      mapaRef.current.clear();
+      mapa.clear();
       maestro.muted = false;
       maestro.removeEventListener('play', tocar);
       maestro.removeEventListener('pause', parar);

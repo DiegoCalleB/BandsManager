@@ -90,3 +90,28 @@ describe('dbUpsertConcert: gastos_detalle no se resetea en un guardado parcial',
     expect(payload).toMatchObject({ ciudad: 'Sevilla', sala: 'Sala X', cache: 900, notas: 'solo cambio esto' });
   });
 });
+
+describe('dbUpsertConcert: el cartel solo lo escribe su ruta validada', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    selectResult = { data: { band_id: 'band-test', cartel_url: 'https://x.supabase.co/ok.png' }, error: null };
+    fromMock.mockImplementation(() => {
+      const qb = crearQueryBuilderMock(selectResult);
+      qb.upsert = upsertMock.mockReturnValue(qb);
+      return qb;
+    });
+  });
+
+  // `cartel_url` sale en la página pública del bolo y en su vista previa de WhatsApp: si la edición
+  // normal del bolo lo aceptara del cliente, se podría colgar cualquier imagen saltándose
+  // PUT /api/cartel/:id/imagen (que exige un PNG de la carpeta de la banda).
+  it('ignora cartel_url y cartel_config que vengan del cliente', async () => {
+    await dbUpsertConcert(
+      { id: 'cnc-1', fecha: '2026-10-01', ciudad: 'Madrid', cartel_url: 'https://evil.com/x.png', cartelUrl: 'https://evil.com/y.png', cartel_config: { foto: 'https://evil.com' } },
+      'band-test'
+    );
+    const payload = upsertMock.mock.calls[0][0];
+    expect(payload).not.toHaveProperty('cartel_url');
+    expect(payload).not.toHaveProperty('cartel_config');
+  });
+});

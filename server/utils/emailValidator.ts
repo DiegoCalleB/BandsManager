@@ -6,6 +6,7 @@
 
 import dns from 'dns';
 import { promisify } from 'util';
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 const resolveMx = promisify(dns.resolveMx);
 const resolve4 = promisify(dns.resolve4);
@@ -52,7 +53,8 @@ export async function isValidEmailDomain(email: string): Promise<boolean> {
         timeoutPromise
       ]);
       isValid = Array.isArray(mxRecords) && mxRecords.length > 0;
-    } catch (mxErr: any) {
+    } catch (mxErrCapturado) {
+      const mxErr = comoErrorCapturado(mxErrCapturado);
       // RFC 5321: Si no hay registro MX (ENODATA), comprobar registro A como fallback
       if (mxErr?.code === 'ENODATA') {
         try {

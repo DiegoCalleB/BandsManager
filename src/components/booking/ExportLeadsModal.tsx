@@ -49,7 +49,7 @@ export const ExportLeadsModal: React.FC<ExportLeadsModalProps> = ({
     return filteredLeads;
   };
 
-  const cleanCsvCell = (val: any) => {
+  const cleanCsvCell = (val: unknown) => {
     if (val === undefined || val === null) return '""';
     const str = String(val).replace(/"/g, '""').replace(/\r?\n/g, " ");
     return `"${str}"`;

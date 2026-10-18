@@ -40,10 +40,10 @@ export async function abrirModalDeImpresion(page: Page, ajustes: Record<string, 
 
   await page.goto('/');
   if (!(await page.getByPlaceholder('Correo electrónico o Usuario').isVisible().catch(() => false))) {
-    await page.getByText('Log in').first().click();
+    await page.getByRole('button', { name: 'Entrar', exact: true }).first().click();
   }
   await page.getByPlaceholder('Correo electrónico o Usuario').fill('diego');
-  await page.getByPlaceholder('Contraseña').fill('bakandeya2026');
+  await page.getByPlaceholder('Contraseña').fill('demo2026');
   await page.getByRole('button', { name: 'Entrar a mi cuenta' }).click();
   // El primer login abre el asistente de configuración: se salta y se navega por el menú lateral
   // (grupo "Música" > "Setlists"). A veces aparece además la pantalla "por dónde empezar".

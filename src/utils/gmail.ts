@@ -10,6 +10,7 @@ import {
 } from 'firebase/auth';
 import firebaseConfig from '../../firebase-applet-config.json';
 import { EmailMessage } from '../types';
+import { comoErrorCapturado } from './errorCapturado';
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -26,8 +27,8 @@ provider.setCustomParameters({ prompt: 'select_account' });
 let isSigningIn = false;
 let cachedAccessToken: string | null = null;
 
-const STORAGE_TOKEN_KEY = 'bakandeya_gmail_token';
-const STORAGE_TOKEN_EXP_KEY = 'bakandeya_gmail_token_exp';
+const STORAGE_TOKEN_KEY = 'bandmanager_gmail_token';
+const STORAGE_TOKEN_EXP_KEY = 'bandmanager_gmail_token_exp';
 
 // Save token to localStorage for persistence across reloads/sessions
 const saveTokenToStorage = (token: string) => {
@@ -50,7 +51,7 @@ const getStoredToken = (): string | null => {
       cachedAccessToken = token;
       return token;
     }
-  } catch (e) {
+  } catch {
     // ignore storage errors
   }
   return null;
@@ -88,7 +89,7 @@ export const initAuth = (onAuthSuccess?: (user: User, token: string) => void, on
       try {
         localStorage.removeItem(STORAGE_TOKEN_KEY);
         localStorage.removeItem(STORAGE_TOKEN_EXP_KEY);
-      } catch (e) {}
+      } catch { /* almacenamiento no disponible: el token ya se descartó en memoria */ }
       if (onAuthFailure) onAuthFailure();
     }
   });
@@ -106,7 +107,8 @@ export const googleSignIn = async (): Promise<{ user: User; accessToken: string 
 
     saveTokenToStorage(credential.accessToken);
     return { user: result.user, accessToken: credential.accessToken };
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     const errCode = error?.code || '';
     const errMsg = String(error?.message || '').toLowerCase();
 
@@ -136,12 +138,12 @@ export const googleSignIn = async (): Promise<{ user: User; accessToken: string 
 
     if (errCode === 'auth/unauthorized-domain' || errMsg.includes('unauthorized-domain')) {
       throw new Error(
-        'El dominio actual de la app no está en la lista de "Dominios autorizados" en la consola de Firebase Authentication.'
+        'El dominio actual de la app no está en la lista de "Dominios autorizados" en la consola de Firebase Authentication.', { cause: errorCapturado }
       );
     }
 
     if (errCode === 'auth/operation-not-allowed' || errMsg.includes('operation-not-allowed')) {
-      throw new Error('El proveedor de inicio de sesión con Google no está habilitado en Firebase Authentication.');
+      throw new Error('El proveedor de inicio de sesión con Google no está habilitado en Firebase Authentication.', { cause: errorCapturado });
     }
 
     console.error('Error al iniciar sesión con Google:', error);
@@ -161,7 +163,7 @@ export const logout = async () => {
   try {
     localStorage.removeItem(STORAGE_TOKEN_KEY);
     localStorage.removeItem(STORAGE_TOKEN_EXP_KEY);
-  } catch (e) {}
+  } catch { /* almacenamiento no disponible: el token ya se descartó en memoria */ }
 };
 
 // Base64URL decoder
@@ -177,24 +179,45 @@ function decodeBase64Url(str: string): string {
         .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
         .join('')
     );
-  } catch (e) {
+  } catch {
     try {
       return atob(base64);
-    } catch (err) {
+    } catch {
       return '';
     }
   }
 }
 
+/** Cabecera de un mensaje de la API de Gmail. */
+interface CabeceraGmail {
+  name: string;
+  value: string;
+}
+
+/** Parte (MIME) de un mensaje de la API de Gmail: `payload` y sus `parts` anidadas. */
+interface ParteMensajeGmail {
+  mimeType?: string;
+  headers?: CabeceraGmail[];
+  body?: { data?: string; size?: number };
+  parts?: ParteMensajeGmail[];
+}
+
+/** Mensaje que devuelve la API de Gmail al crear un borrador. */
+interface MensajeGmail {
+  id: string;
+  threadId?: string;
+  labelIds?: string[];
+}
+
 // Extract headers from message
-function getHeader(headers: any[], name: string): string {
+function getHeader(headers: CabeceraGmail[] | undefined, name: string): string {
   if (!headers) return '';
   const header = headers.find((h) => h.name.toLowerCase() === name.toLowerCase());
   return header ? header.value : '';
 }
 
 // Extract message body
-function getMessageBody(payload: any): string {
+function getMessageBody(payload: ParteMensajeGmail): string {
   if (payload.body && payload.body.data) {
     return decodeBase64Url(payload.body.data);
   }
@@ -274,7 +297,7 @@ export const fetchGmailThreadsForEmail = async (email: string, token: string): P
         try {
           const parsedDate = new Date(dateHeader);
           fechaFormatted = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}-${String(parsedDate.getDate()).padStart(2, '0')} ${String(parsedDate.getHours()).padStart(2, '0')}:${String(parsedDate.getMinutes()).padStart(2, '0')}`;
-        } catch (e) {
+        } catch {
           fechaFormatted = dateHeader;
         }
       } else {
@@ -341,9 +364,9 @@ export function buildRawMimeMessage(
   }
   const subjectB64 = btoa(binarySubject);
 
-  const boundary = `====_Bakandeya_Boundary_${Date.now()}_====`;
+  const boundary = `====_BandManager_Boundary_${Date.now()}_====`;
 
-  let rawMime = '';
+  let rawMime: string;
 
   if (attachments && attachments.length > 0) {
     // Multipart MIME Message with Attachments
@@ -398,7 +421,7 @@ export const createGmailDraft = async (
   token?: string | null,
   isHtml: boolean = true,
   attachments: EmailAttachment[] = []
-): Promise<{ id: string; message: any }> => {
+): Promise<{ id: string; message: MensajeGmail }> => {
   let activeToken = token || (await getAccessToken());
   if (!activeToken) {
     const authRes = await googleSignIn();

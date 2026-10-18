@@ -1,13 +1,14 @@
 // Regresiones de la auditoría B sobre el Agente Enviador (envío real activado a nivel global).
 // Mismo patrón que agentEngineDirectSend.test.ts: AGENT_EMAIL_MODE se lee al cargar el módulo.
 import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest';
+import { hashTextoAprobado } from '../../utils/aprobacionLead';
 
 const dbGetAutonomyConfigMock = vi.fn();
 vi.mock('../../db.js', () => ({
   getSupabase: vi.fn(),
   dbGetAutonomyConfig: (...args: any[]) => dbGetAutonomyConfigMock(...args)
 }));
-vi.mock('../../state.js', () => ({ BAKANDEYA_BAND_ID: 'band-bakandeya' }));
+vi.mock('../../state.js', () => ({ DEMO_BAND_ID: 'band-demo' }));
 
 const enviarEmailMock = vi.fn();
 const crearBorradorMock = vi.fn();
@@ -48,6 +49,7 @@ const leadBase = {
   email_contacto: 'sala@example.com',
   estado: 'aprobado_propuesta',
   pitch_generado: 'Hola, os proponemos un concierto.',
+  pitch_aprobado_hash: hashTextoAprobado('Hola, os proponemos un concierto.'),
   notas: ''
 };
 
@@ -185,5 +187,39 @@ describe('Enviador: fallos al guardar', () => {
     expect(u).toBeDefined();
     expect(u!.fila.notas).toContain('Nota importante previa');
     expect(u!.fila.estado).toBe('nuevo');
+  });
+});
+
+describe('Enviador: solo sale texto aprobado', () => {
+  it.each([
+    ['sin pitch', { pitch_generado: '' }],
+    ['pitch en blanco', { pitch_generado: '   \n ' }],
+    ['sin pitch pero con el último mensaje de la sala', { pitch_generado: '', ultimo_mensaje_recibido: 'Hola, ¿qué caché pedís?' }],
+  ])('%s: no envía ni crea borrador y lo marca como error', async (_caso, cambios) => {
+    montarSupabase({ leads: [{ ...leadBase, ...cambios }] });
+    const r = await runEnviadorAgent({ bandId: 'band-test', triggerType: 'test' });
+    expect(enviarEmailMock).not.toHaveBeenCalled();
+    expect(crearBorradorMock).not.toHaveBeenCalled();
+    expect(r.results[0].status).toBe('error');
+    expect(r.results[0].error).toMatch(/no tiene texto aprobado/);
+  });
+});
+
+describe('Enviador: la aprobación debe constar y corresponder al texto', () => {
+  it('si el texto cambió después de aprobarlo, no se envía ni se crea borrador', async () => {
+    const { updates } = montarSupabase({ leads: [{ ...leadBase, pitch_generado: 'Hola, os proponemos un concierto por 3000 euros.' }] });
+    const r = await runEnviadorAgent({ bandId: 'band-test', triggerType: 'test' });
+    expect(updates.find((u) => u.id === 'lead-1')!.fila.estado).toBe('pendiente_aprobacion');
+    expect(enviarEmailMock).not.toHaveBeenCalled();
+    expect(crearBorradorMock).not.toHaveBeenCalled();
+    expect(r.results[0].status).toBe('error');
+    expect(r.results[0].error).toMatch(/cambió después de aprobarlo/);
+  });
+
+  it('si el lead llegó a la cola sin constancia de aprobación, no sale', async () => {
+    montarSupabase({ leads: [{ ...leadBase, pitch_aprobado_hash: undefined }] });
+    const r = await runEnviadorAgent({ bandId: 'band-test', triggerType: 'test' });
+    expect(enviarEmailMock).not.toHaveBeenCalled();
+    expect(r.results[0].error).toMatch(/No consta quién aprobó/);
   });
 });

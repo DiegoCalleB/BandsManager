@@ -1,0 +1,684 @@
+---
+id: src_types
+title: "src/types.ts"
+layer: service
+domain: system
+file: "src/types.ts"
+tags: ["service", "system", "auto"]
+---
+
+# 📌 src/types.ts
+
+> **Ubicación:** `src/types.ts`  
+> **Capa:** `#layer/service` | **Dominio:** `#domain/system`
+
+## 📖 Descripción
+Exporta: LeadStatus, PitchTemplateCategory, BookingCampaign, LeadType, BandRelationshipStatus, BandContact, CanalInteraccion, ResultadoInteraccion.
+
+---
+
+## 🔗 Conexiones Salientes (Dependencies / Calls)
+_Sin dependencias salientes directas._
+
+---
+
+## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[agent_redactor|Agente Redactor (borradores de respuesta)]] *(from #agent)*
+- [[agent_scheduler|Agent Scheduler In-Process]] *(from #agent)*
+- [[agent_scout|Scout Discovery Agent]] *(from #agent)*
+- [[db_leads|Leads DB Handlers]] *(from #db)*
+- [[db_payments|Pagos y suscripciones (Stripe)]] *(from #db)*
+- [[db_repertoire|Repertoire DB Handlers]] *(from #db)*
+- [[db_state_sync|In-Memory State & Supabase Sync]] *(from #db)*
+- [[hook_app_data|useAppData Hook]] *(from #hook)*
+- [[hook_booking_pipeline|useBookingPipeline Hook]] *(from #hook)*
+- [[route_calendar_conflicts|GET /api/calendar/conflicts]] *(from #route)*
+- [[route_leads_crud|Leads CRUD Route]] *(from #route)*
+- [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(from #route)*
+- [[route_repertoire|Repertoire & Setlists Route]] *(from #route)*
+- [[server|server.ts]] *(from #route)*
+- [[server_ai|server/ai.ts]] *(from #service)*
+- [[server_controllers_tours_controller|server/controllers/tours.controller.ts]] *(from #service)*
+- [[server_db_alertSettings|server/db/alertSettings.ts]] *(from #db)*
+- [[server_db_campaigns|server/db/campaigns.ts]] *(from #db)*
+- [[server_db_contacts|server/db/contacts.ts]] *(from #db)*
+- [[server_db_deals|server/db/deals.ts]] *(from #db)*
+- [[server_db_fans|server/db/fans.ts]] *(from #db)*
+- [[server_db_pitchLearning|server/db/pitchLearning.ts]] *(from #db)*
+- [[server_db_reelMetricas|server/db/reelMetricas.ts]] *(from #db)*
+- [[server_db_rehearsals|server/db/rehearsals.ts]] *(from #db)*
+- [[server_db_schedule|server/db/schedule.ts]] *(from #db)*
+- [[server_db_social|server/db/social.ts]] *(from #db)*
+- [[server_db_tiposAdn|server/db/tiposAdn.ts]] *(from #db)*
+- [[server_db_tiposEpk|server/db/tiposEpk.ts]] *(from #db)*
+- [[server_db_tiposRepertorio|server/db/tiposRepertorio.ts]] *(from #db)*
+- [[server_db_tours|server/db/tours.ts]] *(from #db)*
+- [[server_db_users|server/db/users.ts]] *(from #db)*
+- [[server_promptsManager|server/promptsManager.ts]] *(from #service)*
+- [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
+- [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
+- [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
+- [[server_routes_deals|server/routes/deals.ts]] *(from #route)*
+- [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(from #route)*
+- [[server_routes_leads_feedback|server/routes/leads/feedback.ts]] *(from #route)*
+- [[server_routes_leads_import|server/routes/leads/import.ts]] *(from #route)*
+- [[server_routes_leads_places|server/routes/leads/places.ts]] *(from #route)*
+- [[server_routes_leads_tiposScout|server/routes/leads/tiposScout.ts]] *(from #route)*
+- [[server_routes_metrics|server/routes/metrics.ts]] *(from #route)*
+- [[server_routes_posts|server/routes/posts.ts]] *(from #route)*
+- [[server_routes_tiposCalendarioIcs|server/routes/tiposCalendarioIcs.ts]] *(from #route)*
+- [[server_routes_tracking|server/routes/tracking.ts]] *(from #route)*
+- [[server_services_acordesCancion|server/services/acordesCancion.ts]] *(from #service)*
+- [[server_services_agentIntelligence|server/services/agentIntelligence.ts]] *(from #agent)*
+- [[server_services_chatLecturas|server/services/chatLecturas.ts]] *(from #service)*
+- [[server_services_chatPrompt|server/services/chatPrompt.ts]] *(from #service)*
+- [[server_services_letraCancion|server/services/letraCancion.ts]] *(from #service)*
+- [[server_services_metricasReels|server/services/metricasReels.ts]] *(from #service)*
+- [[server_services_socialPublisher|server/services/socialPublisher.ts]] *(from #service)*
+- [[server_services_socialRadarService|server/services/socialRadarService.ts]] *(from #service)*
+- [[server_services_spotifyService|server/services/spotifyService.ts]] *(from #service)*
+- [[server_services_tiposLeadCorreo|server/services/tiposLeadCorreo.ts]] *(from #service)*
+- [[server_stateTypes|server/stateTypes.ts]] *(from #service)*
+- [[server_tiposAutoEnrichment|server/tiposAutoEnrichment.ts]] *(from #service)*
+- [[server_tiposRespuestasIA|server/tiposRespuestasIA.ts]] *(from #service)*
+- [[server_utils_analisisAcordes|server/utils/analisisAcordes.ts]] *(from #service)*
+- [[server_utils_bandProfile|server/utils/bandProfile.ts]] *(from #service)*
+- [[server_utils_cadenciaReels|server/utils/cadenciaReels.ts]] *(from #service)*
+- [[server_utils_cifradoSincronizado|server/utils/cifradoSincronizado.ts]] *(from #service)*
+- [[server_utils_emailTemplate|server/utils/emailTemplate.ts]] *(from #service)*
+- [[server_utils_melodicIdeaValidator|server/utils/melodicIdeaValidator.ts]] *(from #service)*
+- [[server_utils_musicalDna|server/utils/musicalDna.ts]] *(from #service)*
+- [[server_utils_perfectSetlistPlanner|server/utils/perfectSetlistPlanner.ts]] *(from #service)*
+- [[server_utils_programacionPosts|server/utils/programacionPosts.ts]] *(from #service)*
+- [[server_utils_setlistAIAnalyzer|server/utils/setlistAIAnalyzer.ts]] *(from #service)*
+- [[server_utils_setlistImport|server/utils/setlistImport.ts]] *(from #service)*
+- [[server_utils_templateOptimizer|server/utils/templateOptimizer.ts]] *(from #service)*
+- [[server_utils_tiposBandDna|server/utils/tiposBandDna.ts]] *(from #service)*
+- [[service_pitch_engine|Pitch Engine & Multi-Model Routing]] *(from #service)*
+- [[src_app_ActiveViewRouter|src/app/ActiveViewRouter.tsx]] *(from #service)*
+- [[src_app_AppModalsHost|src/app/AppModalsHost.tsx]] *(from #service)*
+- [[src_app_hooks_useActiveBand|src/app/hooks/useActiveBand.ts]] *(from #service)*
+- [[src_app_hooks_useAppNavigation|src/app/hooks/useAppNavigation.ts]] *(from #service)*
+- [[src_app_hooks_useAppTheme|src/app/hooks/useAppTheme.ts]] *(from #service)*
+- [[src_app_hooks_useGlobalStudio|src/app/hooks/useGlobalStudio.ts]] *(from #service)*
+- [[src_app_hooks_useNavState|src/app/hooks/useNavState.ts]] *(from #service)*
+- [[src_app_hooks_usePlanLimitGuards|src/app/hooks/usePlanLimitGuards.ts]] *(from #service)*
+- [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_atril_hooks_useAtrilAudio|src/components/atril/hooks/useAtrilAudio.ts]] *(from #frontend)*
+- [[src_components_atril_hooks_useAtrilEditing|src/components/atril/hooks/useAtrilEditing.ts]] *(from #frontend)*
+- [[src_components_atril_hooks_useAtrilHarmony|src/components/atril/hooks/useAtrilHarmony.ts]] *(from #frontend)*
+- [[src_components_atril_hooks_useAtrilState|src/components/atril/hooks/useAtrilState.ts]] *(from #frontend)*
+- [[src_components_atril_hooks_useChordAnalysis|src/components/atril/hooks/useChordAnalysis.ts]] *(from #frontend)*
+- [[src_components_band_switcher_bandSwitcherTypes|src/components/band_switcher/bandSwitcherTypes.ts]] *(from #frontend)*
+- [[src_components_band_switcher_hooks_useBandList|src/components/band_switcher/hooks/useBandList.ts]] *(from #frontend)*
+- [[src_components_band_switcher_hooks_useBandOrdering|src/components/band_switcher/hooks/useBandOrdering.ts]] *(from #frontend)*
+- [[src_components_band_switcher_hooks_useBandSwitcherController|src/components/band_switcher/hooks/useBandSwitcherController.ts]] *(from #frontend)*
+- [[src_components_band_switcher_hooks_useCreateBand|src/components/band_switcher/hooks/useCreateBand.ts]] *(from #frontend)*
+- [[src_components_BandCRM|src/components/BandCRM.tsx]] *(from #frontend)*
+- [[src_components_bandCRM_AddEditBandModal|src/components/bandCRM/AddEditBandModal.tsx]] *(from #frontend)*
+- [[src_components_bandCRM_AIBandScoutModal|src/components/bandCRM/AIBandScoutModal.tsx]] *(from #frontend)*
+- [[src_components_bandCRM_bandCrmTypes|src/components/bandCRM/bandCrmTypes.ts]] *(from #frontend)*
+- [[src_components_bandCRM_BandPitchModal|src/components/bandCRM/BandPitchModal.tsx]] *(from #frontend)*
+- [[src_components_bandCRM_BandsFilterBar|src/components/bandCRM/BandsFilterBar.tsx]] *(from #frontend)*
+- [[src_components_bandCRM_BandStatusBadge|src/components/bandCRM/BandStatusBadge.tsx]] *(from #frontend)*
+- [[src_components_bandCRM_BandToneModal|src/components/bandCRM/BandToneModal.tsx]] *(from #frontend)*
+- [[src_components_bandCRM_ChangeBandImageModal|src/components/bandCRM/ChangeBandImageModal.tsx]] *(from #frontend)*
+- [[src_components_bandCRM_hooks_useBandBulkActions|src/components/bandCRM/hooks/useBandBulkActions.ts]] *(from #frontend)*
+- [[src_components_bandCRM_hooks_useBandCrmController|src/components/bandCRM/hooks/useBandCrmController.ts]] *(from #frontend)*
+- [[src_components_bandCRM_hooks_useBandCrmData|src/components/bandCRM/hooks/useBandCrmData.ts]] *(from #frontend)*
+- [[src_components_bandCRM_hooks_useBandCrmUiState|src/components/bandCRM/hooks/useBandCrmUiState.ts]] *(from #frontend)*
+- [[src_components_bandCRM_hooks_useBandCrud|src/components/bandCRM/hooks/useBandCrud.ts]] *(from #frontend)*
+- [[src_components_bandCRM_hooks_useBandDerivedData|src/components/bandCRM/hooks/useBandDerivedData.ts]] *(from #frontend)*
+- [[src_components_bandCRM_hooks_useBandForm|src/components/bandCRM/hooks/useBandForm.ts]] *(from #frontend)*
+- [[src_components_bandCRM_hooks_useBandToneAnalysis|src/components/bandCRM/hooks/useBandToneAnalysis.ts]] *(from #frontend)*
+- [[src_components_BandMap|src/components/BandMap.tsx]] *(from #frontend)*
+- [[src_components_bandMapPopup|src/components/bandMapPopup.ts]] *(from #frontend)*
+- [[src_components_bands_BulkBandActionBar|src/components/bands/BulkBandActionBar.tsx]] *(from #frontend)*
+- [[src_components_BandSwitcherModal|src/components/BandSwitcherModal.tsx]] *(from #frontend)*
+- [[src_components_booking_AddLeadModal|src/components/booking/AddLeadModal.tsx]] *(from #frontend)*
+- [[src_components_booking_BoloConfirmadoSetlistModal|src/components/booking/BoloConfirmadoSetlistModal.tsx]] *(from #frontend)*
+- [[src_components_booking_BookingFiltersPanel|src/components/booking/BookingFiltersPanel.tsx]] *(from #frontend)*
+- [[src_components_booking_BookingSimulationModal|src/components/booking/BookingSimulationModal.tsx]] *(from #frontend)*
+- [[src_components_booking_BulkLeadsActionBar|src/components/booking/BulkLeadsActionBar.tsx]] *(from #frontend)*
+- [[src_components_booking_ChangeLeadImageModal|src/components/booking/ChangeLeadImageModal.tsx]] *(from #frontend)*
+- [[src_components_booking_crm_BulkActionsSection|src/components/booking/crm/BulkActionsSection.tsx]] *(from #frontend)*
+- [[src_components_booking_crm_hooks_useBookingCrmController|src/components/booking/crm/hooks/useBookingCrmController.ts]] *(from #frontend)*
+- [[src_components_booking_crm_hooks_useCrmNavigation|src/components/booking/crm/hooks/useCrmNavigation.ts]] *(from #frontend)*
+- [[src_components_booking_crm_hooks_useLeadActions|src/components/booking/crm/hooks/useLeadActions.ts]] *(from #frontend)*
+- [[src_components_booking_crm_hooks_useLeadEditing|src/components/booking/crm/hooks/useLeadEditing.ts]] *(from #frontend)*
+- [[src_components_booking_crm_hooks_useLeadFiltering|src/components/booking/crm/hooks/useLeadFiltering.ts]] *(from #frontend)*
+- [[src_components_booking_crm_hooks_useLeadFormsAndEnrichment|src/components/booking/crm/hooks/useLeadFormsAndEnrichment.ts]] *(from #frontend)*
+- [[src_components_booking_crm_hooks_useLeadScraping|src/components/booking/crm/hooks/useLeadScraping.ts]] *(from #frontend)*
+- [[src_components_booking_crm_hooks_useLeadSelectionAndTemplates|src/components/booking/crm/hooks/useLeadSelectionAndTemplates.ts]] *(from #frontend)*
+- [[src_components_booking_crm_leadTypeMatchers|src/components/booking/crm/leadTypeMatchers.ts]] *(from #frontend)*
+- [[src_components_booking_CRMContactEnricherModal|src/components/booking/CRMContactEnricherModal.tsx]] *(from #frontend)*
+- [[src_components_booking_DealAndLogisticsCopilot|src/components/booking/DealAndLogisticsCopilot.tsx]] *(from #frontend)*
+- [[src_components_booking_EmailDeliveryTicks|src/components/booking/EmailDeliveryTicks.tsx]] *(from #frontend)*
+- [[src_components_booking_ExcelImportModal|src/components/booking/ExcelImportModal.tsx]] *(from #frontend)*
+- [[src_components_booking_ExportLeadsModal|src/components/booking/ExportLeadsModal.tsx]] *(from #frontend)*
+- [[src_components_booking_FastDealModal|src/components/booking/FastDealModal.tsx]] *(from #frontend)*
+- [[src_components_booking_GenerateAllTemplatesModal|src/components/booking/GenerateAllTemplatesModal.tsx]] *(from #frontend)*
+- [[src_components_booking_google_places_hooks_useAlternativePlaceSources|src/components/booking/google_places/hooks/useAlternativePlaceSources.ts]] *(from #frontend)*
+- [[src_components_booking_google_places_hooks_useMassCampaignSearch|src/components/booking/google_places/hooks/useMassCampaignSearch.ts]] *(from #frontend)*
+- [[src_components_booking_google_places_hooks_usePlaceCrmImport|src/components/booking/google_places/hooks/usePlaceCrmImport.ts]] *(from #frontend)*
+- [[src_components_booking_google_places_hooks_usePlaceResults|src/components/booking/google_places/hooks/usePlaceResults.ts]] *(from #frontend)*
+- [[src_components_booking_google_places_hooks_usePlaceSearch|src/components/booking/google_places/hooks/usePlaceSearch.ts]] *(from #frontend)*
+- [[src_components_booking_google_places_hooks_useScoutFilters|src/components/booking/google_places/hooks/useScoutFilters.ts]] *(from #frontend)*
+- [[src_components_booking_google_places_placesModel|src/components/booking/google_places/placesModel.ts]] *(from #frontend)*
+- [[src_components_booking_google_places_PlacesResultsList|src/components/booking/google_places/PlacesResultsList.tsx]] *(from #frontend)*
+- [[src_components_booking_GooglePlacesExplorerModal|src/components/booking/GooglePlacesExplorerModal.tsx]] *(from #frontend)*
+- [[src_components_booking_LeadAvatar|src/components/booking/LeadAvatar.tsx]] *(from #frontend)*
+- [[src_components_booking_LeadDuplicatesModal|src/components/booking/LeadDuplicatesModal.tsx]] *(from #frontend)*
+- [[src_components_booking_leadHealth|src/components/booking/leadHealth.ts]] *(from #frontend)*
+- [[src_components_booking_LeadHealthBadge|src/components/booking/LeadHealthBadge.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_hooks_useLeadsBatchDateScan|src/components/booking/leads_table/hooks/useLeadsBatchDateScan.ts]] *(from #frontend)*
+- [[src_components_booking_leads_table_hooks_useLeadsTableController|src/components/booking/leads_table/hooks/useLeadsTableController.ts]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadCampaignDates|src/components/booking/leads_table/LeadCampaignDates.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadCardActions|src/components/booking/leads_table/LeadCardActions.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadCardHeader|src/components/booking/leads_table/LeadCardHeader.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadCardIntelligence|src/components/booking/leads_table/LeadCardIntelligence.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadCardQualityBadges|src/components/booking/leads_table/LeadCardQualityBadges.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadDatesInfo|src/components/booking/leads_table/LeadDatesInfo.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadDatesTableBadges|src/components/booking/leads_table/LeadDatesTableBadges.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadGridCard|src/components/booking/leads_table/LeadGridCard.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadIntentBadge|src/components/booking/leads_table/LeadIntentBadge.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_leadRadar|src/components/booking/leads_table/leadRadar.ts]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadRowActions|src/components/booking/leads_table/LeadRowActions.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadRowContact|src/components/booking/leads_table/LeadRowContact.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadSourcePills|src/components/booking/leads_table/LeadSourcePills.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadTableRow|src/components/booking/leads_table/LeadTableRow.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadTemperatureBadge|src/components/booking/leads_table/LeadTemperatureBadge.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_venueProgrammingUrl|src/components/booking/leads_table/venueProgrammingUrl.ts]] *(from #frontend)*
+- [[src_components_booking_MobileBottomSheet|src/components/booking/MobileBottomSheet.tsx]] *(from #frontend)*
+- [[src_components_booking_MorningBriefingRadar|src/components/booking/MorningBriefingRadar.tsx]] *(from #frontend)*
+- [[src_components_booking_MultiModelPitchComparatorModal|src/components/booking/MultiModelPitchComparatorModal.tsx]] *(from #frontend)*
+- [[src_components_booking_NegotiationSimulationModal|src/components/booking/NegotiationSimulationModal.tsx]] *(from #frontend)*
+- [[src_components_booking_QuickDealSimulator|src/components/booking/QuickDealSimulator.tsx]] *(from #frontend)*
+- [[src_components_booking_RoadbookContractModal|src/components/booking/RoadbookContractModal.tsx]] *(from #frontend)*
+- [[src_components_booking_TemplateConfigSection|src/components/booking/TemplateConfigSection.tsx]] *(from #frontend)*
+- [[src_components_booking_tiposRespuestasApi|src/components/booking/tiposRespuestasApi.ts]] *(from #frontend)*
+- [[src_components_booking_venue_modal_types|src/components/booking/venue_modal/types.ts]] *(from #frontend)*
+- [[src_components_booking_venue_modal_VenueBitacoraTab|src/components/booking/venue_modal/VenueBitacoraTab.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_modal_VenueEmailThread|src/components/booking/venue_modal/VenueEmailThread.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_modal_VenueIntelligenceTab|src/components/booking/venue_modal/VenueIntelligenceTab.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_modal_VenueModalHeader|src/components/booking/venue_modal/VenueModalHeader.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_modal_VenuePitchWorkspace|src/components/booking/venue_modal/VenuePitchWorkspace.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_modal_VenueProfileColumn|src/components/booking/venue_modal/VenueProfileColumn.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_modal_VenueWorkspaceModal|src/components/booking/venue_modal/VenueWorkspaceModal.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_panel_apiResponses|src/components/booking/venue_panel/apiResponses.ts]] *(from #frontend)*
+- [[src_components_booking_venue_panel_hooks_buildVenuePanelActions|src/components/booking/venue_panel/hooks/buildVenuePanelActions.ts]] *(from #frontend)*
+- [[src_components_booking_venue_panel_hooks_useVenueEnrichment|src/components/booking/venue_panel/hooks/useVenueEnrichment.ts]] *(from #frontend)*
+- [[src_components_booking_venue_panel_hooks_useVenueMessageThread|src/components/booking/venue_panel/hooks/useVenueMessageThread.ts]] *(from #frontend)*
+- [[src_components_booking_venue_panel_hooks_useVenueScoutActions|src/components/booking/venue_panel/hooks/useVenueScoutActions.ts]] *(from #frontend)*
+- [[src_components_booking_venue_panel_VenueAgentWorkflowBanner|src/components/booking/venue_panel/VenueAgentWorkflowBanner.tsx]] *(from #agent)*
+- [[src_components_booking_venue_panel_VenueAudienceVerificationCards|src/components/booking/venue_panel/VenueAudienceVerificationCards.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_panel_VenueBitacoraSection|src/components/booking/venue_panel/VenueBitacoraSection.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_panel_VenueCalendarEventsCards|src/components/booking/venue_panel/VenueCalendarEventsCards.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_panel_VenueCoBookingMediaCards|src/components/booking/venue_panel/VenueCoBookingMediaCards.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_panel_VenueContactRosterCards|src/components/booking/venue_panel/VenueContactRosterCards.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_panel_VenueEmailsSection|src/components/booking/venue_panel/VenueEmailsSection.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_panel_VenueFinancialSimulatorCard|src/components/booking/venue_panel/VenueFinancialSimulatorCard.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_panel_VenueIntelligenceSection|src/components/booking/venue_panel/VenueIntelligenceSection.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_panel_VenueLeadHealthRow|src/components/booking/venue_panel/VenueLeadHealthRow.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_panel_VenueLeadInfoEditForm|src/components/booking/venue_panel/VenueLeadInfoEditForm.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_panel_venuePanelTypes|src/components/booking/venue_panel/venuePanelTypes.ts]] *(from #frontend)*
+- [[src_components_booking_venue_panel_VenuePitchComposer|src/components/booking/venue_panel/VenuePitchComposer.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_panel_VenuePitchFeedbackPanel|src/components/booking/venue_panel/VenuePitchFeedbackPanel.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_panel_VenuePitchInfoSection|src/components/booking/venue_panel/VenuePitchInfoSection.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_panel_VenuePlaybookBanner|src/components/booking/venue_panel/VenuePlaybookBanner.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_panel_VenueQuickActionBar|src/components/booking/venue_panel/VenueQuickActionBar.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_panel_VenueRouteSocialCards|src/components/booking/venue_panel/VenueRouteSocialCards.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_panel_VenueScoutToolbar|src/components/booking/venue_panel/VenueScoutToolbar.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_panel_VenueTitleBar|src/components/booking/venue_panel/VenueTitleBar.tsx]] *(from #frontend)*
+- [[src_components_booking_WhatsAppPreviewModal|src/components/booking/WhatsAppPreviewModal.tsx]] *(from #frontend)*
+- [[src_components_calendar_CalendarCreateEventModal|src/components/calendar/CalendarCreateEventModal.tsx]] *(from #frontend)*
+- [[src_components_calendar_CalendarEditConcertModal|src/components/calendar/CalendarEditConcertModal.tsx]] *(from #frontend)*
+- [[src_components_calendar_CalendarEditRehearsalModal|src/components/calendar/CalendarEditRehearsalModal.tsx]] *(from #frontend)*
+- [[src_components_calendar_CalendarEventDetailModal|src/components/calendar/CalendarEventDetailModal.tsx]] *(from #frontend)*
+- [[src_components_calendar_CalendarReminderModal|src/components/calendar/CalendarReminderModal.tsx]] *(from #frontend)*
+- [[src_components_calendar_calendarTypes|src/components/calendar/calendarTypes.ts]] *(from #frontend)*
+- [[src_components_calendar_CalendarViewsContainer|src/components/calendar/CalendarViewsContainer.tsx]] *(from #frontend)*
+- [[src_components_calendar_ConcertBreakEvenCard|src/components/calendar/ConcertBreakEvenCard.tsx]] *(from #frontend)*
+- [[src_components_calendar_event_detail_ClosingChecklistTab|src/components/calendar/event_detail/ClosingChecklistTab.tsx]] *(from #frontend)*
+- [[src_components_calendar_event_detail_hooks_useEventDetailController|src/components/calendar/event_detail/hooks/useEventDetailController.ts]] *(from #frontend)*
+- [[src_components_calendar_event_detail_merch_merchCategories|src/components/calendar/event_detail/merch/merchCategories.tsx]] *(from #frontend)*
+- [[src_components_calendar_hooks_useBandMembers|src/components/calendar/hooks/useBandMembers.ts]] *(from #frontend)*
+- [[src_components_calendar_hooks_useCalendarBands|src/components/calendar/hooks/useCalendarBands.ts]] *(from #frontend)*
+- [[src_components_calendar_hooks_useCalendarController|src/components/calendar/hooks/useCalendarController.ts]] *(from #frontend)*
+- [[src_components_calendar_hooks_useCalendarDates|src/components/calendar/hooks/useCalendarDates.ts]] *(from #frontend)*
+- [[src_components_calendar_hooks_useCalendarFilters|src/components/calendar/hooks/useCalendarFilters.ts]] *(from #frontend)*
+- [[src_components_calendar_hooks_useCalendarFullscreen|src/components/calendar/hooks/useCalendarFullscreen.ts]] *(from #frontend)*
+- [[src_components_calendar_hooks_useCreateEventForm|src/components/calendar/hooks/useCreateEventForm.ts]] *(from #frontend)*
+- [[src_components_calendar_hooks_useEventFicha|src/components/calendar/hooks/useEventFicha.ts]] *(from #frontend)*
+- [[src_components_calendar_hooks_useEventInlineEdit|src/components/calendar/hooks/useEventInlineEdit.ts]] *(from #frontend)*
+- [[src_components_calendar_hooks_useEventReminder|src/components/calendar/hooks/useEventReminder.ts]] *(from #frontend)*
+- [[src_components_calendar_hooks_useEventShareActions|src/components/calendar/hooks/useEventShareActions.ts]] *(from #frontend)*
+- [[src_components_calendar_hooks_useRunOfShowAndGear|src/components/calendar/hooks/useRunOfShowAndGear.ts]] *(from #frontend)*
+- [[src_components_calendar_hooks_useSelectedEventDetails|src/components/calendar/hooks/useSelectedEventDetails.ts]] *(from #frontend)*
+- [[src_components_calendar_hooks_useUpcomingEvents|src/components/calendar/hooks/useUpcomingEvents.ts]] *(from #frontend)*
+- [[src_components_calendar_logistics_EventSetlistWidget|src/components/calendar/logistics/EventSetlistWidget.tsx]] *(from #frontend)*
+- [[src_components_calendar_PromocionConciertoModal|src/components/calendar/PromocionConciertoModal.tsx]] *(from #frontend)*
+- [[src_components_calendar_useCalendarRoadbook|src/components/calendar/useCalendarRoadbook.ts]] *(from #frontend)*
+- [[src_components_calendar_views_CalendarOverlays|src/components/calendar/views/CalendarOverlays.tsx]] *(from #frontend)*
+- [[src_components_campaign_CampaignManagerModal|src/components/campaign/CampaignManagerModal.tsx]] *(from #frontend)*
+- [[src_components_campaign_GlobalCampaignBar|src/components/campaign/GlobalCampaignBar.tsx]] *(from #frontend)*
+- [[src_components_cartel_CarteleriaView|src/components/cartel/CarteleriaView.tsx]] *(from #frontend)*
+- [[src_components_cartel_hooks_useEditorCartel|src/components/cartel/hooks/useEditorCartel.ts]] *(from #frontend)*
+- [[src_components_chatbot_ActiveRunPanel|src/components/chatbot/ActiveRunPanel.tsx]] *(from #frontend)*
+- [[src_components_chatbot_ChatMessageBubble|src/components/chatbot/ChatMessageBubble.tsx]] *(from #frontend)*
+- [[src_components_chatbot_chatTypes|src/components/chatbot/chatTypes.ts]] *(from #frontend)*
+- [[src_components_chatbot_hooks_useAgentTriggerAction|src/components/chatbot/hooks/useAgentTriggerAction.ts]] *(from #agent)*
+- [[src_components_chatbot_hooks_useChatActions|src/components/chatbot/hooks/useChatActions.ts]] *(from #frontend)*
+- [[src_components_chatbot_hooks_useChatAudioGeneration|src/components/chatbot/hooks/useChatAudioGeneration.ts]] *(from #frontend)*
+- [[src_components_chatbot_hooks_useChatController|src/components/chatbot/hooks/useChatController.ts]] *(from #frontend)*
+- [[src_components_chatbot_hooks_useChatIdentity|src/components/chatbot/hooks/useChatIdentity.ts]] *(from #frontend)*
+- [[src_components_chatbot_hooks_useChatSend|src/components/chatbot/hooks/useChatSend.ts]] *(from #frontend)*
+- [[src_components_chatbot_hooks_useEntityActions|src/components/chatbot/hooks/useEntityActions.ts]] *(from #frontend)*
+- [[src_components_chatbot_hooks_useLeadEmailActions|src/components/chatbot/hooks/useLeadEmailActions.ts]] *(from #frontend)*
+- [[src_components_CheckoutButton|src/components/CheckoutButton.tsx]] *(from #frontend)*
+- [[src_components_chords_LineaTiempoAcordes|src/components/chords/LineaTiempoAcordes.tsx]] *(from #frontend)*
+- [[src_components_chords_MezclaPistas|src/components/chords/MezclaPistas.tsx]] *(from #frontend)*
+- [[src_components_chords_PanelArmonia|src/components/chords/PanelArmonia.tsx]] *(from #frontend)*
+- [[src_components_chords_ProfesorIA|src/components/chords/ProfesorIA.tsx]] *(from #frontend)*
+- [[src_components_chords_SelectorEscucha|src/components/chords/SelectorEscucha.tsx]] *(from #frontend)*
+- [[src_components_chords_TomasConFondo|src/components/chords/TomasConFondo.tsx]] *(from #frontend)*
+- [[src_components_common_ReliabilityBadge|src/components/common/ReliabilityBadge.tsx]] *(from #frontend)*
+- [[src_components_Dashboard|src/components/Dashboard.tsx]] *(from #frontend)*
+- [[src_components_dashboard_AddLeadModal|src/components/dashboard/AddLeadModal.tsx]] *(from #frontend)*
+- [[src_components_dashboard_agent_autonomy_AgentAutonomyContext|src/components/dashboard/agent_autonomy/AgentAutonomyContext.ts]] *(from #agent)*
+- [[src_components_dashboard_agent_autonomy_hooks_useAgentAutonomyController|src/components/dashboard/agent_autonomy/hooks/useAgentAutonomyController.ts]] *(from #agent)*
+- [[src_components_dashboard_agent_autonomy_hooks_useAutonomyConfig|src/components/dashboard/agent_autonomy/hooks/useAutonomyConfig.ts]] *(from #agent)*
+- [[src_components_dashboard_AgentAutonomySettingsModal|src/components/dashboard/AgentAutonomySettingsModal.tsx]] *(from #agent)*
+- [[src_components_dashboard_alertSettingsDefaults|src/components/dashboard/alertSettingsDefaults.ts]] *(from #frontend)*
+- [[src_components_dashboard_AlertSettingsModal|src/components/dashboard/AlertSettingsModal.tsx]] *(from #frontend)*
+- [[src_components_dashboard_DashboardWidgetGrid|src/components/dashboard/DashboardWidgetGrid.tsx]] *(from #frontend)*
+- [[src_components_dashboard_ExecutiveSummaryHero|src/components/dashboard/ExecutiveSummaryHero.tsx]] *(from #frontend)*
+- [[src_components_dashboard_NeedsAttentionBanner|src/components/dashboard/NeedsAttentionBanner.tsx]] *(from #frontend)*
+- [[src_components_dashboard_NextGigStrip|src/components/dashboard/NextGigStrip.tsx]] *(from #frontend)*
+- [[src_components_dashboard_ProfileCompletenessCard|src/components/dashboard/ProfileCompletenessCard.tsx]] *(from #frontend)*
+- [[src_components_dashboard_SocialAndFansGrowthChart|src/components/dashboard/SocialAndFansGrowthChart.tsx]] *(from #frontend)*
+- [[src_components_dashboard_widgets_CalendarWidget|src/components/dashboard/widgets/CalendarWidget.tsx]] *(from #frontend)*
+- [[src_components_dashboard_widgets_ChartWidgets|src/components/dashboard/widgets/ChartWidgets.tsx]] *(from #frontend)*
+- [[src_components_dashboard_widgets_MarketingWidget|src/components/dashboard/widgets/MarketingWidget.tsx]] *(from #frontend)*
+- [[src_components_dashboard_widgets_ModuleWidgets|src/components/dashboard/widgets/ModuleWidgets.tsx]] *(from #frontend)*
+- [[src_components_dashboard_widgets_RoiBandaWidget|src/components/dashboard/widgets/RoiBandaWidget.tsx]] *(from #frontend)*
+- [[src_components_EmailAccountConfig|src/components/EmailAccountConfig.tsx]] *(from #frontend)*
+- [[src_components_ensayos_BarraSeguimientoEnsayo|src/components/ensayos/BarraSeguimientoEnsayo.tsx]] *(from #frontend)*
+- [[src_components_ensayos_ConvocarEnsayoModal|src/components/ensayos/ConvocarEnsayoModal.tsx]] *(from #frontend)*
+- [[src_components_ensayos_EnsayoCronometro|src/components/ensayos/EnsayoCronometro.tsx]] *(from #frontend)*
+- [[src_components_ensayos_EnsayosManager|src/components/ensayos/EnsayosManager.tsx]] *(from #frontend)*
+- [[src_components_ensayos_GrabacionActaTab|src/components/ensayos/GrabacionActaTab.tsx]] *(from #frontend)*
+- [[src_components_ensayos_ModoLocalEnVivoTab|src/components/ensayos/ModoLocalEnVivoTab.tsx]] *(from #frontend)*
+- [[src_components_ensayos_OrdenDelDiaTab|src/components/ensayos/OrdenDelDiaTab.tsx]] *(from #frontend)*
+- [[src_components_epk_EPKArchivosBlock|src/components/epk/EPKArchivosBlock.tsx]] *(from #frontend)*
+- [[src_components_epk_epkBlocks|src/components/epk/epkBlocks.ts]] *(from #frontend)*
+- [[src_components_epk_EPKDonacionesBlock|src/components/epk/EPKDonacionesBlock.tsx]] *(from #frontend)*
+- [[src_components_epk_EPKFirmaQRBlock|src/components/epk/EPKFirmaQRBlock.tsx]] *(from #frontend)*
+- [[src_components_epk_EPKMusicaBlock|src/components/epk/EPKMusicaBlock.tsx]] *(from #frontend)*
+- [[src_components_epk_EPKPerfilBlock|src/components/epk/EPKPerfilBlock.tsx]] *(from #frontend)*
+- [[src_components_epk_EPKPlantillasBlock|src/components/epk/EPKPlantillasBlock.tsx]] *(from #frontend)*
+- [[src_components_epk_EPKPrensaBlock|src/components/epk/EPKPrensaBlock.tsx]] *(from #frontend)*
+- [[src_components_epk_epkTemplates|src/components/epk/epkTemplates.ts]] *(from #frontend)*
+- [[src_components_EPKManager|src/components/EPKManager.tsx]] *(from #frontend)*
+- [[src_components_fans_FansCommunityView|src/components/fans/FansCommunityView.tsx]] *(from #frontend)*
+- [[src_components_fans_FansDashboardView|src/components/fans/FansDashboardView.tsx]] *(from #frontend)*
+- [[src_components_fans_landing_hooks_useFanBandProfile|src/components/fans_landing/hooks/useFanBandProfile.ts]] *(from #frontend)*
+- [[src_components_fans_landing_hooks_useFanEngagement|src/components/fans_landing/hooks/useFanEngagement.ts]] *(from #frontend)*
+- [[src_components_fans_landing_hooks_useFanJoinForm|src/components/fans_landing/hooks/useFanJoinForm.ts]] *(from #frontend)*
+- [[src_components_fans_landing_hooks_useFanSignupSubmit|src/components/fans_landing/hooks/useFanSignupSubmit.ts]] *(from #frontend)*
+- [[src_components_fans_landing_hooks_useFansLandingController|src/components/fans_landing/hooks/useFansLandingController.ts]] *(from #frontend)*
+- [[src_components_fans_panel_FansAddModal|src/components/fans_panel/FansAddModal.tsx]] *(from #frontend)*
+- [[src_components_fans_panel_hooks_useCityChips|src/components/fans_panel/hooks/useCityChips.ts]] *(from #frontend)*
+- [[src_components_fans_panel_hooks_useFanIncentive|src/components/fans_panel/hooks/useFanIncentive.ts]] *(from #frontend)*
+- [[src_components_fans_panel_hooks_useFansFilters|src/components/fans_panel/hooks/useFansFilters.ts]] *(from #frontend)*
+- [[src_components_fans_panel_hooks_useFansPanelController|src/components/fans_panel/hooks/useFansPanelController.ts]] *(from #frontend)*
+- [[src_components_fans_panel_hooks_useManualFanForm|src/components/fans_panel/hooks/useManualFanForm.ts]] *(from #frontend)*
+- [[src_components_fans_panel_hooks_useQrLink|src/components/fans_panel/hooks/useQrLink.ts]] *(from #frontend)*
+- [[src_components_fans_panel_hooks_useQrSharing|src/components/fans_panel/hooks/useQrSharing.ts]] *(from #frontend)*
+- [[src_components_FansLanding|src/components/FansLanding.tsx]] *(from #frontend)*
+- [[src_components_FansLandingPreviewModal|src/components/FansLandingPreviewModal.tsx]] *(from #frontend)*
+- [[src_components_FansPanel|src/components/FansPanel.tsx]] *(from #frontend)*
+- [[src_components_Finanzas|src/components/Finanzas.tsx]] *(from #frontend)*
+- [[src_components_finanzas_AddTransactionModal|src/components/finanzas/AddTransactionModal.tsx]] *(from #frontend)*
+- [[src_components_finanzas_FinanceSummaryCards|src/components/finanzas/FinanceSummaryCards.tsx]] *(from #frontend)*
+- [[src_components_GlobalPlayer|src/components/GlobalPlayer.tsx]] *(from #frontend)*
+- [[src_components_LoginModal|src/components/LoginModal.tsx]] *(from #frontend)*
+- [[src_components_Merchan|src/components/Merchan.tsx]] *(from #frontend)*
+- [[src_components_MetronomeModal|src/components/MetronomeModal.tsx]] *(from #frontend)*
+- [[src_components_onboarding_OnboardingWizardModal|src/components/onboarding/OnboardingWizardModal.tsx]] *(from #frontend)*
+- [[src_components_onboarding_steps_StepMusicSetlist|src/components/onboarding/steps/StepMusicSetlist.tsx]] *(from #frontend)*
+- [[src_components_onboarding_steps_StepVideos|src/components/onboarding/steps/StepVideos.tsx]] *(from #frontend)*
+- [[src_components_onboarding_wizard_epkLegacy|src/components/onboarding/wizard/epkLegacy.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useBioStep|src/components/onboarding/wizard/hooks/useBioStep.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useBookingAndAgentStep|src/components/onboarding/wizard/hooks/useBookingAndAgentStep.ts]] *(from #agent)*
+- [[src_components_onboarding_wizard_hooks_useEventsStep|src/components/onboarding/wizard/hooks/useEventsStep.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useFansPaymentsStep|src/components/onboarding/wizard/hooks/useFansPaymentsStep.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useIdentityStep|src/components/onboarding/wizard/hooks/useIdentityStep.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useMembersStep|src/components/onboarding/wizard/hooks/useMembersStep.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useMusicSetlistStep|src/components/onboarding/wizard/hooks/useMusicSetlistStep.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useOnboardingWizardController|src/components/onboarding/wizard/hooks/useOnboardingWizardController.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_usePhotosStep|src/components/onboarding/wizard/hooks/usePhotosStep.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_usePressProofStep|src/components/onboarding/wizard/hooks/usePressProofStep.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useRiderStep|src/components/onboarding/wizard/hooks/useRiderStep.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useSocialsMerchStep|src/components/onboarding/wizard/hooks/useSocialsMerchStep.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useVideosStep|src/components/onboarding/wizard/hooks/useVideosStep.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useWizardSteps|src/components/onboarding/wizard/hooks/useWizardSteps.ts]] *(from #frontend)*
+- [[src_components_Planes|src/components/Planes.tsx]] *(from #frontend)*
+- [[src_components_PlanLimitModal|src/components/PlanLimitModal.tsx]] *(from #frontend)*
+- [[src_components_PracticeModePanel|src/components/PracticeModePanel.tsx]] *(from #frontend)*
+- [[src_components_PublicEPK|src/components/PublicEPK.tsx]] *(from #frontend)*
+- [[src_components_reels_center_hooks_useCopyActions|src/components/reels_center/hooks/useCopyActions.ts]] *(from #frontend)*
+- [[src_components_reels_center_hooks_useCopyDraftState|src/components/reels_center/hooks/useCopyDraftState.ts]] *(from #frontend)*
+- [[src_components_reels_center_hooks_useReelsCenterController|src/components/reels_center/hooks/useReelsCenterController.ts]] *(from #frontend)*
+- [[src_components_reels_center_hooks_useSocialPublishing|src/components/reels_center/hooks/useSocialPublishing.ts]] *(from #frontend)*
+- [[src_components_reels_center_reelsApiTypes|src/components/reels_center/reelsApiTypes.ts]] *(from #frontend)*
+- [[src_components_reels_center_ReelsCenterContext|src/components/reels_center/ReelsCenterContext.ts]] *(from #frontend)*
+- [[src_components_reels_metrics_hooks_useContentItems|src/components/reels/metrics/hooks/useContentItems.ts]] *(from #frontend)*
+- [[src_components_reels_metrics_hooks_useGrowthPlan|src/components/reels/metrics/hooks/useGrowthPlan.ts]] *(from #frontend)*
+- [[src_components_reels_metrics_hooks_useMetricForm|src/components/reels/metrics/hooks/useMetricForm.ts]] *(from #frontend)*
+- [[src_components_reels_metrics_hooks_useMetricsChart|src/components/reels/metrics/hooks/useMetricsChart.ts]] *(from #frontend)*
+- [[src_components_reels_metrics_hooks_useMetricsSummary|src/components/reels/metrics/hooks/useMetricsSummary.ts]] *(from #frontend)*
+- [[src_components_reels_metrics_hooks_useReelsMetricsController|src/components/reels/metrics/hooks/useReelsMetricsController.ts]] *(from #frontend)*
+- [[src_components_reels_metrics_metricsTypes|src/components/reels/metrics/metricsTypes.ts]] *(from #frontend)*
+- [[src_components_reels_ReelsMetricsView|src/components/reels/ReelsMetricsView.tsx]] *(from #frontend)*
+- [[src_components_reels_ReelsPhoneMockup|src/components/reels/ReelsPhoneMockup.tsx]] *(from #frontend)*
+- [[src_components_reels_ReelsTheaterModal|src/components/reels/ReelsTheaterModal.tsx]] *(from #frontend)*
+- [[src_components_reels_SocialGrowthPlanView|src/components/reels/SocialGrowthPlanView.tsx]] *(from #frontend)*
+- [[src_components_reels_ViralGrowthStudio|src/components/reels/ViralGrowthStudio.tsx]] *(from #frontend)*
+- [[src_components_ReelsCenter|src/components/ReelsCenter.tsx]] *(from #frontend)*
+- [[src_components_repertorio_ActiveSetlistHeader|src/components/repertorio/ActiveSetlistHeader.tsx]] *(from #frontend)*
+- [[src_components_repertorio_AddSongsToSetlistModal|src/components/repertorio/AddSongsToSetlistModal.tsx]] *(from #frontend)*
+- [[src_components_repertorio_AssignSetlistModal|src/components/repertorio/AssignSetlistModal.tsx]] *(from #frontend)*
+- [[src_components_repertorio_AssignSongsToAlbumModal|src/components/repertorio/AssignSongsToAlbumModal.tsx]] *(from #frontend)*
+- [[src_components_repertorio_bloqueImportado|src/components/repertorio/bloqueImportado.ts]] *(from #frontend)*
+- [[src_components_repertorio_BulkAlbumAudioUploaderModal|src/components/repertorio/BulkAlbumAudioUploaderModal.tsx]] *(from #frontend)*
+- [[src_components_repertorio_CatalogoGeneralView|src/components/repertorio/CatalogoGeneralView.tsx]] *(from #frontend)*
+- [[src_components_repertorio_DiscografiaView|src/components/repertorio/DiscografiaView.tsx]] *(from #frontend)*
+- [[src_components_repertorio_EscenarioView|src/components/repertorio/EscenarioView.tsx]] *(from #frontend)*
+- [[src_components_repertorio_ExportAlbumSongsModal|src/components/repertorio/ExportAlbumSongsModal.tsx]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useActiveSetlistState|src/components/repertorio/hooks/useActiveSetlistState.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useBandRepertoireScope|src/components/repertorio/hooks/useBandRepertoireScope.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useCatalogActions|src/components/repertorio/hooks/useCatalogActions.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useEnergyMapData|src/components/repertorio/hooks/useEnergyMapData.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useRepertorioData|src/components/repertorio/hooks/useRepertorioData.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useRepertorioDialogs|src/components/repertorio/hooks/useRepertorioDialogs.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useRepertorioPersistence|src/components/repertorio/hooks/useRepertorioPersistence.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useRepertorioPlaybackAndModals|src/components/repertorio/hooks/useRepertorioPlaybackAndModals.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useRepertorioPlayers|src/components/repertorio/hooks/useRepertorioPlayers.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useRepertorioViewState|src/components/repertorio/hooks/useRepertorioViewState.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useSetlistCrud|src/components/repertorio/hooks/useSetlistCrud.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useSetlistDeletion|src/components/repertorio/hooks/useSetlistDeletion.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useSetlistItemActions|src/components/repertorio/hooks/useSetlistItemActions.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useSetlistItemPopovers|src/components/repertorio/hooks/useSetlistItemPopovers.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useSetlistItemsMutations|src/components/repertorio/hooks/useSetlistItemsMutations.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useSetlistReordering|src/components/repertorio/hooks/useSetlistReordering.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useSetlistSync|src/components/repertorio/hooks/useSetlistSync.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useSongEditing|src/components/repertorio/hooks/useSongEditing.ts]] *(from #frontend)*
+- [[src_components_repertorio_ImportSetlistModal|src/components/repertorio/ImportSetlistModal.tsx]] *(from #frontend)*
+- [[src_components_repertorio_live_concert_album_LiveConcertAlbumContext|src/components/repertorio/live_concert_album/LiveConcertAlbumContext.ts]] *(from #frontend)*
+- [[src_components_repertorio_LiveConcertToAlbumModal|src/components/repertorio/LiveConcertToAlbumModal.tsx]] *(from #frontend)*
+- [[src_components_repertorio_MemberNotesModal|src/components/repertorio/MemberNotesModal.tsx]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_buildHeaderFooter|src/components/repertorio/pdf_export/buildHeaderFooter.ts]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_buildRowHtmlFactory|src/components/repertorio/pdf_export/buildRowHtmlFactory.ts]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_hooks_usePdfExportController|src/components/repertorio/pdf_export/hooks/usePdfExportController.ts]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_hooks_usePrintPreview|src/components/repertorio/pdf_export/hooks/usePrintPreview.ts]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_hooks_useSongMarks|src/components/repertorio/pdf_export/hooks/useSongMarks.ts]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_MemberNotesHost|src/components/repertorio/pdf_export/MemberNotesHost.tsx]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_PdfExportContext|src/components/repertorio/pdf_export/PdfExportContext.ts]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_printDocumentBuilder|src/components/repertorio/pdf_export/printDocumentBuilder.ts]] *(from #frontend)*
+- [[src_components_repertorio_PdfExportModal|src/components/repertorio/PdfExportModal.tsx]] *(from #frontend)*
+- [[src_components_repertorio_RepertorioCatalogView|src/components/repertorio/RepertorioCatalogView.tsx]] *(from #frontend)*
+- [[src_components_repertorio_RepertorioModalsContainer|src/components/repertorio/RepertorioModalsContainer.tsx]] *(from #frontend)*
+- [[src_components_repertorio_repertorioModalsTipos|src/components/repertorio/repertorioModalsTipos.ts]] *(from #frontend)*
+- [[src_components_repertorio_RepertorioNavBar|src/components/repertorio/RepertorioNavBar.tsx]] *(from #frontend)*
+- [[src_components_repertorio_RepertorioSetlistsView|src/components/repertorio/RepertorioSetlistsView.tsx]] *(from #frontend)*
+- [[src_components_repertorio_SetlistAddBar|src/components/repertorio/SetlistAddBar.tsx]] *(from #frontend)*
+- [[src_components_repertorio_setlistItemKind|src/components/repertorio/setlistItemKind.ts]] *(from #frontend)*
+- [[src_components_repertorio_SetlistItemsList|src/components/repertorio/SetlistItemsList.tsx]] *(from #frontend)*
+- [[src_components_repertorio_SetlistModal|src/components/repertorio/SetlistModal.tsx]] *(from #frontend)*
+- [[src_components_repertorio_SetlistShowItemRow|src/components/repertorio/SetlistShowItemRow.tsx]] *(from #frontend)*
+- [[src_components_repertorio_SetlistSongRow|src/components/repertorio/SetlistSongRow.tsx]] *(from #frontend)*
+- [[src_components_repertorio_showItemForm|src/components/repertorio/showItemForm.ts]] *(from #frontend)*
+- [[src_components_repertorio_ShowItemModal|src/components/repertorio/ShowItemModal.tsx]] *(from #frontend)*
+- [[src_components_repertorio_song_transition_hooks_useTransitionCues|src/components/repertorio/song_transition/hooks/useTransitionCues.ts]] *(from #frontend)*
+- [[src_components_repertorio_song_transition_hooks_useTransitionPlayback|src/components/repertorio/song_transition/hooks/useTransitionPlayback.ts]] *(from #frontend)*
+- [[src_components_repertorio_song_transition_hooks_useTransitionSources|src/components/repertorio/song_transition/hooks/useTransitionSources.ts]] *(from #frontend)*
+- [[src_components_repertorio_song_transition_types|src/components/repertorio/song_transition/types.ts]] *(from #frontend)*
+- [[src_components_repertorio_SongCardRow|src/components/repertorio/SongCardRow.tsx]] *(from #frontend)*
+- [[src_components_repertorio_SongModal|src/components/repertorio/SongModal.tsx]] *(from #frontend)*
+- [[src_components_repertorio_SongTransitionPreviewModal|src/components/repertorio/SongTransitionPreviewModal.tsx]] *(from #frontend)*
+- [[src_components_repertorio_SpotifyDiscographyModal|src/components/repertorio/SpotifyDiscographyModal.tsx]] *(from #frontend)*
+- [[src_components_setlist_performance_hooks_useChordSheet|src/components/setlist_performance/hooks/useChordSheet.ts]] *(from #frontend)*
+- [[src_components_setlist_performance_hooks_usePageTurning|src/components/setlist_performance/hooks/usePageTurning.ts]] *(from #frontend)*
+- [[src_components_setlist_performance_hooks_usePracticeLaunch|src/components/setlist_performance/hooks/usePracticeLaunch.ts]] *(from #frontend)*
+- [[src_components_setlist_performance_hooks_useSetlistNavigation|src/components/setlist_performance/hooks/useSetlistNavigation.ts]] *(from #frontend)*
+- [[src_components_setlist_performance_performanceModel|src/components/setlist_performance/performanceModel.ts]] *(from #frontend)*
+- [[src_components_setlist_performance_ScannedSheetPage|src/components/setlist_performance/ScannedSheetPage.tsx]] *(from #frontend)*
+- [[src_components_setlist_performance_SetlistPerformanceContext|src/components/setlist_performance/SetlistPerformanceContext.ts]] *(from #frontend)*
+- [[src_components_setlist_performance_TeleprompterBlockPage|src/components/setlist_performance/TeleprompterBlockPage.tsx]] *(from #frontend)*
+- [[src_components_SetlistPerformanceView|src/components/SetlistPerformanceView.tsx]] *(from #frontend)*
+- [[src_components_ShareModal|src/components/ShareModal.tsx]] *(from #frontend)*
+- [[src_components_SimplePromoLoginModal|src/components/SimplePromoLoginModal.tsx]] *(from #frontend)*
+- [[src_components_song_studio_hooks_useAiTrackGeneration|src/components/song_studio/hooks/useAiTrackGeneration.ts]] *(from #frontend)*
+- [[src_components_song_studio_hooks_useIdeaLoopControls|src/components/song_studio/hooks/useIdeaLoopControls.ts]] *(from #frontend)*
+- [[src_components_song_studio_hooks_useIdeaPlaybackTracks|src/components/song_studio/hooks/useIdeaPlaybackTracks.ts]] *(from #frontend)*
+- [[src_components_song_studio_hooks_useMoisesStemsPanel|src/components/song_studio/hooks/useMoisesStemsPanel.ts]] *(from #frontend)*
+- [[src_components_song_studio_hooks_useResolvedAudioUrls|src/components/song_studio/hooks/useResolvedAudioUrls.ts]] *(from #frontend)*
+- [[src_components_song_studio_hooks_useSongIdeasCrud|src/components/song_studio/hooks/useSongIdeasCrud.ts]] *(from #frontend)*
+- [[src_components_song_studio_hooks_useSongStudioController|src/components/song_studio/hooks/useSongStudioController.ts]] *(from #frontend)*
+- [[src_components_song_studio_hooks_useStudioIdeasView|src/components/song_studio/hooks/useStudioIdeasView.ts]] *(from #frontend)*
+- [[src_components_song_studio_hooks_useStudioKeyboardShortcuts|src/components/song_studio/hooks/useStudioKeyboardShortcuts.ts]] *(from #frontend)*
+- [[src_components_song_studio_hooks_useStudioPlaybackEngine|src/components/song_studio/hooks/useStudioPlaybackEngine.ts]] *(from #frontend)*
+- [[src_components_song_studio_hooks_useTrackAudioDsp|src/components/song_studio/hooks/useTrackAudioDsp.ts]] *(from #frontend)*
+- [[src_components_song_studio_hooks_useTrackMixerActions|src/components/song_studio/hooks/useTrackMixerActions.ts]] *(from #frontend)*
+- [[src_components_song_studio_hooks_useTrackOverdub|src/components/song_studio/hooks/useTrackOverdub.ts]] *(from #frontend)*
+- [[src_components_song_studio_ideaTracks|src/components/song_studio/ideaTracks.ts]] *(from #frontend)*
+- [[src_components_song_studio_seccionIdea|src/components/song_studio/seccionIdea.ts]] *(from #frontend)*
+- [[src_components_song_studio_songAudioSource|src/components/song_studio/songAudioSource.ts]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioAddIdeaForm|src/components/song_studio/SongStudioAddIdeaForm.tsx]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioAiComposerModal|src/components/song_studio/SongStudioAiComposerModal.tsx]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioAiGeneratorModal|src/components/song_studio/SongStudioAiGeneratorModal.tsx]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioAiMusicModal|src/components/song_studio/SongStudioAiMusicModal.tsx]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioAiTrackGenModal|src/components/song_studio/SongStudioAiTrackGenModal.tsx]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioContext|src/components/song_studio/SongStudioContext.ts]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioDialogs|src/components/song_studio/SongStudioDialogs.tsx]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioIdeaCard|src/components/song_studio/SongStudioIdeaCard.tsx]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioIdeaComments|src/components/song_studio/SongStudioIdeaComments.tsx]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioIdeaHeader|src/components/song_studio/SongStudioIdeaHeader.tsx]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioIdeaMixer|src/components/song_studio/SongStudioIdeaMixer.tsx]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioIdeasFeed|src/components/song_studio/SongStudioIdeasFeed.tsx]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioIdeaTrackActions|src/components/song_studio/SongStudioIdeaTrackActions.tsx]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioIdeaTransport|src/components/song_studio/SongStudioIdeaTransport.tsx]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioIdeaVoteBar|src/components/song_studio/SongStudioIdeaVoteBar.tsx]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioLiveRecordingRow|src/components/song_studio/SongStudioLiveRecordingRow.tsx]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioMixerTrackRow|src/components/song_studio/SongStudioMixerTrackRow.tsx]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioMoisesStemsModal|src/components/song_studio/SongStudioMoisesStemsModal.tsx]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioOverdubDrawer|src/components/song_studio/SongStudioOverdubDrawer.tsx]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioStructureUploadModal|src/components/song_studio/SongStudioStructureUploadModal.tsx]] *(from #frontend)*
+- [[src_components_song_studio_studioConstants|src/components/song_studio/studioConstants.ts]] *(from #frontend)*
+- [[src_components_song_studio_trackColors|src/components/song_studio/trackColors.ts]] *(from #frontend)*
+- [[src_components_SongStudioModal|src/components/SongStudioModal.tsx]] *(from #frontend)*
+- [[src_components_SpotifyPlayerBar|src/components/SpotifyPlayerBar.tsx]] *(from #frontend)*
+- [[src_components_tour_manager_hooks_useTourForm|src/components/tour_manager/hooks/useTourForm.ts]] *(from #frontend)*
+- [[src_components_tour_manager_hooks_useTourManagerController|src/components/tour_manager/hooks/useTourManagerController.ts]] *(from #frontend)*
+- [[src_components_tour_manager_hooks_useTourModal|src/components/tour_manager/hooks/useTourModal.ts]] *(from #frontend)*
+- [[src_components_tour_manager_hooks_useTourSave|src/components/tour_manager/hooks/useTourSave.ts]] *(from #frontend)*
+- [[src_components_tour_manager_TourEditModal|src/components/tour_manager/TourEditModal.tsx]] *(from #frontend)*
+- [[src_components_TourManager|src/components/TourManager.tsx]] *(from #frontend)*
+- [[src_components_TunerModal|src/components/TunerModal.tsx]] *(from #frontend)*
+- [[src_components_user_profile_AppearanceSettings|src/components/user_profile/AppearanceSettings.tsx]] *(from #frontend)*
+- [[src_components_user_profile_hooks_usePlanSummary|src/components/user_profile/hooks/usePlanSummary.ts]] *(from #frontend)*
+- [[src_components_user_profile_hooks_useProfileBands|src/components/user_profile/hooks/useProfileBands.ts]] *(from #frontend)*
+- [[src_components_user_profile_hooks_useProfileIdentity|src/components/user_profile/hooks/useProfileIdentity.ts]] *(from #frontend)*
+- [[src_components_user_profile_UpgradePlanDialog|src/components/user_profile/UpgradePlanDialog.tsx]] *(from #frontend)*
+- [[src_components_UserManagementModal|src/components/UserManagementModal.tsx]] *(from #frontend)*
+- [[src_components_UserProfileModal|src/components/UserProfileModal.tsx]] *(from #frontend)*
+- [[src_components_VenueMap|src/components/VenueMap.tsx]] *(from #frontend)*
+- [[src_config_sampleRepertoire|src/config/sampleRepertoire.ts]] *(from #service)*
+- [[src_context_PlayerContext|src/context/PlayerContext.tsx]] *(from #service)*
+- [[src_context_playerContextValue|src/context/playerContextValue.ts]] *(from #service)*
+- [[src_db_seed|src/db_seed.ts]] *(from #service)*
+- [[src_hooks_useAccompanimentGenerator|src/hooks/useAccompanimentGenerator.ts]] *(from #hook)*
+- [[src_hooks_useAudioPlayer|src/hooks/useAudioPlayer.ts]] *(from #hook)*
+- [[src_hooks_useAuth|src/hooks/useAuth.ts]] *(from #security)*
+- [[src_hooks_useBrowserPushNotifications|src/hooks/useBrowserPushNotifications.ts]] *(from #hook)*
+- [[src_hooks_useCatalogFilters|src/hooks/useCatalogFilters.ts]] *(from #hook)*
+- [[src_hooks_useCityChips|src/hooks/useCityChips.ts]] *(from #hook)*
+- [[src_hooks_useGmailIntegration|src/hooks/useGmailIntegration.ts]] *(from #hook)*
+- [[src_hooks_useIdeaComments|src/hooks/useIdeaComments.ts]] *(from #hook)*
+- [[src_hooks_useInteractionLog|src/hooks/useInteractionLog.ts]] *(from #hook)*
+- [[src_hooks_useMezclaStems|src/hooks/useMezclaStems.ts]] *(from #hook)*
+- [[src_hooks_useNegotiationSimulation|src/hooks/useNegotiationSimulation.ts]] *(from #hook)*
+- [[src_hooks_useSavedFilters|src/hooks/useSavedFilters.ts]] *(from #hook)*
+- [[src_hooks_useSeguimientoEnsayo|src/hooks/useSeguimientoEnsayo.ts]] *(from #hook)*
+- [[src_hooks_useSeparacionIris|src/hooks/useSeparacionIris.ts]] *(from #hook)*
+- [[src_hooks_useShareModal|src/hooks/useShareModal.ts]] *(from #hook)*
+- [[src_hooks_useStagePlayer|src/hooks/useStagePlayer.ts]] *(from #hook)*
+- [[src_hooks_useStudioShareModal|src/hooks/useStudioShareModal.ts]] *(from #hook)*
+- [[src_services_api|src/services/api.ts]] *(from #service)*
+- [[src_services_sesionLocal|src/services/sesionLocal.ts]] *(from #service)*
+- [[src_services_tiposApi|src/services/tiposApi.ts]] *(from #service)*
+- [[src_services_tiposRespuestasHerramientas|src/services/tiposRespuestasHerramientas.ts]] *(from #service)*
+- [[src_utils_accompanimentSynth|src/utils/accompanimentSynth.ts]] *(from #service)*
+- [[src_utils_agendaASetlist|src/utils/agendaASetlist.ts]] *(from #service)*
+- [[src_utils_agendaEnsayo|src/utils/agendaEnsayo.ts]] *(from #service)*
+- [[src_utils_alineacionAcordes|src/utils/alineacionAcordes.ts]] *(from #service)*
+- [[src_utils_analisisAcordesCliente|src/utils/analisisAcordesCliente.ts]] *(from #service)*
+- [[src_utils_appDataNormalize|src/utils/appDataNormalize.ts]] *(from #service)*
+- [[src_utils_audioCueDetector|src/utils/audioCueDetector.ts]] *(from #service)*
+- [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(from #service)*
+- [[src_utils_bandGrowthTiers|src/utils/bandGrowthTiers.ts]] *(from #service)*
+- [[src_utils_bookingFollowup|src/utils/bookingFollowup.ts]] *(from #service)*
+- [[src_utils_bookingTourContext|src/utils/bookingTourContext.ts]] *(from #service)*
+- [[src_utils_bookingUtils|src/utils/bookingUtils.ts]] *(from #service)*
+- [[src_utils_breakEvenCalculator|src/utils/breakEvenCalculator.ts]] *(from #service)*
+- [[src_utils_calendarViewPreferences|src/utils/calendarViewPreferences.ts]] *(from #service)*
+- [[src_utils_campaignMatch|src/utils/campaignMatch.ts]] *(from #service)*
+- [[src_utils_cartel_datos|src/utils/cartel/datos.ts]] *(from #service)*
+- [[src_utils_cuadriculaCompases|src/utils/cuadriculaCompases.ts]] *(from #service)*
+- [[src_utils_duplicateLeads|src/utils/duplicateLeads.ts]] *(from #service)*
+- [[src_utils_emailFormatter|src/utils/emailFormatter.ts]] *(from #service)*
+- [[src_utils_energyPacingUtils|src/utils/energyPacingUtils.ts]] *(from #service)*
+- [[src_utils_epkTraducciones|src/utils/epkTraducciones.ts]] *(from #service)*
+- [[src_utils_epkUtils|src/utils/epkUtils.ts]] *(from #service)*
+- [[src_utils_fanUtils|src/utils/fanUtils.ts]] *(from #service)*
+- [[src_utils_financeUtils|src/utils/financeUtils.ts]] *(from #service)*
+- [[src_utils_formatSongTitle|src/utils/formatSongTitle.ts]] *(from #service)*
+- [[src_utils_gmail|src/utils/gmail.ts]] *(from #service)*
+- [[src_utils_grabarIdea|src/utils/grabarIdea.ts]] *(from #service)*
+- [[src_utils_growthPlanEngine|src/utils/growthPlanEngine.ts]] *(from #service)*
+- [[src_utils_harmonicAnalysis|src/utils/harmonicAnalysis.ts]] *(from #service)*
+- [[src_utils_ideaDeAtril|src/utils/ideaDeAtril.ts]] *(from #service)*
+- [[src_utils_indicadoresMarketing|src/utils/indicadoresMarketing.ts]] *(from #service)*
+- [[src_utils_instrumentSynth|src/utils/instrumentSynth.ts]] *(from #service)*
+- [[src_utils_irisTracks|src/utils/irisTracks.ts]] *(from #service)*
+- [[src_utils_leadReliability|src/utils/leadReliability.ts]] *(from #service)*
+- [[src_utils_lineaTiempoAcordes|src/utils/lineaTiempoAcordes.ts]] *(from #service)*
+- [[src_utils_managerAlerts|src/utils/managerAlerts.ts]] *(from #service)*
+- [[src_utils_mezclaStems|src/utils/mezclaStems.ts]] *(from #service)*
+- [[src_utils_midiExport|src/utils/midiExport.ts]] *(from #service)*
+- [[src_utils_offlineSync|src/utils/offlineSync.ts]] *(from #service)*
+- [[src_utils_repertorioPdf|src/utils/repertorioPdf.ts]] *(from #service)*
+- [[src_utils_roiBanda|src/utils/roiBanda.ts]] *(from #service)*
+- [[src_utils_separacionIris|src/utils/separacionIris.ts]] *(from #service)*
+- [[src_utils_setlistCompatibility|src/utils/setlistCompatibility.ts]] *(from #service)*
+- [[src_utils_setlistOptimization|src/utils/setlistOptimization.ts]] *(from #service)*
+- [[src_utils_shareUtils|src/utils/shareUtils.ts]] *(from #service)*
+- [[src_utils_sheetsUtils|src/utils/sheetsUtils.ts]] *(from #service)*
+- [[src_utils_stageOfflineCache|src/utils/stageOfflineCache.ts]] *(from #service)*
+- [[src_utils_theme|src/utils/theme.ts]] *(from #service)*
+- [[src_utils_tiposRepertorio|src/utils/tiposRepertorio.ts]] *(from #service)*
+- [[src_utils_tourRouting|src/utils/tourRouting.ts]] *(from #service)*
+- [[src_utils_transcripcionMasiva|src/utils/transcripcionMasiva.ts]] *(from #service)*
+- [[src_utils_transitionAudioEngine|src/utils/transitionAudioEngine.ts]] *(from #service)*
+- [[src_utils_userPreferences|src/utils/userPreferences.ts]] *(from #service)*
+- [[src_utils_whatsappUtils|src/utils/whatsappUtils.ts]] *(from #service)*
+- [[ui_booking_crm|Booking CRM Component]] *(from #frontend)*
+- [[ui_calendar_conflicts|Avisos de choque en el calendario]] *(from #frontend)*
+- [[ui_leads_table|Leads Table & Actions]] *(from #frontend)*
+- [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
+- [[ui_venue_detail|Venue Detail & Pitch Simulator]] *(from #frontend)*
+- [[util_calendar_conflicts|Detector de choques del calendario]] *(from #service)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/services/__tests__/calendarConflictService.test.ts`
+- `server/services/__tests__/chatLecturas.test.ts`
+- `server/services/__tests__/metricasReels.test.ts`
+- `server/services/__tests__/socialPublisher.test.ts`
+- `server/utils/__tests__/cadenciaReels.test.ts`
+- `server/utils/__tests__/perfectSetlistPlanner.test.ts`
+- `server/utils/__tests__/programacionPosts.test.ts`
+- `src/audit/mezclaBaseIdea.test.ts`
+- `src/audit/mezclaPistasAtril.test.tsx`
+- `src/audit/tomasConFondoAtril.test.tsx`
+- `src/audit/transcripcionMasiva.test.tsx`
+- `src/components/__tests__/PracticeModePanel.behavior.test.tsx`
+- `src/components/atril/hooks/__tests__/useAtrilAudio.behavior.test.ts`
+- `src/components/booking/__tests__/CRMContactEnricherModal.test.tsx`
+- `src/components/booking/__tests__/ExportLeadsModal.test.ts`
+- `src/components/booking/__tests__/ReinicioPorLead.behavior.test.tsx`
+- `src/components/booking/__tests__/VenueEmailThread.behavior.test.tsx`
+- `src/components/booking/crm/__tests__/leadTypeMatchers.test.ts`
+- `src/components/booking/leads_table/__tests__/LeadRowContact.aviso.test.tsx`
+- `src/components/booking/leads_table/__tests__/leadsTableContracts.test.ts`
+- `src/components/booking/leads_table/hooks/__tests__/useLeadsBatchDateScan.behavior.test.ts`
+- `src/components/booking/venue_panel/__tests__/VenuePitchComposer.aviso.test.tsx`
+- `src/components/booking/venue_panel/__tests__/venuePanelSections.test.tsx`
+- `src/components/dashboard/widgets/__tests__/MarketingWidget.test.tsx`
+- `src/components/ensayos/__tests__/ensayosAgenda.test.ts`
+- `src/components/onboarding/wizard/__tests__/onboardingWizardContracts.test.ts`
+- `src/components/onboarding/wizard/hooks/__tests__/musicSetlistStep.behavior.test.ts`
+- `src/components/onboarding/wizard/hooks/__tests__/onboardingSave.behavior.test.ts`
+- `src/components/repertorio/__tests__/SetlistModal.behavior.test.tsx`
+- `src/components/repertorio/__tests__/SetlistShowItemRowContracts.test.ts`
+- `src/components/repertorio/__tests__/SpotifyDiscographyModal.behavior.test.tsx`
+- `src/components/repertorio/__tests__/showItemForm.test.ts`
+- `src/components/repertorio/live_concert_album/__tests__/liveConcertAlbumContracts.test.ts`
+- `src/components/repertorio/song_transition/__tests__/songTransitionContracts.test.ts`
+- `src/components/setlist_performance/__tests__/setlistPerformanceContracts.test.ts`
+- `src/components/song_studio/__tests__/songStudioModulesContracts.test.ts`
+- `src/components/song_studio/__tests__/songStudioPureHooks.test.ts`
+- `src/components/song_studio/hooks/__tests__/useStudioKeyboardShortcuts.test.tsx`
+- `src/components/user_profile/hooks/__tests__/useProfileBands.behavior.test.ts`
+- `src/hooks/__tests__/useAuth.behavior.test.ts`
+- `src/hooks/__tests__/useStagePlayer.behavior.test.ts`
+- `src/utils/__tests__/agendaASetlist.test.ts`
+- `src/utils/__tests__/audioCueDetector.test.ts`
+- `src/utils/__tests__/bookingUtils.test.ts`
+- `src/utils/__tests__/calendarConflicts.test.ts`
+- `src/utils/__tests__/campaignMatch.test.ts`
+- `src/utils/__tests__/duplicateLeads.test.ts`
+- `src/utils/__tests__/energyPacingUtils.test.ts`
+- `src/utils/__tests__/epkTraducciones.test.ts`
+- `src/utils/__tests__/epkUtils.test.ts`
+- `src/utils/__tests__/fanUtils.test.ts`
+- `src/utils/__tests__/financeUtils.test.ts`
+- `src/utils/__tests__/formatSongTitle.test.ts`
+- `src/utils/__tests__/grabarIdea.test.ts`
+- `src/utils/__tests__/harmonicAnalysis.test.ts`
+- `src/utils/__tests__/indicadoresMarketing.test.ts`
+- `src/utils/__tests__/instrumentSynth.test.ts`
+- `src/utils/__tests__/irisTracks.test.ts`
+- `src/utils/__tests__/lineaTiempoAcordes.test.ts`
+- `src/utils/__tests__/managerAlerts.test.ts`
+- `src/utils/__tests__/mezclaAjustes.test.ts`
+- `src/utils/__tests__/mezclaStems.test.ts`
+- `src/utils/__tests__/midiExport.test.ts`
+- `src/utils/__tests__/pistasDeCancion.test.ts`
+- `src/utils/__tests__/repertorioPdf.test.ts`
+- `src/utils/__tests__/separacionIris.test.ts`
+- `src/utils/__tests__/setlistCompatibility.test.ts`
+- `src/utils/__tests__/setlistOptimization.test.ts`
+- `src/utils/__tests__/sheetsUtils.test.ts`
+- `src/utils/__tests__/stageOfflineCache.test.ts`
+- `src/utils/__tests__/tourRouting.test.ts`
+- `src/utils/__tests__/transitionAudioEngine.test.ts`
+- `src/utils/cartel/__tests__/datos.test.ts`
+
+---
+
+## 🛡️ Reglas de Aislamiento & Calidad
+- [ ] ¿Respeta el trust boundary de `band_id`?
+- [ ] ¿Tiene pruebas unitarias o de integración asociadas?

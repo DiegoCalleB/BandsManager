@@ -83,7 +83,14 @@ describe("Reintento de separación de stems", () => {
 });
 
 describe("Ruta /ai-stem-separation: garantías estáticas", () => {
-  const ruta = fs.readFileSync(path.join(__dirname, "..", "..", "routes", "ai_music.ts"), "utf-8");
+  // La ruta vive repartida entre ai_music.ts y sus módulos de ai_music/ (ADR 0042).
+  const dirRutas = path.join(__dirname, "..", "..", "routes");
+  const ruta = [
+    fs.readFileSync(path.join(dirRutas, "ai_music.ts"), "utf-8"),
+    ...fs.readdirSync(path.join(dirRutas, "ai_music"))
+      .filter((f) => f.endsWith(".ts"))
+      .map((f) => fs.readFileSync(path.join(dirRutas, "ai_music", f), "utf-8")),
+  ].join("\n");
   const modal = fs.readFileSync(path.join(__dirname, "..", "..", "..", "src", "components", "song_studio", "SongStudioMoisesStemsModal.tsx"), "utf-8");
 
   it("nunca escribe tokens del cliente en process.env", () => {

@@ -1,0 +1,19 @@
+:{$PORT:8080} {
+	root * /srv
+	encode zstd gzip
+	header {
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		Cache-Control "public, max-age=300"
+	}
+	header /img/* Cache-Control "public, max-age=86400"
+	handle /fans-contador {
+		reverse_proxy 127.0.0.1:8787
+	}
+	handle /aviso {
+		reverse_proxy 127.0.0.1:8787
+	}
+	handle {
+		file_server
+	}
+}

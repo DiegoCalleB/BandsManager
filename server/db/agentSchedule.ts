@@ -18,7 +18,7 @@ export async function dbGetAgentLastRun(jobName: string): Promise<Date | null> {
       inMemoryLastRun[jobName] = data.last_run_at;
       return new Date(data.last_run_at);
     }
-  } catch (e) {
+  } catch {
     // Tabla no disponible todavía: usar el respaldo en memoria de este proceso.
   }
 

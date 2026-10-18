@@ -1,4 +1,4 @@
-import { Lead, LeadStatus, LeadType, Concert, EmailMessage, InteractionLog } from '../../../types';
+import { Lead, LeadStatus, Concert, BookingCampaign } from '../../../types';
 
 export interface VenueModalProps {
   isOpen: boolean;
@@ -15,7 +15,7 @@ export interface VenueModalProps {
   normalizeType: (type?: string) => string;
   autoDetectVenueAddress: (venueName: string, city: string) => string;
   sectionTab: 'salas' | 'medios' | 'grupos';
-  activeCampaign?: any;
+  activeCampaign?: BookingCampaign | null;
   onLeadLogoUpload?: (file: File) => Promise<string | null> | void;
   isUploadingLeadLogo?: boolean;
   initialTab?: 'pitch' | 'emails' | 'intelligence' | 'bitacora';

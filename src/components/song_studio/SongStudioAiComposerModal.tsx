@@ -1,10 +1,21 @@
 import React, { useState } from 'react';
-import { Sparkles, X, Wand2, Music, Check, User, Mic, FileText, Plus, Disc } from 'lucide-react';
+import { Sparkles, X, Wand2, Plus } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
 import { Song, SongAudioIdea } from '../../types';
+import { seccionDesdeEtiqueta } from './seccionIdea';
 import { apiFetch } from '../../utils/api';
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, Select, Textarea } from '../ui';
+import { comoErrorCapturado } from '../../utils/errorCapturado';
+
+/** Idea de arreglo que devuelve `POST /api/ai-composer-arrangement`. */
+interface IdeaCompositorIa {
+  tituloIdea?: string;
+  instrumentoRol?: string;
+  descripcionArreglo?: string;
+  tablaturaOAcordes?: string;
+  notasParaBanda?: string;
+}
 
 interface SongStudioAiComposerModalProps {
   isOpen: boolean;
@@ -27,7 +38,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
   const [tiempoMinuto, setTiempoMinuto] = useState<string>('01:00');
   const [promptUsuario, setPromptUsuario] = useState<string>('');
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
-  const [generatedIdea, setGeneratedIdea] = useState<any | null>(null);
+  const [generatedIdea, setGeneratedIdea] = useState<IdeaCompositorIa | null>(null);
 
   if (!isOpen) return null;
 
@@ -35,7 +46,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
     setIsGenerating(true);
     setGeneratedIdea(null);
     try {
-      const data = await apiFetch<any>('/api/ai-composer-arrangement', {
+      const data = await apiFetch<{ success?: boolean; idea?: IdeaCompositorIa; error?: string }>('/api/ai-composer-arrangement', {
         method: 'POST',
         body: JSON.stringify({
           titulo: song.titulo,
@@ -55,7 +66,8 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
       } else {
         alert(data?.error || 'Error al generar idea con IA.');
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error generating AI arrangement:', err);
       alert(err?.message || 'Error de conexión al generar arreglo con IA.');
     } finally {
@@ -75,7 +87,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
     const newIdea: SongAudioIdea = {
       id: `idea-ai-${Date.now()}`,
       titulo: generatedIdea.tituloIdea || `Idea IA (${seccionCancion} ${tiempoMinuto})`,
-      seccion: (seccionCancion.toLowerCase().replace(/\s+/g, '-') as any) || 'general',
+      seccion: seccionDesdeEtiqueta(seccionCancion),
       audioUrl: url,
       fecha: new Date().toLocaleDateString('es-ES', {
         day: '2-digit',

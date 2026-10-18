@@ -1,14 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  normalizeText,
-  normalizeVenueName,
-  normalizeEmail,
-  normalizeWebOrHandle,
-  stringSimilarity,
-  findDuplicateLeads,
-  mergeTwoLeads,
-  checkSingleLeadDuplicate,
-} from '../duplicateLeads';
+import { normalizeVenueName, stringSimilarity, findDuplicateLeads, mergeTwoLeads, checkSingleLeadDuplicate } from '../duplicateLeads';
 import { Lead } from '../../types';
 
 describe('duplicateLeads utility', () => {

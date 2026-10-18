@@ -10,6 +10,8 @@ import {
   getDetailedQueueMetrics,
   pruneOldJobs
 } from "../services/agentQueueService.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import { responderError } from '../utils/errorHttp.js';
 
 const router = express.Router();
 
@@ -22,8 +24,9 @@ router.get("/stats", requireAuth, async (req, res) => {
     const bandId = getTargetBandId(req);
     const stats = await getQueueStats(bandId);
     return res.json({ success: true, stats });
-  } catch (error: any) {
-    return res.status(500).json({ success: false, error: error?.message || "Error al obtener estadísticas de la cola." });
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
+    return responderError(res, error, "Error al obtener estadísticas de la cola.");
   }
 });
 
@@ -36,8 +39,9 @@ router.get("/metrics", requireAuth, async (req, res) => {
     const bandId = getTargetBandId(req);
     const data = await getDetailedQueueMetrics(bandId);
     return res.json({ success: true, ...data });
-  } catch (error: any) {
-    return res.status(500).json({ success: false, error: error?.message || "Error al obtener métricas de telemetría." });
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
+    return responderError(res, error, "Error al obtener métricas de telemetría.");
   }
 });
 
@@ -50,8 +54,9 @@ router.post("/prune", requireAuth, async (req, res) => {
     const { completedDays = 7, failedDays = 30 } = req.body;
     const deletedCount = await pruneOldJobs(Number(completedDays), Number(failedDays));
     return res.json({ success: true, deletedCount, message: `Poda completada: ${deletedCount} trabajo(s) eliminados.` });
-  } catch (error: any) {
-    return res.status(500).json({ success: false, error: error?.message || "Error al podar la cola." });
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
+    return responderError(res, error, "Error al podar la cola.");
   }
 });
 
@@ -75,8 +80,9 @@ router.post("/enqueue", requireAuth, async (req, res) => {
     });
 
     return res.json({ success: true, jobId, message: `Trabajo ${jobId} encolado para el agente '${agentType}'.` });
-  } catch (error: any) {
-    return res.status(500).json({ success: false, error: error?.message || "Error al encolar el trabajo." });
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
+    return responderError(res, error, "Error al encolar el trabajo.");
   }
 });
 

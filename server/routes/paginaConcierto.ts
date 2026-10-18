@@ -23,11 +23,22 @@ import {
   slugConcierto,
   type EntradaSitemap,
 } from '../utils/paginaConcierto.js';
+import { alternativasLanding } from '../utils/cabeceraIdioma.js';
+import { renderizarPaginaRider } from '../utils/paginaRider.js';
+import { entradasSeo } from '../utils/seo/sitemap.js';
 import { urlInsignia } from '../utils/referidos.js';
 import { obtenerPerfilPublicoBandaCacheado } from '../services/perfilPublicoBanda.js';
 import { captureError } from '../utils/errorTracking.js';
 
+import emailsCicloVidaRouter from './emailsCicloVida.js';
+import fansContadorRouter from './fans_contador.js';
+import paginasSeoRouter from './paginasSeo.js';
+export { startEmailsCicloVidaScheduler } from '../services/emailsCicloVida.js';
+
 const router = express.Router();
+router.use(emailsCicloVidaRouter); // baja de los emails de onboarding (/api/emails/baja)
+router.use(paginasSeoRouter); // guías de SEO (/guias)
+router.use(fansContadorRouter); // número de fans para la película del TFM (/api/public/fans/contador)
 
 function responderHtml(res: express.Response, status: number, html: string, cache: string) {
   res.status(status);
@@ -35,6 +46,14 @@ function responderHtml(res: express.Response, status: number, html: string, cach
   res.setHeader('Cache-Control', cache);
   res.send(html);
 }
+
+// Página de SEO con contenido fijo (sin datos de ninguna banda): ver server/utils/paginaRider.ts.
+router.get('/plantilla-rider-tecnico', publicoRateLimiter, (_req, res) => {
+  responderHtml(res, 200, renderizarPaginaRider(baseUrlPublica(), 'es'), 'public, max-age=3600, s-maxage=86400');
+});
+router.get('/en/technical-rider-template', publicoRateLimiter, (_req, res) => {
+  responderHtml(res, 200, renderizarPaginaRider(baseUrlPublica(), 'en'), 'public, max-age=3600, s-maxage=86400');
+});
 
 router.get('/e/:slug', publicoRateLimiter, async (req, res) => {
   const base = baseUrlPublica();
@@ -120,7 +139,12 @@ async function construirSitemap(base: string): Promise<string> {
       })
     );
   }
-  const entradas: EntradaSitemap[] = [{ loc: `${base}/` }];
+  const alternativas = alternativasLanding(base);
+  const entradas: EntradaSitemap[] = [
+    { loc: `${base}/`, alternativas },
+    { loc: `${base}/en`, alternativas },
+    ...entradasSeo(base),
+  ];
   for (const c of filas as Array<FilaConcierto & { id: string; sala: string; fecha: string }>) {
     const nombre = nombres.get(String(c.band_id));
     if (!nombre) continue;

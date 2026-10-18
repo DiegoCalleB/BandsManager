@@ -2,22 +2,26 @@ import express from "express";
 import compression from "compression";
 import helmet from "helmet";
 import path from "path";
+import { servirIndex } from "./server/utils/cabeceraIdioma.js";
+import { baseUrlPublica } from "./server/utils/paginaConcierto.js";
 import * as XLSX from "xlsx";
-
 import { resolveResendApiKey } from "./server/services/transactionalEmail.js";
 import { Lead, Concert, SocialPost, Payment, Rehearsal, Song, Setlist } from "./src/types";
 
-import { getSafeUsers, getUserFromRequest } from "./server/auth.js";
+import { getUserFromRequest } from "./server/auth.js";
 import { jsonSegunSesion } from "./server/middleware/limiteCuerpo.js";
-import { mismaBanda } from "./server/utils/bandAccess.js";
-import { loadState, saveState, getEpkConfigForBand, ensureUniqueIdsInState } from "./server/state.js";
+import { paginaRateLimiter } from "./server/middleware/rateLimiter.js";
+import { mismaBanda, bandaDe } from "./server/utils/bandAccess.js";
+import { loadState } from "./server/state.js";
 import { loadStateFromSupabase, invalidarCachePorEscritura } from "./server/db.js";
 import { avisarGuardadoParcial } from "./server/utils/guardadoParcial.js";
 import { startSocialRadarScheduler } from "./server/services/socialRadarService.js";
 import { startAgentScheduler } from "./server/services/agentScheduler.js";
 import { startCalendarConflictScheduler } from "./server/services/calendarConflictService.js";
-import { iniciarColaLetras } from "./server/services/colaLetras.js";
+import { iniciarWorkersDeReels } from "./server/services/workersReels.js";
+import { iniciarColaLetras } from "./server/services/colaLetras.js"; import { iniciarSincronizacionDelCatalogo } from "./server/services/catalogoScheduler.js";
 import { initErrorTracking, captureError } from "./server/utils/errorTracking.js";
+import { responderError } from "./server/utils/errorHttp.js";
 import { getAppInfo } from "./server/utils/version.js";
 
 import usersRouter, { ensureAdminUserExists } from "./server/routes/users.js";
@@ -27,6 +31,7 @@ import chatRouter from "./server/routes/chat.js";
 import leadsRouter from "./server/routes/leads.js";
 import concertsRouter from "./server/routes/concerts.js";
 import bandsRouter from "./server/routes/bands.js";
+import bandMusicRouter from "./server/routes/bandMusic.js";
 import toursRouter from "./server/routes/tours.js";
 import agentRouter from "./server/routes/agent.js";
 import agentQueueRouter from "./server/routes/agentQueue.js";
@@ -44,13 +49,14 @@ import gmailOAuthRouter from "./server/routes/gmailOAuth.js";
 import songsRouter from "./server/routes/songs/index.js";
 import transposeRouter from "./server/routes/transposeRoute.js";
 import trackingRouter from "./server/routes/tracking.js";
-import paginaConciertoRouter from "./server/routes/paginaConcierto.js";
+import paginaConciertoRouter, { startEmailsCicloVidaScheduler } from "./server/routes/paginaConcierto.js";
 import { enlacesCortosApiRouter, enlacesCortosPublicoRouter } from "./server/routes/enlacesCortos.js";
 import { referidosRouter } from "./server/routes/referidos.js";
 import { campanaConciertoRouter } from "./server/routes/campanaConcierto.js";
 import { dealsRouter } from "./server/routes/deals.js";
 
 import dotenv from "dotenv";
+import { comoErrorCapturado } from './src/utils/errorCapturado.js';
 dotenv.config(); // No sobreescribir variables de entorno inyectadas por Railway / producción
 
 // Pasivo sin SENTRY_DSN en el entorno - ver server/utils/errorTracking.ts.
@@ -72,10 +78,8 @@ process.on("unhandledRejection", (reason) => {
 const app = express();
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
-// CSP y COEP desactivados: el panel embebe Stripe Checkout, reproductores de Spotify/YouTube
-// y el widget de Google Translate (inyecta <script>/<style> inline), todos ajenos al origen
-// propio. El resto de cabeceras de helmet (HSTS, X-Frame-Options, nosniff, X-Powered-By oculto)
-// no rompen nada de eso y sí cierran clickjacking y fuga de metadata.
+// CSP mínima (object-src, base-uri, frame-ancestors; helmet exige default-src, de ahí la marca): la completa no se puede fijar porque el panel
+// embebe Stripe, Spotify/YouTube/Vimeo y Google Translate (scripts inline ajenos). COEP sigue desactivado.
 //
 // Referrer-Policy SÍ hay que fijarlo a mano: el "no-referrer" por defecto de helmet hace que el
 // navegador no mande cabecera Referer al pedir el iframe de YouTube del EPK público, y el
@@ -85,7 +89,7 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 // navegadores modernos: manda el origen (no la URL completa) a otros sitios, nada a HTTP en
 // claro, y es suficiente para que YouTube/Vimeo/Spotify carguen bien.
 app.use(helmet({
-  contentSecurityPolicy: false,
+  contentSecurityPolicy: { useDefaults: false, directives: { defaultSrc: helmet.contentSecurityPolicy.dangerouslyDisableDefaultSrc, objectSrc: ["'none'"], baseUri: ["'self'"], frameAncestors: ["'self'"] } },
   crossOriginEmbedderPolicy: false,
   crossOriginResourcePolicy: { policy: "cross-origin" },
   referrerPolicy: { policy: "strict-origin-when-cross-origin" },
@@ -115,6 +119,7 @@ app.use("/api", metricsRouter);
 app.use("/api", chatRouter);
 app.use("/api", leadsRouter);
 app.use("/api", concertsRouter);
+app.use("/api", bandMusicRouter);
 app.use("/api", bandsRouter);
 app.use("/api", toursRouter);
 app.use("/api", agentRouter);
@@ -249,6 +254,18 @@ app.get("/terms", (req, res) => {
   `);
 });
 
+/** Elemento de `runOfShow` (horario) o `gearChecklists` (material) de una fecha, tal como se guarda en el estado. */
+interface ElementoLogistica {
+  id?: string;
+  time?: string;
+  activity?: string;
+  done?: boolean;
+  label?: string;
+  checked?: boolean;
+  band_id?: string;
+  bandId?: string;
+}
+
 app.get("/api/download-excel", (req, res) => {
   try {
     // Antes esta ruta no exigía sesión y exportaba en un Excel los datos de TODAS las bandas del
@@ -263,7 +280,7 @@ app.get("/api/download-excel", (req, res) => {
       return res.status(409).json({ error: "Tu cuenta todavía no tiene ninguna banda asignada." });
     }
     const bandId = authUser.band_id;
-    const isOwn = (recordBandId: any) => {
+    const isOwn = (recordBandId: string | undefined) => {
       if (!recordBandId) return false;
       return mismaBanda(String(recordBandId), bandId);
     };
@@ -271,7 +288,7 @@ app.get("/api/download-excel", (req, res) => {
     const state = loadState();
     const wb = XLSX.utils.book_new();
 
-    const rehearsalsData = (state.rehearsals || []).filter((r: any) => isOwn(r.band_id || r.bandId)).map((r: Rehearsal) => ({
+    const rehearsalsData = (state.rehearsals || []).filter((r) => isOwn(bandaDe(r))).map((r: Rehearsal) => ({
       ID: r.id,
       Fecha: r.fecha,
       Hora: r.hora,
@@ -283,7 +300,7 @@ app.get("/api/download-excel", (req, res) => {
     const wsRehearsals = XLSX.utils.json_to_sheet(rehearsalsData);
     XLSX.utils.book_append_sheet(wb, wsRehearsals, "Ensayos");
 
-    const concertsData = (state.concerts || []).filter((c: any) => isOwn(c.band_id || c.bandId)).map((c: Concert) => ({
+    const concertsData = (state.concerts || []).filter((c) => isOwn(bandaDe(c))).map((c: Concert) => ({
       ID: c.id,
       Fecha: c.fecha,
       Ciudad: c.ciudad,
@@ -295,12 +312,12 @@ app.get("/api/download-excel", (req, res) => {
       "Estado Pago": c.estado_pago,
       Tipo: c.tipo,
       Notas: c.notas || "",
-      band_id: (c as any).band_id || (c as any).bandId || "band-1"
+      band_id: bandaDe(c) || "band-1"
     }));
     const wsConcerts = XLSX.utils.json_to_sheet(concertsData);
     XLSX.utils.book_append_sheet(wb, wsConcerts, "Conciertos");
 
-    const leadsData = (state.leads || []).filter((l: any) => isOwn(l.band_id || l.bandId)).map((l: Lead) => ({
+    const leadsData = (state.leads || []).filter((l) => isOwn(bandaDe(l))).map((l: Lead) => ({
       ID: l.id,
       "Nombre Sala": l.nombre_sala,
       Ciudad: l.ciudad,
@@ -314,12 +331,12 @@ app.get("/api/download-excel", (req, res) => {
       Fuente: l.fuente,
       Estado: l.estado,
       Notas: l.notas || "",
-      band_id: (l as any).band_id || (l as any).bandId || "band-1"
+      band_id: bandaDe(l) || "band-1"
     }));
     const wsLeads = XLSX.utils.json_to_sheet(leadsData);
     XLSX.utils.book_append_sheet(wb, wsLeads, "Salas_Leads");
 
-    const paymentsData = (state.payments || []).filter((p: any) => isOwn(p.band_id || p.bandId)).map((p: Payment) => ({
+    const paymentsData = (state.payments || []).filter((p) => isOwn(bandaDe(p))).map((p: Payment) => ({
       ID: p.id,
       Fecha: p.fecha,
       Concepto: p.concepto,
@@ -327,36 +344,36 @@ app.get("/api/download-excel", (req, res) => {
       Tipo: p.tipo,
       Categoría: p.categoria,
       Estado: p.estado,
-      band_id: (p as any).band_id || (p as any).bandId || "band-1"
+      band_id: bandaDe(p) || "band-1"
     }));
     const wsPayments = XLSX.utils.json_to_sheet(paymentsData);
     XLSX.utils.book_append_sheet(wb, wsPayments, "Finanzas_Pagos");
 
-    const postsData = (state.posts || []).filter((p: any) => isOwn(p.band_id || p.bandId)).map((p: SocialPost) => ({
+    const postsData = (state.posts || []).filter((p) => isOwn(bandaDe(p))).map((p: SocialPost) => ({
       ID: p.id,
       Fecha: p.fecha,
       Plataforma: p.plataforma,
       Contenido: p.contenido,
       Responsable: p.responsable,
       Estado: p.estado,
-      band_id: (p as any).band_id || (p as any).bandId || "band-1"
+      band_id: bandaDe(p) || "band-1"
     }));
     const wsPosts = XLSX.utils.json_to_sheet(postsData);
     XLSX.utils.book_append_sheet(wb, wsPosts, "Redes_Sociales");
 
-    const runOfShowRows: any[] = [];
+    const runOfShowRows: Record<string, unknown>[] = [];
     if (state.runOfShow) {
-      Object.entries(state.runOfShow).forEach(([dateKey, items]: [string, any]) => {
+      Object.entries(state.runOfShow).forEach(([dateKey, items]: [string, unknown]) => {
         if (Array.isArray(items)) {
-          items.forEach((item: any) => {
-            if (!isOwn(item.band_id || item.bandId)) return;
+          items.forEach((item: ElementoLogistica) => {
+            if (!isOwn(bandaDe(item))) return;
             runOfShowRows.push({
               Fecha: dateKey,
               ID: item.id,
               Hora: item.time,
               "Actividad / Horario": item.activity,
               Completado: item.done ? "SÍ" : "NO",
-              band_id: item.band_id || item.bandId || "band-1"
+              band_id: bandaDe(item) || "band-1"
             });
           });
         }
@@ -365,18 +382,18 @@ app.get("/api/download-excel", (req, res) => {
     const wsRunOfShow = XLSX.utils.json_to_sheet(runOfShowRows);
     XLSX.utils.book_append_sheet(wb, wsRunOfShow, "Logistica_Horarios");
 
-    const gearRows: any[] = [];
+    const gearRows: Record<string, unknown>[] = [];
     if (state.gearChecklists) {
-      Object.entries(state.gearChecklists).forEach(([dateKey, items]: [string, any]) => {
+      Object.entries(state.gearChecklists).forEach(([dateKey, items]: [string, unknown]) => {
         if (Array.isArray(items)) {
-          items.forEach((item: any) => {
-            if (!isOwn(item.band_id || item.bandId)) return;
+          items.forEach((item: ElementoLogistica) => {
+            if (!isOwn(bandaDe(item))) return;
             gearRows.push({
               Fecha: dateKey,
               ID: item.id,
               "Material / Equipo a Llevar": item.label,
               "Cargado / Listo": item.checked ? "SÍ" : "NO",
-              band_id: item.band_id || item.bandId || "band-1"
+              band_id: bandaDe(item) || "band-1"
             });
           });
         }
@@ -385,7 +402,7 @@ app.get("/api/download-excel", (req, res) => {
     const wsGear = XLSX.utils.json_to_sheet(gearRows);
     XLSX.utils.book_append_sheet(wb, wsGear, "Logistica_Equipo");
 
-    const songsData = (state.songs || []).filter((s: any) => isOwn(s.band_id || s.bandId)).map((s: Song) => ({
+    const songsData = (state.songs || []).filter((s) => isOwn(bandaDe(s))).map((s: Song) => ({
       ID: s.id,
       Título: s.titulo,
       Duración: s.duracion,
@@ -397,12 +414,12 @@ app.get("/api/download-excel", (req, res) => {
       "Es Cover": s.esVersionCovers ? "SÍ" : "NO",
       Acordes: s.enlaceAcordes || "",
       Notas: s.notasInternas || "",
-      band_id: (s as any).band_id || (s as any).bandId || "band-1"
+      band_id: bandaDe(s) || "band-1"
     }));
     const wsSongs = XLSX.utils.json_to_sheet(songsData);
     XLSX.utils.book_append_sheet(wb, wsSongs, "Canciones");
 
-    const setlistsData = (state.setlists || []).filter((st: any) => isOwn(st.band_id || st.bandId)).map((st: Setlist) => ({
+    const setlistsData = (state.setlists || []).filter((st) => isOwn(bandaDe(st))).map((st: Setlist) => ({
       ID: st.id,
       Nombre: st.nombre,
       Descripción: st.descripcion || "",
@@ -411,12 +428,12 @@ app.get("/api/download-excel", (req, res) => {
       "Fecha Creación": st.fechaCreacion,
       "Última Edición": st.fechaUltimaEdicion,
       "Número Temas": st.items?.length || 0,
-      band_id: (st as any).band_id || (st as any).bandId || "band-1"
+      band_id: bandaDe(st) || "band-1"
     }));
     const wsSetlists = XLSX.utils.json_to_sheet(setlistsData);
     XLSX.utils.book_append_sheet(wb, wsSetlists, "Repertorios");
 
-    const fansData = (state.fans || []).filter((f: any) => isOwn(f.band_id || f.bandId)).map((f: any) => ({
+    const fansData = (state.fans || []).filter((f) => isOwn(bandaDe(f))).map((f) => ({
       ID: f.id,
       Nombre: f.nombre,
       Email: f.email,
@@ -425,12 +442,12 @@ app.get("/api/download-excel", (req, res) => {
       Concierto: f.conciertoOrigenNombre || "",
       "Fecha Captura": f.fechaCaptura || "",
       RGPD: f.consentimientoRGPD ? "SÍ" : "NO",
-      band_id: f.band_id || f.bandId || "band-1"
+      band_id: bandaDe(f) || "band-1"
     }));
     const wsFans = XLSX.utils.json_to_sheet(fansData);
     XLSX.utils.book_append_sheet(wb, wsFans, "Fans_Tribu");
 
-    const toursData = (state.tours || []).filter((t: any) => isOwn(t.band_id || t.bandId)).map((t: any) => ({
+    const toursData = (state.tours || []).filter((t) => isOwn(bandaDe(t))).map((t) => ({
       ID: t.id,
       Nombre: t.nombre,
       Vehículo: t.vehiculo,
@@ -439,14 +456,14 @@ app.get("/api/download-excel", (req, res) => {
       "Fecha Fin": t.fechaFin,
       "Presupuesto Logística": t.presupuestoLogistica || 0,
       "Número Paradas": t.stops?.length || 0,
-      band_id: t.band_id || t.bandId || "band-1"
+      band_id: bandaDe(t) || "band-1"
     }));
     const wsTours = XLSX.utils.json_to_sheet(toursData);
     XLSX.utils.book_append_sheet(wb, wsTours, "Giras");
 
     const registeredBandsData = (state.registeredBands || state.users || [])
-      .filter((b: any) => isOwn(b.band_id || b.bandId || b.id))
-      .map((b: any) => ({
+      .filter((b) => isOwn(bandaDe(b) || b.id))
+      .map((b) => ({
       ID: b.id || b.band_id,
       "Fecha Registro": b.fecha_registro || b.createdAt || "",
       "Nombre Banda": b.nombre_banda || b.bandName || b.name || "",
@@ -460,12 +477,12 @@ app.get("/api/download-excel", (req, res) => {
       "Spotify/YouTube": b.spotify_youtube || "",
       "Estado Cuenta": b.estado_cuenta || "activo",
       Notas: b.notas || "",
-      band_id: b.band_id || b.bandId || b.id || "band-1"
+      band_id: bandaDe(b) || b.id || "band-1"
     }));
     const wsRegisteredBands = XLSX.utils.json_to_sheet(registeredBandsData);
     XLSX.utils.book_append_sheet(wb, wsRegisteredBands, "Registro_Bandas");
 
-    const usersData = (state.users || []).filter((u: any) => isOwn(u.band_id || u.bandId)).map((u: any) => ({
+    const usersData = (state.users || []).filter((u) => isOwn(bandaDe(u))).map((u) => ({
       ID: u.id,
       "Usuario/Email": u.username || u.email,
       Nombre: u.name || u.bandName,
@@ -473,7 +490,7 @@ app.get("/api/download-excel", (req, res) => {
       Plan: u.plan || "emergente",
       Instrumento: u.instrument || "Músico",
       "Fecha Creación": u.createdAt || "",
-      band_id: u.band_id || u.bandId || u.id || "band-1"
+      band_id: bandaDe(u) || u.id || "band-1"
     }));
     const wsUsers = XLSX.utils.json_to_sheet(usersData);
     XLSX.utils.book_append_sheet(wb, wsUsers, "Usuarios");
@@ -483,7 +500,8 @@ app.get("/api/download-excel", (req, res) => {
     res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     res.setHeader("Content-Disposition", 'attachment; filename="band_data.xlsx"');
     return res.send(excelBuffer);
-  } catch (e: any) {
+  } catch (eCapturado) {
+    const e = comoErrorCapturado(eCapturado);
     console.error("Error generating band_data.xlsx:", e);
     return res.status(500).json({ error: "Fallo al generar band_data.xlsx" });
   }
@@ -494,7 +512,7 @@ app.get("/api/state", async (req, res) => {
   try {
     const user = getUserFromRequest(req, loadState);
     // Antes, sin sesión válida (o con sesión pero sin banda asignada), esta ruta devolvía en
-    // silencio los datos reales de Bakandeya (leads, conciertos, fans con datos RGPD, etc.) a
+    // silencio los datos reales de otra banda (leads, conciertos, fans con datos RGPD, etc.) a
     // cualquiera. Es la ruta que alimenta toda la app: hay que exigir sesión y banda de verdad.
     if (!user) {
       return res.status(401).json({ error: "No autorizado. Inicia sesión para continuar." });
@@ -512,7 +530,8 @@ app.get("/api/state", async (req, res) => {
     }
 
     res.json(state);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error in /api/state:", err);
     res.status(500).json({ error: "Error al cargar datos desde Supabase PostgreSQL" });
   }
@@ -533,11 +552,9 @@ app.use("/api/*", (req, res) => {
 // caía en el manejador por defecto de Express (responde 500 pero no deja ningún rastro propio,
 // ni en consola con contexto ni en Sentry). Va DESPUÉS de las rutas para que Express lo enrute
 // aquí en cuanto algo llama a next(err) o lanza de forma síncrona.
-app.use((err: any, req: express.Request, res: express.Response, _next: express.NextFunction) => {
-  console.error(`[UnhandledRouteError] ${req.method} ${req.originalUrl}:`, err);
-  captureError(err, { method: req.method, url: req.originalUrl });
-  if (res.headersSent) return;
-  res.status(500).json({ error: "Error interno del servidor." });
+app.use((err: unknown, req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  console.error("[UnhandledRouteError] %s %s:", req.method, req.originalUrl, err);
+  responderError(res, err);
 });
 
 // Vite middleware integration for full-stack SPA
@@ -574,14 +591,12 @@ async function startServer() {
         }
       }
     }));
-    app.get("*", (req, res) => {
-      res.setHeader("Cache-Control", "no-store");
-      res.sendFile(path.join(distPath, "index.html"));
-    });
+    // La landing en español (/) y en inglés (/en) llevan su <head> por idioma (canonical + hreflang).
+    app.get("*", paginaRateLimiter, servirIndex(distPath, baseUrlPublica()));
   }
 
   const server = app.listen(PORT, "0.0.0.0", () => {
-    console.log(`BandManager.io v${getAppInfo().version} server running on http://localhost:${PORT}`);
+    console.log("BandManager.io v%s server running on http://localhost:%s", getAppInfo().version, PORT);
     // Ampliación de socket timeout para procesos de inferencia pesados (GPU neural)
     server.timeout = 420000;
     server.keepAliveTimeout = 430000;
@@ -604,27 +619,27 @@ async function startServer() {
     }
     // Start booking agents scheduler (Enviador/Lector, ver server/services/agentScheduler.ts)
     try {
-      startAgentScheduler();
+      startAgentScheduler(); iniciarWorkersDeReels(); // el 2.º publica los Reels a su hora y mide lo publicado
     } catch (e) {
-      console.error("Error starting Agent Scheduler:", e);
+      console.error("Error starting Agent/Social Publisher Scheduler:", e);
     }
     // Barrido diario de choques de calendario (aviso por email, ver server/services/calendarConflictService.ts)
     try {
-      startCalendarConflictScheduler();
+      startCalendarConflictScheduler(); startEmailsCicloVidaScheduler(); // el 2.º está apagado salvo EMAILS_CICLO_VIDA=true
     } catch (e) {
       console.error("Error starting Calendar Conflict Scheduler:", e);
     }
     // Cola de letras del audio en segundo plano (ver server/services/colaLetras.ts)
     try {
-      iniciarColaLetras();
+      iniciarColaLetras(); iniciarSincronizacionDelCatalogo(); // el 2.º pone al día el catálogo compartido de salas
     } catch (e) {
       console.error("Error starting Letras Queue:", e);
     }
   });
 
-  server.on("error", (err: any) => {
+  server.on("error", (err: NodeJS.ErrnoException) => {
     if (err.code === "EADDRINUSE") {
-      console.error(`Port ${PORT} is already in use. Exiting process so process manager can restart.`);
+      console.error("Port %s is already in use. Exiting process so process manager can restart.", PORT);
       process.exit(1);
     } else {
       console.error("Server error:", err);

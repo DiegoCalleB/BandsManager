@@ -19,11 +19,21 @@ Miembros por banda, bandas de un usuario y tabla calendar_conflict_notifications
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(Layer: #schema, Domain: #system)*
+- [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_users|server/db/users.ts]] *(Layer: #db, Domain: #system)*
+- [[tabla_calendar_conflict_notifications|tabla calendar_conflict_notifications]] *(Layer: #schema, Domain: #system)*
+- [[tabla_users|tabla users]] *(Layer: #schema, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
 - [[service_calendar_conflicts|Avisos de choques por email]] *(from #service)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/services/__tests__/calendarConflictService.test.ts`
 
 ---
 

@@ -1,4 +1,5 @@
-import type { AudioTrack, Song, SongAudioIdea } from '../types';
+import type { AudioTrack, Song, SongAudioIdea, StemsMeta } from '../types';
+import type { DatosErrorSeparacion, ErrorSeparacionCapturado } from './tiposSeparacionIris';
 
 /**
  * Lógica PURA de la separación de pistas con Iris (sin React, sin red): qué se le dice al usuario en
@@ -300,30 +301,16 @@ export function fusionarPistasServidor(args: {
 }
 
 /**
- * Devuelve la lista de ideas con la idea objetivo actualizada (pistas + datos del motor). La busca por
- * id, por audio o por título —como siempre— y, si no está, la añade al final.
+ * Canción con el resultado de una separación: los stems y cómo se separaron son de la canción
+ * (`song.pistas`, `song.stemsMeta`). Las tomas no se tocan: ya no hay "idea de Iris".
  */
-export function ideasConSeparacion(
-  ideas: SongAudioIdea[] | undefined,
-  objetivo: SongAudioIdea,
+export function cancionConSeparacion<T extends { pistas?: AudioTrack[]; stemsMeta?: StemsMeta }>(
+  cancion: T,
   pistas: AudioTrack[],
   meta: { motor: string; neural: boolean; degradado: boolean; procesadoEn: string }
-): { ideas: SongAudioIdea[]; idea: SongAudioIdea } {
-  const lista = ideas ? [...ideas] : [];
-  const idea: SongAudioIdea = {
-    ...objetivo,
-    pistas,
-    stemEngineUsed: meta.motor,
-    stemIsNeural: meta.neural,
-    stemDegraded: meta.degradado,
-    stemProcessedAt: meta.procesadoEn,
-  };
-  const i = lista.findIndex(
-    (x) => x.id === objetivo.id || (objetivo.audioUrl && x.audioUrl === objetivo.audioUrl) || (x.titulo && x.titulo === objetivo.titulo)
-  );
-  if (i >= 0) lista[i] = { ...lista[i], ...idea };
-  else lista.push(idea);
-  return { ideas: lista, idea };
+): T {
+  const stemsMeta: StemsMeta = { motor: meta.motor, neural: meta.neural, degradado: meta.degradado, procesadoEn: meta.procesadoEn };
+  return { ...cancion, pistas, stemsMeta };
 }
 
 // ───────────────────────── Errores ─────────────────────────
@@ -397,8 +384,8 @@ export function esErrorDeRed(err: unknown): boolean {
  * Traduce lo que haya lanzado la separación (red, Fal, Replicate, Gemini, FFmpeg, Supabase...) a un
  * título, mensaje y consejo para el usuario. Es la misma clasificación de siempre, ahora probada.
  */
-export function describirErrorSeparacion(err: any, motor: MotorIris): ErrorIris {
-  const data = err?.data || {};
+export function describirErrorSeparacion(err: ErrorSeparacionCapturado | null | undefined, motor: MotorIris): ErrorIris {
+  const data: DatosErrorSeparacion = err?.data || {};
   const errMsg = String(data.message || data.error || err?.message || '');
 
   const esRed =

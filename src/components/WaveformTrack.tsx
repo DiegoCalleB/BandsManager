@@ -1,10 +1,4 @@
-import React, {
-  useEffect,
-  useRef,
-  useState,
-  forwardRef,
-  useImperativeHandle,
-} from "react";
+import React, { useEffect, useEffectEvent, useRef, useState, forwardRef } from "react";
 import WaveSurfer from "wavesurfer.js";
 import {
   resolveAudioUrl,
@@ -127,7 +121,19 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(
     const wavesurfer = useRef<WaveSurfer | null>(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [loadError, setLoadError] = useState(false);
-    const [resolvedUrl, setResolvedUrl] = useState<string>("");
+    // URL resuelta (indexeddb:/Drive) etiquetada con la audioUrl de la que procede
+    const [resuelta, setResuelta] = useState<{ de: string | undefined; url: string }>({
+      de: undefined,
+      url: "",
+    });
+    const resolvedUrl = resuelta.de === audioUrl ? resuelta.url : "";
+    // Al cambiar de pista se vuelve a mostrar la carga (ajuste de estado durante el render)
+    const [audioUrlPrevia, setAudioUrlPrevia] = useState(audioUrl);
+    if (audioUrlPrevia !== audioUrl) {
+      setAudioUrlPrevia(audioUrl);
+      setIsLoaded(false);
+      setLoadError(false);
+    }
     const [localTrackDur, setLocalTrackDur] = useState<number>(0);
 
     // Callback ref to forward HTMLAudioElement cleanly to parent and internal ref
@@ -154,7 +160,7 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(
     })();
 
     // Helper time formatter & duration checks
-    const isFiniteNum = (val: any): val is number =>
+    const isFiniteNum = (val: unknown): val is number =>
       typeof val === "number" && !isNaN(val) && isFinite(val) && val > 0;
 
     const formatSecs = (secs: number) => {
@@ -190,35 +196,23 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(
       Math.max(0, (currentTime / effMasterDur) * 100),
     );
 
-    // 1. Resolve audioUrl if needed
+    // 1. Resolve audioUrl if needed (solo indexeddb:/Drive; el resto se usa tal cual en validAudioSrc)
     useEffect(() => {
-      let active = true;
-      setIsLoaded(false);
-      setLoadError(false);
-
-      if (!audioUrl) {
-        setResolvedUrl("");
+      if (
+        !audioUrl ||
+        !(audioUrl.startsWith("indexeddb:") || audioUrl.includes("drive.google.com"))
+      ) {
         return;
       }
-
-      if (
-        audioUrl.startsWith("indexeddb:") ||
-        audioUrl.includes("drive.google.com")
-      ) {
-        resolveAudioUrl(audioUrl)
-          .then((url) => {
-            if (active) {
-              setResolvedUrl(url || "");
-            }
-          })
-          .catch((err) => {
-            console.warn("Error resolving audio URL in WaveformTrack:", err);
-            if (active) setResolvedUrl("");
-          });
-      } else {
-        setResolvedUrl(audioUrl);
-      }
-
+      let active = true;
+      resolveAudioUrl(audioUrl)
+        .then((url) => {
+          if (active) setResuelta({ de: audioUrl, url: url || "" });
+        })
+        .catch((err) => {
+          console.warn("Error resolving audio URL in WaveformTrack:", err);
+          if (active) setResuelta({ de: audioUrl, url: "" });
+        });
       return () => {
         active = false;
       };
@@ -243,6 +237,13 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(
       }
     }, [validAudioSrc]);
 
+    // Lecturas «en vivo» desde el efecto de WaveSurfer sin que re-cree la instancia al cambiar
+    const colorActual = useEffectEvent(() => color);
+    const marcarFalloDeCarga = useEffectEvent(() => {
+      setLoadError(true);
+      setIsLoaded(true); // Dismiss loading overlay
+    });
+
     // 2. Initialize WaveSurfer when validAudioSrc and containerRef are ready
     useEffect(() => {
       if (!containerRef.current || !audioRef.current || !validAudioSrc) return;
@@ -253,8 +254,8 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(
       try {
         ws = WaveSurfer.create({
           container: containerRef.current,
-          waveColor: color + "40", // slightly transparent for background
-          progressColor: color,
+          waveColor: colorActual() + "40", // slightly transparent for background
+          progressColor: colorActual(),
           cursorColor: "transparent", // Custom unified playhead rendered on top
           barWidth: 2,
           barGap: 1,
@@ -277,12 +278,9 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(
           }
         };
 
-        const handleError = (err: any) => {
+        const handleError = (err: unknown) => {
           console.warn("WaveSurfer error loading track:", err);
-          if (!isCancelled) {
-            setLoadError(true);
-            setIsLoaded(true); // Dismiss loading overlay
-          }
+          if (!isCancelled) marcarFalloDeCarga();
         };
 
         ws.on("ready", handleReady);
@@ -302,15 +300,15 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(
           if (ws) {
             try {
               ws.destroy();
-            } catch (e) {
+            } catch {
               // ignore destroy errors
             }
           }
         };
       } catch (err) {
         console.error("Error creating WaveSurfer instance:", err);
-        setLoadError(true);
-        setIsLoaded(true);
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- WaveSurfer.create (sistema externo) falló al instante: no hay callback asíncrono donde avisar del error
+        marcarFalloDeCarga();
       }
     }, [validAudioSrc]);
 
@@ -322,7 +320,7 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(
             waveColor: color + "40",
             progressColor: color,
           });
-        } catch (e) {
+        } catch {
           // ignore if setOptions not supported
         }
       }

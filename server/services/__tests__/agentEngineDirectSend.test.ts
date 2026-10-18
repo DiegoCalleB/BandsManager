@@ -6,6 +6,7 @@
 // ejecuta en el orden real del código, después de haber puesto AGENT_EMAIL_MODE=send.
 
 import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest';
+import { hashTextoAprobado } from '../../utils/aprobacionLead';
 
 const dbGetAutonomyConfigMock = vi.fn();
 vi.mock('../../db.js', () => ({
@@ -14,7 +15,7 @@ vi.mock('../../db.js', () => ({
 }));
 
 vi.mock('../../state.js', () => ({
-  BAKANDEYA_BAND_ID: 'band-bakandeya'
+  DEMO_BAND_ID: 'band-demo'
 }));
 
 const enviarEmailMock = vi.fn();
@@ -55,6 +56,7 @@ const lead = {
   email_contacto: 'sala@example.com',
   estado: 'aprobado_propuesta',
   pitch_generado: 'Hola, os proponemos un concierto.',
+  pitch_aprobado_hash: hashTextoAprobado('Hola, os proponemos un concierto.'),
   notas: ''
 };
 

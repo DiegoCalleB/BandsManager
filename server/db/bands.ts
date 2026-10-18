@@ -1,7 +1,22 @@
 // Bandas registradas (`registered_bands`) y migración de planes. Lectura y escritura siempre con el
 // `bandId` resuelto por sesión (AGENTS.md §2.1).
 
+import { bandaDe } from '../utils/bandAccess.js';
 import { getSupabase, cleanBandId, normalizePlan } from "./core.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { BandaRegistradaGuardada } from '../stateTypes.js';
+import type { AdnExpresion } from './tiposAdn.js';
+
+/** Banda registrada para guardar, con los alias camelCase que mandan registro, Google y billing. */
+export type EntradaBandaRegistrada = Partial<BandaRegistradaGuardada> & {
+  bandId?: string;
+  userId?: string;
+  nombreBanda?: string;
+  contactoNombre?: string;
+  estiloMusical?: string;
+  spotifyYoutube?: string;
+  aforoPromedio?: number;
+};
 
 export async function dbMigrateAllPlansToNewTiers() {
   try {
@@ -100,7 +115,8 @@ export async function dbGetRegisteredBands() {
   const sb = getSupabase();
   const { data, error } = await sb.from("registered_bands").select("*").order("created_at", { ascending: false });
   if (error) throw new Error(`Supabase Error (registered_bands): ${error.message}`);
-  return (data || []).map((b: any) => ({ ...b, plan: normalizePlan(b.plan) }));
+  const filas: BandaRegistradaGuardada[] = data || [];
+  return filas.map((b) => ({ ...b, plan: normalizePlan(b.plan) }));
 }
 
 export async function dbGetRegisteredBandById(bandId: string) {
@@ -111,11 +127,11 @@ export async function dbGetRegisteredBandById(bandId: string) {
   return { ...data, plan: normalizePlan(data.plan) };
 }
 
-export async function dbUpsertRegisteredBand(band: any) {
+export async function dbUpsertRegisteredBand(band: EntradaBandaRegistrada) {
   const sb = getSupabase();
   const payload = {
     id: band.id || `reg-${band.band_id || Date.now()}`,
-    band_id: band.band_id || band.bandId,
+    band_id: bandaDe(band),
     user_id: band.user_id || band.userId || null,
     nombre_banda: band.nombre_banda || band.nombreBanda || band.bandName || "Banda",
     email: band.email || "",
@@ -152,7 +168,7 @@ export async function dbDeleteRegisteredBand(bandId: string) {
  * Best-effort: si Supabase falla, el análisis que ya se le devolvió al usuario en esa misma
  * respuesta sigue siendo válido, solo que no se recordará la próxima vez.
  */
-export async function dbUpdateBandToneDna(bandId: string, dna: any): Promise<boolean> {
+export async function dbUpdateBandToneDna(bandId: string, dna: AdnExpresion): Promise<boolean> {
   const targetBandId = cleanBandId(bandId);
   if (!targetBandId || !dna) return false;
   try {
@@ -168,7 +184,8 @@ export async function dbUpdateBandToneDna(bandId: string, dna: any): Promise<boo
       return false;
     }
     return true;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[registered_bands] No se pudo guardar el ADN de tono:", err?.message || err);
     return false;
   }
@@ -203,10 +220,13 @@ async function withBandDnaLock<T>(bandId: string, fn: () => Promise<T>): Promise
  * y debe devolver el objeto completo a guardar - o la MISMA referencia recibida si no hay nada
  * que cambiar, en cuyo caso no se escribe nada en Supabase.
  */
-export async function dbUpdateBandDnaExpresion(bandId: string, mutate: (current: any) => any | Promise<any>): Promise<{ ok: boolean; dna: any }> {
+export async function dbUpdateBandDnaExpresion(
+  bandId: string,
+  mutate: (current: AdnExpresion) => AdnExpresion | Promise<AdnExpresion>
+): Promise<{ ok: boolean; dna: AdnExpresion }> {
   return withBandDnaLock(bandId, async () => {
     const registered = await dbGetRegisteredBandById(bandId);
-    const current = (registered?.dna_expresion && typeof registered.dna_expresion === "object") ? registered.dna_expresion : {};
+    const current: AdnExpresion = (registered?.dna_expresion && typeof registered.dna_expresion === "object") ? registered.dna_expresion : {};
     const next = await mutate(current);
     if (next === current) return { ok: true, dna: current };
     const ok = await dbUpdateBandToneDna(bandId, next);
@@ -241,7 +261,8 @@ export async function dbAppendBandSpeechPhrases(bandId: string, nuevasFrases: st
       return { ...dnaActual, frases_directo_extraidas: acotadas };
     });
     return ok;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[registered_bands] No se pudieron guardar las frases de directo:", err?.message || err);
     return false;
   }
@@ -255,19 +276,20 @@ export async function dbAppendBandSpeechPhrases(bandId: string, nuevasFrases: st
  *
  * Se acumula (últimas 30) porque cada corrección del usuario aporta una señal más de aprendizaje.
  */
-export async function dbLogReelFeedback(bandId: string, entry: Record<string, any>): Promise<boolean> {
+export async function dbLogReelFeedback(bandId: string, entry: Record<string, unknown>): Promise<boolean> {
   const targetBandId = cleanBandId(bandId);
   if (!targetBandId || !entry) return false;
 
   try {
     await ensureRegisteredBandExists(targetBandId);
     const { ok } = await dbUpdateBandDnaExpresion(targetBandId, (dnaActual) => {
-      const existentes: any[] = Array.isArray(dnaActual.historial_feedback_reels) ? dnaActual.historial_feedback_reels : [];
+      const existentes: unknown[] = Array.isArray(dnaActual.historial_feedback_reels) ? dnaActual.historial_feedback_reels : [];
       const actualizados = [entry, ...existentes].slice(0, 30);
       return { ...dnaActual, historial_feedback_reels: actualizados };
     });
     return ok;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[registered_bands] No se pudo guardar el feedback del Reel:", err?.message || err);
     return false;
   }
@@ -280,19 +302,20 @@ export async function dbLogReelFeedback(bandId: string, entry: Record<string, an
  *
  * Se acumula (últimas 30) porque cada corrección del usuario aporta una señal más de aprendizaje.
  */
-export async function dbLogSetlistFeedback(bandId: string, entry: Record<string, any>): Promise<boolean> {
+export async function dbLogSetlistFeedback(bandId: string, entry: Record<string, unknown>): Promise<boolean> {
   const targetBandId = cleanBandId(bandId);
   if (!targetBandId || !entry) return false;
 
   try {
     await ensureRegisteredBandExists(targetBandId);
     const { ok } = await dbUpdateBandDnaExpresion(targetBandId, (dnaActual) => {
-      const existentes: any[] = Array.isArray(dnaActual.historial_feedback_setlist) ? dnaActual.historial_feedback_setlist : [];
+      const existentes: unknown[] = Array.isArray(dnaActual.historial_feedback_setlist) ? dnaActual.historial_feedback_setlist : [];
       const actualizados = [entry, ...existentes].slice(0, 30);
       return { ...dnaActual, historial_feedback_setlist: actualizados };
     });
     return ok;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[registered_bands] No se pudo guardar el feedback del setlist:", err?.message || err);
     return false;
   }

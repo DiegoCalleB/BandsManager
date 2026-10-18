@@ -1,11 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  computeTransitionTimeline,
-  getTransitionGains,
-  diagnoseTransition,
-  DEFAULT_TRANSITION_CONFIG,
-  resolveSongAudioUrl,
-} from '../transitionAudioEngine';
+import { computeTransitionTimeline, getTransitionGains, diagnoseTransition, resolveSongAudioUrl } from '../transitionAudioEngine';
 import { Song } from '../../types';
 
 describe('transitionAudioEngine', () => {

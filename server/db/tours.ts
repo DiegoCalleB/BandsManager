@@ -2,6 +2,44 @@
 
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
+import type { Tour, TourVehicle } from "../../src/types.js";
+
+/** Gira para guardar: la de la app, admitiendo también los nombres de columna en snake_case. */
+export type EntradaTour = Partial<Tour> & {
+  fecha_inicio?: string;
+  fecha_fin?: string;
+  consumo_l100km?: number;
+  precio_carburante_eur?: number;
+  tipo_combustible?: TourVehicle["tipoCombustible"];
+  presupuesto_logistica?: number;
+  convocatoriaTipo?: Tour["convocatoria_tipo"];
+  convocadosIds?: string[];
+  convocadosNombres?: string[];
+  sincronizar_calendario?: boolean;
+  sincronizar_finanzas?: boolean;
+};
+
+/** Fila de `tours`. Las columnas opcionales son las que el reintento quita si aún no existen. */
+interface FilaTour {
+  id: string;
+  band_id: string;
+  nombre: string;
+  fecha_inicio: string;
+  fecha_fin: string;
+  vehiculo: string;
+  consumo_l100km: number;
+  precio_carburante_eur: number;
+  tipo_combustible: string;
+  presupuesto_logistica: number;
+  convocatoria_tipo?: string;
+  convocados_ids?: string[];
+  convocados_nombres?: string[];
+  sincronizar_calendario?: boolean;
+  sincronizar_finanzas?: boolean;
+  vehiculos?: TourVehicle[];
+  stops: Tour["stops"];
+  estado: string;
+}
 
 export async function dbGetTours(bandId: string) {
   const sb = getSupabase();
@@ -15,7 +53,7 @@ export async function dbGetTours(bandId: string) {
   if (error) throw new Error(`Supabase Error (tours): ${error.message}`);
   const validated = (data || []).filter(t => cleanBandId(t.band_id) === cleanId);
   return validated.map(t => {
-    let vehiculos: any[] = [];
+    let vehiculos: TourVehicle[] = [];
     if (Array.isArray(t.vehiculos) && t.vehiculos.length > 0) {
       vehiculos = t.vehiculos;
     } else if (t.vehiculo) {
@@ -24,7 +62,7 @@ export async function dbGetTours(bandId: string) {
           const parsed = JSON.parse(t.vehiculo);
           if (Array.isArray(parsed)) vehiculos = parsed;
         }
-      } catch (_) {}
+      } catch { /* vehículo antiguo guardado como texto, no JSON: se queda como vehículo único */ }
 
       if (vehiculos.length === 0) {
         vehiculos = [{
@@ -56,7 +94,7 @@ export async function dbGetTours(bandId: string) {
   });
 }
 
-export async function dbUpsertTour(tour: any, bandId: string) {
+export async function dbUpsertTour(tour: EntradaTour, bandId: string) {
   const sb = getSupabase();
   // 'bandId' es el único origen de confianza (lo resuelve la ruta desde la sesión); el
   // objeto de entrada puede traer su propio 'band_id' sin validar desde el cuerpo de la
@@ -74,7 +112,7 @@ export async function dbUpsertTour(tour: any, bandId: string) {
     }
   }
 
-  const vehiculos = Array.isArray(tour.vehiculos) && tour.vehiculos.length > 0
+  const vehiculos: TourVehicle[] = Array.isArray(tour.vehiculos) && tour.vehiculos.length > 0
     ? tour.vehiculos
     : tour.vehiculo
       ? [{
@@ -87,10 +125,10 @@ export async function dbUpsertTour(tour: any, bandId: string) {
       : [];
 
   const mainVehiculo = vehiculos.length > 0
-    ? vehiculos.map((v: any) => v.nombre).filter(Boolean).join(", ")
+    ? vehiculos.map((v) => v.nombre).filter(Boolean).join(", ")
     : (tour.vehiculo || "");
 
-  const payload: any = {
+  const payload: FilaTour = {
     id: finalTourId || `tour-${Date.now()}`,
     band_id: targetBandId,
     nombre: tour.nombre || "Gira",
@@ -111,7 +149,9 @@ export async function dbUpsertTour(tour: any, bandId: string) {
     estado: tour.estado || "planificacion"
   };
 
-  let { data, error } = await sb.from("tours").upsert(payload).select().single();
+  const primero = await sb.from("tours").upsert(payload).select().single();
+  const error = primero.error;
+  let data = primero.data;
 
   // Retry gracefully if any newly introduced optional columns are not yet in remote Supabase schema cache
   if (error && error.message) {
@@ -134,7 +174,6 @@ export async function dbUpsertTour(tour: any, bandId: string) {
       const retry = await sb.from("tours").upsert(fallbackPayload).select().single();
       if (retry.error) throw new Error(`Supabase Error (upsert tour fallback): ${retry.error.message}`);
       data = retry.data;
-      error = null;
     } else {
       throw new Error(`Supabase Error (upsert tour): ${error.message}`);
     }

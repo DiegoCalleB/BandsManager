@@ -4,7 +4,6 @@ import {
   BrowserNotificationConfig,
   NotificationHistoryItem,
   NotificationPermissionStatus,
-  DEFAULT_NOTIFICATION_CONFIG,
 } from '../types/browserNotifications';
 import {
   getBrowserNotificationPermission,
@@ -21,8 +20,11 @@ import {
   sendTestBrowserNotification,
 } from '../services/browserNotificationService';
 
+/** Lead vigilado: `ultimo_contacto` y `fecha_actualizacion` no están en {@link Lead}, pero se leen si la fila los trae. */
+type LeadVigilado = Lead & { ultimo_contacto?: string; fecha_actualizacion?: string };
+
 interface UseBrowserPushNotificationsProps {
-  leads?: Lead[];
+  leads?: LeadVigilado[];
   messages?: Message[];
   onSelectLead?: (leadId: string) => void;
   isLoggedIn?: boolean;
@@ -35,10 +37,10 @@ export function useBrowserPushNotifications({
   onSelectLead,
   isLoggedIn = true,
 }: UseBrowserPushNotificationsProps = {}) {
-  const [isSupported, setIsSupported] = useState<boolean>(true);
-  const [permission, setPermission] = useState<NotificationPermissionStatus>('default');
-  const [config, setConfig] = useState<BrowserNotificationConfig>(DEFAULT_NOTIFICATION_CONFIG);
-  const [history, setHistory] = useState<NotificationHistoryItem[]>([]);
+  const [isSupported] = useState<boolean>(isBrowserNotificationSupported);
+  const [permission, setPermission] = useState<NotificationPermissionStatus>(getBrowserNotificationPermission);
+  const [config, setConfig] = useState<BrowserNotificationConfig>(loadNotificationConfig);
+  const [history, setHistory] = useState<NotificationHistoryItem[]>(loadNotificationHistory);
 
   // Previous snapshots to detect delta changes
   const prevLeadsMapRef = useRef<Map<string, { estado: string; ultimo_mensaje?: string; fecha_actualizacion?: string }>>(new Map());
@@ -46,13 +48,8 @@ export function useBrowserPushNotifications({
   const isInitialLeadsLoadRef = useRef<boolean>(true);
   const isInitialMessagesLoadRef = useRef<boolean>(true);
 
-  // Initialize state on mount
+  // Se mantiene sincronizado con los cambios de configuración e historial emitidos por el servicio.
   useEffect(() => {
-    setIsSupported(isBrowserNotificationSupported());
-    setPermission(getBrowserNotificationPermission());
-    setConfig(loadNotificationConfig());
-    setHistory(loadNotificationHistory());
-
     const handleConfigUpdate = (e: Event) => {
       const customEvent = e as CustomEvent<BrowserNotificationConfig>;
       if (customEvent.detail) {
@@ -153,8 +150,8 @@ export function useBrowserPushNotifications({
         if (lead && lead.id) {
           initialMap.set(lead.id, {
             estado: lead.estado || 'nuevo',
-            ultimo_mensaje: (lead as any).ultimo_mensaje_recibido || (lead as any).ultimo_contacto,
-            fecha_actualizacion: (lead as any).fecha_actualizacion,
+            ultimo_mensaje: lead.ultimo_mensaje_recibido || lead.ultimo_contacto,
+            fecha_actualizacion: lead.fecha_actualizacion,
           });
         }
       });
@@ -170,13 +167,13 @@ export function useBrowserPushNotifications({
       if (!lead || !lead.id) return;
       const leadId = lead.id;
       const currentStatus = lead.estado || 'nuevo';
-      const currentMsg = (lead as any).ultimo_mensaje_recibido || (lead as any).ultimo_contacto;
+      const currentMsg = lead.ultimo_mensaje_recibido || lead.ultimo_contacto;
       const leadName = lead.nombre_sala || 'Sala sin nombre';
 
       currentMap.set(leadId, {
         estado: currentStatus,
         ultimo_mensaje: currentMsg,
-        fecha_actualizacion: (lead as any).fecha_actualizacion,
+        fecha_actualizacion: lead.fecha_actualizacion,
       });
 
       const prevData = prevMap.get(leadId);

@@ -1,23 +1,12 @@
 import { PopoverAncla } from '../../ui/PopoverAncla';
 import React, { useState, useRef, useEffect } from 'react';
-import {
-  X,
-  ChevronLeft,
-  ChevronRight,
-  Search,
-  Building2,
-  Trash2,
-  ExternalLink,
-  SlidersHorizontal,
-} from 'lucide-react';
-import { Lead, LeadStatus, LeadType } from '../../../types';
+import { X, ChevronLeft, ChevronRight, Search, Trash2 } from 'lucide-react';
+import { Lead, LeadStatus } from '../../../types';
 import { LeadAvatar } from '../LeadAvatar';
 import { VerifiedBadge } from '../../common/VerifiedBadge';
-import { LeadHealthBadge } from '../LeadHealthBadge';
 import { isLeadVerificado } from '../../../utils/leadReliability';
 import { FavoriteButton } from '../../common/FavoriteButton';
-import { Button, IconButton, Input } from '../../ui';
-import { ShowIcon } from '../../ui/ShowIcon';
+import { IconButton, Input } from '../../ui';
 
 interface VenueModalHeaderProps {
   lead: Lead;

@@ -5,6 +5,7 @@ import ffmpegPath from "ffmpeg-static";
 import { getSupabase } from "../db/core.js";
 import { uploadBufferToSupabase, rutaAlmacenamientoStem } from "./storage.js";
 import { esUrlExternaSegura } from "./ssrfGuard.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 if (ffmpegPath) {
   ffmpeg.setFfmpegPath(ffmpegPath);
@@ -142,15 +143,16 @@ export async function convertWavUrlToMp3(
       origSize,
       newSize
     };
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error(`[WAV Optimizer] Error convirtiendo ${wavUrl}:`, err?.message || err);
     return null;
   } finally {
     if (fs.existsSync(tempWav)) {
-      try { fs.unlinkSync(tempWav); } catch (_) {}
+      try { fs.unlinkSync(tempWav); } catch { /* el temporal ya no existe: nada que limpiar */ }
     }
     if (fs.existsSync(tempMp3)) {
-      try { fs.unlinkSync(tempMp3); } catch (_) {}
+      try { fs.unlinkSync(tempMp3); } catch { /* el temporal ya no existe: nada que limpiar */ }
     }
   }
 }
@@ -314,12 +316,37 @@ export async function optimizeWavSongsForBand(targetBandId?: string): Promise<Op
       }
     }
 
+    // Stems de la canción (songs.pistas): mismas conversiones que los de las ideas.
+    if (Array.isArray(song.pistas)) {
+      for (const pista of song.pistas) {
+        if (pista?.audioUrl && pista.audioUrl.toLowerCase().includes(".wav")) {
+          const conv = await convertWavUrlToMp3(pista.audioUrl, songBandId, `${song.titulo}-${pista.nombre || 'pista'}`);
+          if (conv) {
+            result.totalWavsProcessed++;
+            result.originalSizeBytes += conv.origSize;
+            result.optimizedSizeBytes += conv.newSize;
+            result.details.push({
+              songId: song.id,
+              songTitle: `${song.titulo} [Pista: ${pista.nombre || 'Pista'}]`,
+              wavUrl: pista.audioUrl,
+              mp3Url: conv.mp3Url,
+              origMB: (conv.origSize / 1024 / 1024).toFixed(2),
+              newMB: (conv.newSize / 1024 / 1024).toFixed(2)
+            });
+            pista.audioUrl = conv.mp3Url;
+            songUpdated = true;
+          }
+        }
+      }
+    }
+
     // Si la canción fue modificada, actualizarla en Supabase
     if (songUpdated) {
-      const updatePayload: any = {
+      const updatePayload: Record<string, unknown> = {
         audio_principal_url: song.audio_principal_url,
         audio_url: song.audio_url,
-        audio_ideas: song.audio_ideas
+        audio_ideas: song.audio_ideas,
+        ...(Array.isArray(song.pistas) ? { pistas: song.pistas } : {})
       };
 
       const { error: updateError } = await sb

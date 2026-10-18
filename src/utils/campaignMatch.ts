@@ -1,5 +1,28 @@
 import { BookingCampaign, Lead } from '../types';
 
+/**
+ * Campaña tal como puede llegar: las filas de Supabase sin mapear traen los campos en snake_case,
+ * y `targetRegions` no está en {@link BookingCampaign} pero algunas campañas lo guardan.
+ */
+type CampanaConAlias = BookingCampaign & {
+  target_cities?: string[];
+  targetRegions?: string[];
+  target_regions?: string[];
+  min_capacity?: number;
+  max_capacity?: number;
+  campaign_start_date?: string;
+  campaign_end_date?: string;
+  target_dates?: string[];
+  target_dates_text?: string;
+};
+
+/** Lead con las variantes de nombre de las fechas de festival que puede traer. */
+type LeadConFechasFestival = Lead & {
+  festivalStartDate?: string;
+  festival_end_date?: string;
+  festivalEndDate?: string;
+};
+
 const MONTH_NAMES_ES: Record<string, number> = {
   enero: 0,
   febrero: 1,
@@ -39,7 +62,7 @@ export function parseFlexibleDate(dateStr: string | null | undefined): Date | nu
   }
 
   // 2. Formato DD/MM/YYYY o DD-MM-YYYY
-  const ddmmyyyy = trimmed.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+  const ddmmyyyy = trimmed.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})/);
   if (ddmmyyyy) {
     const day = parseInt(ddmmyyyy[1], 10);
     const month = parseInt(ddmmyyyy[2], 10) - 1;
@@ -49,7 +72,7 @@ export function parseFlexibleDate(dateStr: string | null | undefined): Date | nu
   }
 
   // 3. Formato DD/MM o DD-MM (asume año actual o próximo)
-  const ddm = trimmed.match(/^(\d{1,2})[\/\-](\d{1,2})$/);
+  const ddm = trimmed.match(/^(\d{1,2})[/-](\d{1,2})$/);
   if (ddm) {
     const day = parseInt(ddm[1], 10);
     const month = parseInt(ddm[2], 10) - 1;
@@ -65,7 +88,7 @@ export function parseFlexibleDate(dateStr: string | null | undefined): Date | nu
       const year = yearMatch ? parseInt(yearMatch[1], 10) : new Date().getFullYear();
 
       const dayMatches = [...trimmed.matchAll(/\b(\d{1,2})\b/g)];
-      let day = dayMatches.length > 0 ? parseInt(dayMatches[0][1], 10) : 1;
+      const day = dayMatches.length > 0 ? parseInt(dayMatches[0][1], 10) : 1;
 
       const d = new Date(year, monthIndex, day);
       if (!isNaN(d.getTime())) return d;
@@ -83,11 +106,12 @@ export function parseFlexibleDate(dateStr: string | null | undefined): Date | nu
 // menos encajan), mientras que el listado de Booking Salas filtraba por el rango exacto. El
 // resultado era que el contador prometía más salas de las que luego aparecían filtradas: no era
 // que el filtro fallara a veces, es que nunca fue el mismo filtro.
-export function leadMatchesCampaignCity(lead: Lead, campaign: BookingCampaign): boolean {
-  const targetCities = ((campaign.targetCities || (campaign as any).target_cities || []) as string[])
+export function leadMatchesCampaignCity(lead: Lead, campana: BookingCampaign): boolean {
+  const campaign: CampanaConAlias = campana;
+  const targetCities = (campaign.targetCities || campaign.target_cities || [])
     .map((c) => c.toLowerCase().trim())
     .filter(Boolean);
-  const targetRegions = (((campaign as any).targetRegions || (campaign as any).target_regions || []) as string[])
+  const targetRegions = (campaign.targetRegions || campaign.target_regions || [])
     .map((r) => r.toLowerCase().trim())
     .filter(Boolean);
 
@@ -106,19 +130,22 @@ export function leadMatchesCampaignCity(lead: Lead, campaign: BookingCampaign): 
   );
 }
 
-export function leadMatchesCampaignCapacity(lead: Lead, campaign: BookingCampaign): boolean {
+export function leadMatchesCampaignCapacity(lead: Lead, campana: BookingCampaign): boolean {
+  const campaign: CampanaConAlias = campana;
   const cap = Number(lead.aforo) || 0;
-  const minCap = Number(campaign.minCapacity || (campaign as any).min_capacity || 0);
-  const maxCap = Number(campaign.maxCapacity || (campaign as any).max_capacity || Infinity);
+  const minCap = Number(campaign.minCapacity || campaign.min_capacity || 0);
+  const maxCap = Number(campaign.maxCapacity || campaign.max_capacity || Infinity);
 
   // Una sala sin aforo registrado no se descarta: no hay dato con el que contradecir la campaña.
   if (cap === 0) return true;
   return cap >= minCap && cap <= maxCap;
 }
 
-export function leadMatchesCampaignDates(lead: Lead, campaign: BookingCampaign): boolean {
-  const startDateStr = (lead as any).festival_start_date || (lead as any).festivalStartDate;
-  const endDateStr = (lead as any).festival_end_date || (lead as any).festivalEndDate || startDateStr;
+export function leadMatchesCampaignDates(leadRecibido: Lead, campana: BookingCampaign): boolean {
+  const lead: LeadConFechasFestival = leadRecibido;
+  const campaign: CampanaConAlias = campana;
+  const startDateStr = lead.festival_start_date || lead.festivalStartDate;
+  const endDateStr = lead.festival_end_date || lead.festivalEndDate || startDateStr;
 
   if (!startDateStr) return true; // Si no hay fecha de evento asignada, no se descarta
 
@@ -127,18 +154,18 @@ export function leadMatchesCampaignDates(lead: Lead, campaign: BookingCampaign):
 
   if (!eventStart || !eventEnd) return true;
 
-  let campStartStr = campaign.campaignStartDate || (campaign as any).campaign_start_date;
-  let campEndStr = campaign.campaignEndDate || (campaign as any).campaign_end_date;
+  let campStartStr = campaign.campaignStartDate || campaign.campaign_start_date;
+  let campEndStr = campaign.campaignEndDate || campaign.campaign_end_date;
 
-  const targetDates = (campaign.targetDates || (campaign as any).target_dates) as string[];
+  const targetDates = campaign.targetDates || campaign.target_dates;
   if ((!campStartStr || !campEndStr) && Array.isArray(targetDates) && targetDates.length > 0) {
     const sorted = [...targetDates].sort();
     if (!campStartStr) campStartStr = sorted[0];
     if (!campEndStr) campEndStr = sorted[sorted.length - 1];
   }
 
-  if ((!campStartStr || !campEndStr) && (campaign.targetDatesText || (campaign as any).target_dates_text)) {
-    const text = campaign.targetDatesText || (campaign as any).target_dates_text;
+  if ((!campStartStr || !campEndStr) && (campaign.targetDatesText || campaign.target_dates_text)) {
+    const text = campaign.targetDatesText || campaign.target_dates_text;
     const parsedTextDate = parseFlexibleDate(text);
     if (parsedTextDate) {
       const iso = parsedTextDate.toISOString().substring(0, 10);

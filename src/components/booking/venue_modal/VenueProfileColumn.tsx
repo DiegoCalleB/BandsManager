@@ -1,34 +1,15 @@
 import React, { useState } from 'react';
-import {
-  Smartphone,
-  Phone,
-  PhoneCall,
-  Mail,
-  Instagram,
-  MapPin,
-  Globe,
-  Sparkles,
-  Calendar,
-  DollarSign,
-  Percent,
-  Edit3,
-  Save,
-  Undo2,
-  Compass,
-  TrendingUp,
-  Loader2,
-  ExternalLink,
-  MessageCircle,
-  Clock,
-  ShieldCheck,
-  AlertTriangle,
-} from 'lucide-react';
-import { Lead, LeadType, Concert } from '../../../types';
-import { getWhatsAppUrl, openWhatsAppChat, WHATSAPP_WINDOW_NAME } from '../../../utils/whatsapp';
+import { Smartphone, Phone, Mail, Instagram, MapPin, Globe, Sparkles, Edit3, Save, Undo2, TrendingUp, Loader2, ExternalLink, MessageCircle, AlertTriangle } from 'lucide-react';
+import { Lead, Concert } from '../../../types';
 import { checkBandDateConflict } from '../../../utils/bookingTourContext';
-import { Button, IconButton, Input, Select, Textarea } from '../../ui';
-import { ShowIcon } from '../../ui/ShowIcon';
+import { Button, Input, Textarea } from '../../ui';
 import { apiFetch } from '../../../utils/api';
+import type { RespuestaEnriquecerLead } from '../tiposRespuestasApi';
+import { comoErrorCapturado } from '../../../utils/errorCapturado';
+import { avisoDeEmail } from '../../../utils/avisoDeEmail';
+
+/** Lead con la fecha de evento que guardaban versiones antiguas del CRM. */
+type LeadConFechaLegacy = Lead & { fecha_posible_evento?: string };
 
 interface VenueProfileColumnProps {
   lead: Lead;
@@ -43,22 +24,23 @@ interface VenueProfileColumnProps {
 export const VenueProfileColumn: React.FC<VenueProfileColumnProps> = ({
   lead,
   onUpdateLead,
-  onFilterByRouteCity,
   bandName,
   concerts = [],
-  onOpenWhatsAppModal,
+  onOpenWhatsAppModal
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editFormData, setEditFormData] = useState<Partial<Lead>>({ ...lead });
   const [isEnrichingScout, setIsEnrichingScout] = useState(false);
   const [scoutMsg, setScoutMsg] = useState<string | null>(null);
 
-  // Sync edit form when lead changes
-  React.useEffect(() => {
+  // Al cambiar de lead se reinicia el formulario (ajuste durante el render, sin efecto).
+  const [leadVistoId, setLeadVistoId] = useState(lead.id);
+  if (leadVistoId !== lead.id) {
+    setLeadVistoId(lead.id);
     setEditFormData({ ...lead });
     setIsEditing(false);
     setScoutMsg(null);
-  }, [lead.id]);
+  }
 
   const handleSave = () => {
     onUpdateLead(lead.id, editFormData);
@@ -74,7 +56,7 @@ export const VenueProfileColumn: React.FC<VenueProfileColumnProps> = ({
     setIsEnrichingScout(true);
     setScoutMsg('Agente Scout consultando web y bases públicas...');
     try {
-      const res = await apiFetch(`/api/leads/enrich-lead`, {
+      const res = await apiFetch<RespuestaEnriquecerLead>(`/api/leads/enrich-lead`, {
         method: 'POST',
         body: JSON.stringify({
           leadId: lead.id,
@@ -102,7 +84,8 @@ export const VenueProfileColumn: React.FC<VenueProfileColumnProps> = ({
       } else {
         setScoutMsg('No se encontraron nuevos datos públicos.');
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setScoutMsg(`Error en Scout: ${err.message || 'Error de conexión'}`);
     } finally {
       setIsEnrichingScout(false);
@@ -111,7 +94,7 @@ export const VenueProfileColumn: React.FC<VenueProfileColumnProps> = ({
 
   // Tour Date Conflict Check
   const conflictCheck = checkBandDateConflict(
-    (lead as any).fecha_posible_evento || lead.fechas_propuestas_sala?.[0] || lead.fechas_libres_detectadas?.[0],
+    (lead as LeadConFechaLegacy).fecha_posible_evento || lead.fechas_propuestas_sala?.[0] || lead.fechas_libres_detectadas?.[0],
     concerts,
     lead.ciudad
   );
@@ -428,6 +411,12 @@ export const VenueProfileColumn: React.FC<VenueProfileColumnProps> = ({
                 <span className="text-[var(--ink-2)] italic opacity-60">Sin email</span>
               )}
             </div>
+            {avisoDeEmail(lead) && (
+              <p role="note" className="flex items-start gap-1.5 rounded-[var(--r-s)] bg-[var(--acc-soft)] px-2.5 py-1.5 text-xs text-[var(--acc-ink)]">
+                <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0" aria-hidden />
+                {avisoDeEmail(lead)}
+              </p>
+            )}
 
             {/* Email secundario si existe */}
             {lead.email_secundario && (
@@ -444,6 +433,12 @@ export const VenueProfileColumn: React.FC<VenueProfileColumnProps> = ({
                   {lead.email_secundario}
                 </a>
               </div>
+            )}
+            {lead.email_secundario && avisoDeEmail(lead, 'email_secundario') && (
+              <p role="note" className="flex items-start gap-1.5 rounded-[var(--r-s)] bg-[var(--acc-soft)] px-2.5 py-1.5 text-xs text-[var(--acc-ink)]">
+                <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0" aria-hidden />
+                {avisoDeEmail(lead, 'email_secundario')}
+              </p>
             )}
 
             {/* Móvil / WhatsApp */}

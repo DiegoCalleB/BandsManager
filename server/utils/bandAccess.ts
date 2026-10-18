@@ -1,6 +1,9 @@
 import type express from "express";
 import { isValidEmail } from "./email.js";
 
+/** Los dos alias con los que el cuerpo de una petición puede nombrar la banda (sin validar). */
+type CuerpoConBanda = { bandId?: unknown; band_id?: unknown } | null | undefined;
+
 /**
  * Resuelve sobre qué banda opera una petición, respetando a qué bandas pertenece el usuario.
  *
@@ -16,15 +19,15 @@ import { isValidEmail } from "./email.js";
  * Extraído de server/routes/repertorio.ts, que ya lo hacía bien, para no tener dos criterios.
  */
 export function getTargetBandId(req: express.Request): string {
-  const user = (req as any).user;
+  const user = req.user;
   const userBandId = user?.band_id;
   const headerBandId = (
     req.headers["x-band-id"] ||
     req.headers["x-active-band-id"] ||
     req.query.band_id ||
     req.query.bandId ||
-    (req.body as any)?.bandId ||
-    (req.body as any)?.band_id
+    (req.body as CuerpoConBanda)?.bandId ||
+    (req.body as CuerpoConBanda)?.band_id
   ) as string | undefined;
 
   if (headerBandId && typeof headerBandId === "string" && headerBandId.trim() && user) {
@@ -58,8 +61,8 @@ export function bandaSolicitada(req: express.Request): string | undefined {
     req.headers["x-active-band-id"] ||
     req.query.band_id ||
     req.query.bandId ||
-    (req.body as any)?.bandId ||
-    (req.body as any)?.band_id
+    (req.body as CuerpoConBanda)?.bandId ||
+    (req.body as CuerpoConBanda)?.band_id
   ) as string | undefined;
   const limpio = typeof bruto === "string" ? bruto.trim() : "";
   return limpio || undefined;
@@ -67,7 +70,7 @@ export function bandaSolicitada(req: express.Request): string | undefined {
 
 /** ¿Puede este usuario escribir en la banda indicada? Para rutas que deben fallar, no degradar. */
 export function puedeEscribirEnBanda(req: express.Request, bandId: string): boolean {
-  const user = (req as any).user;
+  const user = req.user;
   if (!user) return false;
   if (user.role === "admin") return true;
   const limpio = (bandId || "").replace(/^(band|reg)-/, "");
@@ -87,13 +90,13 @@ export function puedeEscribirEnBanda(req: express.Request, bandId: string): bool
  * Va aparte de `bandaSolicitada` porque el band_id viaja anidado dentro de `params`, donde los
  * helpers de arriba no miran.
  */
-export function bandaDelAgente(req: express.Request, params: any): string | null {
-  const user = (req as any).user;
+export function bandaDelAgente(req: express.Request, params: { band_id?: unknown } | null | undefined): string | null {
+  const user = req.user;
   const pedida = typeof params?.band_id === "string" ? params.band_id.trim() : "";
 
-  // Sin usuario (llamada de cron) y sin params.band_id: antes esto caía en band-bakandeya, así
+  // Sin usuario (llamada de cron) y sin params.band_id: antes esto caía en una banda por defecto, así
   // que un job del planificador que se olvidara de mandar el band_id acababa disparando el
-  // agente sobre la banda insignia en vez de fallar. Sin banda explícita, null.
+  // agente sobre otra banda en vez de fallar. Sin banda explícita, null.
   if (!user) return pedida || null;
   if (pedida && !puedeEscribirEnBanda(req, pedida)) return null;
   return pedida || user.band_id || null;
@@ -118,7 +121,7 @@ export function mismaBanda(a?: string, b?: string): boolean {
  * email, así que mandar el de otra persona bastaba para acabar operando sobre SU suscripción.
  */
 export function bandaFacturableDelUsuario(req: express.Request): { bandId: string; email?: string } | null {
-  const user = (req as any).user;
+  const user = req.user;
   if (!user) return null;
 
   const pedida = bandaSolicitada(req);
@@ -131,4 +134,12 @@ export function bandaFacturableDelUsuario(req: express.Request): { bandId: strin
     typeof v === "string" && isValidEmail(v)
   );
   return { bandId, email };
+}
+
+/**
+ * Banda a la que pertenece un registro. Acepta el alias legado `bandId` (registros antiguos en
+ * camelCase) además de `band_id`, para filtrar por banda en un único sitio.
+ */
+export function bandaDe(registro: { band_id?: string; bandId?: string } | null | undefined): string | undefined {
+  return registro?.band_id || registro?.bandId;
 }

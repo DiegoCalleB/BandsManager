@@ -1,6 +1,7 @@
 import { getSupabase } from "../server/db/core.js";
-import { findDuplicateLeads, mergeTwoLeads, normalizeEmail, normalizeVenueName, normalizeText } from "../src/utils/duplicateLeads.js";
+import { findDuplicateLeads, mergeTwoLeads, normalizeVenueName } from "../src/utils/duplicateLeads.js";
 import { Lead } from "../src/types.js";
+import { emailEnDominio, hostEnDominio } from "../server/utils/urlHost.js";
 
 // Master dictionary for high quality logos of iconic Spanish venues / festivals / media
 const VENUE_IMAGE_OVERRIDES: Record<string, { logo: string; website?: string; email?: string }> = {
@@ -127,8 +128,7 @@ function deriveLogoForLead(lead: Lead): string {
       trimmed &&
       trimmed !== "null" &&
       trimmed !== "undefined" &&
-      !trimmed.includes("clearbit.com") &&
-      !trimmed.includes("ui-avatars.com") &&
+      !hostEnDominio(trimmed, "clearbit.com", "ui-avatars.com") &&
       (trimmed.startsWith("http://") || trimmed.startsWith("https://"))
     ) {
       return trimmed;
@@ -137,8 +137,10 @@ function deriveLogoForLead(lead: Lead): string {
 
   // Try instagram handle unavatar
   if (lead.instagram && lead.instagram.trim()) {
-    const handle = lead.instagram
-      .replace(/.*instagram\.com\//, "")
+    // lastIndexOf en vez de /.*instagram\.com\// (coste cuadrático sobre texto libre).
+    const marca = "instagram.com/";
+    const pos = lead.instagram.toLowerCase().lastIndexOf(marca);
+    const handle = (pos >= 0 ? lead.instagram.slice(pos + marca.length) : lead.instagram)
       .replace(/^@/, "")
       .split("/")[0]
       .trim();
@@ -174,28 +176,30 @@ function deriveLogoForLead(lead: Lead): string {
 }
 
 async function run() {
-  console.log("=== INICIANDO LIMPIEZA Y ENRIQUECIMIENTO DE LEADS DE BAKANDEYA ===");
+  console.log("=== INICIANDO LIMPIEZA Y ENRIQUECIMIENTO DE LEADS ===");
   const sb = getSupabase();
 
-  // 1. Cargar todos los leads de Bakandeya
+  // 1. Cargar todos los leads de la banda indicada (argumento: band_id)
+  const bandId = process.argv[2];
+  if (!bandId) throw new Error("Uso: tsx scripts/dedupe_and_enrich.ts <band_id>");
   const { data: rawLeads, error: fetchErr } = await sb
     .from("leads")
     .select("*")
-    .eq("band_id", "band-bakandeya");
+    .eq("band_id", bandId);
 
   if (fetchErr || !rawLeads) {
     console.error("Error al cargar leads:", fetchErr);
     return;
   }
 
-  console.log(`Leads cargados inicialmente: ${rawLeads.length}`);
+  console.log(`Leads cargados inicialmente: %s`, rawLeads.length);
 
   let leads: Lead[] = rawLeads as Lead[];
 
   // 1.5 Correcciones iniciales de nombres o datos corruptos
   for (const l of leads) {
     // Corrige lead con nombre "Sala" que es Sala El Sol
-    if (l.nombre_sala === "Sala" && l.email_contacto?.includes("salaelsol.com")) {
+    if (l.nombre_sala === "Sala" && emailEnDominio(l.email_contacto, "salaelsol.com")) {
       l.nombre_sala = "Sala El Sol";
       l.website = "https://salaelsol.com";
     }
@@ -219,11 +223,11 @@ async function run() {
     passCount++;
     const dupGroups = findDuplicateLeads(leads);
     if (dupGroups.length === 0) {
-      console.log(`Pase ${passCount}: No se detectaron más grupos duplicados.`);
+      console.log(`Pase %s: No se detectaron más grupos duplicados.`, passCount);
       break;
     }
 
-    console.log(`Pase ${passCount}: Se encontraron ${dupGroups.length} grupos de duplicados.`);
+    console.log(`Pase %s: Se encontraron %s grupos de duplicados.`, passCount, dupGroups.length);
 
     const idsToDeleteAllPass: string[] = [];
 
@@ -253,7 +257,7 @@ async function run() {
     }
 
     if (idsToDeleteAllPass.length > 0) {
-      console.log(`Eliminando ${idsToDeleteAllPass.length} IDs duplicados de Supabase...`);
+      console.log(`Eliminando %s IDs duplicados de Supabase...`, idsToDeleteAllPass.length);
       const { error: delErr } = await sb
         .from("leads")
         .delete()
@@ -265,7 +269,7 @@ async function run() {
     }
   }
 
-  console.log(`Tras fusión de duplicados, quedan ${leads.length} leads únicos.`);
+  console.log(`Tras fusión de duplicados, quedan %s leads únicos.`, leads.length);
 
   // 3. Rellenar datos faltantes y logos para TODOS los leads
   let enrichedCount = 0;
@@ -292,7 +296,7 @@ async function run() {
 
     // Derivar logo si sigue vacío o "null"
     const derivedLogo = deriveLogoForLead(l);
-    if (derivedLogo && (!l.imagen_url || l.imagen_url === "null" || l.imagen_url === "undefined" || l.imagen_url.includes("clearbit.com"))) {
+    if (derivedLogo && (!l.imagen_url || l.imagen_url === "null" || l.imagen_url === "undefined" || hostEnDominio(l.imagen_url, "clearbit.com"))) {
       l.imagen_url = derivedLogo;
       enrichedCount++;
     }
@@ -318,14 +322,14 @@ async function run() {
     }
   }
 
-  console.log(`Logos/datos enriquecidos en ${enrichedCount} recintos.`);
+  console.log(`Logos/datos enriquecidos en %s recintos.`, enrichedCount);
 
   // 4. Guardar todos los leads limpios y enriquecidos de nuevo en Supabase
   console.log("Guardando leads limpios y enriquecidos en Supabase...");
   for (const l of leads) {
     const { error: upsertErr } = await sb.from("leads").upsert(l);
     if (upsertErr) {
-      console.error(`Error guardando lead "${l.nombre_sala}" [${l.id}]:`, upsertErr);
+      console.error(`Error guardando lead "%s" [%s]:`, l.nombre_sala, l.id, upsertErr);
     }
   }
 

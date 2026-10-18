@@ -4,6 +4,9 @@ import { Router } from 'express';
 import { requireAuth } from '../state.js';
 import { getTargetBandId } from '../utils/bandAccess.js';
 import { processAudioTransposition } from '../services/audioTransposeService.js';
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import { responderError } from '../utils/errorHttp.js';
+import { detalleTecnico } from './ai_music/detalleTecnico.js';
 
 const router = Router();
 
@@ -27,11 +30,13 @@ router.post(['/transpose-audio', '/api/transpose-audio'], requireAuth, async (re
     if (result.success) {
       res.json(result);
     } else {
-      res.status(500).json(result);
+      console.error('[TransposeRoute] Trasposición fallida:', result.error);
+      res.status(500).json({ success: false, error: 'No se pudo transponer el audio.', details: detalleTecnico(req, result.error) });
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('[TransposeRoute Error]:', err);
-    res.status(500).json({ success: false, error: err.message || 'Error al procesar trasposición de audio.' });
+    responderError(res, err, 'Error al procesar trasposición de audio.');
   }
 });
 

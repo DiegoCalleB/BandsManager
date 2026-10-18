@@ -111,11 +111,44 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
   5. *Tour CFO Predictivo*: Cálculo en vivo del umbral de rentabilidad de la gira durante el trayecto y kilometraje GPS automático.
 * **Por qué importa:** Resuelve la causa número 1 de discusiones y ruptura de bandas (el dinero y las cuentas tanto en gira como en el local), automatiza la contabilidad y protege el patrimonio de los músicos.
 * **Documento maestro:** `docs/planes/splitband.md`
-* **Estado:** Especificado con arquitectura de IA, modelo de compensación y esquema DDL listos.
+### 8. Hoja de Ruta de Excelencia Técnica TFM: Nivel Dios (Super Saiyan Arquitectónico)
+* **Qué:** Elevación de la arquitectura, observabilidad y experiencia de evaluación del proyecto al estándar más alto jamás presentado en el máster:
+  1. *Fase 1: Desmantelamiento Quirúrgico de los 3 Monolitos "God Components" (Patrón Strangler Fig)*:
+     - `src/components/RepertorioSetlists.tsx` (~6.527 líneas iniciales -> **3.403 líneas actuales**, -3.124 líneas / >48% desacoplado):
+       - Extraídos componentes visuales puros con contratos Vitest y nodos Obsidian:
+         - `ActiveSetlistHeader.tsx` (cabecera interactiva y acciones del setlist)
+         - `SetlistItemsList.tsx` (lista interactiva de canciones y eventos con drag & drop)
+         - `RepertorioModalsContainer.tsx` (contenedor desacoplado de los 20 modales auxiliares)
+         - `EnergyMapCard.tsx` y `SetlistStatsSummaryBar.tsx` (mapa de energía, curva de BPM y estadísticas)
+         - `CatalogoGeneralView.tsx` (vista del catálogo unificado)
+         - `SetlistSongRow.tsx` y `SetlistShowItemRow.tsx` (filas desacopladas con accesibilidad móvil)
+         - `src/config/defaultRepertoire.ts`, `src/utils/repertorioPdf.ts`, `src/utils/stageSetlistHtml.ts` (lógica pura de hoja de escenario y semillas)
+     - `src/components/SongStudioModal.tsx` (>6.000 líneas): Separación de paneles de grabación, stems, efectos y mezclador.
+     - `server/routes/users.ts` (3.773 líneas): Modularización de rutas por dominio (auth, perfiles, uploads, preferencias).
+  2. *Fase 2: Dashboard de Observabilidad y Telemetría de Agentes IA (AI Ops)*:
+     - Panel interactivo para evaluadores con métricas en tiempo real de `agent_execution_logs` y `ai_token_ledger`: ratio de aprobación Human-in-the-Loop, tiempos de respuesta, fallbacks y coste de tokens.
+  3. *Fase 3: Sandbox / Modo Demo con Semilla Automática ("Evaluación en 1 Clic")*:
+     - Comando y script `npm run demo:seed` que precarga una banda completa ficticia con leads en todas las etapas, historial de correos y setlists listos para probar sin configurar APIs externas.
+  4. *Fase 4: Comunicación de Impacto (Vídeo Loom 3 Min + Architecture Whitepaper)*:
+     - Demostración audiovisual concisa del ciclo agéntico y documento ejecutivo de 5 páginas con diagramas C4 y ADRs.
+* **Por qué importa:** Convierte la arquitectura interna en un ejemplo académico de manual, elimina toda deuda técnica de componentes gigantes y permite al tribunal evaluar la plataforma completa en 30 segundos sin fricción.
+* **Estado:** Fase 1 en ejecución activa (RepertorioSetlists.tsx desmantelado al 48%).
 
 ---
 
 ## 💡 Ideas por explorar
+
+### Agente de chat: herramientas de Supabase, botón de aprobar y memoria (investigado 2026-10-14)
+
+* **Las cuatro preguntas, con lo que se comprobó en el código** (`server/routes/chat.ts`, `server/utils/conversacionChat.ts`, `src/components/chatbot/`):
+  1. **¿Agentes/herramientas de Supabase deshabilitados?** No lo están. El modelo puede *proponer* escrituras (`propose_add_lead`, `propose_concert`, `propose_tour`, ensayos, logos, disparar un agente…) y **nada se ejecuta hasta que la persona pulsa confirmar**; el servidor decide la banda por la sesión (`bandaDelAgente`) y la configuración de autonomía la lee de su propio estado (`getAutonomyConfigForBand`). Los atajos por palabras clave («lanza el scout en Sevilla») están **siempre activos** y solo proponen la tarjeta de confirmación; ya no hay interruptor ni botón de autonomía en el chat (la autonomía se edita desde el Dashboard y el CRM). Lanzar un agente (`/trigger-agent`) exige ser líder o admin. Auditado: ninguna acción propuesta cruza de banda (la banda sale de la sesión y la capa db ignora el `band_id` del cuerpo). Cualquier miembro puede confirmar crear conciertos, ensayos, giras, contactos aliados, logos y canciones en su propia banda; **aprobar un lead** (y lanzar agentes) exige ahora líder o admin. Decisión de producto pendiente: si conciertos y giras (caché y contrato) deben ser solo de la dirección, como ya lo es `/payments` (`requireLeader`). `PUT /api/bands/:id` y `POST /api/bands` no pasan por `puedeEscribirEnBanda` (hueco menor: ya están atados a la banda de sesión).
+  2. **«Aprobar todos» arriba o abajo.** El botón ya está en la cabecera de la tarjeta «Propuestas del Manager» de cada mensaje (`ChatMessageBubble.tsx`), solo con más de una propuesta pendiente. Esa tarjeta sale *debajo* del texto de la respuesta, así que en la última respuesta queda al final de la conversación. Mejorarlo (barra fija sobre la conversación, o encima del texto) es decisión de diseño.
+  3. **Memoria.** No hay memoria en el servidor: no se guarda ninguna conversación. El historial vive en el `localStorage` del navegador (`bandmanager_chat_messages_<usuario>_<banda>`); al servidor le llegan como mucho los últimos 20 turnos de 4.000 caracteres (`acotarHistorial`) y el cliente manda los últimos 8. Entre dispositivos no se comparte y al borrar los datos del navegador se pierde. Lo único que «aprende» es el resumen global de feedback de pitches que se mete en el prompt.
+  4. **Limpiar el historial cada X tiempo.** Hoy **nunca caduca y sobrevive al cierre de sesión**: `handleLogout` borra token y usuario pero no las claves del chat, así que en un ordenador compartido el siguiente usuario del navegador puede abrir la conversación anterior (con salas, borradores de correo y datos de contacto). No hay nada que limpiar en el servidor. Solo hay un botón manual de reiniciar en la cabecera del chat.
+* **Arreglado en esta tanda:** (a) el chat ya no enseña al usuario el mensaje interno del proveedor de IA cuando falla (iba en el texto de una respuesta 200 que el lint de `err.message` no ve); ahora da un código de error y el detalle va al log y a Sentry. (b) Fuera los restos de los agentes de GitHub Actions: el cliente leía `bandmanager_github_pat/owner/repo/ref` de `localStorage` y los mandaba como cabeceras `x-github-*` que el servidor ya ignoraba, y nadie guardaba esas claves; un test lo vigila.
+* **Pendiente de decidir (producto/privacidad):** política de retención del historial: borrarlo al cerrar sesión, y/o caducarlo a los N días (propuesta: borrar al cerrar sesión y caducar a los 30 días). Colocación de «Aprobar todos». Y revisar el valor por defecto `"Huelva"` que el atajo de agentes pone cuando no detecta región (`chat.ts`): es un dato de una zona concreta en código multi-banda.
+
+---
 
 ### Subida de vídeo de fans vía QR como gancho de conversión hacia el landing
 * **Qué:** en el QR del concierto (cartel, entrada, escenario), añadir la opción de que el asistente suba su propio clip de 15" grabado durante el show.
@@ -166,12 +199,41 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 * **Revisión con datos reales:** revisado con datos simulados (21 salas, conciertos, fans) en claro y oscuro: Booking, Panel, Fans, Calendario, Management, Agente Mánager, Ensayos y Discografía. Finanzas y Merchandising también revisadas (simulando líder y plan Cabeza de Cartel): títulos al estilo `page-title`, importes con `formatEur`, cifras en tinta (sin verde-sube/rojo-baja). Falta solo verlas con los números reales de Ruta 66.
 * **Estado:** F3 a F9 hechas; solo falta contrastar con los números reales de Ruta 66.
 
-### Deuda: datos de bandas concretas (Bakandeya, Ruta 66, Master of Prompts…) todavía en código
+### Deuda: un test que da timeout en CI y los ficheros del Dashboard sobre 600 líneas (2026-10-13)
+
+* **Qué:**
+  1. `server/__tests__/autoEnrichRespetarVacios.test.ts` (2 tests) superó el límite de 5 s en una ejecución de CI de un PR que solo tocaba documentación; al repetirla pasó. Todo lo que usa está simulado (la red incluida), así que parece lento de carga de módulos en un ejecutor cargado. **Arreglado (octubre 2026), en dos pasos:** primero se sospechó de la carga dinámica de `spanishFestivalsDB` y se precargó (no era eso: volvió a fallar en CI). La causa real era la **red**: `fetchUrlExternaSegura` hacía 12 consultas DNS reales a `sala-real.es` por ejecución del test y, en un ejecutor con internet, a veces tardaban más que los 5 s del test; el guardado tardío del primer test aparecía entonces en el segundo (`permitirVaciar: false`). Ahora el test sustituye `fetchUrlExternaSegura` y un último test vigila que no se resuelva ningún dominio por DNS. Barrido de todo `server/`: solo había otro test con DNS real (`roformerStems.test.ts`, hacia `api.github.com`); ahora simula la respuesta DNS y además comprueba el caso de un dominio que resuelve a una IP privada.
+  2. Cuatro ficheros del Dashboard siguen por encima de 600 líneas, congelados en el baseline de `verify:tamano` sin crecer: `dashboard/SocialAndFansGrowthChart.tsx` (784), `Dashboard.tsx` (752), `dashboard/ProfileCompletenessCard.tsx` (654) y `dashboard/widgets/CalendarWidget.tsx` (617). `DashboardWidgetGrid.tsx` ya baja de 600 (octubre 2026: la barra de edición y el catálogo «Añadir widget» salieron a `BarraEdicionPanel` y `AddWidgetModal`, y `widgetNuevo` a `utils/panelWidgets.ts`).
+* **Por qué importa:** (1) un test que falla sin motivo real corta fusiones y enseña a ignorar la CI en rojo; no se arregla saltándolo. (2) Los topes solo frenan el crecimiento: mientras sigan sobre 600 líneas, cada cambio ahí cuesta más de revisar.
+* **Estado:** (1) arreglado; (2) pendiente. Para (2), el siguiente es `SocialAndFansGrowthChart.tsx`, en un PR que no mezcle refactor con comportamiento.
+
+---
+
+### Hecho: una release ya no pone `main` en rojo por `docs/api`
+* **Qué pasaba:** `docs/api/openapi.json` y `docs/api/index.html` llevan `info.version = package.json.version`. El PR de release-please sube la versión del `package.json` pero no regenera esos ficheros, así que al fusionar la 3.0.0 `verify:docs` (`generate-openapi --check`) se puso rojo en `main` y en todos los PR (octubre 2026).
+* **Arreglo:** el modo `--check` ignora solo ese campo (anclado al título de la API, no a otros `"version"` de esquemas), igual que ya ignoraba los números de línea. El contrato sigue vigilado; la versión que muestra la documentación se refresca la próxima vez que se regenera. Descartado tocar `release-please-config.json` a ciegas: no se puede probar en local y un error ahí rompe las releases.
+
+---
+
+### Auditoría de errores internos que llegan al cliente (octubre 2026)
+
+* **Qué:** la regla de lint de `err.message` solo ve `res.status(5xx).json(...err.message...)`. Barrido a mano de las demás formas (`details`, `body: { error }` armado a mano, respuestas 200 con el texto del error):
+  * **Arreglado:** el chat (texto de disculpa con el error de la IA), `/test-supabase` (ahora solo admin), el 500 de la letra sincronizada, `POST /deals` y el audio de referencia de la generación musical.
+  * **Pendiente, decisión de diseño:** los diagnósticos de audio (`server/routes/ai_music/*`) mandan `details: diag.errorDetail` = mensaje crudo del proveedor o `stderr` de ffmpeg, y el cliente lo pinta en el panel de error de la separación (`src/utils/separacionIris.ts`). Propuesta: mantener título, mensaje y consejo (los escribe el equipo) y enseñar `details` solo a admin. Mismo caso en `audioTransposeService` (`error: err.stderr || err.stdout || …`).
+  * **Pendiente, a propósito:** la transcripción de letra (502) enseña «el motivo de cada modelo» (nombres de modelo y un trozo de la respuesta del proveedor, ≤200 caracteres). Es una decisión de producto explícita («si no se puede transcribir, se devuelve el error») y a veces ayuda (p. ej. «¿audio sin voz?»); si se quiere cerrar, mapear a mensajes propios en vez de pasar el texto.
+  * **Arreglado en el PR de `responderError`:** `leads/enrichment.ts` devolvía `details: String(error)` en un 500.
+* **Otros hallazgos de la auditoría, sin tocar:** `storage-stats` y `cleanup-unused-media` (`upload.ts`) llevan una lista fija de bandas por nombre («Ruta 66», «Arritmia», «Vértice») en código multi-banda; el atajo de agentes del chat usa `"Huelva"` como región por defecto.
+
+---
+
+### Deuda: datos de bandas concretas (Ruta 66, Master of Prompts…) todavía en código
 * **Qué:** auditoría de octubre 2026. Ya limpiado (fase 1): pitches y firmas de BandCRM, asunto del Chatbot, redes de ejemplo en FansLanding, logos y nombres por defecto y hoja de ruta / material de ejemplo del Calendario, texto del rider en Booking, líneas inventadas del dossier PDF, géneros por defecto (“Balkan Ska”) y etiqueta “Balkan Hype”.
-* **Hecho en fase 1b/2 (parcial, octubre 2026):** fuera el texto de Bakandeya de las rutas de lectura y prompts del servidor (`emailTemplate.ts` ya no inventa teléfono/email/logo y usa el nombre de la banda; scout, radar, matcher y audiencia usan «la banda»; ejemplos de `metrics.ts`); el EPK de demo de Bakandeya vive aislado en `server/seeds/demoEpk.ts` (con test) y `sync.ts` solo pregunta `defaultEpkConfigFor(bandId)`; variables de tono de `ReelsCenter.tsx` sin nombre de banda.
-* **Pendiente (no se toca sin poder probar contra Supabase real):** (1) la regla «evento sin `band_id` = Bakandeya» en `App.tsx`, `Dashboard.tsx`, `CalendarView.tsx` y `epk_fans.ts` — necesita una migración de datos antiguos antes de borrarla; (2) el caso especial `isBraisUser` / `isBraisMoure` en `server/auth.ts` y `server/routes/users.ts` (toca login y multi-tenant: requiere prueba manual con esa cuenta); (3) semillas de demo de la propia Bakandeya en el cliente (`RepertorioSetlists.tsx` `BAKANDEYA_DEMO_MEMBERS`/`DEFAULT_SONGS`, `Merchan.tsx`, `EPKManager.tsx`) — ya están restringidas a `isBakandeya`, no filtran a otras bandas; mover al servidor es limpieza, no fuga; (4) claves heredadas `bakandeya_token` / `bakandeya_user` en cookie y localStorage — renombrarlas cerraría la sesión a todo el mundo, hacerlo con migración de lectura doble.
+* **Hecho en fase 1b/2 (parcial, octubre 2026):** fuera el texto de una banda concreta de las rutas de lectura y prompts del servidor (`emailTemplate.ts` ya no inventa teléfono/email/logo y usa el nombre de la banda; scout, radar, matcher y audiencia usan «la banda»; ejemplos de `metrics.ts`); el EPK de la banda de ejemplo (`band-demo`) vive aislado en `server/seeds/demoEpk.ts` (con test) y `sync.ts` solo pregunta `defaultEpkConfigFor(bandId)`; variables de tono de `ReelsCenter.tsx` sin nombre de banda.
+* **Hecho en fase 3 (octubre 2026):** ninguna banda recibe ya un trato especial en el código. Fuera la regla «evento sin `band_id` = banda insignia» (App, Dashboard, calendario, `epk_fans.ts`, `state.ts`), las cuentas fundadoras forzadas a una banda, las plantillas por nombre de banda del cliente (repertorio, Merchan, EPK, firma de email, onboarding) y las claves `bakandeya_*` de cookie y `localStorage` (ahora `bandmanager_*`; todos los usuarios deben volver a iniciar sesión una vez). La instalación nueva arranca con una banda de ejemplo neutra (`band-demo`). Los datos existentes se reasignan con `scripts/rename-band-id.ts <id_antiguo> <id_nuevo>`. Ver ADR 0027.
+* **Hecho (octubre 2026):** fuera también el caso especial de la cuenta de Brais Moure (`isBraisUser` / `isBraisMoure` y `server/utils/cuentaBrais.ts`): su cuenta es una más y los permisos salen solo del rol y de la pertenencia a la banda (AGENTS.md §1). La cuenta mouredev@gmail.com se conserva, sin banda asignada en la semilla.
 * **Por qué importa:** cada rama por nombre de banda es una fuga potencial de datos o textos entre bandas y frena el multi-inquilino real.
-* **Estado:** fase 1 hecha; fases 1b y 2 hechas en lo que filtraba texto entre bandas; quedan los cuatro puntos de arriba.
+* **Hecho (octubre 2026), restos visuales:** el logo de demostración (`public/logo_demo*.{jpg,png}`) era el de una banda real y la landing pública enseñaba capturas con sus datos. Ahora el logo es neutro (`scripts/landing/generar-logo-demo.mjs`) y las capturas salen de la semilla «Banda Demo» con `scripts/landing/capturar-landing.mjs` (claro y oscuro, escritorio y móvil, fechas siempre próximas, sin emails reales). Fuera también el logo de Ruta 66 de `public/landing/demo/` y ocho capturas sin uso.
+* **Estado:** hecho. Ninguna banda ni cuenta tiene trato especial en el código.
 
 ---
 
@@ -182,9 +244,9 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 ---
 
 ### Landing pública (`/`) — siguientes pasos
-* **Hecho (octubre 2026):** `PublicLanding` en `/` para quien no tiene sesión (la PWA instalada y los enlaces con query/hash van directos al login); `/login` abre el formulario sin landing; capturas con datos de demo ficticios generadas con `LANDING_SHOTS=1 npx playwright test --project=visual landing-capturas` (salen en `public/landing/`).
+* **Hecho (octubre 2026):** `PublicLanding` en `/` para quien no tiene sesión (la PWA instalada y los enlaces con query/hash van directos al login); `/login` abre el formulario sin landing; capturas con datos de demo ficticios generadas entonces con `LANDING_SHOTS=1 npx playwright test --project=visual landing-capturas` (salen en `public/landing/`). Ese proyecto `visual` ya no existe en `playwright.config.ts`.
 * **Banda de demo (octubre 2026):** `e2e/fixtures/demoBand.ts` (miembros, repertorio, setlist, leads, calendario, fans, métricas y EPK) + retratos y escenas ilustrados generados con `node scripts/landing/generar-demo-assets.mjs` (en `public/landing/demo/`). Son ilustraciones, no fotos: para fotos reales de la banda, sustituye esos ficheros y cambia las rutas del fixture. La landing enseña también el dossier público y la página de fans.
-* **Dos bandas en la demo:** la cuenta de demo lleva Bakandeya y Ruta 66 (calendario conjunto, selector «¿Quién toca hoy?»). Ruta 66 solo tiene eventos ficticios; faltan logo (`importar_fotos.py logo ruta66 …`), fotos, miembros y repertorio reales para su dossier y su página de fans.
+* **Dos bandas en la demo:** la cuenta de demo lleva una banda de ejemplo y Ruta 66 (calendario conjunto, selector «¿Quién toca hoy?»). Ruta 66 solo tiene eventos ficticios; faltan logo (`importar_fotos.py logo ruta66 …`), fotos, miembros y repertorio reales para su dossier y su página de fans.
 * **Pendiente:** precios visibles (decisión de Diego), versión en inglés, SEO real (la app es una SPA: valorar una página estática/prerender para la raíz), páginas legales (privacidad, condiciones) enlazadas desde el pie, vídeo corto del flujo agente → aprobación, y revisar las capturas cuando cambie la UI.
 * **Deuda detectada al hacerla:** tarjetas de redes de Fans (`ReelsMetricsView`) con badges solapados («OAuth / Token») y títulos en rojo; tarjetas de Booking en móvil con chips «Sin datos» de Wegow/Bandsintown que añaden ruido.
 
@@ -245,7 +307,7 @@ _(vacío)_
      - **Eliminación segura in-modal**: Confirmación inline para eliminar conciertos o ensayos directamente desde el modal sin perder contexto.
 
 ## Sesión solo por cookie `httpOnly` (diferido, auditoría B)
-- Hoy el token vive en `localStorage` Y en la cookie `bakandeya_token` (`httpOnly:false`); el cliente lo lee en ~20 sitios para la cabecera `Authorization`. Marcar la cookie `httpOnly` sin migrar esos sitios rompería la sesión y no protegería de XSS (el token sigue en `localStorage`).
+- Hoy el token vive en `localStorage` Y en la cookie `bandmanager_token` (`httpOnly:false`); el cliente lo lee en ~20 sitios para la cabecera `Authorization`. Marcar la cookie `httpOnly` sin migrar esos sitios rompería la sesión y no protegería de XSS (el token sigue en `localStorage`).
 - Hecho: la cookie del servidor lleva `Secure` en producción. Pendiente: migrar el cliente a sesión por cookie (`credentials:'include'` + protección CSRF) y entonces `httpOnly:true`.
 
 ## RLS permisivo `USING (true)` (diferido, auditoría B)

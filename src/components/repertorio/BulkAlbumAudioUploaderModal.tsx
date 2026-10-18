@@ -1,21 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import {
-  X,
-  Upload,
-  Music,
-  CheckCircle2,
-  AlertCircle,
-  Play,
-  Pause,
-  RefreshCw,
-  FileAudio,
-  FolderUp,
-  ArrowRight,
-  Disc3,
-  Check,
-  Image as ImageIcon,
-  Plus,
-} from "lucide-react";
+import { X, Upload, CheckCircle2, AlertCircle, Play, Pause, RefreshCw, FileAudio, FolderUp, Disc3, Check, Image as ImageIcon } from "lucide-react";
 import { Song, ThemeColors } from "../../types";
 import { ModalPortal } from "../common/ModalPortal";
 import { uploadFileToServer } from "../../utils/audioStorage";
@@ -23,6 +7,8 @@ import { formatSecondsToMmSs } from "../../utils/repertorioUtils";
 import { apiFetch } from "../../utils/api";
 import { analizarAcordesDelAudio } from "../../utils/analisisAcordesCliente";
 import { IconButton, Input, Select } from '../ui';
+import '../../services/sesionLocal';
+import { comoErrorCapturado } from '../../utils/errorCapturado';
 
 interface BulkAlbumAudioUploaderModalProps {
   isOpen: boolean;
@@ -52,15 +38,20 @@ interface UploadMatchItem {
   esAproximado?: boolean;
 }
 
+/** Id único en el cliente: `prefijo_<ms>[_<indice>]_<4 caracteres aleatorios>`. Solo se llama desde handlers. */
+function idUnico(prefijo: string, indice?: number): string {
+  const sufijo = Math.random().toString(36).substring(2, 6);
+  return indice === undefined ? `${prefijo}_${Date.now()}_${sufijo}` : `${prefijo}_${Date.now()}_${indice}_${sufijo}`;
+}
+
 export function BulkAlbumAudioUploaderModal({
   isOpen,
   onClose,
   albumName: initialAlbumName = "",
   albumSongs = [],
-  colors,
   bandId,
   isNewAlbumMode = false,
-  onSaveUpdatedSongs,
+  onSaveUpdatedSongs
 }: BulkAlbumAudioUploaderModalProps) {
   const [currentAlbumName, setCurrentAlbumName] = useState<string>(
     initialAlbumName || "",
@@ -154,7 +145,7 @@ export function BulkAlbumAudioUploaderModal({
     filename: string,
   ): { title: string; trackNumber: number } => {
     const rawNoExt = filename.replace(/\.[^/.]+$/, "");
-    let trackNumber = 1;
+    let trackNumber: number;
 
     // Detect leading track number: e.g."01 - Title","01. Title","01_Title","1 Title"
     const leadNumMatch = rawNoExt.match(/^0?(\d+)[\s._-]+(.+)$/);
@@ -252,7 +243,7 @@ export function BulkAlbumAudioUploaderModal({
       const { title, trackNumber } = cleanFileNameToTitle(file.name);
 
       // Detect duration accurately
-      let durationSec = 210;
+      let durationSec: number;
       try {
         durationSec = await new Promise<number>((resolve) => {
           const tempA = new Audio(objectUrl);
@@ -369,12 +360,6 @@ export function BulkAlbumAudioUploaderModal({
     stopPreview();
     setFeedbackMsg(null);
 
-    const token = localStorage.getItem("bakandeya_token");
-    const headers: Record<string, string> = {
-      "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    };
-
     // 1. Upload Cover if present
     let uploadedCoverUrl = coverPreviewUrl;
     if (coverFile) {
@@ -427,7 +412,7 @@ export function BulkAlbumAudioUploaderModal({
         if (isCreatingBrandNewAlbum || !item.matchedSongId) {
           // CREATE NEW SONG IN DATABASE
           const newSong: Song = {
-            id: `song_bulk_${Date.now()}_${i}_${Math.random().toString(36).substring(2, 6)}`,
+            id: idUnico("song_bulk", i),
             titulo: item.title || `Pista ${i + 1}`,
             artista: bandId,
             album: finalAlbumTitle,
@@ -443,7 +428,7 @@ export function BulkAlbumAudioUploaderModal({
             tonalidad: "Am",
             audioIdeas: [
               {
-                id: `idea_master_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+                id: idUnico("idea_master"),
                 titulo: "Audio Máster Completo (Estudio)",
                 seccion: "general",
                 audioUrl: uploadedUrl,
@@ -453,7 +438,7 @@ export function BulkAlbumAudioUploaderModal({
             ],
           };
 
-          const savedData = await apiFetch<any>("/api/songs", {
+          const savedData = await apiFetch<{ song?: Song }>("/api/songs", {
             method: "POST",
             body: JSON.stringify(newSong),
           });
@@ -506,7 +491,7 @@ export function BulkAlbumAudioUploaderModal({
               portadaUrl: uploadedCoverUrl || targetSong.portadaUrl,
               audioIdeas: [
                 {
-                  id: `idea_master_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+                  id: idUnico("idea_master"),
                   titulo: "Audio Máster Completo (Estudio)",
                   seccion: "general",
                   audioUrl: uploadedUrl,
@@ -519,7 +504,7 @@ export function BulkAlbumAudioUploaderModal({
               ],
             };
 
-            const savedData = await apiFetch<any>(
+            const savedData = await apiFetch<{ song?: Song }>(
               `/api/songs/${encodeURIComponent(updatedSong.id)}`,
               {
                 method: "PUT",
@@ -566,7 +551,8 @@ export function BulkAlbumAudioUploaderModal({
             }
           }
         }
-      } catch (err: any) {
+      } catch (errCapturado) {
+        const err = comoErrorCapturado(errCapturado);
         console.error(`Error uploading track ${item.fileName}:`, err);
         setItems((prev) =>
           prev.map((it, idx) =>

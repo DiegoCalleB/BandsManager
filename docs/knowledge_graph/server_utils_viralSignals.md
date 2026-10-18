@@ -1,0 +1,51 @@
+---
+id: server_utils_viralSignals
+title: "server/utils/viralSignals.ts"
+layer: service
+domain: system
+file: "server/utils/viralSignals.ts"
+tags: ["service", "system", "auto"]
+---
+
+# 📌 server/utils/viralSignals.ts
+
+> **Ubicación:** `server/utils/viralSignals.ts`  
+> **Capa:** `#layer/service` | **Dominio:** `#domain/system`
+
+## 📖 Descripción
+Detección de los fragmentos con más potencial viral.
+
+---
+
+## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[ext_ffmpeg|FFmpeg]] *(Layer: #external, Domain: #system)*
+- [[server_utils_audioEnergy|server/utils/audioEnergy.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[server_utils_senalesPublico|server/utils/senalesPublico.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_youtubeSource|server/utils/youtubeSource.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
+
+---
+
+## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
+- [[server_routes_reelsTexto|server/routes/reelsTexto.ts]] *(from #route)*
+- [[server_services_copyPerfecto|server/services/copyPerfecto.ts]] *(from #service)*
+- [[server_services_interesDelPublico|server/services/interesDelPublico.ts]] *(from #service)*
+- [[server_services_senalesVideo|server/services/senalesVideo.ts]] *(from #service)*
+- [[server_utils_informeSenalesPublico|server/utils/informeSenalesPublico.ts]] *(from #service)*
+- [[server_utils_reelStrategy|server/utils/reelStrategy.ts]] *(from #service)*
+- [[server_utils_senalesPublico|server/utils/senalesPublico.ts]] *(from #service)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/reelsRoute.test.ts`
+- `server/services/__tests__/senalesVideo.test.ts`
+- `server/utils/__tests__/reelStrategy.test.ts`
+- `server/utils/__tests__/viralSignals.test.ts`
+
+---
+
+## 🛡️ Reglas de Aislamiento & Calidad
+- [ ] ¿Respeta el trust boundary de `band_id`?
+- [ ] ¿Tiene pruebas unitarias o de integración asociadas?

@@ -11,14 +11,14 @@ export function useWakeLock(activo: boolean) {
     let cancelado = false;
 
     const soltar = () => {
-      sentinel?.release?.().catch(() => {});
+      sentinel?.release?.().catch(() => { /* el bloqueo de pantalla ya se había liberado */ });
       sentinel = null;
     };
     const pedir = async () => {
       try {
         if ('wakeLock' in navigator) {
-          const lock = await (navigator as any).wakeLock.request('screen');
-          if (cancelado) lock.release?.().catch(() => {});
+          const lock = await navigator.wakeLock.request('screen');
+          if (cancelado) lock.release?.().catch(() => { /* el bloqueo de pantalla ya se había liberado */ });
           else sentinel = lock;
         }
       } catch {

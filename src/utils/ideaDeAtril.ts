@@ -1,4 +1,5 @@
-import type { SongAudioIdea } from '../types';
+import type { AudioTrack, Song, SongAudioIdea } from '../types';
+import { cancionConPistas } from './irisTracks';
 
 export interface DatosIdeaDeAtril {
   id: string;
@@ -34,4 +35,79 @@ export function ideasCompatiblesConPistas(ideas: SongAudioIdea[], idsPistas: str
   return ideas.filter(
     (i) => i.origen === 'atril' && (!i.sobrePistas || i.sobrePistas.some((id) => idsPistas.includes(id))),
   );
+}
+
+/**
+ * Stems de la canción que acompañan a una toma (`sobrePistas`), en el orden de la canción.
+ * Los ids que ya no existen (stem borrado o canción vuelta a separar) salen en `faltan`.
+ */
+export function pistasBaseDeIdea(idea: SongAudioIdea, stems: AudioTrack[]): { pistas: AudioTrack[]; faltan: string[] } {
+  const ids = idea.sobrePistas ?? [];
+  const faltan = ids.filter((id) => !stems.some((s) => s.id === id));
+  return { pistas: stems.filter((s) => ids.includes(s.id)), faltan };
+}
+
+/** Toma con otro fondo: p. ej. solo la batería. Vacío la deja en seco (sin fondo ni desfase). */
+export function ideaConPistasBase(idea: SongAudioIdea, ids: string[]): SongAudioIdea {
+  const { sobrePistas: _s, offsetSegundos: _o, ...resto } = idea;
+  const unicos = [...new Set(ids)];
+  if (unicos.length === 0) return resto;
+  return { ...resto, sobrePistas: unicos, offsetSegundos: idea.offsetSegundos ?? 0 };
+}
+
+/** Tomas de la canción: ideas con audio que no son la separación de Iris. */
+export function tomasDeCancion(ideas: SongAudioIdea[] = []): SongAudioIdea[] {
+  return ideas.filter((i) => i.audioUrl && !(i.pistas && i.pistas.length > 1) && !i.stemEngineUsed);
+}
+
+/** Lo que suena al escuchar una toma: su fondo (stems elegidos) más la propia toma como una pista más. */
+export function pistasParaToma(idea: SongAudioIdea, stems: AudioTrack[]): AudioTrack[] {
+  const toma: AudioTrack = {
+    id: `toma-${idea.id}`,
+    nombre: idea.titulo || 'Toma',
+    audioUrl: idea.audioUrl,
+    instrumento: idea.instrumento,
+  } as AudioTrack;
+  return [...pistasBaseDeIdea(idea, stems).pistas, toma];
+}
+
+/** Reemplaza el fondo de una toma dentro de la lista de ideas (el resto queda intacto). */
+export function ideasConFondo(ideas: SongAudioIdea[], ideaId: string, ids: string[]): SongAudioIdea[] {
+  return ideas.map((i) => (i.id === ideaId ? ideaConPistasBase(i, ids) : i));
+}
+
+/** Id con el que una pista de Iris suena y se mezcla dentro de una idea (distinto del de la hoja de Iris). */
+export const idPistaBase = (ideaId: string, stemId: string) => `base-${ideaId}-${stemId}`;
+export const esPistaBase = (ideaId: string, trackId: string) => trackId.startsWith(`base-${ideaId}-`);
+
+/** Pistas de Iris de la idea con su mezcla propia (`mezclaBase`) aplicada. */
+export function pistasBaseMezcladas(idea: SongAudioIdea, stems: AudioTrack[]): AudioTrack[] {
+  return pistasBaseDeIdea(idea, stems).pistas.map((st) => ({
+    ...st,
+    ...(idea.mezclaBase?.[st.id] ?? {}),
+    id: idPistaBase(idea.id, st.id),
+  }));
+}
+
+/**
+ * Guarda una mezcla de pistas mixtas: las de la idea van a `pistas`, las de Iris a `mezclaBase`
+ * (nunca se copian a la idea ni tocan la mezcla de la hoja de Iris).
+ */
+export function cancionConMezcla<T extends Song>(cancion: T, idea: SongAudioIdea, pistas: AudioTrack[]): T {
+  const propias = pistas.filter((t) => !esPistaBase(idea.id, t.id));
+  const mezclaBase = { ...(idea.mezclaBase ?? {}) };
+  for (const t of pistas) {
+    if (!esPistaBase(idea.id, t.id)) continue;
+    mezclaBase[t.id.slice(`base-${idea.id}-`.length)] = {
+      muted: t.muted,
+      solo: t.solo,
+      volumen: t.volumen,
+      pan: t.pan,
+      eqLow: t.eqLow,
+      eqMid: t.eqMid,
+      eqHigh: t.eqHigh,
+      desfaseMs: t.desfaseMs,
+    };
+  }
+  return cancionConPistas(cancion, idea, propias, { mezclaBase });
 }

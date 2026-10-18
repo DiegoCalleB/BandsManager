@@ -1,5 +1,6 @@
 import { Song, SongAudioIdea, Setlist, Rehearsal, Concert, Lead, EPKConfig } from '../types';
 import { openWhatsAppChat } from './whatsapp';
+import { comoErrorCapturado } from './errorCapturado';
 
 export interface SharePayload {
   title: string;
@@ -20,7 +21,8 @@ export async function shareViaWebShare(payload: SharePayload): Promise<boolean> 
         url: payload.url || undefined,
       });
       return true;
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       // User cancelled or share failed
       if (err.name !== 'AbortError') {
         console.error('Error sharing via Web Share API:', err);

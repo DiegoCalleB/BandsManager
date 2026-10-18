@@ -32,7 +32,7 @@ export function RoiBandaWidget({ concerts, payments, plan, puedeVerDinero, onNav
     let vivo = true;
     listarEnlaces()
       .then((l) => vivo && setClicsEntradas(clicsDeEntradas(l.enlaces)))
-      .catch(() => {});
+      .catch(() => { /* ver comentario de arriba: el widget funciona sin clics */ });
     return () => {
       vivo = false;
     };

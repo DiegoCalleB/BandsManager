@@ -7,7 +7,9 @@
  */
 
 import { generateUnifiedAI } from "../ai.js";
+import { detectarDatosInventados } from "../utils/datosInventados.js";
 import { sanitizePitchDeterministically, auditPitchQuality, PitchQualityAudit, getRecommendedWordRange } from "../utils/promptSafety.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export interface JudgeEvaluation {
   score: number; // 0 a 100
@@ -29,8 +31,10 @@ export async function evaluateAndRefinePitch(params: {
   bandName: string;
   minCacheThreshold?: number;
   skipRefinement?: boolean;
+  /** Todo lo que se le dijo al modelo (prompt, enlaces, contacto): una cifra, fecha o contacto que no esté aquí es inventado. */
+  hechos?: string;
 }): Promise<JudgeEvaluation> {
-  const { pitchText, leadName, leadCategory, city, bandName, minCacheThreshold, skipRefinement = false } = params;
+  const { pitchText, leadName, leadCategory, city, minCacheThreshold, skipRefinement = false, hechos } = params;
 
   // 1. Auditoría heurística determinista (0ms)
   const audit = auditPitchQuality(pitchText, leadCategory);
@@ -76,7 +80,7 @@ export async function evaluateAndRefinePitch(params: {
   }
 
   // Chequeo de adjuntos pesados prometidos o archivos comprimidos
-  if (/(zip|.mp3|.wav|adjuntamos|te adjunto|adjunto archivo|descarga el archivo)/i.test(pitchText)) {
+  if (/(\bzip\b|.mp3|.wav|adjuntamos|te adjunto|adjunto archivo|descarga el archivo)/i.test(pitchText)) {
     critique.push('Promesa de archivos adjuntos o descargas pesadas (Regla Zero Attachments incumplida).');
     heuristicScore -= 25;
   }
@@ -103,7 +107,7 @@ export async function evaluateAndRefinePitch(params: {
 
 
   // 1. Prohibición de anglicismos forzados de la industria anglosajona no habituales en salas españolas (ej: curfew -> hora límite de cierre / fin de show)
-  if (/curfew/i.test(pitchText)) {
+  if (/\bcurfew\b/i.test(pitchText)) {
     critique.push('Anglicismo no natural detectado ("curfew"). En España usar "hora límite", "fin de concierto" o "cierre de show".');
     heuristicScore -= 10;
   }
@@ -120,7 +124,7 @@ export async function evaluateAndRefinePitch(params: {
   }
 
   // 4. Prohibición de inventar merchandising si no consta stock en el perfil de la banda
-  if (/merchandising|merch/i.test(pitchText)) {
+  if (/merchandising|merch\b/i.test(pitchText)) {
     // Si la banda no tiene merch explícito, advertir al redactor
     critique.push('Verificación de Merchandising: No asumir venta de merch si la banda no tiene productos físicos o stock registrado.');
   }
@@ -141,8 +145,15 @@ export async function evaluateAndRefinePitch(params: {
     }
   }
 
+  // Datos inventados: precios, fechas, teléfonos, emails o enlaces que no constan en lo que se le dio al modelo
+  const inventados = hechos === undefined ? [] : detectarDatosInventados(pitchText, hechos);
+  if (inventados.length > 0) {
+    critique.push(`Datos inventados que no constan en el perfil ni en la campaña (elimínalos): ${inventados.map(d => d.texto).join(", ")}`);
+    heuristicScore -= 30;
+  }
+
   const finalScore = Math.max(0, Math.min(100, heuristicScore));
-  const passed = finalScore >= 80 && audit.bannedWordsFound.length === 0 && audit.emDashesFound === 0;
+  const passed = finalScore >= 80 && audit.bannedWordsFound.length === 0 && audit.emDashesFound === 0 && inventados.length === 0;
 
   // Si ya pasó con nota alta o se desactiva el refinamiento, devolver saneado determinista
   if (passed || skipRefinement) {
@@ -189,16 +200,18 @@ Responde ÚNICAMENTE con el texto final corregido:`;
 
     if (cleanRefined && cleanRefined.length > 30) {
       const refinedAudit = auditPitchQuality(cleanRefined, leadCategory);
+      const siguenInventados = hechos === undefined ? [] : detectarDatosInventados(cleanRefined, hechos);
       return {
         score: Math.max(finalScore, refinedAudit.antiAiScore),
-        passed: true,
-        critique,
+        passed: siguenInventados.length === 0,
+        critique: siguenInventados.length ? [...critique, `Tras refinar siguen datos inventados: ${siguenInventados.map(d => d.texto).join(", ")}`] : critique,
         requiresRefinement: true,
         refinedText: cleanRefined,
         audit: refinedAudit
       };
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[PitchJudge] Notice during LLM refinement:", err?.message || err);
   }
 

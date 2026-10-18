@@ -611,7 +611,7 @@ function detectarSegmentos(
   const duracionTotal = pcm.length / sampleRate;
   const frontera = (t: number) =>
     t <= 0 ? 0 : t >= T ? duracionTotal : Math.min(duracionTotal, (t * HOP + VENTANA / 2) / sampleRate - dt / 2);
-  let segmentos: SegmentoAcorde[] = [];
+  const segmentos: SegmentoAcorde[] = [];
   let ini = 0;
   for (let t = 1; t <= T; t++) {
     if (t === T || camino[t] !== camino[ini]) {

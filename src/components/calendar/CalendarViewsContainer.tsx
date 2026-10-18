@@ -1,28 +1,7 @@
 import React from 'react';
-import {
-  Calendar,
-  Mic,
-  Clock,
-  MapPin,
-  CheckSquare,
-  Sparkles,
-  ChevronRight,
-  Plus,
-  Trash2,
-  Edit,
-  Ticket,
-  Target,
-  Guitar,
-  Handshake,
-  Drum,
-  AlertTriangle,
-  Eye,
-  Users,
-  List,
-  CheckCircle2,
-} from 'lucide-react';
-import { Concert, Rehearsal, BookingCampaign, ThemeColors } from '../../types';
-import { RoadbookInfo } from './calendarTypes';
+import { Calendar, Clock, ChevronRight, Plus, Edit, Target, Guitar, Handshake, Drum, AlertTriangle, List, CheckCircle2 } from 'lucide-react';
+import { Concert, Rehearsal, BookingCampaign } from '../../types';
+import { RoadbookInfo, BandIdentity, EventoConAlias, FichaEventoTab, CalendarNavigationOptions } from './calendarTypes';
 import { CalendarWeatherBadge } from './AnimatedWeatherIcon';
 import { WeatherAlert } from '../../services/weatherService';
 import { HolidayDateWarning } from '../common/HolidayDateWarning';
@@ -65,18 +44,18 @@ export interface CalendarViewsContainerProps {
   currentMonth: number;
   nextMonthYear: number;
   nextMonth: number;
-  getEventsForDateStr: (dateStr: string) => any;
+  getEventsForDateStr: (dateStr: string) => { concerts: Concert[]; rehearsals: Rehearsal[] };
   getCampaignsForDate: (dateKey: string) => BookingCampaign[];
-  getBandIdentity: (bandId?: string, fallback?: string) => any;
+  getBandIdentity: (bandId?: string, fallback?: string) => BandIdentity;
   getCachedEventWeatherAlerts: (city: string, dateStr: string) => WeatherAlert[];
   setShowCreateModal: (type: 'rehearsal' | 'concert' | 'reunion' | null) => void;
   setShowEventFichaModal: (show: boolean) => void;
-  setModalActiveTab: (tab: any) => void;
+  setModalActiveTab: (tab: FichaEventoTab) => void;
   setViewingConcert: (c: Concert | null) => void;
   setViewingRehearsal: (r: Rehearsal | null) => void;
   onDeleteConcert?: (id: string) => void;
   onDeleteRehearsal?: (id: string) => void;
-  onNavigate?: (view: string, options?: any) => void;
+  onNavigate?: (view: string, options?: CalendarNavigationOptions) => void;
   allRoadbooks: Record<string, RoadbookInfo>;
   getDefaultRoadbook: (c?: Concert | null) => RoadbookInfo;
   filteredConcerts: Concert[];
@@ -91,17 +70,13 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
   const {
     calendarViewMode,
     calendarSearchTerm,
-    viewDate,
     selectedDate,
     setSelectedDate,
     selectedEventId,
     setSelectedEventId,
     handleSelectEvent,
     realToday,
-    isStitchLight,
-    textTitle,
     textSub,
-    textMuted,
     monthNames,
     weekdays,
     currentYear,
@@ -115,20 +90,10 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
     getCachedEventWeatherAlerts,
     setShowCreateModal,
     setShowEventFichaModal,
-    setModalActiveTab,
     setViewingConcert,
     setViewingRehearsal,
-    onDeleteConcert,
-    onDeleteRehearsal,
-    onNavigate,
-    allRoadbooks,
-    getDefaultRoadbook,
     filteredConcerts,
-    filteredRehearsals,
-    concerts,
-    rehearsals,
-    isPromoPlan,
-    onShowNotification,
+    filteredRehearsals
   } = props;
 
   const fullWeekdays = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
@@ -197,7 +162,6 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
             const hasConcert = dayConcerts.length > 0;
             const hasRehearsal = dayRehearsals.length > 0;
             const hasCampaign = dayCampaigns.length > 0;
-            const activeDateCampaign = dayCampaigns.find((c) => c.isActive) || dayCampaigns[0];
             const dayEvents: Array<Concert | Rehearsal> = [...dayConcerts, ...dayRehearsals];
             const dayWeatherAlerts = dayConcerts.flatMap((c) => getCachedEventWeatherAlerts(c.ciudad, formattedDate));
             const primaryAlert = dayWeatherAlerts[0];
@@ -207,7 +171,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
 
             const isToday = isThisRealMonth && cell.day === realToday.getDate();
 
-            let borderAndBgClass = '';
+            let borderAndBgClass: string;
             if (isSelected) {
               borderAndBgClass = 'bg-[var(--acc-soft)] text-[var(--ink)] ring-2 ring-[var(--acc)] z-10 border border-[var(--acc)]';
             } else if (hasConcert && hasRehearsal) {
@@ -250,9 +214,9 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                 {/* Mini Badges / Event Indicators con texto claro y legible */}
                 <div className="w-full space-y-0.5 sm:space-y-1 overflow-hidden">
                   {dayConcerts.slice(0, 2).map((c) => {
-                    const bandInfo = getBandIdentity(c.band_id, (c as any).bandName || (c as any).band_name);
+                    const bandInfo = getBandIdentity(c.band_id, (c as EventoConAlias).bandName || (c as EventoConAlias).band_name);
                     const venueLabel = c.sala || c.ciudad || 'Concierto';
-                    const isPosible = Boolean(c.is_posible || (c as any).isPosible);
+                    const isPosible = Boolean(c.is_posible || (c as EventoConAlias).isPosible);
                     return (
                       <div
                         key={c.id}
@@ -279,7 +243,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                   })}
                   {dayRehearsals.slice(0, dayConcerts.length > 0 ? 1 : 2).map((r) => {
                     const isReu = r.tipo_evento === 'reunion';
-                    const bandInfo = getBandIdentity(r.band_id, (r as any).bandName || (r as any).band_name);
+                    const bandInfo = getBandIdentity(r.band_id, (r as EventoConAlias).bandName || (r as EventoConAlias).band_name);
                     const rehearsalLabel = isReu
                       ? r.asunto || 'Reunión'
                       : r.lugar
@@ -419,9 +383,9 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                   {/* Lista de eventos del día */}
                   <div className="flex-1 flex flex-col gap-1.5 overflow-y-auto max-h-[360px]">
                     {dayConcerts.map((c) => {
-                      const bandInfo = getBandIdentity(c.band_id, (c as any).bandName || (c as any).band_name);
+                      const bandInfo = getBandIdentity(c.band_id, (c as EventoConAlias).bandName || (c as EventoConAlias).band_name);
                       const isEvtSelected = selectedEventId === c.id;
-                      const isPosible = Boolean(c.is_posible || (c as any).isPosible);
+                      const isPosible = Boolean(c.is_posible || (c as EventoConAlias).isPosible);
                       return (
                         <div
                           key={c.id}
@@ -475,9 +439,9 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                           </div>
                           {c.ciudad && <div className="text-micro text-[var(--acc)]/80 truncate"><ShowIcon inline emoji="📍" />{c.ciudad}</div>}
                           <HolidayDateWarning date={c.fecha} city={c.ciudad} compact className="mt-1" />
-                          {((c as any).hora || (c.fecha.includes('T') ? c.fecha.split('T')[1].slice(0, 5) : '')) && (
+                          {((c as EventoConAlias).hora || (c.fecha.includes('T') ? c.fecha.split('T')[1].slice(0, 5) : '')) && (
                             <div className="text-micro font-mono text-[var(--ink-2)] mt-1">
-                              <ShowIcon inline emoji="🕒" />{(c as any).hora || (c.fecha.includes('T') ? c.fecha.split('T')[1].slice(0, 5) : '')}
+                              <ShowIcon inline emoji="🕒" />{(c as EventoConAlias).hora || (c.fecha.includes('T') ? c.fecha.split('T')[1].slice(0, 5) : '')}
                             </div>
                           )}
                         </div>
@@ -486,7 +450,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
 
                     {dayRehearsals.map((r) => {
                       const isReu = r.tipo_evento === 'reunion';
-                      const bandInfo = getBandIdentity(r.band_id, (r as any).bandName || (r as any).band_name);
+                      const bandInfo = getBandIdentity(r.band_id, (r as EventoConAlias).bandName || (r as EventoConAlias).band_name);
                       const isEvtSelected = selectedEventId === r.id;
                       return (
                         <div
@@ -785,7 +749,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                       const c = isConcert ? (evt as Concert) : null;
                       const r = !isConcert ? (evt as Rehearsal) : null;
                       const isReu = r?.tipo_evento === 'reunion';
-                      const bandInfo = getBandIdentity(evt.band_id, (evt as any).bandName || (evt as any).band_name);
+                      const bandInfo = getBandIdentity(evt.band_id, (evt as EventoConAlias).bandName || (evt as EventoConAlias).band_name);
                       const isEvtSelected = selectedEventId === evt.id;
 
                       return (
@@ -866,12 +830,12 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                           </div>
 
                           <div className="flex items-center gap-2.5 shrink-0">
-                            {((evt as any).hora ||
-                              ((evt as any).fecha?.includes('T') ? (evt as any).fecha.split('T')[1].slice(0, 5) : '')) && (
+                            {((evt as EventoConAlias).hora ||
+                              (evt.fecha?.includes('T') ? evt.fecha.split('T')[1].slice(0, 5) : '')) && (
                               <span className="text-xs font-mono text-[var(--ink-2)] flex items-center gap-1">
                                 <Clock className="w-3 h-3 text-[var(--ink-2)]" />
-                                {(evt as any).hora ||
-                                  ((evt as any).fecha?.includes('T') ? (evt as any).fecha.split('T')[1].slice(0, 5) : '')}
+                                {(evt as EventoConAlias).hora ||
+                                  (evt.fecha?.includes('T') ? evt.fecha.split('T')[1].slice(0, 5) : '')}
                               </span>
                             )}
 

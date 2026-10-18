@@ -4,13 +4,16 @@ import { IconButton } from "../ui";
 import { ShowIcon } from "../ui/ShowIcon";
 import { ordenarPorTonica, type ContextoAcorde, type VistaAcorde } from "../../utils/vistaAcordes";
 import { gradoVisible, type EstiloArmonia } from "../../utils/estiloArmonia";
-import { CajaAcorde, SelectorVistaAcorde } from "./AcordeEnInstrumento";
+import type { NivelAcorde } from "../../utils/voicings";
+import { CajaAcorde, SelectorNivel, SelectorVistaAcorde } from "./AcordeEnInstrumento";
 
 interface Props {
   acordes: string[];
   contexto: Map<string, ContextoAcorde>;
   vista: VistaAcorde;
   onVista: (v: VistaAcorde) => void;
+  nivel?: NivelAcorde;
+  onNivel?: (n: NivelAcorde) => void;
   onCerrar: () => void;
   /** Acorde que suena ahora mismo (se ilumina). */
   sonando?: string | null;
@@ -21,7 +24,7 @@ interface Props {
 }
 
 /** Cajón de diagramas de acordes: lo comparten el visor y el ensayo en vivo. */
-export const DrawerDiagramas: React.FC<Props> = ({ acordes, contexto, vista, onVista, onCerrar, sonando, estiloArmonia, disposicion = "lateral" }) => {
+export const DrawerDiagramas: React.FC<Props> = ({ acordes, contexto, vista, onVista, nivel = "normal", onNivel, onCerrar, sonando, estiloArmonia, disposicion = "lateral" }) => {
   const lateral = disposicion === "lateral";
   const gradoDe = (chord: string) => {
     const info = contexto.get(chord)?.info;
@@ -32,7 +35,7 @@ export const DrawerDiagramas: React.FC<Props> = ({ acordes, contexto, vista, onV
     <div
       translate="no"
       className={lateral
-        ? "notranslate w-full md:w-64 bg-[var(--sunken)] p-4 overflow-y-auto shrink-0 space-y-4"
+        ? "notranslate w-full md:w-64 max-md:max-h-[45%] bg-[var(--sunken)] p-4 overflow-y-auto shrink-0 space-y-4"
         : "notranslate p-3.5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-2 animate-fade-in shrink-0"}
     >
       <div className="flex items-center justify-between gap-2 text-xs font-sans font-bold text-[var(--acc)]">
@@ -40,15 +43,17 @@ export const DrawerDiagramas: React.FC<Props> = ({ acordes, contexto, vista, onV
           <ShowIcon inline emoji="🎸" />{lateral ? "Acordes" : "Diagramas de Acordes de este Tema"} ({acordes.length})
         </span>
         {!lateral && <SelectorVistaAcorde vista={vista} onCambio={onVista} />}
+        {!lateral && onNivel && <SelectorNivel nivel={nivel} onCambio={onNivel} />}
         <IconButton label="Cerrar" onClick={onCerrar}><X className="w-3.5 h-3.5" /></IconButton>
       </div>
       {lateral && <SelectorVistaAcorde vista={vista} onCambio={onVista} />}
+      {lateral && onNivel && <SelectorNivel nivel={nivel} onCambio={onNivel} />}
       {acordes.length === 0 ? (
         <p className="text-xs text-[var(--ink-2)] font-sans italic">No se detectaron acordes en el texto.</p>
       ) : (
         <div className={lateral ? "grid grid-cols-2 md:grid-cols-1 gap-3" : "grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2"}>
           {ordenarPorTonica(acordes, contexto).map((chord) => (
-            <CajaAcorde key={chord} chord={chord} vista={vista} contexto={contexto.get(chord)} sonando={chord === sonando} grado={gradoDe(chord)} />
+            <CajaAcorde key={chord} chord={chord} vista={vista} contexto={contexto.get(chord)} sonando={chord === sonando} grado={gradoDe(chord)} nivel={nivel} />
           ))}
         </div>
       )}

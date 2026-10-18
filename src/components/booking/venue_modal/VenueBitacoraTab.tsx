@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { History, Plus, Trash2, PhoneCall, MessageCircle, Calendar, CheckCircle2 } from 'lucide-react';
-import { Lead, InteractionLog } from '../../../types';
-import { Button, Input, Select, Textarea } from '../../ui';
+import { History, Plus, Trash2 } from 'lucide-react';
+import { Lead, InteractionLog, ResultadoInteraccion, CanalInteraccion } from '../../../types';
+import { Button, Select, Textarea } from '../../ui';
 
 interface VenueBitacoraTabProps {
   lead: Lead;
@@ -9,9 +9,9 @@ interface VenueBitacoraTabProps {
 }
 
 export const VenueBitacoraTab: React.FC<VenueBitacoraTabProps> = ({ lead, onUpdateLead }) => {
-  const [tipo, setTipo] = useState<InteractionLog['tipo']>('Llamada');
+  const [tipo, setTipo] = useState<CanalInteraccion>('Llamada');
   const [notas, setNotas] = useState('');
-  const [resultado, setResultado] = useState<InteractionLog['resultado']>('Interesado');
+  const [resultado, setResultado] = useState<ResultadoInteraccion>('Interesado');
   const [isAdding, setIsAdding] = useState(false);
 
   const logs: InteractionLog[] = lead.historial_contacto || [];
@@ -75,7 +75,7 @@ export const VenueBitacoraTab: React.FC<VenueBitacoraTabProps> = ({ lead, onUpda
               <Select
                 size="sm"
                 value={tipo}
-                onChange={(e) => setTipo(e.target.value as any)}
+                onChange={(e) => setTipo(e.target.value as CanalInteraccion)}
                 wrapperClassName="w-full text-xs"
               >
                 <option value="Llamada">Llamada telefónica</option>
@@ -91,7 +91,7 @@ export const VenueBitacoraTab: React.FC<VenueBitacoraTabProps> = ({ lead, onUpda
               <Select
                 size="sm"
                 value={resultado}
-                onChange={(e) => setResultado(e.target.value as InteractionLog['resultado'])}
+                onChange={(e) => setResultado(e.target.value as ResultadoInteraccion)}
                 wrapperClassName="w-full text-xs"
               >
                 <option value="Interesado">Interesado (avanza)</option>

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { firmarEstadoOAuth, verificarEstadoOAuth, validarYConsumirEstadoOAuth } from '../gmailOAuth';
+import { firmarEstadoOAuth, verificarEstadoOAuth, validarYConsumirEstadoOAuth, dominioDeRetornoDistinto } from '../gmailOAuth';
 
 const CRON_ORIGINAL = process.env.CRON_SECRET;
 
@@ -15,26 +15,26 @@ afterEach(() => {
 
 describe('firmarEstadoOAuth / verificarEstadoOAuth', () => {
   it('un estado recién firmado se verifica y devuelve el band_id original', () => {
-    const state = firmarEstadoOAuth('band-bakandeya');
-    expect(verificarEstadoOAuth(state)).toBe('band-bakandeya');
+    const state = firmarEstadoOAuth('band-ejemplo');
+    expect(verificarEstadoOAuth(state)).toBe('band-ejemplo');
   });
 
   it('un estado manipulado (band_id distinto) no verifica', () => {
-    const state = firmarEstadoOAuth('band-bakandeya');
+    const state = firmarEstadoOAuth('band-ejemplo');
     const [, ts, nonce, firma] = state.split('.');
     const falsificado = `band-otra-banda.${ts}.${nonce}.${firma}`;
     expect(verificarEstadoOAuth(falsificado)).toBeNull();
   });
 
   it('un estado con firma alterada no verifica', () => {
-    const state = firmarEstadoOAuth('band-bakandeya');
+    const state = firmarEstadoOAuth('band-ejemplo');
     expect(verificarEstadoOAuth(state.slice(0, -1) + (state.endsWith('a') ? 'b' : 'a'))).toBeNull();
   });
 
   it('un estado caducado (más de 10 minutos) no verifica', () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-01-01T00:00:00Z'));
-    const state = firmarEstadoOAuth('band-bakandeya');
+    const state = firmarEstadoOAuth('band-ejemplo');
     vi.setSystemTime(new Date('2026-01-01T00:11:00Z'));
     expect(verificarEstadoOAuth(state)).toBeNull();
   });
@@ -48,8 +48,8 @@ describe('firmarEstadoOAuth / verificarEstadoOAuth', () => {
 
   it('sin CRON_SECRET configurado, firmar lanza y verificar devuelve null', () => {
     delete process.env.CRON_SECRET;
-    expect(() => firmarEstadoOAuth('band-bakandeya')).toThrow();
-    expect(verificarEstadoOAuth('band-bakandeya.123.n.abc')).toBeNull();
+    expect(() => firmarEstadoOAuth('band-ejemplo')).toThrow();
+    expect(verificarEstadoOAuth('band-ejemplo.123.n.abc')).toBeNull();
   });
 });
 
@@ -75,5 +75,23 @@ describe('validarYConsumirEstadoOAuth (nonce + cookie + un solo uso)', () => {
 
   it('rechaza el formato antiguo de tres partes (sin nonce)', () => {
     expect(validarYConsumirEstadoOAuth('band-a.123.abc', 'x')).toBeNull();
+  });
+});
+
+describe('dominioDeRetornoDistinto (la cookie del flujo no viaja entre dominios)', () => {
+  const retorno = 'https://bands-manager.up.railway.app/api/gmail-oauth/callback';
+
+  it('si se empieza en el mismo dominio al que Google devolverá al usuario, no hay problema', () => {
+    expect(dominioDeRetornoDistinto('bands-manager.up.railway.app', retorno)).toBeNull();
+    expect(dominioDeRetornoDistinto('BANDS-MANAGER.up.railway.app:443', retorno)).toBeNull();
+  });
+
+  it('si se empieza en otro dominio, devuelve el dominio donde hay que abrir la app', () => {
+    expect(dominioDeRetornoDistinto('bandmanager.io', retorno)).toBe('bands-manager.up.railway.app');
+  });
+
+  it('sin datos suficientes (sin host o con una URL de retorno rota) no bloquea nada', () => {
+    expect(dominioDeRetornoDistinto(undefined, retorno)).toBeNull();
+    expect(dominioDeRetornoDistinto('bandmanager.io', 'no es una url')).toBeNull();
   });
 });

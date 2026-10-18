@@ -1,7 +1,7 @@
 import fs from "fs";
-import path from "path";
 import { uploadBufferToSupabase } from "../utils/storage.js";
 import { getSupabase } from "../db/core.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export interface PendingStemUpload {
   id: string;
@@ -65,7 +65,8 @@ class StemStorageRetryManager {
         }
         console.log(`[Stem Storage Queue] 🔄 Rehidratados ${restoredCount} reintentos pendientes desde Supabase tras reinicio.`);
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.warn(`[Stem Storage Queue] Aviso rehidratando cola desde Supabase: ${err?.message || err}`);
     }
   }
@@ -113,7 +114,8 @@ class StemStorageRetryManager {
           created_at: now,
           status: 'pending'
         });
-      } catch (err: any) {
+      } catch (errCapturado) {
+        const err = comoErrorCapturado(errCapturado);
         console.warn(`[Stem Storage Queue] Aviso persistiendo reintento en Supabase: ${err?.message || err}`);
       }
     })();
@@ -154,14 +156,15 @@ class StemStorageRetryManager {
             if (fs.existsSync(item.filePath)) {
               fs.unlinkSync(item.filePath);
             }
-          } catch (e) {
+          } catch {
             // Ignorar fallo de borrado local
           }
           continue;
         }
 
         throw new Error("Supabase devolvió null o URL inválida");
-      } catch (err: any) {
+      } catch (errCapturado) {
+        const err = comoErrorCapturado(errCapturado);
         item.lastError = err?.message || String(err);
         if (item.attempts >= item.maxAttempts) {
           console.error(`[STEM_STORAGE_EXHAUSTED_ALERT] 🚨 ALERTA CRÍTICA: Se agotaron los ${item.maxAttempts} reintentos de subida a Supabase para ${item.storageSubPath}. Error: ${item.lastError}`);
@@ -188,7 +191,7 @@ class StemStorageRetryManager {
         last_error: error || null,
         updated_at: new Date().toISOString()
       }).eq("id", id);
-    } catch {}
+    } catch (err) { console.warn("[Stems] No se pudo guardar el estado del reintento en Supabase:", err); }
   }
 
   private async updateDbRetry(item: PendingStemUpload): Promise<void> {
@@ -200,7 +203,7 @@ class StemStorageRetryManager {
         last_error: item.lastError || null,
         updated_at: new Date().toISOString()
       }).eq("id", item.id);
-    } catch {}
+    } catch (err) { console.warn("[Stems] No se pudo guardar el reintento en Supabase:", err); }
   }
 
   public getQueueLength(): number {
@@ -216,5 +219,5 @@ export const stemStorageRetryManager = new StemStorageRetryManager();
 
 // Rehidratar automáticamente
 setTimeout(() => {
-  stemStorageRetryManager.initFromDatabase().catch(() => {});
+  stemStorageRetryManager.initFromDatabase().catch((err: unknown) => console.warn("[Stems] No se pudo cargar la cola de reintentos desde Supabase al arrancar:", err));
 }, 1000);

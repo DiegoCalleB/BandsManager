@@ -1,5 +1,25 @@
-import { dbGetSocialPosts, dbUpsertSocialPost, dbGetBandSocialAccounts, dbUpsertSocialMetric, dbGetSocialMetrics } from "../db/social.js";
+/**
+ * Publicación de posts sociales en las plataformas reales.
+ *
+ * Sustituye a una versión anterior que SIMULABA la publicación: inventaba un id y una URL,
+ * marcaba el post como publicado y le añadía visitas y seguidores aleatorios. Ahora un post solo
+ * pasa a 'publicado' con el id que devuelve la plataforma. Cuando no se puede publicar de forma
+ * automática (plataforma sin integración, Instagram sin conectar, clip sin derechos acreditados)
+ * se dice exactamente por qué y el post queda listo para publicación asistida (subirlo a mano y
+ * marcarlo como publicado).
+ */
+import { dbGetSocialPosts, dbUpsertSocialPost, dbReclamarPostParaPublicar, dbGetPostsPorPublicar } from "../db/social.js";
+import { dbGetBandSchedule } from "../db/schedule.js";
+import { dbBuscarReelClip, type ReelClip } from "../db/reelClips.js";
 import { cleanBandId } from "../db/core.js";
+import { publicarReelInstagram, type CredencialesInstagram } from "./publicadores/instagramReels.js";
+import { avisarPublicacionesFallidas } from "./avisosPublicacion.js";
+import type { PostFallido } from "../utils/avisoPublicacionFallida.js";
+import { credencialesInstagram } from "./credencialesInstagram.js";
+import { postsVencidos, estaColgadoPublicando } from "../utils/programacionPosts.js";
+import { captureError } from "../utils/errorTracking.js";
+import { comoErrorCapturado } from "../../src/utils/errorCapturado.js";
+import type { SocialPost } from "../../src/types.js";
 
 export interface PublishResult {
   success: boolean;
@@ -8,132 +28,181 @@ export interface PublishResult {
   publishedId?: string;
   publishedUrl?: string;
   error?: string;
+  /** 'asistido' = no se puede publicar solo; `error` dice por qué y qué hacer. */
+  modo?: "publicado" | "asistido" | "fallido";
+  /** El post no falló: otro proceso lo tiene o ya no estaba pendiente. No merece un aviso a la banda. */
+  sinAviso?: boolean;
 }
 
-/**
- * Publica inmediatamente un post específico en la plataforma destino.
- */
-export async function publishSocialPostNow(postId: string, bandId: string): Promise<PublishResult> {
-  const cleanId = cleanBandId(bandId);
-  const posts = await dbGetSocialPosts(cleanId);
-  const post = posts.find((p: any) => p.id === postId);
+/** Log siempre (Sentry puede estar apagado) y a Sentry si está activo. */
+function avisar(contexto: string, e: unknown, extra: Record<string, unknown> = {}): void {
+  console.warn(`[Social Publisher] ${contexto}:`, e);
+  captureError(e, { contexto: `socialPublisher: ${contexto}`, ...extra });
+}
 
-  if (!post) {
-    return { success: false, postId, platform: "unknown", error: "Publicación no encontrada." };
+/** Un humano pulsando "publicar ya" puede reintentar un fallido o publicar un borrador. */
+const ESTADOS_PUBLICACION_MANUAL: SocialPost["estado"][] = ["borrador", "aprobado", "en_cola", "fallido"];
+/** El worker solo publica lo que un humano dejó aprobado o en cola. */
+const ESTADOS_PUBLICACION_PROGRAMADA: SocialPost["estado"][] = ["aprobado", "en_cola"];
+
+/**
+ * Por qué este post NO puede publicarse automáticamente, o null si sí puede. Pura: todo lo que
+ * decide llega como argumento.
+ */
+export function motivoParaNoAutopublicar(
+  post: SocialPost,
+  credenciales: CredencialesInstagram | null,
+  clip: Pick<ReelClip, "derechos" | "control_calidad"> | null
+): string | null {
+  if ((post.plataforma || "Instagram") !== "Instagram") {
+    return `La publicación automática en ${post.plataforma} aún no está disponible: descarga el vídeo, súbelo desde la app y marca el post como publicado.`;
+  }
+  if (!post.video_url || !/^https:\/\//.test(post.video_url) || /youtu\.?be/.test(post.video_url)) {
+    return "Este post no tiene un clip renderizado y guardado en la nube: renderiza el corte antes de publicarlo.";
+  }
+  if (!credenciales) {
+    return "Instagram no está conectado con una cuenta profesional: conéctalo en Métricas para publicar automáticamente.";
+  }
+  if (!clip?.derechos) {
+    return "No consta que el vídeo de origen sea de la banda (su canal no coincide con el YouTube de la banda). Para evitar un strike de copyright no se publica solo: súbelo tú si tienes los derechos.";
+  }
+  if (!clip.control_calidad) {
+    return "No se pudo comprobar la calidad del clip al renderizarlo: vuelve a renderizarlo antes de publicarlo.";
+  }
+  if (!clip.control_calidad.aprobado) {
+    const motivos = clip.control_calidad.bloqueantes.map((p) => p.mensaje).join(" ");
+    return `El clip no ha pasado el control de calidad: ${motivos} Corrige el corte y vuelve a renderizarlo.`;
+  }
+  return null;
+}
+
+
+async function evaluar(post: SocialPost, bandId: string): Promise<{ motivo: string | null; credenciales: CredencialesInstagram | null }> {
+  const credenciales = await credencialesInstagram(bandId);
+  const clip = post.video_url ? await dbBuscarReelClip(bandId, post.video_url).catch((e: unknown) => {
+    console.warn("[Social Publisher] No se pudo comprobar la procedencia del clip:", e);
+    return null;
+  }) : null;
+  return { motivo: motivoParaNoAutopublicar(post, credenciales, clip), credenciales };
+}
+
+function textoDelPost(post: SocialPost): string {
+  const hashtags = (post.hashtags || []).filter((h) => !post.contenido?.includes(h)).join(" ");
+  return [post.contenido || "", hashtags].filter(Boolean).join("\n\n");
+}
+
+async function publicar(
+  post: SocialPost,
+  bandId: string,
+  desde: SocialPost["estado"][]
+): Promise<PublishResult> {
+  const platform = post.plataforma || "Instagram";
+  const { motivo, credenciales } = await evaluar(post, bandId);
+  if (motivo || !credenciales) {
+    return { success: false, postId: post.id, platform, modo: "asistido", error: motivo || "Sin credenciales." };
   }
 
-  const platform = post.plataforma || "Instagram";
-  const accounts = await dbGetBandSocialAccounts(cleanId);
-  const account = accounts.find((a: any) => a.plataforma?.toLowerCase() === platform.toLowerCase() && a.status === "conectado");
-
-  // Validamos si hay cuenta conectada o si se publica en modo sandbox/simulado
-  const handle = account?.handle || post.account_handle || `@${(cleanId || "banda").replace(/^band-/, "")}`;
+  const reclamado = await dbReclamarPostParaPublicar(post.id, bandId, desde);
+  if (!reclamado) {
+    return { success: false, postId: post.id, platform, modo: "fallido", sinAviso: true, error: "Este post ya se está publicando o ya no está pendiente." };
+  }
 
   try {
-    // Generamos un ID de publicación oficial o simulada
-    const publishedId = `pub-${platform.toLowerCase()}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
-    
-    // URL amigable según la plataforma
-    let publishedUrl = `https://instagram.com/p/${publishedId}`;
-    if (platform.toLowerCase().includes("tiktok")) {
-      publishedUrl = `https://www.tiktok.com/@${handle.replace(/^@/, '')}/video/${publishedId}`;
-    } else if (platform.toLowerCase().includes("youtube")) {
-      publishedUrl = `https://youtube.com/shorts/${publishedId}`;
-    }
-
-    const updatedPost = {
-      ...post,
-      estado: "publicado",
-      published_id: publishedId,
-      published_at: new Date().toISOString(),
-      publish_error: null,
-      account_handle: handle,
-      metrics: {
-        views: Math.floor(Math.random() * 450) + 120,
-        likes: Math.floor(Math.random() * 85) + 15,
-        comments: Math.floor(Math.random() * 12) + 2,
-        shares: Math.floor(Math.random() * 9) + 1
-      }
-    };
-
-    await dbUpsertSocialPost(updatedPost, cleanId);
-
-    // Actualizamos las métricas globales de la banda para el Social Radar
-    try {
-      const existingMetrics = await dbGetSocialMetrics(cleanId);
-      const latest = existingMetrics[0] || {};
-      const newFollowersBoost = Math.floor(Math.random() * 15) + 3;
-
-      await dbUpsertSocialMetric({
-        fecha: new Date().toISOString().split("T")[0],
-        instagram: (Number(latest.instagram) || 1200) + (platform.toLowerCase().includes("instagram") ? newFollowersBoost : 0),
-        tiktok: (Number(latest.tiktok) || 850) + (platform.toLowerCase().includes("tiktok") ? newFollowersBoost : 0),
-        youtube: (Number(latest.youtube) || 600) + (platform.toLowerCase().includes("youtube") ? newFollowersBoost : 0),
-        spotify: Number(latest.spotify) || 1500,
-        notas: `Auto-actualización tras publicación en ${platform}: ${post.contenido?.slice(0, 40) || 'Reel'}`
-      }, cleanId);
-    } catch (mErr) {
-      console.warn("[Social Publisher] Warning updating metrics after publish:", mErr);
-    }
-
-    console.log(`[Social Publisher] Post ${postId} publicado con éxito en ${platform} (${handle})`);
-
-    return {
-      success: true,
-      postId,
-      platform,
-      publishedId,
-      publishedUrl
-    };
-  } catch (err: any) {
-    console.error(`[Social Publisher] Error publicando post ${postId} en ${platform}:`, err);
-    await dbUpsertSocialPost({
-      ...post,
-      estado: "fallido",
-      publish_error: err.message || String(err)
-    }, cleanId);
-
-    return {
-      success: false,
-      postId,
-      platform,
-      error: err.message || String(err)
-    };
+    const r = await publicarReelInstagram(credenciales, { videoUrl: post.video_url!, caption: textoDelPost(reclamado) });
+    await dbUpsertSocialPost(
+      // publish_error ya lo dejó a null el reclamo.
+      { ...reclamado, estado: "publicado", published_id: r.publishedId, published_at: new Date().toISOString() },
+      bandId
+    );
+    console.log(`[Social Publisher] Post ${post.id} publicado en Instagram (${r.publishedId}).`);
+    return { success: true, postId: post.id, platform, publishedId: r.publishedId, publishedUrl: r.permalink, modo: "publicado" };
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
+    console.error(`[Social Publisher] Error publicando ${post.id} en ${platform}:`, err);
+    await dbUpsertSocialPost({ ...reclamado, estado: "fallido", publish_error: err.message }, bandId).catch((e: unknown) =>
+      avisar("no se pudo marcar el post como fallido", e, { postId: post.id })
+    );
+    return { success: false, postId: post.id, platform, modo: "fallido", error: err.message };
   }
 }
 
+/** Publica ya un post concreto (acción explícita de la banda). */
+export async function publishSocialPostNow(postId: string, bandId: string): Promise<PublishResult> {
+  const cleanId = cleanBandId(bandId);
+  const post = (await dbGetSocialPosts(cleanId)).find((p: SocialPost) => p.id === postId);
+  if (!post) return { success: false, postId, platform: "unknown", error: "Publicación no encontrada." };
+  return publicar(post, cleanId, ESTADOS_PUBLICACION_MANUAL);
+}
+
 /**
- * Escanea publicaciones aprobadas con fecha y hora vencidas y las publica automáticamente.
+ * Publica los posts vencidos de una banda. Lo que no se puede publicar solo pasa a 'fallido' con
+ * el motivo: si se quedara aprobado, el worker lo reintentaría cada minuto para siempre.
  */
-export async function publishDueScheduledPosts(bandId?: string): Promise<{ dispatched: number; results: PublishResult[] }> {
-  const now = new Date();
-  const todayStr = now.toISOString().split("T")[0];
-  const currentTimeStr = now.toTimeString().slice(0, 5); // "HH:MM"
+async function publicarVencidosDeBanda(bandId: string, posts: SocialPost[], ahora: Date): Promise<PublishResult[]> {
+  const zona = (await dbGetBandSchedule(bandId).catch(() => null))?.timezone;
+  const resultados: PublishResult[] = [];
+  const fallos: PostFallido[] = [];
+  const comoFallo = (p: SocialPost, motivo: string, asistido: boolean): PostFallido => ({ plataforma: p.plataforma || "Instagram", fecha: p.fecha, hora: p.hora_programada, motivo, asistido });
 
-  const results: PublishResult[] = [];
-
-  if (bandId) {
-    const cleanId = cleanBandId(bandId);
-    const posts = await dbGetSocialPosts(cleanId);
-    
-    // Filtrar posts programados que ya deben publicarse
-    const duePosts = posts.filter((p: any) => {
-      if (p.estado === "publicado" || p.estado === "fallido") return false;
-      if (!p.auto_publish && p.estado !== "aprobado" && p.estado !== "en_cola") return false;
-      
-      const postDate = p.fecha || todayStr;
-      const postTime = p.hora_programada || "00:00";
-
-      if (postDate < todayStr) return true;
-      if (postDate === todayStr && postTime <= currentTimeStr) return true;
-      return false;
-    });
-
-    for (const post of duePosts) {
-      const res = await publishSocialPostNow(post.id, cleanId);
-      results.push(res);
-    }
+  for (const colgado of posts.filter((p) => estaColgadoPublicando(p, ahora))) {
+    const motivo = "La publicación se interrumpió. Comprueba en Instagram si llegó a salir antes de reintentarla.";
+    await dbUpsertSocialPost({ ...colgado, estado: "fallido", publish_error: motivo }, bandId);
+    fallos.push(comoFallo(colgado, motivo, false));
   }
 
+  for (const post of postsVencidos(posts, zona, ahora)) {
+    const r = await publicar(post, bandId, ESTADOS_PUBLICACION_PROGRAMADA);
+    if (r.modo === "asistido") {
+      await dbUpsertSocialPost({ ...post, estado: "fallido", publish_error: r.error }, bandId);
+    }
+    if (!r.success && !r.sinAviso) fallos.push(comoFallo(post, r.error || "No se pudo publicar.", r.modo === "asistido"));
+    resultados.push(r);
+  }
+
+  // Un solo correo por banda y pasada, y nunca bloquea ni rompe el worker.
+  if (fallos.length) await avisarPublicacionesFallidas(bandId, fallos).catch((e: unknown) => avisar("aviso de publicación fallida", e, { bandId }));
+  return resultados;
+}
+
+/** Disparo manual por banda (POST /social/run-scheduled-publisher). */
+export async function publishDueScheduledPosts(bandId: string): Promise<{ dispatched: number; results: PublishResult[] }> {
+  const cleanId = cleanBandId(bandId);
+  const results = await publicarVencidosDeBanda(cleanId, await dbGetSocialPosts(cleanId), new Date());
   return { dispatched: results.length, results };
+}
+
+/* ------------------------------------------------------------------ worker */
+
+const TICK_MS = Number(process.env.SOCIAL_PUBLISHER_INTERVAL_MS) || 60_000;
+let handle: NodeJS.Timeout | null = null;
+let tickEnCurso = false;
+
+export async function tickPublicador(ahora = new Date()): Promise<void> {
+  if (tickEnCurso) return;
+  tickEnCurso = true;
+  try {
+    const porBanda = new Map<string, SocialPost[]>();
+    for (const p of await dbGetPostsPorPublicar()) {
+      const bandId = cleanBandId(p.band_id || "");
+      if (!bandId) continue;
+      porBanda.set(bandId, [...(porBanda.get(bandId) || []), p]);
+    }
+    // Banda a banda y en serie: un fallo en una no frena a las demás, y Meta limita por cuenta.
+    for (const [bandId, posts] of porBanda) {
+      await publicarVencidosDeBanda(bandId, posts, ahora).catch((e: unknown) =>
+        avisar("pasada de banda", e, { bandId })
+      );
+    }
+  } catch (e) {
+    avisar("pasada del worker", e);
+  } finally {
+    tickEnCurso = false;
+  }
+}
+
+export function startSocialPublisherScheduler(): void {
+  if (handle) return;
+  handle = setInterval(() => void tickPublicador(), TICK_MS);
+  handle.unref();
+  console.log(`[Social Publisher] Worker de publicación programada activo (cada ${Math.round(TICK_MS / 1000)} s).`);
 }

@@ -2,10 +2,14 @@
 // `checkRecordLimit`.
 
 import express from "express";
+import { hostEnDominio } from "../../utils/urlHost.js";
+import { apiAutenticadaRateLimiter } from "../../middleware/rateLimiter.js";
 import { puedeEntrarEnColaDeEnvio } from "../../utils/email.js";
 import { Lead } from "../../../src/types.js";
 import { loadState, saveState, requireAuth } from "../../state.js";
-import { dbGetLeads, dbGetLeadsPaginated, dbGetLeadById, dbUpsertLead, dbDeleteLead, dbBulkDeleteLeads, dbCheckDeletedLead, dbGetLeadMessages, dbGetActiveCampaign } from "../../db.js";
+import type { PaginatedLeadsResult } from "../../db/leads.js";
+import { esEstadoDeAprobacion } from "../../utils/aprobacionLead.js";
+import { dbGetLeads, dbGetLeadsPaginated, dbGetLeadById, dbUpsertLead, dbDeleteLead, dbBulkDeleteLeads, dbCheckDeletedLead, dbGetLeadMessages, dbGetActiveCampaign, aplicarAprobacionTrasGuardar } from "../../db.js";
 import { getAvailableAIProviders } from "../../ai.js";
 import { autoEnrichLead, extractFestivalDates } from "../../auto_enrichment.js";
 import { isBadDirectoryUrl, getDomainFromUrl } from "./helpers.js";
@@ -15,26 +19,29 @@ import { dbRecordPitchHumanEdit } from "../../db/pitchLearning.js";
 import { getTargetBandId } from "../../utils/bandAccess.js";
 import { filterLeadsByActiveCampaign } from "../../utils/festivalDateFilter.js";
 import { searchFestivalByName, formatFestivalDates } from "../../utils/spanishFestivalsDB.js";
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
+import { responderError } from '../../utils/errorHttp.js';
 
 const router = express.Router();
 
-router.get("/ai/providers", requireAuth, async (req, res) => {
+router.get("/ai/providers", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
   try {
     const providers = getAvailableAIProviders();
     res.json({ success: true, providers });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error fetching AI providers:", err);
     res.status(500).json({ error: "Error al obtener proveedores de IA" });
   }
 });
 
 // Re-align headers (no-op compatibility)
-router.post("/leads/realign-headers", requireAuth, async (req, res) => {
+router.post("/leads/realign-headers", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
   res.json({ success: true, message: "Cabeceras sincronizadas en Supabase PostgreSQL." });
 });
 
 // GET all leads (supports optional server pagination & filtering)
-router.get("/leads", requireAuth, async (req, res) => {
+router.get("/leads", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
   const userBandId = getTargetBandId(req);
   try {
     const page = req.query.page ? parseInt(req.query.page as string, 10) : undefined;
@@ -45,8 +52,8 @@ router.get("/leads", requireAuth, async (req, res) => {
     const sortBy = req.query.sortBy as string | undefined;
     const sortOrder = (req.query.sortOrder as "asc" | "desc") || undefined;
 
-    let leadsList: any[] = [];
-    let pagination: any = undefined;
+    let leadsList: Lead[] = [];
+    let pagination: PaginatedLeadsResult['pagination'] | undefined = undefined;
 
     if (page !== undefined || limit !== undefined || estado || search || ciudad || sortBy) {
       const paginated = await dbGetLeadsPaginated(userBandId, { page, limit, estado, search, ciudad, sortBy, sortOrder });
@@ -62,16 +69,16 @@ router.get("/leads", requireAuth, async (req, res) => {
       leadsList = filterLeadsByActiveCampaign(leadsList, activeCampaign);
     }
 
-    const leads = leadsList.map((l: any) => {
+    const leads = leadsList.map((l) => {
       let img = l.imagen_url || '';
       let web = l.website || '';
 
       // Specific auto-repair for Sala Siroco domain & logo
-      if (l.nombre_sala?.toLowerCase().includes('siroco') || web.includes('salasiroco.es') || web.includes('siroco.es')) {
+      if (l.nombre_sala?.toLowerCase().includes('siroco') || hostEnDominio(web, 'salasiroco.es', 'siroco.es')) {
         web = 'https://siroco.es/';
         img = 'https://siroco.es/wp-content/uploads/2019/03/logo_-blanco_250px.png';
       } else {
-        if (img.includes('ui-avatars.com') || img.includes('clearbit.com')) {
+        if (hostEnDominio(img, 'ui-avatars.com', 'clearbit.com')) {
           img = '';
           if (web && !isBadDirectoryUrl(web)) {
             const domain = getDomainFromUrl(web);
@@ -87,14 +94,15 @@ router.get("/leads", requireAuth, async (req, res) => {
     } else {
       res.json({ leads });
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error getting leads from Supabase:", err);
     res.status(500).json({ error: "Error al obtener salas desde Supabase" });
   }
 });
 
 // GET a single lead by ID
-router.get("/leads/:id", requireAuth, async (req, res) => {
+router.get("/leads/:id", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
   try {
     const { id } = req.params;
     const bandId = getTargetBandId(req);
@@ -103,9 +111,10 @@ router.get("/leads/:id", requireAuth, async (req, res) => {
       return res.status(404).json({ success: false, error: "Sala o contacto no encontrado." });
     }
     res.json({ success: true, lead });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in GET /api/leads/:id:", error);
-    res.status(500).json({ success: false, error: error?.message || "Error al obtener la sala." });
+    responderError(res, error, "Error al obtener la sala.");
   }
 });
 
@@ -114,25 +123,32 @@ router.get("/leads/:id", requireAuth, async (req, res) => {
 // distinto de leads.hilo_emails, un campo aparte que el frontend rellena por su cuenta (sync de
 // Gmail por popup) y que nunca se cruza con esto. Sin esta ruta, todo lo que los agentes
 // registran en lead_messages era invisible en el CRM.
-router.get("/leads/:id/messages", requireAuth, async (req, res) => {
+router.get("/leads/:id/messages", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
   try {
     const { id } = req.params;
     const bandId = getTargetBandId(req);
     const messages = await dbGetLeadMessages(id, bandId);
     res.json({ success: true, messages });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in GET /api/leads/:id/messages:", error);
-    res.status(500).json({ error: error?.message || "Error al obtener el historial de conversación." });
+    responderError(res, error, "Error al obtener el historial de conversación.");
   }
 });
 
 // Update a single lead
-router.put("/leads/:id", requireAuth, async (req, res) => {
+router.put("/leads/:id", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
     const { id } = req.params;
     // `expectedStatus` es una condición de la petición, no un campo del lead: no debe guardarse.
-    const { expectedStatus, ...updatedFields } = req.body || {};
+    const { expectedStatus, aprobado_por: _a, aprobado_at: _b, pitch_aprobado_hash: _c, ...updatedFields } = req.body || {};
+
+    // Aprobar pone un correo real en la cola de envío: solo la dirección de la banda, igual que
+    // lanzar agentes. El resto de ediciones de una sala siguen abiertas a todos los miembros.
+    if (esEstadoDeAprobacion(updatedFields.estado) && req.user?.role !== "leader" && req.user?.role !== "admin") {
+      return res.status(403).json({ error: "Solo la dirección de la banda puede aprobar envíos." });
+    }
 
     const existing = await dbGetLeadById(id, userBandId);
 
@@ -165,6 +181,8 @@ router.put("/leads/:id", requireAuth, async (req, res) => {
       (k) => updatedFields[k] === "" || updatedFields[k] === null
     );
     const saved = await dbUpsertLead(merged, userBandId, { permitirVaciar: true });
+    // Constancia de aprobación (quién, cuándo, huella del texto); el cliente no puede fijarla.
+    saved.estado = (await aplicarAprobacionTrasGuardar(existing, updatedFields, saved, userBandId, req.user?.email || req.user?.username || "desconocido")) as typeof saved.estado;
 
     // Dynamic Few-Shot & Self-Refining Tone DNA: registrar edición humana al aprobar o modificar el pitch
     const esAprobacion = updatedFields.estado === "aprobado" || updatedFields.estado === "aprobado_propuesta" || updatedFields.estado === "aprobado_respuesta";
@@ -188,27 +206,25 @@ router.put("/leads/:id", requireAuth, async (req, res) => {
     autoEnrichLead(saved, userBandId, { respetarVacios: camposVaciados }).catch(err => console.error("Error autoEnrichLead background:", err));
 
     res.json({ success: true, lead: saved });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in PUT /api/leads/:id:", error);
-    res.status(500).json({ error: error?.message || "Error al actualizar la sala." });
+    responderError(res, error, "Error al actualizar la sala.");
   }
 });
 
 // Create a lead
-router.post("/leads", requireAuth, async (req, res) => {
+router.post("/leads", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
-    const state = loadState();
-    const bandConfig = state.epkConfigsByBand?.[userBandId] || state.epkConfigsByBand?.[userBandId.replace(/^(band|reg)-/, '')] || state.epkConfig || {};
-    const registeredBand = state.registeredBands?.find((b: any) => b.band_id === userBandId || b.band_id === userBandId.replace(/^(band|reg)-/, ''));
-    const cleanId = userBandId.replace(/^(band|reg)-/, '');
-    const isBakandeya = cleanId === 'bakandeya';
-    const bandName = registeredBand?.nombre_banda || registeredBand?.bandName || bandConfig?.contactoBooking?.nombre || bandConfig?.nombre_banda || (isBakandeya ? 'Bakandeya' : cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
-    const bandBio = bandConfig?.biografia || registeredBand?.biografia || registeredBand?.dossier_texto_extra || '';
 
     const newLead: Lead = req.body;
-    if (!(newLead as any).band_id) {
-      (newLead as any).band_id = userBandId;
+    // Crear una sala ya «aprobada» sería saltarse la misma regla que en PUT /leads/:id.
+    if (esEstadoDeAprobacion(newLead?.estado) && req.user?.role !== "leader" && req.user?.role !== "admin") {
+      return res.status(403).json({ error: "Solo la dirección de la banda puede aprobar envíos." });
+    }
+    if (!newLead.band_id) {
+      newLead.band_id = userBandId;
     }
 
     // Auto-correct lead type if a venue or festival name was wrongly classified as "medio" or "productora"
@@ -229,14 +245,14 @@ router.post("/leads", requireAuth, async (req, res) => {
     // El límite de leads/medios por plan solo se comprobaba en el cliente (App.tsx,
     // handleAddLeadWithLimitCheck): quien llamase a esta ruta directamente con su token de sesión
     // podía crear leads sin límite sin importar el plan contratado por su banda.
-    const userPlan = (req as any).user?.plan || 'ensayo';
+    const userPlan = req.user?.plan || 'ensayo';
     const isMedio = String(newLead.tipo || '').toLowerCase().includes('medio')
       || String(newLead.tipo || '').toLowerCase().includes('prensa')
       || String(newLead.tipo || '').toLowerCase().includes('radio');
-    const existingLeads = await dbGetLeads(userBandId);
+    const existingLeads: Lead[] = await dbGetLeads(userBandId);
     const currentCount = isMedio
-      ? existingLeads.filter((l: any) => String(l.tipo || '').toLowerCase().includes('medio') || String(l.tipo || '').toLowerCase().includes('radio') || String(l.tipo || '').toLowerCase().includes('prensa')).length
-      : existingLeads.filter((l: any) => !String(l.tipo || '').toLowerCase().includes('medio') && !String(l.tipo || '').toLowerCase().includes('radio') && !String(l.tipo || '').toLowerCase().includes('prensa')).length;
+      ? existingLeads.filter((l) => String(l.tipo || '').toLowerCase().includes('medio') || String(l.tipo || '').toLowerCase().includes('radio') || String(l.tipo || '').toLowerCase().includes('prensa')).length
+      : existingLeads.filter((l) => !String(l.tipo || '').toLowerCase().includes('medio') && !String(l.tipo || '').toLowerCase().includes('radio') && !String(l.tipo || '').toLowerCase().includes('prensa')).length;
     const limitCheck = checkRecordLimit(userPlan, isMedio ? 'medios' : 'leads', currentCount);
     if (!limitCheck.allowed) {
       return res.status(403).json({ error: limitCheck.message, codigo: "limite_plan_alcanzado" });
@@ -270,7 +286,7 @@ router.post("/leads", requireAuth, async (req, res) => {
           // Fallback síncrono a extractFestivalDates con timeout de 3.5s
           const festInfo = await Promise.race([
             extractFestivalDates(newLead),
-            new Promise<any>(resolve => setTimeout(() => resolve({}), 3500))
+            new Promise<Awaited<ReturnType<typeof extractFestivalDates>>>(resolve => setTimeout(() => resolve({}), 3500))
           ]);
           if (festInfo && festInfo.startDate) {
             newLead.festival_start_date = festInfo.startDate;
@@ -287,7 +303,7 @@ router.post("/leads", requireAuth, async (req, res) => {
     }
     
     // Check if this venue was previously deleted
-    const venueName = (newLead as any).nombre_sala || '';
+    const venueName = newLead.nombre_sala || '';
     let warningMsg = null;
     if (venueName) {
       const deletedMatch = await dbCheckDeletedLead(venueName, userBandId);
@@ -299,7 +315,8 @@ router.post("/leads", requireAuth, async (req, res) => {
     let saved: Lead;
     try {
       saved = await dbUpsertLead(newLead, userBandId);
-    } catch (dbErr: any) {
+    } catch (dbErrCapturado) {
+      const dbErr = comoErrorCapturado(dbErrCapturado);
       console.error("Supabase upsert failed in POST /api/leads, saving to local state fallback:", dbErr);
       const fallbackId = newLead.id || `lead-${Date.now()}`;
       saved = {
@@ -313,7 +330,7 @@ router.post("/leads", requireAuth, async (req, res) => {
     // Also update state immediately so UI state reflects new lead
     const freshState = loadState();
     freshState.leads = freshState.leads || [];
-    const idx = freshState.leads.findIndex((l: any) => l.id === saved.id || (l.nombre_sala && saved.nombre_sala && l.nombre_sala.toLowerCase().trim() === saved.nombre_sala.toLowerCase().trim()));
+    const idx = freshState.leads.findIndex((l) => l.id === saved.id || (l.nombre_sala && saved.nombre_sala && l.nombre_sala.toLowerCase().trim() === saved.nombre_sala.toLowerCase().trim()));
     if (idx !== -1) {
       freshState.leads[idx] = saved;
     } else {
@@ -325,14 +342,15 @@ router.post("/leads", requireAuth, async (req, res) => {
     autoEnrichLead(saved, userBandId).catch(err => console.error("Error autoEnrichLead background:", err));
 
     res.json({ success: true, lead: saved, warning: warningMsg });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads:", error);
-    res.status(500).json({ error: error?.message || "Error al crear la sala." });
+    responderError(res, error, "Error al crear la sala.");
   }
 });
 
 // Bulk delete leads
-router.post("/leads/bulk-delete", requireAuth, async (req, res) => {
+router.post("/leads/bulk-delete", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
     const { ids } = req.body;
@@ -345,19 +363,20 @@ router.post("/leads/bulk-delete", requireAuth, async (req, res) => {
     const state = loadState();
     if (state.leads) {
       const idsSet = new Set(ids);
-      state.leads = state.leads.filter((l: any) => !idsSet.has(l.id));
+      state.leads = state.leads.filter((l) => !idsSet.has(l.id));
       saveState(state);
     }
 
     res.json({ success: true, count: ids.length, message: `${ids.length} registros eliminados correctamente y guardados en la lista negra.` });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/bulk-delete:", error);
-    res.status(500).json({ error: error?.message || "Error al eliminar registros masivamente." });
+    responderError(res, error, "Error al eliminar registros masivamente.");
   }
 });
 
 // Delete a lead
-router.delete("/leads/:id", requireAuth, async (req, res) => {
+router.delete("/leads/:id", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
     const { id } = req.params;
@@ -365,14 +384,15 @@ router.delete("/leads/:id", requireAuth, async (req, res) => {
 
     const state = loadState();
     if (state.leads) {
-      state.leads = state.leads.filter((l: any) => l.id !== id);
+      state.leads = state.leads.filter((l) => l.id !== id);
       saveState(state);
     }
 
     res.json({ success: true, message: "Sala o medio eliminado correctamente y guardado en la lista negra de descartados." });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in DELETE /api/leads/:id:", error);
-    res.status(500).json({ error: error?.message || "Error al eliminar la sala." });
+    responderError(res, error, "Error al eliminar la sala.");
   }
 });
 

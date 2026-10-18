@@ -39,13 +39,9 @@ import usersRouter from '../users.js';
 import epkFansRouter from '../epk_fans.js';
 import leadsEnrichmentRouter from '../leads/enrichment.js';
 import { hashPassword } from '../../auth';
+import { manejador as manejadorDe } from './helpers/rutas.js';
 
-function manejador(router: any, ruta: string, metodo: 'get' | 'post' | 'put') {
-  const capa: any = router.stack.find((s: any) => s.route && s.route.path === ruta && s.route.methods[metodo]);
-  expect(capa, `${metodo} ${ruta}`).toBeDefined();
-  const pila = capa.route.stack;
-  return pila[pila.length - 1].handle;
-}
+const manejador = manejadorDe;
 const resFalso = () => {
   const r: any = {};
   r.status = (c: number) => ((r.code = c), r);

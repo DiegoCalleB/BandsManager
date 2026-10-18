@@ -1,46 +1,12 @@
 import React, { useState } from "react";
-import {
-  Sparkles,
-  Check,
-  X,
-  Zap,
-  ShieldCheck,
-  Crown,
-  Star,
-  Layers,
-  Building2,
-  Video,
-  Coins,
-  Bot,
-  Truck,
-  DownloadCloud,
-  ChevronDown,
-  ChevronUp,
-  Gift,
-  PackageCheck,
-  Palette,
-  Printer,
-  Home,
-  Info,
-  ExternalLink,
-  CreditCard,
-  AlertTriangle,
-  Calendar,
-  ArrowRight,
-  Lock,
-  Loader2,
-  RefreshCw,
-} from "lucide-react";
+import { Sparkles, Check, X, ShieldCheck, Crown, Star, Layers, Building2, Video, Coins, Bot, Truck, ChevronDown, ChevronUp, Gift, ExternalLink, CreditCard, AlertTriangle, Calendar, Lock, Loader2, type LucideIcon } from "lucide-react";
 import { ThemeColors, User } from "../types";
 import { CheckoutButton } from "./CheckoutButton";
 import { api } from "../services/api";
-import {
-  normalizePlan,
-  getPlanTierLevel,
-  getPlanDefinition,
-} from "../utils/planPermissions";
+import { normalizePlan, getPlanTierLevel } from "../utils/planPermissions";
 import { ShowIcon } from './ui/ShowIcon';
 import { Button, IconButton } from './ui';
+import { comoErrorCapturado } from '../utils/errorCapturado';
 
 interface PlanesProps {
   colors?: ThemeColors;
@@ -201,7 +167,7 @@ const PLANS_DATA: PlanCardData[] = [
 
 interface ComparisonSection {
   title: string;
-  icon: any;
+  icon: LucideIcon;
   items: {
     name: string;
     description?: string;
@@ -392,17 +358,13 @@ const COMPARISON_TABLE: ComparisonSection[] = [
 ];
 
 export const Planes: React.FC<PlanesProps> = ({
-  colors,
   currentUser,
   activeBandName,
-  currentBandPlan,
-  onSelectPlan,
-  onNavigateToModule,
+  currentBandPlan
 }) => {
   const [billingPeriod, setBillingPeriod] = useState<"monthly" | "annual">(
     "monthly",
   );
-  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [isOpeningPortal, setIsOpeningPortal] = useState(false);
   const [portalError, setPortalError] = useState<string | null>(null);
   const [expandedSections, setExpandedSections] = useState<
@@ -438,7 +400,8 @@ export const Planes: React.FC<PlanesProps> = ({
       } else {
         setPortalError(res.error || "No se pudo abrir el portal de Stripe.");
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setPortalError(
         err.message || "Error al conectar con Stripe Customer Portal",
       );

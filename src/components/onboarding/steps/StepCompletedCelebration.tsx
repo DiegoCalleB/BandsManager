@@ -1,18 +1,5 @@
 import React, { useState } from "react";
-import {
-  Sparkles,
-  CheckCircle2,
-  Globe,
-  Heart,
-  ExternalLink,
-  Copy,
-  Check,
-  ArrowRight,
-  Disc3,
-  Layers,
-  Calendar,
-  Users,
-} from "lucide-react";
+import { Sparkles, Globe, Heart, ExternalLink, Copy, Check, ArrowRight, Disc3, Layers, Calendar } from "lucide-react";
 import { Button } from '../../ui';
 
 interface StepCompletedCelebrationProps {
@@ -32,11 +19,9 @@ export const StepCompletedCelebration: React.FC<
   bandName,
   totalSongs,
   totalVideos,
-  totalPhotos,
   totalEvents,
   hasRider,
-  planName,
-  onFinish,
+  onFinish
 }) => {
   const [copiedEpk, setCopiedEpk] = useState(false);
   const [copiedFans, setCopiedFans] = useState(false);

@@ -1,13 +1,5 @@
 import React, { useRef } from "react";
-import {
-  Layers,
-  Upload,
-  FileText,
-  CheckCircle2,
-  Loader2,
-  Trash2,
-  Check,
-} from "lucide-react";
+import { Layers, Upload, FileText, Loader2, Trash2, Check } from "lucide-react";
 import { IconButton, Input, LinkButton, Textarea } from '../../ui';
 
 interface StepRiderProps {

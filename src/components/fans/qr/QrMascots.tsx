@@ -20,9 +20,7 @@ export const QrMascotSvgGroup: React.FC<QrMascotProps> = ({
   bandLogoUrl,
   bandName = 'Banda',
   size = 100,
-  primaryColor = '#6366f1',
-  secondaryColor = '#ec4899',
-  shape = 'squircle',
+  shape = 'squircle'
 }) => {
   if (mascot === 'none') return null;
 
@@ -302,7 +300,7 @@ export const QrMascotSvgGroup: React.FC<QrMascotProps> = ({
 
       // 🖼️ LOGO OFICIAL DE LA BANDA
       case 'band_logo':
-      default:
+      default: {
         if (bandLogoUrl) {
           return (
             <g transform="translate(12, 12)">
@@ -344,6 +342,7 @@ export const QrMascotSvgGroup: React.FC<QrMascotProps> = ({
             <circle cx="40" cy="40" r="32" fill="none" stroke="url(#mascotGlow)" strokeWidth="2" strokeDasharray="4 3" />
           </g>
         );
+      }
     }
   };
 

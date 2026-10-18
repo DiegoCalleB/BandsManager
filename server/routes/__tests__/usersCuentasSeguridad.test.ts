@@ -20,13 +20,9 @@ vi.mock('../../services/transactionalEmail.js', async (orig) => ({
 
 import usersRouter from '../users.js';
 import { verifyPassword } from '../../auth';
+import { manejador as manejadorDe } from './helpers/rutas.js';
 
-function manejador(ruta: string, metodo: 'post' | 'put') {
-  const capa: any = (usersRouter as any).stack.find((s: any) => s.route && s.route.path === ruta && s.route.methods[metodo]);
-  expect(capa).toBeDefined();
-  const pila = capa.route.stack;
-  return pila[pila.length - 1].handle;
-}
+const manejador = (ruta: string, metodo: 'post' | 'put') => manejadorDe(usersRouter, ruta, metodo);
 const resFalso = () => {
   const r: any = {};
   r.status = (c: number) => ((r.code = c), r);
@@ -42,7 +38,7 @@ beforeEach(() => {
     users: [
       { id: 'u-atacante', username: 'mala', email: 'mala@x.com', role: 'leader', band_id: 'band-mala', passwordHash: 'h', salt: 's' },
       { id: 'u-victima', username: 'victima', email: 'v@x.com', role: 'leader', band_id: 'band-victima', passwordHash: 'hv', salt: 'sv' },
-      { id: 'u-admin', username: 'admin', email: 'admin@bandmanager.ai', role: 'admin', band_id: 'band-bakandeya', passwordHash: 'ha', salt: 'sa' },
+      { id: 'u-admin', username: 'admin', email: 'admin@bandmanager.ai', role: 'admin', band_id: 'band-ejemplo', passwordHash: 'ha', salt: 'sa' },
       { id: 'u-miembro', username: 'miembro', email: 'm@x.com', role: 'member', band_id: 'band-mala', activacion_pendiente: true, passwordHash: 'hm', salt: 'sm' },
     ],
     userBands: [{ id: 'ub-1', user_id: 'u-miembro', band_id: 'band-mala', role: 'member' }],
@@ -104,7 +100,7 @@ describe('plan de pago gratis', () => {
   });
 
   it('el admin de la plataforma sí puede (soporte, sobre sí mismo)', async () => {
-    const admin = { id: 'u-admin', username: 'admin', role: 'admin', band_id: 'band-bakandeya', allowedBandIds: [] };
+    const admin = { id: 'u-admin', username: 'admin', role: 'admin', band_id: 'band-ejemplo', allowedBandIds: [] };
     const r = await put('u-admin', { plan: 'de_gira', band_id: 'band-mala' }, admin);
     expect(r.code).toBeUndefined();
     expect(estado.registeredBands.find((b: any) => b.band_id === 'band-mala').plan).toBe('de_gira');

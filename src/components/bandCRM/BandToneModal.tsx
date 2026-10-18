@@ -1,37 +1,32 @@
-import React, { useState } from "react";
-import { BandContact } from "../../types";
 import {
-  Sparkles,
-  X,
-  Check,
-  Copy,
-  MessageSquare,
-  Radio,
-  Flame,
-  MessageCircle,
-  HeartHandshake,
-  Pencil,
-  Save,
-  XCircle,
-  RefreshCw,
-  Brain,
-  GraduationCap,
-  MessageSquareText,
-  Building2,
-  Tent,
-  Disc3,
-  Users,
-  Briefcase,
-  Landmark,
+Brain,
+Check,
+Copy,
+Flame,
+GraduationCap,
+HeartHandshake,
+MessageCircle,
+MessageSquare,
+MessageSquareText,
+Pencil,
+Radio,
+RefreshCw,
+Save,
+Sparkles,
+X,
+XCircle
 } from "lucide-react";
-import { ModalPortal } from "../common/ModalPortal";
-import { PublicoSilhouette } from "../ui/PublicoSilhouette";
-import { apiFetch } from "../../utils/api";
+import React, { useState } from "react";
 import { api } from "../../services/api";
+import { BandContact } from "../../types";
+import { apiFetch } from "../../utils/api";
 import { ExampleThreadsSection } from "../booking/ExampleThreadsSection";
 import type { TemplateCategory } from "../booking/TemplateConfigSection";
-import { ShowIcon } from '../ui/ShowIcon';
+import { ModalPortal } from "../common/ModalPortal";
 import { Button, IconButton, Input, Textarea } from '../ui';
+import { PublicoSilhouette } from "../ui/PublicoSilhouette";
+import { ShowIcon } from '../ui/ShowIcon';
+import { comoErrorCapturado } from '../../utils/errorCapturado';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -97,6 +92,13 @@ export interface ToneAnalysisData {
 }
 
 /** Borrador de edición manual: los campos de lista se editan como texto y se parten al guardar. */
+/** Respuesta de `PATCH /api/bands/tone-dna`. */
+interface RespuestaGuardarTono {
+  success?: boolean;
+  data?: ToneAnalysisData;
+  error?: string;
+}
+
 interface ToneDraft {
   tono_comunicacion: string;
   tratamiento_habitual: string;
@@ -264,7 +266,8 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
             : "No se pudo entrenar el ADN de tono."),
       );
       if (res.success) await onRefreshLearnedRules?.();
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error entrenando el ADN de tono:", err);
       setTrainMessage(
         err?.message || "Error de conexión al entrenar el ADN de tono.",
@@ -314,19 +317,20 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
         puntos_fuertes_para_conectar: draft.puntos_fuertes_para_conectar.trim(),
         recomendacion_pitch: draft.recomendacion_pitch.trim(),
       };
-      const res = await apiFetch("/api/bands/tone-dna", {
+      const res = await apiFetch<RespuestaGuardarTono>("/api/bands/tone-dna", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(cambios),
       });
-      const json = res as any;
+      const json = res;
       if (json?.success && json.data) {
         onSaved?.(json.data);
         setIsEditing(false);
       } else {
         setSaveError(json?.error || "No se pudo guardar la edición.");
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error guardando edición del ADN de tono:", err);
       setSaveError(err?.message || "Error de conexión al guardar.");
     } finally {
@@ -846,7 +850,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     >
                       <span className="font-mono font-bold text-[var(--acc)] flex items-center gap-1 text-micro">
                         <Flame className="w-3 h-3" /> Punto de Conexión con
-                        Bakandeya
+                        la banda
                       </span>
                       <p className="font-sans leading-relaxed text-xs">
                         {toneData.puntos_fuertes_para_conectar ||

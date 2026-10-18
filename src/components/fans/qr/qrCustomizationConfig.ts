@@ -234,11 +234,11 @@ export const QR_PRESET_THEMES: QrPresetTheme[] = [
     id: 'classic_black',
     name: 'Clásico Blanco & Negro',
     icon: '⬛',
-    description: 'Estilo monocromático limpio y sobrio para cualquier imprenta.',
+    description: 'Monocromo limpio y sobrio para imprenta, con el logo de la banda en el centro.',
     config: {
       dotStyle: 'classics',
       eyeStyle: 'classic',
-      mascot: 'none',
+      mascot: 'band_logo',
       colorPreset: 'classic_black',
       primaryColor: '#ffffff',
       secondaryColor: '#cbd5e1',
@@ -248,7 +248,7 @@ export const QR_PRESET_THEMES: QrPresetTheme[] = [
       frameTitle: '',
       frameSubtitle: '',
       showBackgroundGlow: false,
-      logoBackgroundShape: 'squircle',
+      logoBackgroundShape: 'circle',
     },
   },
 ];
@@ -285,7 +285,7 @@ export function getStoredQrConfig(bandId?: string): QrCustomConfig {
       const parsed = JSON.parse(raw);
       return { ...DEFAULT_QR_CUSTOM_CONFIG, ...parsed };
     }
-  } catch {}
+  } catch { /* caché local corrupta o ausente: se arranca con el valor por defecto */ }
   return DEFAULT_QR_CUSTOM_CONFIG;
 }
 
@@ -297,5 +297,5 @@ export function saveStoredQrConfig(bandId: string, config: QrCustomConfig): void
       localStorage.setItem(`band_qr_config_${bandId}`, json);
     }
     memoryStorage[`band_qr_config_${bandId}`] = json;
-  } catch {}
+  } catch { /* almacenamiento del navegador no disponible (modo privado o cuota llena): el cambio vale para esta sesión */ }
 }

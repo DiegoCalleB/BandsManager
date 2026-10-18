@@ -8,8 +8,38 @@ export interface GoogleUserInfo {
   accessToken?: string;
 }
 
+/** Respuesta del token client de Google Identity Services (éxito o error). */
+interface RespuestaTokenGis {
+  access_token?: string;
+  error?: string;
+}
+
+/** Error que GIS pasa a `error_callback` (p. ej. el popup cerrado). */
+interface ErrorGis {
+  type?: string;
+  message?: string;
+}
+
+/** Parte de `window.google` que usa este módulo (script externo de GIS, sin tipos instalados). */
+interface GoogleIdentityServices {
+  accounts?: {
+    oauth2?: {
+      initTokenClient: (config: {
+        client_id: string;
+        scope: string;
+        prompt: string;
+        callback: (respuesta: RespuestaTokenGis) => void;
+        error_callback: (err: ErrorGis) => void;
+      }) => { requestAccessToken: () => void };
+    };
+  };
+}
+
+/** `window` con el objeto global que cuelga el script de GIS. */
+const ventanaConGoogle = (): Window & { google?: GoogleIdentityServices } => window as Window & { google?: GoogleIdentityServices };
+
 const GOOGLE_CLIENT_ID =
-  (import.meta as any).env?.VITE_GOOGLE_CLIENT_ID ||
+  import.meta.env?.VITE_GOOGLE_CLIENT_ID ||
   firebaseConfig.oAuthClientId ||
   '36068629683-o8nr6e9vleqqv9bvs3qaemp9m4b2hrnm.apps.googleusercontent.com';
 
@@ -17,7 +47,7 @@ let gisScriptLoaded = false;
 let gisScriptPromise: Promise<void> | null = null;
 
 function loadGisScript(): Promise<void> {
-  if (gisScriptLoaded || (window as any).google?.accounts?.oauth2) {
+  if (gisScriptLoaded || ventanaConGoogle().google?.accounts?.oauth2) {
     gisScriptLoaded = true;
     return Promise.resolve();
   }
@@ -32,7 +62,7 @@ function loadGisScript(): Promise<void> {
       gisScriptLoaded = true;
       resolve();
     };
-    script.onerror = (err) => {
+    script.onerror = () => {
       gisScriptPromise = null;
       reject(new Error('No se pudo cargar el script de Google Identity Services.'));
     };
@@ -49,7 +79,7 @@ function loadGisScript(): Promise<void> {
 export async function signInWithGoogleIdentity(): Promise<GoogleUserInfo | null> {
   await loadGisScript();
 
-  const google = (window as any).google;
+  const google = ventanaConGoogle().google;
   if (!google?.accounts?.oauth2) {
     throw new Error('Google Identity Services no está disponible en el navegador.');
   }
@@ -61,7 +91,7 @@ export async function signInWithGoogleIdentity(): Promise<GoogleUserInfo | null>
       client_id: GOOGLE_CLIENT_ID,
       scope: 'openid email profile',
       prompt: 'select_account',
-      callback: async (tokenResponse: any) => {
+      callback: async (tokenResponse) => {
         if (tokenResponse.error) {
           if (
             tokenResponse.error === 'popup_closed' ||
@@ -101,7 +131,7 @@ export async function signInWithGoogleIdentity(): Promise<GoogleUserInfo | null>
           reject(err);
         }
       },
-      error_callback: (err: any) => {
+      error_callback: (err) => {
         if (!resolved) {
           if (err?.type === 'popup_closed') {
             resolve(null);

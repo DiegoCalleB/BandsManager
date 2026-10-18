@@ -44,7 +44,7 @@ interface AiSupportWidgetProps {
 }
 
 /** CTA de apoyo económico a BandManager.io. Independiente de la tarjeta de consumo de IA. */
-export const AiSupportWidget: React.FC<AiSupportWidgetProps> = ({ variant, isStitchLight = false }) => {
+export const AiSupportWidget: React.FC<AiSupportWidgetProps> = ({ variant }) => {
   const owedEur = useAiDebtEur();
   const costeLabel = owedEur === null ? '—' : `${owedEur.toFixed(2).replace('.', ',')} €`;
 
@@ -94,7 +94,7 @@ export const AiSupportWidget: React.FC<AiSupportWidgetProps> = ({ variant, isSti
   );
 };
 
-interface AiUsageCardProps {}
+type AiUsageCardProps = Record<string, never>;
 
 // Por debajo de esto no merece la pena ni mostrar la tarjeta: Diego prefiere que una banda que
 // apenas ha usado IA este mes no vea un número casi a cero, en vez de"ocultar hasta que gaste".

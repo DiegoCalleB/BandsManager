@@ -15,6 +15,7 @@ import os from "os";
 import ffmpegStatic from "ffmpeg-static";
 import { ejecutar } from "./youtubeSource.js";
 import { descargarBufferSeguro } from "./ssrfGuard.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 /** Suelo en dB. astats devuelve `-inf` en el silencio absoluto y eso rompe cualquier media. */
 export const DB_SILENCIO = -90;
@@ -326,7 +327,8 @@ export async function resolverFuenteAudioLocal(
     const ficheroTemporal = path.join(os.tmpdir(), `audio_${Date.now()}_${Math.random().toString(36).slice(2, 8)}.audio`);
     fs.writeFileSync(ficheroTemporal, buffer);
     return { ruta: ficheroTemporal, limpiar: () => fs.unlink(ficheroTemporal, () => {}) };
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[Audio] No se pudo descargar el audio para analizarlo:", String(err?.message || err).substring(0, 200));
     return null;
   }
@@ -361,7 +363,8 @@ export async function analizarEnergiaAudio(
       maxBuffer: 64 * 1024 * 1024
     });
     return parseRmsCurve(stdout);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[Audio] No se pudo medir la energía del audio:", String(err?.message || err).substring(0, 200));
     return [];
   } finally {
@@ -458,7 +461,8 @@ export async function preprocesarAudioDirecto(
       return { success: true, rutaSalida };
     }
     return { success: false, rutaSalida: rutaEntrada, error: "Archivo de salida vacío tras preprocesado" };
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[Preprocesado Audio Directo] Fallo en ffmpeg:", err?.message || err);
     return { success: false, rutaSalida: rutaEntrada, error: String(err?.message || err) };
   }

@@ -2,6 +2,7 @@
 // donación. No es la cuota mensual de créditos de `billing.ts` (AGENTS.md §2.3 y §4.10).
 
 import { getSupabase } from "./core.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export interface RecordAiUsageParams {
   bandId: string;
@@ -34,8 +35,9 @@ function scheduleAutoFlush() {
       console.warn("[AI Ledger Buffer] Error en auto-flush dferido:", err?.message || err);
     });
   }, BATCH_FLUSH_INTERVAL_MS);
+  // En Node el temporizador es un objeto con unref(); en otros entornos puede ser un número.
   if (typeof flushTimer === "object" && flushTimer && "unref" in flushTimer) {
-    (flushTimer as any).unref();
+    flushTimer.unref();
   }
 }
 
@@ -56,7 +58,8 @@ export async function flushAiLedgerBuffer(): Promise<void> {
       console.error("[AI Ledger Buffer] Error al escribir lote en Supabase, re-encolando:", error.message);
       pendingLedgerEntries = [...entriesToInsert, ...pendingLedgerEntries];
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[AI Ledger Buffer] Excepción al volcar lote a Supabase:", err?.message || err);
     pendingLedgerEntries = [...entriesToInsert, ...pendingLedgerEntries];
   } finally {
@@ -111,11 +114,12 @@ export async function dbGetAiDebtCents(bandId: string): Promise<number> {
       .is("settled_at", null);
 
     if (!tableErr && rows) {
-      const sumEur = rows.reduce((acc: number, r: any) => acc + (Number(r.estimated_cost_eur) || 0), 0);
+      const sumEur = rows.reduce((acc: number, r) => acc + (Number(r.estimated_cost_eur) || 0), 0);
       return Math.max(0, Math.round(sumEur * 100));
     }
     return 0;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[AiLedger] Fallback deuda IA a 0 tras error:", err?.message);
     return 0;
   }

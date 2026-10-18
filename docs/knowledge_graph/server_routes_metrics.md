@@ -1,0 +1,43 @@
+---
+id: server_routes_metrics
+title: "server/routes/metrics.ts"
+layer: route
+domain: system
+file: "server/routes/metrics.ts"
+tags: ["route", "system", "auto"]
+---
+
+# 📌 server/routes/metrics.ts
+
+> **Ubicación:** `server/routes/metrics.ts`  
+> **Capa:** `#layer/route` | **Dominio:** `#domain/system`
+
+## 📖 Descripción
+Métricas de la banda y de redes: CRUD, sincronización y métricas reales
+
+---
+
+## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[db_state_sync|In-Memory State & Supabase Sync]] *(Layer: #db, Domain: #system)*
+- [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
+- [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
+- [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
+- [[server_routes_tiposMetricas|server/routes/tiposMetricas.ts]] *(Layer: #route, Domain: #system)*
+- [[server_services_socialRadarService|server/services/socialRadarService.ts]] *(Layer: #service, Domain: #social)*
+- [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
+
+---
+
+## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_metricas_panel|Panel y métricas]] *(from #feature)*
+- [[server|server.ts]] *(from #route)*
+- [[src_services_api|src/services/api.ts]] *(from #service)*
+- [[src_services_tiposApi|src/services/tiposApi.ts]] *(from #service)*
+
+---
+
+## 🛡️ Reglas de Aislamiento & Calidad
+- [ ] ¿Respeta el trust boundary de `band_id`?
+- [ ] ¿Tiene pruebas unitarias o de integración asociadas?

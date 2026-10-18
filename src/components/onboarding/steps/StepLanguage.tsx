@@ -1,18 +1,10 @@
 import React from "react";
-import {
-  Globe,
-  Check,
-  Languages,
-  MessageSquareText,
-  FileText,
-  CheckCircle2,
-  ArrowRight,
-} from "lucide-react";
+import { Globe, Check, Languages, MessageSquareText, FileText } from "lucide-react";
 import {
   useLanguage,
   SUPPORTED_LANGUAGES,
   SupportedLanguage,
-} from "../../../context/LanguageContext";
+} from "../../../context/idioma";
 
 interface StepLanguageProps {
   language: string;
@@ -69,8 +61,7 @@ const LANGUAGE_DETAILS: Record<
 
 export const StepLanguage: React.FC<StepLanguageProps> = ({
   language,
-  setLanguage,
-  onContinue,
+  setLanguage
 }) => {
   const { language: currentAppLang, setLanguage: setAppLang } = useLanguage();
 

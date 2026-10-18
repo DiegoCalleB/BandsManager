@@ -2,6 +2,97 @@
 
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
+import type { Fan } from "../../src/types.js";
+
+/** Fan para guardar: el de la app, admitiendo también los nombres de columna en snake_case. */
+export type EntradaFan = Partial<Fan> & {
+  como_conocio?: string;
+  concierto_origen_id?: string;
+  concierto_origen_nombre?: string;
+  fecha_captura?: string;
+  consentimiento_rgpd?: boolean;
+  cancion_favorita?: string;
+};
+
+/** Fila de `fans`. Las tres últimas columnas son opcionales: el reintento las quita si faltan. */
+interface FilaFan {
+  id: string;
+  band_id: string;
+  nombre: string;
+  email: string;
+  ciudad: string;
+  como_conocio: string;
+  concierto_origen_id: string | null;
+  concierto_origen_nombre: string;
+  fecha_captura: string;
+  consentimiento_rgpd: boolean;
+  mensaje?: string;
+  cancion_favorita?: string;
+  instagram?: string;
+}
+
+/** Alta en la lista de espera de músicos (formulario público), en camelCase o snake_case. */
+export interface EntradaMusicoEnEspera {
+  id?: string;
+  nombreBanda?: string;
+  nombre_banda?: string;
+  nombreContacto?: string;
+  nombre_contacto?: string;
+  email?: string;
+  instagram?: string;
+  telefono?: string;
+  ciudad?: string;
+  genero?: string;
+  enlaceMusica?: string;
+  enlace_musica?: string;
+  interesPrincipal?: string;
+  interes_principal?: string;
+  notas?: string;
+  idioma?: string;
+  bandaOrigen?: string;
+  banda_origen?: string;
+  conciertoOrigen?: string;
+  concierto_origen?: string;
+  created_at?: string;
+}
+
+/** Cuántos fans tiene la banda. Solo el número: lo usa la película del TFM para saber cuándo alguien se ha hecho fan. */
+export async function dbContarFans(bandId: string): Promise<number> {
+  const sb = getSupabase();
+  const { count, error } = await sb
+    .from("fans")
+    .select("id", { count: "exact", head: true })
+    .eq("band_id", cleanBandId(bandId));
+  if (error) throw new Error(`Supabase Error (fans): ${error.message}`);
+  return count ?? 0;
+}
+
+/**
+ * Nombre de pila del último fan, solo si se hizo fan hace menos de `ventanaSeg` segundos. Lo usa la película del TFM para saludar
+ * a quien acaba de escanear el QR. Nunca devuelve el apellido, el correo ni nada anterior a la ventana.
+ */
+export async function dbUltimoFanReciente(bandId: string, ventanaSeg: number): Promise<{ nombre: string; hace: number } | null> {
+  const sb = getSupabase();
+  const { data, error } = await sb
+    .from("fans")
+    .select("nombre, created_at")
+    .eq("band_id", cleanBandId(bandId))
+    .order("created_at", { ascending: false })
+    .limit(1);
+  if (error) throw new Error(`Supabase Error (fans): ${error.message}`);
+  const fila = data?.[0];
+  if (!fila?.created_at) return null;
+  const hace = (Date.now() - new Date(fila.created_at).getTime()) / 1000;
+  if (!(hace >= -5 && hace <= ventanaSeg)) return null;
+  const nombre = nombreDePilaPublico(fila.nombre);
+  return nombre ? { nombre, hace: Math.max(0, Math.round(hace)) } : null;
+}
+
+/** Primera palabra del nombre, solo letras (con tildes), guion y apóstrofo, hasta 24 caracteres. Vacío si no queda nada. */
+export function nombreDePilaPublico(nombre: unknown): string {
+  const primera = String(nombre ?? "").trim().split(/\s+/)[0] ?? "";
+  return primera.replace(/[^\p{L}'-]/gu, "").slice(0, 24);
+}
 
 export async function dbGetFans(bandId: string) {
   const sb = getSupabase();
@@ -27,7 +118,7 @@ export async function dbGetFans(bandId: string) {
   }));
 }
 
-export async function dbUpsertFan(fan: any, bandId: string) {
+export async function dbUpsertFan(fan: EntradaFan, bandId: string) {
   const sb = getSupabase();
   // 'bandId' es el único origen de confianza. En las rutas con sesión es req.user.band_id; en el
   // alta pública por QR (/api/public/fans) la propia ruta ya resuelve targetBandId desde la URL
@@ -49,7 +140,7 @@ export async function dbUpsertFan(fan: any, bandId: string) {
     }
   }
 
-  const payload: any = {
+  const payload: FilaFan = {
     id: finalFanId || `fan-${Date.now()}`,
     band_id: targetBandId,
     nombre: fan.nombre || "",
@@ -65,7 +156,9 @@ export async function dbUpsertFan(fan: any, bandId: string) {
     instagram: fan.instagram || ""
   };
 
-  let { data, error } = await sb.from("fans").upsert(payload).select().single();
+  const primero = await sb.from("fans").upsert(payload).select().single();
+  const error = primero.error;
+  let data = primero.data;
 
   // Reintenta sin las columnas nuevas si el esquema remoto de Supabase aún
   // no tiene la migración aplicada (ver supabase_migration_only_new.sql).
@@ -82,7 +175,6 @@ export async function dbUpsertFan(fan: any, bandId: string) {
     const retry = await sb.from("fans").upsert(fallbackPayload).select().single();
     if (retry.error) throw new Error(`Supabase Error (upsert fan fallback): ${retry.error.message}`);
     data = retry.data;
-    error = null;
   } else if (error) {
     throw new Error(`Supabase Error (upsert fan): ${error.message}`);
   }
@@ -104,7 +196,7 @@ export async function dbDeleteFan(id: string, bandId: string) {
 
 // --- MUSICIANS WAITLIST ---
 
-export async function dbUpsertMusicianWaitlist(item: any) {
+export async function dbUpsertMusicianWaitlist(item: EntradaMusicoEnEspera) {
   const sb = getSupabase();
   const payload = {
     id: item.id || `musician-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
@@ -129,7 +221,7 @@ export async function dbUpsertMusicianWaitlist(item: any) {
     if (!error && data) {
       return data;
     }
-  } catch (err) {
+  } catch {
     // Si la tabla musicians_waitlist no existe en Supabase todavía, guardamos como lead especial
   }
 
@@ -159,12 +251,12 @@ export async function dbGetMusiciansWaitlist() {
   try {
     const { data, error } = await sb.from("musicians_waitlist").select("*").order("created_at", { ascending: false });
     if (!error && data) return data;
-  } catch (e) {}
+  } catch (err) { console.warn("[Fans] Fallo leyendo musicians_waitlist; se prueba la tabla leads:", err); }
 
   try {
     const { data, error } = await sb.from("leads").select("*").eq("tipo", "musico_waitlist").order("created_at", { ascending: false });
     if (!error && data) return data;
-  } catch (e) {}
+  } catch (err) { console.warn("[Fans] Fallo leyendo la lista de espera desde leads:", err); }
 
   return [];
 }

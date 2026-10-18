@@ -1,20 +1,6 @@
 import React from "react";
 import { motion } from "motion/react";
-import {
-  Sun,
-  CloudSun,
-  Cloud,
-  CloudRain,
-  CloudLightning,
-  Snowflake,
-  CloudFog,
-  Wind,
-  Droplets,
-  Thermometer,
-  AlertTriangle,
-  CloudDrizzle,
-  Zap,
-} from "lucide-react";
+import { Sun, CloudSun, Cloud, CloudRain, CloudLightning, Snowflake, CloudFog, Wind, Thermometer, AlertTriangle } from "lucide-react";
 import { EventWeatherData, WeatherAlert } from "../../services/weatherService";
 
 export type WeatherIconType =
@@ -35,8 +21,7 @@ export const AnimatedWeatherIcon: React.FC<AnimatedWeatherIconProps> = ({
   iconType = "sun",
   size = "md",
   className = "",
-  isAlert = false,
-  severity,
+  severity
 }) => {
   // Configuración de tamaños
   const sizeMap = {

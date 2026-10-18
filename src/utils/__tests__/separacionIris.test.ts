@@ -8,7 +8,7 @@ import {
   esErrorDeRed,
   esperaMaximaMs,
   fusionarPistasServidor,
-  ideasConSeparacion,
+  cancionConSeparacion,
   motorFinal,
   nombreMotor,
   pistasSinMaestra,
@@ -147,23 +147,6 @@ describe('fusionarPistasServidor', () => {
   });
 });
 
-describe('ideasConSeparacion', () => {
-  const meta = { motor: 'Iris Ultra', neural: true, degradado: false, procesadoEn: 'ahora' };
-  it('actualiza por id y anota el motor', () => {
-    const i = idea();
-    const r = ideasConSeparacion([idea({ id: 'otra', titulo: 'Otra', audioUrl: 'o' }), i], i, [pista({ id: 'x' })], meta);
-    expect(r.ideas).toHaveLength(2);
-    expect(r.ideas[1]).toMatchObject({ id: 'i1', stemEngineUsed: 'Iris Ultra', stemIsNeural: true, stemDegraded: false });
-    expect(r.ideas[1].pistas).toHaveLength(1);
-  });
-  it('encuentra por audioUrl o título y, si no existe, añade', () => {
-    const i = idea({ id: 'nuevo-id' });
-    expect(ideasConSeparacion([idea({ id: 'viejo' })], i, [], meta).ideas).toHaveLength(1);
-    expect(ideasConSeparacion([idea({ id: 'viejo', audioUrl: 'z', titulo: 'z' })], i, [], meta).ideas).toHaveLength(2);
-    expect(ideasConSeparacion(undefined, i, [], meta).ideas).toHaveLength(1);
-  });
-});
-
 describe('errores', () => {
   it('esErrorDeRed', () => {
     expect(esErrorDeRed(new Error('Failed to fetch'))).toBe(true);
@@ -240,5 +223,25 @@ describe('ideaParaSeparar', () => {
   });
   it('sin nada devuelve null', () => {
     expect(ideaParaSeparar({ id: 's', titulo: 'T' } as any, '')).toBeNull();
+  });
+});
+
+describe('cancionConSeparacion', () => {
+  const meta = { motor: 'Iris Studio', neural: true, degradado: false, procesadoEn: '2026-10-08T00:00:00Z' };
+  it('escribe los stems y su metadato en la canción, sin tocar las tomas', () => {
+    const ideas = [idea()];
+    const s = cancionConSeparacion({ id: 's1', audioIdeas: ideas } as never, [pista({ id: 'a' }), pista({ id: 'b' })], meta) as {
+      audioIdeas: SongAudioIdea[];
+      pistas: AudioTrack[];
+      stemsMeta: { motor: string; neural: boolean };
+    };
+    expect(s.audioIdeas).toBe(ideas);
+    expect(s.audioIdeas[0].pistas).toBeUndefined();
+    expect(s.pistas.map((p) => p.id)).toEqual(['a', 'b']);
+    expect(s.stemsMeta).toMatchObject({ motor: 'Iris Studio', neural: true });
+  });
+  it('conserva el resto de campos de la canción', () => {
+    const s = cancionConSeparacion({ id: 's1', bpm: 120 } as never, [], meta) as { bpm: number };
+    expect(s.bpm).toBe(120);
   });
 });

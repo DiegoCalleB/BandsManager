@@ -1,0 +1,35 @@
+---
+id: src_components_user_profile_BandCreateForm
+title: "src/components/user_profile/BandCreateForm.tsx"
+layer: frontend
+domain: system
+file: "src/components/user_profile/BandCreateForm.tsx"
+tags: ["frontend", "system", "auto"]
+---
+
+# 📌 src/components/user_profile/BandCreateForm.tsx
+
+> **Ubicación:** `src/components/user_profile/BandCreateForm.tsx`  
+> **Capa:** `#layer/frontend` | **Dominio:** `#domain/system`
+
+## 📖 Descripción
+Formulario de alta de una banda nueva.
+
+---
+
+## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_user_profile_UserProfileContext|src/components/user_profile/UserProfileContext.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_user_profile_profileModel|src/components/user_profile/profileModel.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_utils_planPermissions|src/utils/planPermissions.ts]] *(Layer: #service, Domain: #system)*
+
+---
+
+## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_user_profile_BandSelectionSection|src/components/user_profile/BandSelectionSection.tsx]] *(from #frontend)*
+
+---
+
+## 🛡️ Reglas de Aislamiento & Calidad
+- [ ] ¿Respeta el trust boundary de `band_id`?
+- [ ] ¿Tiene pruebas unitarias o de integración asociadas?

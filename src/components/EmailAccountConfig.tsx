@@ -9,11 +9,14 @@ import {
   KeyRound,
   RefreshCw,
   Sparkles,
-  Unlink,
 } from "lucide-react";
 import { api } from "../services/api";
+import type { EstadoGmailOAuth } from "../services/tiposApi";
+import { GmailOAuthEstado } from "./GmailOAuthEstado";
+import { mensajeDeMotivoGmail } from "../utils/motivoGmailOAuth";
 import { BandEmailAccountStatus } from "../types";
 import { Input } from './ui';
+import { comoErrorCapturado } from '../utils/errorCapturado';
 
 interface EmailAccountConfigProps {
   bandId: string;
@@ -56,6 +59,22 @@ const PROVIDER_PRESETS: Record<
   },
 };
 
+// El callback del servidor (server/routes/gmailOAuth.ts) vuelve con ?gmail_oauth=conectado|error.
+function feedbackInicialGmailOAuth(): { type: "success" | "error"; message: string } | null {
+  const params = new URLSearchParams(window.location.search);
+  const resultado = params.get("gmail_oauth");
+  if (!resultado) return null;
+  if (resultado === "conectado") {
+    return {
+      type: "success",
+      message:
+        "¡Gmail conectado! El Agente Enviador ya puede crear borradores sin pedir contraseña.",
+    };
+  }
+  const motivo = params.get("motivo") || "error_desconocido";
+  return { type: "error", message: mensajeDeMotivoGmail(motivo) };
+}
+
 export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
   bandId,
 }) => {
@@ -82,17 +101,14 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
   // Gmail conectado por OAuth (sin contraseña de aplicación ni popup para el Agente Enviador
   // programado - ver server/routes/gmailOAuth.ts). Independiente del formulario IMAP de
   // arriba: una banda puede tener las dos cosas, ninguna, o solo una.
-  const [gmailOAuthStatus, setGmailOAuthStatus] = useState<{
-    connected: boolean;
-    gmail_email?: string;
-  }>({ connected: false });
+  const [gmailOAuthStatus, setGmailOAuthStatus] = useState<EstadoGmailOAuth>({ connected: false });
   const [gmailOAuthLoading, setGmailOAuthLoading] = useState(true);
   const [gmailOAuthConnecting, setGmailOAuthConnecting] = useState(false);
   const [gmailOAuthDisconnecting, setGmailOAuthDisconnecting] = useState(false);
   const [gmailOAuthFeedback, setGmailOAuthFeedback] = useState<{
     type: "success" | "error";
     message: string;
-  } | null>(null);
+  } | null>(feedbackInicialGmailOAuth);
 
   useEffect(() => {
     if (!bandId) return;
@@ -123,21 +139,10 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
     if (!resultado) return;
 
     if (resultado === "conectado") {
-      setGmailOAuthFeedback({
-        type: "success",
-        message:
-          "¡Gmail conectado! El Agente Enviador ya puede crear borradores sin pedir contraseña.",
-      });
       api
         .getGmailOAuthStatus()
         .then((data) => setGmailOAuthStatus(data || { connected: false }))
-        .catch(() => {});
-    } else {
-      const motivo = params.get("motivo") || "error_desconocido";
-      setGmailOAuthFeedback({
-        type: "error",
-        message: `No se pudo conectar Gmail (${motivo}). Inténtalo de nuevo.`,
-      });
+        .catch(() => { /* el aviso de conexión ya se mostró; el estado se refresca al reabrir */ });
     }
     setTimeout(() => setGmailOAuthFeedback(null), 6000);
 
@@ -157,7 +162,8 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
     try {
       const { url } = await api.getGmailOAuthAuthorizeUrl();
       window.location.href = url;
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error iniciando la conexión de Gmail OAuth:", err);
       setGmailOAuthFeedback({
         type: "error",
@@ -178,7 +184,8 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
         message: "Gmail desconectado.",
       });
       setTimeout(() => setGmailOAuthFeedback(null), 4000);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error desconectando Gmail OAuth:", err);
       setGmailOAuthFeedback({
         type: "error",
@@ -275,7 +282,8 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
           "¡Cuenta de email conectada! El Agente Enviador ya puede usarla para enviar y leer correo real.",
       });
       setTimeout(() => setFeedback(null), 5000);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error guardando la cuenta de email:", err);
       setFeedback({
         type: "error",
@@ -289,6 +297,15 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
 
   const labelClass =
     "text-xs font-sans font-semibold text-[var(--ink-2)] flex items-center gap-2";
+
+  // Sin banda no hay cuenta que consultar: antes el spinner de abajo no terminaba nunca.
+  if (!bandId) {
+    return (
+      <div className="p-6 rounded-[var(--r-l)] bg-[var(--surface)] text-xs font-sans text-[var(--ink-2)]">
+        No se pudo identificar la banda activa. Cierra este panel y vuelve a abrirlo desde una banda seleccionada.
+      </div>
+    );
+  }
 
   if (loading) {
     return (
@@ -351,54 +368,14 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
           como en el Agente Enviador programado.
         </p>
 
-        {gmailOAuthLoading ? (
-          <div className="flex items-center gap-2 text-xs font-sans text-[var(--ink-2)]">
-            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-            <span>Comprobando conexión de Gmail…</span>
-          </div>
-        ) : gmailOAuthStatus.connected ? (
-          <div
-            className={`p-3 rounded-[var(--r-s)] text-xs flex items-center justify-between gap-3 ${"bg-[var(--ok)]/10 text-[var(--ink)]"}`}
-          >
-            <div className="flex items-center gap-2 min-w-0">
-              <CheckCircle2 className="w-4 h-4 shrink-0 text-[var(--ok)]" />
-              <span className="truncate">
-                Conectado como <strong>{gmailOAuthStatus.gmail_email}</strong>
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={handleDisconnectGmailOAuth}
-              disabled={gmailOAuthDisconnecting}
-              className="shrink-0 px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] text-xs font-sans font-bold transition-ui cursor-pointer flex items-center gap-1.5 disabled:opacity-50"
-            >
-              {gmailOAuthDisconnecting ? (
-                <Loader2 className="w-3 h-3 animate-spin" />
-              ) : (
-                <Unlink className="w-3 h-3" />
-              )}
-              Desconectar
-            </button>
-          </div>
-        ) : (
-          <button
-            type="button"
-            onClick={handleConnectGmailOAuth}
-            disabled={gmailOAuthConnecting}
-            className="w-full sm:w-auto px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)] font-bold text-xs font-sans transition-ui active:scale-[0.97] disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
-          >
-            {gmailOAuthConnecting ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <Mail className="w-4 h-4" />
-            )}
-            <span>
-              {gmailOAuthConnecting
-                ? "Redirigiendo a Google..."
-                : "Conectar con Google"}
-            </span>
-          </button>
-        )}
+        <GmailOAuthEstado
+          estado={gmailOAuthStatus}
+          cargando={gmailOAuthLoading}
+          conectando={gmailOAuthConnecting}
+          desconectando={gmailOAuthDisconnecting}
+          onConectar={handleConnectGmailOAuth}
+          onDesconectar={handleDisconnectGmailOAuth}
+        />
 
         {gmailOAuthFeedback && (
           <div

@@ -1,6 +1,6 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight, Save } from 'lucide-react';
-import { EPKBlockMeta } from './epkBlocks';
+import { EPKBlockMeta, EPKBlockId } from './epkBlocks';
 import { Button } from '../ui';
 
 interface EPKBlockWrapperProps {
@@ -8,7 +8,7 @@ interface EPKBlockWrapperProps {
   children: React.ReactNode;
   prevBlock?: EPKBlockMeta | null;
   nextBlock?: EPKBlockMeta | null;
-  onNavigate?: (blockId: any) => void;
+  onNavigate?: (blockId: EPKBlockId) => void;
   onSave?: () => void;
   isAllView?: boolean;
 }

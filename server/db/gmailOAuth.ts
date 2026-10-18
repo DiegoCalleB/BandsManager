@@ -11,6 +11,10 @@ export interface BandGmailOAuthAccount {
   scope: string;
   connected_at?: string;
   updated_at?: string;
+  /** Cuándo Google rechazó el refresh token (invalid_grant). Null = la conexión funciona. */
+  needs_reauth_at?: string | null;
+  /** historyId de Gmail del último estado de la bandeja ya procesado por el Lector. */
+  gmail_history_id?: string | null;
 }
 
 // Sin respaldo en memoria a propósito, igual que dbGetBandEmailAccount: un refresh token es
@@ -28,13 +32,13 @@ export async function dbGetBandGmailOAuth(bandId: string): Promise<BandGmailOAut
       .maybeSingle();
 
     if (error) {
-      console.warn(`Notice leyendo OAuth de Gmail para '${cleanId}':`, error.message || error);
+      console.warn("Notice leyendo OAuth de Gmail para '%s':", cleanId, error.message || error);
       return null;
     }
 
     return data ? { ...data, refresh_token: decryptSecret(data.refresh_token) } : null;
   } catch (e) {
-    console.warn(`Fallo leyendo OAuth de Gmail para '${cleanId}':`, e);
+    console.warn("Fallo leyendo OAuth de Gmail para '%s':", cleanId, e);
     return null;
   }
 }
@@ -51,7 +55,11 @@ export async function dbUpsertBandGmailOAuth(account: {
     gmail_email: account.gmail_email,
     refresh_token: encryptSecret(account.refresh_token),
     scope: account.scope,
-    updated_at: new Date().toISOString()
+    updated_at: new Date().toISOString(),
+    // Reconectar con un token nuevo limpia el aviso de "hay que reconectar".
+    needs_reauth_at: null,
+    // Cuenta (re)conectada: el cursor anterior puede ser de otra cuenta, se empieza de cero.
+    gmail_history_id: null
   };
 
   const sb = getSupabase();
@@ -68,6 +76,44 @@ export async function dbUpsertBandGmailOAuth(account: {
   return { ...(data || payload), refresh_token: account.refresh_token };
 }
 
+/** Guarda el cursor de lectura incremental. Devuelve false si no se pudo (se reintentará de cero, sin perder nada). */
+export async function dbSetGmailHistoryId(bandId: string, historyId: string): Promise<boolean> {
+  try {
+    const { error } = await getSupabase()
+      .from("band_gmail_oauth_accounts")
+      .update({ gmail_history_id: historyId })
+      .eq("band_id", cleanBandId(bandId));
+    return !error;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Marca que Google rechazó el refresh token de la banda (invalid_grant): el planificador deja de
+ * encolar agentes para ella y la pantalla de correo pide reconectar. Solo marca la primera vez.
+ * Devuelve true si es la primera vez que se marca.
+ */
+export async function dbMarkGmailNeedsReauth(bandId: string): Promise<boolean> {
+  const cleanId = cleanBandId(bandId);
+  try {
+    const { data, error } = await getSupabase()
+      .from("band_gmail_oauth_accounts")
+      .update({ needs_reauth_at: new Date().toISOString() })
+      .eq("band_id", cleanId)
+      .is("needs_reauth_at", null)
+      .select("band_id");
+    if (error) {
+      console.warn("Notice marcando reconexión de Gmail para '%s':", cleanId, error.message || error);
+      return false;
+    }
+    return Boolean(data?.length);
+  } catch (e) {
+    console.warn("Fallo marcando reconexión de Gmail para '%s':", cleanId, e);
+    return false;
+  }
+}
+
 export async function dbDeleteBandGmailOAuth(bandId: string): Promise<void> {
   const cleanId = cleanBandId(bandId);
   const sb = getSupabase();
@@ -81,7 +127,9 @@ export async function dbDeleteBandGmailOAuth(bandId: string): Promise<void> {
 // devolverlo nunca. Misma razón y mismo patrón que toSafeEmailAccountResponse en
 // emailAccounts.ts - función pura y exportada aparte para poder verificarlo con un test
 // unitario sin montar Express.
-export function toSafeGmailOAuthResponse(account: BandGmailOAuthAccount | null): { connected: boolean; [key: string]: any } {
+export function toSafeGmailOAuthResponse(
+  account: BandGmailOAuthAccount | null
+): { connected: boolean } & Partial<Omit<BandGmailOAuthAccount, 'refresh_token'>> {
   if (!account) {
     return { connected: false };
   }

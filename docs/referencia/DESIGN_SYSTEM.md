@@ -1,6 +1,6 @@
 # Espectro — Sistema de Diseño Parametrizado
 
-**Autoridad:** [`skills/visual-identity/SKILL.md`](../../.claude/skills/visual-identity/SKILL.md)
+**Autoridad:** [`skills/visual-identity/SKILL.md`](../../.gemini/skills/visual-identity/SKILL.md)
 
 ## Visión general
 
@@ -179,7 +179,7 @@ El script reemplaza:
 - [ ] **Probado en claro, oscuro, clásico.**
 - [ ] **Series de datos usan `<Onda>`.** No Chart.js ni D3.
 - [ ] **Estado vacío tiene voz propia.** No "No hay datos".
-- [ ] Checklist anti-plantilla (§8 en [`skills/visual-identity/SKILL.md`](../../.claude/skills/visual-identity/SKILL.md)).
+- [ ] Checklist anti-plantilla (§8 en [`skills/visual-identity/SKILL.md`](../../.gemini/skills/visual-identity/SKILL.md)).
 - [ ] **Cabe en 3 bloques en móvil (~390 px).**
 
 ### Comandos útiles
@@ -259,7 +259,7 @@ A: El diseño anterior, conservado como tema alternativo. Un usuario que no quie
 
 ## Referencias
 
-- [Espectro Design Skill](../../.claude/skills/visual-identity/SKILL.md) — Autoridad estética
+- [Espectro Design Skill](../../.gemini/skills/visual-identity/SKILL.md) — Autoridad estética
 - [AGENTS.md](../../AGENTS.md) — Reglas de desarrollo (§6 — Simplicidad visual)
 - [tokens.css](../../src/styles/tokens.css) — Fuente de verdad de colores y radios
 - [Scripts]

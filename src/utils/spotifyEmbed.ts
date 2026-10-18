@@ -37,3 +37,9 @@ export function spotifyArtistEmbedUrl(valor?: string | null): string | null {
   const id = spotifyArtistId(valor);
   return id ? `https://open.spotify.com/embed/artist/${id}` : null;
 }
+
+/** Enlace al perfil del artista (para abrirlo en otra pestaña), o null si no hay un ID válido. */
+export function spotifyArtistUrl(valor?: string | null): string | null {
+  const id = spotifyArtistId(valor);
+  return id ? `https://open.spotify.com/artist/${id}` : null;
+}

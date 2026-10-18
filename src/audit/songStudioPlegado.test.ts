@@ -2,12 +2,15 @@ import { describe, it, expect } from 'vitest';
 import fs from 'fs';
 import path from 'path';
 
-const studio = fs.readFileSync(path.join(__dirname, '..', 'components', 'SongStudioModal.tsx'), 'utf-8');
+import { leerModuloSongStudio } from './songStudioSource';
+import { leerAtril } from './leerAtril';
+
+const studio = leerModuloSongStudio();
 
 describe('Estudio: plegado de ideas', () => {
   it('ninguna condición fuerza la idea abierta ignorando el chevron', () => {
     expect(studio).not.toMatch(/isIdeaExpanded\s*=\s*filteredIdeas\.length\s*===\s*1/);
-    expect(studio).toContain('const isIdeaExpanded = expandedIdeaIds.has(idea.id);');
+    expect(studio).toContain('const isIdeaExpanded = modoIris || expandedIdeaIds.has(idea.id);');
   });
 
   it('la auto-expansión solo ocurre una vez por idea (no reabre lo que el usuario plegó)', () => {
@@ -33,7 +36,7 @@ describe('Estudio: motores de Iris', () => {
 });
 
 describe('Visor de acordes: el traductor automático no toca los acordes', () => {
-  const visor = fs.readFileSync(path.join(__dirname, '..', 'components', 'Atril.tsx'), 'utf-8');
+  const visor = leerAtril();
   const linea = fs.readFileSync(path.join(__dirname, '..', 'components', 'chords', 'LineaTiempoAcordes.tsx'), 'utf-8');
 
   // Con el idioma en gallego, Google Translate convertía «Mi» en «Meu/Miña», «La» en «A» y «Si» en

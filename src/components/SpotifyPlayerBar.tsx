@@ -1,33 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { ShowIcon } from './ui/ShowIcon';
 
 const SILENT_AUDIO_URI = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
 import { Song, ThemeColors } from '../types';
-import {
-  Play,
-  Pause,
-  SkipBack,
-  SkipForward,
-  Repeat,
-  Volume2,
-  VolumeX,
-  ExternalLink,
-  Disc,
-  Sliders,
-  X,
-  Flame,
-  Music,
-  Sparkles,
-  FileText,
-  ChevronUp,
-  ChevronDown,
-} from 'lucide-react';
-import { parseGoogleDriveAudioUrl, isGoogleDriveUrl, resolveAudioUrl, fileToBase64 } from '../utils/audioStorage';
+import { Play, Pause, SkipBack, SkipForward, Repeat, Volume2, VolumeX, Disc, Sliders, X, Sparkles, FileText, ChevronUp, ChevronDown } from 'lucide-react';
+import { isGoogleDriveUrl, resolveAudioUrl } from '../utils/audioStorage';
 import { CROSSFADE_SECONDS, computeCrossfadeGains, shouldCrossfade } from '../utils/crossfade';
 import { transposeChordToken, getSemitoneDifference } from '../utils/chordUtils';
-import { api } from '../services/api';
 import { useTonePitchShift } from '../hooks/useTonePitchShift';
-import { usePlayer } from '../context/PlayerContext';
+import { usePlayer } from '../context/playerContextValue';
 import { Button, IconButton, Select } from './ui';
 
 interface SpotifyPlayerBarProps {
@@ -46,20 +27,36 @@ interface SpotifyPlayerBarProps {
   transposeSemitones?: number;
 }
 
+/**
+ * Canción tal y como puede llegar al reproductor: con los alias snake_case de filas antiguas y,
+ * si viene de un setlist, con la tonalidad deseada del ítem.
+ */
+type CancionReproducible = Song & {
+  tonalidadDeseada?: string;
+  audio_principal_url?: string;
+  audio_url?: string;
+  audio?: string;
+  url?: string;
+  fileUrl?: string;
+  file_url?: string;
+  audio_ideas?: { audioUrl?: string; audio_url?: string }[];
+};
+
 function getRawAudioUrl(song: Song | null | undefined): string {
   if (!song) return '';
+  const c: CancionReproducible = song;
   return (
-    song.audioPrincipalUrl ||
-    (song as any).audio_principal_url ||
-    song.audioUrl ||
-    (song as any).audio_url ||
-    (song as any).audio ||
-    (song as any).url ||
-    (song as any).fileUrl ||
-    (song as any).file_url ||
-    (song.audioIdeas && song.audioIdeas[0]?.audioUrl) ||
-    (song as any).audio_ideas?.[0]?.audioUrl ||
-    (song as any).audio_ideas?.[0]?.audio_url ||
+    c.audioPrincipalUrl ||
+    c.audio_principal_url ||
+    c.audioUrl ||
+    c.audio_url ||
+    c.audio ||
+    c.url ||
+    c.fileUrl ||
+    c.file_url ||
+    (c.audioIdeas && c.audioIdeas[0]?.audioUrl) ||
+    c.audio_ideas?.[0]?.audioUrl ||
+    c.audio_ideas?.[0]?.audio_url ||
     ''
   );
 }
@@ -67,7 +64,6 @@ function getRawAudioUrl(song: Song | null | undefined): string {
 export default function SpotifyPlayerBar({
   song,
   songs,
-  colors,
   onSelectSong,
   onOpenStudio,
   onOpenIris,
@@ -76,7 +72,7 @@ export default function SpotifyPlayerBar({
   autoPlay = false,
   playSignal = 0,
   onIsPlayingChange,
-  transposeSemitones: propTransposeSemitones = 0,
+  transposeSemitones: propTransposeSemitones = 0
 }: SpotifyPlayerBarProps) {
   const { setCurrentTime: setContextCurrentTime, setDuration: setContextDuration } = usePlayer();
   const [isPlaying, setIsPlaying] = useState(false);
@@ -91,24 +87,25 @@ export default function SpotifyPlayerBar({
 
   // Historial de reproducción: rastrear canciones reproducidas para que atrás vuelva a la anterior
   const playbackHistoryRef = useRef<string[]>(song?.id ? [song.id] : []);
-  const [, forceUpdateHistory] = useState<number>(0);
 
   // Cálculo automático de semitonos (prop explícita o diferencia entre tonalidad y tonalidadDeseada)
-  const calculatedSemitones = React.useMemo(() => {
-    if (typeof propTransposeSemitones === 'number' && propTransposeSemitones !== 0) {
-      return propTransposeSemitones;
-    }
-    if (song?.tonalidad && (song as any)?.tonalidadDeseada) {
-      return getSemitoneDifference(song.tonalidad, (song as any).tonalidadDeseada) ?? 0;
-    }
-    return 0;
-  }, [propTransposeSemitones, song?.id, song?.tonalidad, (song as any)?.tonalidadDeseada]);
+  const tonalidadDeseada = (song as CancionReproducible | null)?.tonalidadDeseada;
+  const calculatedSemitones =
+    typeof propTransposeSemitones === 'number' && propTransposeSemitones !== 0
+      ? propTransposeSemitones
+      : song?.tonalidad && tonalidadDeseada
+        ? getSemitoneDifference(song.tonalidad, tonalidadDeseada) ?? 0
+        : 0;
 
+  // Los semitonos manuales duran hasta que cambia la canción o el cálculo automático
+  // (ajuste de estado durante el render, sin efecto)
   const [transposeSemitones, setTransposeSemitones] = useState<number>(calculatedSemitones);
-
-  useEffect(() => {
+  const claveSemitonos = `${calculatedSemitones}|${song?.id ?? ''}`;
+  const [claveSemitonosPrevia, setClaveSemitonosPrevia] = useState(claveSemitonos);
+  if (claveSemitonosPrevia !== claveSemitonos) {
+    setClaveSemitonosPrevia(claveSemitonos);
     setTransposeSemitones(calculatedSemitones);
-  }, [calculatedSemitones, song?.id]);
+  }
 
   // Fundido real (5s, curva de potencia constante) al pasar al siguiente tema de la cola —
   // desactivado por defecto, mismo interruptor tanto si la cola es el catálogo, un álbum de
@@ -123,16 +120,27 @@ export default function SpotifyPlayerBar({
   const audioRefA = useRef<HTMLAudioElement | null>(null);
   const audioRefB = useRef<HTMLAudioElement | null>(null);
   const activeSlotRef = useRef<'A' | 'B'>('A');
+  // Los elementos y el slot activo también viven en estado para pasárselos al hook de tono sin
+  // leer refs durante el render (los refs siguen siendo lo que usan los manejadores de eventos)
+  const [slotActivo, setSlotActivo] = useState<'A' | 'B'>('A');
+  const [audioElA, setAudioElA] = useState<HTMLAudioElement | null>(null);
+  const [audioElB, setAudioElB] = useState<HTMLAudioElement | null>(null);
+  const attachAudioA = useCallback((el: HTMLAudioElement | null) => {
+    audioRefA.current = el;
+    setAudioElA(el);
+  }, []);
+  const attachAudioB = useCallback((el: HTMLAudioElement | null) => {
+    audioRefB.current = el;
+    setAudioElB(el);
+  }, []);
   const getActiveAudioEl = () => (activeSlotRef.current === 'A' ? audioRefA.current : audioRefB.current);
   const getInactiveAudioEl = () => (activeSlotRef.current === 'A' ? audioRefB.current : audioRefA.current);
 
   // Spotify Pedalboard C++ DSP on server is used for audio transposition instead of Web Audio phase vocoders
 
   // Audio Synth fallback for songs without custom audio file
-  const synthIntervalRef = useRef<any>(null);
+  const synthIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
-
-  const [activeAudioUrl, setActiveAudioUrl] = useState<string>('');
 
   const crossfadeRafRef = useRef<number | null>(null);
   const isCrossfadingRef = useRef(false);
@@ -159,49 +167,42 @@ export default function SpotifyPlayerBar({
     }
   };
 
-  const [isTransposingAudio, setIsTransposingAudio] = useState(false);
+  const [isTransposingAudio] = useState(false);
 
   // Trasposición nativa en tiempo real en el navegador (Tone.js / Web Audio API)
   useTonePitchShift({
-    audioElement: getActiveAudioEl(),
+    audioElement: slotActivo === 'A' ? audioElA : audioElB,
     semitones: transposeSemitones,
   });
 
   // Extract and resolve active audio URL asynchronously (supporting IndexedDB, Drive & Spotify Pedalboard DSP)
+  const rawAudioUrl = song ? getRawAudioUrl(song) : '';
+  const [urlResuelta, setUrlResuelta] = useState<string>('');
+  if (!rawAudioUrl && urlResuelta) setUrlResuelta('');
+  const activeAudioUrl = rawAudioUrl ? urlResuelta : '';
+
   useEffect(() => {
+    if (!rawAudioUrl) return;
     let isMounted = true;
-    if (!song) {
-      setActiveAudioUrl('');
-      return;
-    }
-
-    const rawUrl = getRawAudioUrl(song);
-
-    if (!rawUrl) {
-      setActiveAudioUrl('');
-      return;
-    }
-
-    resolveAudioUrl(rawUrl)
+    resolveAudioUrl(rawAudioUrl)
       .then((resolved) => {
-        if (isMounted) {
-          setActiveAudioUrl(resolved || '');
-        }
+        if (isMounted) setUrlResuelta(resolved || '');
       })
       .catch((err) => {
         console.warn('Error resolving audio URL:', err);
-        if (isMounted) setActiveAudioUrl('');
+        if (isMounted) setUrlResuelta('');
       });
-
     return () => {
       isMounted = false;
     };
-  }, [song]);
+  }, [rawAudioUrl]);
 
   // Sync isPlaying state to parent if callback provided
   useEffect(() => {
     onIsPlayingChange?.(isPlaying);
   }, [isPlaying, onIsPlayingChange]);
+
+  if (!song && isPlaying) setIsPlaying(false);
 
   const lastHandledSignalRef = useRef<number>(0);
   const lastSongIdRef = useRef<string | null>(null);
@@ -224,13 +225,11 @@ export default function SpotifyPlayerBar({
       history.splice(existingIdx, 1);
     }
     history.push(song.id);
-    forceUpdateHistory((prev) => prev + 1);
   }, [song?.id]);
 
   // When song, activeAudioUrl, autoPlay, or playSignal changes
   useEffect(() => {
     if (!song) {
-      setIsPlaying(false);
       lastSongIdRef.current = null;
       return;
     }
@@ -351,7 +350,7 @@ export default function SpotifyPlayerBar({
         // Simple subtle click synth sound for practice
         try {
           if (!audioCtxRef.current) {
-            audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+            audioCtxRef.current = new (window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext)();
           }
           if (audioCtxRef.current.state === 'suspended') {
             audioCtxRef.current.resume();
@@ -532,6 +531,7 @@ export default function SpotifyPlayerBar({
           fromEl.volume = baseVolume;
           toEl.volume = baseVolume;
           activeSlotRef.current = activeSlotRef.current === 'A' ? 'B' : 'A';
+          setSlotActivo(activeSlotRef.current);
           promotedSongIdRef.current = nextQueueSong.id;
           isCrossfadingRef.current = false;
           setIsCrossfading(false);
@@ -570,7 +570,7 @@ export default function SpotifyPlayerBar({
       {/* Dos <audio> en vez de uno (ver activeSlotRef arriba) — solo el activo actualiza el reloj
  en pantalla y decide cuándo fundir; el otro solo se usa como pista temporal de solape. */}
       <audio
-        ref={audioRefA}
+        ref={attachAudioA}
         crossOrigin="anonymous"
         src={SILENT_AUDIO_URI}
         preload="metadata"
@@ -591,7 +591,7 @@ export default function SpotifyPlayerBar({
         }}
       />
       <audio
-        ref={audioRefB}
+        ref={attachAudioB}
         crossOrigin="anonymous"
         src={SILENT_AUDIO_URI}
         preload="metadata"

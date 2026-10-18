@@ -27,3 +27,10 @@ export function estadoReloj(tiempos: number[], k: number, t: number, duracionTot
 
 /** Grados (0-360) del barrido del reloj para un progreso 0-1. */
 export const gradosDeProgreso = (progreso: number): number => Math.round(Math.min(1, Math.max(0, progreso)) * 3600) / 10;
+
+/** Segundos que dura el acorde `k` del cifrado (hasta el siguiente; el último, hasta el final del audio). */
+export function duracionAcorde(tiempos: number[], k: number, duracionTotal: number): number | null {
+  const inicio = tiempos[k];
+  if (inicio === undefined) return null;
+  return Math.max((tiempos[k + 1] ?? duracionTotal) - inicio, 0);
+}

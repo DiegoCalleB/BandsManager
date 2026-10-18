@@ -2,13 +2,9 @@
 
 import express from "express";
 import { requireAuth, loadState, saveState } from "../state.js";
-import {
-  searchSpotifyArtists,
-  getArtistCompleteDiscography,
-  bulkImportSpotifyDiscographyToBand,
-  extractSpotifyArtistId,
-  findAudioPreview
-} from "../services/spotifyService.js";
+import { searchSpotifyArtists, getArtistCompleteDiscography, bulkImportSpotifyDiscographyToBand, findAudioPreview } from "../services/spotifyService.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import { responderError } from '../utils/errorHttp.js';
 
 const router = express.Router();
 
@@ -26,7 +22,7 @@ router.get("/status", (req, res) => {
 });
 
 /**
- * GET /api/spotify/preview?artist=Bakandeya&track=Clandestino
+ * GET /api/spotify/preview?artist=Banda+Demo&track=Tema
  * Resolves high-quality 30-second audio stream URL for any track.
  */
 router.get("/preview", requireAuth, async (req, res) => {
@@ -38,13 +34,14 @@ router.get("/preview", requireAuth, async (req, res) => {
     }
     const previewUrl = await findAudioPreview(artist, track);
     res.json({ success: true, previewUrl });
-  } catch (err: any) {
-    res.status(500).json({ error: err.message || "Error al buscar preview." });
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
+    responderError(res, err, "Error al buscar preview.");
   }
 });
 
 /**
- * GET /api/spotify/search?q=Bakandeya
+ * GET /api/spotify/search?q=Banda+Demo
  * Searches artists or resolves artist URL on Spotify.
  */
 router.get("/search", requireAuth, async (req, res) => {
@@ -56,14 +53,15 @@ router.get("/search", requireAuth, async (req, res) => {
 
     const artists = await searchSpotifyArtists(query);
     res.json({ success: true, artists });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[SpotifyRoute] Search error:", err);
-    res.status(500).json({ error: err.message || "Error al buscar en Spotify." });
+    responderError(res, err, "Error al buscar en Spotify.");
   }
 });
 
 /**
- * GET /api/spotify/artist-discography?query=Bakandeya
+ * GET /api/spotify/artist-discography?query=Banda+Demo
  * Fetches the entire discography (all albums, singles, tracks, preview audio) of an artist.
  */
 router.get("/artist-discography", requireAuth, async (req, res) => {
@@ -75,9 +73,10 @@ router.get("/artist-discography", requireAuth, async (req, res) => {
 
     const discography = await getArtistCompleteDiscography(query);
     res.json({ success: true, discography });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[SpotifyRoute] Discography error:", err);
-    res.status(500).json({ error: err.message || "Error al obtener la discografía de Spotify." });
+    responderError(res, err, "Error al obtener la discografía de Spotify.");
   }
 });
 
@@ -92,7 +91,7 @@ router.post("/import-discography", requireAuth, async (req, res) => {
       return res.status(400).json({ error: "No se han seleccionado álbumes para importar." });
     }
 
-    const userBandId = (req as any).user?.band_id;
+    const userBandId = req.user?.band_id;
     const result = await bulkImportSpotifyDiscographyToBand(
       userBandId,
       artist,
@@ -102,13 +101,14 @@ router.post("/import-discography", requireAuth, async (req, res) => {
 
     // Update in-memory state if applicable
     const state = loadState();
-    state.songs = result.allBandSongs as any;
+    state.songs = result.allBandSongs;
     saveState(state);
 
     res.json(result);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[SpotifyRoute] Import error:", err);
-    res.status(500).json({ error: err.message || "Error al importar la discografía de Spotify." });
+    responderError(res, err, "Error al importar la discografía de Spotify.");
   }
 });
 

@@ -1,33 +1,23 @@
 import React, { useState } from "react";
 import { BookingCampaign, PitchTemplateCategory } from "../../types";
 import { HolidayDateWarning } from "../common/HolidayDateWarning";
-import {
-  Target,
-  Calendar,
-  MapPin,
-  Users,
-  Plus,
-  X,
-  Check,
-  Trash2,
-  Edit3,
-  ChevronRight,
-  Compass,
-  ArrowRight,
-  ShieldCheck,
-  Flame,
-  Wand2,
-  Building2,
-  Tent,
-  Disc3,
-  Radio,
-  Briefcase,
-  Landmark,
-} from "lucide-react";
+import { Target, Calendar, MapPin, Users, Plus, X, Check, Trash2, Edit3, Compass, ShieldCheck, Flame, Wand2, Building2, Tent, Disc3, Radio, Briefcase, Landmark } from "lucide-react";
 import { GenerateAllTemplatesModal } from "../booking/GenerateAllTemplatesModal";
 import { apiFetch } from "../../utils/api";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, LinkButton, Textarea } from '../ui';
+import { comoErrorCapturado } from '../../utils/errorCapturado';
+import type { NavigationOptions } from '../Dashboard';
+
+/** Opciones con las que el gestor de campañas navega (además de las comunes, filtros de campaña). */
+type OpcionesNavegacionCampana = NavigationOptions & { campaignFilter?: string; campaignCities?: string[] };
+
+/** Respuesta de `POST /api/templates/generate-all`: una plantilla por categoría de lead. */
+interface RespuestaGenerarPlantillas {
+  success?: boolean;
+  generatedResults?: Partial<Record<PitchTemplateCategory, { body?: string }>>;
+  error?: string;
+}
 
 // Mismas 7 categorías y misma iconografía que src/components/booking/TemplateConfigSection.tsx
 // (plantillas generales por tipo de lead), para que el mánager reconozca de un vistazo qué
@@ -58,7 +48,7 @@ interface CampaignManagerModalProps {
   onSetActiveCampaign: (
     idOrCampaign: string | BookingCampaign | null,
   ) => Promise<void>;
-  onNavigate?: (view: string, options?: any) => void;
+  onNavigate?: (view: string, options?: OpcionesNavegacionCampana) => void;
 }
 
 export function CampaignManagerModal({
@@ -103,7 +93,7 @@ export function CampaignManagerModal({
     setIsGeneratingAllTemplates(true);
     setTemplateGenerationFeedback(null);
     try {
-      const data = await apiFetch<any>("/api/templates/generate-all", {
+      const data = await apiFetch<RespuestaGenerarPlantillas>("/api/templates/generate-all", {
         method: "POST",
         body: JSON.stringify({
           baseProposal,
@@ -143,7 +133,8 @@ export function CampaignManagerModal({
         );
         return false;
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error in handleGenerateAllCampaignTemplates:", err);
       setTemplateGenerationFeedback(
         "⚠️ Error de conexión al generar las plantillas.",

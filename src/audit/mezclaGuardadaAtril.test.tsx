@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { claveMezclaAtril, leerMezcla, MEZCLA_VACIA, serializarMezcla } from '../utils/mezclaGuardada';
 import { ControlVelocidad } from '../components/chords/ControlVelocidad';
+import { leerAtril } from './leerAtril';
 
 describe('mezcla y velocidad guardadas del Atril', () => {
   it('ida y vuelta, y nada que guardar si todo está por defecto', () => {
@@ -24,7 +24,7 @@ describe('mezcla y velocidad guardadas del Atril', () => {
   });
 
   it('el Atril usa el hook y aplica la velocidad al audio', () => {
-    const atril = readFileSync(new URL('../components/Atril.tsx', import.meta.url), 'utf8');
+    const atril = leerAtril();
     expect(atril).toContain('useMezclaGuardada(song.id)');
     expect(atril).toContain('audioRef.current.playbackRate = velocidad');
   });

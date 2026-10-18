@@ -74,8 +74,8 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
     typeof window !== "undefined" ? window.innerWidth >= 768 : true,
   );
   const [targetRect, setTargetRect] = useState<DOMRect | null>(null);
-  const [targetFound, setTargetFound] = useState(false);
-  const [isHighlighting, setIsHighlighting] = useState(false);
+  const [, setTargetFound] = useState(false);
+  const [, setIsHighlighting] = useState(false);
 
   // Monitor window size to adapt between desktop floating mode and full-screen mobile
   useEffect(() => {
@@ -87,26 +87,45 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
   }, []);
 
   // Reset step index and default directly to floating mode whenever modal opens
-  useEffect(() => {
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+  if (prevIsOpen !== isOpen) {
+    setPrevIsOpen(isOpen);
     if (isOpen) {
       setCurrentStepIndex(0);
       setIsFloatingMode(true);
     }
-  }, [isOpen]);
+  }
 
   const effectiveFloatingMode = isDesktop && isFloatingMode;
   const currentStep = tutorialConfig?.steps[currentStepIndex];
+  const targetSelector = currentStep?.uiTarget?.selector;
+
+  const totalSteps = tutorialConfig?.steps.length ?? 0;
+  const isFirstStep = currentStepIndex === 0;
+  const isLastStep = currentStepIndex === totalSteps - 1;
+
+  const handleNext = () => {
+    if (isLastStep) {
+      onClose(dontShowAgain);
+    } else {
+      setCurrentStepIndex((prev) => Math.min(totalSteps - 1, prev + 1));
+    }
+  };
+
+  const handlePrev = () => {
+    setCurrentStepIndex((prev) => Math.max(0, prev - 1));
+  };
 
   // Locate target element in the DOM and calculate its bounding box
   const locateTargetElement = useCallback(
     (shouldScroll = false) => {
-      if (!currentStep?.uiTarget?.selector) {
+      if (!targetSelector) {
         setTargetRect(null);
         setTargetFound(false);
         return null;
       }
 
-      const selectors = currentStep.uiTarget.selector
+      const selectors = targetSelector
         .split(",")
         .map((s) => s.trim());
       let el: Element | null = null;
@@ -117,7 +136,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
             el = found;
             break;
           }
-        } catch (err) {
+        } catch {
           // Ignore invalid selectors safely
         }
       }
@@ -144,7 +163,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
         return null;
       }
     },
-    [currentStep?.uiTarget?.selector],
+    [targetSelector],
   );
 
   // Monitor position and scroll to target when step changes or floating mode is active
@@ -259,22 +278,6 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
   }, [targetRect]);
 
   if (!isOpen || !tutorialConfig || !currentStep) return null;
-
-  const totalSteps = tutorialConfig.steps.length;
-  const isFirstStep = currentStepIndex === 0;
-  const isLastStep = currentStepIndex === totalSteps - 1;
-
-  const handleNext = () => {
-    if (isLastStep) {
-      onClose(dontShowAgain);
-    } else {
-      setCurrentStepIndex((prev) => Math.min(totalSteps - 1, prev + 1));
-    }
-  };
-
-  const handlePrev = () => {
-    setCurrentStepIndex((prev) => Math.max(0, prev - 1));
-  };
 
   // Color accents based on module
   const accentStyles = {

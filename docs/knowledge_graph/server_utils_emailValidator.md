@@ -1,0 +1,40 @@
+---
+id: server_utils_emailValidator
+title: "server/utils/emailValidator.ts"
+layer: service
+domain: system
+file: "server/utils/emailValidator.ts"
+tags: ["service", "system", "auto"]
+---
+
+# 📌 server/utils/emailValidator.ts
+
+> **Ubicación:** `server/utils/emailValidator.ts`  
+> **Capa:** `#layer/service` | **Dominio:** `#domain/system`
+
+## 📖 Descripción
+Validación de emails con dos niveles:
+
+---
+
+## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
+
+---
+
+## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server_routes_leads_emailValidation|server/routes/leads/emailValidation.ts]] *(from #route)*
+- [[server_routes_leads_templates|server/routes/leads/templates.ts]] *(from #route)*
+- [[server_services_avisarEmailsDudosos|server/services/avisarEmailsDudosos.ts]] *(from #service)*
+- [[server_utils_salaCatalogo|server/utils/salaCatalogo.ts]] *(from #service)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/utils/__tests__/emailValidator.test.ts`
+
+---
+
+## 🛡️ Reglas de Aislamiento & Calidad
+- [ ] ¿Respeta el trust boundary de `band_id`?
+- [ ] ¿Tiene pruebas unitarias o de integración asociadas?

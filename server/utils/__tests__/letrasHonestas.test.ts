@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import fs from 'fs';
 import path from 'path';
+import { leerAtril } from '../../../src/audit/leerAtril';
 
 const raiz = path.join(__dirname, '..', '..', '..');
 const leer = (...p: string[]) => fs.readFileSync(path.join(raiz, ...p), 'utf-8');
@@ -45,7 +46,7 @@ describe('/generate-song-chords: la letra solo sale del audio', () => {
 });
 
 describe('Cliente: ninguna letra de ejemplo escrita en el código', () => {
-  const viewer = leer('src', 'components', 'Atril.tsx');
+  const viewer = leerAtril();
   const enVivo = leer('src', 'components', 'ensayos', 'ModoLocalEnVivoTab.tsx');
 
   it('el visor y el modo en vivo no tienen cifrado de muestra', () => {
@@ -102,9 +103,11 @@ describe('/songs/:id/letra-sincronizada: reconocimiento de voz con tiempos, nunc
 });
 
 describe('Cliente: la letra solo se pide a propósito', () => {
-  const viewer = leer('src', 'components', 'Atril.tsx');
+  const viewer = leerAtril();
   const bulk = leer('src', 'components', 'repertorio', 'BulkAlbumAudioUploaderModal.tsx');
-  const repertorio = leer('src', 'components', 'RepertorioSetlists.tsx');
+  // El contenedor delega la edición de canciones en hooks (repertorio/hooks): el contrato aplica a todo el módulo.
+  const dirHooks = path.join(raiz, 'src', 'components', 'repertorio', 'hooks');
+  const repertorio = [leer('src', 'components', 'RepertorioSetlists.tsx'), ...fs.readdirSync(dirHooks).map((f) => fs.readFileSync(path.join(dirHooks, f), 'utf-8'))].join('\n');
 
   it('«Letra del audio» llama a la transcripción por voz, no al generador antiguo', () => {
     expect(viewer).toContain('/letra-sincronizada');

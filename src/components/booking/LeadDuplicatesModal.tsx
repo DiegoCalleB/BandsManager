@@ -1,33 +1,12 @@
 import React, { useState, useMemo } from "react";
-import {
-  X,
-  Copy,
-  CheckCircle2,
-  AlertTriangle,
-  ArrowRight,
-  Trash2,
-  Merge,
-  Sparkles,
-  MapPin,
-  Mail,
-  Phone,
-  Globe,
-  ExternalLink,
-  ShieldCheck,
-  Check,
-} from "lucide-react";
+import { X, Copy, CheckCircle2, AlertTriangle, Trash2, Merge, Sparkles, MapPin, Mail, Phone, Globe, ShieldCheck } from "lucide-react";
 import { Lead } from "../../types";
-import {
-  findDuplicateLeads,
-  DuplicateGroup,
-  DuplicateMatchReason,
-  mergeTwoLeads,
-  calculateLeadCompletenessScore,
-} from "../../utils/duplicateLeads";
+import { findDuplicateLeads, DuplicateGroup, mergeTwoLeads } from "../../utils/duplicateLeads";
 import { ModalPortal } from "../common/ModalPortal";
 import { apiFetch } from "../../utils/api";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, LinkButton } from '../ui';
+import { comoErrorCapturado } from '../../utils/errorCapturado';
 
 interface LeadDuplicatesModalProps {
   /** Heredado de main: Espectro resuelve el tema en tokens, así que se acepta y se ignora. */
@@ -66,12 +45,6 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
       return g.matchReason === selectedFilter;
     });
   }, [rawGroups, ignoredGroupIds, selectedFilter]);
-
-  const totalInvolvedLeads = useMemo(() => {
-    const ids = new Set<string>();
-    duplicateGroups.forEach((g) => g.leads.forEach((l) => ids.add(l.id)));
-    return ids.size;
-  }, [duplicateGroups]);
 
   if (!isOpen) return null;
 
@@ -121,7 +94,8 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
       window.dispatchEvent(new CustomEvent("app-data-updated"));
       setSuccessMessage(`Sala "${mergedLead.nombre_sala}" fusionada con éxito.`);
       setTimeout(() => setSuccessMessage(null), 3500);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error al fusionar grupo:", err);
       alert(
         "Hubo un error al fusionar las salas. Por favor, inténtalo de nuevo.",
@@ -414,7 +388,6 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {group.leads.map((lead) => {
                       const isSuggested = lead.id === group.suggestedKeepId;
-                      const score = calculateLeadCompletenessScore(lead);
 
                       return (
                         <div

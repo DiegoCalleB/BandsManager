@@ -1,3 +1,5 @@
+import { buildQrSvg } from './qrSvg';
+
 /**
  * Utilidades para exportación, descarga e impresión en máxima calidad (Vectorial SVG, PNG 4K 300 DPI y Flyer A4)
  * de Códigos QR para BandManager (Captura de Fans en Concierto, Dossier EPK, Merchandising).
@@ -39,69 +41,14 @@ export async function urlToDataUrl(url: string): Promise<string> {
 }
 
 /**
- * Obtiene el SVG del código QR y lo limpia con atributos XML necesarios para ser un archivo .svg válido.
- */
-export function getCleanSvgString(svgEl: SVGElement, includeLogo?: { dataUrl: string; sizePercent?: number }): string {
-  const cloned = svgEl.cloneNode(true) as SVGElement;
-
-  // Asegurar namespaces y viewBox
-  cloned.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-  cloned.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
-
-  const viewBox = cloned.getAttribute('viewBox') || '0 0 256 256';
-  const [, , vbWidth, vbHeight] = viewBox.split(' ').map(Number);
-  const w = vbWidth || 256;
-  const h = vbHeight || 256;
-
-  if (includeLogo && includeLogo.dataUrl) {
-    const logoSize = Math.round(w * (includeLogo.sizePercent || 0.22));
-    const logoX = Math.round((w - logoSize) / 2);
-    const logoY = Math.round((h - logoSize) / 2);
-    const radius = Math.round(logoSize * 0.2);
-
-    // Fondo blanco protector para el logo central
-    const bgRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    bgRect.setAttribute('x', String(logoX - 4));
-    bgRect.setAttribute('y', String(logoY - 4));
-    bgRect.setAttribute('width', String(logoSize + 8));
-    bgRect.setAttribute('height', String(logoSize + 8));
-    bgRect.setAttribute('rx', String(radius + 2));
-    bgRect.setAttribute('fill', '#ffffff');
-    bgRect.setAttribute('stroke', 'var(--acc)');
-    bgRect.setAttribute('stroke-width', '2');
-    cloned.appendChild(bgRect);
-
-    // Imagen del logo
-    const img = document.createElementNS('http://www.w3.org/2000/svg', 'image');
-    img.setAttribute('x', String(logoX));
-    img.setAttribute('y', String(logoY));
-    img.setAttribute('width', String(logoSize));
-    img.setAttribute('height', String(logoSize));
-    img.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-    img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', includeLogo.dataUrl);
-    cloned.appendChild(img);
-  }
-
-  const serializer = new XMLSerializer();
-  return serializer.serializeToString(cloned);
-}
-
-/**
  * 1. DESCARGA VECTORIAL SVG (MÁXIMA CALIDAD PARA IMPRENTA / DISEÑO)
  * Resolución matemática infinita, ideal para Illustrator, Corel, imprentas, roll-ups o lonas.
  */
 export async function downloadQrAsSvg(options: QrExportOptions): Promise<void> {
-  const svgEl = options.svgElement || (options.svgElementId ? document.querySelector<SVGElement>(`#${options.svgElementId} svg`) : null);
-  if (!svgEl) {
-    throw new Error('No se encontró el elemento SVG del código QR');
-  }
+  if (!options.url) throw new Error('Falta la URL del código QR');
 
-  let logoDataUrl = '';
-  if (options.logoUrl) {
-    logoDataUrl = await urlToDataUrl(options.logoUrl);
-  }
-
-  const svgString = getCleanSvgString(svgEl, logoDataUrl ? { dataUrl: logoDataUrl } : undefined);
+  const logoDataUrl = options.logoUrl ? await urlToDataUrl(options.logoUrl) : '';
+  const svgString = buildQrSvg(options.url, 100, 'H', logoDataUrl || undefined);
   const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
   const url = URL.createObjectURL(blob);
 
@@ -119,16 +66,13 @@ export async function downloadQrAsSvg(options: QrExportOptions): Promise<void> {
  * Genera un archivo PNG ultranítido listo para carteles, flyers, pegatinas o pantallas.
  */
 export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<void> {
-  const svgEl = options.svgElement || (options.svgElementId ? document.querySelector<SVGElement>(`#${options.svgElementId} svg`) : null);
-  if (!svgEl) {
-    throw new Error('No se encontró el elemento SVG del código QR');
-  }
+  if (!options.url) throw new Error('Falta la URL del código QR');
 
   let logoImg: HTMLImageElement | null = null;
   if (options.logoUrl) {
     try {
       const dataUrl = await urlToDataUrl(options.logoUrl);
-      logoImg = await new Promise((res, rej) => {
+      logoImg = await new Promise((res) => {
         const img = new Image();
         img.crossOrigin = 'anonymous';
         img.onload = () => res(img);
@@ -145,8 +89,8 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
   const ctx = canvas.getContext('2d');
   if (!ctx) throw new Error('No se pudo inicializar el contexto de Canvas');
 
-  // Convertir SVG a Image para dibujarlo en el Canvas a resolución ultra alta
-  const svgString = getCleanSvgString(svgEl);
+  // QR negro sobre blanco (el de pantalla es claro y su fondo no viaja en el SVG); el logo se dibuja encima en el canvas
+  const svgString = buildQrSvg(options.url, 100, 'H');
   const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
   const svgUrl = URL.createObjectURL(svgBlob);
   const qrImg = await new Promise<HTMLImageElement>((resolve, reject) => {
@@ -166,7 +110,7 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Borde exterior ámbar / dorado
-    ctx.strokeStyle = 'var(--acc)';
+    ctx.strokeStyle = '#d97706';
     ctx.lineWidth = 24;
     ctx.strokeRect(60, 60, canvas.width - 120, canvas.height - 120);
 
@@ -191,7 +135,7 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
 
     // Concierto / Sala / Ciudad
     if (options.concertTitle) {
-      ctx.fillStyle = 'var(--acc)';
+      ctx.fillStyle = '#d97706';
       ctx.font = '800 52px system-ui, -apple-system, sans-serif';
       ctx.fillText(options.concertTitle.toUpperCase(), canvas.width / 2, curY);
       curY += 60;
@@ -230,7 +174,7 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
     ctx.fillRect(qrX - 40, qrY - 40, qrSize + 80, qrSize + 80);
     ctx.shadowColor = 'transparent';
 
-    ctx.strokeStyle = 'var(--acc)';
+    ctx.strokeStyle = '#d97706';
     ctx.lineWidth = 16;
     ctx.strokeRect(qrX - 40, qrY - 40, qrSize + 80, qrSize + 80);
 
@@ -243,7 +187,7 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
       const cy = qrY + (qrSize - centerLogoSize) / 2;
 
       ctx.fillStyle = '#ffffff';
-      ctx.strokeStyle = 'var(--acc)';
+      ctx.strokeStyle = '#d97706';
       ctx.lineWidth = 10;
       ctx.beginPath();
       ctx.roundRect(cx - 16, cy - 16, centerLogoSize + 32, centerLogoSize + 32, 24);
@@ -274,7 +218,7 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.strokeStyle = 'var(--acc)';
+    ctx.strokeStyle = '#d97706';
     ctx.lineWidth = 20;
     ctx.strokeRect(40, 40, canvas.width - 80, canvas.height - 80);
 
@@ -286,7 +230,7 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
     curY += 70;
 
     if (options.concertTitle) {
-      ctx.fillStyle = 'var(--acc)';
+      ctx.fillStyle = '#d97706';
       ctx.font = '700 44px system-ui, -apple-system, sans-serif';
       ctx.fillText(options.concertTitle, canvas.width / 2, curY);
       curY += 70;
@@ -304,7 +248,7 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
       const cy = qrY + (qrSize - centerLogoSize) / 2;
 
       ctx.fillStyle = '#ffffff';
-      ctx.strokeStyle = 'var(--acc)';
+      ctx.strokeStyle = '#d97706';
       ctx.lineWidth = 10;
       ctx.beginPath();
       ctx.roundRect(cx - 16, cy - 16, centerLogoSize + 32, centerLogoSize + 32, 24);
@@ -340,7 +284,7 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
       const cy = pad + (qrSize - centerLogoSize) / 2;
 
       ctx.fillStyle = '#ffffff';
-      ctx.strokeStyle = 'var(--acc)';
+      ctx.strokeStyle = '#d97706';
       ctx.lineWidth = 16;
       ctx.beginPath();
       ctx.roundRect(cx - 20, cy - 20, centerLogoSize + 40, centerLogoSize + 40, 32);
@@ -386,13 +330,8 @@ export function printHighQualityFlyer(options: {
   ctaText?: string;
   subtitle?: string;
 }) {
-  const svgEl = options.svgElement || (options.svgElementId ? document.querySelector<SVGElement>(`#${options.svgElementId} svg`) : null);
-  if (!svgEl) {
-    alert('No se pudo encontrar el código QR para imprimir');
-    return;
-  }
-
-  const svgString = getCleanSvgString(svgEl);
+  // El QR de pantalla puede ser claro sobre fondo oscuro (el fondo no se imprime): en papel, negro sobre blanco.
+  const svgString = buildQrSvg(options.url || '', 74, 'H');
   const printWin = window.open('', '_blank');
   if (!printWin) {
     alert('Por favor habilita las ventanas emergentes (pop-ups) en tu navegador para imprimir el cartel.');
@@ -437,6 +376,7 @@ export function printHighQualityFlyer(options: {
  }
  .poster {
  width: 100%;
+ min-width: 0;
  max-width: 680px;
  margin: 0 auto;
  border-radius: 28px;
@@ -444,7 +384,7 @@ export function printHighQualityFlyer(options: {
  text-align: center;
  background: #ffffff;
  position: relative;
- box-shadow: 0 0 0 3px var(--acc-soft), 0 10px 30px rgba(0,0,0,0.08);
+ box-shadow: 0 0 0 3px #cbd5e1, 0 10px 30px rgba(0,0,0,0.08);
  }
  .logo-box {
  margin: 0 auto 16px auto;
@@ -504,11 +444,11 @@ export function printHighQualityFlyer(options: {
  padding: 20px;
  background: #ffffff;
  border-radius: 24px;
- box-shadow: 0 0 0 2px var(--acc-soft), 0 10px 30px rgba(0,0,0,0.08);
+ box-shadow: 0 0 0 2px #cbd5e1, 0 10px 30px rgba(0,0,0,0.08);
  }
  .qr-wrapper svg {
- width: 280px;
- height: 280px;
+ width: 400px;
+ height: 400px;
  display: block;
  }
  .qr-center-logo {
@@ -516,11 +456,11 @@ export function printHighQualityFlyer(options: {
  top: 50%;
  left: 50%;
  transform: translate(-50%, -50%);
- width: 64px;
- height: 64px;
+ width: 88px;
+ height: 88px;
  background: #ffffff;
- border-radius: 16px;
- box-shadow: 0 0 0 2px var(--acc-soft), 0 4px 12px rgba(0,0,0,0.15);
+ border-radius: 50%;
+ box-shadow: 0 0 0 2px #cbd5e1, 0 4px 12px rgba(0,0,0,0.15);
  display: flex;
  align-items: center;
  justify-content: center;
@@ -538,9 +478,10 @@ export function printHighQualityFlyer(options: {
  border-radius: 12px;
  padding: 10px 16px;
  font-family: monospace;
- font-size: 13px;
+ font-size: 12px;
  color: #334155;
  font-weight: 700;
+ overflow-wrap: anywhere;
  word-break: break-all;
  }
  .footer-note {
@@ -556,7 +497,7 @@ export function printHighQualityFlyer(options: {
  }
  .poster {
  box-shadow: none;
- border-width: 4px;
+ border: none;
  padding: 28px 24px;
  }
  .no-print {
@@ -592,9 +533,7 @@ export function printHighQualityFlyer(options: {
           <div class="footer-note">BandManager • Diseñado para imprimir en A4 y colocar en barras, taquilla, roll-ups o escenario</div>
         </div>
         <script>
-          setTimeout(() => {
-            window.print();
-          }, 350);
+          window.addEventListener('load', () => setTimeout(() => window.print(), 200));
         </script>
       </body>
     </html>

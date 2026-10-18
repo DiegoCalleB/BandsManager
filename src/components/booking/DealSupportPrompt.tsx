@@ -25,16 +25,18 @@ function leerDescartado(bandId: string, dealId: string): boolean {
 export const DealSupportPrompt: React.FC<DealSupportPromptProps> = ({ isLoggedIn, bandId }) => {
   const { deals } = useApoyableDeals(isLoggedIn, bandId);
   const [descartados, setDescartados] = useState<Set<string>>(new Set());
-  const [gracias, setGracias] = useState(false);
+  const [gracias, setGracias] = useState(() => new URLSearchParams(window.location.search).get('apoyo') === 'success');
 
   useEffect(() => {
+    if (!gracias) return;
+    const t = window.setTimeout(() => setGracias(false), 7000);
+    return () => window.clearTimeout(t);
+  }, [gracias]);
+
+  // Al volver del pago se limpia ?apoyo= de la URL (el aviso de gracias ya se leyó al montar).
+  useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const resultado = params.get('apoyo');
-    if (!resultado) return;
-    if (resultado === 'success') {
-      setGracias(true);
-      window.setTimeout(() => setGracias(false), 7000);
-    }
+    if (!params.get('apoyo')) return;
     params.delete('apoyo');
     const resto = params.toString();
     window.history.replaceState({}, '', `${window.location.pathname}${resto ? `?${resto}` : ''}${window.location.hash}`);

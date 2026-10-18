@@ -1,1 +1,5 @@
 npx lint-staged
+# El grafo de conocimiento se regenera solo desde los imports reales: nadie tiene que acordarse.
+if git diff --cached --name-only | grep -qE '^(src|server)/.*\.tsx?$|^scripts/generate_obsidian_graph\.ts$'; then
+  npm run graph:sync --silent && git add docs/knowledge_graph
+fi

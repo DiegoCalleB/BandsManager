@@ -22,13 +22,9 @@ import postsRouter from '../posts.js';
 import epkFansRouter from '../epk_fans.js';
 import aiMusicRouter from '../ai_music.js';
 import { ACTIVE_FAL_KEY } from '../../services/audioSeparator/FalAiService.js';
+import { manejador as manejadorDe } from './helpers/rutas.js';
 
-function manejador(router: any, ruta: string, metodo: 'get' | 'post') {
-  const capa: any = router.stack.find((s: any) => s.route && s.route.path === ruta && s.route.methods[metodo]);
-  expect(capa, `${metodo} ${ruta}`).toBeDefined();
-  const pila = capa.route.stack;
-  return pila[pila.length - 1].handle;
-}
+const manejador = manejadorDe;
 const resFalso = () => {
   const r: any = {};
   r.status = (c: number) => ((r.code = c), r);
@@ -44,8 +40,8 @@ beforeEach(() => {
 });
 
 describe('Storage: limpieza de multimedia', () => {
-  it('un usuario normal NO puede ver las estadísticas ni borrar el Storage de las demás bandas', async () => {
-    for (const [ruta, metodo] of [['/storage-stats', 'get'], ['/cleanup-unused-media', 'post']] as const) {
+  it('un usuario normal NO puede ver las estadísticas, borrar el Storage de las demás bandas ni lanzar el diagnóstico del bucket', async () => {
+    for (const [ruta, metodo] of [['/storage-stats', 'get'], ['/cleanup-unused-media', 'post'], ['/test-supabase', 'get']] as const) {
       const res = resFalso();
       await manejador(uploadRouter, ruta, metodo)({ user: usuario, body: { confirmar: true }, headers: {}, query: {} }, res);
       expect(res.code).toBe(403);

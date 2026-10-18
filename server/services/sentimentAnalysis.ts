@@ -8,7 +8,8 @@
 
 import { generateUnifiedAI } from "../ai.js";
 import { sanitizeExternalText } from "../utils/promptSafety.js";
-import { detectResponseType, getNegotiationKeywords, matchesKeyword } from "./replyDrafting.js";
+import { detectResponseType } from "./replyDrafting.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export type SentimentLevel = "muy_positivo" | "positivo" | "neutral" | "cauteloso" | "rechazo" | "negativo";
 export type LeadTemperature = "caliente" | "templado" | "frio";
@@ -89,7 +90,7 @@ const INTENT_LABELS: Record<IntentCategory, string> = {
 export function analyzeSentimentHeuristic(
   messageText: string,
   languageCode = "es",
-  context?: VenueContext
+  _context?: VenueContext
 ): MessageSentimentAnalysis {
   const t = (messageText || "").toLowerCase();
   const resType = detectResponseType(messageText, languageCode);
@@ -108,7 +109,7 @@ export function analyzeSentimentHeuristic(
   let playbook: TacticalPlaybook | undefined;
 
   // Extracción básica de fechas o meses
-  const mesesRegex = /\b(\d{1,2}\s+(?:de\s+)?(?:enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)|(?:enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\s+(?:de\s+)?\d{4}|\d{1,2}[\/\.-]\d{1,2}[\/\.-]\d{2,4}|viernes\s+\d{1,2}|sábado\s+\d{1,2}|sabado\s+\d{1,2})\b/gi;
+  const mesesRegex = /\b(\d{1,2}\s+(?:de\s+)?(?:enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)|(?:enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\s+(?:de\s+)?\d{4}|\d{1,2}[/.-]\d{1,2}[/.-]\d{2,4}|viernes\s+\d{1,2}|sábado\s+\d{1,2}|sabado\s+\d{1,2})\b/gi;
   const matchFechas = messageText.match(mesesRegex);
   if (matchFechas) {
     matchFechas.forEach((f) => {
@@ -118,7 +119,7 @@ export function analyzeSentimentHeuristic(
   }
 
   // Detección de condiciones económicas
-  const moneyMatch = messageText.match(/(\d+[\d\.,]*)\s*(?:€|euros|eur|\$)/i) || messageText.match(/(?:cache|caché|precio|presupuesto|garantía|garantia|taquilla)\s*(?:de|:)?\s*(\d+[\d\.,]*\s*(?:€|euros|eur)?)/i);
+  const moneyMatch = messageText.match(/(\d+[\d.,]*)\s*(?:€|euros|eur|\$)/i) || messageText.match(/(?:cache|caché|precio|presupuesto|garantía|garantia|taquilla)\s*(?:de|:)?\s*(\d+[\d.,]*\s*(?:€|euros|eur)?)/i);
   if (moneyMatch) {
     condicionesEco = {
       tipo: t.includes("taquilla") ? "taquilla" : t.includes("alquiler") ? "alquiler_sala" : "cache_fijo",
@@ -360,7 +361,7 @@ Devuelve ÚNICAMENTE el objeto JSON sin bloques de código markdown ni texto adi
       "consulta_general"
     ];
     const validTemperatures: LeadTemperature[] = ["caliente", "templado", "frio"];
-    const validActions = ["bloquear_fecha", "enviar_rider", "contraofertar_cache", "proponer_alternativa_date_swap", "agendar_seguimiento", "cerrar_hilo_cordial"];
+    const validActions: MessageSentimentAnalysis["accion_sugerida"][] = ["bloquear_fecha", "enviar_rider", "contraofertar_cache", "proponer_alternativa_date_swap", "agendar_seguimiento", "cerrar_hilo_cordial"];
 
     const sentimiento: SentimentLevel = validSentiments.includes(parsed.sentimiento)
       ? parsed.sentimiento
@@ -374,7 +375,7 @@ Devuelve ÚNICAMENTE el objeto JSON sin bloques de código markdown ni texto adi
       ? parsed.temperatura
       : (sentimiento === "muy_positivo" || sentimiento === "positivo" ? "caliente" : sentimiento === "rechazo" || sentimiento === "negativo" ? "frio" : "templado");
 
-    const accionSugerida = validActions.includes(parsed.accion_sugerida)
+    const accionSugerida: MessageSentimentAnalysis["accion_sugerida"] = validActions.includes(parsed.accion_sugerida)
       ? parsed.accion_sugerida
       : "agendar_seguimiento";
 
@@ -397,7 +398,7 @@ Devuelve ÚNICAMENTE el objeto JSON sin bloques de código markdown ni texto adi
         detalles: parsed.condiciones_economicas.detalles ? String(parsed.condiciones_economicas.detalles) : undefined
       } : undefined,
       requisitos_tecnicos: Array.isArray(parsed.requisitos_tecnicos) ? parsed.requisitos_tecnicos.map(String) : [],
-      accion_sugerida: accionSugerida as any,
+      accion_sugerida: accionSugerida,
       estrategia_playbook: parsed.estrategia_playbook && typeof parsed.estrategia_playbook === "object" ? {
         titulo: String(parsed.estrategia_playbook.titulo || "Estrategia Recomendada"),
         pasos: Array.isArray(parsed.estrategia_playbook.pasos) ? parsed.estrategia_playbook.pasos.map(String) : [],
@@ -408,7 +409,8 @@ Devuelve ÚNICAMENTE el objeto JSON sin bloques de código markdown ni texto adi
       confianza: 0.95,
       motor: "gemini_flash"
     };
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[SentimentAnalysis] Fallo en la llamada a Gemini, usando clasificador heurístico:", err?.message || err);
     return analyzeSentimentHeuristic(incomingMessage, languageCode, context);
   }

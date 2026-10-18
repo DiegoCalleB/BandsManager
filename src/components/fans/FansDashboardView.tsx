@@ -3,12 +3,27 @@ import { ShieldCheck, MapPin, ExternalLink, TrendingUp, Users } from 'lucide-rea
 import { Fan } from '../../types';
 import { CurveSeries } from '../ui/CurveSeries';
 
+/** Punto de la curva de crecimiento mensual de fans. */
+export interface PuntoCrecimientoFans {
+  month: string;
+  date: string;
+  nuevos: number;
+  total: number;
+}
+
+/** Origen de captación de fans con su recuento. */
+export interface OrigenFans {
+  name: string;
+  value: number;
+  percentage?: number;
+}
+
 export interface FansDashboardViewProps {
   fans: Fan[];
   clickStats: Record<string, number>;
   effectiveBandName: string;
-  evolutionaryGrowthData: any[];
-  originData: any[];
+  evolutionaryGrowthData: PuntoCrecimientoFans[];
+  originData: OrigenFans[];
   COLORS?: string[];
 }
 

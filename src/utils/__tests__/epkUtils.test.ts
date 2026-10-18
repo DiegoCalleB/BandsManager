@@ -5,18 +5,18 @@ import { EPKConfig, Song } from '../../types';
 describe('epkUtils', () => {
   const completeEPK: EPKConfig = {
     biografia:
-      'Bakandeya es una banda de ska-fusion y reggae rock formada en 2021. Con más de 50 conciertos a sus espaldas en salas de España...',
+      'Banda Demo es una banda de ska-fusion y reggae rock formada en 2021. Con más de 50 conciertos a sus espaldas en salas de España...',
     logoUrl: 'https://example.com/logo.png',
     bandPhotos: ['https://example.com/photo1.jpg', 'https://example.com/photo2.jpg'],
     riderTecnico: '4 canales de microfonía, 2 retornos de monitor, amplificador de guitarra y sección de metales con caja DI.',
     enlacesRedes: {
-      spotify: 'https://spotify.com/artist/bakandeya',
-      youtube: 'https://youtube.com/@bakandeya',
-      instagram: 'https://instagram.com/bakandeyaband',
+      spotify: 'https://spotify.com/artist/banda-demo',
+      youtube: 'https://youtube.com/@banda-demo',
+      instagram: 'https://instagram.com/bandademo',
     },
     contactoBooking: {
       nombre: 'Diego de la Calle',
-      email: 'booking@bakandeya.com',
+      email: 'booking@banda-demo.example',
       telefono: '600123456',
     },
     temasDestacadosIds: ['song1', 'song2'],
@@ -59,6 +59,6 @@ describe('epkUtils', () => {
     const summary = generateEPKPressKitSummary(completeEPK, mockSongs);
     expect(summary).toContain('PRESS KIT COMPACTO');
     expect(summary).toContain('Cacharros y Sueños');
-    expect(summary).toContain('booking@bakandeya.com');
+    expect(summary).toContain('booking@banda-demo.example');
   });
 });

@@ -74,8 +74,8 @@ describe("mergePrintSettings", () => {
       textAlign: "left",
       columnsChoice: "auto",
       showWatermark: true,
-      showTonality: false,
-      showBpm: false,
+      showTonality: true,
+      showBpm: true,
     });
   });
 });
@@ -96,8 +96,8 @@ describe("badgesScope y markedSongs", () => {
     expect(out).toEqual({ markedSongs: { ok: ["x"] } });
   });
 
-  it("por defecto: tono/BPM en todos los temas y sin marcas", () => {
-    expect(DEFAULT_PRINT_SETTINGS.badgesScope).toBe("all");
+  it("por defecto: tono y BPM activos, solo en los temas marcados", () => {
+    expect(DEFAULT_PRINT_SETTINGS.badgesScope).toBe("marked");
     expect(mergePrintSettings(null).markedSongs).toEqual({});
   });
 });

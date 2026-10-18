@@ -1,5 +1,7 @@
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { NormalizedHighlight } from "../utils/reelsCore.js";
 
 /**
  * Persistencia del análisis de highlights del generador de Reels.
@@ -22,12 +24,28 @@ export interface ReelAnalysisRecord {
   videoTitle?: string;
   videoDuration?: number;
   targetDuration?: number;
-  highlights: any[];
-  optimalTime?: any;
-  energyWindows?: any[];
-  videoMeta?: any;
+  highlights: NormalizedHighlight[];
+  /** Mejor momento para publicar, tal como lo propone la IA (forma libre). */
+  optimalTime?: unknown;
+  /** Tramos del audio con más energía (segundos y puntuación). */
+  energyWindows?: Array<{ start: number; end: number; score: number }>;
+  videoMeta?: Record<string, unknown>;
   generatedByAI?: boolean;
   notice?: string;
+}
+
+/** Fila de `reel_analyses` tal como se lee. */
+export interface FilaReelAnalysis {
+  id: string;
+  band_id: string;
+  video_key: string;
+  highlights: NormalizedHighlight[];
+  optimal_time: unknown;
+  energy_windows: ReelAnalysisRecord["energyWindows"];
+  video_meta: Record<string, unknown>;
+  generated_by_ai: boolean;
+  notice: string;
+  updated_at: string;
 }
 
 function idDeAnalisis(bandId: string, videoKey: string): string {
@@ -37,7 +55,7 @@ function idDeAnalisis(bandId: string, videoKey: string): string {
   return `reelan-${bandId}-${limpio}`;
 }
 
-export async function dbGetReelAnalysis(bandId: string, videoKey: string): Promise<any | null> {
+export async function dbGetReelAnalysis(bandId: string, videoKey: string): Promise<FilaReelAnalysis | null> {
   if (!videoKey) return null;
   try {
     const sb = getSupabase();
@@ -53,7 +71,8 @@ export async function dbGetReelAnalysis(bandId: string, videoKey: string): Promi
       return null;
     }
     return data || null;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     // getSupabase() lanza de forma SÍNCRONA si faltan las variables de entorno (por diseño,
     // ver server/db/core.ts). Sin este try/catch, un servidor sin Supabase configurado
     // reventaba con un 500 en vez de simplemente responder "no hay nada guardado".
@@ -62,7 +81,7 @@ export async function dbGetReelAnalysis(bandId: string, videoKey: string): Promi
   }
 }
 
-export async function dbUpsertReelAnalysis(registro: ReelAnalysisRecord): Promise<any | null> {
+export async function dbUpsertReelAnalysis(registro: ReelAnalysisRecord): Promise<FilaReelAnalysis | null> {
   const targetBandId = cleanBandId(registro.bandId);
   if (!registro.videoKey) return null;
 
@@ -99,7 +118,8 @@ export async function dbUpsertReelAnalysis(registro: ReelAnalysisRecord): Promis
       return null;
     }
     return data;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[reel_analyses] No se pudo guardar el análisis:", err?.message || err);
     return null;
   }
@@ -114,14 +134,14 @@ export async function dbUpdateReelAnalysisHighlight(
   bandId: string,
   videoKey: string,
   highlightId: string,
-  patch: Record<string, any>
+  patch: Partial<NormalizedHighlight>
 ): Promise<boolean> {
   try {
     const existente = await dbGetReelAnalysis(bandId, videoKey);
     if (!existente) return false;
 
     const highlights = Array.isArray(existente.highlights) ? existente.highlights : [];
-    const actualizados = highlights.map((h: any) =>
+    const actualizados = highlights.map((h) =>
       h && h.id === highlightId ? { ...h, ...patch } : h
     );
 
@@ -136,7 +156,8 @@ export async function dbUpdateReelAnalysisHighlight(
       return false;
     }
     return true;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[reel_analyses] No se pudo actualizar el highlight guardado:", err?.message || err);
     return false;
   }

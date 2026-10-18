@@ -2,23 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { AlertSettingsConfig, CustomAlertRule } from '../../types';
 import { hasModuleAccess } from '../../utils/planPermissions';
 import { apiFetch } from '../../utils/api';
-import {
-  X,
-  Bell,
-  Mail,
-  ShieldCheck,
-  Sliders,
-  CheckCircle2,
-  Lock,
-  Sparkles,
-  Calendar,
-  Clock,
-  AlertTriangle,
-  Users,
-  Save,
-  Check,
-} from 'lucide-react';
+import { X, Bell, Mail, ShieldCheck, Sliders, Lock, Sparkles, Clock, Save, Check } from 'lucide-react';
 import { Button, IconButton, Input } from '../ui';
+import { DEFAULT_ALERT_RULES } from './alertSettingsDefaults';
+import { comoErrorCapturado } from '../../utils/errorCapturado';
+
+/** Fila de `band_alert_settings` tal y como la devuelve `GET /api/bands/alert-settings`. */
+interface AjustesAlertasRemotos {
+  email_notifications_enabled?: boolean;
+  in_app_notifications_enabled?: boolean;
+  digest_frequency?: AlertSettingsConfig['digestFrequency'];
+  recipient_email?: string;
+  recipient_role?: AlertSettingsConfig['recipientRole'];
+  rules?: CustomAlertRule[];
+}
 
 interface AlertSettingsModalProps {
   isOpen: boolean;
@@ -30,87 +27,13 @@ interface AlertSettingsModalProps {
   onSaveConfig?: (config: AlertSettingsConfig) => void;
 }
 
-export const DEFAULT_ALERT_RULES: CustomAlertRule[] = [
-  {
-    id: 'rule_festivals_window',
-    name: 'Ventana de Festivales de Verano (Oct-Feb)',
-    description: 'Aviso urgente cuando la industria abre la contratación masiva de festivales.',
-    category: 'booking',
-    requiredModule: 'booking',
-    enabled: true,
-    notifyInApp: true,
-    notifyEmail: true,
-    targetRoleOnly: true,
-  },
-  {
-    id: 'rule_stale_festival_lead',
-    name: 'Lead de Festival sin Respuesta',
-    description: 'Notificar si un festival no responde tras un número de días para enviar el follow-up de hito.',
-    category: 'booking',
-    requiredModule: 'booking',
-    enabled: true,
-    daysThreshold: 7,
-    notifyInApp: true,
-    notifyEmail: true,
-    targetRoleOnly: true,
-  },
-  {
-    id: 'rule_stale_venue_lead',
-    name: 'Lead de Sala / Club sin Respuesta',
-    description: 'Aviso cuando una sala lleva días congelada sin confirmación de agenda.',
-    category: 'booking',
-    requiredModule: 'booking',
-    enabled: true,
-    daysThreshold: 7,
-    notifyInApp: true,
-    notifyEmail: false,
-    targetRoleOnly: true,
-  },
-  {
-    id: 'rule_pending_drafts',
-    name: 'Borradores de IA Listos para Aprobación',
-    description: 'Alertar cuando el Agente Redactor genera borradores de pitch esperando revisión humana.',
-    category: 'booking',
-    requiredModule: 'booking',
-    enabled: true,
-    notifyInApp: true,
-    notifyEmail: true,
-    targetRoleOnly: true,
-  },
-  {
-    id: 'rule_unpaid_cache',
-    name: 'Caché de Concierto Pasado sin Cobrar',
-    description: 'Alerta cuando un bolo realizado supera el margen de cobro sin figurar como pagado.',
-    category: 'finanzas',
-    requiredModule: 'finanzas',
-    enabled: true,
-    daysThreshold: 5,
-    notifyInApp: true,
-    notifyEmail: true,
-    targetRoleOnly: true,
-  },
-  {
-    id: 'rule_rehearsal_warning',
-    name: 'Show Próximo sin Ensayos Agendados',
-    description: 'Aviso si hay un concierto en menos de 14 días y no consta ensayo en la agenda.',
-    category: 'ensayos',
-    requiredModule: 'ensayos',
-    enabled: true,
-    daysThreshold: 14,
-    notifyInApp: true,
-    notifyEmail: false,
-    targetRoleOnly: false,
-  },
-];
-
 export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
   isOpen,
   onClose,
   userPlan = 'de_gira',
-  isLeaderOrManager = true,
   userEmail = '',
   bandId = 'band-active',
-  onSaveConfig,
+  onSaveConfig
 }) => {
   const [activeTab, setActiveTab] = useState<'rules' | 'channels' | 'plan'>('rules');
   const [savedSuccess, setSavedSuccess] = useState(false);
@@ -121,7 +44,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
     try {
       const saved = localStorage.getItem(storageKey);
       if (saved) return JSON.parse(saved);
-    } catch (e) {
+    } catch {
       // fallback to default
     }
     return {
@@ -138,7 +61,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
     // Attempt to load remote alert settings from Supabase backend API
     const loadRemoteSettings = async () => {
       try {
-        const data = await apiFetch<any>('/api/bands/alert-settings');
+        const data = await apiFetch<{ settings?: AjustesAlertasRemotos }>('/api/bands/alert-settings');
         if (data?.settings) {
           const s = data.settings;
           setConfig((prev) => ({
@@ -151,7 +74,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
             rules: s.rules && s.rules.length > 0 ? s.rules : prev.rules,
           }));
         }
-      } catch (e) {
+      } catch {
         // Fallback silently to localStorage
       }
     };
@@ -160,11 +83,15 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
     }
   }, [isOpen, bandId]);
 
-  useEffect(() => {
+  // Al montar y cuando cambia userEmail, el destinatario por defecto pasa a ser el del usuario
+  // (solo si aún está vacío o es el placeholder). Se ajusta durante el render.
+  const [prevUserEmail, setPrevUserEmail] = useState<string | null>(null);
+  if (prevUserEmail !== userEmail) {
+    setPrevUserEmail(userEmail);
     if (userEmail && (!config.recipientEmail || config.recipientEmail === 'manager@banda.com')) {
       setConfig((prev) => ({ ...prev, recipientEmail: userEmail }));
     }
-  }, [userEmail]);
+  }
 
   // Los hooks (useState incluido) van siempre ANTES del return anticipado: si no, el número de hooks
   // cambia al abrir/cerrar el modal y React lo rechaza (react-hooks/rules-of-hooks).
@@ -198,7 +125,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
     setSendingTestDigest(true);
     setTestDigestResult(null);
     try {
-      const data = await apiFetch<any>('/api/bands/trigger-alert-digest', {
+      const data = await apiFetch<{ success?: boolean; recipient?: string; error?: string }>('/api/bands/trigger-alert-digest', {
         method: 'POST',
       });
       if (data?.success) {
@@ -206,7 +133,8 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
       } else {
         setTestDigestResult(`Error: ${data?.error || 'No se pudo enviar'}`);
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setTestDigestResult(err?.message || 'Error de conexión.');
     } finally {
       setSendingTestDigest(false);
@@ -484,7 +412,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                         <button
                           key={f.id}
                           type="button"
-                          onClick={() => setConfig((prev) => ({ ...prev, digestFrequency: f.id as any }))}
+                          onClick={() => setConfig((prev) => ({ ...prev, digestFrequency: f.id as AlertSettingsConfig['digestFrequency'] }))}
                           className={`p-3 rounded-[var(--r-m)] text-left transition-ui ${
                             config.digestFrequency === f.id
                               ? 'bg-[var(--acc)]/15 text-[var(--ink)]'

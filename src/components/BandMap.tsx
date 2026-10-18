@@ -1,26 +1,17 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useEffectEvent, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet.markercluster";
 import { BandContact, BandRelationshipStatus } from "../types";
-import {
-  MapPin,
-  Navigation,
-  Check,
-  Loader2,
-  Layers,
-  Music,
-  Handshake,
-  Repeat,
-  Zap,
-  Clock,
-  Radio,
-  X,
-} from "lucide-react";
+import { MapPin, Navigation, Check, Loader2, Layers } from "lucide-react";
 import { escapeHtml } from "../utils/escapeHtml";
+import { htmlPopupBanda } from "./bandMapPopup";
 
 interface BandMapProps {
   bands: BandContact[];
   onSelectBand: (band: BandContact) => void;
+  /** Bandas con preview de 30 s disponible: solo a estas se les ofrece el play en el popup. */
+  disponibles?: Record<string, boolean>;
+  onEscuchar?: (bandId: string) => void;
 }
 
 type MapStyleKey = "streets" | "osm" | "satellite" | "positron" | "dark";
@@ -191,7 +182,7 @@ function resolveBandCoordinates(
     return offsetCoords(SPANISH_CITIES_GEO[rawLoc], index);
   }
 
-  const parts = rawLoc.split(/[\(\-\/\,]/);
+  const parts = rawLoc.split(/[(\-/,]/);
   for (const p of parts) {
     const trimmed = p.trim();
     if (SPANISH_CITIES_GEO[trimmed]) {
@@ -284,11 +275,11 @@ function getStatusBadgeConfig(status: BandRelationshipStatus) {
   }
 }
 
-export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
+export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand, disponibles, onEscuchar }) => {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const leafletMap = useRef<L.Map | null>(null);
   const tileLayerRef = useRef<L.TileLayer | null>(null);
-  const markersGroup = useRef<any>(null);
+  const markersGroup = useRef<L.MarkerClusterGroup | null>(null);
 
   const [mapStyle, setMapStyle] = useState<MapStyleKey>("streets");
   const [showStyleMenu, setShowStyleMenu] = useState<boolean>(false);
@@ -296,6 +287,11 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
     Record<string, [number, number]>
   >({});
   const [isGeocoding, setIsGeocoding] = useState<boolean>(false);
+
+  // Estilo y callback «en vivo» para los efectos de Leaflet (no deben re-crear el mapa ni los marcadores)
+  const estiloInicial = useEffectEvent(() => MAP_STYLES[mapStyle]);
+  const seleccionarBanda = useEffectEvent((band: BandContact) => onSelectBand(band));
+  const escucharBanda = useEffectEvent((bandId: string) => onEscuchar?.(bandId));
 
   // Initialize Map
   useEffect(() => {
@@ -310,7 +306,7 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
 
       L.control.zoom({ position: "bottomright" }).addTo(map);
 
-      const currentPreset = MAP_STYLES[mapStyle];
+      const currentPreset = estiloInicial();
       const layer = L.tileLayer(currentPreset.url, {
         attribution: currentPreset.attr,
         maxZoom: 19,
@@ -318,12 +314,12 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
 
       tileLayerRef.current = layer;
 
-      const clusterGroup = (L as any).markerClusterGroup({
+      const clusterGroup = L.markerClusterGroup({
         showCoverageOnHover: false,
         zoomToBoundsOnClick: true,
         spiderfyOnMaxZoom: true,
         maxClusterRadius: 50,
-        iconCreateFunction: (cluster: any) => {
+        iconCreateFunction: (cluster) => {
           const count = cluster.getChildCount();
           const size = 42;
           const bgColor = "var(--acc)";
@@ -444,7 +440,7 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
               }
             }
           }
-        } catch (err) {
+        } catch {
           // Keep static geocode
         }
         await new Promise((r) => setTimeout(r, 400));
@@ -540,68 +536,11 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
 
       const popupHtml = document.createElement("div");
       popupHtml.className = "font-sans p-1 min-w-[220px] text-[var(--ink)]";
-      popupHtml.innerHTML = `
- <div style="font-family: system-ui, sans-serif;">
- <div style="font-size: 14px; font-weight: 800; color: ${inkColor}; margin-bottom: 2px;">
- ${escapeHtml(band.nombre_banda)}
- </div>
- <div style="font-size: 11px; color: ${ink2Color}; margin-bottom: 6px;">
- 📍 ${escapeHtml(band.localizacion)}
- </div>
- <div style="font-size: 11px; font-weight: 600; color: ${accColor}; margin-bottom: 8px;">
- 🎵 ${escapeHtml(band.estilo_musical)}
- </div>
- <div style="margin-bottom: 8px;">
- <span style="
- background: ${badgeCfg.bg};
- color: ${badgeCfg.color};
- font-size: 10px;
- font-family: monospace;
- font-weight: 700;
- padding: 2px 8px;
- border-radius: 6px;
- display: inline-block;">
- ${badgeCfg.text}
- </span>
- </div>
- ${
-   band.contacto_nombre
-     ? `
- <div style="font-size: 11px; color: ${inkColor}; margin-bottom: 4px;">
- 👤 <strong>Contacto:</strong> ${escapeHtml(band.contacto_nombre)}
- </div>
- `
-     : ""
- }
- ${
-   band.email
-     ? `
- <div style="font-size: 10px; font-family: monospace; color: ${accColor}; margin-bottom: 8px; overflow: hidden; text-overflow: ellipsis;">
- ✉️ ${escapeHtml(band.email)}
- </div>
- `
-     : ""
- }
- <div style="margin-top: 10px;">
- <button id="pop-band-select-${band.id}" style="
- width: 100%;
- background: ${surfaceColor};
- color: ${accColor};
- padding: 6px 10px;
- border-radius: 8px;
- font-size: 11px;
- font-weight: bold;
- font-family: monospace;
- cursor: pointer;
- display: flex;
- align-items: center;
- justify-content: center;
- gap: 4px;">
- 📋 Ver Ficha Técnica
- </button>
- </div>
- </div>
- `;
+      popupHtml.innerHTML = htmlPopupBanda(
+        band,
+        { ink: inkColor, ink2: ink2Color, acc: accColor, surface: surfaceColor, badge: badgeCfg },
+        Boolean(disponibles?.[band.id] && onEscuchar),
+      );
 
       marker.bindPopup(popupHtml);
 
@@ -609,8 +548,12 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
         const btn = document.getElementById(`pop-band-select-${band.id}`);
         if (btn) {
           btn.onclick = () => {
-            onSelectBand(band);
+            seleccionarBanda(band);
           };
+        }
+        const play = document.getElementById(`pop-band-play-${band.id}`);
+        if (play) {
+          play.onclick = () => escucharBanda(band.id);
         }
       });
 
@@ -620,7 +563,7 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
     if (validCount > 0 && leafletMap.current) {
       leafletMap.current.fitBounds(bounds, { padding: [50, 50], maxZoom: 14 });
     }
-  }, [geoPositions, bands]);
+  }, [geoPositions, bands, disponibles, onEscuchar]);
 
   // Handle Resize
   useEffect(() => {

@@ -1,6 +1,17 @@
 import { describe, it, expect } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { bpmDeToques } from '../hooks/useMetronomo';
+
+/** Código fuente del visor en directo: el contenedor más todos los módulos de `setlist_performance/` (tras la modularización, ADR 0034). */
+function leerConcierto(): string {
+  const dir = new URL('../components/setlist_performance/', import.meta.url);
+  const modulos = readdirSync(dir, { recursive: true, encoding: 'utf8' })
+    .filter((f) => /\.tsx?$/.test(f) && !f.includes('__tests__'))
+    .sort()
+    .map((f) => readFileSync(new URL(f, dir), 'utf8'));
+  return [readFileSync(new URL('../components/SetlistPerformanceView.tsx', import.meta.url), 'utf8'), ...modulos].join('\n');
+}
+
 
 const ensayo = readFileSync(new URL('../components/ensayos/ModoLocalEnVivoTab.tsx', import.meta.url), 'utf8');
 
@@ -22,7 +33,7 @@ describe('metrónomo único del producto', () => {
 });
 
 describe('modos en vivo: mecánicas compartidas', () => {
-  const concierto = readFileSync(new URL('../components/SetlistPerformanceView.tsx', import.meta.url), 'utf8');
+  const concierto = leerConcierto();
   it('concierto y ensayo usan el mismo wake lock y los mismos gestos de pasar página', () => {
     for (const src of [ensayo, concierto]) {
       expect(src).toContain('useWakeLock(');

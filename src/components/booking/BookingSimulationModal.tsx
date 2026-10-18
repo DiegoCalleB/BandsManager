@@ -19,7 +19,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
   const simulationSubject =
     lead.hilo_emails && lead.hilo_emails.length > 0
       ? `RE: ${lead.hilo_emails[lead.hilo_emails.length - 1].asunto}`
-      : 'Re: Propuesta de concierto - Bakandeya';
+      : 'Re: Propuesta de concierto';
   const [simulationCustomInstruction, setSimulationCustomInstruction] = useState(
     'La sala muestra gran interés por el directo. Propone una fecha de viernes o sábado de noviembre, un reparto de taquilla del 70/30 a favor de la banda, y entradas a 12€.'
   );
@@ -30,7 +30,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
   const handleGenerate = async () => {
     setIsGenerating(true);
     try {
-      const res = await apiFetch('/api/generate-simulated-email', {
+      const res = await apiFetch<{ message?: string }>('/api/generate-simulated-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -43,7 +43,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
       });
       // apiFetch devuelve el JSON ya parseado (y lanza si la respuesta no fue 2xx),
       // así que no hay Response que interrogar con .ok / .json().
-      const data = res as any;
+      const data = res;
       if (data?.message) {
         setSimulationMessage(data.message);
         setSimulationGenerated(true);
@@ -99,12 +99,12 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
                   onChange={(e) => {
                     const role = e.target.value as 'sala' | 'banda';
                     setSimulationRole(role);
-                    setSimulationSenderName(role === 'sala' ? `Programador de ${lead.nombre_sala}` : 'Booking Bakandeya');
+                    setSimulationSenderName(role === 'sala' ? `Programador de ${lead.nombre_sala}` : 'Booking de la banda');
                   }}
                   wrapperClassName="w-full"
                 >
                   <option value="sala">Sala / promotor (respuesta entrante)</option>
-                  <option value="banda">Banda bakandeya (respuesta saliente)</option>
+                  <option value="banda">Banda (respuesta saliente)</option>
                 </Select>
               </div>
 

@@ -31,8 +31,8 @@ import { transposeChordToken } from '../utils/chordUtils';
 import { ShowIcon } from './ui/ShowIcon';
 import { Button, IconButton } from './ui';
 import { programarClic } from '../utils/clicMetronomo';
-
-const TRANSPOSE_SEMITONE_OPTIONS = [6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6];
+import type { RespuestaAcordesCancion } from '../services/tiposRespuestasHerramientas';
+import { comoErrorCapturado } from '../utils/errorCapturado';
 
 /** Puente invisible: aplica trasposición de tono en tiempo real a UNA pista de audio, reutilizando
  * el mismo hook (Tone.js) que ya usa la barra de reproducción global. Practice Mode suena varias
@@ -86,6 +86,47 @@ function formatTime(totalSeconds: number): string {
   return `${m}:${String(s).padStart(2, '0')}`;
 }
 
+function leerMezclaGuardada(storageKey: string): Record<string, TrackOverride> {
+  try {
+    const raw = localStorage.getItem(storageKey);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
+function leerCompasGuardado(beatAnchorStorageKey: string): number {
+  try {
+    const rawAnchor = localStorage.getItem(beatAnchorStorageKey);
+    return rawAnchor ? Number(rawAnchor) || 0 : 0;
+  } catch {
+    return 0;
+  }
+}
+
+/** Elemento de audio de una pista. Se fija crossOrigin ANTES de asignar el .src (ver ensureAudioLoaded). */
+function crearAudioDePista(): HTMLAudioElement {
+  const el = new Audio();
+  el.preload = 'auto';
+  // Hay que fijar esto ANTES de asignar el .src: si se hace después (como hace, a la fuerza,
+  // useTonePitchShift la primera vez que activas la trasposición), el navegador ya ha
+  // empezado a pedir el audio sin modo CORS y createMediaElementSource() se queda mudo para
+  // esa pista el resto de la sesión, sin lanzar ningún error visible.
+  el.crossOrigin = 'anonymous';
+  return el;
+}
+
+/** Asigna la fuente resuelta de la pista si el elemento aún no tiene una. */
+async function cargarFuenteSiFalta(el: HTMLAudioElement, audioUrl: string): Promise<void> {
+  if (el.src && el.src !== '' && !el.src.endsWith('undefined')) return;
+  try {
+    const resolved = await resolveAudioUrl(audioUrl);
+    el.src = resolved || audioUrl;
+  } catch {
+    el.src = audioUrl;
+  }
+}
+
 interface SmartSongSection {
   id: string;
   name: string;
@@ -100,10 +141,9 @@ export default function PracticeModePanel({
   idea,
   tracks,
   currentUser,
-  glareMode,
   onClose,
   onOpenStudio,
-  onApplyAsMainChords,
+  onApplyAsMainChords
 }: PracticeModePanelProps) {
   const storageKey = useMemo(() => buildStorageKey(song, idea, currentUser), [song, idea, currentUser]);
 
@@ -111,7 +151,7 @@ export default function PracticeModePanel({
   const [speed, setSpeed] = useState(1);
   const [loopA, setLoopA] = useState<number | null>(null);
   const [loopB, setLoopB] = useState<number | null>(null);
-  const [activeSmartSectionId, setActiveSmartSectionId] = useState<string | null>(null);
+  const [, setActiveSmartSectionId] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -121,7 +161,8 @@ export default function PracticeModePanel({
   const [semitonesOffset, setSemitonesOffset] = useState(0);
   const [metronomeOn, setMetronomeOn] = useState(false);
   const [beatAnchorSec, setBeatAnchorSec] = useState(0);
-  const [, setAudioReadyTick] = useState(0);
+  // Elementos de audio por pista, para pintarlos en render (los refs solo se leen en efectos y manejadores).
+  const [audioElementos, setAudioElementos] = useState<Record<string, HTMLAudioElement | null>>({});
 
   // Secciones inteligentes calculadas a partir de la duración del audio o ideas registradas
   const effectiveTotalDuration = duration > 0 ? duration : song.duracionSegundos > 0 ? song.duracionSegundos : 210;
@@ -196,26 +237,20 @@ export default function PracticeModePanel({
 
   const beatAnchorStorageKey = useMemo(() => `${storageKey}:beatAnchor`, [storageKey]);
 
-  // Cargar la mezcla personal guardada de este usuario para esta idea concreta
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(storageKey);
-      setOverrides(raw ? JSON.parse(raw) : {});
-    } catch {
-      setOverrides({});
-    }
-    try {
-      const rawAnchor = localStorage.getItem(beatAnchorStorageKey);
-      setBeatAnchorSec(rawAnchor ? Number(rawAnchor) || 0 : 0);
-    } catch {
-      setBeatAnchorSec(0);
-    }
+  // Cargar la mezcla personal guardada de este usuario para esta idea concreta. Es un ajuste
+  // durante el render (al cambiar de idea) en vez de un efecto: evita un render intermedio con
+  // la mezcla de la idea anterior y que el efecto de persistencia la escriba en la clave nueva.
+  const [claveCargada, setClaveCargada] = useState<string | null>(null);
+  if (claveCargada !== storageKey) {
+    setClaveCargada(storageKey);
+    setOverrides(leerMezclaGuardada(storageKey));
+    setBeatAnchorSec(leerCompasGuardado(beatAnchorStorageKey));
     setLoopA(null);
     setLoopB(null);
     setSpeed(1);
     setSemitonesOffset(0);
     setMetronomeOn(false);
-  }, [storageKey, beatAnchorStorageKey]);
+  }
 
   // Persistir la mezcla personal (solo en este dispositivo, nunca en el documento de la canción)
   useEffect(() => {
@@ -225,7 +260,7 @@ export default function PracticeModePanel({
       } else {
         localStorage.removeItem(storageKey);
       }
-    } catch {}
+    } catch { /* almacenamiento del navegador no disponible (modo privado o cuota llena): el cambio vale para esta sesión */ }
   }, [storageKey, overrides]);
 
   // Persistir el compás marcado (por dispositivo, igual que el resto de ajustes de práctica)
@@ -236,7 +271,7 @@ export default function PracticeModePanel({
       } else {
         localStorage.removeItem(beatAnchorStorageKey);
       }
-    } catch {}
+    } catch { /* almacenamiento del navegador no disponible (modo privado o cuota llena): el cambio vale para esta sesión */ }
   }, [beatAnchorStorageKey, beatAnchorSec]);
 
   const getEffective = useCallback(
@@ -258,9 +293,11 @@ export default function PracticeModePanel({
     [overrides, hasSolo]
   );
 
+  // También al estar listos los elementos de audio: se crean de forma asíncrona y, si no, el
+  // silencio/solo/volumen de la mezcla guardada no llegaría a las pistas creadas después.
   useEffect(() => {
     tracks.forEach(applyDsp);
-  }, [tracks, applyDsp]);
+  }, [tracks, applyDsp, audioElementos]);
 
   const setOverride = (trackId: string, patch: TrackOverride) => {
     setOverrides((prev) => ({
@@ -320,26 +357,13 @@ export default function PracticeModePanel({
     for (const tr of tracks) {
       let el = audioRefs.current[tr.id];
       if (!el) {
-        el = new Audio();
-        el.preload = 'auto';
-        // Hay que fijar esto ANTES de asignar el .src: si se hace después (como hace, a la fuerza,
-        // useTonePitchShift la primera vez que activas la trasposición), el navegador ya ha
-        // empezado a pedir el audio sin modo CORS y createMediaElementSource() se queda mudo para
-        // esa pista el resto de la sesión, sin lanzar ningún error visible.
-        el.crossOrigin = 'anonymous';
+        el = crearAudioDePista();
         audioRefs.current[tr.id] = el;
         createdAny = true;
       }
-      if (!el.src || el.src === '' || el.src.endsWith('undefined')) {
-        try {
-          const resolved = await resolveAudioUrl(tr.audioUrl);
-          el.src = resolved || tr.audioUrl;
-        } catch {
-          el.src = tr.audioUrl;
-        }
-      }
+      await cargarFuenteSiFalta(el, tr.audioUrl);
     }
-    if (createdAny) setAudioReadyTick((t) => t + 1);
+    return createdAny;
   }, [tracks]);
 
   // Recalcula en qué instante exacto (reloj de AudioContext) debería sonar el próximo clic del
@@ -348,10 +372,10 @@ export default function PracticeModePanel({
   const resyncMetronomeAt = useCallback(
     (atTime: number, anchorOverride?: number) => {
       if (!metronomeCtxRef.current) {
-        metronomeCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+        metronomeCtxRef.current = new (window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext)();
       }
       const ctx = metronomeCtxRef.current;
-      if (ctx.state === 'suspended') ctx.resume().catch(() => {});
+      if (ctx.state === 'suspended') ctx.resume().catch(() => { /* contexto de audio ya cerrado o en transición: no hay nada que cambiar */ });
       const anchor = anchorOverride ?? beatAnchorSec;
       const secPerBeat = 60 / (song.bpm || 120) / speed;
       const relativeTime = atTime - anchor;
@@ -405,7 +429,9 @@ export default function PracticeModePanel({
 
   // Carga inicial + limpieza total al cambiar de idea o desmontar
   useEffect(() => {
-    ensureAudioLoaded();
+    ensureAudioLoaded().then((createdAny) => {
+      if (createdAny) setAudioElementos({ ...audioRefs.current });
+    });
     return () => {
       Object.values(audioRefs.current).forEach((el) => {
         if (el) {
@@ -414,6 +440,7 @@ export default function PracticeModePanel({
         }
       });
       audioRefs.current = {};
+      setAudioElementos({});
       if (metronomeTimerRef.current) {
         window.clearInterval(metronomeTimerRef.current);
         metronomeTimerRef.current = null;
@@ -429,7 +456,7 @@ export default function PracticeModePanel({
         if (el) {
           try {
             el.currentTime = clamped;
-          } catch {}
+          } catch { /* audio sin metadatos aún: no admite saltos y se sincroniza al cargar */ }
         }
       });
       setCurrentTime(clamped);
@@ -476,7 +503,7 @@ export default function PracticeModePanel({
     players.forEach((el) => {
       el.playbackRate = speed;
     });
-    await Promise.all(players.map((el) => el.play().catch(() => {})));
+    await Promise.all(players.map((el) => el.play().catch(() => { /* autoplay bloqueado sin gesto del usuario: queda en pausa y se reproduce al pulsar */ })));
     setIsPlaying(true);
   };
 
@@ -502,13 +529,6 @@ export default function PracticeModePanel({
 
   const handleSeekBarChange = (val: number) => {
     seekAll(val);
-  };
-
-  const markLoopA = () => setLoopA(currentTime);
-  const markLoopB = () => setLoopB(currentTime);
-  const clearLoop = () => {
-    setLoopA(null);
-    setLoopB(null);
   };
 
   const handleExport = async (mode: 'sin-mi-pista' | 'solo-mi-pista' | 'mezcla-actual') => {
@@ -541,7 +561,8 @@ export default function PracticeModePanel({
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setExportError(err?.message || 'No se pudo exportar la mezcla.');
     } finally {
       setIsExporting(null);
@@ -557,7 +578,7 @@ export default function PracticeModePanel({
       // Sin songId a propósito: así el servidor NUNCA sobreescribe el cifrado principal de la
       // canción con el análisis de una pista aislada (bajo, guitarra...) — queda solo en este
       // panel hasta que el usuario decida explícitamente aplicarlo con onApplyAsMainChords.
-      const data = await apiFetch('/api/generate-song-chords', {
+      const data = await apiFetch<RespuestaAcordesCancion>('/api/generate-song-chords', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -577,7 +598,8 @@ export default function PracticeModePanel({
           esAproximado: !!data.esAproximado,
         },
       }));
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setChordsErrorByTrack((prev) => ({
         ...prev,
         [tr.id]: err?.message || 'No se pudieron detectar los acordes de esta pista.',
@@ -612,7 +634,7 @@ export default function PracticeModePanel({
       {/* Puentes de trasposición: uno por pista, siempre montados (ver comentario en
  TrackPitchShiftBridge más arriba — desmontarlos a mitad de sesión dejaría esa pista muda). */}
       {tracks.map((tr) => (
-        <TrackPitchShiftBridge key={tr.id} audioElement={audioRefs.current[tr.id] || null} semitones={semitonesOffset} />
+        <TrackPitchShiftBridge key={tr.id} audioElement={audioElementos[tr.id] || null} semitones={semitonesOffset} />
       ))}
       <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-[var(--scrim)]/80">
         <div className={`w-full max-w-2xl rounded-[var(--r-l)] overflow-hidden flex flex-col max-h-[90vh] ${panelBg}`}>

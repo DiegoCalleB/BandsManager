@@ -1,6 +1,6 @@
 import crypto from "crypto";
 import { getSupabase } from "../db/core.js";
-import { esUrlExternaSegura } from "../utils/ssrfGuard.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export interface StemPredictionJob {
   id: string;
@@ -15,7 +15,8 @@ export interface StemPredictionJob {
   updated_at: string;
   webhook_received_at?: string;
   webhook_signature_verified?: boolean;
-  result_stems_map?: any;
+  /** `output` de la predicción tal como lo devuelve el proveedor (forma propia de cada modelo). */
+  result_stems_map?: unknown;
   error_message?: string;
 }
 
@@ -119,7 +120,7 @@ export async function isPredictionWebhookProcessed(predictionId: string): Promis
       processedWebhookIds.add(predictionId);
       return true;
     }
-  } catch (e) {
+  } catch {
     // Si la tabla aún no existe, fallback a memoria
   }
 
@@ -153,7 +154,8 @@ export async function recordPredictionJob(job: Partial<StemPredictionJob> & { id
         result_stems_map: job.result_stems_map || null,
         error_message: job.error_message || null
       }, { onConflict: "id" });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn(`[Stem Predictions] Aviso guardando job de predicción ${job.id}:`, err?.message || err);
   }
 }
@@ -228,13 +230,15 @@ export async function reconcileStaleStemPredictions(staleMinutes = 5): Promise<n
             reconciledCount++;
           }
         }
-      } catch (jobErr: any) {
+      } catch (jobErrCapturado) {
+        const jobErr = comoErrorCapturado(jobErrCapturado);
         console.warn(`[Prediction Reconciler] Error reconciliando job ${job.id}:`, jobErr?.message || jobErr);
       }
     }
 
     return reconciledCount;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[Prediction Reconciler] Fallo en ejecución del reconciliador:", err?.message || err);
     return 0;
   }

@@ -18,16 +18,33 @@ Sanitiza datos externos de salas y correos entrantes antes de inyectarlos en pro
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[service_pitch_engine|Pitch Engine & Multi-Model Routing]] *(Layer: #service, Domain: #booking)*
 - [[agent_lector|Lector Agent (Listener)]] *(Layer: #agent, Domain: #booking)*
+- [[service_pitch_engine|Pitch Engine & Multi-Model Routing]] *(Layer: #service, Domain: #booking)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[agent_lector|Lector Agent (Listener)]] *(from #agent)*
 - [[route_leads_pitch|Leads Pitch Generation Route]] *(from #route)*
 - [[route_leads_reply|Leads Reply Route]] *(from #route)*
-- [[agent_lector|Lector Agent (Listener)]] *(from #agent)*
+- [[server_evals_redactorGolden|server/evals/redactorGolden.ts]] *(from #service)*
+- [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
+- [[server_routes_campanaConcierto|server/routes/campanaConcierto.ts]] *(from #route)*
+- [[server_routes_deals|server/routes/deals.ts]] *(from #route)*
+- [[server_services_copyPerfecto|server/services/copyPerfecto.ts]] *(from #service)*
+- [[server_services_pitchJudge|server/services/pitchJudge.ts]] *(from #service)*
+- [[server_services_sentimentAnalysis|server/services/sentimentAnalysis.ts]] *(from #service)*
+- [[server_utils_auditoriaCopyReel|server/utils/auditoriaCopyReel.ts]] *(from #service)*
+- [[server_utils_bandDna|server/utils/bandDna.ts]] *(from #service)*
+- [[server_utils_chatPromptBloques|server/utils/chatPromptBloques.ts]] *(from #service)*
+- [[server_utils_promptCartel|server/utils/promptCartel.ts]] *(from #service)*
 - [[service_pitch_engine|Pitch Engine & Multi-Model Routing]] *(from #service)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/services/__tests__/pitchJudgeAndVectorStore.test.ts`
+- `server/utils/__tests__/promptSafety.test.ts`
 
 ---
 

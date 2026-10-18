@@ -1,0 +1,375 @@
+/* Continuación de styles.css (partido en trozos de menos de 600 líneas, AGENTS.md §5.6; se cargan en orden) */
+/* El lema final, sobre el local vacío */
+.slide.plano > .lema { position: absolute; left: 0; right: 0; top: 50%; translate: 0 -50%; z-index: 2; margin: 0; text-align: center; color: #fff;
+  font: 400 104px/1 Anton, Oswald, sans-serif; letter-spacing: .01em; text-shadow: 0 6px 40px rgba(0,0,0,.85); opacity: 0; }
+.slide.plano > .lema small { display: block; margin-top: 26px; font: 500 34px/1 Onest, sans-serif; letter-spacing: .32em; text-transform: uppercase; color: #ffd596; }
+.slide.plano.active > .lema { animation: lema 7.5s ease 1.2s both; }
+@keyframes lema { 0% { opacity: 0; letter-spacing: .05em; } 18%, 88% { opacity: 1; letter-spacing: .01em; } 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .slide.plano.active > .lema { animation: none; opacity: 1; } }
+/* Capturas de la app: el resalte y el nombre de la función se quedan; las etiquetas numeradas, los chips y el contador, no */
+body.pelicula:not(.scroll) .dr-lab, body.pelicula:not(.scroll) .slide.feat.active > .ficha span, body.pelicula:not(.scroll) .slide.feat.active > .ficha > i { display: none !important; }
+
+/* ───────── Capítulo 5 en la película: tipografía sobre planos en movimiento, sin tarjetas de diapositiva ───────── */
+body.pelicula:not(.scroll) .slide.scene.biz .actor-velo, body.pelicula:not(.scroll) #stage .slide.scene:is(.biz, [data-title="Para darlo a conocer"], [data-title="Qué viene"]) .actor-velo { background: linear-gradient(90deg, rgba(3,5,10,.86) 0%, rgba(3,5,10,.55) 55%, rgba(3,5,10,.25) 100%); opacity: 1; }
+body.pelicula:not(.scroll) .slide.scene.biz h2 { font: 600 34px/1 Onest, sans-serif; letter-spacing: .3em; text-transform: uppercase; color: #ffd596; max-width: none; margin-top: 8px; }
+body.pelicula:not(.scroll) .slide.scene > .biz-cols { left: 150px; right: 150px; top: 300px; width: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 90px; }
+body.pelicula:not(.scroll) .biz-col { background: none; border: 0; border-left: 4px solid #ffb35c; border-radius: 0; padding: 4px 0 4px 36px; backdrop-filter: none; }
+body.pelicula:not(.scroll) .biz-col .badge { display: block; padding: 0; background: none; margin-bottom: 18px; font-size: 24px; letter-spacing: .28em; text-transform: uppercase; color: #ffd596; }
+body.pelicula:not(.scroll) .biz-col .badge.b2b { color: #7fe2d4; }
+body.pelicula:not(.scroll) .biz-col h3 { font: 400 92px/1 Anton, Oswald, sans-serif; text-transform: uppercase; letter-spacing: .01em; color: #fff; text-shadow: 0 4px 30px rgba(0,0,0,.8); }
+body.pelicula:not(.scroll) .biz-col p { margin-top: 20px; font-size: 36px; color: rgba(255,255,255,.88); text-shadow: 0 2px 16px rgba(0,0,0,.9); }
+/* «Y para darlo a conocer»: el máster, como un rótulo y no como una tarjeta */
+body.pelicula:not(.scroll) .slide.scene .enrol.slim { background: none; border: 0; border-left: 4px solid #ffb35c; border-radius: 0; padding: 0 0 0 28px; margin-top: 30px; backdrop-filter: none; }
+body.pelicula:not(.scroll) .enrol.slim .mono { display: none; }
+body.pelicula:not(.scroll) .enrol.slim .en-top b { font: 400 74px/1.05 Anton, Oswald, sans-serif; text-transform: uppercase; text-shadow: 0 4px 30px rgba(0,0,0,.8); }
+body.pelicula:not(.scroll) .enrol.slim .en-top span { font-size: 30px; color: rgba(255,255,255,.85); }
+/* «Qué viene»: la hoja de ruta es material de defensa (créditos y tecla D); en la película queda la notificación */
+body.pelicula:not(.scroll) .slide.scene.tech .steps, body.pelicula:not(.scroll) .slide.scene > .tech-vis.steps { display: none !important; }
+body.pelicula:not(.scroll) .slide.scene.tech:has(> .notif) h2 { font: 600 34px/1 Onest, sans-serif; letter-spacing: .3em; text-transform: uppercase; color: #ffd596; }
+/* Los dos planos más oscuros del capítulo 5 se aclaran un poco (se ven el portátil y las caras) */
+.slide[data-title="Qué viene"] .actor-vid, .slide[data-title="Cómo ganamos dinero"] .actor-vid { filter: brightness(1.7) contrast(1.05); }
+
+/* Mientras Diego no haya grabado su clip: su foto real entera, sobre ella misma desenfocada (es vertical y pequeña) */
+.entrevista .ent.ent-foto::before { content: ''; position: absolute; inset: -60px; background: var(--bg) center / cover; filter: blur(46px) brightness(.45) saturate(.8); }
+.entrevista .ent.ent-foto img { object-fit: contain; object-position: 50% 50%; width: auto; height: 100%; left: 50%; right: auto; translate: -50% 0; }
+.slide.entrevista.active .ent.ent-foto.on img { animation: none; }
+
+/* «Y esta parte es cierta…» sube para no pisarse con los subtítulos */
+body.pelicula:not(.scroll) .slide.scene[data-title="Prólogo · La decisión"] .scene-foot { position: absolute; left: 120px; right: 120px; bottom: auto; top: 720px; margin: 0; font-size: 26px; opacity: .85; }
+
+/* Insertos de la app en las entrevistas (recurso de documental): la voz sigue y se ve la pantalla de BandManager de la que habla */
+.ent-ins { position: absolute; inset: 0; z-index: 2; overflow: hidden; opacity: 0; background: #0b0c10; transition: opacity 160ms linear; pointer-events: none; }
+.entrevista .ent .ent-ins img { position: absolute; inset: auto; max-width: none; height: auto; object-fit: fill; transform-origin: 50% 50%; filter: brightness(1.12) contrast(1.04); }
+.slide.entrevista.active .ent.ins .ent-ins { opacity: 1; }
+.slide.entrevista.active .ent.ins .ent-ins img { animation: entins 7s cubic-bezier(.2, .6, .3, 1) both; }
+@keyframes entins { from { transform: scale(1); } to { transform: scale(1.06); } }
+.ent.ins .ent-rot { visibility: hidden; }
+.ent-ins-rot { position: absolute; left: 150px; top: 110px; padding-left: 18px; border-left: 3px solid #ffb35c; color: #fff; font: 500 24px/1.25 Onest, sans-serif; letter-spacing: .14em; text-transform: uppercase; text-shadow: 0 2px 16px rgba(0,0,0,.95); }
+.ent-ins-rot b { display: block; font: 600 30px/1.1 Oswald, Onest, sans-serif; letter-spacing: .08em; color: #ffb35c; }
+.ent-ins::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.55), transparent 26%, transparent 74%, rgba(0,0,0,.6)); }
+.ent-ins-rot { z-index: 1; padding: 12px 22px 12px 18px; background: rgba(8,9,12,.82); backdrop-filter: blur(6px); border-radius: 0 6px 6px 0; }
+@media (prefers-reduced-motion: reduce) { .ent-ins img { animation: none !important; } }
+
+/* Escena en dos pasos: las hojas impresas entran sobre la pantalla cuando Iago dice que lo imprime */
+.con-paso .paso2-in { opacity: 0; translate: 0 60px; transition: opacity 500ms ease, translate 700ms cubic-bezier(.2,.7,.2,1); pointer-events: none; }
+.con-paso.paso2 .paso2-in { opacity: 1; translate: 0 0; }
+.con-paso.paso2 .ft-shot { filter: brightness(.45) blur(2px); transition: filter 600ms ease; }
+body.scroll .con-paso .paso2-in { opacity: 1; translate: none; }
+
+/* El contraplano de los músicos ya no tapa la app: en las diapositivas de producto es una ventanita (imagen dentro de
+   imagen) y la pantalla de BandManager se ve siempre. Con la tele del local, arriba a la derecha, justo bajo la banda de
+   cine y sobre el marco; con el móvil, en el lado izquierdo, que está vacío en la película. */
+body.pelicula:not(.scroll) #reaccion { inset: auto; right: 56px; top: 56px; width: 280px; height: 158px; border-radius: 14px;
+  border: 3px solid rgba(255,255,255,.85); box-shadow: 0 18px 50px rgba(0,0,0,.7); }
+body.pelicula:not(.scroll):has(.slide.feat.active .ft-shot.phone) #reaccion { right: auto; left: 120px; top: 300px; width: 560px; height: 315px; }
+/* el cantante de Master of Prompts: su foto en la ventanita cuando habla */
+#reaccion .rx-mop { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; opacity: 0; }
+body.pelicula:not(.scroll):has(.slide.feat.active [data-who="voz_mop"].habla) #reaccion { opacity: 1; }
+body.pelicula:not(.scroll):has(.slide.feat.active [data-who="voz_mop"].habla) #reaccion .rx-mop { opacity: 1; }
+/* el correo ocupa toda la pantalla (cámara incluida): ahí no hay contraplano, que se vea el correo */
+body.pelicula:not(.scroll):has(.slide.feat.active.mailscene) #reaccion { display: none; }
+
+/* ── Netflix: ¿quién está viendo? y pantalla de inicio con la película destacada ── */
+#gate { background: #141414; }
+.nx-home { position: absolute; inset: 0; display: flex; align-items: flex-end; overflow: clip; }
+#gate[data-fase="perfiles"] .nx-home, #gate[data-fase="home"] .nx-perfiles { display: none; }
+.av { position: relative; display: block; box-sizing: border-box; background: #0071eb; overflow: hidden; }
+.av::before { content: ''; position: absolute; left: 26%; top: 34%; width: 11%; height: 11%; border-radius: 50%; background: #fff; box-shadow: calc(var(--av, 170px) * .0) 0 0 #fff, 0 0 0 0 #fff; }
+.av::after { content: ''; position: absolute; left: 26%; top: 56%; width: 48%; height: 20%; border-radius: 0 0 100px 100px / 0 0 100% 100%; border: 0 solid #fff; background: #fff; clip-path: ellipse(50% 100% at 50% 0); }
+.av.brais { background: #0071eb; } .av.profes { background: #f5c518; } .av.diego { background: #e50914; } .av.pelaez { background: #5fb946; }
+.av.mini { width: 40px; height: 40px; border-radius: 4px; }
+.nx-top nav { display: flex; gap: 26px; margin-left: 34px; font: 500 19px/1 'Helvetica Neue', Arial, sans-serif; color: rgba(255,255,255,.85); }
+.nx-top nav .on { color: #fff; font-weight: 700; }
+.nx-der { margin-left: auto; display: flex; align-items: center; gap: 26px; font: 500 19px/1 'Helvetica Neue', Arial, sans-serif; }
+.nx-lupa { width: 22px; height: 22px; border: 3px solid #fff; border-radius: 50%; position: relative; display: block; }
+.nx-lupa::after { content: ''; position: absolute; width: 11px; height: 3px; background: #fff; right: -11px; bottom: -4px; transform: rotate(45deg); }
+.nx-camp { width: 20px; height: 22px; border: 3px solid #fff; border-radius: 10px 10px 2px 2px; display: block; }
+.nx-top { align-items: center; }
+.nx-hero { padding-bottom: min(31vh, 330px) !important; }
+.nx-top10 { display: flex; align-items: center; gap: 14px; margin-top: 18px; font: 700 28px/1 'Helvetica Neue', Arial, sans-serif; }
+.nx-top10 b { background: #e50914; color: #fff; font: 700 13px/1.05 'Helvetica Neue', Arial, sans-serif; letter-spacing: .04em; padding: 6px 7px; text-align: center; border-radius: 3px; }
+.nx-info { background: rgba(109,109,110,.7) !important; }
+.nx-alt { display: flex; gap: 10px; margin-top: 18px; }
+#gate .nx-alt .gate-btn { font-size: 15px; font-weight: 600; padding: 8px 14px; background: rgba(0,0,0,.45); border: 1px solid rgba(255,255,255,.3); }
+.nx-meta { margin-top: 18px; }
+.nx-lado { position: absolute; right: 0; top: 52%; display: flex; align-items: center; gap: 0; z-index: 2; }
+.nx-lado .nx-mute { width: 54px; height: 54px; border: 2px solid rgba(255,255,255,.6); border-radius: 50%; margin-right: 18px; background: rgba(0,0,0,.4); position: relative; }
+.nx-lado .nx-mute::before { content: ''; position: absolute; left: 15px; top: 20px; width: 9px; height: 12px; background: #fff; }
+.nx-lado .nx-mute::after { content: ''; position: absolute; left: 24px; top: 16px; border: 10px solid transparent; border-right: 12px solid #fff; border-left: 0; }
+.nx-lado .nx-edad { background: rgba(51,51,51,.7); border: 0; border-left: 3px solid #fff; padding: 10px 52px 10px 14px; font: 600 22px/1 'Helvetica Neue', Arial, sans-serif; }
+.nx-filas { position: absolute; left: 0; right: 0; bottom: 56px; padding-left: 64px; z-index: 2; font-family: 'Helvetica Neue', Arial, sans-serif; }
+.nx-filas h3 { font-size: 26px; margin: 0 0 12px; font-weight: 700; }
+.nx-row { display: flex; gap: 8px; }
+.nx-card { flex: 0 0 min(16.2vw, 310px); aspect-ratio: 16/9; border-radius: 4px; position: relative; overflow: hidden; background: linear-gradient(#0008, #000c), var(--img) center / cover; filter: grayscale(.85) brightness(.75); display: flex; flex-direction: column; justify-content: flex-end; padding: 12px 14px; gap: 4px; }
+.nx-card b { font-size: 19px; line-height: 1.15; text-shadow: 0 2px 8px #000; }
+.nx-card em { font-style: normal; font-size: 14px; font-weight: 700; color: #e5e5e5; letter-spacing: .06em; text-transform: uppercase; }
+#gate .gate-note { position: absolute; left: 64px; bottom: 16px; margin: 0; z-index: 2; }
+#gate[data-fase="home"] .nx-hero { animation: nxsube .9s cubic-bezier(.2,.7,.2,1) both; }
+#gate[data-fase="home"] .nx-filas { animation: nxsube 1.1s .25s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes nxsube { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+/* Con el tráiler en marcha, la sinopsis y el género se recogen, como en la plataforma */
+.nx-sin, .nx-gen { max-height: 160px; transition: opacity .9s, max-height .9s, margin .9s; }
+#gate.trailer .nx-sin, #gate.trailer .nx-gen { opacity: 0; max-height: 0; margin: 0; overflow: hidden; }
+#gate.trailer .nx-titulo { font-size: clamp(40px, min(6.6vw, 7.6vh), 100px); transition: font-size .9s; }
+@media (max-height: 800px) and (min-width: 801px) {
+  .nx-hero { padding-bottom: 32vh !important; } .nx-titulo { font-size: min(6.4vw, 8vh); margin: 10px 0 12px; } .nx-gen, .nx-meta { display: none; } .nx-sin { font-size: 17px; margin-top: 10px; } .nx-top10 { margin-top: 12px; font-size: 22px; } .nx-alt, .nx-meta { margin-top: 10px; }
+  .nx-top nav, .nx-der { font-size: 15px; } .nx-card b { font-size: 14px; } .nx-card em { font-size: 11px; } .nx-filas h3 { font-size: 20px; }
+}
+
+/* Netflix · «Más información» */
+.nx-modal { position: absolute; inset: 0; z-index: 5; background: rgba(0,0,0,.72); display: grid; place-items: center; font-family: 'Helvetica Neue', Arial, sans-serif; }
+.nx-modal[hidden] { display: none; }
+.nx-mcard { width: min(1180px, 92vw); max-height: 92vh; overflow: hidden; background: #181818; border-radius: 10px; box-shadow: 0 20px 80px #000; animation: nxsube .45s cubic-bezier(.2,.7,.2,1) both; }
+.nx-mfoto { position: relative; height: min(52vh, 560px); display: flex; flex-direction: column; justify-content: flex-end; padding: 0 48px 38px; background: linear-gradient(to top, #181818 4%, transparent 55%), var(--img) center / cover; }
+.nx-mfoto h2 { font: 400 clamp(44px, 6vw, 84px)/.92 Anton, Oswald, Impact, sans-serif; text-transform: uppercase; margin: 0 0 20px; text-shadow: 0 6px 30px #000; }
+.nx-mfoto .gate-btns { margin: 0; }
+.nx-cerrar { position: absolute; top: 18px; right: 18px; width: 44px; height: 44px; border-radius: 50%; border: 0; background: #181818; color: #fff; font-size: 20px; cursor: pointer; }
+.nx-mcuerpo { display: grid; grid-template-columns: 2fr 1fr; gap: 40px; padding: 8px 48px 40px; }
+.nx-mizq p { font-size: 22px; line-height: 1.45; margin: 16px 0 0; }
+.nx-mizq .nx-peq { font-size: 18px; color: #bcbcbc; }
+.nx-verde { color: #46d369; font-weight: 700; }
+.nx-mder { margin: 16px 0 0; font-size: 17px; line-height: 1.5; }
+.nx-mder dt { color: #777; display: inline; margin-right: 8px; }
+.nx-mder dd { display: inline; margin: 0; color: #fff; }
+.nx-mder dd::after { content: ''; display: block; height: 10px; }
+@media (max-height: 800px) { .nx-mfoto { height: 40vh; } .nx-mizq p { font-size: 17px; margin-top: 10px; } .nx-mizq .nx-peq { font-size: 14px; } .nx-mder { font-size: 14px; } .nx-mcuerpo { padding-bottom: 24px; } }
+
+/* Perfiles con foto (si el fichero existe, el generador añade .foto y desaparece la carita) */
+.av.foto { background: var(--foto) center / cover no-repeat; }
+.av.foto::before, .av.foto::after { display: none; }
+.av.diego.foto { background-size: 250%; background-position: 45% 14%; }
+.av.pelaez.foto { background-size: 250%; background-position: 69% 16%; }
+.av.profes.foto { background-size: cover; }
+.av.brais.foto { background-position: 50% 20%; }
+.av.foto { background-origin: border-box; }
+
+/* En la película el diálogo va subtitulado y lo dice el retrato de quien habla: nada de burbujas (la de reacción, la de la escena del local,
+   las de capítulo y la del cierre). Si una burbuja sigue saliendo en modo película, falta su clase aquí. */
+body.pelicula:not(.scroll) :is(.react, .rm-say, .act-msg, .sign-msg) { display: none !important; }
+
+/* Cursor de mentira que pulsa «Reproducir» y salida hacia la película */
+.nx-cursor { position: fixed; z-index: 9; width: 30px; height: 30px; pointer-events: none; transform: translate(-6px, -4px); filter: drop-shadow(0 3px 6px #000a); background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M4 2l15 9-6.5 1.6L16 20l-3 1.3-3.5-7.6L5 17z' fill='white' stroke='black' stroke-width='1.2' stroke-linejoin='round'/></svg>") center / contain no-repeat; }
+.nx-cursor.clic { transform: translate(-6px, -4px) scale(.82); transition: transform .12s; }
+#gatePeli.pulsado { transform: scale(.96); background: #d2d2d2; transition: transform .12s, background .12s; }
+.nx-home { transition: transform .7s cubic-bezier(.5,0,.3,1), opacity .7s; }
+#gate.sale .nx-home { transform: scale(1.08); opacity: 0; }
+
+/* Netflix · más filas, tarjetas con hover y barra superior viva */
+.nx-home { display: block; }
+.nx-scroll { position: absolute; inset: 0; overflow-x: hidden; overflow-y: auto; scrollbar-width: none; }
+.nx-scroll::-webkit-scrollbar { display: none; }
+.nx-pant { position: relative; height: 100%; display: flex; align-items: flex-end; }
+.nx-home > .nx-top { position: absolute; top: 0; left: 0; right: 0; padding: 34px 64px 16px; z-index: 4; background: linear-gradient(#000b, transparent); transition: background .3s; }
+.nx-home > .nx-top.solido { background: #141414; }
+.nx-perf { display: flex; align-items: center; gap: 8px; }
+.nx-flecha { width: 8px; height: 8px; border: solid #fff; border-width: 0 2px 2px 0; transform: translateY(-2px) rotate(45deg); display: block; }
+.nx-camp { position: relative; }
+.nx-camp::after { content: ''; position: absolute; top: -5px; right: -6px; width: 11px; height: 11px; border-radius: 50%; background: #e50914; border: 2px solid #141414; }
+.nx-mas { position: relative; background: #141414; padding: 34px 0 90px 64px; font-family: 'Helvetica Neue', Arial, sans-serif; z-index: 2; }
+.nx-filas2 { margin-bottom: 44px; }
+.nx-filas2 h3 { font-size: 26px; margin: 0 0 12px; font-weight: 700; }
+.nx-card.k { filter: none; background: linear-gradient(#0006, #000b), var(--img) center / cover; transition: transform .25s, box-shadow .25s; }
+.nx-card.k b { font-size: 18px; }
+.nx-filas .nx-card:hover { filter: none; transform: scale(1.1); z-index: 4; transition: transform .25s; }
+.nx-card.k:hover, .nx-card.k.hover { transform: scale(1.22); z-index: 5; box-shadow: 0 14px 46px #000; }
+.nx-acc { display: none; gap: 8px; margin-top: 4px; }
+.nx-acc i { width: 34px; height: 34px; border-radius: 50%; border: 2px solid #9a9a9a; background: #2a2a2a; display: grid; place-items: center; font-style: normal; font-size: 14px; }
+.nx-acc i.p { background: #fff; color: #000; border-color: #fff; }
+.nx-acc i.m { margin-left: auto; }
+.nx-mini { display: none; font-size: 13px; color: #ddd; }
+.nx-mini b { color: #46d369; margin-right: 6px; }
+.nx-card.k:hover .nx-acc, .nx-card.k.hover .nx-acc { display: flex; }
+.nx-card.k:hover .nx-mini, .nx-card.k.hover .nx-mini { display: block; }
+.nx-resta { position: absolute !important; top: 8px; right: 8px; background: #000b; padding: 3px 8px; border-radius: 3px; font-size: 12px !important; text-transform: none !important; letter-spacing: 0 !important; }
+.nx-card u { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: #5a5a5a; text-decoration: none; display: block; }
+.nx-card u::after { content: ''; position: absolute; inset: 0 auto 0 0; width: var(--w); background: #e50914; }
+.nx-row.top { gap: 0; }
+.nx-top-c { display: flex; align-items: flex-end; flex: 0 0 min(25vw, 480px); position: relative; }
+.nx-num { font: 400 min(17vw, 300px)/.78 Anton, Oswald, Impact, sans-serif; color: #141414; -webkit-text-stroke: 4px #6b6b6b; margin-right: -20px; position: relative; z-index: 1; }
+.nx-top-c .nx-card { flex: 0 0 min(11.6vw, 222px); aspect-ratio: 2 / 3; margin-bottom: 4px; }
+.nx-top-c { flex: 0 0 auto; margin-right: 26px; }
+.nx-num { font-size: min(11vw, 210px); }
+.nx-top-c .nx-card { flex: 0 0 min(10.5vw, 200px); }
+#gate:has(.nx-top.solido) .gate-note { opacity: 0; }
+.nx-mini { white-space: nowrap; font-size: 12px; }
+
+/* Pausa de verdad: las animaciones de la escena se quedan quietas (el reproductor #nf sigue vivo) */
+body.pausado #stage, body.pausado #stage *, body.pausado #stage *::before, body.pausado #stage *::after { animation-play-state: paused !important; }
+
+/* Escenas largas con varios planos de fondo (data-title en PLANOS de generar.py, con lista): cada clip entra en --i durante --d y se funde con el
+   siguiente; el último se queda. Evita ver 10 s de vídeo repetidos durante media escena. */
+.slide.scene .scene-bg .actor-vid.sec { opacity: 0; }
+.slide.scene.active .scene-bg .actor-vid.sec { animation: avon var(--d) linear var(--i) both; }
+.slide.scene.active .scene-bg .actor-vid.sec.ult { animation-name: avult; }
+@keyframes avon { 0% { opacity: 0; } 5% { opacity: 1; } 95% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes avult { 0% { opacity: 0; } 5%, 100% { opacity: 1; } }
+
+
+/* Final de película: enlaces para escuchar las dos canciones (los mp3 de audio/musica/, que abre el reproductor del navegador) */
+.nff-mus-t, .nff-mus { opacity: 0; animation: nffaparece 900ms ease-out 3400ms both; }
+.nff-mus-t { margin: 8px 0 0; color: #aaa; font: 600 22px/1 'Helvetica Neue', Arial, sans-serif; letter-spacing: .12em; text-transform: uppercase; }
+.nff-mus { display: flex; gap: 22px; }
+.nff-can { display: flex; flex-direction: column; gap: 8px; }
+.nff-mus .nff-dl { flex-direction: row; justify-content: center; padding: 11px 20px; font-size: 20px; font-weight: 700; background: transparent; box-shadow: inset 0 0 0 2px rgba(255,255,255,.45); }
+.nff-mus a { display: flex; flex-direction: column; gap: 6px; padding: 16px 30px; border-radius: 4px; background: rgba(255,255,255,.14); color: #fff; text-decoration: none; font-family: 'Helvetica Neue', Arial, sans-serif; text-align: left; }
+.nff-mus a b { font-size: 26px; line-height: 1.1; } .nff-mus a small { font-size: 19px; color: #bbb; }
+.nff-mus a:hover { background: #fff; color: #000; } .nff-mus a:hover small { color: #444; }
+@media (prefers-reduced-motion: reduce) { .nff-mus-t, .nff-mus { animation-duration: 1ms; animation-delay: 0ms; } }
+
+/* el móvil del generador de reels enseña a la banda tocando (encaja en el hueco de «Band Clip Studio», entre la cabecera y los iconos) */
+.dr-reelvid { position: absolute; left: 76.56%; top: 37.1%; width: 14.5%; height: 21.6%; border-radius: 18px; overflow: hidden; pointer-events: none; }
+.dr-reelvid video { position: absolute; inset: 0; width: 100% !important; height: 100% !important; object-fit: cover !important; object-position: 50% 40%; }
+
+/* las frases de Diego suenan sobre las fotos de «Mis bandas»; el elemento solo es el portador de la voz */
+.mb-voz { position: absolute; left: 0; top: 0; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+/* con la voz de Diego encima, los subtítulos ocupan abajo: la línea de edades pasa arriba */
+.mis-bandas .mb-linea { bottom: auto; top: 66px; scale: .8; transform-origin: 50% 0; }
+
+/* ── Inicio de «Netflix»: fila de anuncios de BandManager.io (como la de Juegos), acceso fijo y botón «Inicio» del final ── */
+.nx-ad-chip { margin-left: 14px; padding: 3px 10px; border: 1px solid #777; border-radius: 3px; color: #bbb; font-size: 14px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; vertical-align: middle; }
+.nx-games { display: flex; gap: 22px; }
+.nx-game { flex: 0 0 188px; display: flex; flex-direction: column; gap: 4px; color: #fff; text-decoration: none; position: relative; }
+.nx-game i { position: relative; display: grid; place-items: center; overflow: hidden; width: 188px; height: 188px; border-radius: 22%; background: radial-gradient(circle at 18% 12%, var(--c1) 0, transparent 62%), radial-gradient(circle at 92% 96%, var(--c2) 0, transparent 66%), linear-gradient(150deg, var(--c1), var(--c2)); box-shadow: 0 8px 24px #0009, inset 0 0 0 1px #ffffff26; transition: transform .25s, box-shadow .25s; }
+.nx-game i::before { content: ''; position: absolute; inset: 0; background: repeating-radial-gradient(circle at 50% 118%, transparent 0 22px, #ffffff14 22px 24px); }
+.nx-game i::after { content: ''; position: absolute; inset: 0; background: linear-gradient(165deg, #ffffff40 0, transparent 38%), linear-gradient(transparent 60%, #0005); }
+.nx-game i svg { position: relative; z-index: 1; width: 64px; height: 64px; padding: 24px; box-sizing: content-box; border-radius: 50%; background: #ffffff2e; border: 2px solid #ffffff59; fill: none; stroke: #fff; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 3px 8px #0006); }
+.nx-game i img { position: absolute; z-index: 1; right: 10px; bottom: 10px; width: 30px; height: 30px; border-radius: 9px; box-shadow: 0 2px 8px #0007; }
+.nx-game:hover i, .nx-game:focus-visible i { transform: scale(1.07); box-shadow: 0 14px 40px #000; }
+.nx-game b { margin-top: 10px; font-size: 19px; line-height: 1.15; }
+.nx-game small { color: #a3a3a3; font-size: 14px; line-height: 1.25; }
+.nx-game span { margin-top: 6px; align-self: flex-start; padding: 5px 14px; border-radius: 4px; background: #e50914; font-size: 14px; font-weight: 700; }
+.nx-bm { margin-right: 18px; padding: 7px 16px; border-radius: 4px; background: #e50914; color: #fff; font-size: 15px; font-weight: 700; text-decoration: none; white-space: nowrap; }
+.nx-bm:hover { background: #f6121d; }
+.nff-inicio { padding: 14px 34px; border: 0; border-radius: 4px; background: #fff; color: #000; font: 600 26px/1 'Helvetica Neue', Arial, sans-serif; cursor: pointer; opacity: 0; animation: nffaparece 900ms ease-out 3200ms both; }
+.nff-inicio:hover { background: #d8d8d8; }
+@media (prefers-reduced-motion: reduce) { .nff-inicio { animation-duration: 1ms; animation-delay: 0ms; } }
+
+/* pósters tipográficos de las películas inventadas del Top 10 y de «Porque viste…» */
+.nx-card.fake { background: radial-gradient(circle at 20% 15%, var(--c1), transparent 70%), linear-gradient(155deg, var(--c1), var(--c2)); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 14px; box-sizing: border-box; }
+.nx-card.fake > i { position: absolute; left: 10px; top: 8px; font: 400 26px/1 Anton, Impact, sans-serif; color: #e50914; font-style: normal; }
+.nx-card.fake > b { font: 400 min(1.7vw, 30px)/1.08 Anton, Oswald, Impact, sans-serif; text-transform: uppercase; letter-spacing: .01em; text-shadow: 0 3px 12px #0008; }
+.nx-card.fake .nx-mini b { font: inherit; }
+/* las filas del inicio se desplazan hacia el lado (los puestos 7 a 10 del Top 10 quedan fuera de la pantalla) */
+.nx-filas2 :is(.nx-row, .nx-games) { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; padding: 28px 40px 28px 0; margin: -28px 0; }
+.nx-filas2 :is(.nx-row, .nx-games)::-webkit-scrollbar { display: none; }
+
+/* icono real de una app (img/juegos/<id>.png): tapa el icono dibujado */
+.nx-game i img.nx-gicono { position: absolute; z-index: 2; inset: 0; right: auto; bottom: auto; width: 100%; height: 100%; border-radius: 0; box-shadow: none; object-fit: cover; }
+
+.nx-filas2.con-flechas { position: relative; }
+.nx-flecha-fila { position: absolute; top: 56px; bottom: 0; width: 56px; border: 0; background: linear-gradient(90deg, #141414cc, transparent); color: #fff; font-size: 54px; line-height: 1; cursor: pointer; opacity: 0; transition: opacity .2s; z-index: 6; }
+.nx-flecha-fila.ant { left: 0; margin-left: -64px; width: 64px; }
+.nx-flecha-fila.sig { right: 0; background: linear-gradient(270deg, #141414cc, transparent); }
+.nx-filas2.con-flechas:hover .nx-flecha-fila { opacity: 1; }
+.nx-flecha-fila:hover { background-color: #0008; }
+
+/* «Volver al inicio» desde el final de la película: directo al inicio de Netflix, sin pasar por «¿Quién está viendo?» */
+html.ir-inicio #gate .nx-perfiles { display: none !important; }
+html.ir-inicio #gate .nx-home { display: flex !important; }
+
+/* ilustraciones propias de los juegos (sin círculo de cristal ni degradado encima) */
+.nx-game i.arte::before, .nx-game i.arte::after { display: none; }
+.nx-game i.arte svg { width: 100%; height: 100%; padding: 0; border: 0; border-radius: 0; background: none; stroke: none; stroke-width: 0; filter: none; }
+
+/* Etalonaje por origen: medido sobre todo el material (saturación media de las fotos de IA 0,43, de los vídeos 0,29, de las fotos reales 0,37
+   con 0,10 más de calor y 0,34 de luz), se acercan las fotos al tono de los planos de vídeo; el etalonaje común (#etalon, #grano, #vineta) hace el resto */
+body.pelicula:not(.scroll) :is(img[src*="img/miembro-"], img[src*="img/personaje-"], img[src*="img/concierto-"]) { filter: saturate(.8) brightness(.94) contrast(1.03); }
+body.pelicula:not(.scroll) .mis-bandas .mb-foto img { filter: saturate(.84) brightness(.88) contrast(1.06) hue-rotate(-3deg); }
+body.pelicula:not(.scroll) :is(img[src*="gracias-mop"], img[src*="diego-bajista"]) { filter: saturate(.95) brightness(1.08) contrast(1.05); }
+
+/* ───────── Elige tu propia aventura (eleccion.js) ───────── */
+/* Elecciones al estilo de «Bandersnatch»: banda oscura abajo, dos cajas translúcidas, la elegida se rellena de blanco y una línea que se acorta marca el tiempo */
+#eleccion { position: absolute; left: 0; right: 0; bottom: 0; z-index: 70; display: flex; flex-direction: column; align-items: center; gap: 22px; padding: 120px 0 64px; background: linear-gradient(transparent, rgba(0,0,0,.86) 62%); font-family: 'Helvetica Neue', Arial, sans-serif; animation: elsube .5s cubic-bezier(.2, .8, .2, 1) both; }
+@keyframes elsube { from { opacity: 0; translate: 0 30px; } to { opacity: 1; translate: 0 0; } }
+#eleccion .el-q { margin: 0; max-width: 1200px; padding: 0 40px; color: #e8e8ec; font-size: 28px; font-weight: 500; text-align: center; text-shadow: 0 2px 14px #000; }
+#eleccion .el-ops { display: flex; gap: 18px; }
+#eleccion .el-op { display: flex; align-items: center; gap: 18px; width: 520px; padding: 26px 32px; border: 1px solid rgba(255,255,255,.5); border-radius: 3px; background: rgba(20,20,22,.7); color: #fff; font: 500 30px/1.2 'Helvetica Neue', Arial, sans-serif; text-align: left; cursor: pointer; backdrop-filter: blur(8px); transition: background .12s, color .12s, border-color .12s; }
+#eleccion .el-op kbd { flex: none; display: grid; place-items: center; width: 38px; height: 38px; border: 1px solid currentColor; border-radius: 50%; font: 600 20px/1 'Helvetica Neue', Arial, sans-serif; opacity: .7; }
+#eleccion .el-op:hover, #eleccion .el-op:focus-visible { background: #fff; color: #000; border-color: #fff; outline: none; }
+#eleccion .el-op.el-visto { opacity: .38; text-decoration: line-through; cursor: default; }
+#eleccion .el-tiempo { display: block; width: 1058px; max-width: 90vw; height: 4px; background: #fff; transform-origin: left; transform: scaleX(var(--k, 1)); box-shadow: 0 0 10px rgba(255,255,255,.5); }
+#eleccion .el-fin { color: #9a9aa3; font-size: 20px; letter-spacing: .06em; text-transform: uppercase; }
+#eleccion-carta { position: absolute; inset: 0; z-index: 72; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 26px; background: #000; text-align: center; padding: 0 12%; animation: elcarta .5s ease-out both; }
+@keyframes elcarta { from { opacity: 0; } to { opacity: 1; } }
+#eleccion-carta p { margin: 0; color: #fff; font: 400 min(4.6vw, 74px)/1.12 Anton, Oswald, Impact, sans-serif; text-transform: uppercase; letter-spacing: .01em; opacity: 0; animation: elcarta .9s ease-out var(--d, 0s) both; }
+#eleccion-carta p:last-child { color: #e50914; }
+#eleccion-rebobina { position: absolute; inset: 0; z-index: 73; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; background: repeating-linear-gradient(0deg, #0b0b0e 0 3px, #15151a 3px 6px); color: #fff; animation: elreb 2.1s steps(14) both; }
+#eleccion-rebobina i { font: normal 130px/1 'Helvetica Neue', Arial, sans-serif; letter-spacing: -.1em; animation: elreb2 .5s steps(2) infinite; }
+#eleccion-rebobina b { font: 500 34px/1 'Courier New', monospace; letter-spacing: .12em; text-transform: uppercase; }
+@keyframes elreb { 0% { opacity: 0; transform: translateX(-30px) skewX(6deg); } 12% { opacity: 1; } 55% { transform: translateX(14px); filter: hue-rotate(90deg); } 100% { opacity: 1; transform: none; } }
+@keyframes elreb2 { 50% { transform: translateX(-12px); opacity: .6; } }
+@media (prefers-reduced-motion: reduce) { #eleccion, #eleccion-carta, #eleccion-carta p, #eleccion-rebobina, #eleccion-rebobina i { animation: none; opacity: 1; } }
+/* Aviso en la apertura: la película es interactiva */
+.ap-int { position: absolute; left: 0; right: 0; bottom: 130px; margin: 0; text-align: center; color: #bdb7ab; font: 500 30px/1 'Courier New', monospace; letter-spacing: .1em; text-transform: uppercase; opacity: 0; }
+.slide.apertura.active .ap-int { animation: aplin 1500ms var(--ease) 4.4s both, apout 700ms ease-in 6.7s both; }
+
+/* Pausa «Entra tú también» con el QR (eleccion.js) */
+#demo-qr { position: absolute; inset: 0; z-index: 71; display: grid; place-items: center; background: rgba(0,0,0,.82); backdrop-filter: blur(8px); font-family: 'Helvetica Neue', Arial, sans-serif; animation: elcarta .5s ease-out both; }
+#demo-qr .dq-caja { display: flex; align-items: center; gap: 70px; padding: 56px 70px; border-radius: 12px; background: #0e0e12; border: 1px solid rgba(255,255,255,.14); box-shadow: 0 30px 90px #000; }
+#demo-qr .dq-qr { width: 400px; height: 400px; border-radius: 10px; background: #fff; }
+#demo-qr .dq-txt { max-width: 560px; display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+#demo-qr h2 { margin: 0; color: #fff; font: 400 84px/1 Anton, Oswald, Impact, sans-serif; text-transform: uppercase; }
+#demo-qr p { margin: 0; color: #d6d6dc; font-size: 30px; line-height: 1.3; }
+#demo-qr small { color: #e5a53b; font-size: 26px; font-weight: 700; letter-spacing: .06em; }
+#demo-qr button { padding: 18px 34px; border: 0; border-radius: 6px; font: 700 30px/1 'Helvetica Neue', Arial, sans-serif; cursor: pointer; }
+#demo-qr .dq-ok { margin-top: 12px; background: #fff; color: #000; }
+#demo-qr .dq-ok:hover, #demo-qr .dq-ok:focus-visible { background: #d8d8d8; outline: 3px solid #e50914; }
+#demo-qr .dq-sin { background: none; font-weight: 600; }
+@media (prefers-reduced-motion: reduce) { #demo-qr { animation: none; } }
+
+/* «El sello de BandManager»: cuatro herramientas y el sello que se estampa en cada una al nombrarla */
+.slide.sellos .sellos-caja { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 14px; padding: 12px; height: 100%; box-sizing: border-box; }
+.sellos-caja figure { position: relative; margin: 0; border-radius: 12px; overflow: hidden; background: #111 var(--img) var(--pos) / var(--z) no-repeat; border: 1px solid rgba(255,255,255,.14); box-shadow: 0 14px 40px rgba(0,0,0,.55); min-height: 0; }
+.sellos-caja figcaption { position: absolute; left: 12px; top: 10px; padding: 5px 12px; border-radius: 4px; background: rgba(0,0,0,.72); color: #fff; font: 700 20px/1 Onest, Arial, sans-serif; letter-spacing: .04em; }
+/* «Powered by BandManager.io»: una franja discreta al pie de cada herramienta, como el «Powered by» de cualquier marca */
+.sellos-caja .powered { position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 9px 14px; background: linear-gradient(transparent, rgba(0,0,0,.86) 55%); color: rgba(255,255,255,.78); font: 600 19px/1 Onest, Arial, sans-serif; letter-spacing: .03em; opacity: 0; }
+.sellos-caja .powered i { font-style: normal; font-weight: 500; opacity: .85; }
+.sellos-caja .powered img { width: 26px; height: 26px; border-radius: 6px; }
+.sellos-caja .powered b { color: #fff; font-weight: 800; letter-spacing: .02em; }
+.slide.sellos.active .powered { animation: poweredentra .7s ease-out var(--t) both; }
+@keyframes poweredentra { from { opacity: 0; translate: 0 14px; } to { opacity: 1; translate: 0 0; } }
+@media (prefers-reduced-motion: reduce) { .slide.sellos.active .powered { animation: none; opacity: 1; } }
+
+/* en el dossier y el setlist, además, el QR de BandManager */
+.sellos-caja .powered .pq { position: absolute; right: 14px; bottom: 10px; width: 78px; height: 78px; padding: 4px; border-radius: 6px; background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,.6); }
+.sellos-caja .powered:has(.pq) { padding-bottom: 12px; min-height: 62px; }
+
+/* Anuncios de BandManager: miniatura apaisada con la pantalla real de cada herramienta, el color del módulo y el logo como firma */
+.nx-ads .nx-game:has(i.foto) { flex-basis: 300px; }
+.nx-ads .nx-game i.foto { width: 300px; height: 169px; border-radius: 6px; background-color: #0d0f14; background-repeat: no-repeat; }
+.nx-ads .nx-game i.foto::before { display: block; background: linear-gradient(115deg, var(--c1), transparent 55%); mix-blend-mode: soft-light; opacity: .9; }
+.nx-ads .nx-game i.foto::after { background: linear-gradient(transparent 50%, #000a), linear-gradient(90deg, var(--c1), var(--c2)) left bottom / 100% 4px no-repeat; }
+.nx-ads .nx-game i.foto img { z-index: 3; left: 10px; top: 10px; right: auto; bottom: auto; width: 34px; height: 34px; border-radius: 9px; }
+
+/* Apertura: tres frases sobre negro antes del primer plano, para que la película no arranque de golpe */
+.slide.apertura { background: #000; }
+.ap-caja { position: absolute; inset: 0; display: grid; align-content: center; justify-items: center; gap: 34px; text-align: center; padding: 0 160px; }
+.ap-l { margin: 0; font-size: 84px; font-weight: 600; letter-spacing: -.02em; color: #f4efe6; opacity: 0; }
+.ap-2 { font-size: 46px; font-weight: 400; color: #bdb7ab; letter-spacing: 0; }
+.ap-3 { font-size: 46px; font-weight: 500; color: #e0a43a; letter-spacing: 0; }
+.slide.apertura.active .ap-l { animation: aplin 1500ms var(--ease) var(--t) both; }
+.slide.apertura.active .ap-caja { animation: apout 700ms ease-in 6.7s both; }
+@keyframes aplin { from { opacity: 0; filter: blur(8px); transform: translateY(10px); } to { opacity: 1; filter: none; transform: none; } }
+@keyframes apout { to { opacity: 0; } }
+body.scroll .ap-l { opacity: 1; animation: none; }
+@media (prefers-reduced-motion: reduce) { .ap-l { opacity: 1; animation: none !important; } }
+
+/* Pausa «Falta un fan»: la imagen se rompe, aviso de sistema y la espera del escaneo */
+#demo-qr .dq-glitch { position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(255,255,255,.07) 0 2px, transparent 2px 5px); mix-blend-mode: overlay; animation: dqglitch 1.1s steps(2) both; }
+@keyframes dqglitch { 0% { background-color: #ff003c55; transform: translateX(-14px); } 20% { background-color: #00e5ff55; transform: translateX(18px) skewX(4deg); } 40% { background-color: #fff3; transform: translateX(-9px); } 60% { background-color: #ff003c44; transform: translateX(7px); } 100% { background-color: transparent; transform: none; } }
+#demo-qr .dq-caja { animation: dqcaja .9s steps(6) .35s both; }
+@keyframes dqcaja { from { opacity: 0; filter: hue-rotate(90deg) blur(3px); transform: translateX(-12px); } 50% { opacity: .6; transform: translateX(8px); } to { opacity: 1; filter: none; transform: none; } }
+#demo-qr .dq-sis { color: #ff3b4e; font: 700 24px/1 'Courier New', monospace; letter-spacing: .14em; text-transform: uppercase; }
+#demo-qr q { color: #f0e6cf; font-size: 28px; font-style: italic; line-height: 1.3; quotes: none; }
+#demo-qr q:empty, #demo-qr .dq-esp:empty { display: none; }
+#demo-qr .dq-esp { color: #e5a53b; font: 600 24px/1 'Courier New', monospace; font-style: normal; animation: dqparp 1.3s steps(2) infinite; }
+@keyframes dqparp { 50% { opacity: .25; } }
+#demo-qr .dq-sin { opacity: 0; margin-top: 8px; padding: 14px 26px; border: 2px solid #ffffff59; border-radius: 6px; color: #e6e6ec; text-decoration: none; font-size: 24px; pointer-events: none; transition: opacity 1.5s; }
+#demo-qr .dq-sin.on { opacity: 1; pointer-events: auto; }
+#demo-qr.dq-listo .dq-sis { color: #38d27a; }
+#demo-qr.dq-listo .dq-sis::after { content: ' · ok'; }
+#demo-qr.dq-listo .dq-esp { display: none; }
+@media (prefers-reduced-motion: reduce) { #demo-qr .dq-glitch, #demo-qr .dq-caja, #demo-qr .dq-esp { animation: none; } }
+#demo-qr.dq-sinfan .dq-sis { color: #e5a53b; }
+#demo-qr.dq-sinfan .dq-esp { animation: none; color: #e5a53b; }
+body.eligiendo #subtitulo { display: none !important; }

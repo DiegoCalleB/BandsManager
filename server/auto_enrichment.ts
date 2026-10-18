@@ -1,20 +1,29 @@
-import { getAiClient, generateContentWithFallback } from "./ai.js";
+import { getAiClient, generateContentWithFallback, type RespuestaIA } from "./ai.js";
 import { dbUpsertLead, dbUpsertBandContact, dbDeleteLead } from "./db.js";
 import { loadState, saveState, getAutonomyConfigForBand } from "./state.js";
-import { detectPitchLanguage } from "./utils/leadLanguage.js";
-import { esUrlExternaSegura } from "./utils/ssrfGuard.js";
+import { fetchUrlExternaSegura } from "./utils/ssrfGuard.js";
+import { hostEnDominio, emailEnDominio } from "./utils/urlHost.js";
 import { getBandDnaProfile, buildEnhancedPitchSystemPrompt, generateSmartDnaPitchFallback } from "./utils/bandDna.js";
 import { formatGlobalPitchFeedbackForPrompt } from "./promptsManager.js";
 import { limpiarCampoContacto } from "./utils/scoutLeads.js";
 import { enrichVenueDetailsWithSerper } from "./services/venueIntelligenceService.js";
 import { resolverUrlSpotifyDeBanda } from "./services/spotifyService.js";
+import { comoErrorCapturado } from '../src/utils/errorCapturado.js';
+import { elegirInstagram, usuariosDeInstagram } from "./utils/instagramEnWeb.js";
+import { instagramConocido } from "./utils/instagramConocido.js";
+import { camposDesdeCatalogo } from "./utils/camposDesdeCatalogo.js";
+import { anotarProcedencia, camposRellenados, instantanea, type CamposDeEnriquecimiento, type FuenteDato } from "./utils/procedenciaDatos.js";
+import { consultaCatalogo } from "./db/consultaCatalogoSupabase.js";
+import { avisarEmailsDudosos } from "./services/avisarEmailsDudosos.js";
+import type { BandContact, Lead } from '../src/types.js';
+import type { DatosBandaIA, DatosLeadIA, FechasFestivalIA, LeadEliminadoPorCierre, RespuestaPlacesTextSearch } from './tiposAutoEnrichment.js';
 
 function toIsoDateString(val?: string | null): string {
   if (!val || typeof val !== 'string') return '';
   const trimmed = val.trim();
   if (!trimmed) return '';
   if (/^\d{4}-\d{2}-\d{2}/.test(trimmed)) return trimmed.substring(0, 10);
-  const ddmmyyyy = trimmed.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+  const ddmmyyyy = trimmed.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})/);
   if (ddmmyyyy) {
     return `${ddmmyyyy[3]}-${ddmmyyyy[2].padStart(2, '0')}-${ddmmyyyy[1].padStart(2, '0')}`;
   }
@@ -28,10 +37,10 @@ function toIsoDateString(val?: string | null): string {
 /**
  * Scrapes a venue/contact website via direct HTTP fetch to extract emails, instagram, and phone numbers without spending Gemini tokens.
  */
-export async function extractFestivalDates(lead: any): Promise<{ startDate?: string; endDate?: string; email?: string; telefono?: string; website?: string; instagram?: string; genero?: string; aforo?: number; region?: string; imagen_url?: string }> {
+export async function extractFestivalDates(lead: Pick<Lead, 'nombre_sala' | 'ciudad'>): Promise<{ startDate?: string; endDate?: string; email?: string; telefono?: string; website?: string; instagram?: string; genero?: string; aforo?: number; region?: string; imagen_url?: string }> {
   if (!lead.nombre_sala) return {};
 
-  const cleanCity = (lead.ciudad || '').replace(/\s*\([^)]*\)/g, '').trim();
+  const cleanCity = (lead.ciudad || '').slice(0, 200).replace(/\([^)]*\)/g, ' ').replace(/\s+/g, ' ').trim();
   const cleanVenue = (lead.nombre_sala || '').trim();
 
   // STAGE 1: Búsqueda en base de datos local (ultra-rápida, < 1 ms)
@@ -40,7 +49,7 @@ export async function extractFestivalDates(lead: any): Promise<{ startDate?: str
     const localMatch = searchFestivalByName(cleanVenue, cleanCity) || searchFestivalByName(cleanVenue);
     if (localMatch) {
       const dates = formatFestivalDates(localMatch);
-      console.log(`[FestivalDates] ✓ FOUND EN BD LOCAL: "${cleanVenue}" → ${dates.start} a ${dates.end}`);
+      console.log(`[FestivalDates] ✓ FOUND EN BD LOCAL: "%s" → %s a %s`, cleanVenue, dates.start, dates.end);
       const fallbackFavicon = localMatch.website ? `https://www.google.com/s2/favicons?domain=${localMatch.website.replace(/^https?:\/\//, '').split('/')[0]}&sz=128` : undefined;
       return {
         startDate: dates.start,
@@ -76,8 +85,8 @@ Ejemplo para festival del 5 al 6 de julio de 2026:
 {"es_festival": true, "festival_start_date": "2026-07-05", "festival_end_date": "2026-07-06"}`;
 
   try {
-    console.log(`[FestivalDates] Consulta a Gemini AI para "${cleanVenue}" (${cleanCity})...`);
-    let response: any = null;
+    console.log(`[FestivalDates] Consulta a Gemini AI para "%s" (%s)...`, cleanVenue, cleanCity);
+    let response: RespuestaIA | null = null;
     try {
       response = await generateContentWithFallback(client, {
         contents: prompt,
@@ -85,7 +94,7 @@ Ejemplo para festival del 5 al 6 de julio de 2026:
           tools: [{ googleSearch: {} }]
         }
       });
-    } catch (searchErr: any) {
+    } catch {
       response = await generateContentWithFallback(client, {
         contents: prompt
       });
@@ -95,11 +104,11 @@ Ejemplo para festival del 5 al 6 de julio de 2026:
     const cleanedText = text.replace(/```json/g, "").replace(/```/g, "").trim();
     const jsonStart = cleanedText.indexOf('{');
     const jsonEnd = cleanedText.lastIndexOf('}');
-    let data: any = {};
+    let data: FechasFestivalIA = {};
     if (jsonStart !== -1 && jsonEnd !== -1) {
       try {
         data = JSON.parse(cleanedText.substring(jsonStart, jsonEnd + 1));
-      } catch (_) { data = {}; }
+      } catch { data = {}; }
     }
 
     let rawStart = data.festival_start_date || data.startDate || data.start_date;
@@ -128,23 +137,30 @@ Ejemplo para festival del 5 al 6 de julio de 2026:
     const endIso = toIsoDateString(rawEnd) || startIso;
 
     if (startIso) {
-      console.log(`[FestivalDates] ✓ AI FOUND: "${cleanVenue}" → ${startIso} a ${endIso}`);
+      console.log(`[FestivalDates] ✓ AI FOUND: "%s" → %s a %s`, cleanVenue, startIso, endIso);
       return {
         startDate: startIso,
         endDate: endIso
       };
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn(`[FestivalDates] Error en AI fallback:`, err?.message || err);
   }
 
   return {};
 }
 
-async function scrapeWebsiteForContact(websiteUrl: string): Promise<{ email?: string; phone?: string; instagram?: string }> {
+/**
+ * `nombreSala` afina el Instagram: una web enlaza a varias cuentas (patrocinadores, promotoras, el perfil de un
+ * músico) y la primera no tiene por qué ser la de la sala; con el nombre se elige la que se le parece y, si ninguna,
+ * no se apunta ninguna.
+ */
+export async function scrapeWebsiteForContact(websiteUrl: string, nombreSala?: string): Promise<{ email?: string; phone?: string; instagram?: string }> {
   if (!websiteUrl || !websiteUrl.startsWith("http")) return {};
 
   const results: { email?: string; phone?: string; instagram?: string } = {};
+  const candidatosInstagram: string[] = [];
   const urlsToTry = [websiteUrl];
 
   try {
@@ -157,7 +173,7 @@ async function scrapeWebsiteForContact(websiteUrl: string): Promise<{ email?: st
       urlsToTry.push(`${origin}/geral`);
       urlsToTry.push(`${origin}/contact-us`);
     }
-  } catch (e) {
+  } catch {
     // Ignore URL parse error
   }
 
@@ -165,33 +181,32 @@ async function scrapeWebsiteForContact(websiteUrl: string): Promise<{ email?: st
     try {
       // websiteUrl es texto libre del lead: sin esto, un valor apuntando a una IP privada o al
       // endpoint de metadatos de la nube haría que el servidor hiciera esa petición interna y
-      // devolviera lo encontrado (SSRF).
-      if (!(await esUrlExternaSegura(targetUrl))) continue;
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3500); // 3.5s timeout
-      const res = await fetch(targetUrl, {
-        signal: controller.signal,
+      // devolviera lo encontrado (SSRF). La petición va por el guard: DNS a IP pública anclada al
+      // socket, redirecciones revalidadas, tope de tamaño y timeout; una URL no segura lanza y el
+      // catch pasa a la siguiente.
+      const res = await fetchUrlExternaSegura(targetUrl, {
+        timeoutMs: 3500,
+        maxBytes: 2 * 1024 * 1024,
+        maxRedirects: 3,
         headers: {
           "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
         }
       });
-      clearTimeout(timeoutId);
 
-      if (!res.ok) continue;
-      const html = await res.text();
+      if (res.statusCode < 200 || res.statusCode >= 300) continue;
+      const html = res.text();
 
       // 1. Extract email via mailto: or regex
       if (!results.email) {
-        const mailtoMatch = html.match(/href=["']mailto:([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})["']/i);
+        const mailtoMatch = html.match(/href=["']mailto:([a-zA-Z0-9._%+-]{1,64}@[a-zA-Z0-9.-]{1,255}\.[a-zA-Z]{2,24})["']/i);
         if (mailtoMatch) {
           results.email = mailtoMatch[1];
         } else {
-          const emailMatches = html.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g);
+          const emailMatches = html.match(/[a-zA-Z0-9._%+-]{1,64}@[a-zA-Z0-9.-]{1,255}\.[a-zA-Z]{2,24}/g);
           if (emailMatches) {
             const validEmails = emailMatches.filter(e => 
               !e.endsWith(".png") && !e.endsWith(".jpg") && !e.endsWith(".webp") && !e.endsWith(".svg") && !e.endsWith(".js") && !e.endsWith(".css") &&
-              !e.includes("example.com") && !e.includes("domain.com") && !e.includes("schema.org") &&
-              !e.includes("sentry.io") && !e.includes("w3.org") && !e.includes("wordpress") && !e.includes("gravatar")
+              !emailEnDominio(e, "example.com", "domain.com", "schema.org", "sentry.io", "w3.org") && !e.includes("wordpress") && !e.includes("gravatar")
             );
             const priorityEmail = validEmails.find(e => /info|booking|contacto|programacion|prensa|sala/i.test(e));
             if (priorityEmail) {
@@ -203,17 +218,8 @@ async function scrapeWebsiteForContact(websiteUrl: string): Promise<{ email?: st
         }
       }
 
-      // 2. Extract Instagram
-      if (!results.instagram) {
-        const instaMatch = html.match(/https?:\/\/(?:www\.)?instagram\.com\/([a-zA-Z0-9_.-]+)\/?/i);
-        if (instaMatch) {
-          const handle = instaMatch[1].toLowerCase();
-          const reserved = ['p', 'reel', 'reels', 'stories', 'explore', 'accounts', 'privacy', 'legal', 'about', 'help', 'terms', 'direct', 'login', 'signup', 'developer', 'static'];
-          if (!reserved.includes(handle)) {
-            results.instagram = `@${instaMatch[1].replace(/^@/, '')}`;
-          }
-        }
-      }
+      // 2. Extract Instagram (todas las cuentas enlazadas; se elige al terminar)
+      candidatosInstagram.push(...usuariosDeInstagram(html));
 
       // 3. Extract Phone
       if (!results.phone) {
@@ -224,11 +230,13 @@ async function scrapeWebsiteForContact(websiteUrl: string): Promise<{ email?: st
       }
 
       if (results.email) break; // Found main contact email, stop crawling subpages
-    } catch (err) {
+    } catch {
       // Ignore timeout or fetch error on subpage
     }
   }
 
+  const instagram = elegirInstagram(candidatosInstagram, nombreSala);
+  if (instagram) results.instagram = instagram;
   return results;
 }
 
@@ -241,42 +249,31 @@ export interface AutoEnrichOptions {
   respetarVacios?: string[];
 }
 
-export async function autoEnrichLead(lead: any, userBandId: string, opciones: AutoEnrichOptions = {}): Promise<any> {
-  if (!lead || !lead.nombre_sala) return lead;
+// Genérico para devolver el mismo tipo que se recibe: el Scout (routes/agent.ts) pasa un literal que
+// aún no es un Lead y reasigna el resultado a esa variable. Dentro, todo se comprueba contra Lead.
+export async function autoEnrichLead<L extends object>(entrada: L, userBandId: string, opciones: AutoEnrichOptions = {}): Promise<L> {
+  // Los campos obligatorios de Lead los rellena quien crea el lead; aquí solo se leen y completan.
+  const lead = entrada as unknown as Lead & CamposDeEnriquecimiento;
+  if (!lead || !lead.nombre_sala) return entrada;
   const respetarVacios = new Set(opciones.respetarVacios || []);
 
   let modified = false;
 
-  // STAGE 0: Fast Local DB Match (Festivals & Known Venues Heuristics for Instagram/Metadata)
-  if (!lead.instagram || lead.instagram.trim() === "") {
-    try {
-      const { SPANISH_FESTIVALS } = await import("./utils/spanishFestivalsDB.js");
-      const nameLower = lead.nombre_sala.toLowerCase().trim();
+  // Procedencia: tras cada etapa se anota qué fuente rellenó cada campo que estaba vacío.
+  let previo = instantanea(lead);
+  const registrar = (fuente: FuenteDato) => {
+    const ahora = instantanea(lead);
+    lead.datos_fuentes = anotarProcedencia(lead.datos_fuentes, camposRellenados(previo, ahora), fuente);
+    previo = ahora;
+  };
 
-      const matchFest = SPANISH_FESTIVALS.find(
-        (f) => f.nombre.toLowerCase().trim() === nameLower || nameLower.includes(f.nombre.toLowerCase())
-      );
-      if (matchFest && matchFest.instagram) {
-        lead.instagram = matchFest.instagram;
-        modified = true;
-        console.log(`[AutoEnrich Stage 0] ✓ Instagram de festival recuperado de DB local: ${matchFest.instagram}`);
-      }
-
-      if (!lead.instagram) {
-        const webLower = (lead.website || "").toLowerCase();
-        if (nameLower.includes("riviera") || webLower.includes("salariviera")) lead.instagram = "@salariviera";
-        else if (nameLower.includes("panda club") || webLower.includes("pandamadrid")) lead.instagram = "@pandaclubmadrid";
-        else if (nameLower.includes("kasba")) lead.instagram = "@kasbamusic";
-        else if (nameLower.includes("rockville") || webLower.includes("rockville.es")) lead.instagram = "@salarockville";
-        else if (nameLower.includes("ferrara buskers")) lead.instagram = "@ferrarabuskersfestival";
-        else if (nameLower.includes("candlelight") || webLower.includes("feverup")) lead.instagram = "@candlelight.concerts";
-        else if (nameLower.includes("movistar arena") || webLower.includes("movistararena")) lead.instagram = "@movistararena_es";
-        else if (nameLower.includes("cocheras del puerto")) lead.instagram = "@puertohuelva";
-
-        if (lead.instagram) modified = true;
-      }
-    } catch (_) {}
-  }
+  // STAGE 0: lo que ya sabemos sin llamar a ninguna API: Instagram de salas conocidas y el catálogo compartido (lo que
+  // otras bandas encontraron de esa misma sala). Solo rellena huecos.
+  const igLocal = lead.instagram?.trim() ? null : await instagramConocido(lead.nombre_sala, lead.website);
+  if (igLocal) { lead.instagram = igLocal; modified = true; }
+  const delCatalogo = camposDesdeCatalogo(lead, await consultaCatalogo.buscar({ placeId: lead.place_id, nombre: lead.nombre_sala, ciudad: lead.ciudad }).catch(() => null));
+  if (Object.keys(delCatalogo).length) { Object.assign(lead, delCatalogo); modified = true; }
+  registrar("catalogo");
 
   const placesApiKey = process.env.GOOGLE_PLACES_API_KEY || process.env.VITE_GOOGLE_PLACES_API_KEY || "";
 
@@ -284,7 +281,7 @@ export async function autoEnrichLead(lead: any, userBandId: string, opciones: Au
   if (placesApiKey && placesApiKey.trim() !== "") {
     try {
       const searchQuery = `${lead.nombre_sala} ${lead.ciudad || ''} España`;
-      console.log(`[AutoEnrich Places] Consultando Google Places API (New) para: "${searchQuery}"...`);
+      console.log(`[AutoEnrich Places] Consultando Google Places API (New) para: "%s"...`, searchQuery);
       const placesRes = await fetch("https://places.googleapis.com/v1/places:searchText", {
         method: "POST",
         headers: {
@@ -299,12 +296,13 @@ export async function autoEnrichLead(lead: any, userBandId: string, opciones: Au
       });
 
       if (placesRes.ok) {
-        const placesData: any = await placesRes.json();
+        const placesData: RespuestaPlacesTextSearch = await placesRes.json();
         if (Array.isArray(placesData.places) && placesData.places.length > 0) {
           const topPlace = placesData.places[0];
+          if (topPlace.id && !lead.place_id) { lead.place_id = topPlace.id; modified = true; }
 
           if (topPlace.businessStatus === "CLOSED_PERMANENTLY" || topPlace.businessStatus === "CLOSED_TEMPORARILY") {
-            console.log(`[AutoEnrich Places] ELIMINANDO SALA CERRADA: La sala "${lead.nombre_sala}" está CERRADA (${topPlace.businessStatus}) en Google Maps. Eliminando de la BD y guardando en lista negra...`);
+            console.log(`[AutoEnrich Places] ELIMINANDO SALA CERRADA: La sala "%s" está CERRADA (%s) en Google Maps. Eliminando de la BD y guardando en lista negra...`, lead.nombre_sala, topPlace.businessStatus);
             try {
               await dbDeleteLead(lead.id, userBandId);
             } catch (e) {
@@ -312,10 +310,11 @@ export async function autoEnrichLead(lead: any, userBandId: string, opciones: Au
             }
             const state = loadState();
             if (state.leads) {
-              state.leads = state.leads.filter((l: any) => l.id !== lead.id);
+              state.leads = state.leads.filter((l) => l.id !== lead.id);
               saveState(state);
             }
-            return { id: lead.id, deleted: true, reason: 'closed_permanently', nombre_sala: lead.nombre_sala };
+            const eliminado: LeadEliminadoPorCierre = { id: lead.id, deleted: true, reason: 'closed_permanently', nombre_sala: lead.nombre_sala };
+            return eliminado as unknown as L;
           }
 
           if (topPlace.formattedAddress && (!lead.direccion || lead.direccion.length < 5)) {
@@ -333,11 +332,11 @@ export async function autoEnrichLead(lead: any, userBandId: string, opciones: Au
             try {
               const urlObj = new URL(topPlace.websiteUri);
               const domain = urlObj.hostname.replace(/^www\./, '');
-              if (domain && (!lead.imagen_url || lead.imagen_url.includes("places.googleapis.com") || lead.imagen_url.includes("ui-avatars") || lead.imagen_url.includes("clearbit"))) {
+              if (domain && (!lead.imagen_url || hostEnDominio(lead.imagen_url, "places.googleapis.com", "ui-avatars.com", "clearbit.com"))) {
                 lead.imagen_url = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
                 modified = true;
               }
-            } catch (e) {}
+            } catch { /* web mal formada: el lead se queda sin logo */ }
           }
           if (topPlace.formattedAddress && (!lead.ciudad || lead.ciudad === 'Desconocido')) {
             const parts = topPlace.formattedAddress.split(",");
@@ -348,26 +347,28 @@ export async function autoEnrichLead(lead: any, userBandId: string, opciones: Au
           }
         }
       }
-    } catch (placesErr: any) {
+    } catch (placesErrCapturado) {
+      const placesErr = comoErrorCapturado(placesErrCapturado);
       console.warn(`[AutoEnrich Places] Error llamando a Places API:`, placesErr?.message || placesErr);
     }
   }
+  registrar("places");
 
   // STAGE 1.5: Serper Live Google Search Contact Enrichment (Ultra-fast contact and capacity intelligence)
   if (process.env.SERPER_API_KEY && (!lead.email_contacto || !lead.aforo || !lead.telefono || !lead.website)) {
     try {
-      console.log(`[AutoEnrich Serper] Consultando Serper Live Contact para: "${lead.nombre_sala}" (${lead.ciudad || 'España'})...`);
+      console.log(`[AutoEnrich Serper] Consultando Serper Live Contact para: "%s" (%s)...`, lead.nombre_sala, lead.ciudad || 'España');
       const serperContact = await enrichVenueDetailsWithSerper(lead.nombre_sala, lead.ciudad);
       if (serperContact) {
         if (serperContact.email && !lead.email_contacto) {
           lead.email_contacto = serperContact.email;
           modified = true;
-          console.log(`[AutoEnrich Serper] ✓ Email de booking detectado vía Serper: ${serperContact.email}`);
+          console.log(`[AutoEnrich Serper] ✓ Email de booking detectado vía Serper: %s`, serperContact.email);
         }
         if (serperContact.aforo && (!lead.aforo || lead.aforo === 0)) {
           lead.aforo = serperContact.aforo;
           modified = true;
-          console.log(`[AutoEnrich Serper] ✓ Aforo verificado vía Serper: ${serperContact.aforo} personas`);
+          console.log(`[AutoEnrich Serper] ✓ Aforo verificado vía Serper: %s personas`, serperContact.aforo);
         }
         if (serperContact.telefono && !lead.telefono) {
           lead.telefono = serperContact.telefono;
@@ -378,25 +379,27 @@ export async function autoEnrichLead(lead: any, userBandId: string, opciones: Au
           modified = true;
           try {
             const domain = new URL(serperContact.website).hostname.replace(/^www\./, '');
-            if (domain && (!lead.imagen_url || lead.imagen_url.includes("places.googleapis.com") || lead.imagen_url.includes("ui-avatars"))) {
+            if (domain && (!lead.imagen_url || hostEnDominio(lead.imagen_url, "places.googleapis.com", "ui-avatars.com"))) {
               lead.imagen_url = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
               modified = true;
             }
-          } catch (_) {}
+          } catch { /* web mal formada: el lead se queda sin logo */ }
         }
         if (serperContact.instagram && !lead.instagram) {
           lead.instagram = serperContact.instagram;
           modified = true;
         }
       }
-    } catch (serperErr: any) {
+    } catch (serperErrCapturado) {
+      const serperErr = comoErrorCapturado(serperErrCapturado);
       console.warn(`[AutoEnrich Serper] Aviso en consulta Serper:`, serperErr?.message || serperErr);
     }
   }
+  registrar("buscador");
 
   // STAGE 2: Direct Website Scraping & Jina Reader (0 Gemini tokens spent!)
   if (lead.website && (!lead.email_contacto || !lead.instagram || !lead.telefono || !lead.aforo)) {
-    console.log(`[AutoEnrich Jina/Scraper] Consultando web oficial mediante Jina Reader y scraping directo: ${lead.website}...`);
+    console.log(`[AutoEnrich Jina/Scraper] Consultando web oficial mediante Jina Reader y scraping directo: %s...`, lead.website);
     try {
       const { scrapeVenueWithJina } = await import("./services/jinaReaderService.js");
       const jinaData = await scrapeVenueWithJina(lead.website);
@@ -404,7 +407,7 @@ export async function autoEnrichLead(lead: any, userBandId: string, opciones: Au
         if (jinaData.email_contacto && !lead.email_contacto) {
           lead.email_contacto = jinaData.email_contacto;
           modified = true;
-          console.log(`[AutoEnrich Jina] ✓ Email extraído con Jina Reader: ${jinaData.email_contacto}`);
+          console.log(`[AutoEnrich Jina] ✓ Email extraído con Jina Reader: %s`, jinaData.email_contacto);
         }
         if (jinaData.email_secundario && !lead.email_secundario) {
           lead.email_secundario = jinaData.email_secundario;
@@ -429,15 +432,16 @@ export async function autoEnrichLead(lead: any, userBandId: string, opciones: Au
           modified = true;
         }
       }
-    } catch (jinaErr: any) {
+    } catch (jinaErrCapturado) {
+      const jinaErr = comoErrorCapturado(jinaErrCapturado);
       console.warn(`[AutoEnrich Jina] Aviso en consulta Jina Reader:`, jinaErr?.message || jinaErr);
     }
 
-    const scrapedInfo = await scrapeWebsiteForContact(lead.website);
+    const scrapedInfo = await scrapeWebsiteForContact(lead.website, lead.nombre_sala);
     if (scrapedInfo.email && !lead.email_contacto) {
       lead.email_contacto = scrapedInfo.email;
       modified = true;
-      console.log(`[AutoEnrich Scraper] ¡Email extraído mediante scraping directo!: ${scrapedInfo.email}`);
+      console.log(`[AutoEnrich Scraper] ¡Email extraído mediante scraping directo!: %s`, scrapedInfo.email);
     }
     if (scrapedInfo.instagram && !lead.instagram) {
       lead.instagram = scrapedInfo.instagram;
@@ -448,6 +452,8 @@ export async function autoEnrichLead(lead: any, userBandId: string, opciones: Au
       modified = true;
     }
   }
+
+  registrar("web");
 
   // STAGE 3: Gemini AI Fallback (ONLY IF email_contacto is still missing or we need additional info)
   const needsGemini = !lead.email_contacto || !lead.direccion;
@@ -478,8 +484,8 @@ Devuelve EXCLUSIVAMENTE un JSON válido con la siguiente estructura exacta:
 Usa cadena vacía "" para textos no encontrados y 0 para aforo numérico. No inventes información ficticia.`;
 
       try {
-        console.log(`[AutoEnrich Gemini] Ejecutando consulta Gemini AI (Fallback) para Lead: '${lead.nombre_sala}'...`);
-        let response: any = null;
+        console.log(`[AutoEnrich Gemini] Ejecutando consulta Gemini AI (Fallback) para Lead: '%s'...`, lead.nombre_sala);
+        let response: RespuestaIA | null = null;
         try {
           response = await generateContentWithFallback(client, {
             contents: prompt,
@@ -487,7 +493,7 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo numérico. No inv
               tools: [{ googleSearch: {} }]
             }
           });
-        } catch (searchErr: any) {
+        } catch {
           console.warn(`[AutoEnrich Gemini] Google Search no disponible, reintentando con conocimiento Gemini...`);
           response = await generateContentWithFallback(client, {
             contents: prompt
@@ -498,7 +504,7 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo numérico. No inv
         const cleanedText = text.replace(/```json/g, "").replace(/```/g, "").trim();
         const jsonStart = cleanedText.indexOf('{');
         const jsonEnd = cleanedText.lastIndexOf('}');
-        let data: any = {};
+        let data: DatosLeadIA = {};
         if (jsonStart !== -1 && jsonEnd !== -1) {
           data = JSON.parse(cleanedText.substring(jsonStart, jsonEnd + 1));
         } else {
@@ -521,13 +527,14 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo numérico. No inv
         if (data.imagen_url && !lead.imagen_url) { lead.imagen_url = data.imagen_url; modified = true; }
         if (data.icono && (!lead.icono || lead.icono === '🏛️')) { lead.icono = data.icono; modified = true; }
         if (data.notas && (!lead.notas || lead.notas.length < 10)) { lead.notas = data.notas; modified = true; }
-      } catch (err: any) {
-        console.warn(`[AutoEnrich Gemini] Error enriqueciendo Lead '${lead.nombre_sala}':`, err?.message || err);
+      } catch (errCapturado) {
+        const err = comoErrorCapturado(errCapturado);
+        console.warn(`[AutoEnrich Gemini] Error enriqueciendo Lead '%s':`, lead.nombre_sala, err?.message || err);
       }
     }
-  } else {
-    console.log(`[AutoEnrich] AHORRO DE TOKENS: Lead '${lead.nombre_sala}' completado con Google Places + Web Scraping. No se necesitó Gemini AI.`);
   }
+
+  registrar("ia");
 
   // STAGE 4: Festival/Event Data Extraction (detect festivals & extract all data)
   const isFestivalOrEvent =
@@ -575,6 +582,8 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo numérico. No inv
     }
   }
 
+  registrar("ia"); // la extracción de fechas de festivales también es de buscador + IA
+
   // Ensure initial pitch is generated if missing
   if (!lead.pitch_generado || lead.pitch_generado === "Sin pitch generado." || lead.pitch_generado.trim() === "") {
     const state = loadState();
@@ -614,9 +623,10 @@ Devuelve ÚNICAMENTE el texto final redactado del email listo para ser revisado 
         if (pitchRes && pitchRes.text) {
           lead.pitch_generado = pitchRes.text.trim();
           modified = true;
-          console.log(`[AutoEnrich] Pitch inicial de alta calidad generado para '${lead.nombre_sala}'.`);
+          console.log(`[AutoEnrich] Pitch inicial de alta calidad generado para '%s'.`, lead.nombre_sala);
         }
-      } catch (e: any) {
+      } catch (eCapturado) {
+        const e = comoErrorCapturado(eCapturado);
         console.warn(`[AutoEnrich] Error generando pitch inicial con IA:`, e?.message || e);
       }
     }
@@ -631,7 +641,7 @@ Devuelve ÚNICAMENTE el texto final redactado del email listo para ser revisado 
   }
 
   // Ensure official corporate logo / favicon is assigned if website exists and image is missing/placeholder
-  if (lead.website && (!lead.imagen_url || lead.imagen_url.includes("google.com/maps") || lead.imagen_url.includes("place") || lead.imagen_url.includes("clearbit") || lead.imagen_url.includes("ui-avatars") || lead.imagen_url.includes("places.googleapis.com") || lead.imagen_url.trim() === "")) {
+  if (lead.website && (!lead.imagen_url || lead.imagen_url.includes("google.com/maps") || lead.imagen_url.includes("place") || hostEnDominio(lead.imagen_url, "clearbit.com", "ui-avatars.com", "places.googleapis.com") || lead.imagen_url.trim() === "")) {
     try {
       const urlObj = new URL(lead.website);
       const domain = urlObj.hostname.replace(/^www\./, '');
@@ -639,34 +649,35 @@ Devuelve ÚNICAMENTE el texto final redactado del email listo para ser revisado 
         lead.imagen_url = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
         modified = true;
       }
-    } catch (e) {}
+    } catch { /* web mal formada: el lead se queda sin logo */ }
   }
 
   // Lo que el usuario vació a propósito se queda vacío, encuentre lo que encuentre la web.
   for (const campo of respetarVacios) {
-    if (campo in lead) lead[campo] = '';
+    if (campo in lead) Reflect.set(lead, campo, '');
   }
 
   if (modified) {
-    console.log(`[AutoEnrich] Lead '${lead.nombre_sala}' enriquecido y guardado con éxito.`);
+    await avisarEmailsDudosos(lead); // un email de IA o buscador con dominio inexistente se guarda con un aviso
+    console.log(`[AutoEnrich] Lead '%s' enriquecido y guardado con éxito.`, lead.nombre_sala);
     const savedEnriched = await dbUpsertLead(lead, userBandId, { permitirVaciar: respetarVacios.size > 0 });
     const state = loadState();
-    const idx = (state.leads || []).findIndex((l: any) => l.id === lead.id);
+    const idx = (state.leads || []).findIndex((l) => l.id === lead.id);
     if (idx !== -1) {
       state.leads[idx] = savedEnriched;
       saveState(state);
     }
-    return savedEnriched;
+    return savedEnriched as unknown as L;
   }
 
-  return lead;
+  return entrada;
 }
 
 /** Guarda la banda enriquecida y refresca la copia en memoria. */
-async function persistirBandaEnriquecida(band: any, userBandId: string): Promise<any> {
+async function persistirBandaEnriquecida(band: BandContact, userBandId: string): Promise<BandContact> {
   const savedEnriched = await dbUpsertBandContact(band, userBandId);
   const state = loadState();
-  const idx = (state.bands || []).findIndex((b: any) => b.id === band.id);
+  const idx = (state.bands || []).findIndex((b) => b.id === band.id);
   if (idx !== -1) {
     state.bands[idx] = savedEnriched;
     saveState(state);
@@ -674,7 +685,7 @@ async function persistirBandaEnriquecida(band: any, userBandId: string): Promise
   return savedEnriched;
 }
 
-export async function autoEnrichBandContact(band: any, userBandId: string): Promise<any> {
+export async function autoEnrichBandContact(band: BandContact, userBandId: string): Promise<BandContact> {
   if (!band || !band.nombre_banda) return band;
 
   const client = getAiClient();
@@ -702,17 +713,16 @@ Devuelve EXCLUSIVAMENTE un JSON válido con la estructura exacta:
   "telefono": "teléfono público",
   "instagram": "URL o usuario de Instagram",
   "spotify_youtube": "URL de Spotify o canal de YouTube",
-  "aforo_promedio": 0,
   "notas_colaboracion": "Breve resumen del estilo, trayectoria e ideas para colaboraciones o conciertos conjuntos",
   "ciudad_origen_swap": "Ciudad para intercambio de fechas",
   "imagen_url": "URL pública directa del logo oficial o foto principal",
   "icono": "Emoji característico (ej: 🎸, 🎤, ⚡, 🎺, 🎷, 🎶)"
 }
-Usa cadena vacía "" para textos no encontrados y 0 para aforo. No inventes información sin base real.`;
+Usa cadena vacía "" para textos no encontrados. No inventes información sin base real.`;
 
   try {
-    console.log(`[AutoEnrich] Buscando información automática para Banda: '${band.nombre_banda}'...`);
-    let response: any = null;
+    console.log(`[AutoEnrich] Buscando información automática para Banda: '%s'...`, band.nombre_banda);
+    let response: RespuestaIA | null = null;
     try {
       response = await generateContentWithFallback(client, {
         contents: prompt,
@@ -720,8 +730,9 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo. No inventes info
           tools: [{ googleSearch: {} }]
         }
       });
-    } catch (searchErr: any) {
-      console.warn(`[AutoEnrich] Google Search no disponible (${searchErr?.message || searchErr}), reintentando con conocimiento Gemini...`);
+    } catch (searchErrCapturado) {
+      const searchErr = comoErrorCapturado(searchErrCapturado);
+      console.warn(`[AutoEnrich] Google Search no disponible (%s), reintentando con conocimiento Gemini...`, searchErr?.message || searchErr);
       response = await generateContentWithFallback(client, {
         contents: prompt
       });
@@ -731,7 +742,7 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo. No inventes info
     const cleanedText = text.replace(/```json/g, "").replace(/```/g, "").trim();
     const jsonStart = cleanedText.indexOf('{');
     const jsonEnd = cleanedText.lastIndexOf('}');
-    let data: any = {};
+    let data: DatosBandaIA = {};
     if (jsonStart !== -1 && jsonEnd !== -1) {
       data = JSON.parse(cleanedText.substring(jsonStart, jsonEnd + 1));
     } else {
@@ -755,18 +766,18 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo. No inventes info
       const valor = spotify || (/spotify\.com/i.test(delModelo) ? "" : delModelo);
       if (valor) { band.spotify_youtube = valor; modified = true; }
     }
-    if (data.aforo_promedio && (!band.aforo_promedio || band.aforo_promedio === 0)) { band.aforo_promedio = Number(data.aforo_promedio) || 0; modified = true; }
     if (data.notas_colaboracion && (!band.notas_colaboracion || band.notas_colaboracion.length < 10)) { band.notas_colaboracion = data.notas_colaboracion; modified = true; }
     if (data.ciudad_origen_swap && !band.ciudad_origen_swap) { band.ciudad_origen_swap = data.ciudad_origen_swap; modified = true; }
     if (data.imagen_url && !band.imagen_url) { band.imagen_url = data.imagen_url; modified = true; }
     if (data.icono && (!band.icono || band.icono === '🎸')) { band.icono = data.icono; modified = true; }
 
     if (modified) {
-      console.log(`[AutoEnrich] Banda '${band.nombre_banda}' enriquecida con éxito.`);
+      console.log(`[AutoEnrich] Banda '%s' enriquecida con éxito.`, band.nombre_banda);
       return await persistirBandaEnriquecida(band, userBandId);
     }
-  } catch (err: any) {
-    console.warn(`[AutoEnrich] Error enriqueciendo Banda '${band.nombre_banda}':`, err?.message || err);
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
+    console.warn(`[AutoEnrich] Error enriqueciendo Banda '%s':`, band.nombre_banda, err?.message || err);
   }
 
   return band;
