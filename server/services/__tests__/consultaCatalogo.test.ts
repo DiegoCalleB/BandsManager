@@ -98,3 +98,50 @@ describe('crearConsultaCatalogo', () => {
     });
   });
 });
+
+describe('anadirVarias', () => {
+  const guardar = () => vi.fn(async (lead: Record<string, unknown>) => ({ id: String(lead.id) }));
+  let n = 0;
+  const base = (salaIds: string[], plazas: number, extra: Record<string, unknown> = {}) => ({ salaIds, plazas, bandId: 'b', leadsDeLaBanda: [], nuevoId: () => `lead-${++n}`, guardarLead: guardar(), ...extra });
+
+  it('añade las que puede, cuenta cada caso y no repite una sala duplicada en la lista', async () => {
+    reloj.t = 0;
+    const { svc } = montar([sala('s1', 'Alfa'), sala('s2', 'Beta'), sala('s3', 'Gamma', { no_contactar: true })]);
+    const p = base(['s1', 's2', 's1', 's3', 'nope'], 10, { leadsDeLaBanda: [{ id: 'l9', sala_id: 's2' }] });
+    expect(await svc.anadirVarias(p)).toEqual({ anadidas: 1, yaEnAgenda: 1, noDisponibles: 2, limiteAlcanzado: false });
+    expect(p.guardarLead).toHaveBeenCalledTimes(1);
+  });
+
+  it('se detiene al agotar las plazas del plan y lo dice', async () => {
+    reloj.t = 0;
+    const { svc } = montar([sala('s1', 'Alfa'), sala('s2', 'Beta'), sala('s3', 'Gamma')]);
+    const p = base(['s1', 's2', 's3'], 2);
+    expect(await svc.anadirVarias(p)).toEqual({ anadidas: 2, yaEnAgenda: 0, noDisponibles: 0, limiteAlcanzado: true });
+    expect(p.guardarLead).toHaveBeenCalledTimes(2);
+  });
+
+  it('con cero plazas no guarda nada', async () => {
+    reloj.t = 0;
+    const { svc } = montar([sala('s1', 'Alfa')]);
+    const p = base(['s1'], 0);
+    expect((await svc.anadirVarias(p)).limiteAlcanzado).toBe(true);
+    expect(p.guardarLead).not.toHaveBeenCalled();
+  });
+
+  it('acota a 10 salas por petición', async () => {
+    reloj.t = 0;
+    const todas = Array.from({ length: 15 }, (_, i) => sala(`s${i}`, `Sala ${i}`));
+    const { svc } = montar(todas);
+    const p = base(todas.map((s) => s.id), 100);
+    expect((await svc.anadirVarias(p)).anadidas).toBe(10);
+  });
+});
+
+describe('sugerir', () => {
+  it('sugiere por ciudad y género y descarta lo que la banda ya tiene', async () => {
+    reloj.t = 0;
+    const { svc } = montar([sala('s1', 'Alfa', { genero: 'Rock' }), sala('s2', 'Beta', { genero: 'Rock' })]);
+    const r = await svc.sugerir({ ciudad: 'Madrid', genero: 'Rock' }, [{ id: 'l1', sala_id: 's1' }]);
+    expect(r.map((s) => s.id)).toEqual(['s2']);
+  });
+});

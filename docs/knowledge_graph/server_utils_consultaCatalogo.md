@@ -27,6 +27,7 @@ Consulta del catálogo compartido de salas (fase 2): reglas puras, sin base de d
 - [[server_services_chatCatalogo|server/services/chatCatalogo.ts]] *(from #service)*
 - [[server_services_chatLecturas|server/services/chatLecturas.ts]] *(from #service)*
 - [[server_services_consultaCatalogo|server/services/consultaCatalogo.ts]] *(from #service)*
+- [[server_utils_sugerenciasCatalogo|server/utils/sugerenciasCatalogo.ts]] *(from #service)*
 
 ---
 
