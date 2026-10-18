@@ -16,6 +16,7 @@ export interface FechasFestivalIA {
 
 /** Lo que se lee de cada lugar en `places:searchText` de Google Places (API New). */
 export interface LugarPlaces {
+  id?: string;
   businessStatus?: string;
   formattedAddress?: string;
   nationalPhoneNumber?: string;

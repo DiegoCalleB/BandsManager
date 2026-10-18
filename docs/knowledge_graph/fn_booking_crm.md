@@ -40,6 +40,7 @@ Embudo de salas y festivales: leads, enriquecimiento, pitch con IA, respuestas y
 - [[server_db_consultaCatalogoSupabase|server/db/consultaCatalogoSupabase.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_contacts|server/db/contacts.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_deals|server/db/deals.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_enriquecimientoLead|server/db/enriquecimientoLead.ts]] *(Layer: #db, Domain: #booking)*
 - [[server_db_epk|server/db/epk.ts]] *(Layer: #db, Domain: #epk)*
 - [[server_db_exampleThreads|server/db/exampleThreads.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_fans|server/db/fans.ts]] *(Layer: #db, Domain: #social)*

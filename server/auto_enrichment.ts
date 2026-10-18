@@ -9,6 +9,11 @@ import { limpiarCampoContacto } from "./utils/scoutLeads.js";
 import { enrichVenueDetailsWithSerper } from "./services/venueIntelligenceService.js";
 import { resolverUrlSpotifyDeBanda } from "./services/spotifyService.js";
 import { comoErrorCapturado } from '../src/utils/errorCapturado.js';
+import { instagramConocido } from "./utils/instagramConocido.js";
+import { camposDesdeCatalogo } from "./utils/camposDesdeCatalogo.js";
+import { anotarProcedencia, camposRellenados, instantanea, type CamposDeEnriquecimiento, type FuenteDato } from "./utils/procedenciaDatos.js";
+import { consultaCatalogo } from "./db/consultaCatalogoSupabase.js";
+import { avisarEmailsDudosos } from "./services/avisarEmailsDudosos.js";
 import type { BandContact, Lead } from '../src/types.js';
 import type { DatosBandaIA, DatosLeadIA, FechasFestivalIA, LeadEliminadoPorCierre, RespuestaPlacesTextSearch } from './tiposAutoEnrichment.js';
 
@@ -248,42 +253,27 @@ export interface AutoEnrichOptions {
 // aún no es un Lead y reasigna el resultado a esa variable. Dentro, todo se comprueba contra Lead.
 export async function autoEnrichLead<L extends object>(entrada: L, userBandId: string, opciones: AutoEnrichOptions = {}): Promise<L> {
   // Los campos obligatorios de Lead los rellena quien crea el lead; aquí solo se leen y completan.
-  const lead = entrada as unknown as Lead;
+  const lead = entrada as unknown as Lead & CamposDeEnriquecimiento;
   if (!lead || !lead.nombre_sala) return entrada;
   const respetarVacios = new Set(opciones.respetarVacios || []);
 
   let modified = false;
 
-  // STAGE 0: Fast Local DB Match (Festivals & Known Venues Heuristics for Instagram/Metadata)
-  if (!lead.instagram || lead.instagram.trim() === "") {
-    try {
-      const { SPANISH_FESTIVALS } = await import("./utils/spanishFestivalsDB.js");
-      const nameLower = lead.nombre_sala.toLowerCase().trim();
+  // Procedencia: tras cada etapa se anota qué fuente rellenó cada campo que estaba vacío.
+  let previo = instantanea(lead);
+  const registrar = (fuente: FuenteDato) => {
+    const ahora = instantanea(lead);
+    lead.datos_fuentes = anotarProcedencia(lead.datos_fuentes, camposRellenados(previo, ahora), fuente);
+    previo = ahora;
+  };
 
-      const matchFest = SPANISH_FESTIVALS.find(
-        (f) => f.nombre.toLowerCase().trim() === nameLower || nameLower.includes(f.nombre.toLowerCase())
-      );
-      if (matchFest && matchFest.instagram) {
-        lead.instagram = matchFest.instagram;
-        modified = true;
-        console.log(`[AutoEnrich Stage 0] ✓ Instagram de festival recuperado de DB local: %s`, matchFest.instagram);
-      }
-
-      if (!lead.instagram) {
-        const webLower = (lead.website || "").toLowerCase();
-        if (nameLower.includes("riviera") || webLower.includes("salariviera")) lead.instagram = "@salariviera";
-        else if (nameLower.includes("panda club") || webLower.includes("pandamadrid")) lead.instagram = "@pandaclubmadrid";
-        else if (nameLower.includes("kasba")) lead.instagram = "@kasbamusic";
-        else if (nameLower.includes("rockville") || hostEnDominio(webLower, "rockville.es")) lead.instagram = "@salarockville";
-        else if (nameLower.includes("ferrara buskers")) lead.instagram = "@ferrarabuskersfestival";
-        else if (nameLower.includes("candlelight") || webLower.includes("feverup")) lead.instagram = "@candlelight.concerts";
-        else if (nameLower.includes("movistar arena") || webLower.includes("movistararena")) lead.instagram = "@movistararena_es";
-        else if (nameLower.includes("cocheras del puerto")) lead.instagram = "@puertohuelva";
-
-        if (lead.instagram) modified = true;
-      }
-    } catch { /* sin coincidencia conocida el lead se queda sin Instagram; el enriquecimiento sigue */ }
-  }
+  // STAGE 0: lo que ya sabemos sin llamar a ninguna API: Instagram de salas conocidas y el catálogo compartido (lo que
+  // otras bandas encontraron de esa misma sala). Solo rellena huecos.
+  const igLocal = lead.instagram?.trim() ? null : await instagramConocido(lead.nombre_sala, lead.website);
+  if (igLocal) { lead.instagram = igLocal; modified = true; }
+  const delCatalogo = camposDesdeCatalogo(lead, await consultaCatalogo.buscar({ placeId: lead.place_id, nombre: lead.nombre_sala, ciudad: lead.ciudad }).catch(() => null));
+  if (Object.keys(delCatalogo).length) { Object.assign(lead, delCatalogo); modified = true; }
+  registrar("catalogo");
 
   const placesApiKey = process.env.GOOGLE_PLACES_API_KEY || process.env.VITE_GOOGLE_PLACES_API_KEY || "";
 
@@ -309,6 +299,7 @@ export async function autoEnrichLead<L extends object>(entrada: L, userBandId: s
         const placesData: RespuestaPlacesTextSearch = await placesRes.json();
         if (Array.isArray(placesData.places) && placesData.places.length > 0) {
           const topPlace = placesData.places[0];
+          if (topPlace.id && !lead.place_id) { lead.place_id = topPlace.id; modified = true; }
 
           if (topPlace.businessStatus === "CLOSED_PERMANENTLY" || topPlace.businessStatus === "CLOSED_TEMPORARILY") {
             console.log(`[AutoEnrich Places] ELIMINANDO SALA CERRADA: La sala "%s" está CERRADA (%s) en Google Maps. Eliminando de la BD y guardando en lista negra...`, lead.nombre_sala, topPlace.businessStatus);
@@ -361,6 +352,7 @@ export async function autoEnrichLead<L extends object>(entrada: L, userBandId: s
       console.warn(`[AutoEnrich Places] Error llamando a Places API:`, placesErr?.message || placesErr);
     }
   }
+  registrar("places");
 
   // STAGE 1.5: Serper Live Google Search Contact Enrichment (Ultra-fast contact and capacity intelligence)
   if (process.env.SERPER_API_KEY && (!lead.email_contacto || !lead.aforo || !lead.telefono || !lead.website)) {
@@ -403,6 +395,7 @@ export async function autoEnrichLead<L extends object>(entrada: L, userBandId: s
       console.warn(`[AutoEnrich Serper] Aviso en consulta Serper:`, serperErr?.message || serperErr);
     }
   }
+  registrar("buscador");
 
   // STAGE 2: Direct Website Scraping & Jina Reader (0 Gemini tokens spent!)
   if (lead.website && (!lead.email_contacto || !lead.instagram || !lead.telefono || !lead.aforo)) {
@@ -459,6 +452,8 @@ export async function autoEnrichLead<L extends object>(entrada: L, userBandId: s
       modified = true;
     }
   }
+
+  registrar("web");
 
   // STAGE 3: Gemini AI Fallback (ONLY IF email_contacto is still missing or we need additional info)
   const needsGemini = !lead.email_contacto || !lead.direccion;
@@ -537,9 +532,9 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo numérico. No inv
         console.warn(`[AutoEnrich Gemini] Error enriqueciendo Lead '%s':`, lead.nombre_sala, err?.message || err);
       }
     }
-  } else {
-    console.log(`[AutoEnrich] AHORRO DE TOKENS: Lead '%s' completado con Google Places + Web Scraping. No se necesitó Gemini AI.`, lead.nombre_sala);
   }
+
+  registrar("ia");
 
   // STAGE 4: Festival/Event Data Extraction (detect festivals & extract all data)
   const isFestivalOrEvent =
@@ -586,6 +581,8 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo numérico. No inv
       }
     }
   }
+
+  registrar("ia"); // la extracción de fechas de festivales también es de buscador + IA
 
   // Ensure initial pitch is generated if missing
   if (!lead.pitch_generado || lead.pitch_generado === "Sin pitch generado." || lead.pitch_generado.trim() === "") {
@@ -661,6 +658,7 @@ Devuelve ÚNICAMENTE el texto final redactado del email listo para ser revisado 
   }
 
   if (modified) {
+    await avisarEmailsDudosos(lead); // un email de IA o buscador con dominio inexistente se guarda con un aviso
     console.log(`[AutoEnrich] Lead '%s' enriquecido y guardado con éxito.`, lead.nombre_sala);
     const savedEnriched = await dbUpsertLead(lead, userBandId, { permitirVaciar: respetarVacios.size > 0 });
     const state = loadState();
