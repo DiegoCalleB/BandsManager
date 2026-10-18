@@ -37,6 +37,13 @@ async function leerTodo<T>(tabla: string, columnas: string): Promise<T[]> {
   }
 }
 
+/** Lo mínimo de los leads de UNA banda para saber qué salas del catálogo ya tiene. Siempre filtrado por su `bandId`. */
+export async function leadsDeAgendaDeBanda(bandId: string) {
+  const { data, error } = await getSupabase().from('leads').select('id,sala_id,nombre_sala,ciudad,place_id').eq('band_id', bandId);
+  if (error) throw new Error(`No se pudo leer la agenda de la banda: ${error.message}`);
+  return (data ?? []) as Array<{ id: string; sala_id: string | null; nombre_sala: string | null; ciudad: string | null; place_id: string | null }>;
+}
+
 export const puertoCatalogoSupabase: PuertoCatalogo = {
   async leerLeads() {
     return (await leerTodo<FilaLeadCatalogo>('leads', COLUMNAS_LEAD)).map(leadParaCatalogo);

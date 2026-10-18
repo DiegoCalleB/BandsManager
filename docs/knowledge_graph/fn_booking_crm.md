@@ -37,6 +37,7 @@ Embudo de salas y festivales: leads, enriquecimiento, pitch con IA, respuestas y
 - [[server_db_campaigns|server/db/campaigns.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_categoryTemplates|server/db/categoryTemplates.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_concerts|server/db/concerts.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_consultaCatalogoSupabase|server/db/consultaCatalogoSupabase.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_contacts|server/db/contacts.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_deals|server/db/deals.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_epk|server/db/epk.ts]] *(Layer: #db, Domain: #epk)*
@@ -45,6 +46,7 @@ Embudo de salas y festivales: leads, enriquecimiento, pitch con IA, respuestas y
 - [[server_db_pitchLearning|server/db/pitchLearning.ts]] *(Layer: #db, Domain: #booking)*
 - [[server_db_production|server/db/production.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_rehearsals|server/db/rehearsals.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_salasCatalogo|server/db/salasCatalogo.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_social|server/db/social.ts]] *(Layer: #db, Domain: #social)*
 - [[server_db_sync|server/db/sync.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_tiposAdn|server/db/tiposAdn.ts]] *(Layer: #db, Domain: #system)*
@@ -53,6 +55,7 @@ Embudo de salas y festivales: leads, enriquecimiento, pitch con IA, respuestas y
 - [[server_db_users|server/db/users.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_campaigns|server/routes/campaigns.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_catalogo|server/routes/catalogo.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_deals|server/routes/deals.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_leads|server/routes/leads.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_routes_leads_emailValidation|server/routes/leads/emailValidation.ts]] *(Layer: #route, Domain: #booking)*

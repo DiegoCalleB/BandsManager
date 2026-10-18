@@ -31,6 +31,7 @@ Tipos del chat del Mánager Virtual (chat.ts): mensajes del historial, acciones 
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/services/__tests__/chatCatalogo.test.ts`
 - `server/services/__tests__/chatLecturas.test.ts`
 
 ---

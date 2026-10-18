@@ -23,6 +23,7 @@ Exporta: textoDeDatos, nombreEnPrompt, umbralSeguro, bloqueAutonomiaPrompt.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server_services_chatCatalogo|server/services/chatCatalogo.ts]] *(from #service)*
 - [[server_services_chatLecturas|server/services/chatLecturas.ts]] *(from #service)*
 - [[server_services_chatPrompt|server/services/chatPrompt.ts]] *(from #service)*
 

@@ -13,7 +13,7 @@ tags: ["route", "booking", "auto"]
 > **Capa:** `#layer/route` | **Dominio:** `#domain/booking`
 
 ## 📖 Descripción
-Agregador del dominio leads: monta los sub-routers de `./leads/` y reexporta
+Agregador del dominio leads: monta los sub-routers de `./leads/` (y el catálogo de salas, que alimenta la
 
 ---
 
@@ -22,6 +22,7 @@ Agregador del dominio leads: monta los sub-routers de `./leads/` y reexporta
 - [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(Layer: #route, Domain: #booking)*
 - [[route_leads_pitch|Leads Pitch Generation Route]] *(Layer: #route, Domain: #booking)*
 - [[route_leads_reply|Leads Reply Route]] *(Layer: #route, Domain: #booking)*
+- [[server_routes_catalogo|server/routes/catalogo.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_leads_emailValidation|server/routes/leads/emailValidation.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_routes_leads_exampleThreads|server/routes/leads/exampleThreads.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_routes_leads_feedback|server/routes/leads/feedback.ts]] *(Layer: #route, Domain: #booking)*

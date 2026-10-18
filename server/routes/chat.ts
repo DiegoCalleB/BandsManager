@@ -17,6 +17,7 @@ import { iaRateLimiter, chatRateLimiter } from "../middleware/rateLimiter.js";
 import { acotarHistorial, agregarTurno, mensajeAceptable } from "../utils/conversacionChat.js";
 import { convertFunctionCallsToProposedActions } from "../services/chatTools.js";
 import { consultarConLecturas } from "../services/chatLecturas.js";
+import { consultaCatalogo } from "../db/consultaCatalogoSupabase.js";
 import { instruccionesChat, contextoDeDatosChat, mensajeConDatos } from "../services/chatPrompt.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 import { registrarErrorInesperado } from '../utils/errorHttp.js';
@@ -343,7 +344,14 @@ router.post("/chat", requireAuth, chatRateLimiter, async (req, res) => {
     let lastError: ErrorDeFailover | null = null;
 
     try {
-      const resultado = await consultarConLecturas(client, { contents, systemPrompt, bandId: userReq.band_id, leads: state.leads.filter(matchBand) });
+      const leadsDeLaBanda = state.leads.filter(matchBand);
+      const resultado = await consultarConLecturas(client, {
+        contents,
+        systemPrompt,
+        bandId: userReq.band_id,
+        leads: leadsDeLaBanda,
+        catalogo: (args) => consultaCatalogo.consultar(args, leadsDeLaBanda),
+      });
       response = resultado.response;
       accionesDeRondasPrevias = resultado.accionesPrevias;
     } catch (errCapturado) {
