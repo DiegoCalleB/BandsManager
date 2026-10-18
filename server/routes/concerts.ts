@@ -27,19 +27,19 @@ import { programarRevisionDeBanda, choquesVisiblesPara } from "../services/calen
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 import type { CancionDeFeed, ConciertoDeFeed, EnsayoDeFeed, MaterialFeed, PuntoRunOfShowFeed, SalaDeFeed, SetlistDeFeed, TemaDeSetlistFeed } from './tiposCalendarioIcs.js';
 import { responderError } from '../utils/errorHttp.js';
+import { soloDireccionSiTocaDinero } from '../utils/permisosConcierto.js';
 
 const router = express.Router();
 
 /**
  * Firma del feed de calendario para una banda (o una lista de bandas separada por comas).
  *
- * El feed .ics tiene que poder leerse SIN sesión, porque quien lo consume es Google Calendar o
- * el calendario del móvil, que no saben iniciar sesión. Pero identificarlo solo por band_id
- * significaba que probando identificadores se leían los conciertos y ensayos de cualquier banda.
- * La URL lleva ahora una firma que solo el servidor sabe calcular.
+ * El feed .ics se lee SIN sesión (Google Calendar o el móvil no saben iniciarla), pero identificarlo
+ * solo por band_id dejaba leer los conciertos y ensayos de cualquier banda probando identificadores.
+ * La URL lleva una firma que solo el servidor sabe calcular.
  *
- * Es un HMAC, no un valor guardado: así la URL de cada banda es estable sin tocar el esquema, y
- * se invalidan todas de golpe cambiando el secreto.
+ * Es un HMAC, no un valor guardado: la URL de cada banda es estable sin tocar el esquema, y se
+ * invalidan todas de golpe cambiando el secreto.
  */
 export function firmaDeFeed(bandIds: string): string | null {
   const secreto = process.env.CALENDAR_FEED_SECRET || process.env.CRON_SECRET;
@@ -153,7 +153,7 @@ router.delete("/rehearsals/:id", requireAuth, async (req, res) => {
 });
 
 // Update concert
-router.put("/concerts/:id", requireAuth, async (req, res) => {
+router.put("/concerts/:id", requireAuth, soloDireccionSiTocaDinero, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
     const { id } = req.params;
@@ -179,7 +179,7 @@ router.put("/concerts/:id", requireAuth, async (req, res) => {
 });
 
 // Create concert
-router.post("/concerts", requireAuth, async (req, res) => {
+router.post("/concerts", requireAuth, requireLeader, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
     const newConcert: Concert = req.body;
@@ -202,7 +202,7 @@ router.post("/concerts", requireAuth, async (req, res) => {
 });
 
 // Delete concert
-router.delete("/concerts/:id", requireAuth, async (req, res) => {
+router.delete("/concerts/:id", requireAuth, requireLeader, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
     if (!puedeEscribirEnBanda(req, userBandId)) {

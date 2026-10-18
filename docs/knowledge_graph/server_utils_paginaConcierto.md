@@ -30,7 +30,10 @@ Página pública de un concierto (`/e/<slug>`), generada en el servidor.
 - [[server_routes_cartelria|server/routes/cartelria.ts]] *(from #route)*
 - [[server_routes_enlacesCortos|server/routes/enlacesCortos.ts]] *(from #route)*
 - [[server_routes_paginaConcierto|server/routes/paginaConcierto.ts]] *(from #route)*
+- [[server_routes_paginasSeo|server/routes/paginasSeo.ts]] *(from #route)*
 - [[server_routes_referidos|server/routes/referidos.ts]] *(from #route)*
+- [[server_utils_paginaRider|server/utils/paginaRider.ts]] *(from #service)*
+- [[server_utils_seo_render|server/utils/seo/render.ts]] *(from #service)*
 
 ---
 

@@ -4442,10 +4442,14 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "403": {
+            "$ref": "#/components/responses/SoloLider"
           }
         },
         "x-source": "server/routes/concerts.ts:182",
-        "x-autenticacion": "middleware"
+        "x-autenticacion": "middleware",
+        "x-requires-leader": true
       }
     },
     "/api/concerts/sync": {
@@ -4561,10 +4565,14 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "403": {
+            "$ref": "#/components/responses/SoloLider"
           }
         },
         "x-source": "server/routes/concerts.ts:205",
-        "x-autenticacion": "middleware"
+        "x-autenticacion": "middleware",
+        "x-requires-leader": true
       }
     },
     "/api/create-band": {
@@ -12586,11 +12594,15 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "403": {
+            "$ref": "#/components/responses/SoloLider"
           }
         },
         "x-source": "server/routes/tours.ts:10",
         "x-handler": "toursController.createTour",
-        "x-autenticacion": "middleware"
+        "x-autenticacion": "middleware",
+        "x-requires-leader": true
       }
     },
     "/api/tours/{id}": {
@@ -12629,11 +12641,15 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "403": {
+            "$ref": "#/components/responses/SoloLider"
           }
         },
         "x-source": "server/routes/tours.ts:11",
         "x-handler": "toursController.updateTour",
-        "x-autenticacion": "middleware"
+        "x-autenticacion": "middleware",
+        "x-requires-leader": true
       },
       "delete": {
         "tags": [
@@ -12670,11 +12686,15 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "403": {
+            "$ref": "#/components/responses/SoloLider"
           }
         },
         "x-source": "server/routes/tours.ts:12",
         "x-handler": "toursController.deleteTour",
-        "x-autenticacion": "middleware"
+        "x-autenticacion": "middleware",
+        "x-requires-leader": true
       }
     },
     "/api/tracking/click": {
