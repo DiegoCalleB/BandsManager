@@ -4,9 +4,10 @@ import type { BookingCampaign } from "../../../types";
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
  
-import { CalendarCheck,CheckCircle2,Copy,Handshake,Layers,Loader2,MessageCircle,ShieldAlert,Sparkles } from "lucide-react";
+import { AlertTriangle,CalendarCheck,CheckCircle2,Copy,Handshake,Layers,Loader2,MessageCircle,ShieldAlert,Sparkles } from "lucide-react";
 import { Dispatch,SetStateAction } from "react";
 import { Lead } from "../../../types";
+import { avisoDeEmail } from "../../../utils/avisoDeEmail";
 import { getCommercialDealSnippets } from "../../../utils/bookingTourContext";
 import { HolidayDateWarning } from "../../common/HolidayDateWarning";
 import { Button,Textarea } from "../../ui";
@@ -103,6 +104,14 @@ export function VenuePitchComposer({ isReplyStage, setShowMultiModelModal, handl
                 ) : null}
               </div>
             </div>
+
+            {/* Antes de aprobar: si el email del destinatario quedó en duda, que lo comprueben */}
+            {(selectedLead.estado === "pendiente_aprobacion" || selectedLead.estado === "nuevo") && avisoDeEmail(selectedLead) && (
+              <p role="note" className="mb-2.5 flex items-start gap-1.5 rounded-[var(--r-s)] bg-[var(--acc-soft)] px-2.5 py-1.5 text-xs text-[var(--acc-ink)]">
+                <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0" aria-hidden />
+                {avisoDeEmail(selectedLead)}
+              </p>
+            )}
 
             {/* Active Campaign Context Banner in Pitch Section */}
             {activeCampaign && activeCampaign.isActive !== false && (
