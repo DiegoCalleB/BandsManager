@@ -7,7 +7,7 @@ import { escapeHtml } from '../html.js';
 import { slugify } from '../slug.js';
 import { barraHtml, cabezaHtml } from './cabeza.js';
 import { ESTILOS_PAGINA_PUBLICA } from './estilos.js';
-import { ondaHeroSvg, curvaSetlistFigura } from './figuras.js';
+import { heroEnergiaSvg, curvaSetlistFigura } from './figuras.js';
 import { categoriaDe, enlaceDeRelacionada, guiasDe, slugEquivalente } from './indice.js';
 import { RUTAS, alternativasPar, registroUrl, type IdiomaSeo } from './rutas.js';
 import { FECHA_CONTENIDO, TEXTOS, fechaLegible } from './textos.js';
@@ -92,7 +92,7 @@ ${barraHtml(base, idioma, par ? (idioma === 'es' ? par.en : par.es) : RUTAS[idio
 <ul class="etiquetas">${[categoria, t.guias].filter(Boolean).map((e) => `<li>${escapeHtml(String(e))}</li>`).join('')}</ul>
 <h1>${escapeHtml(g.h1)}</h1>
 <p class="lectura">${escapeHtml(t.por)} · ${escapeHtml(t.lectura(minutosDeLectura(g)))} · <time datetime="${FECHA_CONTENIDO}">${escapeHtml(t.actualizado(fechaLegible(idioma)))}</time></p>
-${ondaHeroSvg(g.slug)}
+${heroEnergiaSvg(g.slug)}
 <p class="intro">${escapeHtml(g.intro)}</p>
 <aside class="resumen"><h2>${escapeHtml(t.resumen)}</h2><ul>${g.resumen.map((r) => `<li>${escapeHtml(r)}</li>`).join('')}</ul></aside>
 ${g.secciones.length >= 4 ? `<nav class="toc" aria-label="${escapeHtml(t.enEstaGuia)}"><p>${escapeHtml(t.enEstaGuia)}</p><ol>${g.secciones.map((x, i) => `<li><a href="#${escapeHtml(anclas[i])}">${escapeHtml(x.h2)}</a></li>`).join('')}<li><a href="#faq">${escapeHtml(t.faq)}</a></li></ol></nav>` : ''}
