@@ -57,3 +57,8 @@ Si en algún momento quieres acortar, hay un «Corte de 5 min» en el inicio de 
 2. Pulsa siempre «Reproducir» (el navegador bloquea el audio hasta que alguien pulsa).
 3. Prueba el QR con el móvil. Si no hay datos, el botón «Seguir sin entrar» (a los 6 segundos) evita quedarse parado.
 4. Ten la copia en MP4 a mano, por si falla la red.
+
+## Extras nuevos
+- **«Preguntas del tribunal» (tecla D → pestaña «Preguntas del tribunal»):** cada pregunta tiene un botón «▶ Que conteste Iago» que reproduce su respuesta con su voz, sin tocar la película. Vuelve a pulsarlo (o cierra el panel) para pararlo.
+- **«Cómo se hizo» (inicio de Netflix → fila «Extras»):** ficha con las cifras reales de la película y qué hizo la IA y qué hizo Diego.
+- **Brais se registra en la escena del QR:** la película lo saluda por su nombre de pila. Necesita la variable `FANS_NOMBRE_PUBLICO_BANDAS` en la app principal (ver `AGENTS.md`); sin ella, el saludo no lleva nombre.

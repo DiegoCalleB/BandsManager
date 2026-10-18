@@ -245,6 +245,8 @@
 
   window.DeckVoces = {
     enabled: enabled, play: play, stop: stop, uno: uno, soltar: soltar, pausar: pausar, reanudar: reanudar,
+    // ruta del audio de una frase suelta (para reproducirla fuera de la película, como las respuestas de la defensa)
+    archivo: function (el) { var m = manifest[fnv(el.dataset.who + '|' + el.dataset.say)]; return m ? 'audio/voces/' + m.f + '?v=' + (m.h || m.v || '') : ''; },
     // segundos que dura lo que dicen los personajes de una diapositiva (para repartir una animación de cámara)
     // duración hablada de cada frase de una diapositiva, en segundos y en orden (para la barra de tiempo del reproductor)
     lineas: function (slide) {
