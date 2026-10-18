@@ -7,6 +7,7 @@ export const GUIAS_DIRECTO: GuiaSeo[] = [
     h1: 'Cómo hacer un setlist para un concierto',
     descripcion: 'Criterios para ordenar las canciones de un directo: apertura, curva de energía, tonalidades, transiciones y cierre. Con pasos para armarlo en una tarde.',
     intro: 'Un buen setlist no es tus mejores canciones en fila. Es un recorrido con principio, tensión y final, ajustado al tiempo que te dan.',
+    resumen: ['Empieza por el tiempo real de tu slot y deja canciones de reserva.', 'Dibuja una curva de energía: apertura que enganche, respiro a mitad y cierre fuerte.', 'Cuida tonalidades y tempos entre temas, e imprime el setlist legible para el escenario.'],
     secciones: [
       {
         h2: 'Empieza por el tiempo disponible',
@@ -39,6 +40,7 @@ export const GUIAS_DIRECTO: GuiaSeo[] = [
     h1: 'Hoja de ruta de gira: qué incluir',
     descripcion: 'Cómo preparar la hoja de ruta (day sheet) de un concierto o una gira: horarios, contactos, carga, sonido y alojamiento. Con lista de comprobación.',
     intro: 'La hoja de ruta es el documento que evita llamadas a las dos de la mañana. Cada miembro de la banda debería poder abrirla y saber qué toca hacer y a qué hora.',
+    resumen: ['Una hoja por día con sala, contactos, horarios, comida y alojamiento.', 'En gira, añade tiempos de viaje realistas y un responsable por fecha.', 'Compártela en un documento vivo, no en un PDF perdido en el chat.'],
     secciones: [
       {
         h2: 'Qué incluye una hoja de ruta de un día',
@@ -67,6 +69,7 @@ export const GUIAS_DIRECTO: GuiaSeo[] = [
     h1: 'Rider de hospitalidad: qué pedir a una sala',
     descripcion: 'Qué es el rider de hospitalidad, qué puede pedir razonablemente una banda independiente y cómo plantearlo sin parecer exigente.',
     intro: 'El rider de hospitalidad recoge lo que necesitáis para estar bien durante el concierto: camerino, comida, bebida y logística. Para una banda independiente, menos es más.',
+    resumen: ['Pide solo lo básico: camerino, agua, comida, parking y entradas de cortesía.', 'Sepáralo del rider técnico y marca qué es imprescindible.', 'Pregunta antes qué ofrece la sala: muchas ya lo tienen resuelto.'],
     secciones: [
       {
         h2: 'Qué suele pedirse',
@@ -95,6 +98,7 @@ export const GUIAS_DIRECTO: GuiaSeo[] = [
     h1: 'Cómo organizar los ensayos de una banda',
     descripcion: 'Cómo planificar ensayos que sirvan: frecuencia, objetivos por sesión, calendario compartido y cómo dejar de perder el tiempo.',
     intro: 'Un ensayo sin objetivo se convierte en una charla con ruido. Con una estructura sencilla, dos horas rinden más que cuatro sin plan.',
+    resumen: ['Cada ensayo, un objetivo anotado al empezar y revisado al acabar.', 'Estructura: montaje, calentamiento, trabajo, pase completo y plan del siguiente.', 'Dos semanas antes de un bolo, pasa de trabajar canciones a trabajar el directo.'],
     secciones: [
       {
         h2: 'Cada ensayo, un objetivo',
@@ -127,6 +131,7 @@ export const GUIAS_DIRECTO: GuiaSeo[] = [
     h1: 'Cómo promocionar un concierto',
     descripcion: 'Un plan de promoción por semanas para un concierto: cartel, redes, enlaces con seguimiento, prensa local y cómo llenar la sala.',
     intro: 'Llenar una sala no depende solo de la sala. Con cuatro semanas, un cartel claro y un enlace que se pueda compartir, ya tienes una campaña.',
+    resumen: ['Cuatro semanas bastan: base, ruido, cuenta atrás y medición.', 'Una sola página del concierto para compartir en todos los canales.', 'Un enlace distinto por canal te dice cuál trae más gente.'],
     secciones: [
       {
         h2: 'Semana 4: prepara la base',

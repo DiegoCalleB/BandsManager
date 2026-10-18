@@ -4,20 +4,33 @@
  * texto pasa por `escapeHtml` y el JSON-LD se serializa con `jsonLdSeguro`.
  */
 import { escapeHtml } from '../html.js';
+import { slugify } from '../slug.js';
 import { barraHtml, cabezaHtml } from './cabeza.js';
 import { ESTILOS_PAGINA_PUBLICA } from './estilos.js';
 import { enlaceDeRelacionada, guiasDe, slugEquivalente } from './indice.js';
 import { RUTAS, alternativasPar, type IdiomaSeo } from './rutas.js';
-import { TEXTOS } from './textos.js';
+import { FECHA_CONTENIDO, TEXTOS, fechaLegible } from './textos.js';
 import type { GuiaSeo, SeccionGuia } from './tipos.js';
 
 export const RUTA_GUIAS = RUTAS.es.guias;
 
-function seccion(s: SeccionGuia): string {
+/** Ancla de cada sección: el slug del h2, con sufijo si se repite. Es estable mientras no cambie el título. */
+export function anclasDe(secciones: SeccionGuia[]): string[] {
+  const vistas = new Set<string>();
+  return secciones.map((s, i) => {
+    const base = slugify(s.h2) || `seccion-${i + 1}`;
+    let id = base;
+    for (let n = 2; vistas.has(id); n++) id = `${base}-${n}`;
+    vistas.add(id);
+    return id;
+  });
+}
+
+function seccion(s: SeccionGuia, id: string): string {
   const parrafos = (s.parrafos ?? []).map((p) => `<p>${escapeHtml(p)}</p>`).join('');
   const lista = s.lista ? `<ul class="vinetas">${s.lista.map((i) => `<li>${escapeHtml(i)}</li>`).join('')}</ul>` : '';
   const pasos = s.pasos ? `<ol class="pasos">${s.pasos.map((i) => `<li>${escapeHtml(i)}</li>`).join('')}</ol>` : '';
-  return `<section class="seccion"><h2>${escapeHtml(s.h2)}</h2>${parrafos}${lista}${pasos}</section>`;
+  return `<section class="seccion"><h2 id="${escapeHtml(id)}">${escapeHtml(s.h2)}</h2>${parrafos}${lista}${pasos}</section>`;
 }
 
 function pie(base: string, idioma: IdiomaSeo): string {
@@ -50,7 +63,7 @@ export function renderizarGuia(g: GuiaSeo, base: string, idioma: IdiomaSeo = 'es
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
-      { '@type': 'Article', headline: g.h1, description: g.descripcion, inLanguage: idioma, mainEntityOfPage: `${base}${ruta}`, publisher: { '@type': 'Organization', name: 'BandManager.io', url: base } },
+      { '@type': 'Article', headline: g.h1, description: g.descripcion, inLanguage: idioma, mainEntityOfPage: `${base}${ruta}`, image: `${base}/og-cover.png`, dateModified: FECHA_CONTENIDO, author: { '@type': 'Organization', name: 'BandManager.io', url: base }, publisher: { '@type': 'Organization', name: 'BandManager.io', url: base } },
       {
         '@type': 'BreadcrumbList',
         itemListElement: [
@@ -62,6 +75,7 @@ export function renderizarGuia(g: GuiaSeo, base: string, idioma: IdiomaSeo = 'es
       { '@type': 'FAQPage', mainEntity: g.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
     ],
   };
+  const anclas = anclasDe(g.secciones);
   const relacionadas = g.relacionadas.map((r) => enlaceDeRelacionada(r, idioma)).filter((r): r is NonNullable<typeof r> => !!r);
   return `${cabezaHtml({ base, idioma, ruta, titulo: g.titulo, descripcion: g.descripcion, jsonLd, tipoOg: 'article', alternativas: par ? alternativasPar(base, par.es, par.en) : [] })}
 <body>
@@ -69,10 +83,12 @@ export function renderizarGuia(g: GuiaSeo, base: string, idioma: IdiomaSeo = 'es
 ${barraHtml(base, idioma, par ? (idioma === 'es' ? par.en : par.es) : RUTAS[idioma === 'es' ? 'en' : 'es'].guias)}
 <p class="migas"><a href="${escapeHtml(base)}${rutas.guias}">${escapeHtml(t.guias)}</a> › ${escapeHtml(g.h1)}</p>
 <h1>${escapeHtml(g.h1)}</h1>
-<p class="lectura">${escapeHtml(t.lectura(minutosDeLectura(g)))}</p>
+<p class="lectura">${escapeHtml(t.lectura(minutosDeLectura(g)))} · <time datetime="${FECHA_CONTENIDO}">${escapeHtml(t.actualizado(fechaLegible(idioma)))}</time></p>
 <p class="intro">${escapeHtml(g.intro)}</p>
-${g.secciones.map(seccion).join('\n')}
-<section class="seccion"><h2>${escapeHtml(t.faq)}</h2>
+<aside class="resumen"><h2>${escapeHtml(t.resumen)}</h2><ul>${g.resumen.map((r) => `<li>${escapeHtml(r)}</li>`).join('')}</ul></aside>
+${g.secciones.length >= 4 ? `<nav class="toc" aria-label="${escapeHtml(t.enEstaGuia)}"><p>${escapeHtml(t.enEstaGuia)}</p><ol>${g.secciones.map((x, i) => `<li><a href="#${escapeHtml(anclas[i])}">${escapeHtml(x.h2)}</a></li>`).join('')}<li><a href="#faq">${escapeHtml(t.faq)}</a></li></ol></nav>` : ''}
+${g.secciones.map((x, i) => seccion(x, anclas[i])).join('\n')}
+<section class="seccion"><h2 id="faq">${escapeHtml(t.faq)}</h2>
 ${g.faq.map((f) => `<details><summary>${escapeHtml(f.q)}</summary><p>${escapeHtml(f.a)}</p></details>`).join('')}
 </section>
 <div class="cta">

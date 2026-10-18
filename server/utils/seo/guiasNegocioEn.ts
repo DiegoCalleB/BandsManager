@@ -8,6 +8,7 @@ export const GUIAS_NEGOCIO_EN: GuiaSeoEn[] = [
     h1: 'How to collect fan emails for your band',
     descripcion: 'Why a mailing list is a band’s most valuable asset and how to build it: QR codes at gigs, an incentive, a short form and a first email.',
     intro: 'Social followers belong to the platform. An email address is yours. A mailing list lets you announce every show without depending on any algorithm.',
+    resumen: ['Email is yours; social followers belong to the platform.', 'Ask at the gig with a QR code, one field and a concrete incentive.', 'Explicit consent, an unsubscribe link in every email and an instant welcome.'],
     secciones: [
       {
         h2: 'Why email',
@@ -41,6 +42,7 @@ export const GUIAS_NEGOCIO_EN: GuiaSeoEn[] = [
     h1: 'How to split money in a band',
     descripcion: 'How to share income and costs between band members: a band fund, equal split or split by work, and how to avoid arguments.',
     intro: 'Money breaks more bands than style arguments. A clear agreement from the start, in writing, avoids most conflicts.',
+    resumen: ['Decide shared costs and the band fund first; then split.', 'Pick a model: equal shares, by work or mixed, and write it down.', 'Keep accounts visible to everyone and review the deal when the band changes.'],
     secciones: [
       {
         h2: 'Decide the costs before the split',
@@ -74,6 +76,7 @@ export const GUIAS_NEGOCIO_EN: GuiaSeoEn[] = [
     h1: 'Gig contract checklist: what to include',
     descripcion: 'A checklist for a live performance agreement: parties, date, fee, payment, rider, cancellation and rights. General guidance.',
     intro: 'A gig sealed over text messages is a gig at risk. A short, clear contract protects the band and the venue. This guide is general guidance, not legal advice.',
+    resumen: ['Include the parties, date, fee, payment terms, riders, cancellation and rights.', 'Check that what is written matches what was discussed, especially money and cancellation.', 'With no contract, a confirmation email with an "agreed" reply beats nothing.'],
     secciones: [
       {
         h2: 'What it should include',
@@ -103,6 +106,7 @@ export const GUIAS_NEGOCIO_EN: GuiaSeoEn[] = [
     h1: 'Band management software',
     descripcion: 'What an independent band needs to get more organised than with spreadsheets and group chats: booking, repertoire, calendar, press kit, finances and fans.',
     intro: 'Most bands run on a spreadsheet, a group chat and a lot of memory. It works until there are more than five venues, two rehearsals and a tour.',
+    resumen: ['A spreadsheet works at first; with more venues and rehearsals it falls short.', 'Look for booking, repertoire, calendar, press kit, finances and fan capture.', 'It should work well on a phone and never send anything in your name without your approval.'],
     secciones: [
       {
         h2: 'Where the time goes',

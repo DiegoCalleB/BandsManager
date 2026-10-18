@@ -8,6 +8,7 @@ export const GUIAS_BOOKING_EN: GuiaSeoEn[] = [
     h1: 'How to make an EPK for your band',
     descripcion: 'What an EPK (electronic press kit) is, what it should include and what to leave out. A practical guide so venues and festivals get you in under a minute.',
     intro: 'The EPK, or electronic press kit, is the page a venue or festival opens to decide whether to book you. If it takes more than a minute to understand who you are, they close it.',
+    resumen: ['A good EPK is understood in a minute: style, something to hear right away and contact details.', 'One verifiable proof point beats ten adjectives.', 'Share it as a link, not a PDF: it updates itself and does not weigh down the email.'],
     secciones: [
       {
         h2: 'What an EPK is and what it is for',
@@ -48,6 +49,7 @@ export const GUIAS_BOOKING_EN: GuiaSeoEn[] = [
     h1: 'How to get gigs with your band',
     descripcion: 'A method to book shows without relying on luck: pick the right venues, write to them well, follow up and repeat without burning out.',
     intro: 'Getting gigs is not talent or connections, it is a process. The band that emails fifty well-chosen venues with a short message and a follow-up plays more than the one waiting for the phone to ring.',
+    resumen: ['Getting gigs is a process: well-chosen venues, a short message and follow-up.', 'Prepare an EPK link, a clear rider and two or three possible dates first.', 'Follow up after a week and move on to the next venue after two tries.'],
     secciones: [
       {
         h2: '1. Pick venues that fit, not every venue',
@@ -85,6 +87,7 @@ export const GUIAS_BOOKING_EN: GuiaSeoEn[] = [
     h1: 'How to email a venue to book a gig',
     descripcion: 'Structure, tone and mistakes to avoid when emailing a venue for a show. Includes a short template and what to do if they do not reply.',
     intro: 'The first email decides whether they read you or archive you. The key is to be brief, specific and easy to answer with a yes.',
+    resumen: ['Keep it short: show you know the venue, say what you bring and propose two dates.', 'Put the press kit link in your signature, with no heavy attachments that land in spam.', 'If they do not reply, send a one-line follow-up after a week, then move on.'],
     secciones: [
       {
         h2: 'The structure that works',
@@ -118,6 +121,7 @@ export const GUIAS_BOOKING_EN: GuiaSeoEn[] = [
     h1: 'How to apply to music festivals with your band',
     descripcion: 'How to prepare your application for a festival open call: what they ask for, when to send it and how to stand out among hundreds of submissions.',
     intro: 'Festivals receive hundreds of applications. The ones that pass the first filter are easy to understand quickly and do exactly what the call asks.',
+    resumen: ['Read the full rules: doing exactly what they ask is the first filter.', 'Prepare a press kit link, a short live video and a lean rider.', 'Cite one real proof point and explain why you fit that festival.'],
     secciones: [
       {
         h2: 'Before you send anything',
@@ -147,6 +151,7 @@ export const GUIAS_BOOKING_EN: GuiaSeoEn[] = [
     h1: 'How much to charge for a gig',
     descripcion: 'How to work out your band’s fee and which deal to choose: guaranteed fee, door deal or mixed. A method to find your minimum and negotiate with the venue.',
     intro: 'There is no universal rate. What does exist is a method to know your minimum and to tell when taking on risk is worth it.',
+    resumen: ['There are three deals: guaranteed fee, door deal or mixed with a minimum.', 'Your minimum is real costs plus the value of your time.', 'Talk money after the first yes and put what you agreed in writing.'],
     secciones: [
       {
         h2: 'The three usual deals',
