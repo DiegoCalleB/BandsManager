@@ -31,6 +31,7 @@ Catálogo compartido de salas (`salas_catalogo`): adaptador de Supabase del puer
 - [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
 - [[server_db_consultaCatalogoSupabase|server/db/consultaCatalogoSupabase.ts]] *(from #db)*
 - [[server_routes_catalogo|server/routes/catalogo.ts]] *(from #route)*
+- [[server_services_catalogoScheduler|server/services/catalogoScheduler.ts]] *(from #service)*
 
 ---
 

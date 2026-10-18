@@ -4,13 +4,14 @@
 //  2. Fiabilidad: las señales dan el nivel esperado (una sala sin contactar nunca sale «verificada»).
 //  3. Privacidad: contactos de personas, móviles y enlaces peligrosos no llegan al catálogo.
 // Determinista y sin red: corre en CI. Misma convención que el Lector y el Redactor: `conocido` marca un fallo actual.
-import { calcularFiabilidad, claveSala, emailDeRol, telefonoFijoEs, urlPublica, type NivelSala, type SenalesFiabilidad } from '../utils/salaCatalogo.js';
+import { calcularFiabilidad, claveSala, emailDeRol, instagramDeLaSala, instagramPublico, motivoExclusion, telefonoFijoEs, urlPublica, type NivelSala, type SenalesFiabilidad } from '../utils/salaCatalogo.js';
 
 const AHORA = new Date('2026-10-18T12:00:00Z');
 
 export interface CasoClave { id: string; a: { nombre: string; ciudad: string; placeId?: string }; b: { nombre: string; ciudad: string; placeId?: string }; misma: boolean; conocido?: string }
 export interface CasoNivel { id: string; senales: Partial<SenalesFiabilidad>; esperado: NivelSala; conocido?: string }
-export interface CasoPrivacidad { id: string; tipo: 'email' | 'telefono' | 'url'; entrada: string; permitido: boolean; conocido?: string }
+/** `sala` es el nombre de la sala para los casos de Instagram y de agencia. */
+export interface CasoPrivacidad { id: string; tipo: 'email' | 'telefono' | 'url' | 'instagram' | 'agencia'; entrada: string; sala?: string; permitido: boolean; conocido?: string }
 
 export const CASOS_CLAVE: CasoClave[] = [
   { id: 'dup-01', a: { nombre: 'Sala Apolo', ciudad: 'Barcelona' }, b: { nombre: 'sala apolo', ciudad: 'barcelona' }, misma: true },
@@ -60,6 +61,14 @@ export const CASOS_PRIVACIDAD: CasoPrivacidad[] = [
   { id: 'pri-12', tipo: 'url', entrada: 'javascript:alert(document.cookie)', permitido: false },
   { id: 'pri-13', tipo: 'url', entrada: 'data:text/html;base64,PHNjcmlwdD4=', permitido: false },
   { id: 'pri-14', tipo: 'url', entrada: 'http://localhost:3000/admin', permitido: false },
+  { id: 'pri-17', tipo: 'instagram', entrada: '@sirocosala', sala: 'Siroco', permitido: true },
+  { id: 'pri-18', tipo: 'instagram', entrada: 'https://www.instagram.com/ferrarabuskersfestival/', sala: 'Ferrara Buskers Festival', permitido: true },
+  { id: 'pri-19', tipo: 'instagram', entrada: 'el_nautico_de_san_vicente', sala: 'El Náutico de San Vicente', permitido: true },
+  { id: 'pri-20', tipo: 'instagram', entrada: 'alex.leon.music', sala: 'Honky Tonk Bar', permitido: false },
+  { id: 'pri-21', tipo: 'instagram', entrada: 'mi.club.personal', sala: 'Club', permitido: false },
+  { id: 'pri-22', tipo: 'agencia', entrada: 'Kasba Music (Management & Booking)', permitido: false },
+  { id: 'pri-23', tipo: 'agencia', entrada: 'Propaganda Pel Fet (Booking Agency)', permitido: false },
+  { id: 'pri-24', tipo: 'agencia', entrada: 'Sala Apolo', permitido: true },
 ];
 
 export interface FalloCatalogo { id: string; detalle: string; conocido?: string }
@@ -84,7 +93,12 @@ export function evaluarCatalogo(): ResultadoCatalogo {
     anotar('fiabilidad', nivel === c.esperado, c.id, `esperado ${c.esperado}, obtenido ${nivel}`, c.conocido);
   }
   for (const c of CASOS_PRIVACIDAD) {
-    const salida = c.tipo === 'email' ? emailDeRol(c.entrada) : c.tipo === 'telefono' ? telefonoFijoEs(c.entrada) : urlPublica(c.entrada);
+    const salida =
+      c.tipo === 'email' ? emailDeRol(c.entrada)
+      : c.tipo === 'telefono' ? telefonoFijoEs(c.entrada)
+      : c.tipo === 'instagram' ? instagramDeLaSala(instagramPublico(c.entrada), c.sala ?? '')
+      : c.tipo === 'agencia' ? (motivoExclusion({ id: 'x', band_id: 'x', nombre_sala: c.entrada, ciudad: 'Madrid', tipo: 'sala' }) === null ? c.entrada : null)
+      : urlPublica(c.entrada);
     anotar('privacidad', (salida !== null) === c.permitido, c.id, `${c.tipo} «${c.entrada}»: esperado ${c.permitido ? 'permitido' : 'bloqueado'}, obtenido ${salida !== null ? 'permitido' : 'bloqueado'}`, c.conocido);
   }
 
