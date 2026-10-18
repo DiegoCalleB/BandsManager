@@ -1,3 +1,4 @@
+import { moduloDeBookingOculto } from "../../utils/bookingVisible";
 import React from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { NavGroupDef, NavItemId, NAV_ITEMS } from "../../config/navGroups";
@@ -9,6 +10,7 @@ interface NavGroupSectionProps {
   currentView: string;
   currentActiveBandPlan?: string;
   isAdmin: boolean;
+  bookingVisible: boolean;
   navBadges: Record<string, number | string>;
   onNavigate: (id: NavItemId) => void;
   isOpen: boolean;
@@ -25,6 +27,7 @@ export const NavGroupSection: React.FC<NavGroupSectionProps> = ({
   currentView,
   currentActiveBandPlan,
   isAdmin,
+  bookingVisible,
   navBadges,
   onNavigate,
   isOpen,
@@ -38,6 +41,7 @@ export const NavGroupSection: React.FC<NavGroupSectionProps> = ({
     .filter(
       (item) =>
         (!item.adminOnly || isAdmin) &&
+        !moduloDeBookingOculto(item.id, bookingVisible) &&
         hasModuleAccess(currentActiveBandPlan, item.id),
     );
   if (items.length === 0) return null;

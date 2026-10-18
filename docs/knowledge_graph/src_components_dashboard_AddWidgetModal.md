@@ -22,6 +22,7 @@ Exporta: AddWidgetModal.
 - [[src_hooks_useScrollLock|src/hooks/useScrollLock.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_hooks_useVisualViewportOverlayStyle|src/hooks/useVisualViewportOverlayStyle.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_types_dashboardWidgets|src/types/dashboardWidgets.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_bookingVisible|src/utils/bookingVisible.ts]] *(Layer: #service, Domain: #booking)*
 - [[src_utils_planPermissions|src/utils/planPermissions.ts]] *(Layer: #service, Domain: #system)*
 
 ---

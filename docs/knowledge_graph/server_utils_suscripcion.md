@@ -24,6 +24,7 @@ _Sin dependencias salientes directas._
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(from #security)*
+- [[server_utils_bookingHabilitado|server/utils/bookingHabilitado.ts]] *(from #service)*
 
 ---
 

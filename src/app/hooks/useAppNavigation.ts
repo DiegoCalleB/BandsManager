@@ -10,6 +10,7 @@ import { api } from "../../services/api";
 import type { Message } from "../../types";
 import { Lead,LeadStatus } from "../../types";
 import { aplicarModuloDeVista } from "../../utils/moduloGlobal";
+import { moduloDeBookingOculto } from "../../utils/bookingVisible";
 import { hasModuleAccess } from "../../utils/planPermissions";
 import type { MainView } from "../appViews";
 
@@ -19,6 +20,7 @@ export interface AppNavigationParams {
   refreshTranslation: () => void;
   isLoggedIn: boolean;
   currentActiveBandPlan: "promo" | "promo_plus" | "ensayo" | "local" | "de_gira" | "cabeza_de_cartel";
+  bookingVisible: boolean;
   isAdmin: boolean;
   setShowUserProfileModal: Dispatch<SetStateAction<boolean>>;
   isPromoPlan: boolean;
@@ -57,7 +59,7 @@ const VALID_VIEWS: MainView[] = [
  * @param params Estado y callbacks del contenedor ({@link AppNavigationParams}).
  * @returns Estado derivado y handlers expuestos al contenedor.
  */
-export function useAppNavigation({ language, refreshTranslation, isLoggedIn, currentActiveBandPlan, isAdmin, setShowUserProfileModal, isPromoPlan, setIsMobileMenuOpen, setOpenNavGroupIds, leads, messages, currentActiveBandId }: AppNavigationParams) {
+export function useAppNavigation({ language, refreshTranslation, isLoggedIn, currentActiveBandPlan, bookingVisible, isAdmin, setShowUserProfileModal, isPromoPlan, setIsMobileMenuOpen, setOpenNavGroupIds, leads, messages, currentActiveBandId }: AppNavigationParams) {
 
   // Refresca la traducción al cambiar de vista sin que un `refreshTranslation` nuevo relance el efecto.
   const alCambiarVista = useEffectEvent(() => refreshTranslation());
@@ -150,11 +152,11 @@ export function useAppNavigation({ language, refreshTranslation, isLoggedIn, cur
 
   // Si la vista actual no está permitida para el plan de la banda activa (ej. plan Promo), redirigir inmediatamente a'resumen'
   useEffect(() => {
-    if (!hasModuleAccess(currentActiveBandPlan, currentView)) {
+    if (!hasModuleAccess(currentActiveBandPlan, currentView) || moduloDeBookingOculto(currentView, bookingVisible)) {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza la vista con la URL, el plan y el almacenamiento
       setCurrentView("resumen");
     }
-  }, [currentActiveBandPlan, currentView]);
+  }, [currentActiveBandPlan, currentView, bookingVisible]);
 
   const [bookingOptions, setBookingOptions] = useState<{
     sectionTab?: "salas" | "medios" | "grupos";
@@ -184,6 +186,8 @@ export function useAppNavigation({ language, refreshTranslation, isLoggedIn, cur
       setShowUserProfileModal(true);
       return;
     }
+    // El booking es reservado: a quien no lo tiene ni se le enseña un aviso de plan.
+    if (moduloDeBookingOculto(view, bookingVisible)) return;
     if (!hasModuleAccess(currentActiveBandPlan, view)) {
       if (!isPromoPlan) {
         setShowUserProfileModal(true);

@@ -97,6 +97,7 @@ Módulo sin exportaciones con nombre.
 - [[server_routes_users_rutasSalidaBanda|server/routes/users/rutasSalidaBanda.ts]] *(from #route)*
 - [[server_routes_users_rutasSesion|server/routes/users/rutasSesion.ts]] *(from #route)*
 - [[server_services_agentIntelligence|server/services/agentIntelligence.ts]] *(from #agent)*
+- [[server_services_agentQueueWorker|server/services/agentQueueWorker.ts]] *(from #agent)*
 - [[server_services_calendarConflictService|server/services/calendarConflictService.ts]] *(from #service)*
 - [[server_services_campaignRadarScheduler|server/services/campaignRadarScheduler.ts]] *(from #service)*
 - [[server_services_colaLetras|server/services/colaLetras.ts]] *(from #service)*

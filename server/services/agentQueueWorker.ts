@@ -17,6 +17,8 @@ import { syncActiveCampaignsRadar } from "./campaignRadarScheduler.js";
 import { reconcileStaleStemPredictions } from "./stemPredictionReconciler.js";
 import { captureError } from "../utils/errorTracking.js";
 import { bandHasEmailConfigured } from "./agentScheduler.js";
+import { dbGetRegisteredBandById } from "../db.js";
+import { bandaConBooking } from "../utils/bookingHabilitado.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 const WORKER_ID = `worker_${process.pid}_${Math.random().toString(36).substring(2, 6)}`;
@@ -27,6 +29,7 @@ const WORKER_ID = `worker_${process.pid}_${Math.random().toString(36).substring(
 const POLL_INTERVAL_MS = Number(process.env.AGENT_WORKER_POLL_MS) || 60 * 1000;
 let isWorkerRunning = false;
 let workerLoopTimeout: NodeJS.Timeout | null = null;
+const TRABAJOS_DE_BOOKING = new Set(["lector_inbox_check", "redactor_pitch_dispatch"]);
 
 /**
  * Procesa un trabajo individual según su tipo de agente.
@@ -37,6 +40,12 @@ export async function processSingleJob(job: AgentJob): Promise<void> {
 
   try {
     let resultDetails: DetallesResultadoTrabajo = {};
+
+    // El booking es reservado: un trabajo ya encolado de una banda sin el interruptor no se ejecuta.
+    if (TRABAJOS_DE_BOOKING.has(job.agent_type) && !bandaConBooking(await dbGetRegisteredBandById(job.band_id))) {
+      await completeAgentJob(job.id, { skipped: true, reason: "booking_no_habilitado", duration_ms: Date.now() - startTime });
+      return;
+    }
 
     switch (job.agent_type) {
       case "lector_inbox_check": {

@@ -36,6 +36,7 @@ Exporta: DashboardWidgetGridProps, DashboardWidgetGrid.
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types_dashboardWidgets|src/types/dashboardWidgets.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_bookingVisible|src/utils/bookingVisible.ts]] *(Layer: #service, Domain: #booking)*
 - [[src_utils_panelWidgets|src/utils/panelWidgets.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_planPermissions|src/utils/planPermissions.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_redimensionarWidget|src/utils/redimensionarWidget.ts]] *(Layer: #service, Domain: #system)*

@@ -6,6 +6,7 @@ const mocks = vi.hoisted(() => ({
   runLectorAgent: vi.fn(),
   logAgentExecution: vi.fn(),
   captureError: vi.fn(),
+  dbGetRegisteredBandById: vi.fn(),
 }));
 
 const { EmailAgentErrorFalso } = vi.hoisted(() => ({
@@ -30,12 +31,16 @@ vi.mock('../campaignRadarScheduler.js', () => ({ syncActiveCampaignsRadar: vi.fn
 vi.mock('../stemPredictionReconciler.js', () => ({ reconcileStaleStemPredictions: vi.fn() }));
 vi.mock('../../utils/errorTracking.js', () => ({ captureError: mocks.captureError }));
 vi.mock('../agentScheduler.js', () => ({ bandHasEmailConfigured: async () => true }));
+vi.mock('../../db.js', () => ({ dbGetRegisteredBandById: mocks.dbGetRegisteredBandById }));
 
 import { processSingleJob } from '../agentQueueWorker';
 
 const job = { id: 'job-1', band_id: 'b1', agent_type: 'lector_inbox_check', attempts: 0, max_attempts: 3, payload: {} } as any;
 
-beforeEach(() => vi.clearAllMocks());
+beforeEach(() => {
+  vi.clearAllMocks();
+  mocks.dbGetRegisteredBandById.mockResolvedValue({ band_id: 'b1', suscripcion_habilitada: true });
+});
 
 describe('processSingleJob', () => {
   it('Gmail revocado (reauth_required): cierra el trabajo sin reintentos ni Sentry y avisa una vez en los logs', async () => {
@@ -55,5 +60,14 @@ describe('processSingleJob', () => {
     await processSingleJob(job);
     expect(mocks.failAgentJob).toHaveBeenCalledWith('job-1', 'boom', 0, 3);
     expect(mocks.completeAgentJob).not.toHaveBeenCalled();
+  });
+
+  it.each(['lector_inbox_check', 'redactor_pitch_dispatch'])('%s: una banda sin el interruptor de booking no ejecuta nada', async (agent_type) => {
+    mocks.dbGetRegisteredBandById.mockResolvedValue({ band_id: 'b1', suscripcion_habilitada: false });
+    await processSingleJob({ ...job, agent_type });
+
+    expect(mocks.runLectorAgent).not.toHaveBeenCalled();
+    expect(mocks.failAgentJob).not.toHaveBeenCalled();
+    expect(mocks.completeAgentJob).toHaveBeenCalledWith('job-1', expect.objectContaining({ skipped: true, reason: 'booking_no_habilitado' }));
   });
 });

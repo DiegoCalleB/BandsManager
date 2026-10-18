@@ -28,6 +28,7 @@ Chatbot de la app (`/chat`) y generación de copys para Reels (`/write-reels-cop
 - [[server_services_chatTools|server/services/chatTools.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils|server/utils.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_bandProfile|server/utils/bandProfile.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_bookingHabilitado|server/utils/bookingHabilitado.ts]] *(Layer: #service, Domain: #booking)*
 - [[server_utils_chatPromptBloques|server/utils/chatPromptBloques.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_conversacionChat|server/utils/conversacionChat.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
