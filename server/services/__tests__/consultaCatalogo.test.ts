@@ -145,3 +145,26 @@ describe('sugerir', () => {
     expect(r.map((s) => s.id)).toEqual(['s2']);
   });
 });
+
+describe('buscar', () => {
+  it('encuentra la sala por nombre y ciudad aunque se escriba distinto', async () => {
+    reloj.t = 0;
+    const { svc } = montar([sala('s1', 'Sala Apolo')]);
+    expect((await svc.buscar({ nombre: '  SALA apolo ', ciudad: 'Madrid, España' }))?.id).toBe('s1');
+  });
+
+  it('encuentra la sala por place_id y también cuando está registrada por place_id y el lead no lo trae', async () => {
+    reloj.t = 0;
+    const { svc } = montar([sala('s1', 'Sala Apolo', { clave: 'place:ChIJabc', place_id: 'ChIJabc' })]);
+    expect((await svc.buscar({ placeId: 'ChIJabc', nombre: 'Otro nombre', ciudad: 'Otra' }))?.id).toBe('s1');
+    expect((await svc.buscar({ nombre: 'Sala Apolo', ciudad: 'Madrid' }))?.id).toBe('s1');
+  });
+
+  it('sin identificación suficiente o sin coincidencia devuelve null', async () => {
+    reloj.t = 0;
+    const { svc } = montar([sala('s1', 'Sala Apolo')]);
+    expect(await svc.buscar({ nombre: 'Sala Apolo' })).toBeNull();
+    expect(await svc.buscar({})).toBeNull();
+    expect(await svc.buscar({ nombre: 'Otra sala', ciudad: 'Madrid' })).toBeNull();
+  });
+});

@@ -24,8 +24,12 @@ Instancia única de la consulta al catálogo de salas sobre Supabase (comparte c
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[agent_scout|Scout Discovery Agent]] *(from #agent)*
+- [[fn_acceso_sesion|Acceso y sesión]] *(from #feature)*
+- [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
 - [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
 - [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
+- [[fn_scout_salas|Búsqueda de salas y festivales]] *(from #feature)*
 - [[server_routes_catalogo|server/routes/catalogo.ts]] *(from #route)*
 - [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
 

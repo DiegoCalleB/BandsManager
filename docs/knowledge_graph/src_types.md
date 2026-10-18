@@ -621,6 +621,7 @@ _Sin dependencias salientes directas._
 - `src/components/booking/__tests__/ReinicioPorLead.behavior.test.tsx`
 - `src/components/booking/__tests__/VenueEmailThread.behavior.test.tsx`
 - `src/components/booking/crm/__tests__/leadTypeMatchers.test.ts`
+- `src/components/booking/leads_table/__tests__/LeadRowContact.aviso.test.tsx`
 - `src/components/booking/leads_table/__tests__/leadsTableContracts.test.ts`
 - `src/components/booking/leads_table/hooks/__tests__/useLeadsBatchDateScan.behavior.test.ts`
 - `src/components/booking/venue_panel/__tests__/venuePanelSections.test.tsx`
