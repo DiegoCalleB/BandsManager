@@ -30,6 +30,7 @@ Herramientas de LECTURA del chatbot. Las `propose_*` de chatTools.ts escriben y 
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
+- [[server_services_chatPrompt|server/services/chatPrompt.ts]] *(from #service)*
 
 ---
 

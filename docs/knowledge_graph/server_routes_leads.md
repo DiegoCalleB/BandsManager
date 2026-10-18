@@ -40,6 +40,7 @@ Agregador del dominio leads: monta los sub-routers de `./leads/` y reexporta
 - [[server|server.ts]] *(from #route)*
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
 - [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
+- [[server_services_chatPrompt|server/services/chatPrompt.ts]] *(from #service)*
 
 ---
 
