@@ -36,7 +36,7 @@
   "src/components/campaign/CampaignManagerModal.tsx": 901,
   "src/components/calendar/CalendarViewsContainer.tsx": 892,
   "src/components/reels/ViralGrowthStudio.tsx": 891,
-  "scripts/generate_obsidian_graph.ts": 885,
+  "scripts/generate_obsidian_graph.ts": 883,
   "src/components/EPKManager.tsx": 863,
   "server/ai.ts": 854,
   "server/routes/concerts.ts": 848,
