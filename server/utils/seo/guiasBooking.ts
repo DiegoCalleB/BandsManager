@@ -7,6 +7,7 @@ export const GUIAS_BOOKING: GuiaSeo[] = [
     h1: 'Cómo hacer un EPK para tu banda',
     descripcion: 'Qué es un EPK (dossier de prensa), qué debe llevar y qué sobra. Una guía práctica para que salas y festivales te entiendan en un minuto.',
     intro: 'El EPK (electronic press kit) o dossier es la página que una sala o un festival abre para decidir si te contrata. Si tarda más de un minuto en entenderte, la cierra.',
+    resumen: ['Un EPK bueno se entiende en un minuto: estilo, una escucha inmediata y contacto.', 'Un solo dato verificable de tracción vale más que diez adjetivos.', 'Compártelo como enlace, no como PDF: se actualiza solo y no pesa en el correo.'],
     secciones: [
       {
         h2: 'Qué es un EPK y para qué sirve',
@@ -46,6 +47,7 @@ export const GUIAS_BOOKING: GuiaSeo[] = [
     h1: 'Cómo conseguir bolos con tu banda',
     descripcion: 'Un método para conseguir conciertos sin depender de la suerte: elegir salas, escribirles bien, hacer seguimiento y repetir sin quemarte.',
     intro: 'Conseguir bolos no es talento ni contactos: es un proceso. Quien escribe a cincuenta salas bien elegidas, con un mensaje corto y seguimiento, toca más que quien espera a que le llamen.',
+    resumen: ['Conseguir bolos es un proceso: salas bien elegidas, mensaje corto y seguimiento.', 'Prepara antes un EPK en enlace, un rider claro y dos o tres fechas posibles.', 'Espera una semana para el seguimiento y pasa a la siguiente sala tras dos intentos.'],
     secciones: [
       {
         h2: '1. Elige salas que encajen, no todas',
@@ -82,6 +84,7 @@ export const GUIAS_BOOKING: GuiaSeo[] = [
     h1: 'Cómo escribir un email a una sala de conciertos',
     descripcion: 'Estructura, tono y errores a evitar al escribir a una sala para pedir un bolo. Incluye un modelo corto y qué hacer si no responden.',
     intro: 'El primer correo decide si te leen o te archivan. La clave es ser breve, concreto y fácil de contestar con un sí.',
+    resumen: ['Mensaje corto: conoce la sala, di qué aportas y propón dos fechas.', 'Enlace al dossier en la firma, sin adjuntos pesados que acaben en spam.', 'Si no responden, una línea de seguimiento a la semana y a por la siguiente sala.'],
     secciones: [
       {
         h2: 'La estructura que funciona',
@@ -114,6 +117,7 @@ export const GUIAS_BOOKING: GuiaSeo[] = [
     h1: 'Cómo presentar tu banda a un festival',
     descripcion: 'Cómo preparar la candidatura a una convocatoria de festival: qué piden, cuándo enviarla y cómo destacar entre cientos de propuestas.',
     intro: 'Los festivales reciben cientos de candidaturas. Las que pasan el primer filtro son las que se entienden rápido y cumplen exactamente lo que pide la convocatoria.',
+    resumen: ['Lee las bases enteras: cumplir exactamente lo que piden es el primer filtro.', 'Prepara dossier en enlace, un vídeo corto de directo y un rider ágil.', 'Cita un dato real de tracción y explica por qué encajas en ese festival.'],
     secciones: [
       {
         h2: 'Antes de enviar nada',
@@ -142,6 +146,7 @@ export const GUIAS_BOOKING: GuiaSeo[] = [
     h1: 'Cuánto cobrar por un concierto',
     descripcion: 'Cómo calcular el caché de tu banda y qué modelo elegir: caché fijo, taquilla o mixto. Método para saber tu mínimo y negociar con la sala.',
     intro: 'No existe una tarifa universal. Lo que sí existe es un método para saber cuál es tu mínimo y cuándo te compensa asumir riesgo.',
+    resumen: ['Hay tres modelos: caché fijo, taquilla o mixto con mínimo.', 'Tu mínimo sale de sumar gastos reales y el valor de tu tiempo.', 'Habla de dinero tras el primer sí y deja lo acordado por escrito.'],
     secciones: [
       {
         h2: 'Los tres modelos habituales',

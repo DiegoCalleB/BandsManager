@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { renderizarPaginaRider } from '../../paginaRider.js';
 import { GUIAS, GUIAS_EN, enlaceDeRelacionada, guiaPorSlug, guiasDe, slugEquivalente } from '../indice.js';
-import { renderizarGuia, renderizarIndiceGuias } from '../render.js';
+import { anclasDe, renderizarGuia, renderizarIndiceGuias } from '../render.js';
 import { RUTAS, type IdiomaSeo } from '../rutas.js';
 import { entradasSeo } from '../sitemap.js';
+import { FECHA_CONTENIDO } from '../textos.js';
 
 const BASE = 'https://bandmanager.io';
 const IDIOMAS: IdiomaSeo[] = ['es', 'en'];
@@ -22,6 +23,7 @@ describe.each(IDIOMAS)('guías de SEO (%s)', (idioma) => {
     expect(g.titulo.length).toBeLessThanOrEqual(70);
     expect(g.secciones.length).toBeGreaterThanOrEqual(3);
     expect(g.faq.length).toBeGreaterThanOrEqual(3);
+    expect(g.resumen).toHaveLength(3);
     for (const r of g.relacionadas) expect(enlaceDeRelacionada(r, idioma), `relacionada rota: ${r}`).not.toBeNull();
     expect(JSON.stringify(g)).not.toMatch(/—|--/);
   });
@@ -37,7 +39,13 @@ describe.each(IDIOMAS)('guías de SEO (%s)', (idioma) => {
       expect(html).toContain(`utm_campaign=${g.slug}`);
       const ld = html.match(/<script type="application\/ld\+json">(.*?)<\/script>/s)?.[1] ?? '';
       expect(ld).not.toContain('<');
-      expect(JSON.parse(ld)['@graph']).toHaveLength(3);
+      const grafo = JSON.parse(ld)['@graph'];
+      expect(grafo).toHaveLength(3);
+      expect(grafo[0].dateModified).toBe(FECHA_CONTENIDO);
+      expect(grafo[0].image).toBe(`${BASE}/og-cover.png`);
+      // Resumen visible y cada enlace del índice apunta a un id que existe.
+      expect(html).toContain('class="resumen"');
+      for (const [, ancla] of html.matchAll(/<a href="#([^"]+)">/g)) expect(html, `ancla rota #${ancla}`).toContain(`id="${ancla}"`);
     }
   });
 
@@ -69,7 +77,19 @@ describe('las dos versiones de cada guía', () => {
   it('el sitemap lista cada página en los dos idiomas con las mismas alternativas', () => {
     const entradas = entradasSeo(BASE);
     expect(entradas).toHaveLength((GUIAS.length + 2) * 2);
-    for (const e of entradas) expect(e.alternativas?.map((a) => a.hreflang)).toEqual(['es', 'en', 'x-default']);
+    for (const e of entradas) {
+      expect(e.alternativas?.map((a) => a.hreflang)).toEqual(['es', 'en', 'x-default']);
+      expect(e.lastmod).toBe(FECHA_CONTENIDO);
+    }
+  });
+});
+
+describe('anclas de sección', () => {
+  it('son únicas aunque se repita el título y nunca quedan vacías', () => {
+    const ids = anclasDe([{ h2: 'Paso' }, { h2: 'Paso' }, { h2: '¿¿??' }]);
+    expect(new Set(ids).size).toBe(3);
+    expect(ids[0]).toBe('paso');
+    expect(ids[2]).toBe('seccion-3');
   });
 });
 
