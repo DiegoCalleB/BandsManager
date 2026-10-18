@@ -3,6 +3,7 @@ import type { EntradaSitemap } from '../paginaConcierto.js';
 import { GUIAS } from './indice.js';
 import { rutasDeGuia } from './render.js';
 import { RUTAS, alternativasPar } from './rutas.js';
+import { FECHA_CONTENIDO } from './textos.js';
 
 export function entradasSeo(base: string): EntradaSitemap[] {
   const pares: Array<{ es: string; en: string }> = [
@@ -12,6 +13,6 @@ export function entradasSeo(base: string): EntradaSitemap[] {
   ];
   return pares.flatMap((p) => {
     const alternativas = alternativasPar(base, p.es, p.en);
-    return [{ loc: `${base}${p.es}`, alternativas }, { loc: `${base}${p.en}`, alternativas }];
+    return [{ loc: `${base}${p.es}`, lastmod: FECHA_CONTENIDO, alternativas }, { loc: `${base}${p.en}`, lastmod: FECHA_CONTENIDO, alternativas }];
   });
 }

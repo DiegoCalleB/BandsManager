@@ -25,6 +25,7 @@ Renderizador de las guías de SEO (`/guias`, `/en/guides` y sus guías), en el s
 - [[server_utils_seo_rutas|server/utils/seo/rutas.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_textos|server/utils/seo/textos.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_tipos|server/utils/seo/tipos.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_slug|server/utils/slug.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

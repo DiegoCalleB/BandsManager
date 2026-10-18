@@ -16,6 +16,8 @@ export interface GuiaSeo {
   /** Meta description (≤ 160 caracteres). */
   descripcion: string;
   intro: string;
+  /** Tres ideas clave para quien no va a leer entera la guía (y para el fragmento destacado). */
+  resumen: string[];
   secciones: SeccionGuia[];
   faq: Array<{ q: string; a: string }>;
   /** Slugs de otras guías del mismo idioma, o la ruta de la plantilla de rider, a enlazar al final. */
