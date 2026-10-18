@@ -1,19 +1,19 @@
 ---
-id: src_utils_viajeEstimado
-title: "src/utils/viajeEstimado.ts"
+id: util_viaje_estimado
+title: "Estimador de viaje offline"
 layer: service
-domain: system
+domain: booking
 file: "src/utils/viajeEstimado.ts"
-tags: ["service", "system", "auto"]
+tags: ["calendar", "travel"]
 ---
 
-# 📌 src/utils/viajeEstimado.ts
+# 📌 Estimador de viaje offline
 
 > **Ubicación:** `src/utils/viajeEstimado.ts`  
-> **Capa:** `#layer/service` | **Dominio:** `#domain/system`
+> **Capa:** `#layer/service` | **Dominio:** `#domain/booking`
 
 ## 📖 Descripción
-Estimación OFFLINE de cuánto se tarda en ir de una ciudad española a otra con la furgo.
+Tabla de ~60 ciudades + haversine x1,25 a 85 km/h; vuelo/ferry fijo para islas. Sin red ni IA, para que sea determinista.
 
 ---
 
@@ -23,7 +23,7 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_utils_calendarConflicts|src/utils/calendarConflicts.ts]] *(from #service)*
+- [[util_calendar_conflicts|Detector de choques del calendario]] *(from #service)*
 
 ---
 

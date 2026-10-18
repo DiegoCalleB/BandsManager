@@ -23,7 +23,6 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[server_services_calendarConflictService|server/services/calendarConflictService.ts]] *(from #service)*
 - [[server_services_transactionalEmail|server/services/transactionalEmail.ts]] *(from #service)*
 - [[server_utils_avisoPublicacionFallida|server/utils/avisoPublicacionFallida.ts]] *(from #service)*
 - [[server_utils_avisosCuentaEmail|server/utils/avisosCuentaEmail.ts]] *(from #service)*
@@ -32,6 +31,7 @@ _Sin dependencias salientes directas._
 - [[server_utils_paginaRider|server/utils/paginaRider.ts]] *(from #service)*
 - [[server_utils_seo_cabeza|server/utils/seo/cabeza.ts]] *(from #service)*
 - [[server_utils_seo_render|server/utils/seo/render.ts]] *(from #service)*
+- [[service_calendar_conflicts|Avisos de choques por email]] *(from #service)*
 
 ---
 
