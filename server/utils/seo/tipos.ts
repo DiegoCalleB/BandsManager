@@ -1,4 +1,4 @@
-/** Una guía de SEO (`/guias/<slug>`): contenido fijo y revisable, sin datos de ninguna banda. */
+/** Una guía de SEO: contenido fijo y revisable, sin datos de ninguna banda. */
 export interface SeccionGuia {
   h2: string;
   parrafos?: string[];
@@ -18,7 +18,12 @@ export interface GuiaSeo {
   intro: string;
   secciones: SeccionGuia[];
   faq: Array<{ q: string; a: string }>;
-  /** Slugs de otras guías (o la ruta de la plantilla de rider) a enlazar al final. */
+  /** Slugs de otras guías del mismo idioma, o la ruta de la plantilla de rider, a enlazar al final. */
   relacionadas: string[];
   cta: { titulo: string; texto: string; boton: string };
+}
+
+/** Guía en inglés: lleva el slug de su equivalente en español para el `hreflang` recíproco. */
+export interface GuiaSeoEn extends GuiaSeo {
+  slugEs: string;
 }

@@ -24,9 +24,8 @@ import {
   type EntradaSitemap,
 } from '../utils/paginaConcierto.js';
 import { alternativasLanding } from '../utils/cabeceraIdioma.js';
-import { RUTA_PLANTILLA_RIDER, renderizarPaginaRider } from '../utils/paginaRider.js';
-import { GUIAS } from '../utils/seo/indice.js';
-import { RUTA_GUIAS } from '../utils/seo/render.js';
+import { renderizarPaginaRider } from '../utils/paginaRider.js';
+import { entradasSeo } from '../utils/seo/sitemap.js';
 import { urlInsignia } from '../utils/referidos.js';
 import { obtenerPerfilPublicoBandaCacheado } from '../services/perfilPublicoBanda.js';
 import { captureError } from '../utils/errorTracking.js';
@@ -50,7 +49,10 @@ function responderHtml(res: express.Response, status: number, html: string, cach
 
 // Página de SEO con contenido fijo (sin datos de ninguna banda): ver server/utils/paginaRider.ts.
 router.get('/plantilla-rider-tecnico', publicoRateLimiter, (_req, res) => {
-  responderHtml(res, 200, renderizarPaginaRider(baseUrlPublica()), 'public, max-age=3600, s-maxage=86400');
+  responderHtml(res, 200, renderizarPaginaRider(baseUrlPublica(), 'es'), 'public, max-age=3600, s-maxage=86400');
+});
+router.get('/en/technical-rider-template', publicoRateLimiter, (_req, res) => {
+  responderHtml(res, 200, renderizarPaginaRider(baseUrlPublica(), 'en'), 'public, max-age=3600, s-maxage=86400');
 });
 
 router.get('/e/:slug', publicoRateLimiter, async (req, res) => {
@@ -141,9 +143,7 @@ async function construirSitemap(base: string): Promise<string> {
   const entradas: EntradaSitemap[] = [
     { loc: `${base}/`, alternativas },
     { loc: `${base}/en`, alternativas },
-    { loc: `${base}${RUTA_PLANTILLA_RIDER}` },
-    { loc: `${base}${RUTA_GUIAS}` },
-    ...GUIAS.map((g) => ({ loc: `${base}${RUTA_GUIAS}/${g.slug}` })),
+    ...entradasSeo(base),
   ];
   for (const c of filas as Array<FilaConcierto & { id: string; sala: string; fecha: string }>) {
     const nombre = nombres.get(String(c.band_id));
