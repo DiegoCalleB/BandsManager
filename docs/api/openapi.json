@@ -9626,7 +9626,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/fans_contador.ts:13",
+        "x-source": "server/routes/fans_contador.ts:19",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
