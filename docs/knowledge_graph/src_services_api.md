@@ -89,6 +89,7 @@ Exporta: ApiError, getAuthHeaders, api.
 - [[src_components_user_profile_hooks_useProfileBands|src/components/user_profile/hooks/useProfileBands.ts]] *(from #frontend)*
 - [[src_components_user_profile_UpgradePlanDialog|src/components/user_profile/UpgradePlanDialog.tsx]] *(from #frontend)*
 - [[src_hooks_useAuth|src/hooks/useAuth.ts]] *(from #security)*
+- [[src_services_apiCatalogo|src/services/apiCatalogo.ts]] *(from #service)*
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(from #service)*
 - [[src_utils_calendarViewPreferences|src/utils/calendarViewPreferences.ts]] *(from #service)*
 - [[src_utils_userPreferences|src/utils/userPreferences.ts]] *(from #service)*

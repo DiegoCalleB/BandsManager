@@ -26,6 +26,7 @@ _Sin dependencias salientes directas._
 - [[agent_scout|Scout Discovery Agent]] *(from #agent)*
 - [[route_leads_crud|Leads CRUD Route]] *(from #route)*
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
+- [[server_utils_instagramConocido|server/utils/instagramConocido.ts]] *(from #service)*
 
 ---
 

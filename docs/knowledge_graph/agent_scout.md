@@ -23,12 +23,17 @@ Descubre y enriquece información de salas registrándolas en estado nuevo.
 - [[sec_ssrf_guard|SSRF URL Validator]] *(Layer: #security, Domain: #system)*
 - [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_consultaCatalogoSupabase|server/db/consultaCatalogoSupabase.ts]] *(Layer: #db, Domain: #system)*
 - [[server_promptsManager|server/promptsManager.ts]] *(Layer: #service, Domain: #system)*
+- [[server_services_avisarEmailsDudosos|server/services/avisarEmailsDudosos.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_jinaReaderService|server/services/jinaReaderService.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_spotifyService|server/services/spotifyService.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_venueIntelligenceService|server/services/venueIntelligenceService.ts]] *(Layer: #service, Domain: #booking)*
 - [[server_tiposAutoEnrichment|server/tiposAutoEnrichment.ts]] *(Layer: #service, Domain: #booking)*
 - [[server_utils_bandDna|server/utils/bandDna.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_camposDesdeCatalogo|server/utils/camposDesdeCatalogo.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_instagramConocido|server/utils/instagramConocido.ts]] *(Layer: #service, Domain: #social)*
+- [[server_utils_procedenciaDatos|server/utils/procedenciaDatos.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_scoutLeads|server/utils/scoutLeads.ts]] *(Layer: #service, Domain: #booking)*
 - [[server_utils_spanishFestivalsDB|server/utils/spanishFestivalsDB.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_urlHost|server/utils/urlHost.ts]] *(Layer: #service, Domain: #system)*
@@ -48,6 +53,7 @@ Descubre y enriquece información de salas registrándolas en estado nuevo.
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/__tests__/autoEnrichCatalogoProcedencia.test.ts`
 - `server/__tests__/autoEnrichRespetarVacios.test.ts`
 - `server/__tests__/scrapeContactoLegitimo.test.ts`
 - `server/__tests__/scrapeContactoSsrf.test.ts`

@@ -553,6 +553,9 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-6 text-sm text-[var(--ink-2)] sm:px-6">
           <span>{t('landing.footer.copy').replace('{year}', String(year))}</span>
           <div className="flex items-center gap-4">
+            <a href="/guias" className="hover:underline">
+              {t('landing.footer.guides')}
+            </a>
             <button
               type="button"
               onClick={entrar}

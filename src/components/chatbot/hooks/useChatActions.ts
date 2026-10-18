@@ -9,6 +9,7 @@ import { Concert, Lead, Rehearsal } from "../../../types";
 import type { ChatAutonomyConfig, ChatMessage, ProposedAction } from "../chatTypes";
 import { useAgentTriggerAction } from "./useAgentTriggerAction";
 import { useEntityActions } from "./useEntityActions";
+import { useCatalogoActions } from "./useCatalogoActions";
 import { useLeadEmailActions } from "./useLeadEmailActions";
 
 
@@ -70,6 +71,8 @@ export function useChatActions({ setMessages, leads, autonomyConfig, onUpdateLea
 
   const { applyStatusChange, applyBand, applyConcert, applyRehearsal, applyTour, applyLogoUpdate, applyAddLead, applyUpdateLead } = useEntityActions({ leads, onUpdateLead, updateActionStatusInMessages, setMessages, currentUser, onAddConcert, onAddRehearsal, onCreateLead, onNavigate });
 
+  const { applyAddFromCatalog } = useCatalogoActions({ setMessages, onNavigate });
+
   const { applyAgentTrigger } = useAgentTriggerAction({ autonomyConfig, updateActionStatusInMessages, setMessages, setActiveRun, leads });
 
   async function handleConfirmAllActions(msgId: string, actions: ProposedAction[]) {
@@ -103,6 +106,7 @@ export function useChatActions({ setMessages, leads, autonomyConfig, onUpdateLea
     else if (action.type === 'propose_tour' || action.tour) await applyTour(msgId, actionIndex, action);
     else if (action.type === 'propose_update_logo') await applyLogoUpdate(msgId, actionIndex, action);
     else if (action.type === 'propose_add_lead' || action.lead) await applyAddLead(msgId, actionIndex, action);
+    else if (action.type === 'propose_add_from_catalog' && action.salaId) await applyAddFromCatalog(msgId, actionIndex, action);
     else if (action.type === 'propose_update_lead' && action.leadId) await applyUpdateLead(msgId, actionIndex, action);
     else if (action.type === 'propose_draft_email' && action.leadId) await applyDraftEmail(msgId, actionIndex, action);
     else if (action.type === 'propose_send_email' && action.leadId) await applySendEmail(msgId, actionIndex, action);

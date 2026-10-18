@@ -1,0 +1,48 @@
+---
+id: server_services_catalogoSalas
+title: "server/services/catalogoSalas.ts"
+layer: service
+domain: system
+file: "server/services/catalogoSalas.ts"
+tags: ["service", "system", "auto"]
+---
+
+# 📌 server/services/catalogoSalas.ts
+
+> **Ubicación:** `server/services/catalogoSalas.ts`  
+> **Capa:** `#layer/service` | **Dominio:** `#domain/system`
+
+## 📖 Descripción
+Sincronización del catálogo compartido de salas (fase 1).
+
+---
+
+## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[server_utils_salaCatalogo|server/utils/salaCatalogo.ts]] *(Layer: #service, Domain: #system)*
+
+---
+
+## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server_db_salasCatalogo|server/db/salasCatalogo.ts]] *(from #db)*
+- [[server_services_catalogoScheduler|server/services/catalogoScheduler.ts]] *(from #service)*
+- [[server_services_consultaCatalogo|server/services/consultaCatalogo.ts]] *(from #service)*
+- [[server_utils_camposDesdeCatalogo|server/utils/camposDesdeCatalogo.ts]] *(from #service)*
+- [[server_utils_consultaCatalogo|server/utils/consultaCatalogo.ts]] *(from #service)*
+- [[server_utils_sugerenciasCatalogo|server/utils/sugerenciasCatalogo.ts]] *(from #service)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/__tests__/autoEnrichCatalogoProcedencia.test.ts`
+- `server/services/__tests__/catalogoSalas.test.ts`
+- `server/services/__tests__/catalogoScheduler.test.ts`
+- `server/services/__tests__/consultaCatalogo.test.ts`
+- `server/utils/__tests__/camposDesdeCatalogo.test.ts`
+- `server/utils/__tests__/consultaCatalogo.test.ts`
+- `server/utils/__tests__/sugerenciasCatalogo.test.ts`
+
+---
+
+## 🛡️ Reglas de Aislamiento & Calidad
+- [ ] ¿Respeta el trust boundary de `band_id`?
+- [ ] ¿Tiene pruebas unitarias o de integración asociadas?

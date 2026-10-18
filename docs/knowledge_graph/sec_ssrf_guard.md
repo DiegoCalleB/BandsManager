@@ -45,6 +45,7 @@ Valida llamadas salientes fetch() bloqueando IPs privadas, loopback y metadatos 
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/__tests__/autoEnrichCatalogoProcedencia.test.ts`
 - `server/__tests__/autoEnrichRespetarVacios.test.ts`
 - `server/routes/__tests__/roformerStems.test.ts`
 - `server/services/__tests__/stemWebhookAndLocks.test.ts`

@@ -128,6 +128,7 @@ export const en: Record<string, string> = {
   'landing.nav.faq': 'FAQ',
   'landing.nav.enter': 'Log in',
   'landing.footer.copy': '© {year} BandManager · Built by musicians, for musicians.',
+  'landing.footer.guides': 'Guides for bands (in Spanish)',
   'landing.author.label': 'From musician to musician',
   'landing.author.h2': 'Built from the rehearsal room.',
   'landing.author.p1': 'Hi, I\'m Diego. I\'ve played keys and bass in several bands and a jazz big band.',

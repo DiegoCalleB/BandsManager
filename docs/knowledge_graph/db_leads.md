@@ -22,6 +22,7 @@ Operaciones CRUD en Supabase PostgreSQL con scoping forzoso por bandId.
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(Layer: #schema, Domain: #system)*
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_enriquecimientoLead|server/db/enriquecimientoLead.ts]] *(Layer: #db, Domain: #booking)*
 - [[server_db_tolerantWrite|server/db/tolerantWrite.ts]] *(Layer: #db, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[tabla_deleted_bands|tabla deleted_bands]] *(Layer: #schema, Domain: #system)*
