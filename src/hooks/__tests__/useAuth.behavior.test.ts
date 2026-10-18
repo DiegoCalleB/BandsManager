@@ -119,6 +119,7 @@ describe('useAuth', () => {
     sesionGuardada();
     verifyMe.mockResolvedValue({ user: usuario(), availableBands: [] });
     logout.mockResolvedValue(undefined);
+    localStorage.setItem('bandmanager_chat_messages_band-7', '[{"id":1}]');
     const { result } = renderHook(() => useAuth());
     await waitFor(() => expect(verifyMe).toHaveBeenCalled());
     await act(async () => {
@@ -127,5 +128,6 @@ describe('useAuth', () => {
     expect(logout).toHaveBeenCalledWith('tok');
     expect(result.current.isLoggedIn).toBe(false);
     expect(localStorage.getItem('bandmanager_token')).toBeNull();
+    expect(localStorage.getItem('bandmanager_chat_messages_band-7')).toBeNull();
   });
 });
