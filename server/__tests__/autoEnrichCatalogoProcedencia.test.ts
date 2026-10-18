@@ -103,7 +103,7 @@ describe('autoEnrichLead: Google Maps', () => {
     process.env.GOOGLE_PLACES_API_KEY = 'clave-de-prueba';
     buscar.mockResolvedValue(null);
     vi.stubGlobal('fetch', vi.fn(async (url: string) => {
-      if (String(url).includes('places.googleapis.com')) {
+      if (new URL(String(url)).hostname === 'places.googleapis.com') {
         return new Response(JSON.stringify({ places: [{ id: 'ChIJabc123', formattedAddress: 'Calle Real 5, Madrid', nationalPhoneNumber: '910 000 111', websiteUri: 'https://alfa.example/' }] }), { status: 200 });
       }
       throw new Error('sin red en tests');
@@ -119,7 +119,7 @@ describe('autoEnrichLead: Google Maps', () => {
     process.env.GOOGLE_PLACES_API_KEY = 'clave-de-prueba';
     buscar.mockResolvedValue(null);
     vi.stubGlobal('fetch', vi.fn(async (url: string) => {
-      if (String(url).includes('places.googleapis.com')) return new Response(JSON.stringify({ places: [{ id: 'OTRO', formattedAddress: 'Calle Real 5, Madrid' }] }), { status: 200 });
+      if (new URL(String(url)).hostname === 'places.googleapis.com') return new Response(JSON.stringify({ places: [{ id: 'OTRO', formattedAddress: 'Calle Real 5, Madrid' }] }), { status: 200 });
       throw new Error('sin red en tests');
     }));
     const r: any = await autoEnrichLead({ ...hueco(), direccion: '', place_id: 'ChIJoriginal' }, 'band-x');
