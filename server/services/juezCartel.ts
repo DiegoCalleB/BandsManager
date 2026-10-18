@@ -44,7 +44,7 @@ export async function elegirMejorVariante(bandId: string, variantes: VarianteFon
       completionTokens: uso?.candidatesTokenCount || 0,
       modelName: GEMINI_MODEL,
       estimatedCostEur: costEurFromTokens('gemini', uso?.promptTokenCount || 0, uso?.candidatesTokenCount || 0),
-    }).catch(() => {});
+    }).catch((err) => console.warn('[cartel] No se pudo registrar el consumo del juez:', err?.message || err));
     const parsed = JSON.parse(respuesta.text || '{}') as { best?: unknown };
     const i = Number(parsed.best);
     return Number.isInteger(i) && i >= 0 && i < variantes.length ? i : 0;
