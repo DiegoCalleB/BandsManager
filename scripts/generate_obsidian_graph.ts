@@ -1,8 +1,7 @@
 /**
  * Generator of Obsidian-Compatible Architecture & Dependency Graph
- * Interactive Markdown Knowledge Graph with Bidirectional Wikilinks ([[Node]]), compatible with Obsidian, Foam and agentic navigation.
+ * Interactive Markdown Knowledge Graph with Bidirectional Wikilinks ([[Node]]) for Obsidian, Foam and Agentic Navigation.
  */
-
 import fs from 'node:fs';
 import path from 'node:path';
 import { INDICE_CALENDARIO, NODOS_CALENDARIO } from './graph_nodes_calendario';
@@ -336,7 +335,6 @@ for (const nodo of NODES) {
 const RAIZ = process.cwd();
 const DIRS_ESCANEO = ['src', 'server'];
 const EXT = ['.ts', '.tsx'];
-
 const esTest = (f: string) => /\.(test|spec)\.tsx?$/.test(f) || f.includes('__tests__') || f.endsWith('.d.ts');
 
 const RAIZ_SUELTOS = ['server.ts'];
