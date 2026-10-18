@@ -26,6 +26,7 @@ Exporta: chatFunctionDeclarations, convertFunctionCallsToProposedActions.
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
 - [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
+- [[server_services_chatLecturas|server/services/chatLecturas.ts]] *(from #service)*
 
 ---
 

@@ -25,10 +25,11 @@ Chatbot de la app (`/chat`) y generación de copys para Reels (`/write-reels-cop
 - [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(Layer: #security, Domain: #system)*
 - [[server_routes_leads|server/routes/leads.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_routes_tiposChat|server/routes/tiposChat.ts]] *(Layer: #route, Domain: #system)*
+- [[server_services_chatLecturas|server/services/chatLecturas.ts]] *(Layer: #service, Domain: #system)*
+- [[server_services_chatPrompt|server/services/chatPrompt.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_chatTools|server/services/chatTools.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils|server/utils.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_bandProfile|server/utils/bandProfile.ts]] *(Layer: #service, Domain: #system)*
-- [[server_utils_chatPromptBloques|server/utils/chatPromptBloques.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_conversacionChat|server/utils/conversacionChat.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_melodicIdeaValidator|server/utils/melodicIdeaValidator.ts]] *(Layer: #service, Domain: #system)*
