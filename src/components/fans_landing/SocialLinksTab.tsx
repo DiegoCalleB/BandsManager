@@ -3,10 +3,11 @@
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
 import { BookOpen,Calendar,ChevronDown,ChevronRight,ChevronUp,MapPin,Ticket } from "lucide-react";
+import { useState } from "react";
 import { renderBold } from "../../utils/richText";
 import { safeUrl } from "../../utils/safeUrl";
 import { SocialPlatformsList } from "../SocialPlatformsList";
-import { LinkButton } from "../ui";
+import { Button,Input } from "../ui";
 import { ShowIcon } from "../ui/ShowIcon";
 import { DonationCard } from "./DonationCard";
 import { useFansLanding } from "./FansLandingContext";
@@ -16,7 +17,8 @@ import { useFansLanding } from "./FansLandingContext";
  * @returns Sección de interfaz.
  */
 export function SocialLinksTab() {
-  const { activeTab, t, socialLinks, language, trackClick, clickCounts, epkUrl, logoUrl, imgError, bandName, setImgError, miembros, upcomingConcerts, showAllConcerts, setShowAllConcerts, setActiveTab } = useFansLanding();
+  const [teaserEmail, setTeaserEmail] = useState("");
+  const { formData, setFormData, activeTab, t, socialLinks, language, trackClick, clickCounts, epkUrl, logoUrl, imgError, bandName, setImgError, miembros, upcomingConcerts, showAllConcerts, setShowAllConcerts, setActiveTab } = useFansLanding();
   return (
     <>
 {/* Tab 1: Redes Sociales */}
@@ -116,6 +118,33 @@ export function SocialLinksTab() {
               <ChevronRight className="relative w-5 h-5 text-[var(--ink-2)] group-hover:text-[var(--acc)] group-hover:translate-x-1 transition-ui shrink-0" />
             </a>
 
+            {/* Captación suave del email: un solo campo; nombre y consentimiento se piden en el paso 2 */}
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                setFormData({ ...formData, email: teaserEmail.trim() });
+                setActiveTab("form");
+              }}
+              className="p-4 rounded-[var(--r-l)] bg-[var(--acc)]/10 space-y-2.5 text-left"
+            >
+              <p className="text-sm font-bold text-[var(--ink)]">{t("teaserTitle")}</p>
+              <p className="text-xs text-[var(--ink-2)] font-sans leading-relaxed">{t("teaserBody")}</p>
+              <div className="flex gap-2">
+                <Input
+                  type="email"
+                  required
+                  value={teaserEmail}
+                  onChange={(e) => setTeaserEmail(e.target.value)}
+                  className="flex-1 min-w-0"
+                  placeholder="tu@email.com"
+                  aria-label="Email"
+                />
+                <Button type="submit" size="sm" variant="selected" className="shrink-0">
+                  {t("teaserButton")}
+                </Button>
+              </div>
+            </form>
+
             {/* Aportación Económica / Revolut debajo de links de redes */}
             <DonationCard contextType="redes" />
 
@@ -200,14 +229,6 @@ export function SocialLinksTab() {
               </div>
             )}
 
-            <div className="pt-1 text-center">
-              <LinkButton
-                type="button"
-                onClick={() => setActiveTab("form")}
-              >
-                {t("followCTA")}
-              </LinkButton>
-            </div>
           </div>
         )}
     </>
