@@ -13,7 +13,7 @@ tags: ["schema", "tabla", "auto"]
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Tabla de Supabase `salas_catalogo` (23 columnas).
+Tabla de Supabase `salas_catalogo` (25 columnas).
 
 ---
 
@@ -53,8 +53,10 @@ _Sin dependencias salientes directas._
 - `motivo_no_contactar`
 - `created_at`
 - `updated_at`
+- `estado_negocio`
+- `estado_negocio_en`
 
-**Definida en:** `supabase/migrations/20261108_catalogo_salas.sql`
+**Definida en:** `supabase/migrations/20261108_catalogo_salas.sql`, `supabase/migrations/20261110_estado_negocio_salas.sql`
 
 ---
 

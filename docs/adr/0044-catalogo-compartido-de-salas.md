@@ -35,3 +35,11 @@ Un catálogo aparte, `salas_catalogo`, con solo datos **públicos de la sala**, 
 - Hay un compromiso de privacidad por cobertura: se descartan Instagram de personas y teléfonos móviles aunque a veces fueran los de la sala.
 - La sincronización lee todos los leads de todas las bandas (con el cliente de servicio); es la única pieza que cruza bandas, por eso solo calcula, no expone, y tiene su banco de pruebas de privacidad (`server/evals/catalogoGolden.ts`, que corre en CI).
 - Para revertirlo basta con dejar de montar `server/routes/catalogo.ts` y el planificador: los leads no dependen del catálogo (`sala_id` es opcional y `ON DELETE SET NULL`).
+
+## Actualización: verificación en Google Maps
+
+Tras cada sincronización, el servidor comprueba en Google Places unas 40 salas del catálogo (las que más tiempo llevan sin
+comprobarse; se repite cada 90 días) y anota `estado_negocio`. Solo es no destructiva: una sala `cerrado_permanente` deja de
+salir en consultas, sugerencias y altas, pero no se borra ni se toca la agenda de ninguna banda. Una sala solo se marca como
+cerrada si Maps devuelve, con seguridad, la misma (por `place_id` o por nombre); un fallo de red o de cuota no escribe nada.
+`CATALOGO_VERIFICAR_MAPS=false` la apaga. Los leads de las bandas no se verifican ni se borran por esta vía.
