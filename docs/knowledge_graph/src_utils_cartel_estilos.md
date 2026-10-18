@@ -27,7 +27,13 @@ _Sin dependencias salientes directas._
 - [[src_components_cartel_EstiloBanda|src/components/cartel/EstiloBanda.tsx]] *(from #frontend)*
 - [[src_components_cartel_SelectorFondo|src/components/cartel/SelectorFondo.tsx]] *(from #frontend)*
 - [[src_utils_cartel_adn|src/utils/cartel/adn.ts]] *(from #service)*
+- [[src_utils_cartel_voces|src/utils/cartel/voces.ts]] *(from #service)*
 - [[src_utils_promocionApi|src/utils/promocionApi.ts]] *(from #service)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `src/utils/cartel/__tests__/voces.test.ts`
 
 ---
 

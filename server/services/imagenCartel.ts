@@ -10,6 +10,8 @@ import { carpetaCartel } from '../utils/cartelUrl.js';
 import type { ImagenReferencia } from './referenciasCartel.js';
 
 export const MODELO_IMAGEN = 'gemini-2.5-flash-image';
+/** Proporción del fondo de IA. */
+export const RELACION_FONDO = '4:3';
 
 /** Cada fondo de IA en su propio fichero: el historial del bolo los conserva para no repagarlos. */
 export function rutaFondoIa(bandId: string): string {
@@ -31,8 +33,10 @@ export async function generarFondoCartel(bandId: string, prompt: string, referen
     contents: contenidoDeFondo(prompt, referencias),
     config: {
       responseModalities: ['IMAGE'],
-      // 9:16 y se recorta: un solo fondo pagado sirve para feed, historia e impresión.
-      imageConfig: { aspectRatio: '9:16' },
+      // Apaisada: el cliente la encaja ENTERA en la ventana del cartel (entre las placas del texto), así que
+      // un solo fondo pagado sirve para feed, historia e impresión. Pedir «deja sitio arriba y abajo» en un
+      // lienzo vertical no funciona: un modelo de imagen no mide porcentajes y la ilustración salía cortada.
+      imageConfig: { aspectRatio: RELACION_FONDO },
       abortSignal: AbortSignal.timeout(TIMEOUT_IA_LARGO_MS),
     },
   });
