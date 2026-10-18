@@ -169,6 +169,17 @@
   "v": "3d8da69d2159",
   "who": "guitarra"
  },
+ "123b6266": {
+  "d": 5.11,
+  "e": "044678899995100058962565544300000000003787568732422333100000000000000000000000018899962574596731365612521674554145212443210000",
+  "f": "123b6266.mp3",
+  "h": "017a5bde",
+  "oido": "Y ahora, lo bueno, la música. Quedan tres horas para que cierre el cartel.",
+  "qa": 1.0,
+  "say": "Y ahora, lo bueno: la música. Quedan tres horas para que cierre el cartel.",
+  "v": "33328d9c3671",
+  "who": "bajo"
+ },
  "13ba2c1f": {
   "d": 3.74,
   "e": "0123333445679778341134332100129788642100035456574447308976667587445687630449676599996310000",
@@ -364,6 +375,17 @@
   "say": "[softly] El bajista soy yo. Necesito volver a tocar.",
   "v": "9096eec42678",
   "who": "diego"
+ },
+ "1e12ef82": {
+  "d": 2.66,
+  "e": "15667998829996217778227654222664144310000000000001575767665423410",
+  "f": "1e12ef82.mp3",
+  "h": "92dedb62",
+  "oido": "Y ahora que nos conozca más gente, queda una hora.",
+  "qa": 1.0,
+  "say": "Y ahora, que nos conozca más gente. Queda una hora.",
+  "v": "e2c5a4116bf7",
+  "who": "bajo"
  },
  "1e551ec0": {
   "d": 4.66,
@@ -671,17 +693,6 @@
   "v": "e1bbae2004b9",
   "who": "bajo"
  },
- "406be4f0": {
-  "d": 2.86,
-  "e": "036889998973100000299963886543210000000000000000367867873134124431000",
-  "f": "406be4f0.mp3",
-  "h": "d6e961c7",
-  "oido": "Y ahora lo bueno. La música.",
-  "qa": 1.0,
-  "say": "Y ahora, lo bueno: la música.",
-  "v": "cc96555d1def",
-  "who": "bajo"
- },
  "411098e3": {
   "d": 3.58,
   "e": "025239668784319831000001269596310641241272423231576211000168553118959313621121111210110",
@@ -747,17 +758,6 @@
   "say": "¡Cada vez que una sala lea nuestro dossier, nos hace publicidad gratis, che!",
   "v": "eaa3abc52414",
   "who": "voz"
- },
- "42a113d7": {
-  "d": 3.62,
-  "e": "05877219888997100000000000000388614478994789851187544432000000000000000046431185541332110",
-  "f": "42a113d7.mp3",
-  "h": "be1b1919",
-  "oido": "Y al final lo que nunca nos cuadra, las cuentas.",
-  "qa": 1.0,
-  "say": "Y al final, lo que nunca nos cuadra: las cuentas.",
-  "v": "92456721fb0a",
-  "who": "bajo"
  },
  "4417506d": {
   "d": 5.59,
@@ -944,17 +944,6 @@
   "v": "1df9d7ed36ce",
   "who": "guitarra"
  },
- "56e69e14": {
-  "d": 2.06,
-  "e": "05588998975200000000002767225789413756422576224420",
-  "f": "56e69e14.mp3",
-  "h": "ab188789",
-  "oido": "Y ahora, que nos conozca más gente.",
-  "qa": 1.0,
-  "say": "Y ahora, que nos conozca más gente.",
-  "v": "de8cd0546043",
-  "who": "bajo"
- },
  "57b02ab3": {
   "d": 2.81,
   "e": "00222110000233210127998742100000789612668518944454431145797876642110",
@@ -1074,6 +1063,17 @@
   "v": "8a445602f3d5",
   "who": "bajo"
  },
+ "63571d0c": {
+  "d": 5.35,
+  "e": "046674198878962000000000047784256999935877721276443422000000000004674213755413431000000000000000000044799981799877731751166886544210",
+  "f": "63571d0c.mp3",
+  "h": "eddca29d",
+  "oido": "Y al final, lo que nunca nos cuadra. Las cuentas. ¡Vente minutos, chavales!",
+  "qa": 0.92,
+  "say": "Y al final, lo que nunca nos cuadra: las cuentas. Veinte minutos, chavales.",
+  "v": "4fff76d20282",
+  "who": "bajo"
+ },
  "639a544e": {
   "d": 4.2,
   "e": "0431471169994389742364143451256339733432100000039533753367211120000000594721364445156324343231111210000",
@@ -1083,6 +1083,17 @@
   "qa": 0.8,
   "say": "Y si Claudio y Guglio programan, ¿quién manda aquí? ¿Quién es el líder de la banda?",
   "v": "952cf9d14e9c",
+  "who": "bateria"
+ },
+ "645ab7bc": {
+  "d": 3.62,
+  "e": "00188842861100006912736794135821534443874980376255443411001247897189754424894154102345210",
+  "f": "645ab7bc.mp3",
+  "h": "da9b4bbb",
+  "oido": "Y hago que Pelaez les ha mandado otra banda, solo queda un hueco, tío",
+  "qa": 0.89,
+  "say": "[worried] Iago, que Peláez les ha mandado otra banda. ¡Solo queda un hueco, tío!",
+  "v": "774f18015417",
   "who": "bateria"
  },
  "6503901e": {
@@ -1150,17 +1161,6 @@
   "say": "[excited] ¡Esto es como Tinder, pero para bandas! ¡Y sin tener que hablar con nadie!",
   "v": "63bf416e9cd0",
   "who": "guitarra"
- },
- "685d67db": {
-  "d": 3.07,
-  "e": "132998589979218956463242144311125621565852153343333532464641233232111122221",
-  "f": "685d67db.mp3",
-  "h": "31d9cb75",
-  "oido": "Yo había dejado de tocar, este máster me devolvió las ganas",
-  "qa": 1.0,
-  "say": "Yo había dejado de tocar. Este máster me devolvió las ganas.",
-  "v": "707dce72120d",
-  "who": "diego"
  },
  "68bd029b": {
   "d": 4.3,
@@ -2585,15 +2585,6 @@
   "say": "Y con todo esto, ¿ni el mejor hacker del mundo nos va a tumbar la aplicación?",
   "v": "13b7b2cd7222",
   "who": "bateria"
- },
- "ef128b43": {
-  "d": 7.34,
-  "e": "0599941877982776531975577746661564433431253210003521198418998226466531111100165567214842778977721564321110142156576796163165539755674555653211147987811321145565996522353554332110010",
-  "f": "ef128b43.mp3",
-  "h": "a1994ff6",
-  "say": "Y ya estamos montando un grupo de métal. Nos falta batería… [softly] Con muchísima ilusión, y sabiendo que con Band Mánayer toda la gestión va a ir rodada.",
-  "v": "3b09f0721959",
-  "who": "diego"
  },
  "efed9c47": {
   "d": 2.45,

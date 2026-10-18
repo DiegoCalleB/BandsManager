@@ -1,6 +1,7 @@
 /**
  * Acceso con Google: el token se verifica criptográficamente contra el Client ID (AGENTS.md §1).
  */
+import { avisarAlta } from '../../services/avisoAltas.js';
 import express from 'express';
 import type { UsuarioGuardado } from '../../stateTypes.js';
 import crypto from 'crypto';
@@ -255,6 +256,7 @@ router.post('/auth/google', loginRateLimiter, async (req, res) => {
     } catch (err) {
       console.warn('Could not sync new Google user and band to Supabase:', err);
     }
+    void avisarAlta({ tipo: 'registro', email: cleanEmail, nombre: finalBandName, origen: 'registro con Google' });
   }
 
   if (accessToken) {

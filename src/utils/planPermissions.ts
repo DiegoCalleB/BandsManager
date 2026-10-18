@@ -107,7 +107,7 @@ export const PLANS: Record<'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gir
     name: 'Local',
     badge: 'Iniciación',
     color: '#94a3b8', // Slate / Silver
-    price: '15€ / mes',
+    price: '12€ / mes',
     credits: '300 créditos / mes',
     creditsSub: 'Booking guiado y generación de ideas',
     description: 'Bandas en activo que buscan arrancar su booking y difusión.',
@@ -128,14 +128,9 @@ export const PLANS: Record<'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gir
       'discografia',
       'planes',
     ],
-    stickerGift: {
-      qty: '250 pegatinas gratis',
-      description: 'Pack de pegatinas de tu banda, gratis con tu primera suscripción',
-    },
     features: [
       '1 banda o proyecto',
       '50 salas de conciertos',
-      '🎁 Regalo: 250 pegatinas vinilo de tu banda',
       '10 contactos de prensa y medios',
       'Planificador de Redes & Reels Center',
       'QR & Captura de Base de Fans',
@@ -171,13 +166,13 @@ export const PLANS: Record<'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gir
       'planes',
     ],
     stickerGift: {
-      qty: '500 pegatinas gratis',
+      qty: '150 pegatinas gratis',
       description: 'Pack de pegatinas de tu banda, gratis con tu primera suscripción',
     },
     features: [
       'Salas y festivales ilimitados',
       'Medios y prensa ilimitados',
-      '🎁 Regalo: 500 pegatinas vinilo de tu banda',
+      '🎁 Regalo: 150 pegatinas vinilo de tu banda',
       'Agentes IA Scout, Redactor y Lector',
       'Rutas de Gira & Tour Logistics',
       'Calculadora de kilometraje y dietas',
@@ -215,13 +210,13 @@ export const PLANS: Record<'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gir
       'planes',
     ],
     stickerGift: {
-      qty: '1.000 pegatinas + entrega prioritaria',
+      qty: '300 pegatinas + entrega prioritaria',
       description: 'Pack de pegatinas de tu banda, gratis con tu primera suscripción',
     },
     features: [
       'Hasta 5 bandas gestionadas en paralelo',
       'Todo ilimitado sin restricciones de volumen',
-      '🎁 Regalo: 1.000 pegatinas vinilo + Envío Express',
+      '🎁 Regalo: 300 pegatinas vinilo + Envío Express',
       'Taller Merchan & Inventario Completo',
       'Finanzas Avanzadas e Ingresos/Gastos',
       'IA Multi-Agente con Function Calling',

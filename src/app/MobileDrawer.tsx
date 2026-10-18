@@ -6,6 +6,7 @@ import { LogOut,X,Zap } from "lucide-react";
 import { NavGroupSection } from "../components/common/NavGroupSection";
 import { NavItemButton } from "../components/common/NavItemButton";
 import { AiSupportWidget } from "../components/dashboard/AiUsageSupportWidget";
+import { EntradaPlanes } from "./EntradaPlanes";
 import { IconButton } from "../components/ui";
 import { FLAT_NAV_ORDER_IDS,NAV_GROUPS_MOBILE,NAV_ITEMS,NAV_PINNED_BOTTOM_IDS,NAV_PINNED_TOP_IDS,NavItemId } from "../config/navGroups";
 import { textOnColor } from "../utils/contrastText";
@@ -226,6 +227,7 @@ export function MobileDrawer() {
  Resumen - un usuario que vive navegando por Booking/Repertorio/etc. y nunca entra en
  Resumen no lo veía nunca. Sin gate de plan: el gasto de IA (y el apoyo a él) no depende
  de qué plan tengas. */}
+              <EntradaPlanes />
               <AiSupportWidget variant="sidebar" />
 
               {/* Drawer User Footer */}

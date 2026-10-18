@@ -734,6 +734,10 @@ CREATE TABLE IF NOT EXISTS musicians_waitlist (
   idioma TEXT DEFAULT 'es',
   banda_origen TEXT,
   concierto_origen TEXT,
+  origen TEXT,
+  consentimiento_at TIMESTAMPTZ,
+  confirmado_at TIMESTAMPTZ,
+  baja_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 CREATE INDEX IF NOT EXISTS idx_musicians_waitlist_email ON musicians_waitlist(email);

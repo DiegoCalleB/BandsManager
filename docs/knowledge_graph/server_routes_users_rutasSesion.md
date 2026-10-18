@@ -23,6 +23,7 @@ Sesión activa: quién soy, cambio de banda (solo a bandas de las que eres miemb
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_users_bandasDisponibles|server/routes/users/bandasDisponibles.ts]] *(Layer: #route, Domain: #system)*
 - [[server_stateTypes|server/stateTypes.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_bandaRegistrada|server/utils/bandaRegistrada.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

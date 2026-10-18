@@ -15,6 +15,8 @@ export interface BandaDisponible {
   plan: string;
   logoUrl: string;
   is_main: boolean;
+  /** Interruptor de la suscripción de pago de la banda (apagado por defecto). */
+  suscripcion_habilitada?: boolean;
 }
 
 // Normaliza un band_id para comparar/ordenar (quita el prefijo band-/reg-). Se usa sobre datos
@@ -207,6 +209,7 @@ export async function buildAvailableBandsForUser(
       plan: normalizePlan(b.plan) || getPlanForBand(bid, 'ensayo'),
       logoUrl: getLogoForBand(bid, bName),
       is_main: cleanId === mainClean,
+      suscripcion_habilitada: b.suscripcion_habilitada === true,
     });
   });
 

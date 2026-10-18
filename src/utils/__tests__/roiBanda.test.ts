@@ -10,8 +10,8 @@ const pago = (fecha: string, importe: number, categoria: any = 'merchandising', 
 const entrada = (p: Partial<EntradaRoi>): EntradaRoi => ({ concerts: [], payments: [], plan: 'local', hoy: HOY, ...p });
 
 describe('precio del plan', () => {
-  it('sale de PLANS: 15, 29 y 79 €/mes y 0 en los gratuitos', () => {
-    expect(precioMensualPlan('local')).toBe(15);
+  it('sale de PLANS: 12, 29 y 79 €/mes y 0 en los gratuitos', () => {
+    expect(precioMensualPlan('local')).toBe(12);
     expect(precioMensualPlan('de_gira')).toBe(29);
     expect(precioMensualPlan('cabeza_de_cartel')).toBe(79);
     for (const p of ['promo', 'promo_plus', 'ensayo', undefined, 'gratis', 'desconocido']) expect(precioMensualPlan(p)).toBe(0);
@@ -45,8 +45,8 @@ describe('calcularRoi', () => {
     const r = calcularRoi(entrada({ plan: 'local', concerts: [concierto('2026-10-02', 600), concierto('2026-09-12', 450)] }));
     expect(r.ingresosBolos).toBe(1050);
     expect(r.bolosCobrados).toBe(2);
-    expect(r.costePlan).toBe(45); // 15 €/mes × 3
-    expect(r.multiplo).toBe(23.3);
+    expect(r.costePlan).toBe(36); // 12 €/mes × 3
+    expect(r.multiplo).toBe(29.2);
     expect(r.porMes).toEqual([0, 450, 600]);
     expect(r.estado).toBe('con_datos');
   });
