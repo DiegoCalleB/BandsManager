@@ -75,6 +75,31 @@ describe('sincronizarCatalogo', () => {
     expect(estado.escrituras).toBe(escriturasTrasPrimera);
   });
 
+  it('medios, agencias, bandas amigas y leads de prueba no entran al catálogo y se cuentan por motivo', async () => {
+    const { puerto, estado } = puertoEnMemoria([
+      lead({ id: '1', nombre_sala: 'Radio Segovia', tipo: 'medio' }),
+      lead({ id: '2', nombre_sala: 'Balkan Boom', tipo: 'grupo' }),
+      lead({ id: '3', nombre_sala: 'Panda Management', tipo: 'agencia' }),
+      lead({ id: '4', nombre_sala: 'Test 1786526138562' }),
+      lead({ id: '5', nombre_sala: 'Sala Apolo', tipo: 'sala' }),
+      lead({ id: '6', nombre_sala: 'Rototom', tipo: 'festival', ciudad: 'Benicàssim' }),
+    ]);
+    const r = await sincronizarCatalogo(puerto, { ahora: AHORA });
+    expect(r).toMatchObject({ leadsLeidos: 6, leadsFueraDeCatalogo: { tipo: 3, prueba: 1 }, leadsSinClave: 0, salasResultantes: 2, duplicadosFusionados: 0 });
+    expect(estado.salas.map((s) => s.nombre).sort()).toEqual(['Rototom', 'Sala Apolo']);
+    expect(estado.leads.filter((l) => l.sala_id).map((l) => l.id).sort()).toEqual(['5', '6']);
+  });
+
+  it('la misma sala con la ciudad escrita de formas distintas se fusiona', async () => {
+    const { puerto } = puertoEnMemoria([
+      lead({ id: '1', band_id: 'a', ciudad: 'Barcelona' }),
+      lead({ id: '2', band_id: 'b', ciudad: 'Barcelona, España' }),
+      lead({ id: '3', band_id: 'c', ciudad: 'Barcelona (Cataluña)' }),
+    ]);
+    const r = await sincronizarCatalogo(puerto, { ahora: AHORA });
+    expect(r).toMatchObject({ salasResultantes: 1, duplicadosFusionados: 2 });
+  });
+
   it('los leads sin nombre o sin ciudad no entran y se cuentan', async () => {
     const { puerto, estado } = puertoEnMemoria([lead({ id: '1', ciudad: null }), lead({ id: '2', nombre_sala: '  ' }), lead({ id: '3' })]);
     const r = await sincronizarCatalogo(puerto, { ahora: AHORA });

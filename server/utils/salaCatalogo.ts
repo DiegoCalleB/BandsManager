@@ -86,7 +86,13 @@ const DOMINIOS_PERSONALES = new Set([
   'icloud.com', 'live.com', 'msn.com', 'protonmail.com', 'proton.me', 'telefonica.net', 'terra.es',
 ]);
 
-const sinAcentos = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '');
+/** Solo los recintos donde se puede tocar. Medios, agencias, productoras o bandas amigas no son salas, y las bandas son datos de otras bandas. */
+const TIPOS_CATALOGABLES = new Set(['sala', 'festival', 'ayuntamiento', 'discoteca']);
+
+/** Leads de prueba que se cuelan en las bases reales («Test», «Test 178652...», «Prueba»). */
+const NOMBRE_DE_PRUEBA = /^(test|prueba)(\s|\d|$)/i;
+
+const sinAcentos = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
 /** Texto de comparación: minúsculas, sin acentos ni signos, espacios colapsados. */
 export function normalizarTexto(valor: unknown): string {
@@ -102,6 +108,11 @@ export function textoPublico(valor: unknown, max = 120): string | null {
   return limpio || null;
 }
 
+/** «Barcelona, España», «Lanuza (Huesca)» o «Madrid / Sierra de Guadarrama» son la ciudad antes de la primera coma, barra o paréntesis. */
+export function ciudadPrincipal(valor: unknown): string {
+  return typeof valor === 'string' ? valor.split(/[,/(]/)[0].trim() : '';
+}
+
 /**
  * Clave de desduplicación. Prefiere el `place_id`; si no hay, nombre y ciudad normalizados. Es conservadora a
  * propósito: fusionar dos salas distintas es peor que dejar un duplicado, así que no quita palabras como
@@ -111,7 +122,7 @@ export function claveSala(p: { placeId?: string | null; nombre?: unknown; ciudad
   const place = typeof p.placeId === 'string' ? p.placeId.trim() : '';
   if (place) return `place:${place}`;
   const nombre = normalizarTexto(p.nombre);
-  const ciudad = normalizarTexto(p.ciudad);
+  const ciudad = normalizarTexto(ciudadPrincipal(p.ciudad));
   return nombre && ciudad ? `nc:${nombre}|${ciudad}` : null;
 }
 
@@ -156,8 +167,18 @@ export function telefonoFijoEs(valor: unknown): string | null {
   return /^9\d{8}$/.test(digitos) ? digitos : null;
 }
 
-/** Campos públicos de un lead, o null si no se puede identificar la sala (sin clave). */
+export type MotivoExclusion = 'tipo' | 'prueba' | 'sin_clave';
+
+/** Por qué un lead no entra al catálogo, o null si puede entrar. */
+export function motivoExclusion(lead: LeadParaCatalogo): MotivoExclusion | null {
+  if (!TIPOS_CATALOGABLES.has((lead.tipo ?? '').trim().toLowerCase() || 'sala')) return 'tipo';
+  if (NOMBRE_DE_PRUEBA.test((lead.nombre_sala ?? '').trim())) return 'prueba';
+  return claveSala({ placeId: lead.place_id, nombre: lead.nombre_sala, ciudad: lead.ciudad }) ? null : 'sin_clave';
+}
+
+/** Campos públicos de un lead, o null si no puede entrar al catálogo (`motivoExclusion`). */
 export function camposPublicos(lead: LeadParaCatalogo): CamposPublicosSala | null {
+  if (motivoExclusion(lead)) return null;
   const placeId = lead.place_id?.trim() || null;
   const nombre = textoPublico(lead.nombre_sala);
   const clave = claveSala({ placeId, nombre: lead.nombre_sala, ciudad: lead.ciudad });

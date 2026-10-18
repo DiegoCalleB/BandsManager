@@ -23,6 +23,11 @@ export const CASOS_CLAVE: CasoClave[] = [
   { id: 'dif-03', a: { nombre: 'Sala Apolo 2', ciudad: 'Barcelona' }, b: { nombre: 'Sala Apolo', ciudad: 'Barcelona' }, misma: false },
   { id: 'dif-04', a: { nombre: 'Sala X', ciudad: 'Vigo', placeId: 'P1' }, b: { nombre: 'Sala X', ciudad: 'Vigo', placeId: 'P2' }, misma: false },
   { id: 'dif-05', a: { nombre: 'El Sol', ciudad: 'Madrid' }, b: { nombre: 'El Sol Rock', ciudad: 'Madrid' }, misma: false },
+  { id: 'dup-06', a: { nombre: 'Apolo', ciudad: 'Barcelona' }, b: { nombre: 'Apolo', ciudad: 'Barcelona, España' }, misma: true },
+  { id: 'dup-07', a: { nombre: 'Pirineos Sur', ciudad: 'Lanuza' }, b: { nombre: 'Pirineos Sur', ciudad: 'Lanuza (Huesca)' }, misma: true },
+  { id: 'dup-08', a: { nombre: 'Villanos', ciudad: 'Madrid' }, b: { nombre: 'Villanos', ciudad: 'Madrid / Sierra de Guadarrama' }, misma: true },
+  { id: 'dup-09', a: { nombre: 'Capitol', ciudad: 'Santiago de Compostela' }, b: { nombre: 'Sala Capitol', ciudad: 'Santiago de Compostela' }, misma: true, conocido: 'una banda escribe «Capitol» y otra «Sala Capitol»: no se fusionan a propósito (la clave no quita palabras como «sala»; un duplicado es mejor que fusionar dos salas distintas)' },
+  { id: 'dup-10', a: { nombre: 'Razzmatazz (Sala 2)', ciudad: 'Barcelona' }, b: { nombre: 'Razzmatazz', ciudad: 'Barcelona' }, misma: true, conocido: 'el sufijo «(Sala 2)» distingue nombres: se queda como duplicado, no se adivina' },
 ];
 
 export const CASOS_NIVEL: CasoNivel[] = [

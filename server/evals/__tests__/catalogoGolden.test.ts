@@ -13,9 +13,10 @@ describe('banco de evaluación del catálogo de salas', () => {
     expect(conocidos.filter((id) => !r.fallos.some((f) => f.id === id))).toEqual([]);
   });
 
-  it('privacidad y desduplicación sin un solo fallo: son las promesas que no admiten error', () => {
+  it('privacidad sin un solo fallo, y ninguna falsa fusión: son las promesas que no admiten error', () => {
     expect(r.porBloque.privacidad.aciertos).toBe(r.porBloque.privacidad.total);
-    expect(r.porBloque.desduplicacion.aciertos).toBe(r.porBloque.desduplicacion.total);
+    // Un duplicado sin fusionar es aceptable (hay casos «conocidos»); dos salas distintas fusionadas, nunca.
+    expect(r.fallos.filter((f) => f.id.startsWith('dif-'))).toEqual([]);
   });
 
   it('los ids son únicos', () => {

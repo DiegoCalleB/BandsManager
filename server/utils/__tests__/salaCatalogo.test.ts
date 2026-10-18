@@ -2,12 +2,14 @@ import { describe, it, expect } from 'vitest';
 import {
   calcularFiabilidad,
   camposPublicos,
+  ciudadPrincipal,
   claveSala,
   consolidarCampos,
   emailDeRol,
   fusionarConExistente,
   idDeSala,
   instagramPublico,
+  motivoExclusion,
   senalesDeLeads,
   siguienteVerificadaEn,
   telefonoFijoEs,
@@ -49,6 +51,62 @@ describe('claveSala', () => {
     expect(idDeSala('place:A')).toBe(idDeSala('place:A'));
     expect(idDeSala('place:A')).not.toBe(idDeSala('place:B'));
     expect(idDeSala('place:A')).toMatch(/^sala-[0-9a-f]{16}$/);
+  });
+});
+
+describe('ciudades sucias de las bases reales', () => {
+  it.each([
+    ['Barcelona, España', 'Barcelona'],
+    ['Lanuza (Huesca)', 'Lanuza'],
+    ['Madrid / Sierra de Guadarrama', 'Madrid'],
+    ['Valencia / Barcelona', 'Valencia'],
+    ['  Bilbao ', 'Bilbao'],
+  ])('«%s» es la ciudad «%s»', (entrada, esperada) => {
+    expect(ciudadPrincipal(entrada)).toBe(esperada);
+  });
+
+  it('la misma sala con la ciudad escrita de varias formas tiene la misma clave', () => {
+    const base = claveSala({ nombre: 'Apolo', ciudad: 'Barcelona' });
+    expect(claveSala({ nombre: 'Apolo', ciudad: 'Barcelona, España' })).toBe(base);
+    expect(claveSala({ nombre: 'Apolo', ciudad: 'Barcelona (Cataluña)' })).toBe(base);
+  });
+
+  it('ciudades que no son texto no rompen nada', () => {
+    expect(ciudadPrincipal(undefined)).toBe('');
+    expect(ciudadPrincipal(42)).toBe('');
+  });
+});
+
+describe('motivoExclusion: solo entran los recintos donde se puede tocar', () => {
+  it.each(['sala', 'festival', 'ayuntamiento', 'discoteca', 'SALA', ' Festival '])('«%s» entra', (tipo) => {
+    expect(motivoExclusion(lead({ tipo }))).toBeNull();
+  });
+
+  it('un tipo vacío o ausente cuenta como sala', () => {
+    expect(motivoExclusion(lead({ tipo: null }))).toBeNull();
+    expect(motivoExclusion(lead({ tipo: '' }))).toBeNull();
+  });
+
+  it.each(['medio', 'grupo', 'agencia', 'productora', 'manager', 'sello', 'productor', 'patrocinador', 'supervisor_sync'])(
+    '«%s» no es una sala: no entra',
+    (tipo) => {
+      expect(motivoExclusion(lead({ tipo }))).toBe('tipo');
+      expect(camposPublicos(lead({ tipo }))).toBeNull();
+    },
+  );
+
+  it.each(['Test', 'Test 1786526138562', 'test1', 'Prueba', 'prueba sala'])('«%s» es un lead de prueba', (nombre_sala) => {
+    expect(motivoExclusion(lead({ nombre_sala }))).toBe('prueba');
+  });
+
+  it('salas reales cuyo nombre empieza parecido a «test» no se descartan', () => {
+    expect(motivoExclusion(lead({ nombre_sala: 'Testigos de Jehová Club' }))).toBeNull();
+    expect(motivoExclusion(lead({ nombre_sala: 'Pruebas de Sonido Madrid' }))).toBeNull();
+  });
+
+  it('sin ciudad ni place_id, sin clave; con place_id, entra aunque falte la ciudad', () => {
+    expect(motivoExclusion(lead({ ciudad: null }))).toBe('sin_clave');
+    expect(motivoExclusion(lead({ ciudad: null, place_id: 'P1' }))).toBeNull();
   });
 });
 
