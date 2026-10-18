@@ -16,3 +16,8 @@ export function alternativasPar(base: string, rutaEs: string, rutaEn: string): A
     { hreflang: 'x-default', href: `${base}${rutaEs}` },
   ];
 }
+
+/** Enlace de alta con UTM: `medio` dice dónde estaba el botón y `campana` qué página lo trajo. */
+export function registroUrl(base: string, idioma: IdiomaSeo, medio: string, campana: string): string {
+  return `${base}${RUTAS[idioma].landing}?utm_source=seo&utm_medium=${encodeURIComponent(medio)}&utm_campaign=${encodeURIComponent(campana)}`;
+}
