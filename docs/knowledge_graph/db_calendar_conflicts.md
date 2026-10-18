@@ -1,23 +1,24 @@
 ---
-id: server_db_calendarConflicts
-title: "server/db/calendarConflicts.ts"
+id: db_calendar_conflicts
+title: "Persistencia de avisos de choque"
 layer: db
-domain: system
+domain: booking
 file: "server/db/calendarConflicts.ts"
-tags: ["db", "system", "auto"]
+tags: ["calendar", "db"]
 ---
 
-# 📌 server/db/calendarConflicts.ts
+# 📌 Persistencia de avisos de choque
 
 > **Ubicación:** `server/db/calendarConflicts.ts`  
-> **Capa:** `#layer/db` | **Dominio:** `#domain/system`
+> **Capa:** `#layer/db` | **Dominio:** `#domain/booking`
 
 ## 📖 Descripción
-Soporte de datos para los avisos de choque de calendario: quién pertenece a cada banda y
+Miembros por banda, bandas de un usuario y tabla calendar_conflict_notifications para no repetir avisos.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[schema_supabase|Supabase PostgreSQL Schema]] *(Layer: #schema, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_users|server/db/users.ts]] *(Layer: #db, Domain: #system)*
 - [[tabla_calendar_conflict_notifications|tabla calendar_conflict_notifications]] *(Layer: #schema, Domain: #system)*
@@ -27,7 +28,7 @@ Soporte de datos para los avisos de choque de calendario: quién pertenece a cad
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
-- [[server_services_calendarConflictService|server/services/calendarConflictService.ts]] *(from #service)*
+- [[service_calendar_conflicts|Avisos de choques por email]] *(from #service)*
 
 ---
 

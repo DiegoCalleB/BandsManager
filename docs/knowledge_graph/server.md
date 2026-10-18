@@ -20,6 +20,7 @@ Módulo sin exportaciones con nombre.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[agent_scheduler|Agent Scheduler In-Process]] *(Layer: #agent, Domain: #booking)*
 - [[db_state_sync|In-Memory State & Supabase Sync]] *(Layer: #db, Domain: #system)*
+- [[route_calendar_conflicts|GET /api/calendar/conflicts]] *(Layer: #route, Domain: #booking)*
 - [[route_repertoire|Repertoire & Setlists Route]] *(Layer: #route, Domain: #repertoire)*
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_auth|server/auth.ts]] *(Layer: #security, Domain: #auth)*
@@ -36,7 +37,6 @@ Módulo sin exportaciones con nombre.
 - [[server_routes_campanaConcierto|server/routes/campanaConcierto.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_chat|server/routes/chat.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_concert_to_album|server/routes/concert_to_album.ts]] *(Layer: #route, Domain: #system)*
-- [[server_routes_concerts|server/routes/concerts.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_deals|server/routes/deals.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_donations|server/routes/donations.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_enlacesCortos|server/routes/enlacesCortos.ts]] *(Layer: #route, Domain: #system)*
@@ -55,7 +55,6 @@ Módulo sin exportaciones con nombre.
 - [[server_routes_transposeRoute|server/routes/transposeRoute.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_upload|server/routes/upload.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_users|server/routes/users.ts]] *(Layer: #route, Domain: #system)*
-- [[server_services_calendarConflictService|server/services/calendarConflictService.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_catalogoScheduler|server/services/catalogoScheduler.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_colaLetras|server/services/colaLetras.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_services_socialRadarService|server/services/socialRadarService.ts]] *(Layer: #service, Domain: #social)*
@@ -67,6 +66,7 @@ Módulo sin exportaciones con nombre.
 - [[server_utils_guardadoParcial|server/utils/guardadoParcial.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_paginaConcierto|server/utils/paginaConcierto.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_version|server/utils/version.ts]] *(Layer: #service, Domain: #system)*
+- [[service_calendar_conflicts|Avisos de choques por email]] *(Layer: #service, Domain: #booking)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 

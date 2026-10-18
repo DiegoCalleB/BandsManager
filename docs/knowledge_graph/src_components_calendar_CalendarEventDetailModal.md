@@ -24,6 +24,7 @@ Ficha emergente de un evento del calendario (concierto o ensayo): resumen, logí
 - [[src_components_calendar_event_detail_hooks_useEventDetailController|src/components/calendar/event_detail/hooks/useEventDetailController.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_services_weatherService|src/services/weatherService.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[util_calendar_conflicts|Detector de choques del calendario]] *(Layer: #service, Domain: #booking)*
 
 ---
 

@@ -25,7 +25,7 @@ Filas que mezcla el feed de calendario ICS (concerts.ts): vienen de Supabase o, 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
 - [[fn_finanzas_planes|Finanzas, merchan y planes]] *(from #feature)*
-- [[server_routes_concerts|server/routes/concerts.ts]] *(from #route)*
+- [[route_calendar_conflicts|GET /api/calendar/conflicts]] *(from #route)*
 
 ---
 

@@ -32,9 +32,9 @@ Exporta: getProductionAppUrl, resolveResendApiKey, SendEmailOptions, sendTransac
 - [[server_routes_users_rutasRecuperacion|server/routes/users/rutasRecuperacion.ts]] *(from #route)*
 - [[server_routes_users_rutasRegistro|server/routes/users/rutasRegistro.ts]] *(from #route)*
 - [[server_services_avisosPublicacion|server/services/avisosPublicacion.ts]] *(from #service)*
-- [[server_services_calendarConflictService|server/services/calendarConflictService.ts]] *(from #service)*
 - [[server_services_emailsCicloVida|server/services/emailsCicloVida.ts]] *(from #service)*
 - [[server_services_gmailConexion|server/services/gmailConexion.ts]] *(from #service)*
+- [[service_calendar_conflicts|Avisos de choques por email]] *(from #service)*
 
 ---
 
