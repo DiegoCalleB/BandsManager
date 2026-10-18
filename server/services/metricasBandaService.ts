@@ -4,13 +4,15 @@
 import { getSpotifyAccessToken } from "./spotifyService.js";
 import { elegirCanalYoutube } from "../utils/metricasBanda.js";
 import { elegirArtistaDeezer, ArtistaDeezer } from "../utils/musicPreview.js";
+import { canalYoutubeDeEnlace, EnlacesParaMetricas } from "../utils/redesBanda.js";
+import { CredencialesInstagram, seguidoresInstagram } from "./instagramDescubrimiento.js";
 import { spotifyArtistId } from "../../src/utils/spotifyEmbed.js";
 import { getSupabase } from "../db/core.js";
 
 export type Resultado = { fila: FilaMetrica } | { motivo: string };
 
 export interface FilaMetrica {
-  fuente: "spotify" | "youtube" | "deezer";
+  fuente: "spotify" | "youtube" | "deezer" | "instagram";
   seguidores?: number | null;
   suscriptores?: number | null;
   visualizaciones?: number | null;
@@ -58,10 +60,38 @@ async function metricasDeezer(nombre: string): Promise<Resultado> {
   }
 }
 
-async function metricasYoutube(nombre: string): Promise<Resultado> {
+/** Estadísticas de un canal de YouTube (`filtro`: id=…, forHandle=… o forUsername=…). */
+async function estadisticasYoutube(clave: string, filtro: string): Promise<Resultado> {
+  const stats = await fetch(
+    `https://www.googleapis.com/youtube/v3/channels?part=statistics&${filtro}&key=${encodeURIComponent(clave)}`,
+    { signal: AbortSignal.timeout(6000) },
+  );
+  if (!stats.ok) return { motivo: `YouTube respondió ${stats.status} en estadísticas` };
+  const s = (await stats.json()) as { items?: { statistics?: { subscriberCount?: string; viewCount?: string; hiddenSubscriberCount?: boolean } }[] };
+  const est = s.items?.[0]?.statistics;
+  if (!est) return { motivo: "YouTube no devuelve estadísticas" };
+  return {
+    fila: {
+      fuente: "youtube",
+      suscriptores: est.hiddenSubscriberCount ? null : Number(est.subscriberCount ?? NaN) || null,
+      visualizaciones: Number(est.viewCount ?? NaN) || null,
+    },
+  };
+}
+
+const PARAMETRO_CANAL = { id: "id", handle: "forHandle", usuario: "forUsername" } as const;
+
+async function metricasYoutube(nombre: string, enlace?: string): Promise<Resultado> {
   const clave = (process.env.YOUTUBE_API_KEY || process.env.YT_API_KEY || "").trim();
   if (!clave) return { motivo: "falta YOUTUBE_API_KEY" };
   try {
+    // El canal del enlace guardado es exacto y cuesta 1 unidad; si no resuelve se busca por nombre.
+    const directo = canalYoutubeDeEnlace(enlace);
+    if (directo) {
+      const r = await estadisticasYoutube(clave, `${PARAMETRO_CANAL[directo.tipo]}=${encodeURIComponent(directo.valor)}`);
+      if ("fila" in r) return r;
+    }
+
     // search.list cuesta 100 unidades de cuota: por eso solo se hace una vez al mes por banda.
     const busqueda = await fetch(
       `https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&maxResults=10&q=${encodeURIComponent(nombre)}&key=${encodeURIComponent(clave)}`,
@@ -74,22 +104,7 @@ async function metricasYoutube(nombre: string): Promise<Resultado> {
       (datos.items || []).map((i) => ({ channelId: i.id?.channelId || "", channelTitle: i.snippet?.channelTitle || "" })),
     );
     if (!canal) return { motivo: "YouTube no tiene un canal con ese nombre exacto" };
-
-    const stats = await fetch(
-      `https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${encodeURIComponent(canal.channelId)}&key=${encodeURIComponent(clave)}`,
-      { signal: AbortSignal.timeout(6000) },
-    );
-    if (!stats.ok) return { motivo: `YouTube respondió ${stats.status} en estadísticas` };
-    const s = (await stats.json()) as { items?: { statistics?: { subscriberCount?: string; viewCount?: string; hiddenSubscriberCount?: boolean } }[] };
-    const est = s.items?.[0]?.statistics;
-    if (!est) return { motivo: "YouTube no devuelve estadísticas" };
-    return {
-      fila: {
-        fuente: "youtube",
-        suscriptores: est.hiddenSubscriberCount ? null : Number(est.subscriberCount ?? NaN) || null,
-        visualizaciones: Number(est.viewCount ?? NaN) || null,
-      },
-    };
+    return await estadisticasYoutube(clave, `id=${encodeURIComponent(canal.channelId)}`);
   } catch (err) {
     return { motivo: `YouTube no responde (${err instanceof Error ? err.message : "error"})` };
   }
@@ -98,12 +113,18 @@ async function metricasYoutube(nombre: string): Promise<Resultado> {
 /** Todas las fuentes de una banda: filas válidas y motivos de las que fallan. */
 export async function capturarMetricasBanda(
   nombre: string,
-  enlaceSpotify: string,
+  enlaces: EnlacesParaMetricas,
+  instagram: CredencialesInstagram,
 ): Promise<{ filas: FilaMetrica[]; motivos: { fuente: FilaMetrica["fuente"]; motivo: string }[] }> {
-  const [sp, dz, yt] = await Promise.all([metricasSpotify(enlaceSpotify), metricasDeezer(nombre), metricasYoutube(nombre)]);
+  const [sp, dz, ig, yt] = await Promise.all([
+    metricasSpotify(enlaces.spotify || ""),
+    metricasDeezer(nombre),
+    seguidoresInstagram(instagram, enlaces.instagram),
+    metricasYoutube(nombre, enlaces.youtube),
+  ]);
   const filas: FilaMetrica[] = [];
   const motivos: { fuente: FilaMetrica["fuente"]; motivo: string }[] = [];
-  for (const [fuente, r] of [["spotify", sp], ["deezer", dz], ["youtube", yt]] as const) {
+  for (const [fuente, r] of [["spotify", sp], ["deezer", dz], ["instagram", ig], ["youtube", yt]] as const) {
     if ("fila" in r) filas.push(r.fila);
     else motivos.push({ fuente, motivo: r.motivo });
   }

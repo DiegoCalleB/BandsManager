@@ -335,7 +335,6 @@ for (const nodo of NODES) {
 const RAIZ = process.cwd();
 const DIRS_ESCANEO = ['src', 'server'];
 const EXT = ['.ts', '.tsx'];
-
 const esTest = (f: string) => /\.(test|spec)\.tsx?$/.test(f) || f.includes('__tests__') || f.endsWith('.d.ts');
 
 const RAIZ_SUELTOS = ['server.ts'];
@@ -530,7 +529,6 @@ const coincideRuta = (url: string, patron: string[]): boolean => {
   const seg = url.split('/');
   return seg.length === patron.length && patron.every((p, i) => p.includes(':') || seg[i].includes(':') || seg[i] === p);
 };
-
 
 // Servicios externos: un nodo ext_* por proveedor, enlazado desde todo fichero cuyo código lo usa.
 const PROVEEDORES: { id: string; title: string; descripcion: string; re: RegExp }[] = [
