@@ -53,13 +53,12 @@ Reglas para la película:
 
 ## 1. Hallazgos antes de nada
 
-| # | Hallazgo | Gravedad | Evidencia | Propuesta |
-|---|---|:-:|---|---|
-| 1 | **Valoración fija en los datos estructurados de la landing:** `ratingValue: '4.9'`, `ratingCount: '312'`. No hay ninguna fuente de datos detrás, es un literal en el código. Si no son valoraciones reales y verificables, es una reseña inventada: incumple las directrices de Google para datos estructurados (riesgo de acción manual sobre el sitio) y puede ser publicidad engañosa. Contradice además la regla del guion del TFM: «todo lo que se promete del producto existe». | **Alta** | `src/components/PublicLanding.tsx` (bloque JSON-LD `SoftwareApplication`) | Quitar `aggregateRating` hasta que haya valoraciones reales y enlazables. Es un cambio de 5 líneas. |
-| 2 | **Sin analítica web.** No hay GA4, GTM, Plausible, PostHog ni similar. Los enlaces cortos y la insignia registran clics con UTM, pero no se puede saber cuántas visitas tiene la landing ni cuántas acaban en registro. | Alta | Búsqueda en `index.html`, `src/` y `package.json` sin resultados | Medición mínima y compatible con RGPD (§6). |
-| 3 | **Las landings no declaran idiomas alternativos.** Hay textos en es/en/ca/eu/gl pero no hay `hreflang`. | Media | Búsqueda de `hreflang` sin resultados *(sin verificar a fondo)* | Español e inglés decididos (§6): declarar `hreflang` es/en. |
-
----
+| # | Hallazgo | Estado | Evidencia |
+|---|---|:-:|---|
+| 1 | **Valoración fija en los datos estructurados de la landing** (`ratingValue: '4.9'`, `ratingCount: '312'`, sin fuente real: una reseña inventada). | ✅ Resuelto: ya no hay `aggregateRating`; solo `SoftwareApplication` y `FAQPage`. | `src/components/PublicLanding.tsx` |
+| 2 | **Sin analítica web.** | 🟡 Implementada (Plausible sin cookies, cinco eventos del embudo) pero **apagada por defecto**: falta activarla en producción y mirar los números. | `src/utils/analitica.ts` |
+| 3 | **Las landings no declaraban idiomas alternativos.** | ✅ Resuelto: `/` y `/en` llevan `canonical` y `hreflang` desde el servidor; las guías y la plantilla de rider también. | `server/utils/cabeceraIdioma.ts` |
+| 4 | **/musicos y sus tres alias servían la misma pantalla sin título propio ni canónica.** | ✅ Resuelto: título, descripción y canónica única servidos desde el servidor, con par `hreflang` vía `?lang=en`. | `server/utils/cabeceraIdioma.ts` |
 
 ## 2. Lo que ya existe (verificado en el repositorio)
 
@@ -71,6 +70,7 @@ Reglas para la película:
 | **QR con UTM en los PDF** de repertorio | `src/components/repertorio/pdf_export/buildHeaderFooter.ts` | `utm_source=setlist&utm_medium=qr`: cada setlist impreso trae visitas medibles. |
 | **Páginas de concierto indexables** | `server/routes/paginaConcierto.ts` | HTML en servidor, `sitemap.xml` y `robots.txt`; vistas previas correctas en WhatsApp e Instagram. Solo conciertos publicables y con lista blanca de campos. |
 | **Landing con SEO base** | `index.html`, `src/components/PublicLanding.tsx` | `title`, `description`, Open Graph, Twitter card, `og-cover.png` 1200×630, `FAQPage` JSON-LD, i18n. |
+| **Guías y plantilla de rider en SEO** (es/en) | `server/routes/paginasSeo.ts`, `server/utils/seo/`, `server/utils/paginaRider.ts` | 14 guías y una plantilla editable bajo `/guias` y `/en/guides`: contenido para búsquedas reales de bandas, con `Article`, `BreadcrumbList` y `FAQPage`, resumen, índice con anclas, `hreflang` recíproco, UTM por guía y sitemap. |
 | **Tres landings por audiencia** | `PublicLanding`, `PublicMusiciansLanding`, `PublicTfmLanding`, `FansLanding` | Mensaje distinto para cada público. |
 | **Planes y precios** | `src/components/Planes.tsx` | Tres niveles gratuitos y de pago. |
 | **Chat de conversión en la landing** | `src/components/LandingChatWidget.tsx` | Respuestas guionizadas, sin backend ni coste. |
