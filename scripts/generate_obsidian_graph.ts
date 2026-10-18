@@ -18,7 +18,7 @@ interface GraphNode {
   tags: string[];
 }
 
-const NODES: GraphNode[] = [
+export const NODES: GraphNode[] = [
   // UI Layer
   {
     id: 'ui_booking_crm',
@@ -47,7 +47,7 @@ const NODES: GraphNode[] = [
     domain: 'booking',
     file: 'src/components/booking/VenueDetailPanel.tsx',
     description: 'Ficha técnica de la sala, hilo de conversación y generador de respuestas.',
-    linksTo: ['route_leads_pitch', 'route_leads_reply', 'agent_redactor'],
+    linksTo: ['route_leads_pitch', 'route_leads_reply', 'service_pitch_engine'],
     tags: ['ui', 'booking', 'pitch']
   },
   {
@@ -153,7 +153,7 @@ const NODES: GraphNode[] = [
     domain: 'auth',
     file: 'server/utils/bandAccess.ts',
     description: 'Resolución forzosa del band_id desde la sesión autenticada. Bloquea inyecciones en req.body.',
-    linksTo: ['db_leads', 'db_repertoire', 'db_payments', 'sec_ssrf_guard'],
+    linksTo: ['db_leads', 'db_repertoire', 'sec_ssrf_guard'],
     tags: ['security', 'trust-boundary', 'multi-tenancy']
   },
   {
@@ -163,7 +163,7 @@ const NODES: GraphNode[] = [
     domain: 'system',
     file: 'server/utils/ssrfGuard.ts',
     description: 'Valida llamadas salientes fetch() bloqueando IPs privadas, loopback y metadatos cloud.',
-    linksTo: ['agent_scout', 'route_leads_enrichment'],
+    linksTo: ['agent_scout'],
     tags: ['security', 'ssrf', 'network']
   },
   {
@@ -173,7 +173,7 @@ const NODES: GraphNode[] = [
     domain: 'system',
     file: 'server/utils/promptSafety.ts',
     description: 'Sanitiza datos externos de salas y correos entrantes antes de inyectarlos en prompts de IA.',
-    linksTo: ['agent_redactor', 'agent_lector', 'service_pitch_engine'],
+    linksTo: ['service_pitch_engine', 'agent_lector'],
     tags: ['security', 'owasp-llm', 'prompt-safety']
   },
 
@@ -227,7 +227,7 @@ const NODES: GraphNode[] = [
     domain: 'booking',
     file: 'server/services/agentScheduler.ts',
     description: 'Bucle in-process (60s tick) que orquesta el Scout, Enviador y Lector.',
-    linksTo: ['agent_enviador', 'agent_lector', 'db_agent_schedule'],
+    linksTo: ['agent_enviador', 'agent_lector'],
     tags: ['agent', 'scheduler', 'cron']
   },
   {

@@ -20,7 +20,6 @@ Bucle in-process (60s tick) que orquesta el Scout, Enviador y Lector.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[agent_enviador|Enviador Agent (Dispatcher)]] *(Layer: #agent, Domain: #booking)*
 - [[agent_lector|Lector Agent (Listener)]] *(Layer: #agent, Domain: #booking)*
-- [[db_agent_schedule]]
 
 ---
 
