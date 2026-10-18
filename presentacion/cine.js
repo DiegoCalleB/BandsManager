@@ -463,11 +463,23 @@
   };
   var dfCerrar = function () {
     if (!df || df.hidden) return; df.dataset.ult = (df.querySelector('.df-tabs .on') || {}).dataset ? df.querySelector('.df-tabs .on').dataset.df : 'arq';
+    if (df.dfCalla) df.dfCalla();
     df.hidden = true; document.body.classList.remove('df-abierto'); var d = D(); if (dfPausada && d) d.pausar(false); dfPausada = false;
   };
   if (df) {
     df.querySelectorAll('.df-tabs button').forEach(function (b) { b.addEventListener('click', function () { dfPestana(b.dataset.df); }); });
     df.querySelector('.df-x').addEventListener('click', dfCerrar);
+    // «Que conteste Iago»: la respuesta suena con su voz sin tocar la película (que está en pausa); se corta al volver a pulsar o al cerrar
+    var dfAudio = new Audio(), dfBoton = null;
+    var dfCalla = function () { dfAudio.pause(); if (dfBoton) { dfBoton.classList.remove('habla'); dfBoton.textContent = '▶ Que conteste Iago'; } dfBoton = null; };
+    df.addEventListener('click', function (e) {
+      var b = e.target.closest && e.target.closest('.df-voz'); if (!b || !window.DeckVoces) return;
+      var suena = dfBoton === b; dfCalla(); if (suena) return;
+      var src = window.DeckVoces.archivo(b); if (!src) return;
+      dfBoton = b; b.classList.add('habla'); b.textContent = '■ Parar'; dfAudio.src = src; dfAudio.onended = dfCalla;
+      var pr = dfAudio.play(); if (pr && pr.catch) pr.catch(dfCalla);
+    });
+    df.dfCalla = dfCalla;
     var dfBtn = nf.querySelector('.nf-def'); if (dfBtn) dfBtn.addEventListener('click', function (e) { e.stopPropagation(); dfAbrir(); });
     addEventListener('keydown', function (e) {
       if (e.ctrlKey || e.metaKey || e.altKey || /input|textarea/i.test((e.target || {}).tagName || '')) return;

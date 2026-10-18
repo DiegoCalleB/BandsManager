@@ -95,14 +95,14 @@
     el.innerHTML = '<i class="dq-glitch" aria-hidden="true"></i><div class="dq-caja"><img class="dq-qr" src="img/qr-fans.png" alt="QR de fans de Os Herdeiros do Código"><div class="dq-txt"><b class="dq-sis">Fallo de reproducción</b><h2></h2><p></p><q></q><small></small><em class="dq-esp"></em><button type="button" class="dq-ok" hidden>Ya estoy dentro →</button><button type="button" class="dq-sin">Seguir sin entrar</button></div></div>';
     var h2 = el.querySelector('h2'), p = el.querySelector('p'), q = el.querySelector('q'), esp = el.querySelector('.dq-esp'), ok = el.querySelector('.dq-ok'), sin = el.querySelector('.dq-sin');
     h2.textContent = DEMO.titulo; p.textContent = DEMO.texto; el.querySelector('small').textContent = 'bandmanager.io/unete';
-    var base = null, vivo = true;
-    var contar = function () { return fetch('fans-contador', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) { return j && Number.isInteger(j.total) ? j.total : null; }, function () { return null; }); };
+    var base = null, vivo = true, quien = null;  // quien: nombre de pila del fan que acaba de entrar, si el servidor lo da (solo la banda de la demo, 3 minutos)
+    var contar = function () { return fetch('fans-contador', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) { quien = j && j.ultimo && typeof j.ultimo.nombre === 'string' && j.ultimo.nombre ? j.ultimo.nombre : null; return j && Number.isInteger(j.total) ? j.total : null; }, function () { return null; }); };
     var fin = function () { vivo = false; clearInterval(sondeo); clearTimeout(tarde); removeEventListener('keydown', teclas, true); clearInterval(vigila); el.remove(); };
     var sigue = function () { if (!vivo) return; fin(); hechas.demo = true; saltar(siguiente); };
     var teclas = function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); sigue(); } };
     var hecho = function (n) {
       vivo = false; clearInterval(sondeo); el.classList.add('dq-listo');
-      h2.textContent = 'Fan nº ' + n; p.textContent = 'Bienvenido, Brais. Ahora sí.'; q.textContent = ''; esp.textContent = ''; ok.hidden = true; sin.hidden = true;
+      h2.textContent = 'Fan nº ' + n; p.textContent = quien ? 'Bienvenido, ' + quien + '. Te estábamos esperando. Ahora sí.' : 'Bienvenido, Brais. Ahora sí.'; q.textContent = ''; esp.textContent = ''; ok.hidden = true; sin.hidden = true;
       setTimeout(function () { vivo = true; sigue(); }, 2600);
     };
     var sondeo = setInterval(function () { if (!vivo) return; contar().then(function (t) { if (vivo && base !== null && t !== null && t > base) hecho(t); }); }, 2500);
