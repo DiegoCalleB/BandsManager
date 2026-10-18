@@ -20,6 +20,14 @@ Este grafo de conocimiento interactivo mapea de forma determinista todas las cap
 - [[agent_lector|Lector Agent (Gmail OAuth2/IMAP)]]
 - [[service_pitch_engine|Motor Multi-Modelo (Gemini / DeepSeek / OpenAI)]]
 
+### 📅 Calendario & Choques
+- [[ui_calendar_conflicts|Avisos en el calendario]]
+- [[util_calendar_conflicts|Detector de choques]]
+- [[util_viaje_estimado|Estimador de viaje]]
+- [[service_calendar_conflicts|Avisos por email]]
+- [[db_calendar_conflicts|Persistencia de avisos]]
+- [[route_calendar_conflicts|GET /api/calendar/conflicts]]
+
 ### 🔒 2. Seguridad & Trust Boundary
 - [[sec_trust_boundary|Límite de Confianza (getTargetBandId)]]
 - [[sec_ssrf_guard|Protección SSRF (esUrlExternaSegura)]]

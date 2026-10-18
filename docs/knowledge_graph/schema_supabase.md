@@ -23,6 +23,7 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[db_calendar_conflicts|Persistencia de avisos de choque]] *(from #db)*
 - [[db_leads|Leads DB Handlers]] *(from #db)*
 - [[db_lead_messages|Lead Messages & Thread DB]] *(from #db)*
 - [[db_repertoire|Repertoire DB Handlers]] *(from #db)*

@@ -375,6 +375,8 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 
 ## ⚡ 7. Eficiencia de Desarrollo y Economía de Tokens
 
+-1. **Grafo antes que grep.** Para "¿quién llama a X?" o "¿dónde engancho Y?", abre primero `docs/knowledge_graph/index.md` (skill `graphify`). El grafo se escribe a mano en `scripts/generate_obsidian_graph.ts` (lista `NODES`), no sale del AST: al añadir o mover un subsistema, añade su nodo y ejecuta `npm run graph:sync` en el mismo commit. La fuente de las skills es `skills/`; `.claude/` está en `.gitignore`, así que en un clon limpio solo existe `skills/`.
+
 0. **Mapa de carpetas (para orientarse sin explorar cada vez):**
    ```
    server/

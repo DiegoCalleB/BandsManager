@@ -27,6 +27,9 @@ Resolución forzosa del band_id desde la sesión autenticada. Bloquea inyeccione
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[ui_leads_table|Leads Table & Actions]] *(from #frontend)*
+- [[util_calendar_conflicts|Detector de choques del calendario]] *(from #service)*
+- [[service_calendar_conflicts|Avisos de choques por email]] *(from #service)*
+- [[route_calendar_conflicts|GET /api/calendar/conflicts]] *(from #route)*
 - [[hook_booking_pipeline|useBookingPipeline Hook]] *(from #hook)*
 - [[hook_app_data|useAppData Hook]] *(from #hook)*
 - [[route_leads_crud|Leads CRUD Route]] *(from #route)*
