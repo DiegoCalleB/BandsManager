@@ -18,6 +18,7 @@ Exporta: ApiError, getAuthHeaders, api.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[route_calendar_conflicts|GET /api/calendar/conflicts]] *(Layer: #route, Domain: #booking)*
 - [[route_leads_crud|Leads CRUD Route]] *(Layer: #route, Domain: #booking)*
 - [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(Layer: #route, Domain: #booking)*
 - [[route_leads_pitch|Leads Pitch Generation Route]] *(Layer: #route, Domain: #booking)*
@@ -26,7 +27,6 @@ Exporta: ApiError, getAuthHeaders, api.
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_bands_responseStrategies|server/routes/bands/responseStrategies.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_campaigns|server/routes/campaigns.ts]] *(Layer: #route, Domain: #system)*
-- [[server_routes_concerts|server/routes/concerts.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_donations|server/routes/donations.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(Layer: #route, Domain: #epk)*
 - [[server_routes_gmailOAuth|server/routes/gmailOAuth.ts]] *(Layer: #security, Domain: #auth)*

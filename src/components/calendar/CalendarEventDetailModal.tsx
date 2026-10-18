@@ -9,8 +9,11 @@ import type { WeatherAlert } from '../../services/weatherService';
 import { useEventDetailController } from './event_detail/hooks/useEventDetailController';
 import { EventDetailProvider } from './event_detail/EventDetailProvider';
 import { EventDetailLayout } from './event_detail/EventDetailLayout';
+import type { Choque } from '../../utils/calendarConflicts';
 
 export interface CalendarEventDetailModalProps {
+  /** Choques y avisos de calendario del evento mostrado (ver useCalendarConflicts). */
+  choquesEvento?: Choque[];
   showEventFichaModal: boolean;
   setShowEventFichaModal: (show: boolean) => void;
   selectedConcert: Concert | null;

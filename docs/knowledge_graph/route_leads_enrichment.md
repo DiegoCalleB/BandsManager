@@ -56,7 +56,6 @@ Busca datos públicos de una sala (web, redes) para completar su ficha. Pasa por
 - [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
 - [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
 - [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
-- [[sec_ssrf_guard|SSRF URL Validator]] *(from #security)*
 - [[server_routes_leads|server/routes/leads.ts]] *(from #route)*
 - [[src_components_booking_AddLeadModal|src/components/booking/AddLeadModal.tsx]] *(from #frontend)*
 - [[src_components_booking_ChangeLeadImageModal|src/components/booking/ChangeLeadImageModal.tsx]] *(from #frontend)*

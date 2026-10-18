@@ -89,7 +89,7 @@ export function AtrilView() {
 
     {/* DIAGRAMAS: en móvil, justo bajo la barra en el dock; con tope de altura y scroll interno */}
     {activeTab === "chords" && (
-      <div className="shrink-0 max-md:shrink max-md:min-h-0 max-md:order-last max-md:max-h-[32dvh] max-md:overflow-y-auto max-md:overscroll-contain max-md:pb-[env(safe-area-inset-bottom)]">
+      <div className="shrink-0 max-md:shrink max-md:min-h-0 max-md:order-last max-md:max-h-[24dvh] max-md:overflow-y-auto max-md:overscroll-contain max-md:pb-[env(safe-area-inset-bottom)]">
         <DiagramasAcordeActual
           estado={estadoActual}
           sonando={acordeSonando}

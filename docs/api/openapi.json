@@ -1128,7 +1128,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/users/rutasSesion.ts:321",
+        "x-source": "server/routes/users/rutasSesion.ts:301",
         "x-autenticacion": "handler-opcional",
         "x-comprobaciones-handler": [
           "lee el token de sesión"
@@ -1166,7 +1166,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users/rutasSesion.ts:14",
+        "x-source": "server/routes/users/rutasSesion.ts:15",
         "x-autenticacion": "handler",
         "x-comprobaciones-handler": [
           "lee el token de sesión"
@@ -1295,7 +1295,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users/rutasSesion.ts:136",
+        "x-source": "server/routes/users/rutasSesion.ts:137",
         "x-autenticacion": "handler",
         "x-comprobaciones-handler": [
           "lee el token de sesión"
@@ -1891,7 +1891,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bandMusic.ts:177",
+        "x-source": "server/routes/bandMusic.ts:180",
         "x-autenticacion": "middleware"
       }
     },
@@ -1926,7 +1926,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bandMusic.ts:152",
+        "x-source": "server/routes/bandMusic.ts:154",
         "x-autenticacion": "middleware"
       }
     },
@@ -1961,7 +1961,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bandMusic.ts:56",
+        "x-source": "server/routes/bandMusic.ts:58",
         "x-autenticacion": "middleware"
       }
     },
@@ -2176,7 +2176,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bandMusic.ts:116",
+        "x-source": "server/routes/bandMusic.ts:118",
         "x-autenticacion": "middleware"
       }
     },
@@ -2507,7 +2507,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bandMusic.ts:36",
+        "x-source": "server/routes/bandMusic.ts:38",
         "x-autenticacion": "middleware"
       }
     },
@@ -4625,7 +4625,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bandMusic.ts:205",
+        "x-source": "server/routes/bandMusic.ts:208",
         "x-autenticacion": "middleware"
       }
     },

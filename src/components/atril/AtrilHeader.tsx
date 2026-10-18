@@ -15,13 +15,13 @@ export function AtrilHeader() {
   const { handleToggleAudio, isPlayingAudio, audioUrl, song, handleGenerateWithAi, isGeneratingAi, analisisAcordes, isAnalyzingChords, setShowAnalisisAcordes, handleAnalyzeChordsFromAudio, setShowStructureUploadModal, setShowShareModal, setShowMetronomeModal, setShowTunerModal, setActiveTab, esMovil } = useAtril();
   return (
     <>
-      <div className="bg-[var(--sunken)] p-4 pr-24 flex flex-wrap items-center justify-between gap-3 shrink-0">
-        <div className="flex items-center gap-3">
+      <div className="bg-[var(--sunken)] p-3 sm:p-4 pr-24 flex flex-wrap items-center justify-between gap-3 shrink-0">
+        <div className="flex items-center gap-3 min-w-0">
           {/* INTERACTIVE PLAY / PAUSE BUTTON */}
           <button
             type="button"
             onClick={handleToggleAudio}
-            className={`p-2.5 rounded-[var(--r-pill)] transition-ui cursor-pointer flex items-center justify-center shrink-0 ${
+            className={`p-2 sm:p-2.5 rounded-[var(--r-pill)] transition-ui cursor-pointer flex items-center justify-center shrink-0 ${
               isPlayingAudio
                 ? "bg-[var(--ink)] text-[var(--bg)]"
                 : audioUrl
@@ -37,14 +37,14 @@ export function AtrilHeader() {
             }
           >
             {isPlayingAudio ? (
-              <Pause className="w-6 h-6 fill-current" />
+              <Pause className="w-5 h-5 sm:w-6 sm:h-6 fill-current" />
             ) : (
-              <Play className="w-6 h-6 fill-current pl-0.5" />
+              <Play className="w-5 h-5 sm:w-6 sm:h-6 fill-current pl-0.5" />
             )}
           </button>
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <h2 className="text-lg sm:text-xl font-bold text-[var(--ink)] leading-tight">
+              <h2 className="text-base sm:text-xl font-bold truncate text-[var(--ink)] leading-tight">
                 {formatSongTitle(song.titulo)}
               </h2>
               {song.esVersionCovers && (

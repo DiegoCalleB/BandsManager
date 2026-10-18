@@ -18,9 +18,9 @@ Búsqueda, filtros por banda y choques entre eventos.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[src_components_calendar_useCalendarConflicts|src/components/calendar/useCalendarConflicts.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_calendarConflicts|src/utils/calendarConflicts.ts]] *(Layer: #service, Domain: #system)*
+- [[ui_calendar_conflicts|Avisos de choque en el calendario]] *(Layer: #frontend, Domain: #booking)*
+- [[util_calendar_conflicts|Detector de choques del calendario]] *(Layer: #service, Domain: #booking)*
 
 ---
 

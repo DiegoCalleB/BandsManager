@@ -41,8 +41,11 @@ export const DIRECCION_DE_ARTE = [
 export const COSTE_IMAGEN_USD = 0.039;
 const EUR_USD = 1.08;
 
-export function costeImagenEur(): number {
-  return COSTE_IMAGEN_USD / EUR_USD;
+/** Gemini 3 Pro Image ≈ 0,134 USD por imagen. */
+export const COSTE_IMAGEN_PRO_USD = 0.134;
+
+export function costeImagenEur(pro = false): number {
+  return (pro ? COSTE_IMAGEN_PRO_USD : COSTE_IMAGEN_USD) / EUR_USD;
 }
 
 /** Lo que la persona quiere, ya en inglés y por partes. Cada campo es DATO, nunca una orden. */

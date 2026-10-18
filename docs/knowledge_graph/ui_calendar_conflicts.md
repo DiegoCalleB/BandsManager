@@ -1,27 +1,27 @@
 ---
-id: src_components_calendar_useCalendarConflicts
-title: "src/components/calendar/useCalendarConflicts.ts"
+id: ui_calendar_conflicts
+title: "Avisos de choque en el calendario"
 layer: frontend
-domain: system
+domain: booking
 file: "src/components/calendar/useCalendarConflicts.ts"
-tags: ["frontend", "system", "auto"]
+tags: ["ui", "calendar"]
 ---
 
-# 📌 src/components/calendar/useCalendarConflicts.ts
+# 📌 Avisos de choque en el calendario
 
 > **Ubicación:** `src/components/calendar/useCalendarConflicts.ts`  
-> **Capa:** `#layer/frontend` | **Dominio:** `#domain/system`
+> **Capa:** `#layer/frontend` | **Dominio:** `#domain/booking`
 
 ## 📖 Descripción
-Exporta: useCalendarConflicts.
+Hook (detección local + cruce de bandas del servidor), banner, triángulo por día y sección en la ficha del evento (CalendarEventConflicts).
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[server_routes_concerts|server/routes/concerts.ts]] *(Layer: #route, Domain: #system)*
+- [[route_calendar_conflicts|GET /api/calendar/conflicts]] *(Layer: #route, Domain: #booking)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_calendarConflicts|src/utils/calendarConflicts.ts]] *(Layer: #service, Domain: #system)*
+- [[util_calendar_conflicts|Detector de choques del calendario]] *(Layer: #service, Domain: #booking)*
 
 ---
 

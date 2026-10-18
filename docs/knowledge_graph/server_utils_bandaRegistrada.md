@@ -1,19 +1,19 @@
 ---
-id: src_utils_viajeEstimado
-title: "src/utils/viajeEstimado.ts"
+id: server_utils_bandaRegistrada
+title: "server/utils/bandaRegistrada.ts"
 layer: service
 domain: system
-file: "src/utils/viajeEstimado.ts"
+file: "server/utils/bandaRegistrada.ts"
 tags: ["service", "system", "auto"]
 ---
 
-# 📌 src/utils/viajeEstimado.ts
+# 📌 server/utils/bandaRegistrada.ts
 
-> **Ubicación:** `src/utils/viajeEstimado.ts`  
+> **Ubicación:** `server/utils/bandaRegistrada.ts`  
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Estimación OFFLINE de cuánto se tarda en ir de una ciudad española a otra con la furgo.
+Busca el registro de una banda por su id sin confundir ids gemelos (`mi-banda` y `band-mi-banda`).
 
 ---
 
@@ -23,12 +23,12 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_utils_calendarConflicts|src/utils/calendarConflicts.ts]] *(from #service)*
+- [[server_routes_users_rutasSesion|server/routes/users/rutasSesion.ts]] *(from #route)*
 
 ---
 
 ## 🧪 Tests que lo cubren
-- `src/utils/__tests__/viajeEstimado.test.ts`
+- `server/utils/__tests__/bandaRegistrada.test.ts`
 
 ---
 

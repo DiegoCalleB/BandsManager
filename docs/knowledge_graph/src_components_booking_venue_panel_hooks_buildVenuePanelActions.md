@@ -18,13 +18,13 @@ Exporta: buildVenuePanelActionsParams, buildVenuePanelActions.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[route_calendar_conflicts|GET /api/calendar/conflicts]] *(Layer: #route, Domain: #booking)*
 - [[route_leads_crud|Leads CRUD Route]] *(Layer: #route, Domain: #booking)*
 - [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(Layer: #route, Domain: #booking)*
 - [[route_leads_pitch|Leads Pitch Generation Route]] *(Layer: #route, Domain: #booking)*
 - [[route_leads_reply|Leads Reply Route]] *(Layer: #route, Domain: #booking)*
 - [[route_repertoire|Repertoire & Setlists Route]] *(Layer: #route, Domain: #repertoire)*
 - [[server_routes_agent|server/routes/agent.ts]] *(Layer: #agent, Domain: #system)*
-- [[server_routes_concerts|server/routes/concerts.ts]] *(Layer: #route, Domain: #system)*
 - [[src_components_booking_tiposRespuestasApi|src/components/booking/tiposRespuestasApi.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_venue_panel_venuePanelTypes|src/components/booking/venue_panel/venuePanelTypes.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_services_sesionLocal|src/services/sesionLocal.ts]] *(Layer: #service, Domain: #system)*
