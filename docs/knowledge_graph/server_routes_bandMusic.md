@@ -40,16 +40,10 @@ Escucha y Spotify en lote para las bandas de la cuenta. Todo va acotado a la ban
 - [[src_components_bandCRM_hooks_useBandBulkActions|src/components/bandCRM/hooks/useBandBulkActions.ts]] *(from #frontend)*
 - [[src_components_bandCRM_hooks_useBandCrmData|src/components/bandCRM/hooks/useBandCrmData.ts]] *(from #frontend)*
 - [[src_components_bandCRM_hooks_useBandCrud|src/components/bandCRM/hooks/useBandCrud.ts]] *(from #frontend)*
-- [[src_components_bandCRM_SeguidoresSpotifyManual|src/components/bandCRM/SeguidoresSpotifyManual.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_SpotifySweepModal|src/components/bandCRM/SpotifySweepModal.tsx]] *(from #frontend)*
 - [[src_components_booking_BandPreviewPlayer|src/components/booking/BandPreviewPlayer.tsx]] *(from #frontend)*
 - [[src_components_chatbot_hooks_useEntityActions|src/components/chatbot/hooks/useEntityActions.ts]] *(from #frontend)*
 - [[src_services_api|src/services/api.ts]] *(from #service)*
-
----
-
-## 🧪 Tests que lo cubren
-- `server/routes/__tests__/bandMusicSeguidores.test.ts`
 
 ---
 

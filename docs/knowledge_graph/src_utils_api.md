@@ -34,7 +34,6 @@ Exporta: ApiRequestError, getActiveBandId, apiFetchRaw, apiFetch, safeJsonFetch.
 - [[src_components_bandCRM_hooks_useBandCrud|src/components/bandCRM/hooks/useBandCrud.ts]] *(from #frontend)*
 - [[src_components_bandCRM_hooks_useBandForm|src/components/bandCRM/hooks/useBandForm.ts]] *(from #frontend)*
 - [[src_components_bandCRM_hooks_useBandToneAnalysis|src/components/bandCRM/hooks/useBandToneAnalysis.ts]] *(from #frontend)*
-- [[src_components_bandCRM_SeguidoresSpotifyManual|src/components/bandCRM/SeguidoresSpotifyManual.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_SpotifySweepModal|src/components/bandCRM/SpotifySweepModal.tsx]] *(from #frontend)*
 - [[src_components_booking_AddLeadModal|src/components/booking/AddLeadModal.tsx]] *(from #frontend)*
 - [[src_components_booking_AgentQueueMonitorModal|src/components/booking/AgentQueueMonitorModal.tsx]] *(from #agent)*

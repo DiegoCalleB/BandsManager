@@ -243,5 +243,5 @@ export function useBandCrmData({ bandName, currentBandId, leads }: BandCrmDataPa
     fetchRegisteredBands();
   }, [currentBandId]);
 
-  return { setReproductor, bands, myBandName, setBands, setSelectedBandIds, selectedBandIds, fetchBands, setBulkProgressState, registeredBands, subTab, setSubTab, fetchRegisteredBands, actualizarMetricas, actualizandoMetricas, cargarMetricas, isLoadingRegBands, metricas, disponibles, reproductor, bulkProgressState };
+  return { setReproductor, bands, myBandName, setBands, setSelectedBandIds, selectedBandIds, fetchBands, setBulkProgressState, registeredBands, subTab, setSubTab, fetchRegisteredBands, actualizarMetricas, actualizandoMetricas, isLoadingRegBands, metricas, disponibles, reproductor, bulkProgressState };
 }

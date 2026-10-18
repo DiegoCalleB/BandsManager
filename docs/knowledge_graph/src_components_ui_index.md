@@ -68,7 +68,6 @@ BandManager UI Component Library
 - [[src_components_bandCRM_BandsTable|src/components/bandCRM/BandsTable.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_BandToneModal|src/components/bandCRM/BandToneModal.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_ChangeBandImageModal|src/components/bandCRM/ChangeBandImageModal.tsx]] *(from #frontend)*
-- [[src_components_bandCRM_SeguidoresSpotifyManual|src/components/bandCRM/SeguidoresSpotifyManual.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_SpotifySweepModal|src/components/bandCRM/SpotifySweepModal.tsx]] *(from #frontend)*
 - [[src_components_bands_BulkBandActionBar|src/components/bands/BulkBandActionBar.tsx]] *(from #frontend)*
 - [[src_components_booking_AddLeadModal|src/components/booking/AddLeadModal.tsx]] *(from #frontend)*

@@ -22,11 +22,3 @@ export function elegirCanalYoutube(nombreBanda: string, canales: CanalYoutube[])
     ) || null
   );
 }
-
-const MAX_SEGUIDORES = 1_000_000_000;
-
-/** Seguidores anotados a mano: entero >= 0 (número o texto de dígitos); null si no es válido. */
-export function validarSeguidores(valor: unknown): number | null {
-  const n = typeof valor === "string" && /^\d+$/.test(valor.trim()) ? Number(valor.trim()) : valor;
-  return typeof n === "number" && Number.isInteger(n) && n >= 0 && n <= MAX_SEGUIDORES ? n : null;
-}
