@@ -139,6 +139,7 @@ BandManager UI Component Library
 - [[src_components_calendar_CalendarCreateEventModal|src/components/calendar/CalendarCreateEventModal.tsx]] *(from #frontend)*
 - [[src_components_calendar_CalendarEditConcertModal|src/components/calendar/CalendarEditConcertModal.tsx]] *(from #frontend)*
 - [[src_components_calendar_CalendarEditRehearsalModal|src/components/calendar/CalendarEditRehearsalModal.tsx]] *(from #frontend)*
+- [[src_components_calendar_CalendarEventConflicts|src/components/calendar/CalendarEventConflicts.tsx]] *(from #frontend)*
 - [[src_components_calendar_CalendarReminderModal|src/components/calendar/CalendarReminderModal.tsx]] *(from #frontend)*
 - [[src_components_calendar_CalendarSyncModal|src/components/calendar/CalendarSyncModal.tsx]] *(from #frontend)*
 - [[src_components_calendar_CalendarViewsContainer|src/components/calendar/CalendarViewsContainer.tsx]] *(from #frontend)*
@@ -175,6 +176,7 @@ BandManager UI Component Library
 - [[src_components_cartel_AjustesCartel|src/components/cartel/AjustesCartel.tsx]] *(from #frontend)*
 - [[src_components_cartel_CarteleriaView|src/components/cartel/CarteleriaView.tsx]] *(from #frontend)*
 - [[src_components_cartel_EstiloBanda|src/components/cartel/EstiloBanda.tsx]] *(from #frontend)*
+- [[src_components_cartel_IdeaCartel|src/components/cartel/IdeaCartel.tsx]] *(from #frontend)*
 - [[src_components_cartel_PreguntaCabeza|src/components/cartel/PreguntaCabeza.tsx]] *(from #frontend)*
 - [[src_components_cartel_SelectorFondo|src/components/cartel/SelectorFondo.tsx]] *(from #frontend)*
 - [[src_components_chatbot_ActiveRunPanel|src/components/chatbot/ActiveRunPanel.tsx]] *(from #frontend)*
@@ -269,6 +271,7 @@ BandManager UI Component Library
 - [[src_components_onboarding_steps_StepPhotos|src/components/onboarding/steps/StepPhotos.tsx]] *(from #frontend)*
 - [[src_components_onboarding_steps_StepPressProof|src/components/onboarding/steps/StepPressProof.tsx]] *(from #frontend)*
 - [[src_components_onboarding_steps_StepRider|src/components/onboarding/steps/StepRider.tsx]] *(from #frontend)*
+- [[src_components_onboarding_steps_StepSalasSugeridas|src/components/onboarding/steps/StepSalasSugeridas.tsx]] *(from #frontend)*
 - [[src_components_onboarding_steps_StepSocialsMerch|src/components/onboarding/steps/StepSocialsMerch.tsx]] *(from #frontend)*
 - [[src_components_onboarding_steps_StepVideos|src/components/onboarding/steps/StepVideos.tsx]] *(from #frontend)*
 - [[src_components_onboarding_wizard_WizardFooter|src/components/onboarding/wizard/WizardFooter.tsx]] *(from #frontend)*
@@ -290,6 +293,7 @@ BandManager UI Component Library
 - [[src_components_reels_center_EditorActions|src/components/reels_center/EditorActions.tsx]] *(from #frontend)*
 - [[src_components_reels_center_PublicationsCalendar|src/components/reels_center/PublicationsCalendar.tsx]] *(from #frontend)*
 - [[src_components_reels_center_ReelsCenterHeader|src/components/reels_center/ReelsCenterHeader.tsx]] *(from #frontend)*
+- [[src_components_reels_center_RevisionFinalDialog|src/components/reels_center/RevisionFinalDialog.tsx]] *(from #frontend)*
 - [[src_components_reels_center_SchedulerInputs|src/components/reels_center/SchedulerInputs.tsx]] *(from #frontend)*
 - [[src_components_reels_center_SoulWriterCard|src/components/reels_center/SoulWriterCard.tsx]] *(from #frontend)*
 - [[src_components_reels_center_VideoInputArea|src/components/reels_center/VideoInputArea.tsx]] *(from #frontend)*

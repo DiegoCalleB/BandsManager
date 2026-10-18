@@ -26,11 +26,13 @@ _Sin dependencias salientes directas._
 - [[server_db_reelMetricas|server/db/reelMetricas.ts]] *(from #db)*
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
 - [[server_services_metricasReels|server/services/metricasReels.ts]] *(from #service)*
+- [[server_utils_resumenSemanalReels|server/utils/resumenSemanalReels.ts]] *(from #service)*
 
 ---
 
 ## 🧪 Tests que lo cubren
 - `server/utils/__tests__/aprendizajeReels.test.ts`
+- `server/utils/__tests__/resumenSemanalReels.test.ts`
 
 ---
 

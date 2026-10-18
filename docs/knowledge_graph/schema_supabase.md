@@ -65,6 +65,7 @@ Esquema relacional de tablas, índices pgvector, funciones y políticas RLS.
 - [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
 - [[tabla_rehearsals|tabla rehearsals]] *(Layer: #schema, Domain: #system)*
 - [[tabla_run_of_show|tabla run_of_show]] *(Layer: #schema, Domain: #system)*
+- [[tabla_salas_catalogo|tabla salas_catalogo]] *(Layer: #schema, Domain: #system)*
 - [[tabla_saved_filters|tabla saved_filters]] *(Layer: #schema, Domain: #system)*
 - [[tabla_schema_migrations|tabla schema_migrations]] *(Layer: #schema, Domain: #system)*
 - [[tabla_setlist_shortcuts|tabla setlist_shortcuts]] *(Layer: #schema, Domain: #repertoire)*
@@ -88,6 +89,7 @@ Esquema relacional de tablas, índices pgvector, funciones y políticas RLS.
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[db_agent_schedule|Estado del Scheduler de agentes]] *(from #db)*
 - [[db_ai_ledger|AI Token Ledger]] *(from #db)*
+- [[db_calendar_conflicts|Persistencia de avisos de choque]] *(from #db)*
 - [[db_lead_messages|Lead Messages & Thread DB]] *(from #db)*
 - [[db_leads|Leads DB Handlers]] *(from #db)*
 - [[db_payments|Pagos y suscripciones (Stripe)]] *(from #db)*

@@ -29,6 +29,7 @@ Barra lateral de logística, modales de alta/edición/recordatorio/ficha y modo 
 - [[src_components_calendar_calendarTheme|src/components/calendar/calendarTheme.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_calendar_logistics_LogisticsSidebar|src/components/calendar/logistics/LogisticsSidebar.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[util_calendar_conflicts|Detector de choques del calendario]] *(Layer: #service, Domain: #booking)*
 
 ---
 

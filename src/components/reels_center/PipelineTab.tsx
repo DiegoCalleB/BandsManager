@@ -3,6 +3,7 @@
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
 import { KanbanBoard } from "./KanbanBoard";
+import { ResumenSemanalCard } from "./ResumenSemanalCard";
 import { SoulWriterCard } from "./SoulWriterCard";
 
 /**
@@ -13,6 +14,8 @@ export function PipelineTab() {
   return (
     <>
       <div className="space-y-6">
+      <ResumenSemanalCard />
+
       {/* 1. Pipeline Kanban */}
       <KanbanBoard />
 

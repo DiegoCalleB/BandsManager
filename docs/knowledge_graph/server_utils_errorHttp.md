@@ -23,6 +23,7 @@ Respuestas de error seguras.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[route_calendar_conflicts|GET /api/calendar/conflicts]] *(from #route)*
 - [[route_leads_crud|Leads CRUD Route]] *(from #route)*
 - [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(from #route)*
 - [[route_leads_pitch|Leads Pitch Generation Route]] *(from #route)*
@@ -37,9 +38,9 @@ Respuestas de error seguras.
 - [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
 - [[server_routes_billing|server/routes/billing.ts]] *(from #route)*
 - [[server_routes_campaigns|server/routes/campaigns.ts]] *(from #route)*
+- [[server_routes_catalogo|server/routes/catalogo.ts]] *(from #route)*
 - [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
 - [[server_routes_concert_to_album|server/routes/concert_to_album.ts]] *(from #route)*
-- [[server_routes_concerts|server/routes/concerts.ts]] *(from #route)*
 - [[server_routes_deals|server/routes/deals.ts]] *(from #route)*
 - [[server_routes_donations|server/routes/donations.ts]] *(from #route)*
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(from #route)*

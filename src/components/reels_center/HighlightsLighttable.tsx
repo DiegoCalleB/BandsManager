@@ -6,6 +6,8 @@ import { Flame, Layers, Play } from "lucide-react";
 import type { ViralWindow } from "./reelsApiTypes";
 import { useReelsCenter } from "./ReelsCenterContext";
 import { formatTime, parseRangeTimes } from "./reelsHelpers";
+import { razonDelTramo } from "./razonDelTramo";
+import { RazonDelTramoPanel } from "./RazonDelTramoPanel";
 
 /**
  * Mesa de luz con los highlights detectados y sus señales de energía.
@@ -129,22 +131,12 @@ export function HighlightsLighttable() {
                     : "Cuanto más intenso, más suena la banda en ese punto. El recuadro verde es el corte seleccionado."}
                 </p>
                 {(() => {
-                  // El motivo de la ventana que coincide con el corte seleccionado, para no obligar a
-                  // pasar el ratón por encima de una barra diminuta para leerlo.
+                  // La razón del corte seleccionado, visible sin pasar el ratón por una barra diminuta.
                   const clip = highlights[selectedHighlightIndex];
                   if (!clip || !conDesglose) return null;
-                  const { start } = parseRangeTimes(clip.range);
-                  const ventana = viralWindows.find(
-                    (v) => Math.abs(v.start - start) <= 2,
-                  );
-                  if (!ventana?.motivo) return null;
-                  return (
-                    <p
-                      className={`text-micro font-sans italic leading-snug pt-0.5 text-[var(--acc)]`}
-                    >
-                      "{ventana.motivo}"
-                    </p>
-                  );
+                  const { start, end } = parseRangeTimes(clip.range);
+                  const razon = razonDelTramo({ start, end }, viralWindows);
+                  return razon ? <RazonDelTramoPanel razon={razon} /> : null;
                 })()}
               </div>
             );

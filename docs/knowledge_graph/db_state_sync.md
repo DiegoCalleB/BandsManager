@@ -37,6 +37,7 @@ Copia en memoria de alta velocidad sincronizada con Supabase al arranque.
 - [[agent_scout|Scout Discovery Agent]] *(from #agent)*
 - [[db_leads|Leads DB Handlers]] *(from #db)*
 - [[hook_app_data|useAppData Hook]] *(from #hook)*
+- [[route_calendar_conflicts|GET /api/calendar/conflicts]] *(from #route)*
 - [[route_leads_crud|Leads CRUD Route]] *(from #route)*
 - [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(from #route)*
 - [[route_leads_pitch|Leads Pitch Generation Route]] *(from #route)*
@@ -57,9 +58,9 @@ Copia en memoria de alta velocidad sincronizada con Supabase al arranque.
 - [[server_routes_campaigns|server/routes/campaigns.ts]] *(from #route)*
 - [[server_routes_campanaConcierto|server/routes/campanaConcierto.ts]] *(from #route)*
 - [[server_routes_cartelria|server/routes/cartelria.ts]] *(from #route)*
+- [[server_routes_catalogo|server/routes/catalogo.ts]] *(from #route)*
 - [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
 - [[server_routes_concert_to_album|server/routes/concert_to_album.ts]] *(from #route)*
-- [[server_routes_concerts|server/routes/concerts.ts]] *(from #route)*
 - [[server_routes_deals|server/routes/deals.ts]] *(from #route)*
 - [[server_routes_donations|server/routes/donations.ts]] *(from #route)*
 - [[server_routes_enlacesCortos|server/routes/enlacesCortos.ts]] *(from #route)*
@@ -98,6 +99,7 @@ Copia en memoria de alta velocidad sincronizada con Supabase al arranque.
 - [[server_routes_users_rutasSalidaBanda|server/routes/users/rutasSalidaBanda.ts]] *(from #route)*
 - [[server_routes_users_rutasSesion|server/routes/users/rutasSesion.ts]] *(from #route)*
 - [[server_services_agentIntelligence|server/services/agentIntelligence.ts]] *(from #agent)*
+- [[server_services_chatPrompt|server/services/chatPrompt.ts]] *(from #service)*
 - [[server_services_perfilDeLaPeticion|server/services/perfilDeLaPeticion.ts]] *(from #service)*
 - [[service_pitch_engine|Pitch Engine & Multi-Model Routing]] *(from #service)*
 

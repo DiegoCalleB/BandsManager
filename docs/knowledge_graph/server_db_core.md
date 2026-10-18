@@ -25,6 +25,7 @@ Exporta: rolDeClaveSupabase, getSupabase, normalizePlan, cleanBandId.
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[db_agent_schedule|Estado del Scheduler de agentes]] *(from #db)*
 - [[db_ai_ledger|AI Token Ledger]] *(from #db)*
+- [[db_calendar_conflicts|Persistencia de avisos de choque]] *(from #db)*
 - [[db_lead_messages|Lead Messages & Thread DB]] *(from #db)*
 - [[db_leads|Leads DB Handlers]] *(from #db)*
 - [[db_payments|Pagos y suscripciones (Stripe)]] *(from #db)*
@@ -34,7 +35,6 @@ Exporta: rolDeClaveSupabase, getSupabase, normalizePlan, cleanBandId.
 - [[server_db_alertSettings|server/db/alertSettings.ts]] *(from #db)*
 - [[server_db_autonomy|server/db/autonomy.ts]] *(from #db)*
 - [[server_db_bands|server/db/bands.ts]] *(from #db)*
-- [[server_db_calendarConflicts|server/db/calendarConflicts.ts]] *(from #db)*
 - [[server_db_campaigns|server/db/campaigns.ts]] *(from #db)*
 - [[server_db_cartelEstilo|server/db/cartelEstilo.ts]] *(from #db)*
 - [[server_db_categoryTemplates|server/db/categoryTemplates.ts]] *(from #db)*
@@ -59,6 +59,7 @@ Exporta: rolDeClaveSupabase, getSupabase, normalizePlan, cleanBandId.
 - [[server_db_reelMetricas|server/db/reelMetricas.ts]] *(from #db)*
 - [[server_db_referidos|server/db/referidos.ts]] *(from #db)*
 - [[server_db_rehearsals|server/db/rehearsals.ts]] *(from #db)*
+- [[server_db_salasCatalogo|server/db/salasCatalogo.ts]] *(from #db)*
 - [[server_db_schedule|server/db/schedule.ts]] *(from #db)*
 - [[server_db_social|server/db/social.ts]] *(from #db)*
 - [[server_db_stemsCache|server/db/stemsCache.ts]] *(from #db)*
@@ -73,7 +74,7 @@ Exporta: rolDeClaveSupabase, getSupabase, normalizePlan, cleanBandId.
 - [[server_routes_users_adminInicial|server/routes/users/adminInicial.ts]] *(from #route)*
 - [[server_services_agentIntelligence|server/services/agentIntelligence.ts]] *(from #agent)*
 - [[server_services_agentQueueService|server/services/agentQueueService.ts]] *(from #agent)*
-- [[server_services_calendarConflictService|server/services/calendarConflictService.ts]] *(from #service)*
+- [[server_services_avisosPublicacion|server/services/avisosPublicacion.ts]] *(from #service)*
 - [[server_services_colaLetras|server/services/colaLetras.ts]] *(from #service)*
 - [[server_services_emailAgentClient|server/services/emailAgentClient.ts]] *(from #agent)*
 - [[server_services_gmailConexion|server/services/gmailConexion.ts]] *(from #service)*
@@ -85,6 +86,7 @@ Exporta: rolDeClaveSupabase, getSupabase, normalizePlan, cleanBandId.
 - [[server_services_stemPredictionReconciler|server/services/stemPredictionReconciler.ts]] *(from #service)*
 - [[server_services_stemStorageRetryQueue|server/services/stemStorageRetryQueue.ts]] *(from #service)*
 - [[server_utils_optimizeExistingWavs|server/utils/optimizeExistingWavs.ts]] *(from #service)*
+- [[service_calendar_conflicts|Avisos de choques por email]] *(from #service)*
 
 ---
 

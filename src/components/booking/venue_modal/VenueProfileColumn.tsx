@@ -6,6 +6,7 @@ import { Button, Input, Textarea } from '../../ui';
 import { apiFetch } from '../../../utils/api';
 import type { RespuestaEnriquecerLead } from '../tiposRespuestasApi';
 import { comoErrorCapturado } from '../../../utils/errorCapturado';
+import { avisoDeEmail } from '../../../utils/avisoDeEmail';
 
 /** Lead con la fecha de evento que guardaban versiones antiguas del CRM. */
 type LeadConFechaLegacy = Lead & { fecha_posible_evento?: string };
@@ -410,6 +411,12 @@ export const VenueProfileColumn: React.FC<VenueProfileColumnProps> = ({
                 <span className="text-[var(--ink-2)] italic opacity-60">Sin email</span>
               )}
             </div>
+            {avisoDeEmail(lead) && (
+              <p role="note" className="flex items-start gap-1.5 rounded-[var(--r-s)] bg-[var(--acc-soft)] px-2.5 py-1.5 text-xs text-[var(--acc-ink)]">
+                <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0" aria-hidden />
+                {avisoDeEmail(lead)}
+              </p>
+            )}
 
             {/* Email secundario si existe */}
             {lead.email_secundario && (
@@ -426,6 +433,12 @@ export const VenueProfileColumn: React.FC<VenueProfileColumnProps> = ({
                   {lead.email_secundario}
                 </a>
               </div>
+            )}
+            {lead.email_secundario && avisoDeEmail(lead, 'email_secundario') && (
+              <p role="note" className="flex items-start gap-1.5 rounded-[var(--r-s)] bg-[var(--acc-soft)] px-2.5 py-1.5 text-xs text-[var(--acc-ink)]">
+                <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0" aria-hidden />
+                {avisoDeEmail(lead, 'email_secundario')}
+              </p>
             )}
 
             {/* Móvil / WhatsApp */}

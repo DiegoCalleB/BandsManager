@@ -6,6 +6,7 @@
 // almacenamiento y de la carpeta de ESA banda (`esUrlDeCartel` en server/utils/cartelUrl.ts).
 
 import { ORDEN_FORMATOS, type FormatoCartel } from './formatos';
+import { ELECCIONES_COMPOSICION, LETRAS_CARTEL, type ComposicionElegida, type LetraCartel } from './voces';
 
 /** `banda` = «Tus colores», sacados del logo al abrir la vista (no se guardan: dependen del logo actual). */
 export const PALETA_IDS = ['noche', 'amarillo', 'electrico', 'bosque', 'banda'] as const;
@@ -25,8 +26,16 @@ export interface CartelConfig {
   horario: boolean;
   qr: boolean;
   marca: boolean;
-  /** Logo de la banda en la esquina del cartel. */
+  /** Logo de la banda en la fila de logos del cartel. */
   logo: boolean;
+  /** La letra del nombre y del día: `auto` la saca del estilo de la banda. */
+  letra: LetraCartel;
+  /** Cómo se reparte el cartel: `auto` lo decide la letra. */
+  composicion: ComposicionElegida;
+  /** Logos en la tinta del cartel (como impresos) en vez de a color sobre una placa clara. */
+  logosTinta: boolean;
+  /** Logos de otras bandas del bolo (subidos para este cartel), en el orden en que salen. */
+  logos: string[];
   /** Últimos fondos de IA de este bolo, el más nuevo primero. */
   fondosIa: string[];
   /** Foto propia subida para este bolo. */
@@ -34,6 +43,7 @@ export interface CartelConfig {
 }
 
 export const MAX_FONDOS_IA = 3;
+export const MAX_LOGOS = 4;
 const MAX_EXTRA = 40;
 const MAX_CABEZA = 120;
 
@@ -47,6 +57,10 @@ export const CONFIG_INICIAL: CartelConfig = {
   qr: true,
   marca: true,
   logo: false,
+  letra: 'auto',
+  composicion: 'auto',
+  logosTinta: true,
+  logos: [],
   fondosIa: [],
   foto: null,
 };
@@ -68,6 +82,11 @@ export function sanearConfigCartel(raw: unknown, esUrlPermitida: (url: string) =
     .filter((u, i, a) => a.indexOf(u) === i)
     .slice(0, MAX_FONDOS_IA);
   const foto = url(r.foto);
+  const logos = (Array.isArray(r.logos) ? r.logos : [])
+    .map(url)
+    .filter((u): u is string => !!u)
+    .filter((u, i, a) => a.indexOf(u) === i)
+    .slice(0, MAX_LOGOS);
 
   let fondo: FondoGuardado = CONFIG_INICIAL.fondo;
   const f = r.fondo as Record<string, unknown> | undefined;
@@ -91,6 +110,10 @@ export function sanearConfigCartel(raw: unknown, esUrlPermitida: (url: string) =
     qr: booleano(r.qr, true),
     marca: booleano(r.marca, true),
     logo: booleano(r.logo, false),
+    letra: (LETRAS_CARTEL as readonly string[]).includes(r.letra as string) ? (r.letra as LetraCartel) : 'auto',
+    composicion: (ELECCIONES_COMPOSICION as readonly string[]).includes(r.composicion as string) ? (r.composicion as ComposicionElegida) : 'auto',
+    logosTinta: booleano(r.logosTinta, true),
+    logos,
     fondosIa,
     foto,
   };
@@ -102,10 +125,10 @@ export function conFondoIa(config: CartelConfig, url: string): CartelConfig {
 }
 
 /** Lo que se decide por bolo y no es el fondo. */
-export type AjustesBolo = Pick<CartelConfig, 'cabeza' | 'extra' | 'horario' | 'qr' | 'marca' | 'logo'>;
+export type AjustesBolo = Pick<CartelConfig, 'cabeza' | 'extra' | 'horario' | 'qr' | 'marca' | 'logo' | 'logosTinta' | 'letra' | 'composicion'>;
 
 export function ajustesDe(c: CartelConfig): AjustesBolo {
-  return { cabeza: c.cabeza, extra: c.extra, horario: c.horario, qr: c.qr, marca: c.marca, logo: c.logo };
+  return { cabeza: c.cabeza, extra: c.extra, horario: c.horario, qr: c.qr, marca: c.marca, logo: c.logo, logosTinta: c.logosTinta, letra: c.letra, composicion: c.composicion };
 }
 
 /**
@@ -119,11 +142,12 @@ export function configDesdeEstado(e: {
   ajustes: AjustesBolo;
   fondosIa: string[];
   fotoRemota: string | null;
+  logos: string[];
   anterior: CartelConfig;
 }): CartelConfig {
   let fondo = e.fondo;
   if (fondo.tipo === 'imagen' && fondo.origen === 'foto' && fondo.url !== e.fotoRemota) {
     fondo = e.fotoRemota && fondo.url.startsWith('blob:') ? { tipo: 'imagen', origen: 'foto', url: e.fotoRemota } : e.anterior.fondo;
   }
-  return { v: 1, formato: e.formato, fondo, ...e.ajustes, fondosIa: e.fondosIa.slice(0, MAX_FONDOS_IA), foto: e.fotoRemota };
+  return { v: 1, formato: e.formato, fondo, ...e.ajustes, logos: e.logos.slice(0, MAX_LOGOS), fondosIa: e.fondosIa.slice(0, MAX_FONDOS_IA), foto: e.fotoRemota };
 }

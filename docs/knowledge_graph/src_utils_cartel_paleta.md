@@ -25,6 +25,7 @@ tags: ["service", "system", "auto"]
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_cartel_hooks_useAdnCartel|src/components/cartel/hooks/useAdnCartel.ts]] *(from #frontend)*
 - [[src_components_cartel_SelectorFondo|src/components/cartel/SelectorFondo.tsx]] *(from #frontend)*
+- [[src_utils_cartel_papel|src/utils/cartel/papel.ts]] *(from #service)*
 
 ---
 

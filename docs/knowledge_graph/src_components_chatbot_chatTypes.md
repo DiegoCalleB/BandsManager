@@ -25,12 +25,14 @@ Contratos del chat del asistente: acciones propuestas y mensajes.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server_services_chatCatalogo|server/services/chatCatalogo.ts]] *(from #service)*
 - [[server_services_chatTools|server/services/chatTools.ts]] *(from #service)*
 - [[src_components_Chatbot|src/components/Chatbot.tsx]] *(from #frontend)*
 - [[src_components_chatbot_ChatContext|src/components/chatbot/ChatContext.ts]] *(from #frontend)*
 - [[src_components_chatbot_ChatMessageBubble|src/components/chatbot/ChatMessageBubble.tsx]] *(from #frontend)*
 - [[src_components_chatbot_hooks_useAgentRuns|src/components/chatbot/hooks/useAgentRuns.ts]] *(from #agent)*
 - [[src_components_chatbot_hooks_useAgentTriggerAction|src/components/chatbot/hooks/useAgentTriggerAction.ts]] *(from #agent)*
+- [[src_components_chatbot_hooks_useCatalogoActions|src/components/chatbot/hooks/useCatalogoActions.ts]] *(from #frontend)*
 - [[src_components_chatbot_hooks_useChatActions|src/components/chatbot/hooks/useChatActions.ts]] *(from #frontend)*
 - [[src_components_chatbot_hooks_useChatAudioGeneration|src/components/chatbot/hooks/useChatAudioGeneration.ts]] *(from #frontend)*
 - [[src_components_chatbot_hooks_useChatIdentity|src/components/chatbot/hooks/useChatIdentity.ts]] *(from #frontend)*

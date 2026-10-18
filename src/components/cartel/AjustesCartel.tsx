@@ -1,8 +1,10 @@
 import React from 'react';
-import { X } from 'lucide-react';
+import { ImagePlus, X } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
 import { Field, IconButton, Input, Select, Switch } from '../ui';
 import { TODAS } from '../../utils/cartel/datos';
+import { MAX_LOGOS } from '../../utils/cartel/config';
+import { ELECCIONES_COMPOSICION, ETIQUETA_COMPOSICION, ETIQUETA_LETRA, LETRAS_CARTEL, type ComposicionElegida, type LetraCartel } from '../../utils/cartel/voces';
 import type { AjustesBolo } from './hooks/useEditorCartel';
 
 interface Props {
@@ -15,6 +17,11 @@ interface Props {
   tieneEnlace: boolean;
   tieneLogo: boolean;
   puedeQuitarMarca: boolean;
+  /** Logos de otras bandas del bolo (subidos para este cartel). */
+  logos: string[];
+  subiendoLogo: boolean;
+  onSubirLogo: (archivo: File | undefined) => void;
+  onQuitarLogo: (url: string) => void;
 }
 
 function Fila({ titulo, detalle, children }: { titulo: string; detalle: string; children: React.ReactNode }) {
@@ -30,7 +37,7 @@ function Fila({ titulo, detalle, children }: { titulo: string; detalle: string; 
 }
 
 /** Lo que casi nadie toca, fuera de la pantalla principal (AGENTS.md §6). Se guarda por bolo. */
-export function AjustesCartel({ abierto, onCerrar, ajustes, onCambiar, bandas, tieneHorario, tieneEnlace, tieneLogo, puedeQuitarMarca }: Props) {
+export function AjustesCartel({ abierto, onCerrar, ajustes, onCambiar, bandas, tieneHorario, tieneEnlace, tieneLogo, puedeQuitarMarca, logos, subiendoLogo, onSubirLogo, onQuitarLogo }: Props) {
   if (!abierto) return null;
   return (
     <ModalPortal isOpen onClose={onCerrar}>
@@ -55,6 +62,22 @@ export function AjustesCartel({ abierto, onCerrar, ajustes, onCambiar, bandas, t
             </Field>
           )}
 
+          <Field label="Letra del nombre y la fecha" hint="Automática elige según el estilo de vuestra banda.">
+            <Select value={ajustes.letra} onChange={(e) => onCambiar({ letra: e.target.value as LetraCartel })}>
+              {LETRAS_CARTEL.map((l) => (
+                <option key={l} value={l}>{ETIQUETA_LETRA[l]}</option>
+              ))}
+            </Select>
+          </Field>
+
+          <Field label="Composición" hint="Cómo se reparte el cartel. Automática la elige según la letra.">
+            <Select value={ajustes.composicion} onChange={(e) => onCambiar({ composicion: e.target.value as ComposicionElegida })}>
+              {ELECCIONES_COMPOSICION.map((k) => (
+                <option key={k} value={k}>{ETIQUETA_COMPOSICION[k]}</option>
+              ))}
+            </Select>
+          </Field>
+
           <Field label="Línea extra" optional hint="Precio, invitada, «Entrada libre»… Máximo 40 caracteres.">
             <Input maxLength={40} value={ajustes.extra} placeholder="Anticipada 10 € · Taquilla 12 €" onChange={(e) => onCambiar({ extra: e.target.value })} />
           </Field>
@@ -63,15 +86,48 @@ export function AjustesCartel({ abierto, onCerrar, ajustes, onCambiar, bandas, t
             <Fila titulo="Horario" detalle={tieneHorario ? 'Puertas y show, de la hoja de ruta.' : 'Añade las horas en la hoja de ruta del bolo.'}>
               <Switch aria-label="Horario" checked={tieneHorario && ajustes.horario} disabled={!tieneHorario} onCheckedChange={(v) => onCambiar({ horario: v })} />
             </Fila>
-            <Fila titulo="Logo de la banda" detalle={tieneLogo ? 'En la esquina de arriba, sobre una placa clara.' : 'Sube el logo en el dossier para poder usarlo.'}>
+            <Fila titulo="Logo de la banda" detalle={tieneLogo ? 'En la fila de logos, encima de los datos.' : 'Sube el logo en el dossier para poder usarlo.'}>
               <Switch aria-label="Logo de la banda" checked={tieneLogo && ajustes.logo} disabled={!tieneLogo} onCheckedChange={(v) => onCambiar({ logo: v })} />
             </Fila>
+            {((tieneLogo && ajustes.logo) || logos.length > 0) && (
+              <Fila titulo="Logos en una tinta" detalle="Como impresos con el resto del cartel. Apagado, van a color sobre una placa clara.">
+                <Switch aria-label="Logos en una tinta" checked={ajustes.logosTinta} onCheckedChange={(v) => onCambiar({ logosTinta: v })} />
+              </Fila>
+            )}
             <Fila titulo="QR en el impreso" detalle={tieneEnlace ? 'Lleva a la página del bolo y cuenta cada escaneo.' : 'No hay enlace disponible ahora mismo.'}>
               <Switch aria-label="QR en el impreso" checked={tieneEnlace && ajustes.qr} disabled={!tieneEnlace} onCheckedChange={(v) => onCambiar({ qr: v })} />
             </Fila>
             <Fila titulo="Hecho con BandManager.io" detalle={puedeQuitarMarca ? 'Gracias por dejarla: así nos conocen otras bandas.' : 'Va incluida en los planes gratuitos.'}>
               <Switch aria-label="Marca BandManager" checked={puedeQuitarMarca ? ajustes.marca : true} disabled={!puedeQuitarMarca} onCheckedChange={(v) => onCambiar({ marca: v })} />
             </Fila>
+          </div>
+
+          <div className="grid gap-2">
+            <div>
+              <p className="text-sm text-[var(--ink)]">Logos de las otras bandas</p>
+              <p className="text-xs text-[var(--ink-2)]">Salen en una fila encima de los datos, junto al de tu banda. Hasta {MAX_LOGOS}. Mejor un PNG sin fondo.</p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              {logos.map((u, i) => (
+                <div key={u} className="relative size-14 shrink-0 overflow-hidden rounded-[var(--r-s)] bg-[var(--sunken)]">
+                  <img src={u} alt={`Logo ${i + 1}`} className="size-full object-contain p-1.5" />
+                  <IconButton label="Quitar logo" size="icon-xs" variant="raised" className="absolute right-0.5 top-0.5" onClick={() => onQuitarLogo(u)}>
+                    <X className="size-3" aria-hidden />
+                  </IconButton>
+                </div>
+              ))}
+              {logos.length < MAX_LOGOS && (
+                <label className="grid size-14 shrink-0 cursor-pointer place-items-center rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink-2)] transition-ui hover:text-[var(--ink)]" title="Añadir un logo">
+                  <ImagePlus className="size-5" aria-hidden />
+                  <input type="file" accept="image/*" disabled={subiendoLogo} className="sr-only" aria-label="Añadir un logo"
+                    onChange={(e) => {
+                      onSubirLogo(e.target.files?.[0]);
+                      e.target.value = '';
+                    }} />
+                </label>
+              )}
+            </div>
+            {subiendoLogo && <p className="text-xs text-[var(--ink-2)]">Subiendo el logo…</p>}
           </div>
         </div>
       </div>

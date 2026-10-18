@@ -26,7 +26,7 @@ _Sin dependencias salientes directas._
 - [[src_components_cartel_CarteleriaView|src/components/cartel/CarteleriaView.tsx]] *(from #frontend)*
 - [[src_components_cartel_hooks_useEditorCartel|src/components/cartel/hooks/useEditorCartel.ts]] *(from #frontend)*
 - [[src_utils_cartel_datos|src/utils/cartel/datos.ts]] *(from #service)*
-- [[src_utils_cartel_layout|src/utils/cartel/layout.ts]] *(from #service)*
+- [[src_utils_cartel_layoutBase|src/utils/cartel/layoutBase.ts]] *(from #service)*
 
 ---
 

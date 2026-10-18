@@ -4,7 +4,7 @@
 import express, { type Request, type Response } from "express";
 import { requireAuth } from "../state.js";
 import { getTargetBandId } from "../utils/bandAccess.js";
-import { aprendizajeDeBanda } from "../services/metricasReels.js";
+import { aprendizajeDeBanda, resumenSemanalDeBanda } from "../services/metricasReels.js";
 import { responderError } from "../utils/errorHttp.js";
 
 const router = express.Router();
@@ -19,6 +19,18 @@ router.get("/reels/aprendizaje", requireAuth, async (req: Request, res: Response
     return res.json({ success: true, ...aprendizaje });
   } catch (err) {
     return responderError(res, err, "No se pudo cargar lo aprendido de tus Reels.");
+  }
+});
+
+/**
+ * GET /api/reels/resumen-semanal
+ * Los Reels que mejor han funcionado esta semana y qué formato probar después.
+ */
+router.get("/reels/resumen-semanal", requireAuth, async (req: Request, res: Response) => {
+  try {
+    return res.json({ success: true, ...(await resumenSemanalDeBanda(getTargetBandId(req))) });
+  } catch (err) {
+    return responderError(res, err, "No se pudo preparar el resumen de la semana.");
   }
 });
 

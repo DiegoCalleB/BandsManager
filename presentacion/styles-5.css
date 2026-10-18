@@ -209,6 +209,8 @@ body.pausado #stage, body.pausado #stage *, body.pausado #stage *::before, body.
 .nff-mus-t, .nff-mus { opacity: 0; animation: nffaparece 900ms ease-out 3400ms both; }
 .nff-mus-t { margin: 8px 0 0; color: #aaa; font: 600 22px/1 'Helvetica Neue', Arial, sans-serif; letter-spacing: .12em; text-transform: uppercase; }
 .nff-mus { display: flex; gap: 22px; }
+.nff-can { display: flex; flex-direction: column; gap: 8px; }
+.nff-mus .nff-dl { flex-direction: row; justify-content: center; padding: 11px 20px; font-size: 20px; font-weight: 700; background: transparent; box-shadow: inset 0 0 0 2px rgba(255,255,255,.45); }
 .nff-mus a { display: flex; flex-direction: column; gap: 6px; padding: 16px 30px; border-radius: 4px; background: rgba(255,255,255,.14); color: #fff; text-decoration: none; font-family: 'Helvetica Neue', Arial, sans-serif; text-align: left; }
 .nff-mus a b { font-size: 26px; line-height: 1.1; } .nff-mus a small { font-size: 19px; color: #bbb; }
 .nff-mus a:hover { background: #fff; color: #000; } .nff-mus a:hover small { color: #444; }
@@ -248,8 +250,8 @@ body.pausado #stage, body.pausado #stage *, body.pausado #stage *::before, body.
 .nx-card.fake > b { font: 400 min(1.7vw, 30px)/1.08 Anton, Oswald, Impact, sans-serif; text-transform: uppercase; letter-spacing: .01em; text-shadow: 0 3px 12px #0008; }
 .nx-card.fake .nx-mini b { font: inherit; }
 /* las filas del inicio se desplazan hacia el lado (los puestos 7 a 10 del Top 10 quedan fuera de la pantalla) */
-.nx-filas2 .nx-row { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; padding: 28px 40px 28px 0; margin: -28px 0; }
-.nx-filas2 .nx-row::-webkit-scrollbar { display: none; }
+.nx-filas2 :is(.nx-row, .nx-games) { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; padding: 28px 40px 28px 0; margin: -28px 0; }
+.nx-filas2 :is(.nx-row, .nx-games)::-webkit-scrollbar { display: none; }
 
 /* icono real de una app (img/juegos/<id>.png): tapa el icono dibujado */
 .nx-game i img.nx-gicono { position: absolute; z-index: 2; inset: 0; right: auto; bottom: auto; width: 100%; height: 100%; border-radius: 0; box-shadow: none; object-fit: cover; }
@@ -332,8 +334,12 @@ body.pelicula:not(.scroll) :is(img[src*="gracias-mop"], img[src*="diego-bajista"
 .sellos-caja .powered .pq { position: absolute; right: 14px; bottom: 10px; width: 78px; height: 78px; padding: 4px; border-radius: 6px; background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,.6); }
 .sellos-caja .powered:has(.pq) { padding-bottom: 12px; min-height: 62px; }
 
-/* Anuncios de BandManager: ilustración propia de cada herramienta, con el logo como firma */
-.nx-ads .nx-game i.arte img:not(.nx-gicono) { z-index: 3; right: 10px; bottom: 10px; width: 36px; height: 36px; border-radius: 10px; }
+/* Anuncios de BandManager: miniatura apaisada con la pantalla real de cada herramienta, el color del módulo y el logo como firma */
+.nx-ads .nx-game:has(i.foto) { flex-basis: 300px; }
+.nx-ads .nx-game i.foto { width: 300px; height: 169px; border-radius: 6px; background-color: #0d0f14; background-repeat: no-repeat; }
+.nx-ads .nx-game i.foto::before { display: block; background: linear-gradient(115deg, var(--c1), transparent 55%); mix-blend-mode: soft-light; opacity: .9; }
+.nx-ads .nx-game i.foto::after { background: linear-gradient(transparent 50%, #000a), linear-gradient(90deg, var(--c1), var(--c2)) left bottom / 100% 4px no-repeat; }
+.nx-ads .nx-game i.foto img { z-index: 3; left: 10px; top: 10px; right: auto; bottom: auto; width: 34px; height: 34px; border-radius: 9px; }
 
 /* Apertura: tres frases sobre negro antes del primer plano, para que la película no arranque de golpe */
 .slide.apertura { background: #000; }

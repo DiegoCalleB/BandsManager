@@ -1,4 +1,7 @@
 import React, { useRef, useState } from 'react';
+// Las letras de cartel (nombre y día de la fecha): solo se cargan con esta vista.
+import '@fontsource/anton/latin-400.css';
+import '@fontsource/dm-serif-display/latin-400.css';
 import { Download, FileArchive, Settings2, Share2 } from 'lucide-react';
 import type { Concert } from '../../types';
 import { ActionMenu, Button, EmptyState, Select, Tabs } from '../ui';
@@ -8,6 +11,7 @@ import { useEditorCartel } from './hooks/useEditorCartel';
 import { SelectorFondo } from './SelectorFondo';
 import { PreguntaCabeza } from './PreguntaCabeza';
 import { EstiloBanda } from './EstiloBanda';
+import { IdeaCartel } from './IdeaCartel';
 import { AjustesCartel } from './AjustesCartel';
 import { puedeQuitarMarcaCartel } from '../../utils/planPermissions';
 
@@ -80,6 +84,7 @@ const CarteleriaView: React.FC<Props> = ({ concerts, bandName, plan, banda, onCa
           generando={ed.generando}
           estiloInicial={ed.adn.estiloSugerido}
           paletaBanda={ed.adn.paletaBanda}
+          panelIdea={<IdeaCartel idea={ed.idea} />}
           panelBanda={
             <EstiloBanda
               referencias={ed.adn.adn.referencias}
@@ -127,6 +132,10 @@ const CarteleriaView: React.FC<Props> = ({ concerts, bandName, plan, banda, onCa
           tieneEnlace={ed.tieneEnlace}
           tieneLogo={ed.tieneLogo}
           puedeQuitarMarca={ed.puedeQuitarMarca}
+          logos={ed.logos}
+          subiendoLogo={ed.subiendoLogo}
+          onSubirLogo={ed.subirLogo}
+          onQuitarLogo={ed.quitarLogo}
         />
       </div>
     </div>

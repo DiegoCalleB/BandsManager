@@ -19,6 +19,7 @@ Placas de papel: en un cartel impreso el texto no flota encima de la ilustració
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_utils_cartel_layout|src/utils/cartel/layout.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_cartel_papel|src/utils/cartel/papel.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

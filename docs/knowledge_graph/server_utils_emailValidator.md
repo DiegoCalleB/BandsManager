@@ -25,6 +25,8 @@ Validación de emails con dos niveles:
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_routes_leads_emailValidation|server/routes/leads/emailValidation.ts]] *(from #route)*
 - [[server_routes_leads_templates|server/routes/leads/templates.ts]] *(from #route)*
+- [[server_services_avisarEmailsDudosos|server/services/avisarEmailsDudosos.ts]] *(from #service)*
+- [[server_utils_salaCatalogo|server/utils/salaCatalogo.ts]] *(from #service)*
 
 ---
 

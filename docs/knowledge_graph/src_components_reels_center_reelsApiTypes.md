@@ -18,8 +18,8 @@ Contratos tipados de las respuestas de la API del Centro de Reels.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[route_calendar_conflicts|GET /api/calendar/conflicts]] *(Layer: #route, Domain: #booking)*
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
-- [[server_routes_concerts|server/routes/concerts.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_posts|server/routes/posts.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_reels|server/routes/reels.ts]] *(Layer: #route, Domain: #social)*
 - [[src_components_bandCRM_BandToneModal|src/components/bandCRM/BandToneModal.tsx]] *(Layer: #frontend, Domain: #booking)*
@@ -44,8 +44,17 @@ Contratos tipados de las respuestas de la API del Centro de Reels.
 - [[src_components_reels_center_hooks_useReelsSync|src/components/reels_center/hooks/useReelsSync.ts]] *(from #frontend)*
 - [[src_components_reels_center_hooks_useReelStyleOptions|src/components/reels_center/hooks/useReelStyleOptions.ts]] *(from #frontend)*
 - [[src_components_reels_center_hooks_useRenderedClipState|src/components/reels_center/hooks/useRenderedClipState.ts]] *(from #frontend)*
+- [[src_components_reels_center_hooks_useResumenSemanal|src/components/reels_center/hooks/useResumenSemanal.ts]] *(from #frontend)*
 - [[src_components_reels_center_hooks_useSocialPublishing|src/components/reels_center/hooks/useSocialPublishing.ts]] *(from #frontend)*
 - [[src_components_reels_center_hooks_useVideoAnalyzer|src/components/reels_center/hooks/useVideoAnalyzer.ts]] *(from #frontend)*
+- [[src_components_reels_center_razonDelTramo|src/components/reels_center/razonDelTramo.ts]] *(from #frontend)*
+- [[src_components_reels_center_ResumenSemanalCard|src/components/reels_center/ResumenSemanalCard.tsx]] *(from #frontend)*
+- [[src_components_reels_center_revisionFinal|src/components/reels_center/revisionFinal.ts]] *(from #frontend)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `src/components/reels_center/__tests__/razonDelTramo.test.ts`
 
 ---
 

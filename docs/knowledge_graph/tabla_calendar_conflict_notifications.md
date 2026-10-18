@@ -23,8 +23,8 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[db_calendar_conflicts|Persistencia de avisos de choque]] *(from #db)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
-- [[server_db_calendarConflicts|server/db/calendarConflicts.ts]] *(from #db)*
 
 ---
 

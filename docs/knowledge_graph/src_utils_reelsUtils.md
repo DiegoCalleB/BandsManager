@@ -34,6 +34,7 @@ _Sin dependencias salientes directas._
 - [[src_components_reels_center_hooks_useVideoAnalyzer|src/components/reels_center/hooks/useVideoAnalyzer.ts]] *(from #frontend)*
 - [[src_components_reels_center_reelsApiTypes|src/components/reels_center/reelsApiTypes.ts]] *(from #frontend)*
 - [[src_components_reels_center_reelsHelpers|src/components/reels_center/reelsHelpers.ts]] *(from #frontend)*
+- [[src_components_reels_center_revisionFinal|src/components/reels_center/revisionFinal.ts]] *(from #frontend)*
 - [[src_components_reels_ReelsPhoneMockup|src/components/reels/ReelsPhoneMockup.tsx]] *(from #frontend)*
 - [[src_components_reels_ReelsTheaterModal|src/components/reels/ReelsTheaterModal.tsx]] *(from #frontend)*
 - [[src_components_ReelsCenter|src/components/ReelsCenter.tsx]] *(from #frontend)*
