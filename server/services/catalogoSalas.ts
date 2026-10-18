@@ -1,0 +1,185 @@
+/**
+ * Sincronización del catálogo compartido de salas (fase 1).
+ *
+ * Recorre los leads de todas las bandas, agrupa los que son la misma sala, saca solo sus datos públicos, calcula la
+ * fiabilidad y enlaza cada lead con su sala (`leads.sala_id`). Es idempotente y tiene modo simulación, que informa
+ * de lo que haría sin escribir nada. Solo lo usa el servidor: nada de esto llega a una ruta pública.
+ *
+ * Depende de un puerto (`PuertoCatalogo`), no de Supabase: el adaptador real vive en server/db/salasCatalogo.ts y los
+ * tests usan uno en memoria.
+ */
+import {
+  calcularFiabilidad,
+  camposPublicos,
+  claveSala,
+  consolidarCampos,
+  fusionarConExistente,
+  idDeSala,
+  senalesDeLeads,
+  siguienteVerificadaEn,
+  type CamposPublicosSala,
+  type LeadParaCatalogo,
+  type NivelSala,
+} from '../utils/salaCatalogo.js';
+
+export interface SalaGuardada extends CamposPublicosSala {
+  id: string;
+  nivel: NivelSala;
+  puntuacion: number;
+  verificada_en: Date | null;
+  bandas_con_respuesta: number;
+  bandas_con_entrega: number;
+  rebotes: number;
+  no_contactar: boolean;
+}
+
+/** Lo que el servicio escribe. `no_contactar` no está: es de quien lo marca y la sincronización nunca lo toca. */
+export type SalaAGuardar = Omit<SalaGuardada, 'no_contactar'>;
+
+export interface PuertoCatalogo {
+  leerLeads(): Promise<LeadParaCatalogo[]>;
+  leerSalas(): Promise<SalaGuardada[]>;
+  guardarSalas(salas: SalaAGuardar[]): Promise<void>;
+  enlazarLeads(enlaces: Array<{ leadId: string; salaId: string }>): Promise<void>;
+}
+
+export interface InformeCatalogo {
+  simulacion: boolean;
+  leadsLeidos: number;
+  /** Leads sin nombre o sin ciudad (y sin place_id): no se pueden identificar y no entran. */
+  leadsSinClave: number;
+  salasResultantes: number;
+  salasNuevas: number;
+  salasActualizadas: number;
+  salasSinCambios: number;
+  /** Leads que son la misma sala que otro: cuántos se fusionaron. */
+  duplicadosFusionados: number;
+  leadsEnlazados: number;
+  porNivel: Record<NivelSala, number>;
+}
+
+const TAMANO_LOTE = 200;
+
+const lotes = <T>(items: T[]): T[][] => Array.from({ length: Math.ceil(items.length / TAMANO_LOTE) }, (_, i) => items.slice(i * TAMANO_LOTE, (i + 1) * TAMANO_LOTE));
+
+const CAMPOS_COMPARADOS: Array<keyof SalaAGuardar> = [
+  'clave', 'place_id', 'nombre', 'ciudad', 'region', 'direccion', 'tipo', 'aforo', 'genero', 'website', 'instagram',
+  'email_contacto', 'telefono', 'nivel', 'puntuacion', 'bandas_con_respuesta', 'bandas_con_entrega', 'rebotes',
+];
+
+const huboCambios = (previa: SalaGuardada, nueva: SalaAGuardar): boolean =>
+  CAMPOS_COMPARADOS.some((k) => (previa[k] ?? null) !== (nueva[k] ?? null)) ||
+  (previa.verificada_en?.getTime() ?? null) !== (nueva.verificada_en?.getTime() ?? null);
+
+type Miembro = { lead: LeadParaCatalogo; ficha: CamposPublicosSala };
+
+/**
+ * Si unos leads de una sala traen `place_id` y otros no, serían dos grupos de la misma sala. Los sin `place_id` pasan al
+ * grupo con `place_id` cuando su nombre y ciudad coinciden con los de uno solo (con varios candidatos no se adivina).
+ */
+function unirGruposDeLaMismaSala(grupos: Map<string, Miembro[]>): void {
+  const placePorNombreCiudad = new Map<string, string[]>();
+  for (const [clave, miembros] of grupos) {
+    if (!clave.startsWith('place:')) continue;
+    for (const { ficha } of miembros) {
+      const nc = claveSala({ nombre: ficha.nombre, ciudad: ficha.ciudad });
+      if (nc && !placePorNombreCiudad.get(nc)?.includes(clave)) placePorNombreCiudad.set(nc, [...(placePorNombreCiudad.get(nc) ?? []), clave]);
+    }
+  }
+  for (const [clave, miembros] of [...grupos]) {
+    const candidatos = clave.startsWith('nc:') ? placePorNombreCiudad.get(clave) : undefined;
+    if (candidatos?.length !== 1) continue;
+    grupos.get(candidatos[0])?.push(...miembros);
+    grupos.delete(clave);
+  }
+}
+
+export async function sincronizarCatalogo(
+  puerto: PuertoCatalogo,
+  opciones: { ahora?: Date; simulacion?: boolean } = {},
+): Promise<InformeCatalogo> {
+  const ahora = opciones.ahora ?? new Date();
+  const simulacion = opciones.simulacion ?? false;
+
+  const [leads, guardadas] = await Promise.all([puerto.leerLeads(), puerto.leerSalas()]);
+  const porClave = new Map(guardadas.map((s) => [s.clave, s]));
+
+  const grupos = new Map<string, Miembro[]>();
+  let leadsSinClave = 0;
+  for (const lead of leads) {
+    const ficha = camposPublicos(lead);
+    if (!ficha) {
+      leadsSinClave++;
+      continue;
+    }
+    const grupo = grupos.get(ficha.clave) ?? [];
+    grupo.push({ lead, ficha });
+    grupos.set(ficha.clave, grupo);
+  }
+
+  unirGruposDeLaMismaSala(grupos);
+
+  const aGuardar: SalaAGuardar[] = [];
+  const enlaces: Array<{ leadId: string; salaId: string }> = [];
+  const porNivel: Record<NivelSala, number> = { sin_verificar: 0, probable: 0, verificada: 0 };
+  let nuevas = 0;
+  let actualizadas = 0;
+  let sinCambios = 0;
+
+  for (const [clave, miembros] of grupos) {
+    const consolidada = consolidarCampos(miembros.map((m) => m.ficha));
+    // Una sala que antes se catalogó por nombre y ciudad y ahora tiene place_id conserva su fila (y su id).
+    const claveNombreCiudad = claveSala({ nombre: consolidada.nombre, ciudad: consolidada.ciudad });
+    const previa = porClave.get(clave) ?? (consolidada.place_id && claveNombreCiudad ? porClave.get(claveNombreCiudad) : undefined);
+
+    const campos = previa ? fusionarConExistente(previa, { ...consolidada, clave }) : consolidada;
+    const senales = senalesDeLeads(miembros.map((m) => m.lead), ahora, campos, previa?.verificada_en);
+    const { puntuacion, nivel } = calcularFiabilidad(senales, ahora);
+    const sala: SalaAGuardar = {
+      ...campos,
+      id: previa?.id ?? idDeSala(clave),
+      nivel,
+      puntuacion,
+      verificada_en: siguienteVerificadaEn(
+        previa ? { verificadaEn: previa.verificada_en, bandasConEntrega: previa.bandas_con_entrega, bandasConRespuesta: previa.bandas_con_respuesta } : null,
+        senales,
+        nivel,
+        ahora,
+      ),
+      bandas_con_respuesta: senales.bandasConRespuesta,
+      bandas_con_entrega: senales.bandasConEntrega,
+      rebotes: senales.rebotes,
+    };
+
+    porNivel[nivel]++;
+    if (!previa) {
+      nuevas++;
+      aGuardar.push(sala);
+    } else if (huboCambios(previa, sala)) {
+      actualizadas++;
+      aGuardar.push(sala);
+    } else {
+      sinCambios++;
+    }
+    for (const { lead } of miembros) if (lead.sala_id !== sala.id) enlaces.push({ leadId: lead.id, salaId: sala.id });
+  }
+
+  if (!simulacion) {
+    // Primero las salas (los leads apuntan a ellas con una FK) y después los enlaces.
+    for (const lote of lotes(aGuardar)) await puerto.guardarSalas(lote);
+    for (const lote of lotes(enlaces)) await puerto.enlazarLeads(lote);
+  }
+
+  return {
+    simulacion,
+    leadsLeidos: leads.length,
+    leadsSinClave,
+    salasResultantes: grupos.size,
+    salasNuevas: nuevas,
+    salasActualizadas: actualizadas,
+    salasSinCambios: sinCambios,
+    duplicadosFusionados: leads.length - leadsSinClave - grupos.size,
+    leadsEnlazados: enlaces.length,
+    porNivel,
+  };
+}

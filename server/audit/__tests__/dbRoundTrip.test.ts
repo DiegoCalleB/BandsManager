@@ -13,6 +13,7 @@ const SALTADAS_ACEPTADAS: Record<string, string> = {
   data_change_history: 'registro append-only alimentado por triggers; no se edita',
   enlaces_bandas_amigas: 'CHECK en plataforma: el valor genérico de prueba no es válido por diseño',
   metricas_bandas_amigas: 'CHECK en fuente y periodo (YYYY-MM): el valor genérico de prueba no es válido por diseño',
+  salas_catalogo: 'CHECK en nivel (sin_verificar, probable, verificada): el valor genérico de prueba no es válido por diseño; la cubre server/migrations/__tests__/catalogoSalas.test.ts',
 };
 
 describe('round-trip de guardado en BD', () => {
