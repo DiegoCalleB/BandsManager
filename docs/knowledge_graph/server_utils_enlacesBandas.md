@@ -26,6 +26,7 @@ _Sin dependencias salientes directas._
 - [[server_db_contacts|server/db/contacts.ts]] *(from #db)*
 - [[server_db_enlacesBandas|server/db/enlacesBandas.ts]] *(from #db)*
 - [[server_routes_bandMusic|server/routes/bandMusic.ts]] *(from #route)*
+- [[server_utils_redesBanda|server/utils/redesBanda.ts]] *(from #service)*
 
 ---
 

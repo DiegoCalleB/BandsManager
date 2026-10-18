@@ -23,11 +23,13 @@ Escucha y Spotify en lote para las bandas de la cuenta. Todo va acotado a la ban
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_enlacesBandas|server/db/enlacesBandas.ts]] *(Layer: #db, Domain: #system)*
+- [[server_services_instagramDescubrimiento|server/services/instagramDescubrimiento.ts]] *(Layer: #service, Domain: #social)*
 - [[server_services_metricasBandaService|server/services/metricasBandaService.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_musicPreviewService|server/services/musicPreviewService.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_spotifyService|server/services/spotifyService.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_enlacesBandas|server/utils/enlacesBandas.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_metricasBanda|server/utils/metricasBanda.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_redesBanda|server/utils/redesBanda.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_spotifyMatch|server/utils/spotifyMatch.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_spotifyEmbed|src/utils/spotifyEmbed.ts]] *(Layer: #service, Domain: #system)*
 - [[tabla_band_contacts|tabla band_contacts]] *(Layer: #schema, Domain: #system)*
