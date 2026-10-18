@@ -77,8 +77,8 @@ describe("lecturas del chatbot", () => {
     expect(r.por_tipo.constructor).toBe(1);
   });
 
-  it("declara las tres herramientas", () => {
-    expect(lecturasChatDeclaraciones.map((d) => d.name)).toEqual(["buscar_leads", "ver_lead", "resumen_embudo"]);
+  it("declara las cuatro herramientas de lectura", () => {
+    expect(lecturasChatDeclaraciones.map((d) => d.name)).toEqual(["buscar_leads", "ver_lead", "resumen_embudo", "buscar_catalogo"]);
   });
 });
 

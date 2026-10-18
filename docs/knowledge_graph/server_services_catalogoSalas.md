@@ -24,11 +24,15 @@ Sincronización del catálogo compartido de salas (fase 1).
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_db_salasCatalogo|server/db/salasCatalogo.ts]] *(from #db)*
+- [[server_services_consultaCatalogo|server/services/consultaCatalogo.ts]] *(from #service)*
+- [[server_utils_consultaCatalogo|server/utils/consultaCatalogo.ts]] *(from #service)*
 
 ---
 
 ## 🧪 Tests que lo cubren
 - `server/services/__tests__/catalogoSalas.test.ts`
+- `server/services/__tests__/consultaCatalogo.test.ts`
+- `server/utils/__tests__/consultaCatalogo.test.ts`
 
 ---
 
