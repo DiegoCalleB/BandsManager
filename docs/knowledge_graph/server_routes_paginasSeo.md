@@ -13,7 +13,7 @@ tags: ["route", "system", "auto"]
 > **Capa:** `#layer/route` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Guías públicas de SEO: /guias (índice) y /guias/:slug. Contenido fijo en server/utils/seo/, sin datos de bandas.
+Guías públicas de SEO: /guias y /en/guides (índices) y /guias/:slug y /en/guides/:slug. Contenido fijo
 
 ---
 
@@ -22,6 +22,7 @@ Guías públicas de SEO: /guias (índice) y /guias/:slug. Contenido fijo en serv
 - [[server_utils_paginaConcierto|server/utils/paginaConcierto.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_indice|server/utils/seo/indice.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_render|server/utils/seo/render.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_seo_rutas|server/utils/seo/rutas.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
