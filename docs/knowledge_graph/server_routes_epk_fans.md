@@ -60,6 +60,7 @@ EPK y captación de fans: configuración de autonomía de agentes, EPK editable/
 
 ## 🧪 Tests que lo cubren
 - `server/routes/__tests__/auditoriaSeguridadPR2.test.ts`
+- `server/routes/__tests__/fansSoloSupabase.test.ts`
 - `server/routes/__tests__/seguridadAutorizacion.test.ts`
 
 ---

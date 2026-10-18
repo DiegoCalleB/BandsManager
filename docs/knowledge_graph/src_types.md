@@ -38,7 +38,6 @@ _Sin dependencias salientes directas._
 - [[route_repertoire|Repertoire & Setlists Route]] *(from #route)*
 - [[server|server.ts]] *(from #route)*
 - [[server_ai|server/ai.ts]] *(from #service)*
-- [[server_controllers_tours_controller|server/controllers/tours.controller.ts]] *(from #service)*
 - [[server_db_alertSettings|server/db/alertSettings.ts]] *(from #db)*
 - [[server_db_campaigns|server/db/campaigns.ts]] *(from #db)*
 - [[server_db_contacts|server/db/contacts.ts]] *(from #db)*

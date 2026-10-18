@@ -34,6 +34,8 @@ vi.mock('../../db.js', () => ({
   dbGetActiveCampaign: async () => null,
   dbGetSongs: async () => [],
   dbGetSetlists: async () => [],
+  dbGetTours: async () => [],
+  dbContarFans: async () => 0,
 }));
 
 import router from '../chat.js';
