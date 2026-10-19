@@ -21,6 +21,7 @@
     "spotify:bandas": "tsx scripts/arreglar-spotify-bandas.ts",
     "probar:senales": "tsx scripts/probar-senales.ts",
     "probar:publicacion": "tsx scripts/probar-publicacion.ts",
+    "banco:deteccion": "tsx scripts/banco-deteccion.ts",
     "test:coverage": "vitest run --coverage",
     "coverage:ratchet": "node scripts/subir-umbral-cobertura.mjs",
     "test:e2e": "playwright test",

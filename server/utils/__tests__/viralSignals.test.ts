@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import {
+import { encajarEnElGolpe, describe, it, expect } from 'vitest';
+import { encajarEnElGolpe,
   parseCambiosDePlano,
   detectarCambiosDePlano,
   detectarTipoContenido,
@@ -271,5 +271,27 @@ describe('ventanasMasVirales · interés del público', () => {
     const texto = resumirSenalesParaPrompt(vs, 'concierto');
     expect(texto).toMatch(/público \d+/);
     expect(texto).toMatch(/reproduce|repeticiones/i);
+  });
+});
+
+describe("encajarEnElGolpe", () => {
+  // Silencio hasta 20,0 s y golpe fuerte desde ahí.
+  const curva = Array.from({ length: 600 }, (_, i) => ({ t: i / 10, db: i / 10 >= 20 ? -8 : -50 }));
+  const v = (start: number) => ({ start, end: start + 30, energia: 80, arranque: 50, dinamismo: 50, score: 70, motivo: "x" });
+
+  it("mueve el inicio al golpe si empezaba antes, en el silencio", () => {
+    const r = encajarEnElGolpe(v(18), curva, 60);
+    expect(r.start).toBeCloseTo(20, 0);
+    expect(r.end - r.start).toBe(30);
+    expect(r.motivo).toContain("golpe");
+  });
+
+  it("no toca un corte que ya cae en el golpe", () => {
+    expect(encajarEnElGolpe(v(20), curva, 60).start).toBe(20);
+  });
+
+  it("no se sale del vídeo", () => {
+    const r = encajarEnElGolpe(v(30), curva, 60);
+    expect(r.end).toBeLessThanOrEqual(61);
   });
 });

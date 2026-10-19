@@ -253,7 +253,41 @@ export function ventanasMasVirales(
     elegidas.push({ ...v, motivo: describirVentana(v, cortes.length > 0) });
     if (elegidas.length >= maxVentanas) break;
   }
-  return elegidas.sort((a, b) => a.start - b.start);
+  return elegidas.map((v) => encajarEnElGolpe(v, ordenada, ultimo)).sort((a, b) => a.start - b.start);
+}
+
+/** Cuánto se puede mover el inicio de un corte para caer en el golpe, en segundos. */
+const RADIO_GOLPE = 3;
+/** Mejora mínima (dB) del salto de volumen para que merezca la pena mover el corte. */
+const MEJORA_MINIMA_DB = 4;
+
+/**
+ * Los 2 primeros segundos deciden si alguien se queda, así que el corte debe empezar EN el golpe
+ * (la entrada de la banda, el bombo) y no medio segundo antes, en el silencio o la cola anterior.
+ * Mira unos segundos a cada lado y mueve el inicio solo si el salto de volumen mejora de verdad.
+ */
+export function encajarEnElGolpe(v: VentanaViral, curva: PuntoEnergia[], ultimo: number): VentanaViral {
+  const dur = v.end - v.start;
+  const salto = (t: number) => {
+    const despues = mediaEnRango(curva, t, t + 1);
+    const antes = mediaEnRango(curva, Math.max(0, t - 1.5), t);
+    return despues !== null && antes !== null ? despues - antes : null;
+  };
+  const actual = salto(v.start) ?? 0;
+  let mejorT = v.start;
+  let mejorSalto = actual;
+  for (let d = -RADIO_GOLPE; d <= RADIO_GOLPE; d += 0.5) {
+    const t = v.start + d;
+    if (t < 0 || t + dur > ultimo + 1) continue;
+    const sl = salto(t);
+    if (sl !== null && sl > mejorSalto) {
+      mejorSalto = sl;
+      mejorT = t;
+    }
+  }
+  if (mejorT === v.start || mejorSalto - actual < MEJORA_MINIMA_DB) return v;
+  const mov = Number((mejorT - v.start).toFixed(1));
+  return { ...v, start: mejorT, end: mejorT + dur, motivo: `${v.motivo}; inicio ajustado ${Math.abs(mov)} s ${mov < 0 ? "antes" : "después"} para caer en el golpe` };
 }
 
 /** Explica en una frase por qué este tramo ha puntuado así. */
