@@ -13,7 +13,7 @@ tags: ["schema", "tabla", "auto"]
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Tabla de Supabase `salas_catalogo` (26 columnas).
+Tabla de Supabase `salas_catalogo` (29 columnas).
 
 ---
 
@@ -26,6 +26,9 @@ _Sin dependencias salientes directas._
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 - [[server_db_salasCatalogo|server/db/salasCatalogo.ts]] *(from #db)*
 - [[server_db_salasPublicas|server/db/salasPublicas.ts]] *(from #db)*
+- [[tabla_catalogo_sala_generos|tabla catalogo_sala_generos]] *(from #schema)*
+- [[tabla_catalogo_staging|tabla catalogo_staging]] *(from #schema)*
+- [[tabla_catalogo_supresion|tabla catalogo_supresion]] *(from #schema)*
 - [[tabla_festivales|tabla festivales]] *(from #schema)*
 - [[tabla_leads|tabla leads]] *(from #schema)*
 
@@ -58,8 +61,11 @@ _Sin dependencias salientes directas._
 - `estado_negocio`
 - `estado_negocio_en`
 - `fuentes`
+- `pais`
+- `lat`
+- `lon`
 
-**Definida en:** `supabase/migrations/20261108_catalogo_salas.sql`, `supabase/migrations/20261110_estado_negocio_salas.sql`, `supabase/migrations/20261112_salas_fuentes.sql`
+**Definida en:** `supabase/migrations/20261108_catalogo_salas.sql`, `supabase/migrations/20261110_estado_negocio_salas.sql`, `supabase/migrations/20261112_salas_fuentes.sql`, `supabase/migrations/20261113_catalogo_global_base.sql`
 
 ---
 

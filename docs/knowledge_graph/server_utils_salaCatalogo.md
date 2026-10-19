@@ -38,6 +38,7 @@ Catálogo compartido de salas: reglas puras (sin red ni base de datos).
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/migrations/__tests__/catalogoGlobal.test.ts`
 - `server/services/__tests__/catalogoSalas.test.ts`
 - `server/utils/__tests__/salaCatalogo.test.ts`
 
