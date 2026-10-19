@@ -275,6 +275,78 @@ Los festivales muy especializados (metal, electrónica, jazz, blues, músicas de
 | PBR Live Festival | sin comunidad asignada |  | pendiente |
 | Molan Los 2000 Logroño | La Rioja |  | pendiente |
 | Molan Los 2000 Lugo | Galicia |  | pendiente |
+| 1001 Músicas | sin comunidad asignada |  | pendiente |
+| AlRumbo Festival | sin comunidad asignada |  | pendiente |
+| Amante Festival | sin comunidad asignada |  | pendiente |
+| Atardeceres Larios | sin comunidad asignada |  | pendiente |
+| Barcelona Arts & Music | sin comunidad asignada |  | pendiente |
+| Barcelona Beach Festival | sin comunidad asignada |  | pendiente |
+| Barna'n'Roll | sin comunidad asignada |  | pendiente |
+| BBK Music Legends Festival | sin comunidad asignada |  | pendiente |
+| Benalfest | sin comunidad asignada |  | pendiente |
+| Bilbo'N'Roll | sin comunidad asignada |  | pendiente |
+| Black Music Festival | sin comunidad asignada |  | pendiente |
+| Boombastic Madrid | sin comunidad asignada |  | pendiente |
+| Boombastic PortAventura | sin comunidad asignada |  | pendiente |
+| Cáceres Underground Weekend | sin comunidad asignada |  | pendiente |
+| Cosquín Rock España | sin comunidad asignada |  | pendiente |
+| Costa Feira | sin comunidad asignada |  | pendiente |
+| Costa Sonora | sin comunidad asignada |  | pendiente |
+| Cranc Festival | sin comunidad asignada |  | pendiente |
+| Cruïlla de Tardor | sin comunidad asignada |  | pendiente |
+| Cultura Inquieta | sin comunidad asignada |  | pendiente |
+| Desolation Metal Days | sin comunidad asignada |  | pendiente |
+| Emergentes Festival | sin comunidad asignada |  | pendiente |
+| Esférica Rioja Alavesa | sin comunidad asignada |  | pendiente |
+| Espacio Zity | sin comunidad asignada |  | pendiente |
+| Festival 10 Sentidos | sin comunidad asignada |  | pendiente |
+| Festival Cara.B | sin comunidad asignada |  | pendiente |
+| Festival Cadena 100 Por Ellas | sin comunidad asignada |  | pendiente |
+| Festival de Jazz de Granada | sin comunidad asignada |  | pendiente |
+| Festival de Música Antigua de Sevilla | sin comunidad asignada |  | pendiente |
+| Festival de Música Española de Cádiz | sin comunidad asignada |  | pendiente |
+| Festival EN VIVO | sin comunidad asignada |  | pendiente |
+| Festival F | sin comunidad asignada |  | pendiente |
+| Festival Internacional de Santander | sin comunidad asignada |  | pendiente |
+| Festival Internacional del Cante de las Minas | sin comunidad asignada |  | pendiente |
+| Festival Mutante | sin comunidad asignada |  | pendiente |
+| Festival Santas Pascuas | sin comunidad asignada |  | pendiente |
+| Festival Senderos | sin comunidad asignada |  | pendiente |
+| Festival Tío Pepe | sin comunidad asignada |  | pendiente |
+| Festimad | sin comunidad asignada |  | pendiente |
+| Festiuet | sin comunidad asignada |  | pendiente |
+| Fira Trovam | sin comunidad asignada |  | pendiente |
+| Fort Festival | sin comunidad asignada |  | pendiente |
+| Fulanita Fest | sin comunidad asignada |  | pendiente |
+| Fuzzville | sin comunidad asignada |  | pendiente |
+| Girona A Cappella Festival | sin comunidad asignada |  | pendiente |
+| Holi Not Holi Festival | sin comunidad asignada |  | pendiente |
+| Huercasa Country Festival | sin comunidad asignada |  | pendiente |
+| Iboga Summer Festival | sin comunidad asignada |  | pendiente |
+| Jazz Palencia Festival | sin comunidad asignada |  | pendiente |
+| Kanka Festival | sin comunidad asignada |  | pendiente |
+| La M.O.D.A. Festival | sin comunidad asignada |  | pendiente |
+| La Plaza Santander | sin comunidad asignada |  | pendiente |
+| L.E.V. Matadero | sin comunidad asignada |  | pendiente |
+| Lunátikko 90s Festival | sin comunidad asignada |  | pendiente |
+| MIRA Digital Arts Festival | sin comunidad asignada |  | pendiente |
+| No Sin Música | sin comunidad asignada |  | pendiente |
+| Ortigueira Festival | sin comunidad asignada |  | pendiente |
+| Peñón Fest | sin comunidad asignada |  | pendiente |
+| Primavera a la Ciutat | sin comunidad asignada |  | pendiente |
+| Primavera Weekender | sin comunidad asignada |  | pendiente |
+| Purple Weekend | sin comunidad asignada |  | pendiente |
+| Puro Latino Almería | sin comunidad asignada |  | pendiente |
+| Puro Latino El Puerto de Santa María | sin comunidad asignada |  | pendiente |
+| Puro Latino Madrid | sin comunidad asignada |  | pendiente |
+| Reggaeton Beach Festival (varias ciudades: Mallorca, Marbella, Santander, Asturias, Benidorm, Gran Canaria, Tenerife…) | sin comunidad asignada |  | pendiente |
+| Rock Imperium Festival | sin comunidad asignada |  | pendiente |
+| Slow Music | sin comunidad asignada |  | pendiente |
+| Starmus Festival | sin comunidad asignada |  | pendiente |
+| Sun & Thunder | sin comunidad asignada |  | pendiente |
+| V de Valarés | sin comunidad asignada |  | pendiente |
+| Vigo SeaFest | sin comunidad asignada |  | pendiente |
+| WOMAD Cáceres | sin comunidad asignada |  | pendiente |
 
 ## Dónde seguir buscando nombres
 
