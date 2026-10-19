@@ -3,7 +3,7 @@
   "info": {
     "title": "BandManager.io API",
     "version": "3.0.0",
-    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (391) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
+    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (393) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
     "license": {
       "name": "AGPL-3.0-only",
       "identifier": "AGPL-3.0-only"
@@ -14622,7 +14622,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginaConcierto.ts:64",
+        "x-source": "server/routes/paginaConcierto.ts:66",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -14698,7 +14698,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginaConcierto.ts:60",
+        "x-source": "server/routes/paginaConcierto.ts:62",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -14776,6 +14776,29 @@
         "x-autenticacion": "ninguna"
       }
     },
+    "/netflix": {
+      "get": {
+        "tags": [
+          "paginaConcierto"
+        ],
+        "operationId": "getNetflix",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/presentacionTfm.ts:25",
+        "x-handler": "redirigir",
+        "x-autenticacion": "ninguna",
+        "x-rate-limiters": [
+          "publicoRateLimiter"
+        ]
+      }
+    },
     "/plantilla-rider-tecnico": {
       "get": {
         "tags": [
@@ -14792,7 +14815,30 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginaConcierto.ts:57",
+        "x-source": "server/routes/paginaConcierto.ts:59",
+        "x-autenticacion": "ninguna",
+        "x-rate-limiters": [
+          "publicoRateLimiter"
+        ]
+      }
+    },
+    "/presentacion_tfm": {
+      "get": {
+        "tags": [
+          "paginaConcierto"
+        ],
+        "operationId": "getPresentacionTfm",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/presentacionTfm.ts:24",
+        "x-handler": "redirigir",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -14860,7 +14906,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/paginaConcierto.ts:180",
+        "x-source": "server/routes/paginaConcierto.ts:182",
         "x-autenticacion": "ninguna"
       }
     },
@@ -14999,7 +15045,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginaConcierto.ts:162",
+        "x-source": "server/routes/paginaConcierto.ts:164",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
