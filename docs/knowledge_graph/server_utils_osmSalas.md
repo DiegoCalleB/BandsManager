@@ -29,6 +29,7 @@ Salas de España a partir de OpenStreetMap (datos abiertos, ODbL): reglas puras,
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/services/__tests__/importarSalasOsm.test.ts`
 - `server/utils/__tests__/osmSalas.test.ts`
 
 ---
