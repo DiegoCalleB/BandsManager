@@ -2,7 +2,20 @@
  * Festivales del directorio público. Los datos viven en el repositorio y entran por revisión (pull request):
  * nadie puede editar una ficha publicada desde fuera. Cada ficha lleva su fuente y la fecha en que se comprobó.
  */
-export type EstiloFestival = 'rock' | 'indie' | 'pop' | 'metal' | 'electronica' | 'folk' | 'jazz' | 'urbano' | 'emergente';
+export type EstiloFestival =
+  | 'rock' | 'indie' | 'pop' | 'metal' | 'punk' | 'electronica' | 'folk' | 'jazz' | 'blues' | 'flamenco'
+  | 'urbano' | 'reggaeton' | 'reggae' | 'mundo' | 'clasica' | 'antigua' | 'experimental' | 'emergente';
+
+/** `desconocido` no es `no`: un filtro por «admite independientes» solo devuelve lo que está comprobado. */
+export type Tri = 'si' | 'no' | 'desconocido';
+
+export interface RequisitosConvocatoria {
+  independientes: Tri;
+  exigeSelloOAgencia: Tri;
+  exigeResidencia: Tri;
+  cuota: Tri;
+  remuneracion?: string;
+}
 
 export interface Festival {
   /** Identificador estable de la URL (minúsculas, números y guiones). No se cambia nunca: la URL es el enlace de otros. */
@@ -24,5 +37,13 @@ export interface Festival {
   /** Próxima edición, si está confirmada. */
   edicion?: { inicio: string; fin: string };
   /** Convocatoria para bandas, si la hay. Sin `cierre` solo se enlaza la fuente: no se inventa un plazo. */
-  convocatoria?: { url: string; cierre?: string; resumen: { es: string; en: string } };
+  convocatoria?: {
+    url: string;
+    abre?: string;
+    cierre?: string;
+    /** Edición para la que se programa (la siguiente o la siguiente a la siguiente). */
+    edicionAnio?: number;
+    requisitos?: RequisitosConvocatoria;
+    resumen: { es: string; en: string };
+  };
 }

@@ -15,7 +15,7 @@ Queremos un directorio público de festivales (y más adelante salas) con convoc
 - **Caducidad automática.** Una ficha sin comprobar en 365 días desaparece del índice, devuelve 404 y sale del sitemap (`server/utils/seo/festivales/vigencia.ts`).
 - **Calidad antes que volumen.** Una ficha *mínima* (solo lugar y estilo, sin web oficial ni convocatoria) se lista pero se sirve con `noindex`. El directorio solo se indexa y entra en el sitemap con al menos 8 fichas *completas* vigentes.
 - **Sin datos personales.** Solo datos del evento y su web oficial; nada de contactos de personas.
-- Páginas `/festivales`, `/festivales/:slug` y sus equivalentes `/en/festivals`; el texto sale de datos estructurados, así que ambos idiomas se mantienen a la vez.
+- Páginas bajo `/directories` (portada de los directorios; las guías con consejos siguen en `/guias`): `/directories/festivals`, `/directories/festivals/:slug` y, en inglés, `/en/directories/…`. Los tramos de la URL van en inglés en los dos idiomas. Las rutas anteriores (`/festivales`, `/listados`, `/en/festivals`) redirigen (301); el texto sale de datos estructurados, así que ambos idiomas se mantienen a la vez.
 
 ## Alternativas descartadas
 

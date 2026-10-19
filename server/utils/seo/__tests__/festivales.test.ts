@@ -45,7 +45,7 @@ describe('frescura y convocatorias', () => {
   it('con pocas fichas vigentes el directorio va con noindex y fuera del sitemap', () => {
     expect(indexable(FESTIVALES, HOY)).toBe(false);
     expect(renderizarIndiceFestivales(BASE, 'es', HOY)).toContain('noindex,follow');
-    expect(entradasSeo(BASE, HOY).some((e) => e.loc.includes('/festivales') || e.loc.includes('/festivals'))).toBe(false);
+    expect(entradasSeo(BASE, HOY).some((e) => e.loc.includes('/directories'))).toBe(false);
   });
   it('las fichas mínimas se listan pero no cuentan para indexar ni se indexan solas', () => {
     const minimas = Array.from({ length: MIN_FICHAS_INDEXABLES + 2 }, (_, i) => ficha(i, { web: undefined, convocatoria: undefined }));
@@ -81,5 +81,24 @@ describe.each(['es', 'en'] as const)('páginas (%s)', (idioma) => {
     expect(html).toContain(f.fuente);
     expect(html).toContain('application/ld+json');
     expect(html.match(/<h1>/g)).toHaveLength(1);
+  });
+});
+
+describe('rutas y portada de listados', () => {
+  it('los directorios cuelgan de /directories y /en/directories (tramos en inglés en los dos idiomas)', async () => {
+    const { RUTAS } = await import('../rutas.js');
+    expect(RUTAS.es.festival('x')).toBe('/directories/festivals/x');
+    expect(RUTAS.en.festival('x')).toBe('/en/directories/festivals/x');
+  });
+  it('la portada enlaza el directorio de festivales y va con noindex mientras solo haya uno', async () => {
+    const { renderizarListados, DIRECTORIOS, MIN_DIRECTORIOS_INDEXABLES } = await import('../listados.js');
+    const html = renderizarListados(BASE, 'es');
+    expect(html).toContain('/directories/festivals');
+    expect(html).toContain(DIRECTORIOS.length >= MIN_DIRECTORIOS_INDEXABLES ? 'index,follow' : 'noindex,follow');
+    expect(renderizarListados(BASE, 'en')).toContain('/en/directories/festivals');
+  });
+  it('la ficha tiene la miga Directories › Festivals › ficha', () => {
+    const html = renderizarFestival(FESTIVALES[0], BASE, 'es', HOY);
+    expect(html).toContain('href="https://bandmanager.io/directories"');
   });
 });
