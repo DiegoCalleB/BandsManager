@@ -64,7 +64,7 @@ export const GUIAS_BOOKING: GuiaSeo[] = [
       { q: '¿Qué pongo si aún no tengo vídeos de directo?', a: 'Graba un teaser de treinta a sesenta segundos en un ensayo con buena luz y sonido. Vale más que nada y se prepara en una tarde.' },
       { q: '¿Con qué frecuencia lo actualizo?', a: 'Tras cada concierto con una foto o un clip y cada mes con una revisión rápida de datos y enlaces.' },
     ],
-    relacionadas: ['email-a-una-sala', 'como-conseguir-bolos', '/plantilla-rider-tecnico'],
+    relacionadas: ['email-a-una-sala', 'como-conseguir-bolos', '/technical-rider-template'],
     cta: { titulo: 'Tu EPK, con un enlace', texto: 'En BandManager montas el dossier de tu banda y lo compartes con una URL propia, con rider técnico incluido.', boton: 'Crear mi EPK gratis' },
   },
 
@@ -206,7 +206,7 @@ export const GUIAS_BOOKING: GuiaSeo[] = [
       { q: '¿Merece la pena presentarse si no tengo disco?', a: 'Sí, si tienes buen directo. Muchos festivales valoran más la actuación que el catálogo grabado.' },
       { q: '¿Me pueden pedir que toque gratis?', a: 'A veces. Decide antes qué condiciones aceptas y qué contrapartida pides: visibilidad real, backline o alojamiento.' },
     ],
-    relacionadas: ['como-hacer-un-epk', '/plantilla-rider-tecnico', 'cuanto-cobrar-por-un-concierto'],
+    relacionadas: ['como-hacer-un-epk', '/technical-rider-template', 'cuanto-cobrar-por-un-concierto'],
     cta: { titulo: 'Candidaturas sin perder el hilo', texto: 'Lleva en BandManager tus fechas, tus propuestas y tu dossier para no dejar escapar ninguna convocatoria.', boton: 'Probar BandManager gratis' },
   },
   {

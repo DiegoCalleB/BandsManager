@@ -97,7 +97,7 @@ export const GUIAS_EXTRA: GuiaSeo[] = [
       { q: '¿Qué hago si no hay prueba de sonido?', a: 'En festivales o programaciones con varias bandas a veces solo hay una línea de sonido rápida. Llega con todo montado y los ajustes anotados.' },
       { q: '¿Qué es una input list?', a: 'La lista de canales que el técnico conecta a la mesa. Cuanto más clara, más rápido va la prueba.' },
     ],
-    relacionadas: ['/plantilla-rider-tecnico', 'hoja-de-ruta-de-gira', 'como-organizar-ensayos'],
+    relacionadas: ['/technical-rider-template', 'hoja-de-ruta-de-gira', 'como-organizar-ensayos'],
     cta: { titulo: 'Rider y hoja de ruta a mano', texto: 'Guarda el rider técnico y la hoja de ruta de cada concierto en BandManager y compártelos con la sala con un enlace.', boton: 'Probar BandManager gratis' },
   },
   {

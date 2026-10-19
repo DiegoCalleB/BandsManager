@@ -68,7 +68,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
   const [fotoError, setFotoError] = useState(false);
 
   const es = language === 'es';
-  const guiasHref = es ? '/guias' : '/en/guides';
+  const guiasHref = es ? '/guides' : '/en/guides';
 
   useEffect(() => {
     const title = t('landing.meta.title');
