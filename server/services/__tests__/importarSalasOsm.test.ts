@@ -20,6 +20,17 @@ describe('importarSalasDeOsm', () => {
     expect(r).toMatchObject({ nuevas: 1, completadas: 0, salasEnOsm: 1 });
     expect(guardadas[0]).toMatchObject({ nombre: 'Sala Nueva', nivel: 'sin_verificar', bandas_con_entrega: 0 });
     expect(guardadas[0].id).toMatch(/^sala-/);
+    expect(guardadas[0].fuentes).toEqual(['osm']);
+  });
+
+  it('cita OpenStreetMap solo en las salas a las que ha aportado algo, y conserva otras fuentes', async () => {
+    const previa = existente({ id: 'sala-1', clave: 'nc:moby|madrid', nombre: 'Moby', nivel: 'probable', fuentes: ['leads'] });
+    const { puerto, guardadas } = montar([previa]);
+    await importarSalasDeOsm({ puerto, descargar: async () => [elemento('Moby', { capacity: '300' })] });
+    expect(guardadas[0].fuentes).toEqual(['leads', 'osm']);
+    const sinAporte = montar([existente({ id: 'sala-2', clave: 'nc:moby|madrid', nombre: 'Moby', nivel: 'probable', aforo: 300 })]);
+    await importarSalasDeOsm({ puerto: sinAporte.puerto, descargar: async () => [elemento('Moby', { capacity: '300' })] });
+    expect(sinAporte.guardadas).toEqual([]);
   });
 
   it('a una sala existente solo le rellena lo que le falta, sin pisar lo que tiene', async () => {

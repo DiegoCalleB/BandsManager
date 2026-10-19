@@ -52,6 +52,7 @@ Usamos el formato [plantilla](./0000-plantilla.md) (inspirado en MADR).
 | [0043](./0043-modularizacion-users.md) | Modularización de server/routes/users.ts (3652 → 42 líneas) en once sub-routers montados en el orden original | Aceptada | nueva |
 | [0044](./0044-catalogo-compartido-de-salas.md) | Compartir entre bandas un catálogo de salas con solo datos públicos, fiabilidad calculada y contacto revelado al añadir | Aceptada | nueva |
 | [0045](./0045-directorio-publico-de-festivales.md) | Directorio público de festivales curado, sin edición abierta | Aceptada | nueva |
+| [0046](./0046-directorio-publico-de-salas.md) | Directorio público de salas de conciertos de España | Aceptada | nueva |
 
 ## Cómo añadir uno
 
