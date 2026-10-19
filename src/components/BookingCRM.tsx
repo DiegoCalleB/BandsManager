@@ -14,6 +14,8 @@ export { autoDetectVenueAddress, normalizeStatus, normalizeType, VENUE_ADDRESS_D
 
 export interface BookingCRMProps {
   leads: Lead[];
+  /** Primera carga en curso: la lista muestra esqueleto en vez del vacío "ninguna sala". */
+  cargando?: boolean;
   colors: ThemeColors;
   onUpdateLead: (leadId: string, updatedFields: Partial<Lead>, expectedStatus?: string) => void;
   onAddLead?: (lead: Lead) => void;
