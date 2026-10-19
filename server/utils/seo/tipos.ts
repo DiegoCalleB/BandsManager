@@ -18,13 +18,13 @@ export interface GraficoLineas {
   nota?: { serie: number; indice: number; texto: string };
 }
 
-export type IdCalculadora = 'cache-minimo' | 'slot-setlist' | 'embudo-bolos';
+export type IdCalculadora = 'cache-minimo' | 'slot-setlist' | 'embudo-bolos' | 'epk-checklist';
 
 export interface SeccionGuia {
   h2: string;
   parrafos?: string[];
   /** Infografía propia (SVG generado en servidor, ver `figuras.ts`). */
-  figura?: 'curva-setlist';
+  figura?: 'curva-setlist' | 'anatomia-epk';
   grafico?: GraficoLineas;
   /** Calculadora interactiva (ver `calculadoras.ts`). */
   calculadora?: IdCalculadora;

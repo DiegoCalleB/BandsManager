@@ -3,44 +3,71 @@ import type { GuiaSeo } from './tipos.js';
 export const GUIAS_BOOKING: GuiaSeo[] = [
   {
     slug: 'como-hacer-un-epk',
-    titulo: 'Cómo hacer un EPK para tu banda: qué incluir y ejemplos',
+    titulo: 'Cómo hacer un EPK para tu banda: estructura, ejemplos y checklist',
     h1: 'Cómo hacer un EPK para tu banda',
-    descripcion: 'Qué es un EPK (dossier de prensa), qué debe llevar y qué sobra. Una guía práctica para que salas y festivales te entiendan en un minuto.',
-    intro: 'El EPK (electronic press kit) o dossier es la página que una sala o un festival abre para decidir si te contrata. Si tarda más de un minuto en entenderte, la cierra.',
-    resumen: ['Un EPK bueno se entiende en un minuto: estilo, una escucha inmediata y contacto.', 'Un solo dato verificable de tracción vale más que diez adjetivos.', 'Compártelo como enlace, no como PDF: se actualiza solo y no pesa en el correo.'],
+    descripcion: 'Qué incluir en el EPK (dossier de prensa) de tu banda, en qué orden y qué sobra. Con esquema de una pantalla, ejemplos de antes y después y una checklist.',
+    intro: 'El EPK, o dossier de prensa electrónico, es la página que abre una sala, un festival o un periodista para decidir si te contrata o te escribe. Tiene un minuto. Un buen EPK no cuenta toda tu historia: responde rápido a las tres preguntas del programador y le da un motivo para contestar.',
+    resumen: ['Un EPK de una pantalla responde a tres cosas: ¿encaja con mi sala?, ¿llena público? y ¿es fácil trabajar con ellos?', 'El orden importa: nombre y estilo, escucha inmediata, foto, un dato real, biografía corta, vídeo de directo y, al final, rider y contacto.', 'Compártelo como enlace, adáptalo según a quién se lo mandas y actualízalo tras cada concierto: un EPK desactualizado resta confianza.'],
     secciones: [
       {
-        h2: 'Qué es un EPK y para qué sirve',
-        parrafos: ['Es una presentación de tu banda pensada para quien programa: quiénes sois, cómo sonáis, qué habéis tocado y cómo contactar. No es una web de fans ni un currículum de veinte páginas.', 'Un buen EPK responde de golpe a tres preguntas del programador: ¿encaja en mi sala?, ¿llena público?, ¿es fácil trabajar con ellos?'],
+        h2: 'Qué se pregunta quien lo abre',
+        parrafos: ['Quien programa recibe decenas de propuestas a la semana. No lee: escanea. Cada bloque de tu EPK tiene que contestar una duda concreta en pocos segundos.'],
+        tablas: [{ titulo: 'Lo que el programador necesita saber', cabeceras: ['Pregunta', 'Dónde la responde tu EPK'], filas: [['¿Qué hacen y a qué suena?', 'Una frase de estilo y una escucha inmediata.'], ['¿Encajan con mi sala?', 'El estilo, el formato y un dato de dónde han tocado.'], ['¿Llevan público?', 'Un dato real de tracción local, solo uno.'], ['¿Tocan bien en directo?', 'Un vídeo de treinta a sesenta segundos.'], ['¿Es fácil trabajar con ellos?', 'Rider claro y contacto visible.']] }],
       },
       {
-        h2: 'Qué debe llevar, por orden de importancia',
-        pasos: [
-          'Una frase que defina el estilo y a quién se parece, sin superlativos que no puedas demostrar.',
-          'Una escucha inmediata: un par de temas o un teaser de 30 a 60 segundos de directo. Nada de conciertos enteros.',
-          'Una foto de banda buena y una versión horizontal para cartelería.',
-          'Un dato verificable de tracción local, uno solo: entradas vendidas en una sala concreta, por ejemplo.',
-          'Biografía corta, de cuatro o cinco líneas.',
-          'Rider técnico y datos de contacto visibles, sin tener que buscarlos.',
-        ],
+        h2: 'Anatomía de un EPK de una pantalla',
+        parrafos: ['Piénsalo para el móvil, que es donde se abre casi todo. De arriba abajo, lo que decide va primero y lo que se consulta después va al final.'],
+        figura: 'anatomia-epk',
+        pasos: ['Nombre y estilo en una frase, sin superlativos que no puedas demostrar.', 'Una escucha inmediata: un par de temas o un teaser, que suenen sin salir de la página.', 'Una foto de banda de calidad, que se vea bien también en pequeño.', 'Un dato real de tracción local: entradas vendidas en una sala concreta, por ejemplo.', 'Biografía de cuatro o cinco líneas.', 'Un vídeo de directo de treinta a sesenta segundos.', 'Rider técnico y contacto, fáciles de encontrar.'],
       },
       {
-        h2: 'Qué sobra',
-        lista: ['Biografías de cada músico con sus instrumentos desde los doce años.', 'Veinte fotos o adjuntos pesados que hacen que el correo acabe en spam.', 'Adjetivos de relleno: "potente", "único", "revolucionario".', 'Enlaces a todas las redes: con dos o tres bien elegidas basta.'],
+        h2: 'Puntúa tu EPK',
+        parrafos: ['Marca lo que ya tiene el tuyo. Lo que no marques es lo primero que arreglar.'],
+        calculadora: 'epk-checklist',
       },
       {
-        h2: 'PDF o enlace',
-        parrafos: ['Un enlace a una página siempre gana al PDF adjunto: se abre en el móvil, se actualiza sin reenviarlo y no pesa en el correo. Si además puedes saber si lo han abierto, sabes cuándo conviene escribir de nuevo.'],
+        h2: 'Qué escribir en cada bloque',
+        parrafos: ['La diferencia entre un EPK que se lee y uno que se cierra suele estar en el texto. Sustituye el relleno por hechos que se puedan comprobar.'],
+        tablas: [{ titulo: 'Antes y después', cabeceras: ['Bloque', 'Mejor evitarlo', 'Mejor así'], filas: [['Estilo', '«Rock potente, original y sin etiquetas»', '«Rock de guitarras con estribillos de sala pequeña, para quien disfruta de [referencia 1] o [referencia 2]»'], ['Biografía', '«Formada en 2019 por cuatro amigos con influencias muy variadas…»', '«[Banda] son cuatro músicos de [ciudad] que tocan en directo desde [año]. Cierran el repertorio con [tema] y han actuado en [sala 1] y [sala 2].»'], ['Dato de tracción', '«Miles de seguidores»', '«Agotaron entradas en [sala] el [mes]: [número] personas»'], ['Contacto', 'Un formulario escondido al final', 'Nombre, correo y teléfono a la vista, con el horario en que contestas']] }],
+        aviso: 'Si no tienes aún un dato de tracción, no lo inventes: pon dónde has tocado y una escucha buena. Un dato falso o inflado es lo primero que comprueba un programador.',
+      },
+      {
+        h2: 'Un EPK distinto según a quién se lo envías',
+        parrafos: ['El mismo dossier base sirve, pero cambia qué va primero. Piensa en quién lo abre.'],
+        tablas: [{ titulo: 'Qué priorizar según el destinatario', cabeceras: ['Destinatario', 'Va primero', 'Qué añadir'], filas: [['Sala pequeña', 'Escucha y vídeo de directo', 'Fechas libres y rider ligero.'], ['Festival', 'Vídeo y dato de convocatoria', 'Formato corto del set y cambios de montaje rápidos.'], ['Prensa y blogs', 'Una noticia concreta y fotos', 'Notas de prensa, fotos descargables y la historia en tres frases.'], ['Promotor o agencia', 'Dato de tracción y calendario', 'Formato y condiciones de la gira.']] }],
+      },
+      {
+        h2: 'Fotos, vídeo y audio: lo práctico',
+        tablas: [{ titulo: 'Material y formato recomendado', cabeceras: ['Material', 'Qué conviene', 'Evita'], filas: [['Foto de banda', 'Buena luz, todos reconocibles y en horizontal, más una versión vertical.', 'Fotos oscuras, de espaldas o con filtros que oculten caras.'], ['Vídeo de directo', 'Treinta a sesenta segundos con buen sonido y la banda en plano.', 'Conciertos enteros o grabaciones con el micrófono saturado.'], ['Audio', 'Dos temas que se reproduzcan directamente en la página.', 'Reproducción automática y enlaces que obliguen a salir.'], ['Logo', 'Fondo transparente y versión clara y oscura.', 'Imágenes pequeñas estiradas.']] }],
+      },
+      {
+        h2: 'Enlace o PDF',
+        parrafos: ['Un enlace a una página siempre gana al PDF adjunto: se abre en el móvil, se actualiza sin reenviarlo y no pesa en el correo, que es lo que más fácilmente acaba en spam. El PDF solo tiene sentido como descarga opcional para quien necesite imprimirlo.'],
+      },
+      {
+        h2: 'Errores que cuestan bolos',
+        lista: ['Biografías largas con la historia entera de la banda y de cada miembro.', 'Adjuntar PDF y fotos pesadas en el primer correo.', 'Superlativos que no puedes demostrar: «potente», «único», «el mejor».', 'Enlaces a todas las redes en lugar de dos o tres bien elegidas.', 'Música que no suena a la primera, con registro o aplicación de por medio.', 'Fechas pasadas, discos antiguos y fotos de otra formación.'],
+      },
+      {
+        h2: 'Mantenerlo vivo',
+        tablas: [{ titulo: 'Un calendario de actualización', cabeceras: ['Cuándo', 'Qué actualizas'], filas: [['Tras cada concierto', 'Una foto o un clip nuevo y la lista de salas donde has tocado.'], ['Cada mes', 'El dato de tracción, si ha cambiado, y los enlaces rotos.'], ['Cada lanzamiento', 'Los temas de la escucha inmediata y la biografía.'], ['Cada cambio de formación', 'Foto, biografía y rider.']] }],
+      },
+      {
+        h2: 'Cómo hacerlo en BandManager',
+        lista: ['Elige una plantilla de diseño del dossier y rellena los bloques: perfil y bio, música y directo, media kit con PDFs y prensa.', 'Sube el rider técnico y el dossier en PDF como descarga opcional dentro del propio dossier.', 'Comparte un único enlace, con una firma de email y un código QR ya preparados.', 'Si lo envías con el enlace de seguimiento de una propuesta, BandManager registra interacciones como abrirlo, reproducir un tema o descargar el PDF.'],
       },
     ],
     faq: [
       { q: '¿Qué diferencia hay entre EPK y dossier?', a: 'En la práctica se usan como sinónimos. EPK es el término anglosajón (electronic press kit) y dossier el castellano. Lo que importa es que sea breve, escuchable y fácil de compartir con un enlace.' },
       { q: '¿Cuánto debe ocupar un EPK?', a: 'Una pantalla de móvil de scroll o una o dos páginas si es PDF. Lo detallado se deja para quien lo pida.' },
       { q: '¿Necesito un EPK si todavía toco poco?', a: 'Sí, y es cuando más ayuda. Un EPK ordenado compensa la falta de trayectoria porque demuestra que eres profesional y fácil de contratar.' },
+      { q: '¿Qué pongo si aún no tengo vídeos de directo?', a: 'Graba un teaser de treinta a sesenta segundos en un ensayo con buena luz y sonido. Vale más que nada y se prepara en una tarde.' },
+      { q: '¿Con qué frecuencia lo actualizo?', a: 'Tras cada concierto con una foto o un clip y cada mes con una revisión rápida de datos y enlaces.' },
     ],
     relacionadas: ['email-a-una-sala', 'como-conseguir-bolos', '/plantilla-rider-tecnico'],
     cta: { titulo: 'Tu EPK, con un enlace', texto: 'En BandManager montas el dossier de tu banda y lo compartes con una URL propia, con rider técnico incluido.', boton: 'Crear mi EPK gratis' },
   },
+
   {
     slug: 'como-conseguir-bolos',
     titulo: 'Cómo conseguir bolos: método, calculadora y plantillas para bandas',

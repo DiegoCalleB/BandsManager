@@ -66,9 +66,28 @@ export function calcEmbudoBolos(v: EntradaEmbudo) {
   };
 }
 
+export interface EntradaEpk {
+  escucha: number;
+  foto: number;
+  video: number;
+  dato: number;
+  bio: number;
+  rider: number;
+  contacto: number;
+  enlace: number;
+}
+
+/** Puntúa un EPK: cada elemento marcado (1) suma una octava parte. */
+export function calcEpkChecklist(v: EntradaEpk) {
+  const claves = ['escucha', 'foto', 'video', 'dato', 'bio', 'rider', 'contacto', 'enlace'] as const;
+  let hechos = 0;
+  for (const k of claves) if ((v as unknown as Record<string, number>)[k] > 0) hechos++;
+  return { hechos, faltan: claves.length - hechos, porcentaje: Math.round((hechos / claves.length) * 100) };
+}
+
 interface DefCalc {
   titulo: string;
-  campos: Array<{ nombre: string; etiqueta: string; valor: number; paso: number }>;
+  campos: Array<{ nombre: string; etiqueta: string; valor: number; paso: number; casilla?: boolean }>;
   resultados: Array<{ clave: string; etiqueta: string; unidad: string; grande?: boolean }>;
   nota: string;
 }
@@ -104,6 +123,25 @@ const DEFINICIONES: Record<IdiomaSeo, Record<IdCalculadora, DefCalc>> = {
         { clave: 'porSemana', etiqueta: 'Mensajes por semana', unidad: '' },
       ],
       nota: 'Los porcentajes por defecto son de ejemplo. En cuanto tengas tus propios envíos, cámbialos por los tuyos.',
+    },
+    'epk-checklist': {
+      titulo: 'Puntúa tu EPK',
+      campos: [
+        { nombre: 'escucha', etiqueta: 'Se puede escuchar un tema sin salir de la página', valor: 0, paso: 1, casilla: true },
+        { nombre: 'foto', etiqueta: 'Tiene una foto de banda de calidad', valor: 0, paso: 1, casilla: true },
+        { nombre: 'video', etiqueta: 'Hay un vídeo de directo de 30 a 60 segundos', valor: 0, paso: 1, casilla: true },
+        { nombre: 'dato', etiqueta: 'Cita un dato real de tracción', valor: 0, paso: 1, casilla: true },
+        { nombre: 'bio', etiqueta: 'La biografía cabe en cuatro o cinco líneas', valor: 0, paso: 1, casilla: true },
+        { nombre: 'rider', etiqueta: 'El rider técnico está a la vista', valor: 0, paso: 1, casilla: true },
+        { nombre: 'contacto', etiqueta: 'El contacto se ve sin buscarlo', valor: 0, paso: 1, casilla: true },
+        { nombre: 'enlace', etiqueta: 'Se comparte con un enlace, no como PDF pesado', valor: 0, paso: 1, casilla: true },
+      ],
+      resultados: [
+        { clave: 'hechos', etiqueta: 'Elementos cubiertos (de 8)', unidad: '', grande: true },
+        { clave: 'porcentaje', etiqueta: 'Tu EPK está al', unidad: '%' },
+        { clave: 'faltan', etiqueta: 'Te faltan', unidad: 'elementos' },
+      ],
+      nota: 'No es una nota oficial: es una lista de comprobación. Lo que no marques es lo primero que arreglar.',
     },
     'slot-setlist': {
       titulo: 'Calculadora: cuántos temas caben',
@@ -149,6 +187,25 @@ const DEFINICIONES: Record<IdiomaSeo, Record<IdCalculadora, DefCalc>> = {
       ],
       nota: 'The default percentages are examples. As soon as you have sends of your own, swap them for yours.',
     },
+    'epk-checklist': {
+      titulo: 'Score your press kit',
+      campos: [
+        { nombre: 'escucha', etiqueta: 'You can hear a track without leaving the page', valor: 0, paso: 1, casilla: true },
+        { nombre: 'foto', etiqueta: 'It has a quality band photo', valor: 0, paso: 1, casilla: true },
+        { nombre: 'video', etiqueta: 'There is a 30 to 60 second live video', valor: 0, paso: 1, casilla: true },
+        { nombre: 'dato', etiqueta: 'It cites one real proof point', valor: 0, paso: 1, casilla: true },
+        { nombre: 'bio', etiqueta: 'The bio fits in four or five lines', valor: 0, paso: 1, casilla: true },
+        { nombre: 'rider', etiqueta: 'The technical rider is easy to find', valor: 0, paso: 1, casilla: true },
+        { nombre: 'contacto', etiqueta: 'Contact details are visible without searching', valor: 0, paso: 1, casilla: true },
+        { nombre: 'enlace', etiqueta: 'It is shared as a link, not a heavy PDF', valor: 0, paso: 1, casilla: true },
+      ],
+      resultados: [
+        { clave: 'hechos', etiqueta: 'Items covered (out of 8)', unidad: '', grande: true },
+        { clave: 'porcentaje', etiqueta: 'Your press kit is at', unidad: '%' },
+        { clave: 'faltan', etiqueta: 'Still missing', unidad: 'items' },
+      ],
+      nota: 'It is not an official grade: it is a checklist. What you leave unticked is the first thing to fix.',
+    },
     'slot-setlist': {
       titulo: 'Calculator: how many songs fit',
       campos: [
@@ -165,6 +222,7 @@ const DEFINICIONES: Record<IdiomaSeo, Record<IdCalculadora, DefCalc>> = {
 };
 
 const FORMULAS: Record<IdCalculadora, (v: never) => unknown> = {
+  'epk-checklist': calcEpkChecklist as (v: never) => unknown,
   'embudo-bolos': calcEmbudoBolos as (v: never) => unknown,
   'cache-minimo': calcCacheMinimo as (v: never) => unknown,
   'slot-setlist': calcSlotSetlist as (v: never) => unknown,
@@ -174,7 +232,11 @@ const FORMULAS: Record<IdCalculadora, (v: never) => unknown> = {
 export function calculadoraHtml(id: IdCalculadora, idioma: IdiomaSeo): string {
   const d = DEFINICIONES[idioma][id];
   const campos = d.campos
-    .map((c) => `<label>${escapeHtml(c.etiqueta)}<input type="number" inputmode="decimal" name="${c.nombre}" value="${c.valor}" min="0" step="${c.paso}"></label>`)
+    .map((c) =>
+      c.casilla
+        ? `<label class="casilla"><input type="checkbox" name="${c.nombre}"><span>${escapeHtml(c.etiqueta)}</span></label>`
+        : `<label>${escapeHtml(c.etiqueta)}<input type="number" inputmode="decimal" name="${c.nombre}" value="${c.valor}" min="0" step="${c.paso}"></label>`
+    )
     .join('');
   const res = d.resultados.map((r) => `<p${r.grande ? ' class="grande"' : ''}>${escapeHtml(r.etiqueta)}: <strong data-r="${r.clave}">–</strong>${r.unidad ? ` ${escapeHtml(r.unidad)}` : ''}</p>`).join('');
   return `<form class="calc no-imprimir" data-calc="${id}" onsubmit="return false"><h3>${escapeHtml(d.titulo)}</h3><div class="campos">${campos}</div><div class="res" aria-live="polite">${res}</div><small>${escapeHtml(d.nota)}</small></form>`;
@@ -186,5 +248,5 @@ export function scriptCalculadoras(ids: IdCalculadora[], idioma: IdiomaSeo): str
   const unicos = [...new Set(ids)];
   const formulas = unicos.map((id) => `'${id}':${FORMULAS[id].toString()}`).join(',');
   const local = idioma === 'es' ? 'es-ES' : 'en-GB';
-  return `<script>(function(){var F={${formulas}};var L='${local}';document.querySelectorAll('form.calc').forEach(function(f){var fn=F[f.getAttribute('data-calc')];if(!fn)return;function run(){var v={};f.querySelectorAll('input').forEach(function(i){v[i.name]=parseFloat(i.value)||0});var r=fn(v);f.querySelectorAll('[data-r]').forEach(function(e){var n=r[e.getAttribute('data-r')];e.textContent=typeof n==='number'?n.toLocaleString(L,{maximumFractionDigits:1}):'–'})}f.addEventListener('input',run);run()})})();</script>`;
+  return `<script>(function(){var F={${formulas}};var L='${local}';document.querySelectorAll('form.calc').forEach(function(f){var fn=F[f.getAttribute('data-calc')];if(!fn)return;function run(){var v={};f.querySelectorAll('input').forEach(function(i){v[i.name]=i.type==='checkbox'?(i.checked?1:0):(parseFloat(i.value)||0)});var r=fn(v);f.querySelectorAll('[data-r]').forEach(function(e){var n=r[e.getAttribute('data-r')];e.textContent=typeof n==='number'?n.toLocaleString(L,{maximumFractionDigits:1}):'–'})}f.addEventListener('input',run);run()})})();</script>`;
 }

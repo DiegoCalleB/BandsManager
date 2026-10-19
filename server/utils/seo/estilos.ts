@@ -86,4 +86,7 @@ table.tabla tbody tr:nth-child(even) td{background:var(--bg)}
 .calc .res strong{color:var(--ink);font-size:1.25rem;font-variant-numeric:tabular-nums}
 .calc .grande strong{color:var(--acc-ink);font-size:1.6rem}
 .calc small{display:block;margin-top:.6rem;color:var(--ink-2);font-size:13px}
+.calc .campos:has(.casilla){grid-template-columns:1fr}
+.calc label.casilla{display:flex;align-items:center;gap:.7rem;padding:.55rem .7rem;border-radius:12px;background:var(--bg);color:var(--ink);font-size:15px;cursor:pointer}
+.calc label.casilla input{width:22px;min-height:22px;height:22px;flex:none;accent-color:var(--acc)}
 `;

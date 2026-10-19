@@ -2,8 +2,8 @@
 export type IdiomaSeo = 'es' | 'en';
 
 export const RUTAS = {
-  es: { landing: '/', guias: '/guias', guia: (slug: string) => `/guias/${slug}`, rider: '/plantilla-rider-tecnico' },
-  en: { landing: '/en', guias: '/en/guides', guia: (slug: string) => `/en/guides/${slug}`, rider: '/en/technical-rider-template' },
+  es: { landing: '/', guias: '/guias', guia: (slug: string) => `/guias/${slug}`, rider: '/plantilla-rider-tecnico', festivales: '/festivales', festival: (slug: string) => `/festivales/${slug}` },
+  en: { landing: '/en', guias: '/en/guides', guia: (slug: string) => `/en/guides/${slug}`, rider: '/en/technical-rider-template', festivales: '/en/festivals', festival: (slug: string) => `/en/festivals/${slug}` },
 } as const;
 
 export const OTRO_IDIOMA: Record<IdiomaSeo, IdiomaSeo> = { es: 'en', en: 'es' };

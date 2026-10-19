@@ -27,6 +27,8 @@ _Sin dependencias salientes directas._
 - [[server_utils_paginaRider|server/utils/paginaRider.ts]] *(from #service)*
 - [[server_utils_seo_cabeza|server/utils/seo/cabeza.ts]] *(from #service)*
 - [[server_utils_seo_calculadoras|server/utils/seo/calculadoras.ts]] *(from #service)*
+- [[server_utils_seo_festivales_render|server/utils/seo/festivales/render.ts]] *(from #service)*
+- [[server_utils_seo_festivales_textos|server/utils/seo/festivales/textos.ts]] *(from #service)*
 - [[server_utils_seo_figuras|server/utils/seo/figuras.ts]] *(from #service)*
 - [[server_utils_seo_indice|server/utils/seo/indice.ts]] *(from #service)*
 - [[server_utils_seo_render|server/utils/seo/render.ts]] *(from #service)*
