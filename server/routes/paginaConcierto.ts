@@ -38,6 +38,7 @@ import contactoEmpresasRouter from './contactoEmpresas.js';
 import pegatinasRouter from './pegatinas.js';
 import fansContadorRouter from './fans_contador.js';
 import paginasSeoRouter from './paginasSeo.js';
+import presentacionTfmRouter from './presentacionTfm.js';
 export { startEmailsCicloVidaScheduler } from '../services/emailsCicloVida.js';
 
 const router = express.Router();
@@ -46,6 +47,7 @@ router.use(interesadosRouter); // lista de novedades de la landing (/api/public/
 router.use(contactoEmpresasRouter); // consultas de empresas, planes B2B (/api/public/contacto-empresas)
 router.use(pegatinasRouter); // regalo de pegatinas en la primera suscripción (/api/billing/pegatinas)
 router.use(paginasSeoRouter); // guías de SEO (/guides)
+router.use(presentacionTfmRouter); // atajos a la película del TFM (/presentacion_tfm, /netflix)
 router.use(fansContadorRouter); // número de fans para la película del TFM (/api/public/fans/contador)
 
 function responderHtml(res: express.Response, status: number, html: string, cache: string) {
