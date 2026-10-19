@@ -26,7 +26,6 @@ Operaciones sobre colecciones del estado en memoria (`state.tours`, `state.fans`
 - [[route_calendar_conflicts|GET /api/calendar/conflicts]] *(from #route)*
 - [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
 - [[server_routes_metrics|server/routes/metrics.ts]] *(from #route)*
-- [[server_routes_posts|server/routes/posts.ts]] *(from #route)*
 - [[server_routes_spotify|server/routes/spotify.ts]] *(from #route)*
 
 ---
