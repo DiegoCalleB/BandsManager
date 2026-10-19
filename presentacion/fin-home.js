@@ -157,3 +157,22 @@
     }
   }
 })();
+
+// Música del inicio: «Compila nu bravu» de Os Herdeiros do Código, en bucle y bajito. El navegador solo la deja sonar
+// tras un gesto del usuario, así que arranca con el primero (clic o tecla) dentro del inicio, y se para al salir de él
+// (película, «Sin sonido»…), para que no se mezcle con la música de las escenas.
+(function () {
+  var cancion = new Audio('audio/musica/compila.mp3');
+  cancion.loop = true; cancion.volume = 0.22; cancion.preload = 'auto';
+  var arranca = function () {
+    if (!document.body.classList.contains('gate')) return;
+    cancion.play().catch(function () { /* sin permiso de audio: el inicio funciona igual */ });
+    document.removeEventListener('pointerdown', arranca, true);
+    document.removeEventListener('keydown', arranca, true);
+  };
+  document.addEventListener('pointerdown', arranca, true);
+  document.addEventListener('keydown', arranca, true);
+  new MutationObserver(function () {
+    if (!document.body.classList.contains('gate')) { cancion.pause(); this.disconnect(); }
+  }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+})();
