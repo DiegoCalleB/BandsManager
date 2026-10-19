@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { consultaOverpassSalas, REGIONES_OSM, salaDesdeOsm, salasDeOsm, type ElementoOsm } from '../osmSalas.js';
+import { consultaOverpassSalas, contarDescartes, REGIONES_OSM, salaDesdeOsm, salasDeOsm, type ElementoOsm } from '../osmSalas.js';
 import { regionDeCodigoPostal } from '../regionesEspana.js';
 
 const el = (tags: Record<string, string>, id = 1): ElementoOsm => ({ type: 'node', id, tags });
@@ -75,6 +75,18 @@ describe('consultaOverpassSalas', () => {
     expect(q).toContain('"ISO3166-2"="ES-MD"');
     expect(consultaOverpassSalas('ES-MD"; out;')).not.toContain('out;"');
     expect(REGIONES_OSM.every((r) => consultaOverpassSalas(r).includes(`"${r}"`))).toBe(true);
+  });
+});
+
+describe('contarDescartes', () => {
+  it('cuenta los elementos sin nombre y los que tienen nombre pero no ciudad, y no los que entran', () => {
+    const r = contarDescartes([
+      el({ amenity: 'music_venue' }, 1),
+      el({ amenity: 'music_venue', name: 'Sala Sin Ciudad' }, 2),
+      el({ amenity: 'music_venue', name: 'Sala Con Ciudad', 'addr:city': 'Soria' }, 3),
+      el({ amenity: 'concert_hall', name: 'Otra Sin Ciudad' }, 4),
+    ]);
+    expect(r).toEqual({ sinNombre: 1, sinCiudad: 2 });
   });
 });
 

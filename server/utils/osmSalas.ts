@@ -82,6 +82,18 @@ export function salaDesdeOsm(el: ElementoOsm): CamposPublicosSala | null {
   };
 }
 
+/** Por qué se descartan elementos de OSM: sin nombre o sin ciudad no se pueden identificar. Sirve para explicar un resultado corto. */
+export function contarDescartes(elementos: ElementoOsm[]): { sinNombre: number; sinCiudad: number } {
+  let sinNombre = 0;
+  let sinCiudad = 0;
+  for (const el of elementos) {
+    const t = el.tags ?? {};
+    if (!textoPublico(t.name)) sinNombre++;
+    else if (!textoPublico(etiqueta(t, 'addr:city', 'addr:municipality', 'addr:place'), 80)) sinCiudad++;
+  }
+  return { sinNombre, sinCiudad };
+}
+
 /** Los campos que tiene `a` los conserva; los que le faltan se completan con los de `b`. */
 function completar(a: CamposPublicosSala, b: CamposPublicosSala): CamposPublicosSala {
   const hueco = (v: unknown) => v === null || v === undefined || v === '';
