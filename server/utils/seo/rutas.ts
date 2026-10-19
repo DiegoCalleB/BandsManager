@@ -1,9 +1,12 @@
-/** Rutas públicas de SEO por idioma. Las páginas en inglés viven bajo `/en/` y la landing inglesa es `/en`. */
+/**
+ * Rutas públicas de SEO por idioma. Los tramos de la URL de los directorios van en inglés en los dos idiomas; las páginas
+ * en inglés viven bajo `/en/` y la landing inglesa es `/en`.
+ */
 export type IdiomaSeo = 'es' | 'en';
 
 export const RUTAS = {
-  es: { landing: '/', guias: '/guias', guia: (slug: string) => `/guias/${slug}`, rider: '/plantilla-rider-tecnico', festivales: '/festivales', festival: (slug: string) => `/festivales/${slug}` },
-  en: { landing: '/en', guias: '/en/guides', guia: (slug: string) => `/en/guides/${slug}`, rider: '/en/technical-rider-template', festivales: '/en/festivals', festival: (slug: string) => `/en/festivals/${slug}` },
+  es: { landing: '/', guias: '/guias', guia: (slug: string) => `/guias/${slug}`, rider: '/plantilla-rider-tecnico', listados: '/directories', festivales: '/directories/festivals', festival: (slug: string) => `/directories/festivals/${slug}` },
+  en: { landing: '/en', guias: '/en/guides', guia: (slug: string) => `/en/guides/${slug}`, rider: '/en/technical-rider-template', listados: '/en/directories', festivales: '/en/directories/festivals', festival: (slug: string) => `/en/directories/festivals/${slug}` },
 } as const;
 
 export const OTRO_IDIOMA: Record<IdiomaSeo, IdiomaSeo> = { es: 'en', en: 'es' };
