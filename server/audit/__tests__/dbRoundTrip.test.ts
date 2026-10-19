@@ -16,7 +16,7 @@ const SALTADAS_ACEPTADAS: Record<string, string> = {
   festivales: 'CHECK en estado_revision: el valor genérico de prueba no es válido por diseño; la cubre server/migrations/__tests__/festivales.test.ts',
   festival_ediciones: 'CHECK en anio: el valor genérico de prueba no es válido por diseño; la cubre server/migrations/__tests__/festivales.test.ts',
   festival_convocatorias: 'CHECK en admite_independientes: el valor genérico de prueba no es válido por diseño; la cubre server/migrations/__tests__/festivales.test.ts',
-  salas_catalogo: 'CHECK en nivel (sin_verificar, probable, verificada): el valor genérico de prueba no es válido por diseño; la cubre server/migrations/__tests__/catalogoSalas.test.ts',
+  catalogo_salas: 'CHECK en nivel (sin_verificar, probable, verificada): el valor genérico de prueba no es válido por diseño; la cubre server/migrations/__tests__/catalogoSalas.test.ts',
   catalogo_generos: 'CHECK padre_id <> id: el valor genérico de prueba es el mismo en ambas columnas; la cubre server/migrations/__tests__/catalogoGlobal.test.ts',
   catalogo_ingestas: 'CHECK en estado: el valor genérico de prueba no es válido por diseño; la cubre server/migrations/__tests__/catalogoGlobal.test.ts',
   catalogo_staging: 'CHECK en estado: el valor genérico de prueba no es válido por diseño; la cubre server/migrations/__tests__/catalogoGlobal.test.ts',

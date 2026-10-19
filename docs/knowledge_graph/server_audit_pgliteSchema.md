@@ -33,6 +33,7 @@ _Sin llamadas entrantes indexadas._
 - `server/migrations/__tests__/catalogoGlobal.test.ts`
 - `server/migrations/__tests__/catalogoSalas.test.ts`
 - `server/migrations/__tests__/festivales.test.ts`
+- `server/migrations/__tests__/renombrarCatalogoSalas.test.ts`
 - `server/migrations/__tests__/runner.test.ts`
 
 ---

@@ -24,8 +24,6 @@ _Sin dependencias salientes directas._
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
-- [[server_db_salasCatalogo|server/db/salasCatalogo.ts]] *(from #db)*
-- [[server_db_salasPublicas|server/db/salasPublicas.ts]] *(from #db)*
 - [[tabla_catalogo_sala_generos|tabla catalogo_sala_generos]] *(from #schema)*
 - [[tabla_catalogo_staging|tabla catalogo_staging]] *(from #schema)*
 - [[tabla_catalogo_supresion|tabla catalogo_supresion]] *(from #schema)*

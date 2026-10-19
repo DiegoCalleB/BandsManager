@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import type { PGlite } from '@electric-sql/pglite';
 import { cargarEsquema } from '../../audit/pgliteSchema';
+import { conNombreAntiguo } from './helpers/nombreAntiguoSalas';
 
 const FICHERO = '20261111_festivales.sql';
 const SQL = fs.readFileSync(path.resolve(__dirname, '../../../supabase/migrations', FICHERO), 'utf8');
@@ -22,8 +23,10 @@ const falla = async (sql: string) => { await expect(db.exec(sql)).rejects.toThro
 describe('migración del directorio de festivales', () => {
   it('se aplica sin errores sobre el esquema real y es idempotente', async () => {
     expect(errores.filter((e) => e.fichero.includes('festivales'))).toEqual([]);
-    await db.exec(SQL);
-    await db.exec(SQL);
+    await conNombreAntiguo(db, async () => {
+      await db.exec(SQL);
+      await db.exec(SQL);
+    });
     const t = await consultar<{ n: number }>("select count(*)::int n from information_schema.tables where table_name in ('festivales','festival_ediciones','festival_convocatorias')");
     expect(t[0].n).toBe(3);
   });
@@ -65,9 +68,9 @@ describe('migración del directorio de festivales', () => {
   });
 
   it('borrar una sala del catálogo no borra el festival enlazado', async () => {
-    await db.exec("insert into salas_catalogo (id, clave, nombre) values ('sala-f', 'nc:festival enlazado|soria', 'Festival Enlazado')");
+    await db.exec("insert into catalogo_salas (id, clave, nombre) values ('sala-f', 'nc:festival enlazado|soria', 'Festival Enlazado')");
     await db.exec("insert into festivales (id, nombre, sala_id) values ('f-enlazado', 'Festival Enlazado', 'sala-f')");
-    await db.exec("delete from salas_catalogo where id='sala-f'");
+    await db.exec("delete from catalogo_salas where id='sala-f'");
     const [f] = await consultar<{ sala_id: string | null }>("select sala_id from festivales where id='f-enlazado'");
     expect(f.sala_id).toBeNull();
   });
@@ -76,13 +79,15 @@ describe('migración del directorio de festivales', () => {
 describe('migración de la procedencia de las salas', () => {
   const SQL_FUENTES = fs.readFileSync(path.resolve(__dirname, '../../../supabase/migrations/20261112_salas_fuentes.sql'), 'utf8');
   it('añade `fuentes` a las salas con lista vacía por defecto, es idempotente y no toca las filas existentes', async () => {
-    await db.exec("insert into salas_catalogo (id, clave, nombre) values ('sala-previa', 'nc:previa|madrid', 'Sala previa') on conflict do nothing");
-    await db.exec(SQL_FUENTES);
-    await db.exec(SQL_FUENTES);
-    const [f] = await consultar<{ fuentes: string[]; nombre: string }>("select fuentes, nombre from salas_catalogo where id='sala-previa'");
+    await db.exec("insert into catalogo_salas (id, clave, nombre) values ('sala-previa', 'nc:previa|madrid', 'Sala previa') on conflict do nothing");
+    await conNombreAntiguo(db, async () => {
+      await db.exec(SQL_FUENTES);
+      await db.exec(SQL_FUENTES);
+    });
+    const [f] = await consultar<{ fuentes: string[]; nombre: string }>("select fuentes, nombre from catalogo_salas where id='sala-previa'");
     expect(f).toEqual({ fuentes: [], nombre: 'Sala previa' });
-    await db.exec("update salas_catalogo set fuentes = array['osm'] where id='sala-previa'");
-    const [g] = await consultar<{ fuentes: string[] }>("select fuentes from salas_catalogo where id='sala-previa'");
+    await db.exec("update catalogo_salas set fuentes = array['osm'] where id='sala-previa'");
+    const [g] = await consultar<{ fuentes: string[] }>("select fuentes from catalogo_salas where id='sala-previa'");
     expect(g.fuentes).toEqual(['osm']);
   });
 });
