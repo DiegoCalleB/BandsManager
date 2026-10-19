@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { importarSalasDeOsm, type PuertoImportacion } from '../importarSalasOsm.js';
+import { crearDescargaOsm, importarSalasDeOsm, type PuertoImportacion } from '../importarSalasOsm.js';
 import type { SalaAGuardar, SalaGuardada } from '../catalogoSalas.js';
 
 const elemento = (name: string, extra: Record<string, string> = {}, id = 1) => ({ type: 'node', id, tags: { amenity: 'music_venue', name, 'addr:city': 'Madrid', ...extra } });
@@ -59,5 +59,25 @@ describe('importarSalasDeOsm', () => {
     const r = await importarSalasDeOsm({ puerto, descargar: async () => [elemento('Moby', { capacity: '300' })] });
     expect(r.sinCambios).toBe(1);
     expect(guardadas).toEqual([]);
+  });
+});
+
+describe('crearDescargaOsm', () => {
+  const respuesta = (cuerpo: unknown, status = 200) => new Response(JSON.stringify(cuerpo), { status });
+
+  it('si el primer servidor falla, usa el siguiente', async () => {
+    const fetcher = vi.fn()
+      .mockRejectedValueOnce(Object.assign(new TypeError('fetch failed'), { cause: { code: 'ECONNRESET' } }))
+      .mockResolvedValueOnce(respuesta({ elements: [elemento('Sala Nueva')] }));
+    const r = await crearDescargaOsm(['https://uno.test/api', 'https://dos.test/api'], fetcher as unknown as typeof fetch)();
+    expect(r).toHaveLength(1);
+    expect(fetcher).toHaveBeenCalledTimes(2);
+  });
+
+  it('si fallan todos, el error dice cuál y por qué', async () => {
+    const fetcher = vi.fn()
+      .mockRejectedValueOnce(Object.assign(new TypeError('fetch failed'), { cause: { code: 'ENOTFOUND' } }))
+      .mockResolvedValueOnce(respuesta({}, 429));
+    await expect(crearDescargaOsm(['https://uno.test/api', 'https://dos.test/api'], fetcher as unknown as typeof fetch)()).rejects.toThrow(/uno\.test: fetch failed \(ENOTFOUND\); dos\.test: respondió 429/);
   });
 });
