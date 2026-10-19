@@ -8,6 +8,8 @@ interface Props {
   bemoles?: boolean;
   /** Fija la clave (por instrumento); sin ella se elige por la altura. */
   clave?: Clave;
+  /** Índice de la nota (modo escala) que se dibuja en el color del módulo: la nota de paso. */
+  resaltar?: number;
   etiqueta: string;
 }
 
@@ -24,7 +26,7 @@ function ajustarAlto(svg: SVGSVGElement | null, ancho: number): void {
 }
 
 /** Pentagrama con VexFlow, cargado solo al pedirlo: la librería no entra en el arranque de la app. */
-export const Pentagrama: React.FC<Props> = ({ midi, modo, bemoles = false, clave: claveFija, etiqueta }) => {
+export const Pentagrama: React.FC<Props> = ({ midi, modo, bemoles = false, clave: claveFija, resaltar, etiqueta }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [fallo, setFallo] = useState(false);
   const clave = midi.join(',');
@@ -57,6 +59,7 @@ export const Pentagrama: React.FC<Props> = ({ midi, modo, bemoles = false, clave
         voz.addTickables(figuras);
         new Formatter().joinVoices([voz]).format([voz], ancho - 70);
         voz.draw(ctx, stave);
+        if (resaltar !== undefined && modo === 'escala') figuras[resaltar]?.getSVGElement()?.classList.add('nota-paso');
         const svg = el.querySelector('svg');
         svg?.setAttribute('role', 'img');
         svg?.setAttribute('aria-label', etiqueta);
@@ -67,8 +70,8 @@ export const Pentagrama: React.FC<Props> = ({ midi, modo, bemoles = false, clave
     })();
     return () => { vivo = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- `clave` resume `midi`
-  }, [clave, modo, bemoles, claveFija, etiqueta]);
+  }, [clave, modo, bemoles, claveFija, resaltar, etiqueta]);
 
   if (fallo) return <p className="text-micro text-[var(--ink-2)] font-sans">No se pudo dibujar el pentagrama.</p>;
-  return <div ref={ref} className="flex justify-center overflow-x-auto [&_svg]:max-w-full [&_svg_*]:fill-[var(--ink)] [&_svg_*]:stroke-[var(--ink)]" />;
+  return <div ref={ref} className="flex justify-center overflow-x-auto [&_svg]:max-w-full [&_svg_*]:fill-[var(--ink)] [&_svg_*]:stroke-[var(--ink)] [&_.nota-paso_*]:fill-[var(--acc)] [&_.nota-paso_*]:stroke-[var(--acc)]" />;
 };

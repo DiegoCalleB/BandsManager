@@ -194,6 +194,7 @@ export const CajaAcorde: React.FC<{ chord: string; vista: VistaAcorde; contexto?
   // Pro: el bajo arranca en la inversión recomendada (como piano y guitarra) y suma la 7.ª si el acorde la tiene.
   const invBajoPro = fija ?? invT;
   const inversiones = useMemo(() => (vista === 'guitarra' && nivel !== 'basico' ? inversionesGuitarra(chord) : []), [vista, nivel, chord]);
+  const invLineaBajo = nivel === 'pro' ? invBajoPro : invElegida === null && fija === null ? undefined : invBajo;
   const invGuitarra = nivel === 'pro' ? invT : invElegida;
   const shape = vista === 'guitarra' && nivel === 'normal' && invGuitarra === null ? buscarFormaGuitarra(chord) : undefined;
   const formaInv = invGuitarra === null ? null : inversiones.find((f) => f.inversion === invGuitarra) ?? inversiones[0] ?? null;
@@ -231,7 +232,7 @@ export const CajaAcorde: React.FC<{ chord: string; vista: VistaAcorde; contexto?
         </div>
       ) : vista === 'bajo' ? (
         <div className="space-y-1">
-          <BajoAcorde acorde={chord} siguiente={contexto?.siguiente} color={color} nivel={nivel} inversion={nivel === 'pro' ? invBajoPro : invElegida === null && fija === null ? undefined : invBajo} />
+          <BajoAcorde acorde={chord} siguiente={contexto?.siguiente} color={color} nivel={nivel} inversion={invLineaBajo} />
           {totalInv >= 3 && fija === null && <ChipsInversion opciones={Array.from({ length: totalInv }, (_, i) => i)} activa={nivel === 'pro' ? invBajoPro : invBajo} recomendada={sugerida} onElige={setInvElegida} />}
         </div>
       ) : forma ? (
@@ -262,7 +263,14 @@ export const CajaAcorde: React.FC<{ chord: string; vista: VistaAcorde; contexto?
       {!tapar && (
         <>
           <button type="button" aria-pressed={conNotas} title="Ver las notas en el pentagrama" onClick={() => setManual(!conNotas)} className={`px-3 py-1 rounded-[var(--r-pill)] text-micro font-sans cursor-pointer bg-[var(--surface)] text-[var(--ink)] ${conNotas ? 'font-bold' : ''}`}>{conNotas ? 'Ocultar pentagrama' : '♪ Ver pentagrama'}</button>
-          {conNotas && <Pentagrama midi={midiEscrito(midiDeAcorde(chord, vista, nivel, invSonido), vista)} clave={claveDeVista(vista)} modo="acorde" bemoles={prefiereBemoles(chord)} etiqueta={`Pentagrama: ${chord}`} />}
+          {conNotas && (() => {
+            // Bajo: el pentagrama muestra la misma línea que el mástil, con la nota de paso hacia el siguiente acorde en color.
+            const linea = vista === 'bajo' && nivel !== 'basico' ? lineaDeBajo(chord, contexto?.siguiente, invLineaBajo, nivel === 'pro') : null;
+            const bemoles = prefiereBemoles(chord);
+            if (!linea) return <Pentagrama midi={midiEscrito(midiDeAcorde(chord, vista, nivel, invSonido), vista)} clave={claveDeVista(vista)} modo="acorde" bemoles={bemoles} etiqueta={`Pentagrama: ${chord}`} />;
+            const paso = linea.findIndex((x) => x.rol === 'paso');
+            return <Pentagrama midi={midiEscrito(linea.map((x) => x.pitch), vista)} clave={claveDeVista(vista)} modo="escala" bemoles={bemoles} resaltar={paso < 0 ? undefined : paso} etiqueta={`Pentagrama: ${chord}${paso < 0 ? '' : `, con nota de paso hacia ${contexto?.siguiente}`}`} />;
+          })()}
         </>
       )}
     </div>
