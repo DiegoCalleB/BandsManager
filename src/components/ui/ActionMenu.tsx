@@ -52,14 +52,20 @@ export function ActionMenu({ label, items, className }: ActionMenuProps) {
     if (left !== null) setPos({ ...pos, left });
   }, [open, pos]);
 
+  // Scroll/resize no cierran el menú (el autoscroll del Atril lo mataba al instante): se recoloca junto a su ancla.
+  // El scroll del propio panel se ignora.
   useEffect(() => {
     if (!open) return;
-    const cerrar = () => setOpen(false);
-    window.addEventListener('resize', cerrar);
-    window.addEventListener('scroll', cerrar, true);
+    const recolocar = (e: Event) => {
+      if (e.target instanceof Node && panelRef.current?.contains(e.target)) return;
+      if (!anclaRef.current) return;
+      setPos(posicionMenu(anclaRef.current.getBoundingClientRect(), { ancho: window.innerWidth, alto: window.innerHeight }));
+    };
+    window.addEventListener('resize', recolocar);
+    window.addEventListener('scroll', recolocar, true);
     return () => {
-      window.removeEventListener('resize', cerrar);
-      window.removeEventListener('scroll', cerrar, true);
+      window.removeEventListener('resize', recolocar);
+      window.removeEventListener('scroll', recolocar, true);
     };
   }, [open]);
 
