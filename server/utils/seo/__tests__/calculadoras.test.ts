@@ -67,11 +67,13 @@ describe('cifras del gráfico de «cuánto cobrar»', () => {
 describe('script de las calculadoras', () => {
   const guia = guiaPorSlug('cuanto-cobrar-por-un-concierto')!;
   const html = renderizarGuia(guia, 'https://bandmanager.io', 'es');
-  const js = html.match(/<script>(.*?)<\/script>/s)?.[1] ?? '';
+  // Hay otro script en la página (el aviso de idioma de la barra): el de las calculadoras es el que lee los formularios.
+  const scripts = [...html.matchAll(/<script>(.*?)<\/script>/gs)].map((m) => m[1]);
+  const js = scripts.find((x) => x.includes('data-calc')) ?? '';
 
-  it('la página lleva el formulario y un único script autosuficiente', () => {
+  it('la página lleva el formulario y un único script de calculadoras autosuficiente', () => {
     expect(html).toContain('data-calc="cache-minimo"');
-    expect(html.match(/<script>/g)).toHaveLength(1);
+    expect(scripts.filter((x) => x.includes('data-calc'))).toHaveLength(1);
     expect(js).not.toMatch(/cov_|__name|import /);
     expect(() => new Function('document', js)).not.toThrow();
   });
