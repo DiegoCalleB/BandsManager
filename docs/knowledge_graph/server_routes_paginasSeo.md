@@ -20,6 +20,7 @@ Guías y directorio de festivales de SEO: /guides y /en/guides (índices) y /gui
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(Layer: #security, Domain: #system)*
 - [[server_services_festivalesPublicos|server/services/festivalesPublicos.ts]] *(Layer: #service, Domain: #system)*
+- [[server_services_salasPublicas|server/services/salasPublicas.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_paginaConcierto|server/utils/paginaConcierto.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_festivales_render|server/utils/seo/festivales/render.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_festivales_vigencia|server/utils/seo/festivales/vigencia.ts]] *(Layer: #service, Domain: #system)*
@@ -27,6 +28,8 @@ Guías y directorio de festivales de SEO: /guides y /en/guides (índices) y /gui
 - [[server_utils_seo_listados|server/utils/seo/listados.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_render|server/utils/seo/render.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_rutas|server/utils/seo/rutas.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_seo_salas_publicas|server/utils/seo/salas/publicas.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_seo_salas_render|server/utils/seo/salas/render.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

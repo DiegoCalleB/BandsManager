@@ -29,6 +29,7 @@ Textos de interfaz de las páginas de SEO (el contenido de cada guía vive en su
 - [[server_utils_seo_indice|server/utils/seo/indice.ts]] *(from #service)*
 - [[server_utils_seo_listados|server/utils/seo/listados.ts]] *(from #service)*
 - [[server_utils_seo_render|server/utils/seo/render.ts]] *(from #service)*
+- [[server_utils_seo_salas_render|server/utils/seo/salas/render.ts]] *(from #service)*
 - [[server_utils_seo_sitemap|server/utils/seo/sitemap.ts]] *(from #service)*
 
 ---

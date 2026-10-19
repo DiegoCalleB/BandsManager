@@ -13,7 +13,7 @@ tags: ["schema", "tabla", "auto"]
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Tabla de Supabase `salas_catalogo` (25 columnas).
+Tabla de Supabase `salas_catalogo` (26 columnas).
 
 ---
 
@@ -25,6 +25,7 @@ _Sin dependencias salientes directas._
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 - [[server_db_salasCatalogo|server/db/salasCatalogo.ts]] *(from #db)*
+- [[server_db_salasPublicas|server/db/salasPublicas.ts]] *(from #db)*
 - [[tabla_festivales|tabla festivales]] *(from #schema)*
 - [[tabla_leads|tabla leads]] *(from #schema)*
 
@@ -56,8 +57,9 @@ _Sin dependencias salientes directas._
 - `updated_at`
 - `estado_negocio`
 - `estado_negocio_en`
+- `fuentes`
 
-**Definida en:** `supabase/migrations/20261108_catalogo_salas.sql`, `supabase/migrations/20261110_estado_negocio_salas.sql`
+**Definida en:** `supabase/migrations/20261108_catalogo_salas.sql`, `supabase/migrations/20261110_estado_negocio_salas.sql`, `supabase/migrations/20261112_salas_fuentes.sql`
 
 ---
 

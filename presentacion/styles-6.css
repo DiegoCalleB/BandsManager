@@ -90,3 +90,6 @@
 #makingof .mo-cols p { margin: 0; color: #ddd; font-size: 17px; line-height: 1.45; }
 #makingof .mo-pie { margin: 24px 0 0; color: #888; font-size: 14px; }
 @media (max-width: 700px) { #makingof .mo-cols { grid-template-columns: 1fr; } #makingof .mo-caja { padding: 28px 22px; } }
+
+/* «Calidad en cifras»: la nota de medición no queda debajo del subtítulo en modo película */
+body.pelicula .bs-foot { transform: translateY(-20px); }

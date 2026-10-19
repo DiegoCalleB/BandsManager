@@ -14,7 +14,7 @@
   "info": {
     "title": "BandManager.io API",
     "version": "3.0.0",
-    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (407) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
+    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (417) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
     "license": {
       "name": "AGPL-3.0-only",
       "identifier": "AGPL-3.0-only"
@@ -14623,7 +14623,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginasSeo.ts:57",
+        "x-source": "server/routes/paginasSeo.ts:80",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -14645,7 +14645,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginasSeo.ts:59",
+        "x-source": "server/routes/paginasSeo.ts:82",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -14677,7 +14677,150 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginasSeo.ts:60",
+        "x-source": "server/routes/paginasSeo.ts:83",
+        "x-autenticacion": "ninguna",
+        "x-rate-limiters": [
+          "publicoRateLimiter"
+        ]
+      }
+    },
+    "/directories/venues": {
+      "get": {
+        "tags": [
+          "paginaConcierto"
+        ],
+        "operationId": "getDirectoriesVenues",
+        "description": "Comentario en el código: Salas de conciertos (rutas literales: `npm run docs:api` no entiende rutas construidas).",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/paginasSeo.ts:88",
+        "x-autenticacion": "ninguna",
+        "x-rate-limiters": [
+          "publicoRateLimiter"
+        ]
+      }
+    },
+    "/directories/venues/{comunidad}": {
+      "get": {
+        "tags": [
+          "paginaConcierto"
+        ],
+        "operationId": "getDirectoriesVenuesComunidad",
+        "parameters": [
+          {
+            "name": "comunidad",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/paginasSeo.ts:89",
+        "x-autenticacion": "ninguna",
+        "x-rate-limiters": [
+          "publicoRateLimiter"
+        ]
+      }
+    },
+    "/directories/venues/{comunidad}/{ciudad}": {
+      "get": {
+        "tags": [
+          "paginaConcierto"
+        ],
+        "operationId": "getDirectoriesVenuesComunidadCiudad",
+        "parameters": [
+          {
+            "name": "comunidad",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ciudad",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/paginasSeo.ts:90",
+        "x-autenticacion": "ninguna",
+        "x-rate-limiters": [
+          "publicoRateLimiter"
+        ]
+      }
+    },
+    "/directories/venues/{comunidad}/{ciudad}/{slug}": {
+      "get": {
+        "tags": [
+          "paginaConcierto"
+        ],
+        "operationId": "getDirectoriesVenuesComunidadCiudadSlug",
+        "parameters": [
+          {
+            "name": "comunidad",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ciudad",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/paginasSeo.ts:91",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -14709,7 +14852,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginaConcierto.ts:67",
+        "x-source": "server/routes/paginaConcierto.ts:70",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -14731,7 +14874,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginasSeo.ts:58",
+        "x-source": "server/routes/paginasSeo.ts:81",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -14753,7 +14896,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginasSeo.ts:61",
+        "x-source": "server/routes/paginasSeo.ts:84",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -14785,7 +14928,149 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginasSeo.ts:62",
+        "x-source": "server/routes/paginasSeo.ts:85",
+        "x-autenticacion": "ninguna",
+        "x-rate-limiters": [
+          "publicoRateLimiter"
+        ]
+      }
+    },
+    "/en/directories/venues": {
+      "get": {
+        "tags": [
+          "paginaConcierto"
+        ],
+        "operationId": "getEnDirectoriesVenues",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/paginasSeo.ts:92",
+        "x-autenticacion": "ninguna",
+        "x-rate-limiters": [
+          "publicoRateLimiter"
+        ]
+      }
+    },
+    "/en/directories/venues/{comunidad}": {
+      "get": {
+        "tags": [
+          "paginaConcierto"
+        ],
+        "operationId": "getEnDirectoriesVenuesComunidad",
+        "parameters": [
+          {
+            "name": "comunidad",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/paginasSeo.ts:93",
+        "x-autenticacion": "ninguna",
+        "x-rate-limiters": [
+          "publicoRateLimiter"
+        ]
+      }
+    },
+    "/en/directories/venues/{comunidad}/{ciudad}": {
+      "get": {
+        "tags": [
+          "paginaConcierto"
+        ],
+        "operationId": "getEnDirectoriesVenuesComunidadCiudad",
+        "parameters": [
+          {
+            "name": "comunidad",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ciudad",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/paginasSeo.ts:94",
+        "x-autenticacion": "ninguna",
+        "x-rate-limiters": [
+          "publicoRateLimiter"
+        ]
+      }
+    },
+    "/en/directories/venues/{comunidad}/{ciudad}/{slug}": {
+      "get": {
+        "tags": [
+          "paginaConcierto"
+        ],
+        "operationId": "getEnDirectoriesVenuesComunidadCiudadSlug",
+        "parameters": [
+          {
+            "name": "comunidad",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ciudad",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/paginasSeo.ts:95",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -14807,7 +15092,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginasSeo.ts:70",
+        "x-source": "server/routes/paginasSeo.ts:103",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -14839,7 +15124,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginasSeo.ts:71",
+        "x-source": "server/routes/paginasSeo.ts:104",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -14861,7 +15146,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginasSeo.ts:54",
+        "x-source": "server/routes/paginasSeo.ts:64",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -14893,7 +15178,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginasSeo.ts:55",
+        "x-source": "server/routes/paginasSeo.ts:65",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -14915,7 +15200,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginaConcierto.ts:63",
+        "x-source": "server/routes/paginaConcierto.ts:66",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -14937,7 +15222,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginasSeo.ts:68",
+        "x-source": "server/routes/paginasSeo.ts:101",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -14969,7 +15254,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginasSeo.ts:69",
+        "x-source": "server/routes/paginasSeo.ts:102",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -14992,7 +15277,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginasSeo.ts:52",
+        "x-source": "server/routes/paginasSeo.ts:62",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -15024,7 +15309,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginasSeo.ts:53",
+        "x-source": "server/routes/paginasSeo.ts:63",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -15046,7 +15331,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginasSeo.ts:49",
+        "x-source": "server/routes/paginasSeo.ts:59",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -15078,7 +15363,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginasSeo.ts:50",
+        "x-source": "server/routes/paginasSeo.ts:60",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -15118,7 +15403,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginasSeo.ts:65",
+        "x-source": "server/routes/paginasSeo.ts:98",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -15140,7 +15425,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginasSeo.ts:66",
+        "x-source": "server/routes/paginasSeo.ts:99",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -15172,7 +15457,30 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginasSeo.ts:67",
+        "x-source": "server/routes/paginasSeo.ts:100",
+        "x-autenticacion": "ninguna",
+        "x-rate-limiters": [
+          "publicoRateLimiter"
+        ]
+      }
+    },
+    "/netflix": {
+      "get": {
+        "tags": [
+          "paginaConcierto"
+        ],
+        "operationId": "getNetflix",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/presentacionTfm.ts:25",
+        "x-handler": "redirigir",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -15195,7 +15503,30 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginaConcierto.ts:62",
+        "x-source": "server/routes/paginaConcierto.ts:65",
+        "x-autenticacion": "ninguna",
+        "x-rate-limiters": [
+          "publicoRateLimiter"
+        ]
+      }
+    },
+    "/presentacion_tfm": {
+      "get": {
+        "tags": [
+          "paginaConcierto"
+        ],
+        "operationId": "getPresentacionTfm",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/presentacionTfm.ts:24",
+        "x-handler": "redirigir",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -15263,7 +15594,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/paginaConcierto.ts:183",
+        "x-source": "server/routes/paginaConcierto.ts:186",
         "x-autenticacion": "ninguna"
       }
     },
@@ -15402,7 +15733,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginaConcierto.ts:165",
+        "x-source": "server/routes/paginaConcierto.ts:168",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -15425,7 +15756,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginaConcierto.ts:58",
+        "x-source": "server/routes/paginaConcierto.ts:61",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"

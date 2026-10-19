@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { importarSalasDeOsm, type PuertoImportacion } from '../importarSalasOsm.js';
+import { crearDescargaOsm, importarSalasDeOsm, type PuertoImportacion } from '../importarSalasOsm.js';
 import type { SalaAGuardar, SalaGuardada } from '../catalogoSalas.js';
 
 const elemento = (name: string, extra: Record<string, string> = {}, id = 1) => ({ type: 'node', id, tags: { amenity: 'music_venue', name, 'addr:city': 'Madrid', ...extra } });
@@ -20,6 +20,17 @@ describe('importarSalasDeOsm', () => {
     expect(r).toMatchObject({ nuevas: 1, completadas: 0, salasEnOsm: 1 });
     expect(guardadas[0]).toMatchObject({ nombre: 'Sala Nueva', nivel: 'sin_verificar', bandas_con_entrega: 0 });
     expect(guardadas[0].id).toMatch(/^sala-/);
+    expect(guardadas[0].fuentes).toEqual(['osm']);
+  });
+
+  it('cita OpenStreetMap solo en las salas a las que ha aportado algo, y conserva otras fuentes', async () => {
+    const previa = existente({ id: 'sala-1', clave: 'nc:moby|madrid', nombre: 'Moby', nivel: 'probable', fuentes: ['leads'] });
+    const { puerto, guardadas } = montar([previa]);
+    await importarSalasDeOsm({ puerto, descargar: async () => [elemento('Moby', { capacity: '300' })] });
+    expect(guardadas[0].fuentes).toEqual(['leads', 'osm']);
+    const sinAporte = montar([existente({ id: 'sala-2', clave: 'nc:moby|madrid', nombre: 'Moby', nivel: 'probable', aforo: 300 })]);
+    await importarSalasDeOsm({ puerto: sinAporte.puerto, descargar: async () => [elemento('Moby', { capacity: '300' })] });
+    expect(sinAporte.guardadas).toEqual([]);
   });
 
   it('a una sala existente solo le rellena lo que le falta, sin pisar lo que tiene', async () => {
@@ -48,5 +59,25 @@ describe('importarSalasDeOsm', () => {
     const r = await importarSalasDeOsm({ puerto, descargar: async () => [elemento('Moby', { capacity: '300' })] });
     expect(r.sinCambios).toBe(1);
     expect(guardadas).toEqual([]);
+  });
+});
+
+describe('crearDescargaOsm', () => {
+  const respuesta = (cuerpo: unknown, status = 200) => new Response(JSON.stringify(cuerpo), { status });
+
+  it('si el primer servidor falla, usa el siguiente', async () => {
+    const fetcher = vi.fn()
+      .mockRejectedValueOnce(Object.assign(new TypeError('fetch failed'), { cause: { code: 'ECONNRESET' } }))
+      .mockResolvedValueOnce(respuesta({ elements: [elemento('Sala Nueva')] }));
+    const r = await crearDescargaOsm(['https://uno.test/api', 'https://dos.test/api'], fetcher as unknown as typeof fetch)();
+    expect(r).toHaveLength(1);
+    expect(fetcher).toHaveBeenCalledTimes(2);
+  });
+
+  it('si fallan todos, el error dice cuál y por qué', async () => {
+    const fetcher = vi.fn()
+      .mockRejectedValueOnce(Object.assign(new TypeError('fetch failed'), { cause: { code: 'ENOTFOUND' } }))
+      .mockResolvedValueOnce(respuesta({}, 429));
+    await expect(crearDescargaOsm(['https://uno.test/api', 'https://dos.test/api'], fetcher as unknown as typeof fetch)()).rejects.toThrow(/uno\.test: fetch failed \(ENOTFOUND\); dos\.test: respondió 429/);
   });
 });

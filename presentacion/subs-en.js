@@ -202,7 +202,7 @@ window.SUBS_EN = {
 "Por cierto, el miércoles ensayo con Máster of Prompts. ¿A qué hora era?": "By the way, on Wednesday I rehearse with Master of Prompts. What time was it?",
 "Mira el calendario, Brais. Mira el calendario.": "Check the calendar, Brais. Check the calendar.",
 "Vale, pero tengo una duda. Si esto es tan bueno… ¿cómo se entera el resto de bandas?": "Okay, but I have a question. If this is so good… how do the other bands find out?",
-"De boca a oreja, tío. Una banda se lo cuenta a otra, y esa a otra. Como pasa con los buenos pedales.": "Word of mouth. One band tells another, and that one tells the next. Just like good pedals.",
+"Con el boca a boca, tío. Una banda se lo cuenta a otra, y esa a otra. Como pasa con los buenos pedales.": "Word of mouth. One band tells another, and that one tells the next. Just like good pedals.",
 "Y le damos un empujón: todo lo que sale de la app lleva el sello de Band Mánayer. El cú-erre de los fans, el dossier, el acuerdo con la sala, el sétlist…": "And we give it a push: everything that comes out of the app carries the BandManager seal. The fans' QR, the dossier, the agreement with the venue, the setlist…",
 "¿Mi hoja de batería también? ¡Ya me veo en la portada, neno!": "My drum sheet too? I can already see myself on the cover!",
 "¡Cada vez que una sala lea nuestro dossier, nos hace publicidad gratis, che!": "Every time a venue reads our dossier, it's free advertising for us, che!",
@@ -256,7 +256,7 @@ window.SUBS_EN = {
 "¿Y eso es lo que hace que no nos hackeen?": "And is that what keeps us from getting hacked?",
 "Es una parte. Tú toca la guitarra, que de lo demás me encargo yo. Como siempre: el bajo sujetándolo todo.": "It's part of it. You play the guitar, I'll handle the rest. As always: the bass holding everything together.",
 "¡Madre mía! ¡Esto tiene más pruebas que en la época del Covid!": "Good grief! This has more tests than the Covid era!",
-"Más de dos mil. Y se ejecutan solos: en cada commit, en cada push. Y en producción, un control de salud y Séntri vigilando los errores. Como un roadie que nunca duerme.": "Over two thousand. And they run on their own: on every commit, on every push. And in production, a health check and Sentry watching for errors. Like a roadie who never sleeps.",
+"Casi cuatro mil. Y se ejecutan solos: en cada commit, en cada push. Y en producción, un control de salud y Séntri vigilando los errores. Como un roadie que nunca duerme.": "Almost four thousand. And they run on their own: on every commit, on every push. And in production, a health check and Sentry watching for errors. Like a roadie who never sleeps.",
 "Oye, Iago, que mi primo jura que te vio en Miami. En un descapotable.": "Hey, Iago, my cousin swears he saw you in Miami. In a convertible.",
 "Sin comentarios, Brais. Sin comentarios.": "No comment, Brais. No comment."
 };

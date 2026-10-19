@@ -5,8 +5,8 @@
 export type IdiomaSeo = 'es' | 'en';
 
 export const RUTAS = {
-  es: { landing: '/', guias: '/guides', guia: (slug: string) => `/guides/${slug}`, rider: '/technical-rider-template', listados: '/directories', festivales: '/directories/festivals', festival: (slug: string) => `/directories/festivals/${slug}` },
-  en: { landing: '/en', guias: '/en/guides', guia: (slug: string) => `/en/guides/${slug}`, rider: '/en/technical-rider-template', listados: '/en/directories', festivales: '/en/directories/festivals', festival: (slug: string) => `/en/directories/festivals/${slug}` },
+  es: { landing: '/', guias: '/guides', guia: (slug: string) => `/guides/${slug}`, rider: '/technical-rider-template', listados: '/directories', festivales: '/directories/festivals', festival: (slug: string) => `/directories/festivals/${slug}`, salas: '/directories/venues', salasComunidad: (c: string) => `/directories/venues/${c}`, salasCiudad: (c: string, ciudad: string) => `/directories/venues/${c}/${ciudad}`, sala: (c: string, ciudad: string, slug: string) => `/directories/venues/${c}/${ciudad}/${slug}` },
+  en: { landing: '/en', guias: '/en/guides', guia: (slug: string) => `/en/guides/${slug}`, rider: '/en/technical-rider-template', listados: '/en/directories', festivales: '/en/directories/festivals', festival: (slug: string) => `/en/directories/festivals/${slug}`, salas: '/en/directories/venues', salasComunidad: (c: string) => `/en/directories/venues/${c}`, salasCiudad: (c: string, ciudad: string) => `/en/directories/venues/${c}/${ciudad}`, sala: (c: string, ciudad: string, slug: string) => `/en/directories/venues/${c}/${ciudad}/${slug}` },
 } as const;
 
 export const OTRO_IDIOMA: Record<IdiomaSeo, IdiomaSeo> = { es: 'en', en: 'es' };

@@ -26,6 +26,7 @@ import {
 import { alternativasLanding } from '../utils/cabeceraIdioma.js';
 import { renderizarPaginaRider } from '../utils/paginaRider.js';
 import { obtenerFestivales } from '../services/festivalesPublicos.js';
+import { obtenerSalasPublicas } from '../services/salasPublicas.js';
 import { entradasSeo } from '../utils/seo/sitemap.js';
 import { urlInsignia } from '../utils/referidos.js';
 import { obtenerPerfilPublicoBandaCacheado } from '../services/perfilPublicoBanda.js';
@@ -37,6 +38,7 @@ import contactoEmpresasRouter from './contactoEmpresas.js';
 import pegatinasRouter from './pegatinas.js';
 import fansContadorRouter from './fans_contador.js';
 import paginasSeoRouter from './paginasSeo.js';
+import presentacionTfmRouter from './presentacionTfm.js';
 export { startEmailsCicloVidaScheduler } from '../services/emailsCicloVida.js';
 
 const router = express.Router();
@@ -45,6 +47,7 @@ router.use(interesadosRouter); // lista de novedades de la landing (/api/public/
 router.use(contactoEmpresasRouter); // consultas de empresas, planes B2B (/api/public/contacto-empresas)
 router.use(pegatinasRouter); // regalo de pegatinas en la primera suscripción (/api/billing/pegatinas)
 router.use(paginasSeoRouter); // guías de SEO (/guides)
+router.use(presentacionTfmRouter); // atajos a la película del TFM (/presentacion_tfm, /netflix)
 router.use(fansContadorRouter); // número de fans para la película del TFM (/api/public/fans/contador)
 
 function responderHtml(res: express.Response, status: number, html: string, cache: string) {
@@ -152,7 +155,7 @@ async function construirSitemap(base: string): Promise<string> {
   const entradas: EntradaSitemap[] = [
     { loc: `${base}/`, alternativas },
     { loc: `${base}/en`, alternativas },
-    ...entradasSeo(base, hoyIso(), await obtenerFestivales()),
+    ...entradasSeo(base, hoyIso(), await obtenerFestivales(), await obtenerSalasPublicas()),
   ];
   for (const c of filas as Array<FilaConcierto & { id: string; sala: string; fecha: string }>) {
     const nombre = nombres.get(String(c.band_id));

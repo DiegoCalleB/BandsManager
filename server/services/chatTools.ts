@@ -307,7 +307,7 @@ export const chatFunctionDeclarations: FunctionDeclaration[] = [
   },
   {
     name: "propose_agent_trigger",
-    description: "Propone lanzar o ejecutar un agente autónomo de Supabase (Enviador, Scout, Redactor o Lector) ÚNICAMENTE cuando el usuario lo solicita explícitamente.",
+    description: "Propone lanzar o ejecutar un agente autónomo de Supabase (Enviador, Scout, Redactor o Lector) cuando el usuario lo solicita explícitamente o, para 'Scout Descubridor', cuando el catálogo de salas se queda corto y el usuario podría querer buscar más en internet (siempre como propuesta que él confirma).",
     parameters: {
       type: Type.OBJECT,
       properties: {

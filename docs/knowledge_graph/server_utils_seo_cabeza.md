@@ -32,6 +32,7 @@ tags: ["service", "system", "auto"]
 - [[server_utils_seo_festivales_render|server/utils/seo/festivales/render.ts]] *(from #service)*
 - [[server_utils_seo_listados|server/utils/seo/listados.ts]] *(from #service)*
 - [[server_utils_seo_render|server/utils/seo/render.ts]] *(from #service)*
+- [[server_utils_seo_salas_render|server/utils/seo/salas/render.ts]] *(from #service)*
 
 ---
 
