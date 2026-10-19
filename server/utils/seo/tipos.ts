@@ -18,7 +18,7 @@ export interface GraficoLineas {
   nota?: { serie: number; indice: number; texto: string };
 }
 
-export type IdCalculadora = 'cache-minimo' | 'slot-setlist';
+export type IdCalculadora = 'cache-minimo' | 'slot-setlist' | 'embudo-bolos';
 
 export interface SeccionGuia {
   h2: string;
