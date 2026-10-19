@@ -116,7 +116,7 @@ export function renderizarPaginaRider(base: string, idioma: IdiomaSeo = 'es'): s
   return `${cabezaHtml({ base, idioma, ruta, titulo: c.titulo, descripcion: c.descripcion, jsonLd, tipoOg: 'article', alternativas: alternativasPar(base, RUTAS.es.rider, RUTAS.en.rider) })}
 <body>
 <main>
-${barraHtml(base, idioma, RUTAS[idioma === 'es' ? 'en' : 'es'].rider)}
+${barraHtml(base, idioma, RUTAS[idioma === 'es' ? 'en' : 'es'].rider, 'rider_tecnico')}
 <header class="no-imprimir">
 <h1>${escapeHtml(c.h1)}</h1>
 <p class="intro">${escapeHtml(c.intro)}</p>

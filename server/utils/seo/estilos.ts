@@ -48,7 +48,7 @@ ul.vinetas{margin:0 0 .9rem;padding-left:1.2rem}ul.vinetas li{margin:0 0 .35rem}
 .rel small{display:block;font-weight:400;color:var(--ink-2)}
 section.seccion{margin:1.5rem 0}
 
-.barra{display:flex;justify-content:space-between;align-items:center;margin:0 0 1rem;font-size:14px}
+.barra{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;gap:.5rem;margin:0 -1rem 1rem;padding:.6rem 1rem;background:var(--bg);font-size:14px}.barra .der{display:flex;align-items:center;gap:.5rem}
 .barra a{color:var(--ink);text-decoration:none;font-weight:650}
 .barra .idioma{color:var(--ink-2);font-weight:500;padding:.35rem .8rem;border-radius:999px;background:var(--sunken)}
 .lectura{font-size:13px;color:var(--ink-2);margin:-.25rem 0 .9rem}
@@ -59,4 +59,20 @@ section.seccion{margin:1.5rem 0}
 .toc{margin:0 0 1.25rem;font-size:15px}.toc p{margin:0 0 .35rem;font-weight:650;color:var(--ink-2)}
 .toc ol{margin:0;padding-left:1.2rem}.toc a{color:var(--acc-ink);text-decoration:none}.toc a:hover{text-decoration:underline}
 h2[id]{scroll-margin-top:1rem}
+
+.boton-s{display:inline-flex;align-items:center;min-height:40px;padding:0 1rem;border-radius:999px;background:var(--acc);color:var(--on-acc)!important;font-weight:650;font-size:14px;white-space:nowrap}
+.etiquetas{display:flex;flex-wrap:wrap;gap:.4rem;margin:.25rem 0 .75rem;padding:0;list-style:none}
+.etiquetas li{padding:.2rem .7rem;border-radius:999px;background:var(--sunken);color:var(--ink-2);font-size:13px}
+.hero{display:block;width:100%;height:auto;margin:0 0 1.25rem;border-radius:24px;background:var(--surface)}
+figure.fig{margin:1rem 0 1.25rem;padding:1rem;border-radius:24px;background:var(--surface)}
+figure.fig svg{display:block;width:100%;height:auto}
+figure.fig figcaption{margin-top:.6rem;font-size:13px;color:var(--ink-2)}
+.scroll{overflow-x:auto;margin:.5rem 0 1rem;border-radius:18px;background:var(--surface)}
+table.tabla{width:100%;border-collapse:collapse;font-size:14px;min-width:20rem}
+table.tabla caption{text-align:left;font-weight:650;padding:.7rem .9rem .2rem}
+table.tabla th{text-align:left;color:var(--ink-2);font-weight:650;padding:.5rem .9rem}
+table.tabla td{padding:.55rem .9rem;vertical-align:top;font-variant-numeric:tabular-nums}
+table.tabla tbody tr:nth-child(even) td{background:var(--bg)}
+.aviso{margin:1rem 0;padding:1rem 1.1rem;border-radius:18px;background:var(--surface);color:var(--ink);font-weight:550}
+.aviso::before{content:'';display:inline-block;width:.6rem;height:.6rem;margin-right:.5rem;border-radius:999px;background:var(--acc)}
 `;

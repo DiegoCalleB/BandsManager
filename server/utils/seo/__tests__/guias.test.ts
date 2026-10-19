@@ -45,6 +45,9 @@ describe.each(IDIOMAS)('guías de SEO (%s)', (idioma) => {
       expect(grafo[0].image).toBe(`${BASE}/og-cover.png`);
       // Resumen visible y cada enlace del índice apunta a un id que existe.
       expect(html).toContain('class="resumen"');
+      expect(html).toContain('class="etiquetas"');
+      expect(html).toContain('class="hero"');
+      expect(html).toContain('utm_medium=cabecera');
       for (const [, ancla] of html.matchAll(/<a href="#([^"]+)">/g)) expect(html, `ancla rota #${ancla}`).toContain(`id="${ancla}"`);
     }
   });
@@ -81,6 +84,26 @@ describe('las dos versiones de cada guía', () => {
       expect(e.alternativas?.map((a) => a.hreflang)).toEqual(['es', 'en', 'x-default']);
       expect(e.lastmod).toBe(FECHA_CONTENIDO);
     }
+  });
+});
+
+describe('bloques de contenido', () => {
+  it.each(IDIOMAS)('(%s) el pilar del setlist lleva infografía accesible, tablas y aviso', (idioma) => {
+    const g = guiaPorSlug(idioma === 'es' ? 'como-hacer-un-setlist' : 'how-to-make-a-setlist', idioma)!;
+    const html = renderizarGuia(g, BASE, idioma);
+    expect(html).toContain('<figure class="fig">');
+    expect(html).toMatch(/<svg[^>]*role="img"[^>]*aria-label="[^"]{40,}"/);
+    expect(html).toContain('<table class="tabla">');
+    expect(html).toContain('<th scope="col">');
+    expect(html).toContain('class="aviso"');
+  });
+
+  it('el texto de una tabla se escapa', () => {
+    const base = guiaPorSlug('como-hacer-un-setlist')!;
+    const g = { ...base, secciones: [{ h2: 'x', tablas: [{ cabeceras: ['<b>'], filas: [['<script>alert(1)</script>']] }] }, ...base.secciones] };
+    const html = renderizarGuia(g, BASE, 'es');
+    expect(html).not.toContain('<script>alert(1)');
+    expect(html).toContain('&lt;script&gt;');
   });
 });
 

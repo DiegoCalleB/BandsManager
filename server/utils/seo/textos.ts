@@ -10,6 +10,8 @@ interface TextosSeo {
   otroIdiomaEtiqueta: string;
   lectura: (minutos: number) => string;
   resumen: string;
+  empieza: string;
+  por: string;
   enEstaGuia: string;
   actualizado: (fecha: string) => string;
   indiceTitulo: string;
@@ -35,6 +37,8 @@ export const TEXTOS: Record<IdiomaSeo, TextosSeo> = {
     otroIdiomaEtiqueta: 'English',
     lectura: (m) => `${m} min de lectura`,
     resumen: 'En resumen',
+    empieza: 'Empieza gratis',
+    por: 'Por BandManager',
     enEstaGuia: 'En esta guía',
     actualizado: (f) => `Actualizado el ${f}`,
     indiceTitulo: 'Guías y plantillas para bandas de música | BandManager',
@@ -58,6 +62,8 @@ export const TEXTOS: Record<IdiomaSeo, TextosSeo> = {
     otroIdiomaEtiqueta: 'Español',
     lectura: (m) => `${m} min read`,
     resumen: 'In short',
+    empieza: 'Start free',
+    por: 'By BandManager',
     enEstaGuia: 'In this guide',
     actualizado: (f) => `Updated ${f}`,
     indiceTitulo: 'Guides and templates for bands | BandManager',

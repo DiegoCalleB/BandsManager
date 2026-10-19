@@ -1,7 +1,19 @@
 /** Una guía de SEO: contenido fijo y revisable, sin datos de ninguna banda. */
+/** Tabla de datos o plantilla copiable dentro de una sección. */
+export interface TablaGuia {
+  titulo?: string;
+  cabeceras: string[];
+  filas: string[][];
+}
+
 export interface SeccionGuia {
   h2: string;
   parrafos?: string[];
+  /** Infografía propia (SVG generado en servidor, ver `figuras.ts`). */
+  figura?: 'curva-setlist';
+  /** Recuadro destacado con la idea que no se debe olvidar. */
+  aviso?: string;
+  tablas?: TablaGuia[];
   /** Lista con viñetas. */
   lista?: string[];
   /** Lista numerada. */
