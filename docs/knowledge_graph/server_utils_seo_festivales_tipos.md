@@ -23,10 +23,16 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server_db_festivales|server/db/festivales.ts]] *(from #db)*
 - [[server_utils_seo_festivales_datos|server/utils/seo/festivales/datos.ts]] *(from #service)*
+- [[server_utils_seo_festivales_importar|server/utils/seo/festivales/importar.ts]] *(from #service)*
+- [[server_utils_seo_festivales_mapeo|server/utils/seo/festivales/mapeo.ts]] *(from #service)*
+- [[server_utils_seo_festivales_proveedor|server/utils/seo/festivales/proveedor.ts]] *(from #service)*
 - [[server_utils_seo_festivales_render|server/utils/seo/festivales/render.ts]] *(from #service)*
+- [[server_utils_seo_festivales_semilla|server/utils/seo/festivales/semilla.ts]] *(from #service)*
 - [[server_utils_seo_festivales_textos|server/utils/seo/festivales/textos.ts]] *(from #service)*
 - [[server_utils_seo_festivales_vigencia|server/utils/seo/festivales/vigencia.ts]] *(from #service)*
+- [[server_utils_seo_sitemap|server/utils/seo/sitemap.ts]] *(from #service)*
 
 ---
 

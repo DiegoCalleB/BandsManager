@@ -29,6 +29,7 @@ Páginas públicas indexables: /e/:slug (un concierto), /sitemap.xml y /robots.t
 - [[server_routes_pegatinas|server/routes/pegatinas.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_presentacionTfm|server/routes/presentacionTfm.ts]] *(Layer: #route, Domain: #system)*
 - [[server_services_emailsCicloVida|server/services/emailsCicloVida.ts]] *(Layer: #service, Domain: #system)*
+- [[server_services_festivalesPublicos|server/services/festivalesPublicos.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_perfilPublicoBanda|server/services/perfilPublicoBanda.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_bandHash|server/utils/bandHash.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_cabeceraIdioma|server/utils/cabeceraIdioma.ts]] *(Layer: #service, Domain: #system)*

@@ -13,7 +13,7 @@ tags: ["service", "system", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Rutas públicas de SEO por idioma. Las páginas en inglés viven bajo `/en/` y la landing inglesa es `/en`.
+Rutas públicas de SEO por idioma. Los tramos de la URL de los directorios van en inglés en los dos idiomas; las páginas
 
 ---
 
@@ -31,6 +31,7 @@ _Sin dependencias salientes directas._
 - [[server_utils_seo_festivales_textos|server/utils/seo/festivales/textos.ts]] *(from #service)*
 - [[server_utils_seo_figuras|server/utils/seo/figuras.ts]] *(from #service)*
 - [[server_utils_seo_indice|server/utils/seo/indice.ts]] *(from #service)*
+- [[server_utils_seo_listados|server/utils/seo/listados.ts]] *(from #service)*
 - [[server_utils_seo_render|server/utils/seo/render.ts]] *(from #service)*
 - [[server_utils_seo_sitemap|server/utils/seo/sitemap.ts]] *(from #service)*
 - [[server_utils_seo_textos|server/utils/seo/textos.ts]] *(from #service)*
@@ -38,6 +39,7 @@ _Sin dependencias salientes directas._
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/utils/seo/__tests__/festivales.test.ts`
 - `server/utils/seo/__tests__/guias.test.ts`
 
 ---

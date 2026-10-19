@@ -7,7 +7,7 @@ import { RUTAS, alternativasPar, registroUrl, type IdiomaSeo } from '../rutas.js
 import { TEXTOS, fechaLegible } from '../textos.js';
 import { FESTIVALES } from './datos.js';
 import { ESTILOS, TEXTOS_FESTIVALES } from './textos.js';
-import type { Festival } from './tipos.js';
+import type { Festival, Tri } from './tipos.js';
 import { convocatoriaAbierta, fichaIndexable, festivalesVigentes, indexable } from './vigencia.js';
 
 const NOINDEX = 'noindex,follow';
@@ -21,6 +21,21 @@ function estadoConvocatoria(f: Festival, hoy: string, idioma: IdiomaSeo): string
   if (!f.convocatoria) return t.sinConvocatoria;
   if (!f.convocatoria.cierre) return t.sinPlazo;
   return convocatoriaAbierta(f, hoy) ? `${t.abierta} · ${fechaLegible(idioma, f.convocatoria.cierre)}` : t.cerrada;
+}
+
+function requisitosHtml(f: Festival, idioma: IdiomaSeo): string {
+  const r = f.convocatoria?.requisitos;
+  if (!r) return '';
+  const t = TEXTOS_FESTIVALES[idioma];
+  const si = (v: Tri) => t[v];
+  const filas: Array<[string, string]> = [
+    [t.independientes, si(r.independientes)],
+    [t.sello, si(r.exigeSelloOAgencia)],
+    [t.residencia, si(r.exigeResidencia)],
+    [t.cuota, si(r.cuota)],
+    ...(r.remuneracion ? ([[t.remuneracion, r.remuneracion]] as Array<[string, string]>) : []),
+  ];
+  return `<div class="scroll"><table class="tabla"><caption>${escapeHtml(t.requisitos)}</caption><tbody>${filas.map(([k, v]) => `<tr><th scope="row">${escapeHtml(k)}</th><td>${escapeHtml(v)}</td></tr>`).join('')}</tbody></table></div>`;
 }
 
 const tarjeta = (f: Festival, base: string, idioma: IdiomaSeo, hoy: string) =>
@@ -43,6 +58,7 @@ export function renderizarIndiceFestivales(base: string, idioma: IdiomaSeo, hoy:
 <body>
 <main>
 ${barraHtml(base, idioma, RUTAS[idioma === 'es' ? 'en' : 'es'].festivales, 'festivales')}
+<p class="migas"><a href="${escapeHtml(base)}${rutas.listados}">${escapeHtml(t.listados)}</a> › ${escapeHtml(t.h1)}</p>
 <h1>${escapeHtml(t.h1)}</h1>
 <p class="intro">${escapeHtml(t.intro)}</p>
 <section class="seccion"><h2>${escapeHtml(t.abiertas)}</h2>
@@ -79,8 +95,9 @@ export function renderizarFestival(f: Festival, base: string, idioma: IdiomaSeo,
       evento,
       { '@type': 'BreadcrumbList', itemListElement: [
         { '@type': 'ListItem', position: 1, name: TEXTOS[idioma].inicio, item: `${base}${rutas.landing}` },
-        { '@type': 'ListItem', position: 2, name: t.h1, item: `${base}${rutas.festivales}` },
-        { '@type': 'ListItem', position: 3, name: f.nombre, item: `${base}${ruta}` },
+        { '@type': 'ListItem', position: 2, name: t.listados, item: `${base}${rutas.listados}` },
+        { '@type': 'ListItem', position: 3, name: t.h1, item: `${base}${rutas.festivales}` },
+        { '@type': 'ListItem', position: 4, name: f.nombre, item: `${base}${ruta}` },
       ] },
     ],
   };
@@ -89,12 +106,12 @@ export function renderizarFestival(f: Festival, base: string, idioma: IdiomaSeo,
 <body>
 <main>
 ${barraHtml(base, idioma, RUTAS[idioma === 'es' ? 'en' : 'es'].festival(f.slug), f.slug)}
-<p class="migas"><a href="${escapeHtml(base)}${rutas.festivales}">${escapeHtml(t.h1)}</a> › ${escapeHtml(f.nombre)}</p>
+<p class="migas"><a href="${escapeHtml(base)}${rutas.listados}">${escapeHtml(t.listados)}</a> › <a href="${escapeHtml(base)}${rutas.festivales}">${escapeHtml(t.h1)}</a> › ${escapeHtml(f.nombre)}</p>
 <ul class="etiquetas">${f.estilos.map((e) => `<li>${escapeHtml(ESTILOS[idioma][e])}</li>`).join('')}</ul>
 <h1>${escapeHtml(f.nombre)}</h1>
 <p class="intro">${escapeHtml(f.descripcion[idioma])}</p>
 <div class="scroll"><table class="tabla"><tbody>${filas.map(([k, v]) => `<tr><th scope="row">${escapeHtml(k)}</th><td>${escapeHtml(v)}</td></tr>`).join('')}</tbody></table></div>
-${f.convocatoria ? `<section class="seccion"><h2>${escapeHtml(t.convocatoria)}</h2><p>${escapeHtml(f.convocatoria.resumen[idioma])}</p><div class="acciones"><a class="boton suave" rel="noopener" href="${escapeHtml(f.convocatoria.url)}">${escapeHtml(t.verBases)}</a></div></section>` : ''}
+${f.convocatoria ? `<section class="seccion"><h2>${escapeHtml(t.convocatoria)}</h2><p>${escapeHtml(f.convocatoria.resumen[idioma])}</p>${requisitosHtml(f, idioma)}<div class="acciones"><a class="boton suave" rel="noopener" href="${escapeHtml(f.convocatoria.url)}">${escapeHtml(t.verBases)}</a></div></section>` : ''}
 <p class="aviso"><strong>${escapeHtml(t.consejo)}.</strong> ${escapeHtml(t.consejoTexto)}${guiaSlug ? ` <a href="${escapeHtml(base)}${escapeHtml(rutas.guia(guiaSlug))}">${escapeHtml(t.guia)}</a>.` : ''}</p>
 <p class="lectura">${escapeHtml(t.fuente)}: <a rel="noopener" href="${escapeHtml(f.fuente)}">${escapeHtml(new URL(f.fuente).hostname)}</a>${f.web ? ` · <a rel="noopener" href="${escapeHtml(f.web)}">${escapeHtml(t.web)}</a>` : ''}</p>
 <div class="cta">

@@ -23,7 +23,7 @@ Fichas del directorio de festivales. Añadir una = abrir un pull request con la 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[server_routes_paginasSeo|server/routes/paginasSeo.ts]] *(from #route)*
+- [[server_services_festivalesPublicos|server/services/festivalesPublicos.ts]] *(from #service)*
 - [[server_utils_seo_festivales_render|server/utils/seo/festivales/render.ts]] *(from #service)*
 - [[server_utils_seo_sitemap|server/utils/seo/sitemap.ts]] *(from #service)*
 
@@ -31,6 +31,7 @@ Fichas del directorio de festivales. Añadir una = abrir un pull request con la 
 
 ## 🧪 Tests que lo cubren
 - `server/utils/seo/__tests__/festivales.test.ts`
+- `server/utils/seo/__tests__/festivalesDb.test.ts`
 
 ---
 

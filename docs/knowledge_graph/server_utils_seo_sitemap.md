@@ -20,6 +20,7 @@ Entradas del sitemap de las páginas de SEO: cada par es/en declara sus alternat
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_utils_paginaConcierto|server/utils/paginaConcierto.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_festivales_datos|server/utils/seo/festivales/datos.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_seo_festivales_tipos|server/utils/seo/festivales/tipos.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_festivales_vigencia|server/utils/seo/festivales/vigencia.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_indice|server/utils/seo/indice.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_render|server/utils/seo/render.ts]] *(Layer: #service, Domain: #system)*

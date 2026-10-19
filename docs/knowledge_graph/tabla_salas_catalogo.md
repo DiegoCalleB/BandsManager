@@ -25,6 +25,7 @@ _Sin dependencias salientes directas._
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 - [[server_db_salasCatalogo|server/db/salasCatalogo.ts]] *(from #db)*
+- [[tabla_festivales|tabla festivales]] *(from #schema)*
 - [[tabla_leads|tabla leads]] *(from #schema)*
 
 ---
