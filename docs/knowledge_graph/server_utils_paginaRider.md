@@ -13,7 +13,7 @@ tags: ["service", "system", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Página pública de SEO «plantilla de rider técnico» (`/plantilla-rider-tecnico` y `/en/technical-rider-template`),
+Página pública de SEO «plantilla de rider técnico» (`/technical-rider-template` y `/en/technical-rider-template`),
 
 ---
 
@@ -32,6 +32,7 @@ Página pública de SEO «plantilla de rider técnico» (`/plantilla-rider-tecni
 
 ## 🧪 Tests que lo cubren
 - `server/utils/__tests__/paginaRider.test.ts`
+- `server/utils/seo/__tests__/avisoIdioma.test.ts`
 - `server/utils/seo/__tests__/guias.test.ts`
 
 ---

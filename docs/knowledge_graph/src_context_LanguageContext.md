@@ -20,6 +20,7 @@ Exporta: LanguageProvider.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_context_googleTranslate|src/context/googleTranslate.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_context_idioma|src/context/idioma.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_idiomaNavegador|src/utils/idiomaNavegador.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

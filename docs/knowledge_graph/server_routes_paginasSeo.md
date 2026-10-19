@@ -13,14 +13,18 @@ tags: ["route", "system", "auto"]
 > **Capa:** `#layer/route` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Guías públicas de SEO: /guias y /en/guides (índices) y /guias/:slug y /en/guides/:slug. Contenido fijo
+Guías y directorio de festivales de SEO: /guides y /en/guides (índices) y /guides/:slug y /en/guides/:slug. Contenido fijo
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(Layer: #security, Domain: #system)*
+- [[server_services_festivalesPublicos|server/services/festivalesPublicos.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_paginaConcierto|server/utils/paginaConcierto.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_seo_festivales_render|server/utils/seo/festivales/render.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_seo_festivales_vigencia|server/utils/seo/festivales/vigencia.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_indice|server/utils/seo/indice.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_seo_listados|server/utils/seo/listados.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_render|server/utils/seo/render.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_rutas|server/utils/seo/rutas.ts]] *(Layer: #service, Domain: #system)*
 
@@ -29,6 +33,11 @@ Guías públicas de SEO: /guias y /en/guides (índices) y /guias/:slug y /en/gui
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
 - [[server_routes_paginaConcierto|server/routes/paginaConcierto.ts]] *(from #route)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/paginasSeo.test.ts`
 
 ---
 
