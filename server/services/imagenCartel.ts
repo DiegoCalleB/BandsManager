@@ -7,7 +7,7 @@ import { dbRecordAiUsage } from '../db/aiLedger.js';
 import { uploadBufferToSupabase } from '../utils/storage.js';
 import { elegirMejorVariante, type VarianteFondo } from './juezCartel.js';
 import { isSpendCapOrQuotaError } from '../ai.js';
-import { costeImagenEur } from '../utils/promptCartel.js';
+import { costeImagenEur, type EncuadreFondo } from '../utils/promptCartel.js';
 import { carpetaCartel } from '../utils/cartelUrl.js';
 import type { ImagenReferencia } from './referenciasCartel.js';
 
@@ -17,8 +17,9 @@ export const MODELO_IMAGEN_PRO = 'gemini-3-pro-image-preview';
 export const MODELO_IMAGEN = process.env.CARTEL_MODELO_IMAGEN || MODELO_IMAGEN_PRO;
 /** Variantes por cartel; un juez elige la mejor. 1 = sin juez. */
 export const VARIANTES_FONDO = Math.min(4, Math.max(1, Number(process.env.CARTEL_VARIANTES) || 3));
-/** Proporción del fondo de IA. */
+/** Proporción del fondo de IA: apaisada si va en una ventana del papel, vertical si ocupa todo el cartel. */
 export const RELACION_FONDO = '4:3';
+export const RELACION_FONDO_SANGRE = '3:4';
 
 /** Cada fondo de IA en su propio fichero: el historial del bolo los conserva para no repagarlos. */
 export function rutaFondoIa(bandId: string): string {
@@ -31,7 +32,7 @@ export function contenidoDeFondo(prompt: string, referencias: ImagenReferencia[]
   return [{ role: 'user', parts: [{ text: prompt }, ...referencias.map((r) => ({ inlineData: { mimeType: r.mimeType, data: r.data } }))] }];
 }
 
-async function unaVariante(bandId: string, modelo: string, prompt: string, referencias: ImagenReferencia[]): Promise<VarianteFondo | null> {
+async function unaVariante(bandId: string, modelo: string, prompt: string, referencias: ImagenReferencia[], relacion: string): Promise<VarianteFondo | null> {
   const client = getAiClient();
   if (!client) return null;
   const respuesta = await client.models.generateContent({
@@ -42,7 +43,7 @@ async function unaVariante(bandId: string, modelo: string, prompt: string, refer
       // Apaisada: el cliente la encaja ENTERA en la ventana del cartel (entre las placas del texto), así que
       // un solo fondo pagado sirve para feed, historia e impresión. Pedir «deja sitio arriba y abajo» en un
       // lienzo vertical no funciona: un modelo de imagen no mide porcentajes y la ilustración salía cortada.
-      imageConfig: { aspectRatio: RELACION_FONDO },
+      imageConfig: { aspectRatio: relacion },
       abortSignal: AbortSignal.timeout(TIMEOUT_IA_LARGO_MS),
     },
   });
@@ -61,8 +62,8 @@ async function unaVariante(bandId: string, modelo: string, prompt: string, refer
 }
 
 /** Pide `n` variantes en paralelo y se queda con las que salieron; si todas fallan, relanza el primer error. */
-async function variantes(bandId: string, modelo: string, prompt: string, referencias: ImagenReferencia[], n: number) {
-  const r = await Promise.allSettled(Array.from({ length: n }, () => unaVariante(bandId, modelo, prompt, referencias)));
+async function variantes(bandId: string, modelo: string, prompt: string, referencias: ImagenReferencia[], n: number, relacion: string) {
+  const r = await Promise.allSettled(Array.from({ length: n }, () => unaVariante(bandId, modelo, prompt, referencias, relacion)));
   const ok = r.flatMap((x) => (x.status === 'fulfilled' && x.value ? [x.value] : []));
   if (ok.length > 0) return ok;
   const fallo = r.find((x): x is PromiseRejectedResult => x.status === 'rejected');
@@ -70,17 +71,18 @@ async function variantes(bandId: string, modelo: string, prompt: string, referen
   return ok;
 }
 
-export async function generarFondoCartel(bandId: string, prompt: string, referencias: ImagenReferencia[] = []): Promise<string | null> {
+export async function generarFondoCartel(bandId: string, prompt: string, referencias: ImagenReferencia[] = [], encuadre: EncuadreFondo = 'ventana'): Promise<string | null> {
+  const relacion = encuadre === 'sangre' ? RELACION_FONDO_SANGRE : RELACION_FONDO;
   if (!getAiClient()) return null;
 
   let candidatas: VarianteFondo[];
   try {
-    candidatas = await variantes(bandId, MODELO_IMAGEN, prompt, referencias, VARIANTES_FONDO);
+    candidatas = await variantes(bandId, MODELO_IMAGEN, prompt, referencias, VARIANTES_FONDO, relacion);
   } catch (e) {
     // Sin cupo se avisa tal cual; si es el modelo caro el que no está disponible, se cae al barato.
     if (isSpendCapOrQuotaError(e) || MODELO_IMAGEN === MODELO_IMAGEN_BASE) throw e;
     console.warn('[Cartel] Modelo de imagen principal no disponible, se usa el básico:', (e as Error)?.message || e);
-    candidatas = await variantes(bandId, MODELO_IMAGEN_BASE, prompt, referencias, VARIANTES_FONDO);
+    candidatas = await variantes(bandId, MODELO_IMAGEN_BASE, prompt, referencias, VARIANTES_FONDO, relacion);
   }
   if (candidatas.length === 0) return null;
 

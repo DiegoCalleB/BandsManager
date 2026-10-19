@@ -366,7 +366,11 @@ export async function renderCartel(
     return ctx.measureText(t).width;
   };
   const logos = await cargarLogos(piezas.logos ?? []);
-  const conIlustracion = fondo.tipo === 'imagen' && fondo.origen === 'ia';
+  const esIa = fondo.tipo === 'imagen' && fondo.origen === 'ia';
+  // Una ilustración de IA vertical (3:4) es el cartel entero: el texto va encima, en sus zonas calmadas.
+  // Una apaisada es una ventana dentro de un papel: el layout se compacta para dejarle sitio.
+  const aSangre = esIa && !!imagen && imagen.height / imagen.width >= 1.1;
+  const conIlustracion = esIa && !aSangre;
   const L = calcularLayout(def, ancho, piezas.datos, { ...piezas.opciones, compacto: conIlustracion, voz, composicion: piezas.composicion, logos: logos.map((l) => l.img.width / l.img.height) }, medir);
   canvas.width = L.ancho;
   canvas.height = L.alto;
@@ -388,7 +392,7 @@ export async function renderCartel(
     };
     dibujarOnda(ctx, hueco, paleta.acento, piezas.semilla, u);
   } else if (imagen) {
-    if (fondo.tipo === 'imagen' && fondo.origen === 'ia') {
+    if (conIlustracion) {
       // Un fondo de IA es una ilustración ENTERA dentro de un cartel de papel: va en la ventana que dejan
       // las placas del texto y nada la corta. Si está dibujada sobre un papel liso, el cartel es de ESE papel
       // y la ilustración se funde con él (sin caja ni filetes); si no, se enmarca. La fibra se pone al final,
@@ -451,6 +455,13 @@ export async function renderCartel(
   } else {
     tArriba = tintaDeLineas(ctx, lineasArriba, L.zonas.arriba, u, voz);
     tAbajo = tintaDeLineas(ctx, lineasAbajo, L.zonas.abajo, u, voz, L.logos);
+    if (aSangre) {
+      // Sobre una ilustración que ocupa todo el cartel, el texto es siempre claro sobre una sombra de la propia
+      // imagen: un velo claro de papel con letra oscura se lee como una mancha gris pegada encima del arte.
+      const sobreArte = (t: Tinta): Tinta => (t.tinta === 'oscura' ? { tinta: 'clara', velo: 0.6 } : t);
+      tArriba = sobreArte(tArriba);
+      tAbajo = sobreArte(tAbajo);
+    }
     velar(ctx, L.zonas.arriba, tArriba, true, fundido);
     velar(ctx, L.zonas.abajo, tAbajo, false, fundido);
     pintar(lineasArriba, tArriba);
@@ -458,7 +469,7 @@ export async function renderCartel(
   }
   dibujarAdornos(ctx, L.adornos, (a) => tintaDe(a.y >= L.zonas.abajo.y ? tAbajo : tArriba));
   // 3. La fibra de papel, por encima de todo menos el QR (que tiene que escanear): fondo y letras impresos juntos.
-  if (conIlustracion) aplicarGrano(ctx, L.ancho, L.alto, semillaDeTexto(piezas.semilla));
+  if (esIa) aplicarGrano(ctx, L.ancho, L.alto, semillaDeTexto(piezas.semilla));
 
   // 4. QR.
   if (L.qr && piezas.qrUrl) dibujarQr(ctx, L.qr, piezas.qrUrl);
