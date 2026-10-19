@@ -40,6 +40,32 @@ export function calcSlotSetlist(v: EntradaSlot) {
   return { temas, minutos: Math.round(temas * unidad * 10) / 10, sobra: Math.max(0, Math.round(((v.slot || 0) - temas * unidad) * 10) / 10) };
 }
 
+export interface EntradaEmbudo {
+  objetivo: number;
+  respuesta: number;
+  fecha: number;
+  meses: number;
+}
+
+/**
+ * Cuántas salas contactar para llegar a tus bolos: objetivo entre (tasa de respuesta × tasa de fecha tras responder),
+ * por arriba. `respuesta` y `fecha` van en porcentaje y `meses` es el plazo para repartir los envíos.
+ */
+export function calcEmbudoBolos(v: EntradaEmbudo) {
+  const objetivo = Math.max(0, Math.round(v.objetivo || 0));
+  const respuesta = Math.min(100, Math.max(0, v.respuesta || 0));
+  const fecha = Math.min(100, Math.max(0, v.fecha || 0));
+  const meses = Math.max(1, v.meses || 1);
+  const tasa = (respuesta / 100) * (fecha / 100);
+  const salas = tasa > 0 ? Math.ceil(objetivo / tasa - 1e-9) : 0;
+  return {
+    salas,
+    respuestas: Math.ceil((salas * respuesta) / 100 - 1e-9),
+    porSemana: Math.round((salas / (meses * 4.345)) * 10) / 10,
+    unaDeCada: tasa > 0 ? Math.round((1 / tasa) * 10) / 10 : 0,
+  };
+}
+
 interface DefCalc {
   titulo: string;
   campos: Array<{ nombre: string; etiqueta: string; valor: number; paso: number }>;
@@ -63,6 +89,21 @@ const DEFINICIONES: Record<IdiomaSeo, Record<IdCalculadora, DefCalc>> = {
         { clave: 'soloGastos', etiqueta: 'Solo para no perder dinero (gastos)', unidad: '€' },
       ],
       nota: 'Cuenta en «gastos» transporte, backline, comida y sonido si lo pones tú. En «horas» suma ensayo, montaje, viaje y concierto.',
+    },
+    'embudo-bolos': {
+      titulo: 'Calculadora: a cuántas salas escribir',
+      campos: [
+        { nombre: 'objetivo', etiqueta: 'Bolos que quieres conseguir', valor: 12, paso: 1 },
+        { nombre: 'respuesta', etiqueta: 'Salas que contestan (%)', valor: 20, paso: 5 },
+        { nombre: 'fecha', etiqueta: 'De las que contestan, acaban en fecha (%)', valor: 30, paso: 5 },
+        { nombre: 'meses', etiqueta: 'Plazo en meses', valor: 6, paso: 1 },
+      ],
+      resultados: [
+        { clave: 'salas', etiqueta: 'Salas a contactar', unidad: '', grande: true },
+        { clave: 'respuestas', etiqueta: 'Respuestas que recibirás', unidad: '' },
+        { clave: 'porSemana', etiqueta: 'Mensajes por semana', unidad: '' },
+      ],
+      nota: 'Los porcentajes por defecto son de ejemplo. En cuanto tengas tus propios envíos, cámbialos por los tuyos.',
     },
     'slot-setlist': {
       titulo: 'Calculadora: cuántos temas caben',
@@ -93,6 +134,21 @@ const DEFINICIONES: Record<IdiomaSeo, Record<IdCalculadora, DefCalc>> = {
       ],
       nota: 'Count transport, backline, food and sound under "costs" if you provide them. Under "hours" add rehearsal, load-in, travel and the show.',
     },
+    'embudo-bolos': {
+      titulo: 'Calculator: how many venues to write to',
+      campos: [
+        { nombre: 'objetivo', etiqueta: 'Gigs you want to book', valor: 12, paso: 1 },
+        { nombre: 'respuesta', etiqueta: 'Venues that reply (%)', valor: 20, paso: 5 },
+        { nombre: 'fecha', etiqueta: 'Of those, end up with a date (%)', valor: 30, paso: 5 },
+        { nombre: 'meses', etiqueta: 'Timeframe in months', valor: 6, paso: 1 },
+      ],
+      resultados: [
+        { clave: 'salas', etiqueta: 'Venues to contact', unidad: '', grande: true },
+        { clave: 'respuestas', etiqueta: 'Replies you will get', unidad: '' },
+        { clave: 'porSemana', etiqueta: 'Messages per week', unidad: '' },
+      ],
+      nota: 'The default percentages are examples. As soon as you have sends of your own, swap them for yours.',
+    },
     'slot-setlist': {
       titulo: 'Calculator: how many songs fit',
       campos: [
@@ -109,6 +165,7 @@ const DEFINICIONES: Record<IdiomaSeo, Record<IdCalculadora, DefCalc>> = {
 };
 
 const FORMULAS: Record<IdCalculadora, (v: never) => unknown> = {
+  'embudo-bolos': calcEmbudoBolos as (v: never) => unknown,
   'cache-minimo': calcCacheMinimo as (v: never) => unknown,
   'slot-setlist': calcSlotSetlist as (v: never) => unknown,
 };

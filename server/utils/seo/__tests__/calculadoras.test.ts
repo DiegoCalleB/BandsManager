@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { calcCacheMinimo, calcSlotSetlist, scriptCalculadoras } from '../calculadoras.js';
+import { calcCacheMinimo, calcEmbudoBolos, calcSlotSetlist, scriptCalculadoras } from '../calculadoras.js';
 import { guiaPorSlug } from '../indice.js';
 import { renderizarGuia } from '../render.js';
 
@@ -25,6 +25,26 @@ describe('calcSlotSetlist', () => {
   });
   it('nunca devuelve negativos', () => {
     expect(calcSlotSetlist({ slot: 3, media: 4 }).temas).toBe(0);
+  });
+});
+
+describe('calcEmbudoBolos', () => {
+  it('ejemplo de la guía: 12 bolos con 20 % y 30 % piden 200 salas', () => {
+    expect(calcEmbudoBolos({ objetivo: 12, respuesta: 20, fecha: 30, meses: 6 })).toMatchObject({ salas: 200, respuestas: 40, porSemana: 7.7, unaDeCada: 16.7 });
+  });
+  it('redondea hacia arriba y no divide por cero', () => {
+    expect(calcEmbudoBolos({ objetivo: 1, respuesta: 20, fecha: 30, meses: 6 }).salas).toBe(17);
+    expect(calcEmbudoBolos({ objetivo: 12, respuesta: 0, fecha: 30, meses: 6 }).salas).toBe(0);
+    expect(calcEmbudoBolos({ objetivo: 12, respuesta: 200, fecha: 300, meses: 0 }).salas).toBe(12);
+  });
+  it('el gráfico de «conseguir bolos» sale de las tasas que dice (3, 6 y 12 de cada 100)', () => {
+    const g = guiaPorSlug('como-conseguir-bolos')!.secciones.find((x) => x.grafico)!.grafico!;
+    const salas = g.ejeX.etiquetas.map(Number);
+    for (const [nombre, tasa] of [['3 de cada 100', 0.03], ['6 de cada 100', 0.06], ['12 de cada 100', 0.12]] as const) {
+      expect(g.series.find((x) => x.nombre === nombre)!.valores).toEqual(salas.map((n) => Math.round(n * tasa * 10) / 10));
+    }
+    // Cada serie es una tasa válida de la calculadora: 12 bolos en 120 salas al 12 % de éxito.
+    expect(calcEmbudoBolos({ objetivo: 14, respuesta: 40, fecha: 30, meses: 6 }).salas).toBe(117);
   });
 });
 
