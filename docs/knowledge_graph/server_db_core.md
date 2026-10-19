@@ -49,6 +49,7 @@ Exporta: rolDeClaveSupabase, esSupabaseNoConfigurado, getSupabase, normalizePlan
 - [[server_db_epk|server/db/epk.ts]] *(from #db)*
 - [[server_db_exampleThreads|server/db/exampleThreads.ts]] *(from #db)*
 - [[server_db_fans|server/db/fans.ts]] *(from #db)*
+- [[server_db_festivales|server/db/festivales.ts]] *(from #db)*
 - [[server_db_gmailOAuth|server/db/gmailOAuth.ts]] *(from #security)*
 - [[server_db_interesados|server/db/interesados.ts]] *(from #db)*
 - [[server_db_leadAprobacion|server/db/leadAprobacion.ts]] *(from #db)*
@@ -62,6 +63,7 @@ Exporta: rolDeClaveSupabase, esSupabaseNoConfigurado, getSupabase, normalizePlan
 - [[server_db_referidos|server/db/referidos.ts]] *(from #db)*
 - [[server_db_rehearsals|server/db/rehearsals.ts]] *(from #db)*
 - [[server_db_salasCatalogo|server/db/salasCatalogo.ts]] *(from #db)*
+- [[server_db_salasPublicas|server/db/salasPublicas.ts]] *(from #db)*
 - [[server_db_schedule|server/db/schedule.ts]] *(from #db)*
 - [[server_db_social|server/db/social.ts]] *(from #db)*
 - [[server_db_stemsCache|server/db/stemsCache.ts]] *(from #db)*

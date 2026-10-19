@@ -31,8 +31,14 @@ _Sin dependencias salientes directas._
 - [[server_utils_interesados|server/utils/interesados.ts]] *(from #service)*
 - [[server_utils_paginaConcierto|server/utils/paginaConcierto.ts]] *(from #service)*
 - [[server_utils_paginaRider|server/utils/paginaRider.ts]] *(from #service)*
+- [[server_utils_seo_avisoIdioma|server/utils/seo/avisoIdioma.ts]] *(from #service)*
 - [[server_utils_seo_cabeza|server/utils/seo/cabeza.ts]] *(from #service)*
+- [[server_utils_seo_calculadoras|server/utils/seo/calculadoras.ts]] *(from #service)*
+- [[server_utils_seo_festivales_render|server/utils/seo/festivales/render.ts]] *(from #service)*
+- [[server_utils_seo_figuras|server/utils/seo/figuras.ts]] *(from #service)*
+- [[server_utils_seo_listados|server/utils/seo/listados.ts]] *(from #service)*
 - [[server_utils_seo_render|server/utils/seo/render.ts]] *(from #service)*
+- [[server_utils_seo_salas_render|server/utils/seo/salas/render.ts]] *(from #service)*
 - [[service_calendar_conflicts|Avisos de choques por email]] *(from #service)*
 
 ---

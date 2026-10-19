@@ -23,6 +23,7 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server_utils_geoEspana|server/utils/geoEspana.ts]] *(from #service)*
 - [[server_utils_osmSalas|server/utils/osmSalas.ts]] *(from #service)*
 
 ---

@@ -24,7 +24,9 @@ _Sin dependencias salientes directas._
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_utils_seo_cabeza|server/utils/seo/cabeza.ts]] *(from #service)*
+- [[server_utils_seo_festivales_render|server/utils/seo/festivales/render.ts]] *(from #service)*
 - [[server_utils_seo_render|server/utils/seo/render.ts]] *(from #service)*
+- [[server_utils_seo_salas_render|server/utils/seo/salas/render.ts]] *(from #service)*
 
 ---
 

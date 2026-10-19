@@ -47,6 +47,26 @@ describe('LanguageProvider', () => {
     expect(ctx.t('clave.inexistente')).toBe('clave.inexistente');
   });
 
+  it.each([
+    [['ja-JP', 'en-US'], 'en'],
+    [['fr-FR'], 'en'],
+    [['de'], 'en'],
+    [['es-MX', 'en-US'], 'es'],
+    [['ca-ES'], 'ca'],
+    [['en-GB'], 'en'],
+  ] as const)('sin idioma guardado se adapta al del navegador %j → %s', (idiomas, esperado) => {
+    vi.spyOn(navigator, 'languages', 'get').mockReturnValue(idiomas as unknown as readonly string[]);
+    montar();
+    expect(ctx.language).toBe(esperado);
+  });
+
+  it('el idioma guardado manda sobre el del navegador', () => {
+    vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['ja-JP']);
+    localStorage.setItem('bandmanager_language', 'es');
+    montar();
+    expect(ctx.language).toBe('es');
+  });
+
   it('en la URL /en manda el inglés sobre el idioma guardado, sin sobrescribirlo', () => {
     localStorage.setItem('bandmanager_language', 'es');
     window.history.pushState({}, '', '/en');

@@ -29,6 +29,7 @@ _Sin dependencias salientes directas._
 - [[server_routes_users_rutasMiembros|server/routes/users/rutasMiembros.ts]] *(from #route)*
 - [[server_routes_users_rutasRegistro|server/routes/users/rutasRegistro.ts]] *(from #route)*
 - [[server_utils_paginaConcierto|server/utils/paginaConcierto.ts]] *(from #service)*
+- [[server_utils_seo_festivales_importar|server/utils/seo/festivales/importar.ts]] *(from #service)*
 - [[server_utils_seo_render|server/utils/seo/render.ts]] *(from #service)*
 
 ---

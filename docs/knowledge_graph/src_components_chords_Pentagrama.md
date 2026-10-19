@@ -23,8 +23,13 @@ Exporta: Pentagrama.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_chords_AcordeEnInstrumento|src/components/chords/AcordeEnInstrumento.tsx]] *(from #frontend)*
 - [[src_components_chords_DiagramaEscala|src/components/chords/DiagramaEscala.tsx]] *(from #frontend)*
+- [[src_components_chords_PentagramaFicha|src/components/chords/PentagramaFicha.tsx]] *(from #frontend)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `src/audit/pentagramaPaso.test.tsx`
 
 ---
 

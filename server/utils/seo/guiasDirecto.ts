@@ -3,37 +3,72 @@ import type { GuiaSeo } from './tipos.js';
 export const GUIAS_DIRECTO: GuiaSeo[] = [
   {
     slug: 'como-hacer-un-setlist',
-    titulo: 'Cómo hacer un setlist para un concierto: orden, energía y duración',
-    h1: 'Cómo hacer un setlist para un concierto',
-    descripcion: 'Criterios para ordenar las canciones de un directo: apertura, curva de energía, tonalidades, transiciones y cierre. Con pasos para armarlo en una tarde.',
-    intro: 'Un buen setlist no es tus mejores canciones en fila. Es un recorrido con principio, tensión y final, ajustado al tiempo que te dan.',
-    resumen: ['Empieza por el tiempo real de tu slot y deja canciones de reserva.', 'Dibuja una curva de energía: apertura que enganche, respiro a mitad y cierre fuerte.', 'Cuida tonalidades y tempos entre temas, e imprime el setlist legible para el escenario.'],
+    titulo: 'Cómo hacer un setlist: estructura, orden y plantillas gratis',
+    h1: 'Cómo hacer un setlist que funcione',
+    descripcion: 'Qué es un setlist y cómo montarlo: calcula el tiempo, estructura el concierto en cinco tramos, ordena por tonalidad y afinación y copia tres plantillas.',
+    intro: 'Un setlist es la lista ordenada de los temas de un concierto, con sus transiciones y, a menudo, la tonalidad y la afinación de cada uno. Casi todos se rompen por el medio: buen arranque, buen cierre y, entre medias, una playlist sin hilo. La solución no es meter más temas, es darle forma.',
+    resumen: ['Empieza por el tiempo real de tu slot, no por las canciones: casi todas las bandas cargan de más.', 'Estructura el set en cinco tramos (gancho, subida, respiro, remontada y cierre) y ordena después por tonalidad y afinación.', 'Lleva una hoja de una página al escenario, mándale el setlist al técnico con tiempo y trátalo como un borrador hasta la prueba de sonido.'],
     secciones: [
       {
-        h2: 'Empieza por el tiempo disponible',
-        parrafos: ['Pregunta cuánto dura tu slot y cuánto hay entre canción y canción. Cuenta la duración real de cada tema, más el tiempo que pierdes hablando y afinando. Sobra siempre alguno: deja una o dos canciones de reserva.'],
+        h2: 'Empieza por el tiempo, no por las canciones',
+        parrafos: ['Antes de abrir ninguna herramienta, apunta dos números: los minutos que tienes en el escenario y lo que dura de media cada tema. Después cuenta medio minuto de transición por canción y resta cinco minutos de margen para imprevistos: una cuerda rota, un pedido del público, un micro que no suena.', 'La cuenta es sencilla: (minutos del slot menos 5) dividido entre (duración media más 0,5). Con ella sale un número de temas casi siempre menor del que pensabas.'],
+        calculadora: 'slot-setlist',
+        tablas: [{ titulo: 'Cuántos temas caben en tu slot', cabeceras: ['Slot', 'Temas de 4 min', 'Temas de 3 min'], filas: [['30 min', '5', '7'], ['45 min', '8', '11'], ['60 min', '12', '15'], ['75 min', '15', '20'], ['90 min', '18', '24']] }],
       },
       {
-        h2: 'Dibuja la curva de energía',
-        pasos: ['Abre con un tema que enganche rápido, no necesariamente el más fuerte.', 'Sube la energía en el primer tercio y consigue la atención de la sala.', 'Coloca un respiro hacia la mitad: un tema lento o una canción con dinámica distinta.', 'Reconstruye la tensión hasta el final.', 'Cierra con el tema que quieras que se recuerde y deja uno de reserva para el bis.'],
+        h2: 'La curva de energía en cinco tramos',
+        parrafos: ['Un set que funciona tiene casi siempre el mismo esqueleto: arranca con algo que enganche, sube, respira, vuelve a subir y cierra con algo que todos puedan cantar. No es una fórmula mágica, es la forma en que se cansa y se recupera la atención de una sala.'],
+        figura: 'curva-setlist',
+        tablas: [{ titulo: 'Los cinco tramos de un set de doce temas', cabeceras: ['Tramo', 'Temas', 'Qué buscas'], filas: [['Gancho', '1 y 2', 'Atrapar en los primeros 20 segundos. Un tema medio o rápido; el lento profundo se guarda.'], ['Subida', '3 a 5', 'Subir energía con temas más cortos y estribillos grandes. Aquí el público ocasional decide si se queda.'], ['Respiro', '6 y 7', 'Un tema más lento o desnudo. Sin él, la sala se agota hacia el noveno.'], ['Remontada', '8 a 10', 'Reconstruir la tensión con los temas más grandes.'], ['Cierre', '11 y 12 (y bis)', 'Un estribillo que todos conozcan. Nada experimental al final.']] }],
+        aviso: 'Una regla que suele funcionar: el tema más conocido va penúltimo, no último. El público llega al pico antes del cierre y se va cantando el último, que debe ser un estribillo seguro.',
       },
       {
-        h2: 'Cuida las transiciones',
-        lista: ['Tonalidades: pasar de un tema a otro en tonos cercanos suena más natural.', 'Tempo: evita saltos bruscos de BPM sin una pausa o un cambio de ambiente.', 'Cambios de instrumento o de afinación: agrúpalos para no parar el concierto cada tres minutos.'],
+        h2: 'Ordena por tonalidad y afinación',
+        parrafos: ['Cuando el orden suena bien, míralo con los ojos de la banda. Dos temas en drop D seguidos son un cambio de afinación ahorrado. Tres posiciones distintas de cejilla seguidas son tres momentos en que el guitarrista mira al mástil en lugar del público. Si puedes agrupar por afinación sin romper la curva, hazlo; si no, cubre el cambio con una intro de treinta segundos o una historia.', 'Con las tonalidades pasa algo parecido: no hace falta ser teórico, basta con escuchar las uniones. Si dos temas seguidos suenan mal cantados a medio volumen en el salón de casa, cambia uno de sitio.'],
+        tablas: [{ titulo: 'Cómo suena cada salto de tonalidad', cabeceras: ['Salto', 'Efecto', 'Cuándo usarlo'], filas: [['Una cuarta o quinta arriba', 'Suena a construcción', 'Para remontar tras el respiro'], ['Un tono abajo', 'Suena a bajada', 'Justo antes del tema lento'], ['Misma tonalidad dos veces', 'Plano', 'Solo si el tempo cambia mucho'], ['Un semitono', 'Suena a accidente', 'Evítalo salvo que sea a propósito']] }],
       },
       {
-        h2: 'Imprímelo y compártelo',
-        parrafos: ['Lleva copias legibles al escenario, con letra grande y los cambios marcados, y comparte la misma versión con el técnico de sonido. Un setlist con QR hacia tus redes convierte cada concierto en seguidores.'],
+        h2: 'Planifica las transiciones, no solo los temas',
+        parrafos: ['La mayoría de los setlists listan doce temas y cero transiciones. En el escenario, cada hueco se convierte en una pregunta. Decide antes de subir:'],
+        lista: ['Qué temas van pegados, con cuenta directa desde la última nota.', 'Cuáles necesitan un puente: un relleno de batería, un colchón de teclado, una afinación.', 'Cuáles piden una historia o una frase del cantante.', 'Dónde hace falta un descanso real: agua, cambio de guitarra, hablar con el público.'],
+        aviso: 'Escribe las transiciones como líneas aparte en el setlist. «Cambio a acústica» forma parte del concierto tanto como el tema anterior.',
+      },
+      {
+        h2: 'Una hoja de una página para el escenario',
+        parrafos: ['La versión que acaba pegada en el suelo delante del baterista debe caber en una página, leerse bajo los focos a dos metros y llevar solo lo imprescindible: título, tonalidad y afinación. Las letras y los acordes van en una tablet o en el móvil, en una vista pensada para escenario, no en el papel.'],
+      },
+      {
+        h2: 'Mándaselo al técnico de sonido con tiempo',
+        parrafos: ['Lo que más sube tu sonido en directo es entregar al técnico, el día antes, un setlist con las duraciones y los temas que piden algo especial: cambio a acústica, voz de armonía, click, un sample. Si la sala tiene técnico de casa que no te ha oído nunca, añade el plano de escenario: dará por hecho que no tienes uno.', 'Mejor un enlace que un PDF: el PDF se queda viejo en cuanto cambias el orden.'],
+      },
+      {
+        h2: 'Tres plantillas para copiar',
+        parrafos: ['Son esqueletos, no sentencias: cambia los tipos de tema por los tuyos y ajusta la duración a tu slot.'],
+        tablas: [
+          { titulo: 'Concierto de 45 minutos como telonero', cabeceras: ['#', 'Tema', 'Función'], filas: [['1', 'Tu mejor arranque', 'Gancho'], ['2', 'Tu segundo mejor tema', 'Gancho'], ['3', 'Tema nuevo o menos conocido', 'Subida'], ['4', 'Tema más conocido', 'Pico'], ['5', 'Lento o desnudo', 'Respiro'], ['6', 'Tema de construcción', 'Remontada'], ['7', 'El que quieres que recuerden', 'Cierre']] },
+          { titulo: 'Concierto de 75 minutos en sala propia', cabeceras: ['Bloque', 'Temas', 'Función'], filas: [['Apertura', '1 a 3', 'Gancho y subida'], ['Primer tercio', '4 a 7', 'Material nuevo con los estribillos grandes'], ['Respiro', '8 y 9', 'Un lento y un tema acústico'], ['Remontada', '10 a 13', 'Los temas más conocidos'], ['Cierre', '14 y 15', 'Estribillo conocido y bis']] },
+          { titulo: 'Festival de 30 minutos', cabeceras: ['#', 'Idea'], filas: [['1 a 2', 'Arranca fuerte y sin hablar: el público está de paso'], ['3 a 4', 'Sube con lo más reconocible'], ['5', 'Un único respiro corto'], ['6 a 7', 'Cierra con lo más conocido y deja uno de reserva']] },
+        ],
+      },
+      {
+        h2: 'Cómo hacerlo en BandManager',
+        lista: ['Guarda cada tema con su tonalidad, BPM y duración en el repertorio.', 'Arma el setlist arrastrando temas y mira el mapa de energía del set para ver si la curva respira.', 'Exporta el setlist en PDF para imprimirlo y llevarlo al escenario.', 'Compártelo como texto con el resto de la banda y úsalo en el modo escenario, con letras, acordes y transposición.'],
+      },
+      {
+        h2: 'Trátalo como un borrador hasta la prueba de sonido',
+        parrafos: ['Las mejores bandas reconstruyen los últimos tres temas después de la prueba, según la sala. Si es pequeña y el público es mayor, recortan el cierre más ruidoso y suben el estribillo. Si el público es joven y está de pie, al revés. Un setlist es un plan, no un contrato: constrúyelo para poder editarlo, no para conservarlo.'],
       },
     ],
     faq: [
-      { q: '¿Cuántas canciones caben en una hora?', a: 'Depende de la duración media, pero con temas de tres a cuatro minutos y la charla entre canciones, suelen ser entre doce y catorce.' },
-      { q: '¿Conviene cambiar el setlist según la sala?', a: 'Sí. Una sala de pie pide más energía; un teatro permite más matices. Ten una versión base y ajústala.' },
-      { q: '¿Cómo meto las versiones de otros?', a: 'Dos o tres, en puntos donde el público se suelte, ayudan a conectar. No más de un tercio del set.' },
+      { q: '¿Cuántas canciones caben en una hora?', a: 'Entre doce y quince, según duren tres o cuatro minutos cada una, contando medio minuto de transición y cinco minutos de margen.' },
+      { q: '¿Qué canción va primera y cuál última?', a: 'Primero algo que enganche en veinte segundos, no necesariamente tu mejor tema. Al final, un estribillo que todos conozcan; el más conocido suele ir justo antes.' },
+      { q: '¿Conviene cambiar el setlist según la sala?', a: 'Sí. Una sala de pie pide más energía y un teatro permite más matices. Ten una versión base y ajusta los últimos tres temas tras la prueba.' },
+      { q: '¿Cuántas versiones de otros meto?', a: 'Dos o tres, colocadas donde la sala pueda soltarse, ayudan a conectar. Mejor que no pasen de un tercio del set.' },
     ],
-    relacionadas: ['como-organizar-ensayos', 'promocionar-un-concierto', '/plantilla-rider-tecnico'],
-    cta: { titulo: 'Setlists que se ordenan solos', texto: 'En BandManager armas el repertorio, ves la curva de energía y exportas el setlist en PDF con QR.', boton: 'Probar BandManager gratis' },
+    relacionadas: ['como-organizar-ensayos', 'como-hacer-una-prueba-de-sonido', 'promocionar-un-concierto'],
+    cta: { titulo: 'Setlists que se ordenan solos', texto: 'En BandManager armas el repertorio, ves la curva de energía y exportas el setlist en PDF.', boton: 'Probar BandManager gratis' },
   },
+
   {
     slug: 'hoja-de-ruta-de-gira',
     titulo: 'Hoja de ruta de gira: plantilla y qué incluir',
@@ -60,7 +95,7 @@ export const GUIAS_DIRECTO: GuiaSeo[] = [
       { q: '¿Quién la hace?', a: 'Quien lleve la gestión de la banda, con la información que da la sala. Conviene que todos la lean antes de salir.' },
       { q: '¿Cuándo debo mandarla?', a: 'Con tiempo para poder corregir: unos tres días antes en una fecha suelta y con la gira cerrada semanas antes.' },
     ],
-    relacionadas: ['/plantilla-rider-tecnico', 'rider-de-hospitalidad', 'como-organizar-ensayos'],
+    relacionadas: ['/technical-rider-template', 'rider-de-hospitalidad', 'como-organizar-ensayos'],
     cta: { titulo: 'Gira y calendario en un solo sitio', texto: 'BandManager reúne tus conciertos, horarios y contactos para que toda la banda vea lo mismo.', boton: 'Probar BandManager gratis' },
   },
   {
@@ -89,7 +124,7 @@ export const GUIAS_DIRECTO: GuiaSeo[] = [
       { q: '¿Se negocia?', a: 'Sí. Es habitual adaptarlo al presupuesto y las condiciones de cada sala o festival.' },
       { q: '¿Dónde se incluye?', a: 'En un apartado distinto del rider técnico y del dossier, o como documento aparte.' },
     ],
-    relacionadas: ['/plantilla-rider-tecnico', 'hoja-de-ruta-de-gira', 'contrato-actuacion-musical'],
+    relacionadas: ['/technical-rider-template', 'hoja-de-ruta-de-gira', 'contrato-actuacion-musical'],
     cta: { titulo: 'Todos tus documentos a mano', texto: 'Guarda el rider y el dossier en BandManager y compártelos con un enlace en cada propuesta.', boton: 'Probar BandManager gratis' },
   },
   {

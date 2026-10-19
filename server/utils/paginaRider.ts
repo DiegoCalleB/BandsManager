@@ -1,5 +1,5 @@
 /**
- * Página pública de SEO «plantilla de rider técnico» (`/plantilla-rider-tecnico` y `/en/technical-rider-template`),
+ * Página pública de SEO «plantilla de rider técnico» (`/technical-rider-template` y `/en/technical-rider-template`),
  * generada en el servidor.
  *
  * Captura búsquedas reales de bandas («plantilla rider técnico», «input list») con una plantilla
@@ -116,7 +116,7 @@ export function renderizarPaginaRider(base: string, idioma: IdiomaSeo = 'es'): s
   return `${cabezaHtml({ base, idioma, ruta, titulo: c.titulo, descripcion: c.descripcion, jsonLd, tipoOg: 'article', alternativas: alternativasPar(base, RUTAS.es.rider, RUTAS.en.rider) })}
 <body>
 <main>
-${barraHtml(base, idioma, RUTAS[idioma === 'es' ? 'en' : 'es'].rider)}
+${barraHtml(base, idioma, RUTAS[idioma === 'es' ? 'en' : 'es'].rider, 'rider_tecnico')}
 <header class="no-imprimir">
 <h1>${escapeHtml(c.h1)}</h1>
 <p class="intro">${escapeHtml(c.intro)}</p>
