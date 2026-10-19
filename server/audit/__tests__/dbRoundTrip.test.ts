@@ -14,6 +14,9 @@ const SALTADAS_ACEPTADAS: Record<string, string> = {
   enlaces_bandas_amigas: 'CHECK en plataforma: el valor genérico de prueba no es válido por diseño',
   metricas_bandas_amigas: 'CHECK en fuente y periodo (YYYY-MM): el valor genérico de prueba no es válido por diseño',
   salas_catalogo: 'CHECK en nivel (sin_verificar, probable, verificada): el valor genérico de prueba no es válido por diseño; la cubre server/migrations/__tests__/catalogoSalas.test.ts',
+  festivales: 'CHECK en estado_revision: el valor genérico de prueba no es válido por diseño',
+  festival_ediciones: 'CHECK en anio: el valor genérico de prueba no es válido por diseño',
+  festival_convocatorias: 'CHECK en admite_independientes: el valor genérico de prueba no es válido por diseño',
 };
 
 describe('round-trip de guardado en BD', () => {
