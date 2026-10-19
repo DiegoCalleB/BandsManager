@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { calcCacheMinimo, calcEmbudoBolos, calcSlotSetlist, scriptCalculadoras } from '../calculadoras.js';
+import { calcCacheMinimo, calcEmbudoBolos, calcEpkChecklist, calcSlotSetlist, scriptCalculadoras } from '../calculadoras.js';
 import { guiaPorSlug } from '../indice.js';
 import { renderizarGuia } from '../render.js';
 
@@ -92,5 +92,20 @@ describe('script de las calculadoras', () => {
 
   it('sin calculadoras no hay script', () => {
     expect(scriptCalculadoras([], 'es')).toBe('');
+  });
+});
+
+describe('calcEpkChecklist', () => {
+  const todo = { escucha: 1, foto: 1, video: 1, dato: 1, bio: 1, rider: 1, contacto: 1, enlace: 1 };
+  it('puntúa por elementos marcados', () => {
+    expect(calcEpkChecklist(todo)).toEqual({ hechos: 8, faltan: 0, porcentaje: 100 });
+    expect(calcEpkChecklist({ ...todo, video: 0, dato: 0 })).toEqual({ hechos: 6, faltan: 2, porcentaje: 75 });
+    expect(calcEpkChecklist({ escucha: 0, foto: 0, video: 0, dato: 0, bio: 0, rider: 0, contacto: 0, enlace: 0 })).toEqual({ hechos: 0, faltan: 8, porcentaje: 0 });
+  });
+  it('la guía del EPK lleva la checklist con ocho casillas y la anatomía accesible', () => {
+    const html = renderizarGuia(guiaPorSlug('como-hacer-un-epk')!, 'https://bandmanager.io', 'es');
+    expect(html.match(/type="checkbox"/g)).toHaveLength(8);
+    expect(html).toMatch(/<svg[^>]*role="img"[^>]*aria-label="Esquema de un dossier/);
+    expect(html.match(/data-calc="epk-checklist"/g)).toHaveLength(1);
   });
 });

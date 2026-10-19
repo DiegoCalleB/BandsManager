@@ -14,6 +14,8 @@ export interface OpcionesCabeza {
   jsonLd: unknown;
   tipoOg: 'article' | 'website';
   alternativas: Array<{ hreflang: string; href: string }>;
+  /** Directiva `robots`; por defecto se indexa. Una página con poco contenido propio debe ir con `noindex,follow`. */
+  robots?: string;
 }
 
 export function cabezaHtml(o: OpcionesCabeza): string {
@@ -28,7 +30,7 @@ export function cabezaHtml(o: OpcionesCabeza): string {
 <meta name="description" content="${escapeHtml(o.descripcion)}">
 <link rel="canonical" href="${escapeHtml(url)}">
 ${alternas}
-<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="robots" content="${escapeHtml(o.robots ?? 'index,follow,max-image-preview:large')}">
 <meta property="og:type" content="${o.tipoOg}">
 <meta property="og:site_name" content="BandManager">
 <meta property="og:locale" content="${TEXTOS[o.idioma].ogLocale}">

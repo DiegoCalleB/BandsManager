@@ -198,3 +198,39 @@ export function graficoLineasFigura(g: GraficoLineas): string {
 
   return `<figure class="fig"><svg viewBox="0 0 640 ${yAbajo + 64}" role="img" aria-label="${escapeHtml(g.alt)}"><title>${escapeHtml(g.alt)}</title>${rejilla}${tituloY}${dibujos.join('')}${nota}${directas}${etiquetasX}${tituloX}</svg><figcaption>${escapeHtml(g.pie)}</figcaption></figure>`;
 }
+
+const TEXTOS_EPK: Record<IdiomaSeo, { bloques: string[]; alt: string; pie: string }> = {
+  es: {
+    bloques: ['Nombre y estilo', 'Escucha inmediata', 'Foto de banda', 'Un dato real', 'Bio de cuatro líneas', 'Vídeo de directo', 'Rider y contacto'],
+    alt: 'Esquema de un dossier de banda visto en un móvil, de arriba abajo con siete bloques numerados: nombre y estilo, un reproductor de escucha inmediata, una foto de banda, un dato real de tracción, una biografía de cuatro líneas, un vídeo de directo y, al final, los botones de rider y contacto.',
+    pie: 'Orden de un EPK de una sola pantalla: lo que decide el programador va arriba y lo que consulta después, abajo.',
+  },
+  en: {
+    bloques: ['Name and style', 'Instant listen', 'Band photo', 'One real proof point', 'Four-line bio', 'Live video', 'Rider and contact'],
+    alt: 'Diagram of a band press kit on a phone, top to bottom with seven numbered blocks: name and style, an instant-listen player, a band photo, one real proof point, a four-line bio, a live video and, at the bottom, the rider and contact buttons.',
+    pie: 'Order of a one-screen press kit: what the booker decides on goes at the top and what they check afterwards at the bottom.',
+  },
+};
+
+/** Esquema de un EPK de una pantalla: un móvil con siete bloques numerados y su explicación a la derecha. */
+export function anatomiaEpkFigura(idioma: IdiomaSeo): string {
+  const t = TEXTOS_EPK[idioma];
+  const x0 = 56;
+  const w = 178;
+  // [centro vertical del bloque, dibujo]
+  const bloques: Array<[number, string]> = [
+    [56, `<rect x="${x0}" y="42" width="120" height="14" rx="7" style="fill:var(--ink);opacity:.85"/><rect x="${x0}" y="64" width="86" height="8" rx="4" style="fill:var(--ink-2);opacity:.5"/>`],
+    [109, `<rect x="${x0}" y="92" width="${w}" height="34" rx="17" style="fill:var(--acc)"/><path d="M${x0 + 18} 102l12 7-12 7z" style="fill:var(--on-acc)"/><path d="M${x0 + 46} 109c8-12 14 12 22 0s14 12 22 0 14 12 22 0 14 12 22 0" fill="none" stroke-width="3" stroke-linecap="round" style="stroke:var(--on-acc);opacity:.85"/>`],
+    [180, `<rect x="${x0}" y="138" width="${w}" height="84" rx="14" style="fill:var(--sunken)"/><circle cx="${x0 + 50}" cy="176" r="12" style="fill:var(--ink-2);opacity:.35"/><circle cx="${x0 + 89}" cy="170" r="14" style="fill:var(--ink-2);opacity:.45"/><circle cx="${x0 + 128}" cy="176" r="12" style="fill:var(--ink-2);opacity:.35"/><rect x="${x0 + 36}" y="192" width="106" height="20" rx="10" style="fill:var(--ink-2);opacity:.3"/>`],
+    [247, `<rect x="${x0}" y="234" width="146" height="26" rx="13" style="fill:var(--acc);opacity:.16"/><rect x="${x0 + 14}" y="244" width="96" height="7" rx="3.5" style="fill:var(--acc-ink)"/>`],
+    [295, [274, 288, 302, 316].map((y, i) => `<rect x="${x0}" y="${y}" width="${[178, 168, 176, 118][i]}" height="7" rx="3.5" style="fill:var(--ink-2);opacity:.38"/>`).join('')],
+    [358, `<rect x="${x0}" y="330" width="${w}" height="56" rx="12" style="fill:var(--sunken)"/><circle cx="${x0 + w / 2}" cy="358" r="15" style="fill:var(--surface)"/><path d="M${x0 + w / 2 - 4} 351l11 7-11 7z" style="fill:var(--acc)"/>`],
+    [402, `<rect x="${x0}" y="392" width="86" height="22" rx="11" style="fill:var(--acc)"/><rect x="${x0 + 92}" y="392" width="86" height="22" rx="11" style="fill:var(--sunken)"/>`],
+  ];
+  const marco = `<rect x="40" y="12" width="210" height="418" rx="32" style="fill:var(--sunken)"/><rect x="48" y="22" width="194" height="398" rx="24" style="fill:var(--surface)"/>`;
+  const dibujos = bloques.map(([, d]) => d).join('');
+  const etiquetas = bloques
+    .map(([cy], i) => `<line x1="${x0 + w + 8}" y1="${cy}" x2="288" y2="${cy}" stroke-width="2" stroke-dasharray="4 5" style="stroke:var(--ink-2);opacity:.4"/><circle cx="304" cy="${cy}" r="14" style="fill:var(--acc)"/><text x="304" y="${cy + 6}" text-anchor="middle" font-size="17" font-weight="700" style="fill:var(--on-acc)">${i + 1}</text><text x="328" y="${cy + 6}" font-size="18" font-weight="600" style="fill:var(--ink)">${escapeHtml(t.bloques[i])}</text>`)
+    .join('');
+  return `<figure class="fig"><svg viewBox="0 0 600 442" role="img" aria-label="${escapeHtml(t.alt)}"><title>${escapeHtml(t.alt)}</title>${marco}${dibujos}${etiquetas}</svg><figcaption>${escapeHtml(t.pie)}</figcaption></figure>`;
+}
