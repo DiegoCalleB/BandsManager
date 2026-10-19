@@ -6,9 +6,8 @@ import { ETIQUETA_VISTA } from './useVistaAcordes';
 import { fijarModoEnsayo, useModoEnsayo, usePentagramaSiempre } from './modoEnsayo';
 import { AYUDA_NIVEL, ETIQUETA_NIVEL, NIVELES, etiquetaIntervalo, inversionesGuitarra, notaDePasoHacia, pasoEnGuitarra, powerChord, type NivelAcorde } from '../../utils/voicings';
 import { DiagramaGuitarra } from './DiagramaGuitarra';
-import { Pentagrama } from './Pentagrama';
-import { midiDeAcorde, precargarSonido, sonarAcorde } from '../../utils/sonarAcorde';
-import { prefiereBemoles, claveDeVista, midiEscrito } from '../../utils/pentagrama';
+import { PentagramaFicha } from './PentagramaFicha';
+import { precargarSonido, sonarAcorde } from '../../utils/sonarAcorde';
 import { ETIQUETA_INVERSION, inversionRecomendada, inversionesDe, nombreInversion, vozTeclado } from '../../utils/inversiones';
 
 const BLANCAS = [0, 2, 4, 5, 7, 9, 11];
@@ -263,14 +262,7 @@ export const CajaAcorde: React.FC<{ chord: string; vista: VistaAcorde; contexto?
       {!tapar && (
         <>
           <button type="button" aria-pressed={conNotas} title="Ver las notas en el pentagrama" onClick={() => setManual(!conNotas)} className={`px-3 py-1 rounded-[var(--r-pill)] text-micro font-sans cursor-pointer bg-[var(--surface)] text-[var(--ink)] ${conNotas ? 'font-bold' : ''}`}>{conNotas ? 'Ocultar pentagrama' : '♪ Ver pentagrama'}</button>
-          {conNotas && (() => {
-            // Bajo: el pentagrama muestra la misma línea que el mástil, con la nota de paso hacia el siguiente acorde en color.
-            const linea = vista === 'bajo' && nivel !== 'basico' ? lineaDeBajo(chord, contexto?.siguiente, invLineaBajo, nivel === 'pro') : null;
-            const bemoles = prefiereBemoles(chord);
-            if (!linea) return <Pentagrama midi={midiEscrito(midiDeAcorde(chord, vista, nivel, invSonido), vista)} clave={claveDeVista(vista)} modo="acorde" bemoles={bemoles} etiqueta={`Pentagrama: ${chord}`} />;
-            const paso = linea.findIndex((x) => x.rol === 'paso');
-            return <Pentagrama midi={midiEscrito(linea.map((x) => x.pitch), vista)} clave={claveDeVista(vista)} modo="escala" bemoles={bemoles} resaltar={paso < 0 ? undefined : paso} etiqueta={`Pentagrama: ${chord}${paso < 0 ? '' : `, con nota de paso hacia ${contexto?.siguiente}`}`} />;
-          })()}
+          {conNotas && <PentagramaFicha chord={chord} vista={vista} nivel={nivel} siguiente={contexto?.siguiente} invSonido={invSonido} invLineaBajo={invLineaBajo} />}
         </>
       )}
     </div>
