@@ -48,7 +48,7 @@ export const GUIAS_DIRECTO_EN: GuiaSeoEn[] = [
         tablas: [
           { titulo: '45-minute support slot', cabeceras: ['#', 'Song', 'Role'], filas: [['1', 'Your best opener', 'Hook'], ['2', 'Your second best song', 'Hook'], ['3', 'New or lesser-known song', 'Lift'], ['4', 'Best-known song', 'Peak'], ['5', 'Slow or stripped back', 'Breather'], ['6', 'Building song', 'Climb'], ['7', 'The one you want remembered', 'Closer']] },
           { titulo: '75-minute headline show', cabeceras: ['Block', 'Songs', 'Role'], filas: [['Opening', '1 to 3', 'Hook and lift'], ['First third', '4 to 7', 'New material with the big choruses'], ['Breather', '8 and 9', 'A slow song and an acoustic one'], ['Climb', '10 to 13', 'Your best-known songs'], ['Closer', '14 and 15', 'A known chorus and an encore']] },
-          { titulo: '30-minute festival set', cabeceras: ['#', 'Idea'], filas: [['1 to 2', 'Open strong and do not talk: the crowd is passing through'], ['3 to 4', 'Lift with your most recognisable songs'], ['5', 'A single short breather'], ['6 to 7', 'Close with your best-known and keep one in reserve']] },
+          { titulo: '30-minute festival set', cabeceras: ['#', 'Idea'], filas: [['1 to 2', 'Open strong and do not talk: the crowd is passing through'], ['3 to 4', 'Lift with your most recognizable songs'], ['5', 'A single short breather'], ['6 to 7', 'Close with your best-known and keep one in reserve']] },
         ],
       },
       {
@@ -63,7 +63,7 @@ export const GUIAS_DIRECTO_EN: GuiaSeoEn[] = [
     faq: [
       { q: 'How many songs fit in an hour?', a: 'Between twelve and fifteen, depending on whether each runs three or four minutes, counting half a minute of changeover and five minutes of margin.' },
       { q: 'Which song goes first and which last?', a: 'First, something that hooks within twenty seconds, not necessarily your best song. Last, a chorus everyone knows; the best-known song usually goes just before.' },
-      { q: 'Should I change the setlist for each venue?', a: 'Yes. A standing room wants more energy and a theatre allows more nuance. Keep a base version and adjust the last three songs after soundcheck.' },
+      { q: 'Should I change the setlist for each venue?', a: 'Yes. A standing room wants more energy and a theater allows more nuance. Keep a base version and adjust the last three songs after soundcheck.' },
       { q: 'How many covers should I include?', a: 'Two or three, placed where the room can let loose, help you connect. Keep them under a third of the set.' },
     ],
     relacionadas: ['how-to-run-band-rehearsals', 'how-to-run-a-soundcheck', 'how-to-promote-a-gig'],
@@ -149,7 +149,7 @@ export const GUIAS_DIRECTO_EN: GuiaSeoEn[] = [
       },
       {
         h2: 'Calendar and attendance',
-        lista: ['Fix a recurring day and time, and respect it.', 'Confirm attendance ahead of time: if a key member is missing, better to move the rehearsal than to do it half-way.', 'Share the repertoire and the recording of the last rehearsal so people practise at home.'],
+        lista: ['Fix a recurring day and time, and respect it.', 'Confirm attendance ahead of time: if a key member is missing, better to move the rehearsal than to do it half-way.', 'Share the repertoire and the recording of the last rehearsal so people practice at home.'],
       },
       {
         h2: 'Before a show',
