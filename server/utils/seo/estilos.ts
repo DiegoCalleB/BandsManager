@@ -51,6 +51,7 @@ section.seccion{margin:1.5rem 0}
 .barra{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;gap:.5rem;margin:0 -1rem 1rem;padding:.6rem 1rem;background:var(--bg);font-size:14px}.barra .der{display:flex;align-items:center;gap:.5rem}
 .barra a{color:var(--ink);text-decoration:none;font-weight:650}
 .barra .idioma{color:var(--ink-2);font-weight:500;padding:.35rem .8rem;border-radius:999px;background:var(--sunken)}
+.aviso-idioma{display:flex;justify-content:space-between;align-items:center;gap:.75rem;margin:0 0 1rem;padding:.65rem .9rem;border-radius:18px;background:var(--surface);font-size:14px;color:var(--ink)}.aviso-idioma[hidden]{display:none}.aviso-idioma a{color:var(--acc-ink,var(--acc));font-weight:650}.aviso-idioma button{flex:none;border:0;background:transparent;color:var(--ink-2);font-size:20px;line-height:1;padding:.1rem .4rem;cursor:pointer}
 .lectura{font-size:13px;color:var(--ink-2);margin:-.25rem 0 .9rem}
 
 .resumen{background:var(--surface);border-radius:24px;padding:1.1rem 1.25rem;margin:0 0 1.25rem}
