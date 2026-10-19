@@ -61,7 +61,9 @@ export const puertoCatalogoSupabase: PuertoCatalogo = {
   async guardarSalas(salas: SalaAGuardar[]) {
     if (salas.length === 0) return;
     const ahora = new Date().toISOString();
-    const filas = salas.map((s) => ({ ...s, verificada_en: s.verificada_en?.toISOString() ?? null, updated_at: ahora }));
+    // `created_at` es de la base de datos. Una sala ya existente lo trae al leerla y una nueva no: en un mismo lote PostgREST
+    // rellena con null la que no lo tiene, y eso viola el NOT NULL (la importación de OSM fallaba así al mezclar nuevas y ya existentes).
+    const filas = salas.map(({ created_at: _creada, ...s }: SalaAGuardar & { created_at?: unknown }) => ({ ...s, verificada_en: s.verificada_en?.toISOString() ?? null, updated_at: ahora }));
     const { error } = await getSupabase().from('salas_catalogo').upsert(filas, { onConflict: 'id' });
     if (error) throw new Error(`No se pudo guardar el catálogo de salas: ${error.message}`);
   },
