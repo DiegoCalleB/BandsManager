@@ -25,4 +25,15 @@ describe('PentagramaFicha: colorines y escala', () => {
     fireEvent.click(getByText('Ver escala completa'));
     await waitFor(() => expect(container.querySelectorAll('svg')).toHaveLength(2));
   });
+  it('piano Pro con acorde siguiente: el acorde y, detrás, una sola nota de paso', async () => {
+    const { PentagramaFicha } = await import('../components/chords/PentagramaFicha');
+    const { container } = render(<PentagramaFicha chord="C" vista="teclado" nivel="pro" siguiente="F" invSonido={0} />);
+    await waitFor(() => expect(container.querySelectorAll('.nota-paso')).toHaveLength(1));
+  });
+  it('piano Normal no añade nota de paso', async () => {
+    const { PentagramaFicha } = await import('../components/chords/PentagramaFicha');
+    const { container } = render(<PentagramaFicha chord="C" vista="teclado" nivel="normal" siguiente="F" invSonido={0} />);
+    await waitFor(() => expect(container.querySelector('svg')).not.toBeNull());
+    expect(container.querySelector('.nota-paso')).toBeNull();
+  });
 });

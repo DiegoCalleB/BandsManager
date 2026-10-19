@@ -204,7 +204,7 @@ export const CajaAcorde: React.FC<{ chord: string; vista: VistaAcorde; contexto?
   // La inversión que se está viendo es la que suena: lo que ves es lo que oyes.
   const invSonido = vista === 'teclado' ? invT : vista === 'bajo' ? (nivel === 'pro' ? invBajoPro : invBajo) : formaInv ? formaInv.inversion : fija ?? 0;
   useEffect(() => { if (sonar) precargarSonido(); }, [sonar]);
-  const oirla = () => { void sonarAcorde(chord, vista, nivel, invSonido); };
+  const oirla = () => { void sonarAcorde(chord, vista, nivel, invSonido, contexto?.siguiente); };
   const tapar = ensayo && !visto;
   return (
     <div id={id} translate="no" data-sonando={sonando ? 'true' : undefined} onClick={sonar ? (e) => { if (!(e.target as HTMLElement).closest('button,[role=button]')) oirla(); } : undefined} className={`${sonar ? 'cursor-pointer ' : ''}notranslate p-2.5 rounded-[var(--r-m)] text-center space-y-1.5 transition-all duration-150 ${sonando ? `bg-[var(--acc-soft)] ${conReloj ? '' : 'ring-2 ring-[var(--acc)] scale-[1.03]'}` : `bg-[var(--sunken)] ${contexto?.tonica ? 'ring-2 ring-[var(--ok)]' : ''}`}`}>

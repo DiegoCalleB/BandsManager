@@ -14,10 +14,17 @@ describe('midiDeAcorde', () => {
   it('guitarra Básico: solo raíz y quinta (power chord)', () => {
     expect(midiDeAcorde('E', 'guitarra', 'basico', 0)).toEqual([52, 59]);
   });
-  it('bajo: las notas del acorde una a una, de grave a agudo, empezando por la de la inversión', () => {
-    expect(midiDeAcorde('C', 'bajo', 'normal', 0)).toEqual([36, 40, 43]);
-    expect(midiDeAcorde('C', 'bajo', 'normal', 1)).toEqual([28, 31, 36]);
+  it('bajo: las notas del acorde una a una, de grave a agudo, empezando por la de la inversión, y cierra en la octava', () => {
+    expect(midiDeAcorde('C', 'bajo', 'normal', 0)).toEqual([36, 40, 43, 48]);
+    expect(midiDeAcorde('C', 'bajo', 'normal', 1)).toEqual([28, 31, 36, 40]);
     expect(midiDeAcorde('C', 'bajo', 'basico', 0)).toEqual([36, 43]);
+  });
+  it('bajo: suena la nota de paso hacia el acorde siguiente, la misma que ve el mástil', () => {
+    const sin = midiDeAcorde('C', 'bajo', 'normal', 0);
+    const con = midiDeAcorde('C', 'bajo', 'normal', 0, 'F');
+    expect(con.slice(0, 3)).toEqual(sin.slice(0, 3));
+    expect([4, 6]).toContain(con[3] % 12); // un semitono bajo o sobre Fa, la que quede más cerca de la mano
+    expect(midiDeAcorde('C', 'bajo', 'basico', 0, 'F')).toEqual([36, 43]);
   });
   it('un acorde que no se reconoce no suena', () => {
     expect(midiDeAcorde('xyz', 'teclado')).toEqual([]);
