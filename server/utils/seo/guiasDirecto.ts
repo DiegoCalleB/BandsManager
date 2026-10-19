@@ -12,6 +12,7 @@ export const GUIAS_DIRECTO: GuiaSeo[] = [
       {
         h2: 'Empieza por el tiempo, no por las canciones',
         parrafos: ['Antes de abrir ninguna herramienta, apunta dos números: los minutos que tienes en el escenario y lo que dura de media cada tema. Después cuenta medio minuto de transición por canción y resta cinco minutos de margen para imprevistos: una cuerda rota, un pedido del público, un micro que no suena.', 'La cuenta es sencilla: (minutos del slot menos 5) dividido entre (duración media más 0,5). Con ella sale un número de temas casi siempre menor del que pensabas.'],
+        calculadora: 'slot-setlist',
         tablas: [{ titulo: 'Cuántos temas caben en tu slot', cabeceras: ['Slot', 'Temas de 4 min', 'Temas de 3 min'], filas: [['30 min', '5', '7'], ['45 min', '8', '11'], ['60 min', '12', '15'], ['75 min', '15', '20'], ['90 min', '18', '24']] }],
       },
       {
