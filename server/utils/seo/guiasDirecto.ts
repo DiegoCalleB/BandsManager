@@ -95,7 +95,7 @@ export const GUIAS_DIRECTO: GuiaSeo[] = [
       { q: '¿Quién la hace?', a: 'Quien lleve la gestión de la banda, con la información que da la sala. Conviene que todos la lean antes de salir.' },
       { q: '¿Cuándo debo mandarla?', a: 'Con tiempo para poder corregir: unos tres días antes en una fecha suelta y con la gira cerrada semanas antes.' },
     ],
-    relacionadas: ['/plantilla-rider-tecnico', 'rider-de-hospitalidad', 'como-organizar-ensayos'],
+    relacionadas: ['/technical-rider-template', 'rider-de-hospitalidad', 'como-organizar-ensayos'],
     cta: { titulo: 'Gira y calendario en un solo sitio', texto: 'BandManager reúne tus conciertos, horarios y contactos para que toda la banda vea lo mismo.', boton: 'Probar BandManager gratis' },
   },
   {
@@ -124,7 +124,7 @@ export const GUIAS_DIRECTO: GuiaSeo[] = [
       { q: '¿Se negocia?', a: 'Sí. Es habitual adaptarlo al presupuesto y las condiciones de cada sala o festival.' },
       { q: '¿Dónde se incluye?', a: 'En un apartado distinto del rider técnico y del dossier, o como documento aparte.' },
     ],
-    relacionadas: ['/plantilla-rider-tecnico', 'hoja-de-ruta-de-gira', 'contrato-actuacion-musical'],
+    relacionadas: ['/technical-rider-template', 'hoja-de-ruta-de-gira', 'contrato-actuacion-musical'],
     cta: { titulo: 'Todos tus documentos a mano', texto: 'Guarda el rider y el dossier en BandManager y compártelos con un enlace en cada propuesta.', boton: 'Probar BandManager gratis' },
   },
   {

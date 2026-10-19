@@ -5,7 +5,7 @@
 export type IdiomaSeo = 'es' | 'en';
 
 export const RUTAS = {
-  es: { landing: '/', guias: '/guias', guia: (slug: string) => `/guias/${slug}`, rider: '/plantilla-rider-tecnico', listados: '/directories', festivales: '/directories/festivals', festival: (slug: string) => `/directories/festivals/${slug}` },
+  es: { landing: '/', guias: '/guides', guia: (slug: string) => `/guides/${slug}`, rider: '/technical-rider-template', listados: '/directories', festivales: '/directories/festivals', festival: (slug: string) => `/directories/festivals/${slug}` },
   en: { landing: '/en', guias: '/en/guides', guia: (slug: string) => `/en/guides/${slug}`, rider: '/en/technical-rider-template', listados: '/en/directories', festivales: '/en/directories/festivals', festival: (slug: string) => `/en/directories/festivals/${slug}` },
 } as const;
 

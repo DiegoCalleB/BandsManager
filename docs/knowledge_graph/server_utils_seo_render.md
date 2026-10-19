@@ -13,7 +13,7 @@ tags: ["service", "system", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Renderizador de las guías de SEO (`/guias`, `/en/guides` y sus guías), en el servidor y sin I/O.
+Renderizador de las guías de SEO (`/guides`, `/en/guides` y sus guías), en el servidor y sin I/O.
 
 ---
 

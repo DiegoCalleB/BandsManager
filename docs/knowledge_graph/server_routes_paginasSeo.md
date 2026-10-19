@@ -13,7 +13,7 @@ tags: ["route", "system", "auto"]
 > **Capa:** `#layer/route` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Guías y directorio de festivales de SEO: /guias y /en/guides (índices) y /guias/:slug y /en/guides/:slug. Contenido fijo
+Guías y directorio de festivales de SEO: /guides y /en/guides (índices) y /guides/:slug y /en/guides/:slug. Contenido fijo
 
 ---
 
@@ -33,6 +33,11 @@ Guías y directorio de festivales de SEO: /guias y /en/guides (índices) y /guia
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
 - [[server_routes_paginaConcierto|server/routes/paginaConcierto.ts]] *(from #route)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/paginasSeo.test.ts`
 
 ---
 

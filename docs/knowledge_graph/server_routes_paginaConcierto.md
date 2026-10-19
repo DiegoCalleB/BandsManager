@@ -50,6 +50,7 @@ Páginas públicas indexables: /e/:slug (un concierto), /sitemap.xml y /robots.t
 
 ## 🧪 Tests que lo cubren
 - `server/routes/__tests__/paginaConcierto.test.ts`
+- `server/routes/__tests__/paginasSeo.test.ts`
 
 ---
 

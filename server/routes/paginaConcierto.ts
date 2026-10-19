@@ -45,7 +45,7 @@ router.use(emailsCicloVidaRouter); // baja de los emails de onboarding (/api/ema
 router.use(interesadosRouter); // lista de novedades de la landing (/api/public/interesados)
 router.use(contactoEmpresasRouter); // consultas de empresas, planes B2B (/api/public/contacto-empresas)
 router.use(pegatinasRouter); // regalo de pegatinas en la primera suscripción (/api/billing/pegatinas)
-router.use(paginasSeoRouter); // guías de SEO (/guias)
+router.use(paginasSeoRouter); // guías de SEO (/guides)
 router.use(presentacionTfmRouter); // atajos a la película del TFM (/presentacion_tfm, /netflix)
 router.use(fansContadorRouter); // número de fans para la película del TFM (/api/public/fans/contador)
 
@@ -57,9 +57,11 @@ function responderHtml(res: express.Response, status: number, html: string, cach
 }
 
 // Página de SEO con contenido fijo (sin datos de ninguna banda): ver server/utils/paginaRider.ts.
-router.get('/plantilla-rider-tecnico', publicoRateLimiter, (_req, res) => {
+router.get('/technical-rider-template', publicoRateLimiter, (_req, res) => {
   responderHtml(res, 200, renderizarPaginaRider(baseUrlPublica(), 'es'), 'public, max-age=3600, s-maxage=86400');
 });
+// Ruta anterior (en español): redirige para no perder los enlaces ya compartidos ni el posicionamiento.
+router.get('/plantilla-rider-tecnico', publicoRateLimiter, (_req, res) => res.redirect(301, '/technical-rider-template'));
 router.get('/en/technical-rider-template', publicoRateLimiter, (_req, res) => {
   responderHtml(res, 200, renderizarPaginaRider(baseUrlPublica(), 'en'), 'public, max-age=3600, s-maxage=86400');
 });

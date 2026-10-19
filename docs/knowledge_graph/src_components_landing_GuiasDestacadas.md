@@ -13,7 +13,7 @@ tags: ["frontend", "system", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Bloque de la landing que lleva a las guías públicas (`/guias` y `/en/guides`, páginas de SEO servidas por el
+Bloque de la landing que lleva a las guías públicas (`/guides` y `/en/guides`, páginas de SEO servidas por el
 
 ---
 

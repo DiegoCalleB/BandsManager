@@ -1,5 +1,5 @@
 /**
- * Bloque de la landing que lleva a las guías públicas (`/guias` y `/en/guides`, páginas de SEO servidas por el
+ * Bloque de la landing que lleva a las guías públicas (`/guides` y `/en/guides`, páginas de SEO servidas por el
  * servidor). Tres guías destacadas y un enlace al índice. Los enlaces son rutas completas, no de la SPA.
  */
 import { ArrowRight } from 'lucide-react';
@@ -9,9 +9,9 @@ export const GuiasDestacadas: React.FC = () => {
   const { language, t } = useLanguage();
   const es = language === 'es';
   const guias = [
-    { href: es ? '/guias/como-hacer-un-setlist' : '/en/guides/how-to-make-a-setlist', title: t('landing.guides.setlist.title'), text: t('landing.guides.setlist.text') },
-    { href: es ? '/guias/cuanto-cobrar-por-un-concierto' : '/en/guides/how-much-to-charge-for-a-gig', title: t('landing.guides.fee.title'), text: t('landing.guides.fee.text') },
-    { href: es ? '/guias/como-conseguir-bolos' : '/en/guides/how-to-get-gigs', title: t('landing.guides.gigs.title'), text: t('landing.guides.gigs.text') },
+    { href: es ? '/guides/como-hacer-un-setlist' : '/en/guides/how-to-make-a-setlist', title: t('landing.guides.setlist.title'), text: t('landing.guides.setlist.text') },
+    { href: es ? '/guides/cuanto-cobrar-por-un-concierto' : '/en/guides/how-much-to-charge-for-a-gig', title: t('landing.guides.fee.title'), text: t('landing.guides.fee.text') },
+    { href: es ? '/guides/como-conseguir-bolos' : '/en/guides/how-to-get-gigs', title: t('landing.guides.gigs.title'), text: t('landing.guides.gigs.text') },
   ];
 
   return (
@@ -33,7 +33,7 @@ export const GuiasDestacadas: React.FC = () => {
             </li>
           ))}
         </ul>
-        <a href={es ? '/guias' : '/en/guides'} className="mt-8 inline-flex items-center gap-1.5 font-semibold text-[var(--acc-ink)] hover:underline">
+        <a href={es ? '/guides' : '/en/guides'} className="mt-8 inline-flex items-center gap-1.5 font-semibold text-[var(--acc-ink)] hover:underline">
           {t('landing.guides.all')}
           <ArrowRight className="size-4" aria-hidden />
         </a>
