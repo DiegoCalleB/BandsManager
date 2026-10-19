@@ -28,7 +28,7 @@ const fichaDe = (s: SalaGuardada): CamposPublicosSala => ({ clave: s.clave, ...(
 
 function nuevaSala(c: CamposPublicosSala, ahora: Date): SalaAGuardar {
   const { puntuacion, nivel } = calcularFiabilidad({ placeId: false, webDeclarada: !!c.website, emailValido: !!c.email_contacto, bandasConEntrega: 0, bandasConRespuesta: 0, rebotes: 0 }, ahora);
-  return { ...c, id: idDeSala(c.clave), nivel, puntuacion, verificada_en: null, bandas_con_respuesta: 0, bandas_con_entrega: 0, rebotes: 0 };
+  return { ...c, id: idDeSala(c.clave), nivel, puntuacion, verificada_en: null, bandas_con_respuesta: 0, bandas_con_entrega: 0, rebotes: 0, fuentes: ['osm'] };
 }
 
 export async function importarSalasDeOsm(p: { puerto: PuertoImportacion; descargar: DescargarOsm; simulacion?: boolean; ahora?: () => Date }): Promise<InformeImportacion> {
@@ -58,7 +58,8 @@ export async function importarSalasDeOsm(p: { puerto: PuertoImportacion; descarg
     }
     const { clave: _clave, ...campos } = completa;
     const { no_contactar: _nc, estado_negocio: _en, estado_negocio_en: _ene, ...base } = previa;
-    aGuardar.push({ ...base, ...campos });
+    // Si OpenStreetMap ha aportado algo a esta sala, hay que citarlo (ODbL).
+    aGuardar.push({ ...base, ...campos, fuentes: [...new Set([...(previa.fuentes ?? []), 'osm'])] });
     informe.completadas++;
   }
 

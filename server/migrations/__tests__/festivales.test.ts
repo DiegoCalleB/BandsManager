@@ -72,3 +72,18 @@ describe('migración del directorio de festivales', () => {
     expect(f.sala_id).toBeNull();
   });
 });
+
+describe('migración de la procedencia de las salas', () => {
+  const SQL_FUENTES = fs.readFileSync(path.resolve(__dirname, '../../../supabase/migrations/20261112_salas_fuentes.sql'), 'utf8');
+  it('añade `fuentes` a las salas con lista vacía por defecto, es idempotente y no toca las filas existentes', async () => {
+    await db.exec("insert into salas_catalogo (id, clave, nombre) values ('sala-previa', 'nc:previa|madrid', 'Sala previa') on conflict do nothing");
+    await db.exec(SQL_FUENTES);
+    await db.exec(SQL_FUENTES);
+    const [f] = await consultar<{ fuentes: string[]; nombre: string }>("select fuentes, nombre from salas_catalogo where id='sala-previa'");
+    expect(f).toEqual({ fuentes: [], nombre: 'Sala previa' });
+    await db.exec("update salas_catalogo set fuentes = array['osm'] where id='sala-previa'");
+    const [g] = await consultar<{ fuentes: string[] }>("select fuentes from salas_catalogo where id='sala-previa'");
+    expect(g.fuentes).toEqual(['osm']);
+  });
+});
+

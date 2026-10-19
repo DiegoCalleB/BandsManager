@@ -36,6 +36,8 @@ export interface SalaGuardada extends CamposPublicosSala {
   /** Según Google Maps (verificarSalasEnMaps). Ausente en las filas anteriores a la migración. */
   estado_negocio?: EstadoNegocio;
   estado_negocio_en?: Date | null;
+  /** De dónde salió la información pública (`osm` = OpenStreetMap). Ausente en las filas anteriores a la migración. */
+  fuentes?: string[];
 }
 
 /** Lo que el servicio escribe. `no_contactar` no está: es de quien lo marca y la sincronización nunca lo toca. */

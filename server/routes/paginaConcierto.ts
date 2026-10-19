@@ -26,6 +26,7 @@ import {
 import { alternativasLanding } from '../utils/cabeceraIdioma.js';
 import { renderizarPaginaRider } from '../utils/paginaRider.js';
 import { obtenerFestivales } from '../services/festivalesPublicos.js';
+import { obtenerSalasPublicas } from '../services/salasPublicas.js';
 import { entradasSeo } from '../utils/seo/sitemap.js';
 import { urlInsignia } from '../utils/referidos.js';
 import { obtenerPerfilPublicoBandaCacheado } from '../services/perfilPublicoBanda.js';
@@ -152,7 +153,7 @@ async function construirSitemap(base: string): Promise<string> {
   const entradas: EntradaSitemap[] = [
     { loc: `${base}/`, alternativas },
     { loc: `${base}/en`, alternativas },
-    ...entradasSeo(base, hoyIso(), await obtenerFestivales()),
+    ...entradasSeo(base, hoyIso(), await obtenerFestivales(), await obtenerSalasPublicas()),
   ];
   for (const c of filas as Array<FilaConcierto & { id: string; sala: string; fecha: string }>) {
     const nombre = nombres.get(String(c.band_id));

@@ -47,7 +47,7 @@ describe('rutas en inglés y redirecciones 301', () => {
     expect(res.destino).toBe(destino);
   });
 
-  it.each(['/guides', '/guides/:slug', '/en/guides', '/en/guides/:slug', '/directories', '/en/directories', '/directories/festivals', '/directories/festivals/:slug', '/en/directories/festivals', '/en/directories/festivals/:slug'])('existe la ruta %s', (ruta) => {
+  it.each(['/guides', '/guides/:slug', '/en/guides', '/en/guides/:slug', '/directories', '/en/directories', '/directories/festivals', '/directories/festivals/:slug', '/en/directories/festivals', '/en/directories/festivals/:slug', '/directories/venues', '/directories/venues/:comunidad', '/directories/venues/:comunidad/:ciudad', '/directories/venues/:comunidad/:ciudad/:slug', '/en/directories/venues', '/en/directories/venues/:comunidad', '/en/directories/venues/:comunidad/:ciudad', '/en/directories/venues/:comunidad/:ciudad/:slug'])('existe la ruta %s', (ruta) => {
     expect(manejador(router, ruta)).toBeTypeOf('function');
   });
 
@@ -56,6 +56,19 @@ describe('rutas en inglés y redirecciones 301', () => {
     manejador(router, '/guides/:slug')({ params: { slug: 'como-hacer-un-epk' } }, res);
     expect(res.code ?? 200).toBe(200);
     expect(res.body).toContain('rel="canonical" href="https://bandmanager.io/guides/como-hacer-un-epk"');
+  });
+
+  it('si no hay salas publicadas (o la base falla), las páginas de salas dan 404 y el índice sale vacío con noindex', async () => {
+    const pedir = (ruta: string, params: Record<string, string> = {}) =>
+      new Promise<any>((ok) => { const res = resFalso(); res.send = (b: any) => { res.body = b; ok(res); return res; }; manejador(router, ruta)({ params }, res, ok); });
+    const indice = await pedir('/directories/venues');
+    expect(indice.code ?? 200).toBe(200);
+    expect(indice.body).toContain('noindex,follow');
+    const zona = await pedir('/directories/venues/:comunidad', { comunidad: 'comunidad-de-madrid' });
+    expect(zona.code).toBe(404);
+    const sala = await pedir('/en/directories/venues/:comunidad/:ciudad/:slug', { comunidad: 'a', ciudad: 'b', slug: 'c' });
+    expect(sala.code).toBe(404);
+    expect(sala.body).toContain('noindex');
   });
 
   it('el directorio responde con las fichas fijas si la base de datos falla', async () => {
