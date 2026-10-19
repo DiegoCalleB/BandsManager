@@ -18,6 +18,7 @@ Exporta: IdeaCartel.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_cartel_BotonVoz|src/components/cartel/BotonVoz.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_cartel_hooks_useIdeaCartel|src/components/cartel/hooks/useIdeaCartel.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_utils_cartel_idea|src/utils/cartel/idea.ts]] *(Layer: #service, Domain: #system)*
