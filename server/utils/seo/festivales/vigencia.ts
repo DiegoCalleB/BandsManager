@@ -3,7 +3,7 @@ import type { Festival } from './tipos.js';
 
 /** Una ficha no verificada en este tiempo deja de mostrarse y de indexarse hasta que alguien la compruebe. */
 export const DIAS_VALIDEZ = 365;
-/** Con menos fichas vigentes que estas, el directorio es una página fina: se publica pero con `noindex`. */
+/** Con menos fichas completas (con web oficial o convocatoria) que estas, el directorio es una página fina: se publica pero con `noindex`. */
 export const MIN_FICHAS_INDEXABLES = 8;
 
 const MS_DIA = 86_400_000;
@@ -19,4 +19,9 @@ export const convocatoriaAbierta = (f: Festival, hoy: string): boolean => !!f.co
 export const festivalesVigentes = (todos: readonly Festival[], hoy: string): Festival[] =>
   todos.filter((f) => estaVigente(f, hoy)).sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'));
 
-export const indexable = (todos: readonly Festival[], hoy: string): boolean => festivalesVigentes(todos, hoy).length >= MIN_FICHAS_INDEXABLES;
+/** Una ficha mínima (solo lugar y estilo) no aporta nada que no tenga la fuente: no se indexa ni cuenta para el umbral. */
+export const esCompleta = (f: Festival): boolean => !!f.web || !!f.convocatoria;
+
+export const indexable = (todos: readonly Festival[], hoy: string): boolean => festivalesVigentes(todos, hoy).filter(esCompleta).length >= MIN_FICHAS_INDEXABLES;
+
+export const fichaIndexable = (f: Festival, todos: readonly Festival[], hoy: string): boolean => esCompleta(f) && indexable(todos, hoy);

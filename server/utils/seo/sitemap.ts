@@ -1,7 +1,7 @@
 /** Entradas del sitemap de las páginas de SEO: cada par es/en declara sus alternativas recíprocas. */
 import type { EntradaSitemap } from '../paginaConcierto.js';
 import { FESTIVALES } from './festivales/datos.js';
-import { festivalesVigentes, indexable } from './festivales/vigencia.js';
+import { fichaIndexable, festivalesVigentes, indexable } from './festivales/vigencia.js';
 import { GUIAS } from './indice.js';
 import { rutasDeGuia } from './render.js';
 import { RUTAS, alternativasPar } from './rutas.js';
@@ -19,7 +19,7 @@ export function entradasSeo(base: string, hoy: string = new Date().toISOString()
   });
   // El directorio entra en el sitemap solo cuando es indexable (ver MIN_FICHAS_INDEXABLES).
   if (!indexable(FESTIVALES, hoy)) return entradas;
-  const vigentes = festivalesVigentes(FESTIVALES, hoy);
+  const vigentes = festivalesVigentes(FESTIVALES, hoy).filter((f) => fichaIndexable(f, FESTIVALES, hoy));
   const ultima = vigentes.map((f) => f.verificadoEn).sort().at(-1) ?? FECHA_CONTENIDO;
   const festivales = [{ es: RUTAS.es.festivales, en: RUTAS.en.festivales, lastmod: ultima }, ...vigentes.map((f) => ({ es: RUTAS.es.festival(f.slug), en: RUTAS.en.festival(f.slug), lastmod: f.verificadoEn }))];
   return [...entradas, ...festivales.flatMap((p) => {

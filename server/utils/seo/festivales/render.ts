@@ -8,7 +8,7 @@ import { TEXTOS, fechaLegible } from '../textos.js';
 import { FESTIVALES } from './datos.js';
 import { ESTILOS, TEXTOS_FESTIVALES } from './textos.js';
 import type { Festival } from './tipos.js';
-import { convocatoriaAbierta, festivalesVigentes, indexable } from './vigencia.js';
+import { convocatoriaAbierta, fichaIndexable, festivalesVigentes, indexable } from './vigencia.js';
 
 const NOINDEX = 'noindex,follow';
 const SLUG_GUIA_FESTIVAL = 'presentar-banda-festival';
@@ -85,7 +85,7 @@ export function renderizarFestival(f: Festival, base: string, idioma: IdiomaSeo,
     ],
   };
   const descripcion = `${f.descripcion[idioma]} ${f.convocatoria ? estadoConvocatoria(f, hoy, idioma) : ''}`.trim().slice(0, 160);
-  return `${cabezaHtml({ base, idioma, ruta, titulo: t.tituloFicha(f.nombre, f.ciudad).slice(0, 70), descripcion, jsonLd, tipoOg: 'website', alternativas: alternativasPar(base, RUTAS.es.festival(f.slug), RUTAS.en.festival(f.slug)), robots: indexable(todos, hoy) ? undefined : NOINDEX })}
+  return `${cabezaHtml({ base, idioma, ruta, titulo: t.tituloFicha(f.nombre, f.ciudad).slice(0, 70), descripcion, jsonLd, tipoOg: 'website', alternativas: alternativasPar(base, RUTAS.es.festival(f.slug), RUTAS.en.festival(f.slug)), robots: fichaIndexable(f, todos, hoy) ? undefined : NOINDEX })}
 <body>
 <main>
 ${barraHtml(base, idioma, RUTAS[idioma === 'es' ? 'en' : 'es'].festival(f.slug), f.slug)}

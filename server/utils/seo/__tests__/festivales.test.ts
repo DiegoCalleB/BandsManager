@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { FESTIVALES } from '../festivales/datos.js';
 import { renderizarFestival, renderizarIndiceFestivales } from '../festivales/render.js';
 import type { Festival } from '../festivales/tipos.js';
-import { DIAS_VALIDEZ, MIN_FICHAS_INDEXABLES, convocatoriaAbierta, estaVigente, festivalesVigentes, indexable } from '../festivales/vigencia.js';
+import { DIAS_VALIDEZ, MIN_FICHAS_INDEXABLES, convocatoriaAbierta, esCompleta, estaVigente, fichaIndexable, festivalesVigentes, indexable } from '../festivales/vigencia.js';
 import { entradasSeo } from '../sitemap.js';
 
 const BASE = 'https://bandmanager.io';
@@ -46,6 +46,17 @@ describe('frescura y convocatorias', () => {
     expect(indexable(FESTIVALES, HOY)).toBe(false);
     expect(renderizarIndiceFestivales(BASE, 'es', HOY)).toContain('noindex,follow');
     expect(entradasSeo(BASE, HOY).some((e) => e.loc.includes('/festivales') || e.loc.includes('/festivals'))).toBe(false);
+  });
+  it('las fichas mínimas se listan pero no cuentan para indexar ni se indexan solas', () => {
+    const minimas = Array.from({ length: MIN_FICHAS_INDEXABLES + 2 }, (_, i) => ficha(i, { web: undefined, convocatoria: undefined }));
+    expect(minimas.every((f) => !esCompleta(f))).toBe(true);
+    expect(indexable(minimas, HOY)).toBe(false);
+    const completas = Array.from({ length: MIN_FICHAS_INDEXABLES }, (_, i) => ficha(i));
+    const mezcla = [...completas, ficha(99, { web: undefined, convocatoria: undefined })];
+    expect(indexable(mezcla, HOY)).toBe(true);
+    expect(fichaIndexable(completas[0], mezcla, HOY)).toBe(true);
+    expect(fichaIndexable(mezcla[8], mezcla, HOY)).toBe(false);
+    expect(renderizarFestival(mezcla[8], BASE, 'es', HOY, mezcla)).toContain('noindex,follow');
   });
   it('con fichas suficientes se indexa y entra en el sitemap con hreflang recíproco', () => {
     const muchas = Array.from({ length: MIN_FICHAS_INDEXABLES }, (_, i) => ficha(i));

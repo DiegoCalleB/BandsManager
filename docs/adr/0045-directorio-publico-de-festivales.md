@@ -13,7 +13,7 @@ Queremos un directorio público de festivales (y más adelante salas) con convoc
 - **Datos curados en el repositorio** (`server/utils/seo/festivales/datos.ts`). Una ficha entra por pull request, con su `fuente` (https) y `verificadoEn`. Nadie edita lo publicado desde fuera.
 - **Nada se inventa.** Si un campo no se pudo comprobar (web oficial, plazo de cierre) se omite; una convocatoria sin plazo conocido no se anuncia como abierta.
 - **Caducidad automática.** Una ficha sin comprobar en 365 días desaparece del índice, devuelve 404 y sale del sitemap (`server/utils/seo/festivales/vigencia.ts`).
-- **Calidad antes que volumen.** Con menos de 8 fichas vigentes el directorio se sirve con `noindex` y sin entrar en el sitemap.
+- **Calidad antes que volumen.** Una ficha *mínima* (solo lugar y estilo, sin web oficial ni convocatoria) se lista pero se sirve con `noindex`. El directorio solo se indexa y entra en el sitemap con al menos 8 fichas *completas* vigentes.
 - **Sin datos personales.** Solo datos del evento y su web oficial; nada de contactos de personas.
 - Páginas `/festivales`, `/festivales/:slug` y sus equivalentes `/en/festivals`; el texto sale de datos estructurados, así que ambos idiomas se mantienen a la vez.
 

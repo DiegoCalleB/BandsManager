@@ -1,24 +1,24 @@
 # Festivales pendientes de verificar
 
-Lista de partida del directorio público (`server/utils/seo/festivales/datos.ts`, ADR 0045). **Ninguno está publicado**:
+Lista de partida del directorio público (`server/utils/seo/festivales/datos.ts`, ADR 0045). Diez tienen ya una **ficha mínima** (lugar y estilo, fuente secundaria) y el resto no está publicado:
 un festival solo pasa a `datos.ts` cuando alguien comprueba en su web oficial ciudad, estilo, web, edición y, si la hay,
 convocatoria para bandas, y anota la fuente y la fecha. El mes es el de la edición 2026 según el índice de
 [Santander Music](https://www.santandersmusic.com/magazine/festivales/festivales-espana), y solo sirve de orientación.
 
 | Festival | Mes (2026) | Estado |
 |---|---|---|
-| Viña Rock | Mayo | pendiente |
+| Viña Rock | Mayo | ficha mínima (falta web oficial y convocatoria) |
 | Warm Up Festival | Mayo | pendiente |
 | Interestelar Sevilla | Mayo | pendiente |
 | Spring Festival Alicante | Mayo | pendiente |
-| Primavera Sound | Junio | pendiente |
+| Primavera Sound | Junio | ficha mínima (falta web oficial y convocatoria) |
 | Palencia Sonora | Junio | pendiente |
-| Festival de les Arts | Junio | pendiente |
-| Sónar | Junio | pendiente |
+| Festival de les Arts | Junio | ficha mínima (falta web oficial y convocatoria) |
+| Sónar | Junio | ficha mínima (falta web oficial y convocatoria) |
 | O Son Do Camiño | Junio | pendiente |
 | Mallorca Live Festival | Junio | pendiente |
 | Festival de Los Sentidos | Junio | pendiente |
-| Azkena Rock Festival | Junio | pendiente |
+| Azkena Rock Festival | Junio | ficha mínima (falta web oficial y convocatoria) |
 | Conexión Valladolid | Junio | pendiente |
 | Metrópoli Gijón | Junio | pendiente |
 | Resurrection Fest | Julio | pendiente |
@@ -29,10 +29,10 @@ convocatoria para bandas, y anota la fuente y la fecha. El mes es el de la edici
 | Barcelona Rock Fest | Julio | pendiente |
 | Festival Cruilla Barcelona | Julio | pendiente |
 | Pirata Beach Festival | Julio | pendiente |
-| Mad Cool | Julio | pendiente |
-| Bilbao BBK Live | Julio | pendiente |
+| Mad Cool | Julio | ficha mínima (falta web oficial y convocatoria) |
+| Bilbao BBK Live | Julio | ficha mínima (falta web oficial y convocatoria) |
 | Festival PortAmérica | Julio | pendiente |
-| Festival Internacional de Benicàssim (FIB) | Julio | pendiente |
+| Festival Internacional de Benicàssim (FIB) | Julio | ficha mínima (falta web oficial y convocatoria) |
 | Cook Music Fest | Julio | pendiente |
 | Zevra Festival | Julio | pendiente |
 | Jazzaldia | Julio | pendiente |
@@ -40,10 +40,10 @@ convocatoria para bandas, y anota la fuente y la fecha. El mes es el de la edici
 | Share Festival | Julio | pendiente |
 | Monegros Desert Festival | Julio | pendiente |
 | Low Festival | Julio | pendiente |
-| Arenal Sound | Julio | pendiente |
+| Arenal Sound | Julio | ficha mínima (falta web oficial y convocatoria) |
 | Santander Music | Agosto | pendiente |
 | SonRías Baixas | Agosto | pendiente |
-| Sonorama Ribera | Agosto | pendiente |
+| Sonorama Ribera | Agosto | ficha mínima (falta web oficial y convocatoria) |
 | Dreambeach Festival | Agosto | pendiente |
 | Brunch Electronik Festival | Agosto | pendiente |
 | Medusa Festival | Agosto | pendiente |
