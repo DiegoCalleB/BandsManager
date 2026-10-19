@@ -54,3 +54,12 @@ rellenan los campos vacíos y nunca se toca una verificada. Aplica las mismas re
 Instagram que se parezca a la sala). La región sale del código postal. **Atribución obligatoria por la ODbL: «© colaboradores de
 OpenStreetMap»** donde se muestren estos datos. Nota: la sincronización desde los leads sigue mandando sobre una sala si
 una banda la tiene en su agenda.
+
+## Actualización: importación por comunidad y solo salas de conciertos
+
+Una consulta de Overpass para toda España saturaba los servidores públicos (500 y 502 en los tres). La importación de
+OpenStreetMap pide ahora **una consulta por comunidad o ciudad autónoma** (19, con pausa entre ellas), prueba tres
+servidores por consulta y, si alguna comunidad falla, importa el resto (es idempotente). Si no llega ninguna, se
+reintenta cada hora hasta tres veces. Además se limita a lo que le sirve a una banda: **solo `music_venue` y
+`concert_hall`**. Se quitan las discotecas y los bares, pubs, cafés y restaurantes con `live_music=yes`, que metían mucho
+ruido. La marca `osm` en `salas_catalogo.fuentes` (ADR 0046) cita a OpenStreetMap donde corresponde.
