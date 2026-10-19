@@ -17,14 +17,21 @@ export interface ElementoOsm {
   tags?: Record<string, string>;
 }
 
-/** Consulta Overpass de los recintos de música en directo de España. */
-export const CONSULTA_OVERPASS_SALAS = `[out:json][timeout:240];
-area["ISO3166-1"="ES"][admin_level=2]->.es;
+/**
+ * Comunidades y ciudades autónomas de España (códigos ISO 3166-2). Una sola consulta para todo el país hace que los
+ * servidores públicos de Overpass respondan 500 o 502 por exceso de carga; por comunidad pasa sin problema.
+ */
+export const REGIONES_OSM = ['ES-AN', 'ES-AR', 'ES-AS', 'ES-CB', 'ES-CE', 'ES-CL', 'ES-CM', 'ES-CN', 'ES-CT', 'ES-EX', 'ES-GA', 'ES-IB', 'ES-MC', 'ES-MD', 'ES-ML', 'ES-NC', 'ES-PV', 'ES-RI', 'ES-VC'] as const;
+
+/**
+ * Consulta Overpass de las salas de música en directo y los locales de conciertos de una comunidad (código ISO 3166-2,
+ * por ejemplo `ES-MD`). Sin bares, cafés ni discotecas: meten mucho ruido y a una banda le sirven poco.
+ */
+export const consultaOverpassSalas = (region: string): string => `[out:json][timeout:90];
+area["ISO3166-2"="${region.replace(/[^A-Z0-9-]/g, '')}"]->.r;
 (
-  nwr["amenity"="music_venue"](area.es);
-  nwr["amenity"="concert_hall"](area.es);
-  nwr["amenity"="nightclub"](area.es);
-  nwr["amenity"~"^(bar|pub|cafe|restaurant)$"]["live_music"="yes"](area.es);
+  nwr["amenity"="music_venue"](area.r);
+  nwr["amenity"="concert_hall"](area.r);
 );
 out tags;`;
 
@@ -73,6 +80,18 @@ export function salaDesdeOsm(el: ElementoOsm): CamposPublicosSala | null {
     email_contacto: primerValido(etiqueta(t, 'email', 'contact:email'), emailDeRol),
     telefono: primerValido(etiqueta(t, 'phone', 'contact:phone'), telefonoFijoEs),
   };
+}
+
+/** Por qué se descartan elementos de OSM: sin nombre o sin ciudad no se pueden identificar. Sirve para explicar un resultado corto. */
+export function contarDescartes(elementos: ElementoOsm[]): { sinNombre: number; sinCiudad: number } {
+  let sinNombre = 0;
+  let sinCiudad = 0;
+  for (const el of elementos) {
+    const t = el.tags ?? {};
+    if (!textoPublico(t.name)) sinNombre++;
+    else if (!textoPublico(etiqueta(t, 'addr:city', 'addr:municipality', 'addr:place'), 80)) sinCiudad++;
+  }
+  return { sinNombre, sinCiudad };
 }
 
 /** Los campos que tiene `a` los conserva; los que le faltan se completan con los de `b`. */

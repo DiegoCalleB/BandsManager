@@ -25,6 +25,7 @@ vi.mock('../../db.js', () => ({
   dbGetSetlists: async () => [],
   dbGetTours: async () => [],
   dbContarFans: async () => 0,
+  dbGetPayments: async () => [],
 }));
 
 import router from '../chat.js';

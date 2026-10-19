@@ -4,6 +4,7 @@
  */
 import { Activity, Bot, ChevronDown, Copy, Download, FileSpreadsheet, FileText, Loader2, MapPin, MessageSquareText, Search, Send, Sparkles, Wrench, X } from "lucide-react";
 import { Button, IconButton } from "../../ui";
+import { ABRIR_CATALOGO_SALAS } from "../catalogo/eventosCatalogo";
 import { useBookingCrm } from "./BookingCrmContext";
 
 /**
@@ -53,6 +54,20 @@ export function MobileToolsPanel() {
                     ? 'Despachando correos...'
                     : `Agente Enviador (${leads.filter((l) => ['aprobado', 'aprobado_propuesta', 'aprobado_respuesta'].includes(l.estado)).length} en cola de envío)`}
                 </span>
+              </span>
+              <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                window.dispatchEvent(new CustomEvent(ABRIR_CATALOGO_SALAS));
+                setIsMobileToolsOpen(false);
+              }}
+              className="flex items-center justify-between p-2.5 rounded-[var(--r-m)] text-xs font-bold bg-[var(--sunken)] hover:brightness-95 text-[var(--ink)] transition-ui cursor-pointer active:scale-[0.97]"
+            >
+              <span className="flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-[var(--ink-2)]" />
+                Catálogo de salas (las que han encontrado otras bandas)
               </span>
               <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
             </button>

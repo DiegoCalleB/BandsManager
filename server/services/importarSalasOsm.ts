@@ -6,7 +6,7 @@
  * Depende de un puerto y de una función de descarga, así que se prueba sin red ni base de datos.
  */
 import { calcularFiabilidad, idDeSala, type CamposPublicosSala } from '../utils/salaCatalogo.js';
-import { CONSULTA_OVERPASS_SALAS, completarSala, salasDeOsm, type ElementoOsm } from '../utils/osmSalas.js';
+import { REGIONES_OSM, completarSala, consultaOverpassSalas, contarDescartes, salasDeOsm, type ElementoOsm } from '../utils/osmSalas.js';
 import type { PuertoCatalogo, SalaAGuardar, SalaGuardada } from './catalogoSalas.js';
 
 export type PuertoImportacion = Pick<PuertoCatalogo, 'leerSalas' | 'guardarSalas'>;
@@ -15,6 +15,8 @@ export type DescargarOsm = () => Promise<ElementoOsm[]>;
 export interface InformeImportacion {
   simulacion: boolean;
   elementosLeidos: number;
+  /** Elementos sin nombre (no se pueden identificar) y con nombre pero sin ciudad (tampoco): lo que hace que entren menos salas de las que hay en el mapa. */
+  descartados: { sinNombre: number; sinCiudad: number };
   salasEnOsm: number;
   nuevas: number;
   completadas: number;
@@ -28,7 +30,7 @@ const fichaDe = (s: SalaGuardada): CamposPublicosSala => ({ clave: s.clave, ...(
 
 function nuevaSala(c: CamposPublicosSala, ahora: Date): SalaAGuardar {
   const { puntuacion, nivel } = calcularFiabilidad({ placeId: false, webDeclarada: !!c.website, emailValido: !!c.email_contacto, bandasConEntrega: 0, bandasConRespuesta: 0, rebotes: 0 }, ahora);
-  return { ...c, id: idDeSala(c.clave), nivel, puntuacion, verificada_en: null, bandas_con_respuesta: 0, bandas_con_entrega: 0, rebotes: 0 };
+  return { ...c, id: idDeSala(c.clave), nivel, puntuacion, verificada_en: null, bandas_con_respuesta: 0, bandas_con_entrega: 0, rebotes: 0, fuentes: ['osm'] };
 }
 
 export async function importarSalasDeOsm(p: { puerto: PuertoImportacion; descargar: DescargarOsm; simulacion?: boolean; ahora?: () => Date }): Promise<InformeImportacion> {
@@ -38,7 +40,7 @@ export async function importarSalasDeOsm(p: { puerto: PuertoImportacion; descarg
   const existentes = new Map((await p.puerto.leerSalas()).map((s) => [s.clave, s]));
 
   const aGuardar: SalaAGuardar[] = [];
-  const informe: InformeImportacion = { simulacion: !!p.simulacion, elementosLeidos: elementos.length, salasEnOsm: deOsm.length, nuevas: 0, completadas: 0, sinCambios: 0 };
+  const informe: InformeImportacion = { simulacion: !!p.simulacion, elementosLeidos: elementos.length, descartados: contarDescartes(elementos), salasEnOsm: deOsm.length, nuevas: 0, completadas: 0, sinCambios: 0 };
 
   for (const c of deOsm) {
     const previa = existentes.get(c.clave);
@@ -58,7 +60,8 @@ export async function importarSalasDeOsm(p: { puerto: PuertoImportacion; descarg
     }
     const { clave: _clave, ...campos } = completa;
     const { no_contactar: _nc, estado_negocio: _en, estado_negocio_en: _ene, ...base } = previa;
-    aGuardar.push({ ...base, ...campos });
+    // Si OpenStreetMap ha aportado algo a esta sala, hay que citarlo (ODbL).
+    aGuardar.push({ ...base, ...campos, fuentes: [...new Set([...(previa.fuentes ?? []), 'osm'])] });
     informe.completadas++;
   }
 
@@ -66,14 +69,69 @@ export async function importarSalasDeOsm(p: { puerto: PuertoImportacion; descarg
   return informe;
 }
 
-/** Descarga real de Overpass. Tarda: la consulta recorre toda España. */
-export const descargarOsmSalas: DescargarOsm = async () => {
-  const r = await fetch('https://overpass-api.de/api/interpreter', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'BandManager/1.0 (https://bandmanager.io)' },
-    body: `data=${encodeURIComponent(CONSULTA_OVERPASS_SALAS)}`,
-    signal: AbortSignal.timeout(300_000),
-  });
-  if (!r.ok) throw new Error(`Overpass respondió ${r.status}`);
-  return ((await r.json()) as { elements?: ElementoOsm[] }).elements ?? [];
-};
+/** Servidores públicos de Overpass: si uno está saturado o no responde, se prueba el siguiente. */
+export const SERVIDORES_OVERPASS = ['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter', 'https://overpass.private.coffee/api/interpreter'];
+
+/** Motivo legible de un fallo de red: undici solo dice «fetch failed» y deja la causa real en `cause`. */
+export function motivoDeRed(e: unknown): string {
+  const causa = e instanceof Error ? (e.cause as { code?: string; message?: string } | undefined) : undefined;
+  const base = e instanceof Error ? e.message : String(e);
+  return causa?.code || causa?.message ? `${base} (${causa.code ?? causa.message})` : base;
+}
+
+export interface OpcionesDescargaOsm {
+  /** Comunidades a descargar (por defecto, todas). */
+  regiones?: readonly string[];
+  /** Pausa entre comunidades, para no saturar un servicio público. */
+  pausaMs?: number;
+  /** Se llama con cada comunidad que ningún servidor pudo dar; las demás siguen. */
+  alFallarRegion?: (region: string, motivo: string) => void;
+}
+
+const pausa = (ms: number) => (ms > 0 ? new Promise<void>((r) => setTimeout(r, ms)) : Promise.resolve());
+
+/**
+ * Descarga real de Overpass, comunidad por comunidad (una consulta para toda España satura los servidores públicos:
+ * respondían 500 y 502). Cada comunidad prueba los servidores en orden. Si algunas fallan, se importa lo que sí llegó
+ * (la importación es idempotente: la próxima vez se completa); solo falla si no llegó ninguna.
+ */
+export function crearDescargaOsm(servidores: readonly string[] = SERVIDORES_OVERPASS, fetcher: typeof fetch = fetch, timeoutMs = 120_000, o: OpcionesDescargaOsm = {}): DescargarOsm {
+  const regiones = o.regiones ?? REGIONES_OSM;
+  const pausaMs = o.pausaMs ?? 3000;
+  return async () => {
+    const elementos = new Map<string, ElementoOsm>();
+    const fallos: string[] = [];
+    for (const [i, region] of regiones.entries()) {
+      if (i > 0) await pausa(pausaMs);
+      const motivos: string[] = [];
+      let llegaron = false;
+      for (const url of servidores) {
+        try {
+          const r = await fetcher(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'BandManager/1.0 (https://bandmanager.io)' },
+            body: `data=${encodeURIComponent(consultaOverpassSalas(region))}`,
+            signal: AbortSignal.timeout(timeoutMs),
+          });
+          if (!r.ok) throw new Error(`respondió ${r.status}`);
+          for (const el of ((await r.json()) as { elements?: ElementoOsm[] }).elements ?? []) elementos.set(`${el.type}/${el.id}`, el);
+          llegaron = true;
+          break;
+        } catch (e) {
+          motivos.push(`${new URL(url).host}: ${motivoDeRed(e)}`);
+        }
+      }
+      if (!llegaron) {
+        const motivo = motivos.join('; ');
+        fallos.push(`${region} (${motivo})`);
+        o.alFallarRegion?.(region, motivo);
+      }
+    }
+    if (fallos.length === regiones.length) throw new Error(`Overpass no respondió en ningún servidor — ${fallos[0]}`);
+    return [...elementos.values()];
+  };
+}
+
+export const descargarOsmSalas: DescargarOsm = crearDescargaOsm(SERVIDORES_OVERPASS, fetch, 120_000, {
+  alFallarRegion: (region, motivo) => console.warn(`[Catálogo] Overpass: sin datos de ${region} esta vez (${motivo}).`),
+});

@@ -36,6 +36,12 @@ Esquema relacional de tablas, índices pgvector, funciones y políticas RLS.
 - [[tabla_calendar_conflict_notifications|tabla calendar_conflict_notifications]] *(Layer: #schema, Domain: #system)*
 - [[tabla_campaign_pitch_training|tabla campaign_pitch_training]] *(Layer: #schema, Domain: #booking)*
 - [[tabla_campaigns|tabla campaigns]] *(Layer: #schema, Domain: #system)*
+- [[tabla_catalogo_generos|tabla catalogo_generos]] *(Layer: #schema, Domain: #system)*
+- [[tabla_catalogo_generos_alias|tabla catalogo_generos_alias]] *(Layer: #schema, Domain: #system)*
+- [[tabla_catalogo_ingestas|tabla catalogo_ingestas]] *(Layer: #schema, Domain: #system)*
+- [[tabla_catalogo_sala_generos|tabla catalogo_sala_generos]] *(Layer: #schema, Domain: #system)*
+- [[tabla_catalogo_staging|tabla catalogo_staging]] *(Layer: #schema, Domain: #system)*
+- [[tabla_catalogo_supresion|tabla catalogo_supresion]] *(Layer: #schema, Domain: #system)*
 - [[tabla_category_pitch_templates|tabla category_pitch_templates]] *(Layer: #schema, Domain: #booking)*
 - [[tabla_concert_deals|tabla concert_deals]] *(Layer: #schema, Domain: #system)*
 - [[tabla_concerts|tabla concerts]] *(Layer: #schema, Domain: #system)*

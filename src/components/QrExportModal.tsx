@@ -40,6 +40,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
   >("poster-a4");
   const [customCta, setCustomCta] = useState(defaultCta);
   const [includeLogo, setIncludeLogo] = useState(Boolean(logoUrl));
+  const [showMarca, setShowMarca] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
   const [exportSuccess, setExportSuccess] = useState<string | null>(null);
 
@@ -57,6 +58,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
           url,
           filename: `${baseFilename}-vectorial`,
           logoUrl: includeLogo ? logoUrl : undefined,
+          marca: showMarca,
         });
         setExportSuccess(
           "¡Archivo SVG vectorial descargado en máxima calidad!",
@@ -68,6 +70,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
           filename: baseFilename,
           template: "qr-only",
           logoUrl: includeLogo ? logoUrl : undefined,
+          marca: showMarca,
         });
         setExportSuccess("¡Imagen PNG Ultra HD (4K / 300 DPI) descargada!");
       } else if (selectedFormat === "poster-a4") {
@@ -80,6 +83,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
           dateCity,
           url,
           logoUrl: includeLogo ? logoUrl : undefined,
+          marca: showMarca,
           ctaText: customCta,
         });
         setExportSuccess("¡Cartel A4 en alta resolución (300 DPI) descargado!");
@@ -92,6 +96,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
           concertTitle,
           url,
           logoUrl: includeLogo ? logoUrl : undefined,
+          marca: showMarca,
         });
         setExportSuccess("¡Tarjeta/Pegatina HD descargada!");
       }
@@ -112,6 +117,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
       dateCity,
       url,
       logoUrl: includeLogo ? logoUrl : undefined,
+      marca: showMarca,
       ctaText: customCta,
     });
   };
@@ -309,6 +315,18 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
               </span>
             </label>
           )}
+
+          <label className="flex items-center gap-3 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={showMarca}
+              onChange={(e) => setShowMarca(e.target.checked)}
+              className="w-4 h-4 rounded text-[var(--acc)] focus:ring-[var(--acc)] bg-[var(--surface)]"
+            />
+            <span className="text-xs text-[var(--ink-2)] font-medium">
+              Mostrar la firma «Hecho con bandmanager.io» bajo el QR
+            </span>
+          </label>
 
           <div className="pt-2  flex items-center justify-between text-xs font-sans text-[var(--ink-2)]">
             <span>

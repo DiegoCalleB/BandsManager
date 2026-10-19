@@ -53,3 +53,48 @@ export async function anadirVariasSalasDelCatalogo(salaIds: string[]): Promise<I
   if (!res.ok) throw new Error(cuerpo.error || `No se pudieron añadir las salas (${res.status}).`);
   return { anadidas: cuerpo.anadidas ?? 0, yaEnAgenda: cuerpo.yaEnAgenda ?? 0, noDisponibles: cuerpo.noDisponibles ?? 0, limiteAlcanzado: !!cuerpo.limiteAlcanzado };
 }
+
+/** Sala del catálogo tal y como la ve una banda al explorar: sin email ni teléfono, solo si los tiene. */
+export interface SalaDelCatalogo {
+  id: string;
+  nombre: string;
+  ciudad: string | null;
+  region: string | null;
+  tipo: string;
+  aforo: number | null;
+  genero: string | null;
+  website: string | null;
+  instagram: string | null;
+  nivel: 'sin_verificar' | 'probable' | 'verificada';
+  bandas_con_respuesta: number;
+  tiene_email: boolean;
+  tiene_telefono: boolean;
+  ya_en_agenda: boolean;
+}
+
+export interface FiltrosDelCatalogo {
+  texto?: string;
+  lugar?: string;
+  tipo?: string;
+  conContacto?: boolean;
+  limite?: number;
+}
+
+export interface ResultadoDelCatalogo {
+  total: number;
+  mostradas: number;
+  salas: SalaDelCatalogo[];
+}
+
+export async function buscarSalasDelCatalogo(filtros: FiltrosDelCatalogo, signal?: AbortSignal): Promise<ResultadoDelCatalogo> {
+  const q = new URLSearchParams();
+  if (filtros.texto?.trim()) q.set('texto', filtros.texto.trim());
+  if (filtros.lugar?.trim()) q.set('lugar', filtros.lugar.trim());
+  if (filtros.tipo) q.set('tipo', filtros.tipo);
+  if (filtros.conContacto) q.set('conContacto', 'true');
+  q.set('limite', String(filtros.limite ?? 50));
+  const res = await fetch(`/api/catalogo/salas?${q}`, { headers: getAuthHeaders(), signal });
+  if (!res.ok) throw new Error(`No se pudo abrir el catálogo (${res.status}).`);
+  const cuerpo = (await res.json()) as Partial<ResultadoDelCatalogo>;
+  return { total: cuerpo.total ?? 0, mostradas: cuerpo.mostradas ?? 0, salas: cuerpo.salas ?? [] };
+}
