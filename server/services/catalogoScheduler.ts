@@ -69,14 +69,28 @@ async function verificarEnMapsAhora(): Promise<void> {
  * Importa al catálogo las salas de España de OpenStreetMap. Es opt-in (`CATALOGO_IMPORTAR_OSM=true`) porque descarga
  * miles de elementos de un servicio público; solo añade salas nuevas y rellena huecos, así que repetirla es inofensivo.
  */
-export async function importarSalasOsmAhora(): Promise<void> {
+export async function importarSalasOsmAhora(): Promise<boolean> {
   try {
     const r = await importarSalasDeOsm({ puerto: puertoCatalogoSupabase, descargar: descargarOsmSalas });
     console.log(`[Catálogo] Importación OSM: ${r.salasEnOsm} salas en OSM, ${r.nuevas} nuevas, ${r.completadas} completadas, ${r.sinCambios} sin cambios.`);
+    return true;
   } catch (e) {
     console.warn("[Catálogo] La importación de OSM falló:", e instanceof Error ? e.message : e);
     captureError(e, { fase: "importarSalasOsm" });
+    return false;
   }
+}
+
+const REINTENTOS_IMPORTACION = 3;
+const ESPERA_REINTENTO_MS = 60 * 60 * 1000;
+
+/** Una importación y, si no llega nada (Overpass caído o saturado), otra a la hora, hasta tres veces. */
+function programarImportacion(espera: number, reintentos = REINTENTOS_IMPORTACION): void {
+  importacion = setTimeout(async () => {
+    importacion = null;
+    if (!(await importarSalasOsmAhora()) && reintentos > 0) programarImportacion(ESPERA_REINTENTO_MS, reintentos - 1);
+  }, espera);
+  importacion.unref?.();
 }
 
 export function iniciarSincronizacionDelCatalogo(): void {
@@ -91,8 +105,7 @@ export function iniciarSincronizacionDelCatalogo(): void {
   intervalo.unref?.();
   if (process.env.CATALOGO_IMPORTAR_OSM === "true") {
     // Después de la primera sincronización, para que las salas de las bandas ya estén y no se dupliquen.
-    importacion = setTimeout(() => void importarSalasOsmAhora(), 15 * 60 * 1000);
-    importacion.unref?.();
+    programarImportacion(15 * 60 * 1000);
   }
 }
 
