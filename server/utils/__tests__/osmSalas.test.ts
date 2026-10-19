@@ -78,3 +78,16 @@ describe('consultaOverpassSalas', () => {
   });
 });
 
+
+describe('descartesDeOsm', () => {
+  it('cuenta por qué se descarta cada elemento', async () => {
+    const { descartesDeOsm } = await import('../osmSalas.js');
+    const r = descartesDeOsm([
+      el({ amenity: 'music_venue', name: 'Con todo', 'addr:city': 'Madrid' }, 1),
+      el({ amenity: 'music_venue', name: 'Sin ciudad' }, 2),
+      el({ amenity: 'music_venue', name: 'Otra sin ciudad' }, 3),
+      el({ amenity: 'music_venue', 'addr:city': 'Madrid' }, 4),
+    ]);
+    expect(r).toEqual({ sinNombre: 1, sinCiudad: 2 });
+  });
+});

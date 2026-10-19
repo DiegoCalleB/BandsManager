@@ -6,7 +6,7 @@
  * Depende de un puerto y de una función de descarga, así que se prueba sin red ni base de datos.
  */
 import { calcularFiabilidad, idDeSala, type CamposPublicosSala } from '../utils/salaCatalogo.js';
-import { REGIONES_OSM, completarSala, consultaOverpassSalas, salasDeOsm, type ElementoOsm } from '../utils/osmSalas.js';
+import { REGIONES_OSM, completarSala, consultaOverpassSalas, descartesDeOsm, salasDeOsm, type ElementoOsm } from '../utils/osmSalas.js';
 import type { PuertoCatalogo, SalaAGuardar, SalaGuardada } from './catalogoSalas.js';
 
 export type PuertoImportacion = Pick<PuertoCatalogo, 'leerSalas' | 'guardarSalas'>;
@@ -16,6 +16,8 @@ export interface InformeImportacion {
   simulacion: boolean;
   elementosLeidos: number;
   salasEnOsm: number;
+  /** Elementos que no entraron por no poder identificarse. Si son muchos, hay que resolver la ciudad de otra forma. */
+  descartadas: { sinNombre: number; sinCiudad: number };
   nuevas: number;
   completadas: number;
   sinCambios: number;
@@ -38,7 +40,7 @@ export async function importarSalasDeOsm(p: { puerto: PuertoImportacion; descarg
   const existentes = new Map((await p.puerto.leerSalas()).map((s) => [s.clave, s]));
 
   const aGuardar: SalaAGuardar[] = [];
-  const informe: InformeImportacion = { simulacion: !!p.simulacion, elementosLeidos: elementos.length, salasEnOsm: deOsm.length, nuevas: 0, completadas: 0, sinCambios: 0 };
+  const informe: InformeImportacion = { simulacion: !!p.simulacion, elementosLeidos: elementos.length, salasEnOsm: deOsm.length, descartadas: descartesDeOsm(elementos), nuevas: 0, completadas: 0, sinCambios: 0 };
 
   for (const c of deOsm) {
     const previa = existentes.get(c.clave);

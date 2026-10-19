@@ -73,7 +73,7 @@ describe('iniciarSincronizacionDelCatalogo', () => {
 });
 
 describe('importación de OpenStreetMap', () => {
-  const ok = { simulacion: false, elementosLeidos: 10, salasEnOsm: 5, nuevas: 5, completadas: 0, sinCambios: 0 };
+  const ok = { simulacion: false, elementosLeidos: 10, salasEnOsm: 5, descartadas: { sinNombre: 0, sinCiudad: 5 }, nuevas: 5, completadas: 0, sinCambios: 0 };
   const arrancar = () => {
     vi.useFakeTimers();
     process.env.CATALOGO_IMPORTAR_OSM = 'true';

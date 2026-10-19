@@ -102,4 +102,15 @@ export function salasDeOsm(elementos: ElementoOsm[]): CamposPublicosSala[] {
   return [...porClave.values()];
 }
 
+/** Por qué se descartan elementos de una descarga: sin nombre o sin ciudad no se pueden identificar en el catálogo. */
+export function descartesDeOsm(elementos: ElementoOsm[]): { sinNombre: number; sinCiudad: number } {
+  const cuenta = { sinNombre: 0, sinCiudad: 0 };
+  for (const el of elementos) {
+    const t = el.tags ?? {};
+    if (!textoPublico(t.name)) cuenta.sinNombre++;
+    else if (!textoPublico(etiqueta(t, 'addr:city', 'addr:municipality', 'addr:place'), 80)) cuenta.sinCiudad++;
+  }
+  return cuenta;
+}
+
 export { completar as completarSala };
