@@ -34,6 +34,8 @@ _Sin dependencias salientes directas._
 - [[server_utils_seo_indice|server/utils/seo/indice.ts]] *(from #service)*
 - [[server_utils_seo_listados|server/utils/seo/listados.ts]] *(from #service)*
 - [[server_utils_seo_render|server/utils/seo/render.ts]] *(from #service)*
+- [[server_utils_seo_salas_render|server/utils/seo/salas/render.ts]] *(from #service)*
+- [[server_utils_seo_salas_textos|server/utils/seo/salas/textos.ts]] *(from #service)*
 - [[server_utils_seo_sitemap|server/utils/seo/sitemap.ts]] *(from #service)*
 - [[server_utils_seo_textos|server/utils/seo/textos.ts]] *(from #service)*
 

@@ -42,6 +42,7 @@ Red de errores del servidor: hasta ahora, un fallo no anticipado (uno que ningú
 - [[server_services_emailsCicloVida|server/services/emailsCicloVida.ts]] *(from #service)*
 - [[server_services_festivalesPublicos|server/services/festivalesPublicos.ts]] *(from #service)*
 - [[server_services_metricasReels|server/services/metricasReels.ts]] *(from #service)*
+- [[server_services_salasPublicas|server/services/salasPublicas.ts]] *(from #service)*
 - [[server_services_socialPublisher|server/services/socialPublisher.ts]] *(from #service)*
 - [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(from #service)*
 - [[service_calendar_conflicts|Avisos de choques por email]] *(from #service)*

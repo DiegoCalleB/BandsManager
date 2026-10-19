@@ -25,6 +25,8 @@ Entradas del sitemap de las páginas de SEO: cada par es/en declara sus alternat
 - [[server_utils_seo_indice|server/utils/seo/indice.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_render|server/utils/seo/render.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_rutas|server/utils/seo/rutas.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_seo_salas_publicas|server/utils/seo/salas/publicas.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_seo_salas_tipos|server/utils/seo/salas/tipos.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_textos|server/utils/seo/textos.ts]] *(Layer: #service, Domain: #system)*
 
 ---
@@ -37,6 +39,7 @@ Entradas del sitemap de las páginas de SEO: cada par es/en declara sus alternat
 ## 🧪 Tests que lo cubren
 - `server/utils/seo/__tests__/festivales.test.ts`
 - `server/utils/seo/__tests__/guias.test.ts`
+- `server/utils/seo/__tests__/salas.test.ts`
 
 ---
 
