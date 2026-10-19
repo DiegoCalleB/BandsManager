@@ -39,7 +39,7 @@
   "scripts/generate_obsidian_graph.ts": 883,
   "src/components/EPKManager.tsx": 863,
   "server/ai.ts": 854,
-  "server/routes/concerts.ts": 847,
+  "server/routes/concerts.ts": 839,
   "src/components/repertorio/EnergyMapCard.tsx": 845,
   "src/components/UserManagementModal.tsx": 840,
   "src/components/repertorio/ExportAlbumSongsModal.tsx": 829,

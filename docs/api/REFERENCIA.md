@@ -40,7 +40,7 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `POST` | `/api/auth/reset-password/request` | Pública | loginRateLimiter |  | [`server/routes/users/rutasRecuperacion.ts:17`](../../server/routes/users/rutasRecuperacion.ts#L17) |
 | `POST` | `/api/auth/switch-band` | Sesión (comprobada en el handler) | — |  | [`server/routes/users/rutasSesion.ts:137`](../../server/routes/users/rutasSesion.ts#L137) |
 | `POST` | `/api/billing/webhook` | Firma o secreto | — |  | [`server/routes/billing.ts:987`](../../server/routes/billing.ts#L987) |
-| `GET` | `/api/calendar.ics` | Firma o secreto | — |  | [`server/routes/concerts.ts:437`](../../server/routes/concerts.ts#L437) |
+| `GET` | `/api/calendar.ics` | Firma o secreto | — |  | [`server/routes/concerts.ts:429`](../../server/routes/concerts.ts#L429) |
 | `GET` | `/api/download-excel` | Sesión (comprobada en el handler) | — |  | [`server.ts:269`](../../server.ts#L269) |
 | `GET` | `/api/emails/baja` | Pública | publicoRateLimiter |  | [`server/routes/emailsCicloVida.ts:13`](../../server/routes/emailsCicloVida.ts#L13) |
 | `GET` | `/api/gmail-oauth/callback` | Pública | gmailOAuthRateLimiter |  | [`server/routes/gmailOAuth.ts:184`](../../server/routes/gmailOAuth.ts#L184) |
@@ -242,7 +242,7 @@ Son las que un revisor de seguridad querrá mirar primero.
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
 | `POST` | `/api/chat` | Sesión | chatRateLimiter |  | [`server/routes/chat.ts:31`](../../server/routes/chat.ts#L31) |
-| `POST` | `/api/write-reels-copy` | Sesión | iaRateLimiter |  | [`server/routes/chat.ts:521`](../../server/routes/chat.ts#L521) |
+| `POST` | `/api/write-reels-copy` | Sesión | iaRateLimiter |  | [`server/routes/chat.ts:522`](../../server/routes/chat.ts#L522) |
 
 ### concert_to_album
 
@@ -264,8 +264,8 @@ Son las que un revisor de seguridad querrá mirar primero.
 
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
-| `GET` | `/api/calendar-feed-url` | Sesión | — |  | [`server/routes/concerts.ts:411`](../../server/routes/concerts.ts#L411) |
-| `GET` | `/api/calendar.ics` | Firma o secreto | — |  | [`server/routes/concerts.ts:437`](../../server/routes/concerts.ts#L437) |
+| `GET` | `/api/calendar-feed-url` | Sesión | — |  | [`server/routes/concerts.ts:403`](../../server/routes/concerts.ts#L403) |
+| `GET` | `/api/calendar.ics` | Firma o secreto | — |  | [`server/routes/concerts.ts:429`](../../server/routes/concerts.ts#L429) |
 | `GET` | `/api/calendar/conflicts` | Sesión | — |  | [`server/routes/concerts.ts:61`](../../server/routes/concerts.ts#L61) |
 | `POST` | `/api/concerts` | Sesión | — |  | [`server/routes/concerts.ts:187`](../../server/routes/concerts.ts#L187) |
 | `POST` | `/api/concerts/sync` | Sesión | — |  | [`server/routes/concerts.ts:247`](../../server/routes/concerts.ts#L247) |
@@ -274,10 +274,10 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `GET` | `/api/logistics` | Sesión | — |  | [`server/routes/concerts.ts:268`](../../server/routes/concerts.ts#L268) |
 | `POST` | `/api/logistics/gear` | Sesión | — |  | [`server/routes/concerts.ts:318`](../../server/routes/concerts.ts#L318) |
 | `POST` | `/api/logistics/runofshow` | Sesión | — |  | [`server/routes/concerts.ts:291`](../../server/routes/concerts.ts#L291) |
-| `GET` | `/api/payments` | Sesión + líder | — |  | [`server/routes/concerts.ts:345`](../../server/routes/concerts.ts#L345) |
-| `POST` | `/api/payments` | Sesión + líder | — |  | [`server/routes/concerts.ts:357`](../../server/routes/concerts.ts#L357) |
-| `POST` | `/api/payments/sync` | Sesión + líder | — |  | [`server/routes/concerts.ts:389`](../../server/routes/concerts.ts#L389) |
-| `PUT` | `/api/payments/{id}` | Sesión + líder | — |  | [`server/routes/concerts.ts:370`](../../server/routes/concerts.ts#L370) |
+| `GET` | `/api/payments` | Sesión + líder | — |  | [`server/routes/concerts.ts:348`](../../server/routes/concerts.ts#L348) |
+| `POST` | `/api/payments` | Sesión + líder | — |  | [`server/routes/concerts.ts:362`](../../server/routes/concerts.ts#L362) |
+| `POST` | `/api/payments/sync` | Sesión + líder | — |  | [`server/routes/concerts.ts:384`](../../server/routes/concerts.ts#L384) |
+| `PUT` | `/api/payments/{id}` | Sesión + líder | — |  | [`server/routes/concerts.ts:373`](../../server/routes/concerts.ts#L373) |
 | `POST` | `/api/rehearsals` | Sesión | — |  | [`server/routes/concerts.ts:101`](../../server/routes/concerts.ts#L101) |
 | `PUT` | `/api/rehearsals/{id}` | Sesión | — |  | [`server/routes/concerts.ts:75`](../../server/routes/concerts.ts#L75) |
 | `DELETE` | `/api/rehearsals/{id}` | Sesión | — |  | [`server/routes/concerts.ts:124`](../../server/routes/concerts.ts#L124) |

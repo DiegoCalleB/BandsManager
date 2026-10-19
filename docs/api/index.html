@@ -2868,7 +2868,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/concerts.ts:411",
+        "x-source": "server/routes/concerts.ts:403",
         "x-autenticacion": "middleware"
       }
     },
@@ -2885,7 +2885,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/concerts.ts:437",
+        "x-source": "server/routes/concerts.ts:429",
         "x-autenticacion": "firma",
         "x-comprobaciones-handler": [
           "firma HMAC en la URL"
@@ -9090,7 +9090,7 @@
             "$ref": "#/components/responses/SoloLider"
           }
         },
-        "x-source": "server/routes/concerts.ts:345",
+        "x-source": "server/routes/concerts.ts:348",
         "x-autenticacion": "middleware",
         "x-requires-leader": true
       },
@@ -9127,7 +9127,7 @@
             "$ref": "#/components/responses/SoloLider"
           }
         },
-        "x-source": "server/routes/concerts.ts:357",
+        "x-source": "server/routes/concerts.ts:362",
         "x-autenticacion": "middleware",
         "x-requires-leader": true
       }
@@ -9138,7 +9138,7 @@
           "concerts"
         ],
         "operationId": "postApiPaymentsSync",
-        "description": "Comentario en el código: Sync all payments/finances with Supabase (Admin only)",
+        "description": "Comentario en el código: Devuelve los pagos de Supabase (Finanzas lo usa para refrescar). Ya no hay copia en memoria que sincronizar; se conserva la ruta por compatibilidad con el cliente.",
         "parameters": [
           {
             "$ref": "#/components/parameters/BandIdActiva"
@@ -9166,7 +9166,7 @@
             "$ref": "#/components/responses/SoloLider"
           }
         },
-        "x-source": "server/routes/concerts.ts:389",
+        "x-source": "server/routes/concerts.ts:384",
         "x-autenticacion": "middleware",
         "x-requires-leader": true
       }
@@ -9213,7 +9213,7 @@
             "$ref": "#/components/responses/SoloLider"
           }
         },
-        "x-source": "server/routes/concerts.ts:370",
+        "x-source": "server/routes/concerts.ts:373",
         "x-autenticacion": "middleware",
         "x-requires-leader": true
       }
@@ -13832,7 +13832,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/chat.ts:521",
+        "x-source": "server/routes/chat.ts:522",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"

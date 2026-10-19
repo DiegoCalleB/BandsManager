@@ -8,6 +8,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const capturado: { systemInstruction?: string; turnoUsuario?: string } = {};
 let epk: Record<string, unknown> = {};
 let autonomiaServidor: Record<string, unknown> = {};
+let pagosDb: Array<Record<string, unknown>> = [];
 
 vi.mock('../../state.js', () => ({
   loadState: () => ({ leads: [], rehearsals: [], concerts: [], messages: [], payments: [], users: [], registeredBands: [] }),
@@ -36,6 +37,7 @@ vi.mock('../../db.js', () => ({
   dbGetSetlists: async () => [],
   dbGetTours: async () => [],
   dbContarFans: async () => 0,
+  dbGetPayments: async () => pagosDb,
 }));
 
 import router from '../chat.js';
@@ -53,6 +55,7 @@ beforeEach(() => {
   capturado.turnoUsuario = undefined;
   epk = {};
   autonomiaServidor = {};
+  pagosDb = [];
 });
 
 describe('chat: datos de la banda en el turno del usuario', () => {
@@ -124,5 +127,12 @@ describe('chat: instrucción de sistema', () => {
   it('la restricción de finanzas depende solo del rol de la sesión', async () => {
     await llamarChat({ message: 'hola' });
     expect(capturado.systemInstruction).not.toContain('RESTRICCIÓN CRÍTICA DE FINANZAS');
+  });
+
+  it('un líder ve en el contexto los pagos reales de Supabase, no los de una copia en memoria', async () => {
+    pagosDb = [{ id: 'pay-1', band_id: 'band-a', concepto: 'Alquiler de sala del jueves', importe: 321 }];
+    await llamarChat({ message: '¿cómo van las cuentas?' });
+    const prompt = capturado.turnoUsuario ?? '';
+    expect(prompt).toContain('Alquiler de sala del jueves');
   });
 });
