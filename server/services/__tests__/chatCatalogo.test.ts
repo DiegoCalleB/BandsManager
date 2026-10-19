@@ -155,3 +155,18 @@ describe('resultadoParaModelo: cuando el catálogo no basta', () => {
     expect(JSON.stringify(salida)).not.toContain('<<<');
   });
 });
+
+describe('medios y grupos', () => {
+  it('ofrece el Scout Descubridor también para medios y grupos', () => {
+    for (const tipo of ['medio', 'grupo']) {
+      const salida: any = resultadoParaModelo(resultado(), { lugar: 'Vigo', tipo });
+      expect(salida.siguiente_paso).toContain(`tipo: "${tipo}"`);
+    }
+  });
+
+  it('el prompt dice a qué ir con medios y grupos, que no están en el catálogo', async () => {
+    const { REGLA_CATALOGO } = await import('../chatCatalogo.js');
+    expect(REGLA_CATALOGO).toContain('MEDIOS DE COMUNICACIÓN Y GRUPOS DE MÚSICA');
+    expect(REGLA_CATALOGO).toContain("tipo 'medio' o 'grupo'");
+  });
+});
