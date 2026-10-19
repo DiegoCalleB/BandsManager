@@ -27,6 +27,7 @@ Hace sonar un acorde del Atril tal y como lo dibuja el diagrama (misma inversió
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_chords_AcordeEnInstrumento|src/components/chords/AcordeEnInstrumento.tsx]] *(from #frontend)*
+- [[src_components_chords_PentagramaFicha|src/components/chords/PentagramaFicha.tsx]] *(from #frontend)*
 
 ---
 

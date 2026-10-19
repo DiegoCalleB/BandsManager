@@ -4,29 +4,32 @@
  */
 import { bajarCancion } from './ducking';
 import { vozTeclado } from './inversiones';
-import { notasParaDibujar, type VistaAcorde } from './vistaAcordes';
+import { lineaDeBajo, notasParaDibujar, type VistaAcorde } from './vistaAcordes';
 import type { NivelAcorde } from './voicings';
 
 const BASE_TECLADO = 48; // Do3
-const BASE_BAJO = 36; // Do2
+const BASE_BAJO = 28; // Mi1: la cuerda al aire del bajo; la nota grave de cada acorde cae entre Mi1 y Re#2
 export const DURACION_ACORDE_S = 1.4;
 
 /**
  * Alturas MIDI del acorde para esa vista. Piano y guitarra: la voz de la inversión (Básico: tríada, en guitarra solo
- * raíz y quinta como el power chord). Bajo: la nota grave de la inversión.
+ * raíz y quinta como el power chord). Bajo: la misma línea que el mástil y el pentagrama (Normal y Pro, con la nota de paso
+ * hacia `siguiente` si se conoce); en Básico, raíz y quinta.
  */
-export function midiDeAcorde(acorde: string, vista: VistaAcorde, nivel: NivelAcorde = 'normal', inversion = 0): number[] {
+export function midiDeAcorde(acorde: string, vista: VistaAcorde, nivel: NivelAcorde = 'normal', inversion = 0, siguiente?: string | null): number[] {
   const n = notasParaDibujar(acorde);
   if (!n) return [];
   const inv = Math.max(0, Math.min(inversion, n.notas.length - 1));
   if (vista === 'bajo') {
+    const linea = nivel === 'basico' ? null : lineaDeBajo(acorde, siguiente, inv, nivel === 'pro');
+    if (linea) return linea.map((x) => x.pitch);
     // Arpegio de grave a agudo: arranca en la nota de la inversión y sube por las demás del acorde (Básico: raíz y quinta).
     const pcs = nivel === 'basico' ? n.notas.filter((pc) => pc === n.raiz || pc === n.quinta) : n.notas;
     const ini = Math.min(inv, pcs.length - 1);
     const sube: number[] = [];
     pcs.map((_, i) => pcs[(ini + i) % pcs.length]).forEach((pc) => {
-      let m = BASE_BAJO + pc;
-      while (sube.length && m <= sube[sube.length - 1]) m += 12;
+      const prev = sube[sube.length - 1];
+      const m = prev === undefined ? BASE_BAJO + ((pc - (BASE_BAJO % 12) + 12) % 12) : prev + (((pc - prev) % 12 + 12) % 12 || 12);
       sube.push(m);
     });
     return sube;
@@ -52,8 +55,8 @@ const crearSinte = async (): Promise<Sintetizador> => {
 };
 
 /** Toca el acorde y baja la canción mientras suena. Sin Web Audio (tests, navegadores raros) no hace nada. */
-export async function sonarAcorde(acorde: string, vista: VistaAcorde, nivel: NivelAcorde, inversion: number): Promise<void> {
-  const midi = midiDeAcorde(acorde, vista, nivel, inversion);
+export async function sonarAcorde(acorde: string, vista: VistaAcorde, nivel: NivelAcorde, inversion: number, siguiente?: string | null): Promise<void> {
+  const midi = midiDeAcorde(acorde, vista, nivel, inversion, siguiente);
   if (!midi.length) return;
   try {
     const Tone = await import('tone');

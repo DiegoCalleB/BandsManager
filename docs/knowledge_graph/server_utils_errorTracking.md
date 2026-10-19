@@ -40,6 +40,7 @@ Red de errores del servidor: hasta ahora, un fallo no anticipado (uno que ningú
 - [[server_services_campaignRadarScheduler|server/services/campaignRadarScheduler.ts]] *(from #service)*
 - [[server_services_catalogoScheduler|server/services/catalogoScheduler.ts]] *(from #service)*
 - [[server_services_emailsCicloVida|server/services/emailsCicloVida.ts]] *(from #service)*
+- [[server_services_festivalesPublicos|server/services/festivalesPublicos.ts]] *(from #service)*
 - [[server_services_metricasReels|server/services/metricasReels.ts]] *(from #service)*
 - [[server_services_socialPublisher|server/services/socialPublisher.ts]] *(from #service)*
 - [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(from #service)*
