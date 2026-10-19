@@ -25,6 +25,7 @@ Vista activa de la aplicación interna (resumen, CRM, calendario, repertorio…)
 - [[src_components_RegaloPegatinas|src/components/RegaloPegatinas.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_Skeleton|src/components/ui/Skeleton.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_estadoCargaLeads|src/utils/estadoCargaLeads.ts]] *(Layer: #service, Domain: #booking)*
 
 ---
 
