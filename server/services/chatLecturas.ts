@@ -145,7 +145,7 @@ async function leer(nombre: string, args: Argumentos | undefined, params: { lead
   if (nombre !== NOMBRE_BUSCAR_CATALOGO) return ejecutarLectura(nombre, args, params.leads);
   if (!params.catalogo) return { error: "El catálogo de salas no está disponible ahora." };
   try {
-    return resultadoParaModelo(await params.catalogo(args ?? {}));
+    return resultadoParaModelo(await params.catalogo(args ?? {}), args);
   } catch (e) {
     console.warn("buscar_catalogo falló:", e);
     return { error: "No se pudo consultar el catálogo de salas." };
