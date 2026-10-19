@@ -13,7 +13,7 @@ tags: ["service", "system", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-De las filas de Supabase (`festivales`, `festival_ediciones`, `festival_convocatorias`) a la ficha pública. Puro y probado.
+De las filas de Supabase (`catalogo_festivales`, `catalogo_festival_ediciones`, `catalogo_festival_convocatorias`) a la ficha pública. Puro y probado.
 
 ---
 

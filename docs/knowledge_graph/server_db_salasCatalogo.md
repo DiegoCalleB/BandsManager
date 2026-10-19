@@ -13,7 +13,7 @@ tags: ["db", "system", "auto"]
 > **Capa:** `#layer/db` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Catálogo compartido de salas (`salas_catalogo`): adaptador de Supabase del puerto de server/services/catalogoSalas.ts.
+Catálogo compartido de salas (`catalogo_salas`): adaptador de Supabase del puerto de server/services/catalogoSalas.ts.
 
 ---
 
@@ -23,7 +23,6 @@ Catálogo compartido de salas (`salas_catalogo`): adaptador de Supabase del puer
 - [[server_services_verificarSalasEnMaps|server/services/verificarSalasEnMaps.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_salaCatalogo|server/utils/salaCatalogo.ts]] *(Layer: #service, Domain: #system)*
 - [[tabla_leads|tabla leads]] *(Layer: #schema, Domain: #booking)*
-- [[tabla_salas_catalogo|tabla salas_catalogo]] *(Layer: #schema, Domain: #system)*
 
 ---
 

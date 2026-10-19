@@ -1,5 +1,7 @@
 # ADR 0044: Compartir entre bandas un catálogo de salas sin compartir nada privado
 
+> **Nota (ADR 0048):** la tabla `salas_catalogo` se llama ahora `catalogo_salas`. El texto conserva el nombre de su momento.
+
 - **Estado:** Aceptada
 - **Fecha:** 2026-10-18
 - **Origen:** nueva

@@ -54,6 +54,7 @@ Usamos el formato [plantilla](./0000-plantilla.md) (inspirado en MADR).
 | [0045](./0045-directorio-publico-de-festivales.md) | Directorio público de festivales curado, sin edición abierta | Aceptada | nueva |
 | [0046](./0046-directorio-publico-de-salas.md) | Directorio público de salas de conciertos de España | Aceptada | nueva |
 | [0047](./0047-base-del-catalogo-global.md) | Preparar el catálogo de salas para ser global sin tocar lo que ya funciona | Aceptada | nueva |
+| [0048](./0048-renombrar-salas-catalogo-a-catalogo-salas.md) | Renombrar `salas_catalogo` y las tablas de festivales bajo el prefijo `catalogo_` | Aceptada | nueva |
 
 ## Cómo añadir uno
 

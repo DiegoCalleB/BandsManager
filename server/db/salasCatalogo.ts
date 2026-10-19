@@ -1,4 +1,4 @@
-// Catálogo compartido de salas (`salas_catalogo`): adaptador de Supabase del puerto de server/services/catalogoSalas.ts.
+// Catálogo compartido de salas (`catalogo_salas`): adaptador de Supabase del puerto de server/services/catalogoSalas.ts.
 // Solo lo usa el servidor con la clave de servicio; ninguna ruta de usuario lee esta tabla directamente.
 
 import { getSupabase } from './core.js';
@@ -55,7 +55,7 @@ export const puertoCatalogoSupabase: PuertoCatalogo = {
   },
 
   async leerSalas() {
-    return (await leerTodo<FilaSala>('salas_catalogo', '*')).map(salaDeFila);
+    return (await leerTodo<FilaSala>('catalogo_salas', '*')).map(salaDeFila);
   },
 
   async guardarSalas(salas: SalaAGuardar[]) {
@@ -64,7 +64,7 @@ export const puertoCatalogoSupabase: PuertoCatalogo = {
     // `created_at` es de la base de datos. Una sala ya existente lo trae al leerla y una nueva no: en un mismo lote PostgREST
     // rellena con null la que no lo tiene, y eso viola el NOT NULL (la importación de OSM fallaba así al mezclar nuevas y ya existentes).
     const filas = salas.map(({ created_at: _creada, ...s }: SalaAGuardar & { created_at?: unknown }) => ({ ...s, verificada_en: s.verificada_en?.toISOString() ?? null, updated_at: ahora }));
-    const { error } = await getSupabase().from('salas_catalogo').upsert(filas, { onConflict: 'id' });
+    const { error } = await getSupabase().from('catalogo_salas').upsert(filas, { onConflict: 'id' });
     if (error) throw new Error(`No se pudo guardar el catálogo de salas: ${error.message}`);
   },
 
@@ -82,7 +82,7 @@ export const puertoCatalogoSupabase: PuertoCatalogo = {
 export const puertoVerificacionSupabase: PuertoVerificacion = {
   async salasPendientes(limite, antesDe) {
     const { data, error } = await getSupabase()
-      .from('salas_catalogo')
+      .from('catalogo_salas')
       .select('*')
       .eq('no_contactar', false)
       .or(`estado_negocio_en.is.null,estado_negocio_en.lt.${antesDe.toISOString()}`)
@@ -93,7 +93,7 @@ export const puertoVerificacionSupabase: PuertoVerificacion = {
   },
 
   async guardarEstado(salaId, estado, en) {
-    const { error } = await getSupabase().from('salas_catalogo').update({ estado_negocio: estado, estado_negocio_en: en.toISOString() }).eq('id', salaId);
+    const { error } = await getSupabase().from('catalogo_salas').update({ estado_negocio: estado, estado_negocio_en: en.toISOString() }).eq('id', salaId);
     if (error) throw new Error(`No se pudo guardar el estado de la sala ${salaId}: ${error.message}`);
   },
 };
