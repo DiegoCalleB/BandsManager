@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useEffectEvent, useState, ReactNode } from 'react';
 import { LanguageContext, TRANSLATIONS, type SupportedLanguage } from './idioma';
+import { idiomaSugerido } from '../utils/idiomaNavegador';
 import { montarWidgetDeGoogle, quitarMarcaDeTraduccion, traducirConGoogle } from './googleTranslate';
 
-/** Idioma guardado, si no el del navegador (si está soportado) y si no español. */
+/** Idioma guardado, si no el del navegador (si está soportado) y si no el sugerido: inglés fuera del español, español sin información. */
 function idiomaInicial(): SupportedLanguage {
   // /en es la landing en inglés: manda la URL sobre lo guardado, para que lo que ve Google coincida.
   if (window.location.pathname.replace(/\/+$/, '').toLowerCase() === '/en') return 'en';
@@ -10,12 +11,13 @@ function idiomaInicial(): SupportedLanguage {
   if (saved && TRANSLATIONS[saved]) {
     return saved;
   }
-  // Try browser language default
-  const navLang = navigator.language.slice(0, 2).toLowerCase();
+  // Idioma del navegador: el primero de la lista de preferencias (un japonés con ['ja', 'en-US'] no debe ver español).
+  const preferidos = navigator.languages?.length ? navigator.languages : [navigator.language];
+  const navLang = String(preferidos[0] ?? '').slice(0, 2).toLowerCase();
   if (navLang === 'ca' || navLang === 'gl' || navLang === 'eu' || navLang === 'en' || navLang === 'es') {
     return navLang as SupportedLanguage;
   }
-  return 'es';
+  return idiomaSugerido(preferidos);
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {

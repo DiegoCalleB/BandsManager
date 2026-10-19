@@ -104,7 +104,7 @@ export const GUIAS_NEGOCIO_EN: GuiaSeoEn[] = [
     slugEs: 'software-para-gestionar-una-banda',
     titulo: 'Band Management Software: What It Should Have for Indie Bands',
     h1: 'Band management software',
-    descripcion: 'What an independent band needs to get more organised than with spreadsheets and group chats: booking, repertoire, calendar, press kit, finances and fans.',
+    descripcion: 'What an independent band needs to get more organized than with spreadsheets and group chats: booking, repertoire, calendar, press kit, finances and fans.',
     intro: 'Most bands run on a spreadsheet, a group chat and a lot of memory. It works until there are more than five venues, two rehearsals and a tour.',
     resumen: ['A spreadsheet works at first; with more venues and rehearsals it falls short.', 'Look for booking, repertoire, calendar, press kit, finances and fan capture.', 'It should work well on a phone and never send anything in your name without your approval.'],
     secciones: [

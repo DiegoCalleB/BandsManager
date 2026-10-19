@@ -51,6 +51,7 @@ section.seccion{margin:1.5rem 0}
 .barra{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;gap:.5rem;margin:0 -1rem 1rem;padding:.6rem 1rem;background:var(--bg);font-size:14px}.barra .der{display:flex;align-items:center;gap:.5rem}
 .barra a{color:var(--ink);text-decoration:none;font-weight:650}
 .barra .idioma{color:var(--ink-2);font-weight:500;padding:.35rem .8rem;border-radius:999px;background:var(--sunken)}
+.aviso-idioma{display:flex;justify-content:space-between;align-items:center;gap:.75rem;margin:0 0 1rem;padding:.65rem .9rem;border-radius:18px;background:var(--surface);font-size:14px;color:var(--ink)}.aviso-idioma[hidden]{display:none}.aviso-idioma a{color:var(--acc-ink,var(--acc));font-weight:650}.aviso-idioma button{flex:none;border:0;background:transparent;color:var(--ink-2);font-size:20px;line-height:1;padding:.1rem .4rem;cursor:pointer}
 .lectura{font-size:13px;color:var(--ink-2);margin:-.25rem 0 .9rem}
 
 .resumen{background:var(--surface);border-radius:24px;padding:1.1rem 1.25rem;margin:0 0 1.25rem}
@@ -80,10 +81,13 @@ table.tabla tbody tr:nth-child(even) td{background:var(--bg)}
 .calc h3{margin:0 0 .75rem;font-size:17px;color:var(--ink)}
 .calc .campos{display:grid;gap:.7rem;grid-template-columns:repeat(auto-fit,minmax(9.5rem,1fr))}
 .calc label{display:grid;gap:.3rem;font-size:14px;color:var(--ink-2)}
-.calc input{width:100%;min-height:44px;padding:0 .8rem;border:0;border-radius:12px;background:var(--bg);color:var(--ink);font:inherit;font-size:16px;font-variant-numeric:tabular-nums}
+.calc input,.calc select{width:100%;min-height:44px;padding:0 .8rem;border:0;border-radius:12px;background:var(--bg);color:var(--ink);font:inherit;font-size:16px;font-variant-numeric:tabular-nums}
 .calc .res{display:grid;gap:.5rem;margin-top:1rem;padding:1rem;border-radius:18px;background:var(--bg)}
 .calc .res p{margin:0;color:var(--ink-2)}
 .calc .res strong{color:var(--ink);font-size:1.25rem;font-variant-numeric:tabular-nums}
 .calc .grande strong{color:var(--acc-ink);font-size:1.6rem}
 .calc small{display:block;margin-top:.6rem;color:var(--ink-2);font-size:13px}
+.calc .campos:has(.casilla){grid-template-columns:1fr}
+.calc label.casilla{display:flex;align-items:center;gap:.7rem;padding:.55rem .7rem;border-radius:12px;background:var(--bg);color:var(--ink);font-size:15px;cursor:pointer}
+.calc label.casilla input{width:22px;min-height:22px;height:22px;flex:none;accent-color:var(--acc)}
 `;

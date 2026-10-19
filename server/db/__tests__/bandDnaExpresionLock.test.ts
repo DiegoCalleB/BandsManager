@@ -44,6 +44,9 @@ function crearFromMock() {
       }
       return builder;
     },
+    // `await …or(...)` (lista de candidatas) resuelve a las filas que casan.
+    then: (resolve: (v: unknown) => unknown) =>
+      resolve({ data: bandId && rows.get(bandId) ? [rows.get(bandId)] : [], error: null }),
     maybeSingle: async () => ({ data: (bandId && rows.get(bandId)) || null, error: null }),
     single: async () => ({ data: (bandId && rows.get(bandId)) || null, error: null })
   };

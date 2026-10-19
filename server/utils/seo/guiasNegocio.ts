@@ -93,7 +93,7 @@ export const GUIAS_NEGOCIO: GuiaSeo[] = [
       { q: '¿Quién redacta el contrato?', a: 'Puede hacerlo la sala o la banda. Lo importante es revisarlo con calma antes de firmar.' },
       { q: '¿Necesito un abogado?', a: 'Para contratos sencillos de un concierto, un modelo claro suele bastar. Para giras, exclusividades o cachés altos, consulta a un profesional.' },
     ],
-    relacionadas: ['cuanto-cobrar-por-un-concierto', 'rider-de-hospitalidad', '/plantilla-rider-tecnico'],
+    relacionadas: ['cuanto-cobrar-por-un-concierto', 'rider-de-hospitalidad', '/technical-rider-template'],
     cta: { titulo: 'Tus bolos y condiciones, ordenados', texto: 'BandManager guarda las fechas, el caché y las condiciones de cada concierto en un solo sitio.', boton: 'Probar BandManager gratis' },
   },
   {

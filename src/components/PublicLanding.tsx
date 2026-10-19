@@ -5,6 +5,7 @@ import { useLanguage, SupportedLanguage } from '../context/idioma';
 import { registrarEvento } from '../utils/analitica';
 import { LandingChatWidget } from './LandingChatWidget';
 import { FormularioInteres } from './landing/FormularioInteres';
+import { GuiasDestacadas } from './landing/GuiasDestacadas';
 
 interface PublicLandingProps {
   onEntrar: () => void;
@@ -67,6 +68,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
   const [fotoError, setFotoError] = useState(false);
 
   const es = language === 'es';
+  const guiasHref = es ? '/guides' : '/en/guides';
 
   useEffect(() => {
     const title = t('landing.meta.title');
@@ -177,6 +179,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
             <a href="#iris" className="hover:text-[var(--ink)]">Estudio Iris</a>
             <a href="#setlists-miembros" className="hover:text-[var(--ink)]">Setlists</a>
             <a href="#fans" className="hover:text-[var(--ink)]">Fans y QR</a>
+            <a href={guiasHref} className="hover:text-[var(--ink)]">{t('landing.nav.guides')}</a>
             <a href="#preguntas" className="hover:text-[var(--ink)]">{t('landing.nav.faq')}</a>
           </nav>
 
@@ -481,8 +484,10 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
           </div>
         </section>
 
+        <GuiasDestacadas />
+
         {/* PREGUNTAS */}
-        <section id="preguntas" className="bg-[var(--sunken)]">
+        <section id="preguntas">
           <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24">
             <h2 className="mb-10 font-display text-3xl font-bold tracking-tight sm:text-4xl">
               {t('landing.faqs.title')}
@@ -545,7 +550,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-6 text-sm text-[var(--ink-2)] sm:px-6">
           <span>{t('landing.footer.copy').replace('{year}', String(year))}</span>
           <div className="flex items-center gap-4">
-            <a href={es ? '/guias' : '/en/guides'} className="hover:underline">
+            <a href={guiasHref} className="hover:underline">
               {t('landing.footer.guides')}
             </a>
             <button
