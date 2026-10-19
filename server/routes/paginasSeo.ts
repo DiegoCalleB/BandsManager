@@ -1,4 +1,4 @@
-// Guías y directorio de festivales de SEO: /guias y /en/guides (índices) y /guias/:slug y /en/guides/:slug. Contenido fijo
+// Guías y directorio de festivales de SEO: /guides y /en/guides (índices) y /guides/:slug y /en/guides/:slug. Contenido fijo
 // en server/utils/seo/, sin datos de bandas. Las rutas son literales para que `npm run docs:api` las vea.
 import express from 'express';
 import { publicoRateLimiter } from '../middleware/rateLimiter.js';
@@ -46,8 +46,11 @@ async function enviarIndiceFestivales(res: express.Response, idioma: IdiomaSeo) 
   responderHtml(res, 200, renderizarIndiceFestivales(baseUrlPublica(), idioma, hoy(), await obtenerFestivales()), CACHE);
 }
 
-router.get('/guias', publicoRateLimiter, (_req, res) => enviarIndice(res, 'es'));
-router.get('/guias/:slug', publicoRateLimiter, (req, res) => enviarGuia(res, req.params.slug, 'es'));
+router.get('/guides', publicoRateLimiter, (_req, res) => enviarIndice(res, 'es'));
+router.get('/guides/:slug', publicoRateLimiter, (req, res) => enviarGuia(res, req.params.slug, 'es'));
+// Rutas anteriores en español: redirigen para no perder enlaces ni posicionamiento.
+router.get('/guias', publicoRateLimiter, (_req, res) => res.redirect(301, RUTAS.es.guias));
+router.get('/guias/:slug', publicoRateLimiter, (req, res) => res.redirect(301, RUTAS.es.guia(String(req.params.slug))));
 router.get('/en/guides', publicoRateLimiter, (_req, res) => enviarIndice(res, 'en'));
 router.get('/en/guides/:slug', publicoRateLimiter, (req, res) => enviarGuia(res, req.params.slug, 'en'));
 

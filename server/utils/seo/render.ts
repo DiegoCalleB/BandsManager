@@ -1,5 +1,5 @@
 /**
- * Renderizador de las guías de SEO (`/guias`, `/en/guides` y sus guías), en el servidor y sin I/O.
+ * Renderizador de las guías de SEO (`/guides`, `/en/guides` y sus guías), en el servidor y sin I/O.
  * Mismo criterio que `paginaConcierto.ts`: HTML completo para Google sin ejecutar JavaScript, todo
  * texto pasa por `escapeHtml` y el JSON-LD se serializa con `jsonLdSeguro`.
  */

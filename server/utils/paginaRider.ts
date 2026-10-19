@@ -1,5 +1,5 @@
 /**
- * Página pública de SEO «plantilla de rider técnico» (`/plantilla-rider-tecnico` y `/en/technical-rider-template`),
+ * Página pública de SEO «plantilla de rider técnico» (`/technical-rider-template` y `/en/technical-rider-template`),
  * generada en el servidor.
  *
  * Captura búsquedas reales de bandas («plantilla rider técnico», «input list») con una plantilla
