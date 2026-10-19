@@ -1,5 +1,7 @@
 # ADR 0046: Directorio público de salas de conciertos de España
 
+> **Nota (ADR 0048):** la tabla `salas_catalogo` se llama ahora `catalogo_salas`.
+
 - **Estado:** Aceptada
 - **Fecha:** 2026-10-19
 - **Origen:** nueva

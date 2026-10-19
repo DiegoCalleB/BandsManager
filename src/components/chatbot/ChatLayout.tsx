@@ -19,7 +19,7 @@ export function ChatLayout() {
   return (
     <>
       <div
-      className={`flex flex-col ${isFloating ? 'h-[550px]' : 'h-full min-h-[500px]'} ${'bg-[var(--surface)]'} rounded-[var(--r-l)] overflow-hidden font-sans w-full max-w-full overflow-x-hidden`}
+      className={`flex flex-col ${isFloating ? 'h-full sm:h-[550px]' : 'h-full min-h-[500px]'} ${'bg-[var(--surface)]'} ${isFloating ? 'rounded-none sm:rounded-[var(--r-l)]' : 'rounded-[var(--r-l)]'} overflow-hidden font-sans w-full max-w-full overflow-x-hidden`}
     >
       {/* Bot Header */}
       <ChatbotHeader

@@ -1,4 +1,4 @@
-// Directorio de festivales: lectura de las tres tablas (`festivales`, `festival_ediciones`, `festival_convocatorias`) y escritura de la carga.
+// Directorio de festivales: lectura de las tres tablas (`catalogo_festivales`, `catalogo_festival_ediciones`, `catalogo_festival_convocatorias`) y escritura de la carga.
 // Solo lo usa el servidor con la clave de servicio; ninguna ruta de usuario toca estas tablas directamente.
 
 import { getSupabase } from './core.js';
@@ -20,9 +20,9 @@ async function leerTodo<T>(tabla: string): Promise<T[]> {
 /** Fichas publicables (revisadas, con fuente y fecha) tal como las muestran las páginas públicas. */
 export async function festivalesPublicosDeDb(hoy: string = new Date().toISOString().slice(0, 10)): Promise<Festival[]> {
   const [festivales, ediciones, convocatorias] = await Promise.all([
-    leerTodo<FilaFestival>('festivales'),
-    leerTodo<FilaEdicion & { id: string }>('festival_ediciones'),
-    leerTodo<FilaConvocatoria & { id: string }>('festival_convocatorias'),
+    leerTodo<FilaFestival>('catalogo_festivales'),
+    leerTodo<FilaEdicion & { id: string }>('catalogo_festival_ediciones'),
+    leerTodo<FilaConvocatoria & { id: string }>('catalogo_festival_convocatorias'),
   ]);
   return festivalesDeFilas(festivales, ediciones, convocatorias, hoy);
 }

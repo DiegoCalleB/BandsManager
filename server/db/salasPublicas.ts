@@ -12,7 +12,7 @@ export async function salasPublicasDeDb(): Promise<SalaPublica[]> {
   const filas: FilaSalaPublica[] = [];
   for (let desde = 0; ; desde += PAGINA) {
     const { data, error } = await getSupabase()
-      .from('salas_catalogo')
+      .from('catalogo_salas')
       .select(COLUMNAS)
       .eq('tipo', 'sala')
       .eq('no_contactar', false)

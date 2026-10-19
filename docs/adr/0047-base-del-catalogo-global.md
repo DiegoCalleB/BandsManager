@@ -1,5 +1,7 @@
 # ADR 0047: Preparar el catálogo de salas para ser global sin tocar lo que ya funciona
 
+> **Nota (ADR 0048):** la tabla `salas_catalogo` se llama ahora `catalogo_salas`; el renombrado que aquí se descartó se hizo después como refactor aparte.
+
 - **Estado:** Aceptada
 - **Fecha:** 2026-10-19
 - **Origen:** nueva
