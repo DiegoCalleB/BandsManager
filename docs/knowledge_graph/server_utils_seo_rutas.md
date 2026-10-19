@@ -25,6 +25,7 @@ _Sin dependencias salientes directas._
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_routes_paginasSeo|server/routes/paginasSeo.ts]] *(from #route)*
 - [[server_utils_paginaRider|server/utils/paginaRider.ts]] *(from #service)*
+- [[server_utils_seo_avisoIdioma|server/utils/seo/avisoIdioma.ts]] *(from #service)*
 - [[server_utils_seo_cabeza|server/utils/seo/cabeza.ts]] *(from #service)*
 - [[server_utils_seo_calculadoras|server/utils/seo/calculadoras.ts]] *(from #service)*
 - [[server_utils_seo_festivales_render|server/utils/seo/festivales/render.ts]] *(from #service)*
@@ -39,6 +40,7 @@ _Sin dependencias salientes directas._
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/utils/seo/__tests__/avisoIdioma.test.ts`
 - `server/utils/seo/__tests__/festivales.test.ts`
 - `server/utils/seo/__tests__/guias.test.ts`
 

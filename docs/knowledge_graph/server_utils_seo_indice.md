@@ -41,6 +41,7 @@ Registro de las guías de SEO por idioma. Añadir una guía = añadirla a uno de
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/utils/seo/__tests__/avisoIdioma.test.ts`
 - `server/utils/seo/__tests__/calculadoras.test.ts`
 - `server/utils/seo/__tests__/guias.test.ts`
 - `server/utils/seo/__tests__/landingEnlaces.test.ts`

@@ -31,6 +31,7 @@ _Sin dependencias salientes directas._
 - [[server_utils_interesados|server/utils/interesados.ts]] *(from #service)*
 - [[server_utils_paginaConcierto|server/utils/paginaConcierto.ts]] *(from #service)*
 - [[server_utils_paginaRider|server/utils/paginaRider.ts]] *(from #service)*
+- [[server_utils_seo_avisoIdioma|server/utils/seo/avisoIdioma.ts]] *(from #service)*
 - [[server_utils_seo_cabeza|server/utils/seo/cabeza.ts]] *(from #service)*
 - [[server_utils_seo_calculadoras|server/utils/seo/calculadoras.ts]] *(from #service)*
 - [[server_utils_seo_festivales_render|server/utils/seo/festivales/render.ts]] *(from #service)*

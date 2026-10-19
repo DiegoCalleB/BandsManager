@@ -38,6 +38,7 @@ Renderizador de las guías de SEO (`/guides`, `/en/guides` y sus guías), en el 
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/utils/seo/__tests__/avisoIdioma.test.ts`
 - `server/utils/seo/__tests__/calculadoras.test.ts`
 - `server/utils/seo/__tests__/guias.test.ts`
 

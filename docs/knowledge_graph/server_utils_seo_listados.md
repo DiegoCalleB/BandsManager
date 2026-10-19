@@ -31,6 +31,7 @@ Portada de los listados (`/listados`, `/en/directories`): enlaza cada directorio
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/utils/seo/__tests__/avisoIdioma.test.ts`
 - `server/utils/seo/__tests__/festivales.test.ts`
 
 ---

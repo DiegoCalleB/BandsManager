@@ -32,6 +32,7 @@ Página pública de SEO «plantilla de rider técnico» (`/technical-rider-templ
 
 ## 🧪 Tests que lo cubren
 - `server/utils/__tests__/paginaRider.test.ts`
+- `server/utils/seo/__tests__/avisoIdioma.test.ts`
 - `server/utils/seo/__tests__/guias.test.ts`
 
 ---

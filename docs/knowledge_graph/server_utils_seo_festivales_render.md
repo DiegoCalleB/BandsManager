@@ -37,6 +37,7 @@ Directorio público de festivales (`/festivales`, `/en/festivals`): HTML complet
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/utils/seo/__tests__/avisoIdioma.test.ts`
 - `server/utils/seo/__tests__/festivales.test.ts`
 - `server/utils/seo/__tests__/festivalesDb.test.ts`
 
