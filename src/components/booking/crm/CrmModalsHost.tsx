@@ -7,6 +7,7 @@ import { AgentAutonomySettingsModal } from "../../dashboard/AgentAutonomySetting
 import { AddLeadModal } from "../AddLeadModal";
 import { AgentQueueMonitorModal } from "../AgentQueueMonitorModal";
 import { BulkProgressModal } from "../BulkProgressModal";
+import { CatalogoSalasHost } from "../catalogo/CatalogoSalasHost";
 import { CRMContactEnricherModal } from "../CRMContactEnricherModal";
 import { ExcelImportModal } from "../ExcelImportModal";
 import { ExportLeadsModal } from "../ExportLeadsModal";
@@ -67,6 +68,8 @@ export function CrmModalsHost() {
       onModalScrape={handleModalScrape}
       onLeadLogoUpload={(file) => handleLeadLogoUpload(file, false)}
       />
+
+      <CatalogoSalasHost />
 
       <GooglePlacesExplorerModal
       isOpen={isPlacesExplorerOpen}
