@@ -13,6 +13,7 @@ export const GUIAS_DIRECTO_EN: GuiaSeoEn[] = [
       {
         h2: 'Start with the time, not the songs',
         parrafos: ['Before opening any tool, write down two numbers: the minutes you have on stage and the average length of your songs. Then count half a minute of changeover per song and subtract five minutes of margin for surprises: a broken string, a request from the crowd, a dead mic.', 'The sum is simple: (slot minutes minus 5) divided by (average song length plus 0.5). It almost always gives you fewer songs than you thought.'],
+        calculadora: 'slot-setlist',
         tablas: [{ titulo: 'How many songs fit in your slot', cabeceras: ['Slot', '4-minute songs', '3-minute songs'], filas: [['30 min', '5', '7'], ['45 min', '8', '11'], ['60 min', '12', '15'], ['75 min', '15', '20'], ['90 min', '18', '24']] }],
       },
       {

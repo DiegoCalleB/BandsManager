@@ -7,7 +7,8 @@ import { escapeHtml } from '../html.js';
 import { slugify } from '../slug.js';
 import { barraHtml, cabezaHtml } from './cabeza.js';
 import { ESTILOS_PAGINA_PUBLICA } from './estilos.js';
-import { heroEnergiaSvg, curvaSetlistFigura } from './figuras.js';
+import { calculadoraHtml, scriptCalculadoras } from './calculadoras.js';
+import { curvaSetlistFigura, graficoLineasFigura, heroEnergiaSvg } from './figuras.js';
 import { categoriaDe, enlaceDeRelacionada, guiasDe, slugEquivalente } from './indice.js';
 import { RUTAS, alternativasPar, registroUrl, type IdiomaSeo } from './rutas.js';
 import { FECHA_CONTENIDO, TEXTOS, fechaLegible } from './textos.js';
@@ -34,7 +35,7 @@ function tabla(t: TablaGuia): string {
 
 function seccion(s: SeccionGuia, id: string, idioma: IdiomaSeo): string {
   const parrafos = (s.parrafos ?? []).map((p) => `<p>${escapeHtml(p)}</p>`).join('');
-  const figura = s.figura === 'curva-setlist' ? curvaSetlistFigura(idioma) : '';
+  const figura = (s.figura === 'curva-setlist' ? curvaSetlistFigura(idioma) : '') + (s.grafico ? graficoLineasFigura(s.grafico) : '') + (s.calculadora ? calculadoraHtml(s.calculadora, idioma) : '');
   const tablas = (s.tablas ?? []).map(tabla).join('');
   const lista = s.lista ? `<ul class="vinetas">${s.lista.map((i) => `<li>${escapeHtml(i)}</li>`).join('')}</ul>` : '';
   const pasos = s.pasos ? `<ol class="pasos">${s.pasos.map((i) => `<li>${escapeHtml(i)}</li>`).join('')}</ol>` : '';
@@ -108,6 +109,7 @@ ${g.faq.map((f) => `<details><summary>${escapeHtml(f.q)}</summary><p>${escapeHtm
 ${relacionadas.length ? `<section class="seccion"><h2>${escapeHtml(t.seguirLeyendo)}</h2><ul class="rel">${relacionadas.map((r) => `<li><a href="${escapeHtml(base)}${escapeHtml(r.ruta)}">${escapeHtml(r.titulo)}<small>${escapeHtml(r.resumen)}</small></a></li>`).join('')}</ul></section>` : ''}
 ${pie(base, idioma)}
 </main>
+${scriptCalculadoras(g.secciones.flatMap((x) => (x.calculadora ? [x.calculadora] : [])), idioma)}
 </body>
 </html>`;
 }

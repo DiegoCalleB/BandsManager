@@ -1,7 +1,7 @@
 /** CSS compartido de las páginas públicas de SEO (copia a mano de los tokens de Espectro: no pasan por Tailwind). */
 export const ESTILOS_PAGINA_PUBLICA = `
-:root{--bg:#F6F7F9;--surface:#FFFFFF;--sunken:#E8EBEF;--ink:#2A2E35;--ink-2:#5A626E;--acc:#2158DC;--on-acc:#FFFFFF;--acc-ink:#1D4ED8;color-scheme:light}
-@media (prefers-color-scheme:dark){:root{--bg:#101216;--surface:#191C21;--sunken:#0B0D10;--ink:#E3E7EC;--ink-2:#A6AEB9;--acc:#60A5FA;--on-acc:#0A1F3D;--acc-ink:#60A5FA;color-scheme:dark}}
+:root{--bg:#F6F7F9;--surface:#FFFFFF;--sunken:#E8EBEF;--ink:#2A2E35;--ink-2:#5A626E;--acc:#2158DC;--on-acc:#FFFFFF;--acc-ink:#1D4ED8;--ok:#17998C;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#101216;--surface:#191C21;--sunken:#0B0D10;--ink:#E3E7EC;--ink-2:#A6AEB9;--acc:#60A5FA;--on-acc:#0A1F3D;--acc-ink:#60A5FA;--ok:#4FC7B8;color-scheme:dark}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:"Onest Variable","Onest",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
 main{max-width:44rem;margin:0 auto;padding:1.25rem 1rem 3rem}
@@ -75,4 +75,15 @@ table.tabla td{padding:.55rem .9rem;vertical-align:top;font-variant-numeric:tabu
 table.tabla tbody tr:nth-child(even) td{background:var(--bg)}
 .aviso{margin:1rem 0;padding:1rem 1.1rem;border-radius:18px;background:var(--surface);color:var(--ink);font-weight:550}
 .aviso::before{content:'';display:inline-block;width:.6rem;height:.6rem;margin-right:.5rem;border-radius:999px;background:var(--acc)}
+
+.calc{background:var(--surface);border-radius:24px;padding:1.1rem 1.1rem 1.25rem;margin:1rem 0 1.25rem}
+.calc h3{margin:0 0 .75rem;font-size:17px;color:var(--ink)}
+.calc .campos{display:grid;gap:.7rem;grid-template-columns:repeat(auto-fit,minmax(9.5rem,1fr))}
+.calc label{display:grid;gap:.3rem;font-size:14px;color:var(--ink-2)}
+.calc input{width:100%;min-height:44px;padding:0 .8rem;border:0;border-radius:12px;background:var(--bg);color:var(--ink);font:inherit;font-size:16px;font-variant-numeric:tabular-nums}
+.calc .res{display:grid;gap:.5rem;margin-top:1rem;padding:1rem;border-radius:18px;background:var(--bg)}
+.calc .res p{margin:0;color:var(--ink-2)}
+.calc .res strong{color:var(--ink);font-size:1.25rem;font-variant-numeric:tabular-nums}
+.calc .grande strong{color:var(--acc-ink);font-size:1.6rem}
+.calc small{display:block;margin-top:.6rem;color:var(--ink-2);font-size:13px}
 `;

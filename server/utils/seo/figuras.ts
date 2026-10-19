@@ -5,6 +5,7 @@
  */
 import { escapeHtml } from '../html.js';
 import type { IdiomaSeo } from './rutas.js';
+import type { GraficoLineas } from './tipos.js';
 
 interface Punto {
   x: number;
@@ -127,4 +128,73 @@ export function curvaSetlistFigura(idioma: IdiomaSeo): string {
   const leyenda = `<line x1="${x0}" y1="302" x2="${x0 + 34}" y2="302" stroke-width="4" stroke-linecap="round" style="stroke:var(--acc)"/><text x="${x0 + 42}" y="308" font-size="16" style="fill:var(--ink)">${escapeHtml(t.con)}</text><line x1="${x0 + 220}" y1="302" x2="${x0 + 254}" y2="302" stroke-width="3" stroke-dasharray="7 8" stroke-linecap="round" style="stroke:var(--ink-2);opacity:.7"/><text x="${x0 + 262}" y="308" font-size="16" style="fill:var(--ink)">${escapeHtml(t.sin)}</text>`;
 
   return `<figure class="fig"><svg viewBox="0 0 600 322" role="img" aria-label="${escapeHtml(t.alt)}"><title>${escapeHtml(t.alt)}</title>${bandas}${rejilla}<path d="${area}" style="fill:var(--acc);opacity:.12"/>${plana}<path d="${linea}" fill="none" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--acc)"/>${puntos}${mejor}${numeros}${ejeX}${leyenda}</svg><figcaption>${escapeHtml(t.pie)}</figcaption></figure>`;
+}
+
+const ESTILO_SERIE = {
+  principal: { color: 'var(--acc)', ancho: 4.5, guiones: '', area: true },
+  secundaria: { color: 'var(--ok)', ancho: 4, guiones: '', area: false },
+  neutra: { color: 'var(--ink)', ancho: 3.5, guiones: '', area: false },
+  referencia: { color: 'var(--ink-2)', ancho: 3, guiones: '7 8', area: false },
+} as const;
+
+/** Redondea hacia un máximo «bonito» para los rótulos del eje (0, 1/4, 1/2, 3/4, 1). */
+function formatoNumero(n: number): string {
+  return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '\u202f');
+}
+
+/** Gráfico de líneas definido con datos: ejes con rótulos, etiquetas directas al final de cada línea y una nota opcional. */
+export function graficoLineasFigura(g: GraficoLineas): string {
+  const [x0, x1, yArriba, yAbajo] = [78, 500, 26, 250];
+  const n = g.ejeX.etiquetas.length;
+  const px = (i: number) => x0 + (n <= 1 ? 0 : (i * (x1 - x0)) / (n - 1));
+  const py = (v: number) => yAbajo - (Math.max(0, v) / g.ejeY.max) * (yAbajo - yArriba);
+  const unidad = g.ejeY.unidad ? `\u00a0${escapeHtml(g.ejeY.unidad)}` : '';
+
+  const rejilla = [0, 1, 2, 3, 4]
+    .map((k) => {
+      const v = (g.ejeY.max * k) / 4;
+      return `<line x1="${x0}" y1="${py(v).toFixed(1)}" x2="${x1}" y2="${py(v).toFixed(1)}" stroke-width="1" style="stroke:var(--ink-2);opacity:${k === 0 ? 0.35 : 0.16}"/><text x="${x0 - 10}" y="${(py(v) + 6).toFixed(1)}" text-anchor="end" font-size="16" style="fill:var(--ink-2)">${formatoNumero(v)}${unidad}</text>`;
+    })
+    .join('');
+
+  const cada = Math.ceil(n / 7);
+  const etiquetasX = g.ejeX.etiquetas
+    .map((e, i) => (i % cada === 0 || i === n - 1 ? `<text x="${px(i).toFixed(1)}" y="${yAbajo + 24}" text-anchor="middle" font-size="16" style="fill:var(--ink-2)">${escapeHtml(e)}</text>` : ''))
+    .join('');
+  const tituloX = `<text x="${((x0 + x1) / 2).toFixed(0)}" y="${yAbajo + 52}" text-anchor="middle" font-size="16" style="fill:var(--ink-2)">${escapeHtml(g.ejeX.titulo)}</text>`;
+  const tituloY = `<text x="${x0}" y="${yArriba - 8}" font-size="16" font-weight="650" style="fill:var(--ink)">${escapeHtml(g.ejeY.titulo)}</text>`;
+
+  const dibujos: string[] = [];
+  const etiquetas: Array<{ y: number; texto: string; color: string }> = [];
+  g.series.forEach((serie) => {
+    const e = ESTILO_SERIE[serie.tipo ?? 'principal'];
+    const pts = serie.valores.map((v, i) => ({ x: px(i), y: py(v) }));
+    const linea = curvaSuave(pts);
+    if (e.area) dibujos.push(`<path d="${linea}L${pts[pts.length - 1].x.toFixed(1)} ${yAbajo}L${pts[0].x.toFixed(1)} ${yAbajo}Z" style="fill:${e.color};opacity:.1"/>`);
+    dibujos.push(`<path d="${linea}" fill="none" stroke-width="${e.ancho}" stroke-linecap="round" stroke-linejoin="round"${e.guiones ? ` stroke-dasharray="${e.guiones}"` : ''} style="stroke:${e.color}${serie.tipo === 'referencia' ? ';opacity:.7' : ''}"/>`);
+    if (serie.tipo !== 'referencia') dibujos.push(...pts.map((p) => `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4.5" stroke-width="2.5" style="fill:var(--surface);stroke:${e.color}"/>`));
+    if (serie.tipo === 'referencia') {
+      // La línea de referencia se rotula a su izquierda, encima de ella, para no confundirla con las series vecinas.
+      dibujos.push(`<text x="${x0 + 10}" y="${(pts[0].y - 10).toFixed(1)}" font-size="16" font-weight="650" style="fill:var(--ink-2)">${escapeHtml(serie.nombre)}</text>`);
+    } else {
+      etiquetas.push({ y: pts[pts.length - 1].y, texto: serie.nombre, color: e.color === 'var(--acc)' ? 'var(--acc-ink)' : e.color });
+    }
+  });
+
+  // Etiquetas directas al final de cada línea, separadas para que no se pisen.
+  etiquetas.sort((a, b) => a.y - b.y);
+  for (let i = 1; i < etiquetas.length; i++) etiquetas[i].y = Math.max(etiquetas[i].y, etiquetas[i - 1].y + 22);
+  const directas = etiquetas.map((e) => `<text x="${x1 + 12}" y="${(e.y + 6).toFixed(1)}" font-size="16" font-weight="650" style="fill:${e.color}">${escapeHtml(e.texto)}</text>`).join('');
+
+  let nota = '';
+  if (g.nota) {
+    const serie = g.series[g.nota.serie];
+    const x = px(g.nota.indice);
+    const y = py(serie.valores[g.nota.indice]);
+    // La etiqueta va al lado del punto que deja libre más espacio (las líneas suben hacia la derecha).
+    const derecha = x < (x0 + x1) / 2;
+    nota = `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="8" style="fill:var(--acc)"/><text x="${(derecha ? x + 16 : x - 16).toFixed(1)}" y="${(y - 12).toFixed(1)}" text-anchor="${derecha ? 'start' : 'end'}" font-size="16" font-weight="650" style="fill:var(--acc-ink)">${escapeHtml(g.nota.texto)}</text>`;
+  }
+
+  return `<figure class="fig"><svg viewBox="0 0 640 ${yAbajo + 64}" role="img" aria-label="${escapeHtml(g.alt)}"><title>${escapeHtml(g.alt)}</title>${rejilla}${tituloY}${dibujos.join('')}${nota}${directas}${etiquetasX}${tituloX}</svg><figcaption>${escapeHtml(g.pie)}</figcaption></figure>`;
 }
