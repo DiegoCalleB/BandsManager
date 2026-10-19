@@ -15,6 +15,7 @@ import { getTargetBandId, bandaDe } from "../utils/bandAccess.js";
 import { publishSocialPostNow, publishDueScheduledPosts } from "../services/socialPublisher.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 import { responderError } from '../utils/errorHttp.js';
+import { fusionarColeccionDeBanda } from '../utils/estadoPorBanda.js';
 
 const router = express.Router();
 
@@ -222,7 +223,7 @@ router.post("/posts/sync", requireAuth, async (req, res) => {
   try {
     const posts: SocialPost[] = await dbGetSocialPosts(userBandId);
     const state = loadState();
-    state.posts = posts;
+    state.posts = fusionarColeccionDeBanda(state.posts, userBandId, posts);
     saveState(state);
     
     res.json({

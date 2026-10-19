@@ -25,6 +25,7 @@ EPK y captación de fans: configuración de autonomía de agentes, EPK editable/
 - [[server_db_sync|server/db/sync.ts]] *(Layer: #db, Domain: #system)*
 - [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(Layer: #security, Domain: #system)*
 - [[server_routes_tracking|server/routes/tracking.ts]] *(Layer: #route, Domain: #system)*
+- [[server_services_avisoAltas|server/services/avisoAltas.ts]] *(Layer: #service, Domain: #system)*
 - [[server_tiposRespuestasIA|server/tiposRespuestasIA.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils|server/utils.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_bandHash|server/utils/bandHash.ts]] *(Layer: #service, Domain: #system)*
@@ -59,6 +60,7 @@ EPK y captación de fans: configuración de autonomía de agentes, EPK editable/
 
 ## 🧪 Tests que lo cubren
 - `server/routes/__tests__/auditoriaSeguridadPR2.test.ts`
+- `server/routes/__tests__/fansSoloSupabase.test.ts`
 - `server/routes/__tests__/seguridadAutorizacion.test.ts`
 
 ---

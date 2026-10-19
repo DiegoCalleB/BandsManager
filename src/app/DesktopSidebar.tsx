@@ -7,6 +7,7 @@ import { NavGroupSection } from "../components/common/NavGroupSection";
 import { NavItemButton } from "../components/common/NavItemButton";
 import { ThemeToggle } from "../components/common/ThemeToggle";
 import { AiSupportWidget } from "../components/dashboard/AiUsageSupportWidget";
+import { EntradaPlanes } from "./EntradaPlanes";
 import { NotificationCenterBell } from "../components/notifications/NotificationCenterBell";
 import { Button,IconButton } from "../components/ui";
 import { FLAT_NAV_ORDER_IDS,NAV_GROUPS_DESKTOP,NAV_ITEMS,NAV_PINNED_BOTTOM_IDS,NAV_PINNED_TOP_IDS,NavItemId } from "../config/navGroups";
@@ -277,6 +278,7 @@ export function DesktopSidebar() {
               );
             })()}
 
+          <EntradaPlanes />
           <AiSupportWidget variant="sidebar" />
           </div>
 

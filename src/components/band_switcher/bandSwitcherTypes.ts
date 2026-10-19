@@ -16,6 +16,8 @@ export interface SwitcherBand {
   name?: string;
   style?: string;
   plan?: string;
+  /** Interruptor de la suscripción de pago de la banda (apagado por defecto). */
+  suscripcion_habilitada?: boolean;
   is_main?: boolean;
 }
 

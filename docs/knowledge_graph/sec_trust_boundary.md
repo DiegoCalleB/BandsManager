@@ -22,6 +22,7 @@ Resolución forzosa del band_id desde la sesión autenticada. Bloquea inyeccione
 - [[db_repertoire|Repertoire DB Handlers]] *(Layer: #db, Domain: #repertoire)*
 - [[sec_ssrf_guard|SSRF URL Validator]] *(Layer: #security, Domain: #system)*
 - [[server_utils_email|server/utils/email.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_suscripcion|server/utils/suscripcion.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
@@ -66,6 +67,7 @@ Resolución forzosa del band_id desde la sesión autenticada. Bloquea inyeccione
 - [[server_routes_leads_places|server/routes/leads/places.ts]] *(from #route)*
 - [[server_routes_leads_templates|server/routes/leads/templates.ts]] *(from #route)*
 - [[server_routes_metrics|server/routes/metrics.ts]] *(from #route)*
+- [[server_routes_pegatinas|server/routes/pegatinas.ts]] *(from #route)*
 - [[server_routes_posts|server/routes/posts.ts]] *(from #route)*
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
 - [[server_routes_reelsAprendizaje|server/routes/reelsAprendizaje.ts]] *(from #route)*
@@ -83,6 +85,7 @@ Resolución forzosa del band_id desde la sesión autenticada. Bloquea inyeccione
 - [[server_routes_users_rutasSalidaBanda|server/routes/users/rutasSalidaBanda.ts]] *(from #route)*
 - [[server_services_perfilDeLaPeticion|server/services/perfilDeLaPeticion.ts]] *(from #service)*
 - [[server_utils_bandDna|server/utils/bandDna.ts]] *(from #service)*
+- [[server_utils_estadoPorBanda|server/utils/estadoPorBanda.ts]] *(from #service)*
 - [[service_calendar_conflicts|Avisos de choques por email]] *(from #service)*
 - [[ui_leads_table|Leads Table & Actions]] *(from #frontend)*
 - [[util_calendar_conflicts|Detector de choques del calendario]] *(from #service)*

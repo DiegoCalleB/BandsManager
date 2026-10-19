@@ -22,6 +22,8 @@ Registro de las guías de SEO por idioma. Añadir una guía = añadirla a uno de
 - [[server_utils_seo_guiasBookingEn|server/utils/seo/guiasBookingEn.ts]] *(Layer: #service, Domain: #booking)*
 - [[server_utils_seo_guiasDirecto|server/utils/seo/guiasDirecto.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_guiasDirectoEn|server/utils/seo/guiasDirectoEn.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_seo_guiasExtra|server/utils/seo/guiasExtra.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_seo_guiasExtraEn|server/utils/seo/guiasExtraEn.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_guiasNegocio|server/utils/seo/guiasNegocio.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_guiasNegocioEn|server/utils/seo/guiasNegocioEn.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_rutas|server/utils/seo/rutas.ts]] *(Layer: #service, Domain: #system)*

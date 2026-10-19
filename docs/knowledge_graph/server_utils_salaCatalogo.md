@@ -27,8 +27,11 @@ Catálogo compartido de salas: reglas puras (sin red ni base de datos).
 - [[server_evals_catalogoGolden|server/evals/catalogoGolden.ts]] *(from #service)*
 - [[server_services_catalogoSalas|server/services/catalogoSalas.ts]] *(from #service)*
 - [[server_services_consultaCatalogo|server/services/consultaCatalogo.ts]] *(from #service)*
+- [[server_services_importarSalasOsm|server/services/importarSalasOsm.ts]] *(from #service)*
 - [[server_utils_consultaCatalogo|server/utils/consultaCatalogo.ts]] *(from #service)*
+- [[server_utils_estadoNegocio|server/utils/estadoNegocio.ts]] *(from #service)*
 - [[server_utils_instagramEnWeb|server/utils/instagramEnWeb.ts]] *(from #service)*
+- [[server_utils_osmSalas|server/utils/osmSalas.ts]] *(from #service)*
 - [[server_utils_sugerenciasCatalogo|server/utils/sugerenciasCatalogo.ts]] *(from #service)*
 
 ---

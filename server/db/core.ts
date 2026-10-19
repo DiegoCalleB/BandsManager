@@ -12,6 +12,16 @@ export function rolDeClaveSupabase(jwt: string): string | null {
   }
 }
 
+/**
+ * ¿El error es solo "Supabase no está configurado" (arranque local sin .env)? En ese modo la app
+ * trabaja con el estado en memoria; cualquier otro fallo de Supabase es una escritura perdida.
+ */
+export function esSupabaseNoConfigurado(err: unknown): boolean {
+  return err instanceof Error && err.message === MENSAJE_SIN_SUPABASE;
+}
+
+const MENSAJE_SIN_SUPABASE = "Supabase URL or Key is missing in environment variables.";
+
 export function getSupabase(): SupabaseClient {
   if (supabaseInstance) return supabaseInstance;
 
@@ -33,7 +43,7 @@ export function getSupabase(): SupabaseClient {
   const jwtKey = serviceRole || keys.find(k => k.startsWith("eyJ")) || keys[0] || "";
 
   if (!url || !jwtKey) {
-    throw new Error("Supabase URL or Key is missing in environment variables.");
+    throw new Error(MENSAJE_SIN_SUPABASE);
   }
 
   // El backend debe usar la clave service_role (salta RLS). Con la anon, todo depende de políticas

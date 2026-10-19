@@ -10,6 +10,7 @@ import { SkeletonDashboard } from "../components/ui/Skeleton";
 import type { Rehearsal } from "../types";
 import { LeadStatus } from "../types";
 import { useApp } from "./AppContext";
+import { RegaloPegatinas } from "../components/RegaloPegatinas";
 import { BandCRM,BookingCRM,CalendarView,CarteleriaView,Chatbot,EnsayosManager,EPKManager,FansPanel,Finanzas,Merchan,Planes,ReelsCenter,RepertorioSetlists,TourManager } from "./lazyViews";
 
 /**
@@ -329,13 +330,16 @@ export function ActiveViewRouter() {
                 )}
 
                 {currentView === "planes" && (
-                  <Planes
-                    colors={colors}
-                    currentUser={currentUser}
-                    activeBandName={currentActiveBandName}
-                    currentBandPlan={currentActiveBandPlan}
-                    onNavigateToModule={handleNavigate}
-                  />
+                  <>
+                    <RegaloPegatinas />
+                    <Planes
+                      colors={colors}
+                      currentUser={currentUser}
+                      activeBandName={currentActiveBandName}
+                      currentBandPlan={currentActiveBandPlan}
+                      onNavigateToModule={handleNavigate}
+                    />
+                  </>
                 )}
               </Suspense>
             )}

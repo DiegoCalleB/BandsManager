@@ -251,6 +251,9 @@ BandManager UI Component Library
 - [[src_components_finanzas_AddTransactionModal|src/components/finanzas/AddTransactionModal.tsx]] *(from #frontend)*
 - [[src_components_FontSelectorModal|src/components/FontSelectorModal.tsx]] *(from #frontend)*
 - [[src_components_InvitarBandaCard|src/components/InvitarBandaCard.tsx]] *(from #frontend)*
+- [[src_components_landing_FormularioEmpresas|src/components/landing/FormularioEmpresas.tsx]] *(from #frontend)*
+- [[src_components_landing_FormularioInteres|src/components/landing/FormularioInteres.tsx]] *(from #frontend)*
+- [[src_components_landing_PreciosTfm|src/components/landing/PreciosTfm.tsx]] *(from #frontend)*
 - [[src_components_LandingChatWidget|src/components/LandingChatWidget.tsx]] *(from #frontend)*
 - [[src_components_LoginModal|src/components/LoginModal.tsx]] *(from #frontend)*
 - [[src_components_Merchan|src/components/Merchan.tsx]] *(from #frontend)*
@@ -308,6 +311,7 @@ BandManager UI Component Library
 - [[src_components_reels_ReelsTheaterModal|src/components/reels/ReelsTheaterModal.tsx]] *(from #frontend)*
 - [[src_components_reels_SocialGrowthPlanView|src/components/reels/SocialGrowthPlanView.tsx]] *(from #frontend)*
 - [[src_components_reels_ViralGrowthStudio|src/components/reels/ViralGrowthStudio.tsx]] *(from #frontend)*
+- [[src_components_RegaloPegatinas|src/components/RegaloPegatinas.tsx]] *(from #frontend)*
 - [[src_components_repertorio_AddSongsToSetlistModal|src/components/repertorio/AddSongsToSetlistModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_AssignSetlistModal|src/components/repertorio/AssignSetlistModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_AssignSongsToAlbumModal|src/components/repertorio/AssignSongsToAlbumModal.tsx]] *(from #frontend)*

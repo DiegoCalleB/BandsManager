@@ -5,6 +5,7 @@ import { requireAuth, loadState, saveState } from "../state.js";
 import { searchSpotifyArtists, getArtistCompleteDiscography, bulkImportSpotifyDiscographyToBand, findAudioPreview } from "../services/spotifyService.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 import { responderError } from '../utils/errorHttp.js';
+import { fusionarColeccionDeBanda } from '../utils/estadoPorBanda.js';
 
 const router = express.Router();
 
@@ -101,7 +102,7 @@ router.post("/import-discography", requireAuth, async (req, res) => {
 
     // Update in-memory state if applicable
     const state = loadState();
-    state.songs = result.allBandSongs;
+    state.songs = fusionarColeccionDeBanda(state.songs, userBandId, result.allBandSongs);
     saveState(state);
 
     res.json(result);

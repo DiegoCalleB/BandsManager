@@ -80,11 +80,6 @@ const PLANS_DATA: PlanCardData[] = [
     creditsSub: "Booking guiado y generación de ideas",
     ctaText: "Elegir Local",
     ctaVariant: "silver",
-    stickerGift: {
-      qty: "50 pegatinas de tu banda gratis",
-      description: "Pack de pegatinas de vinilo gratis con tu suscripción",
-      tag: "50 uds gratis",
-    },
     features: [
       { text: "150 créditos IA / mes", included: true },
       { text: "50 salas", included: true },
@@ -113,9 +108,9 @@ const PLANS_DATA: PlanCardData[] = [
     ctaText: "Probar 30 días gratis",
     ctaVariant: "gold",
     stickerGift: {
-      qty: "100 pegatinas de tu banda gratis",
+      qty: "150 pegatinas de tu banda gratis",
       description: "Pack de pegatinas de vinilo gratis con tu suscripción",
-      tag: "100 uds gratis",
+      tag: "150 uds gratis",
     },
     features: [
       { text: "800 créditos IA / mes", included: true, highlight: true },
@@ -144,9 +139,9 @@ const PLANS_DATA: PlanCardData[] = [
     ctaText: "Elegir Cabeza de Cartel",
     ctaVariant: "emerald",
     stickerGift: {
-      qty: "200 pegatinas + entrega prioritaria",
+      qty: "300 pegatinas + entrega prioritaria",
       description: "Pack de pegatinas de vinilo con envío express gratis",
-      tag: "200 uds + Envío Express",
+      tag: "300 uds + Envío Express",
     },
     features: [
       { text: "2.500 créditos IA / mes", included: true, highlight: true },

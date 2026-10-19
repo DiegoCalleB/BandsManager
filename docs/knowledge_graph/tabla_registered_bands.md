@@ -13,7 +13,7 @@ tags: ["schema", "tabla", "auto"]
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Tabla de Supabase `registered_bands` (32 columnas).
+Tabla de Supabase `registered_bands` (33 columnas).
 
 ---
 
@@ -73,6 +73,7 @@ _Sin dependencias salientes directas._
 - [[tabla_messages|tabla messages]] *(from #schema)*
 - [[tabla_metricas_bandas_amigas|tabla metricas_bandas_amigas]] *(from #schema)*
 - [[tabla_payments|tabla payments]] *(from #schema)*
+- [[tabla_pegatinas_pedidos|tabla pegatinas_pedidos]] *(from #schema)*
 - [[tabla_pitch_example_threads|tabla pitch_example_threads]] *(from #schema)*
 - [[tabla_pitch_learning_examples|tabla pitch_learning_examples]] *(from #schema)*
 - [[tabla_pitch_vector_store|tabla pitch_vector_store]] *(from #schema)*
@@ -130,8 +131,9 @@ _Sin dependencias salientes directas._
 - `ref_code`
 - `referido_por`
 - `referido_en`
+- `suscripcion_habilitada`
 
-**Definida en:** `supabase_schema.sql`, `supabase_migration_only_new.sql`, `supabase/migrations/20260915_ai_token_ledger_band_scope.sql`, `supabase/migrations/20261009_sincronizar_esquema_auditoria.sql`, `supabase/migrations/20261016_referidos_banda.sql`
+**Definida en:** `supabase_schema.sql`, `supabase_migration_only_new.sql`, `supabase/migrations/20260915_ai_token_ledger_band_scope.sql`, `supabase/migrations/20261009_sincronizar_esquema_auditoria.sql`, `supabase/migrations/20261016_referidos_banda.sql`, `supabase/migrations/20261108_suscripcion_habilitada.sql`
 
 ---
 

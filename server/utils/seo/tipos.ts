@@ -1,7 +1,36 @@
 /** Una guía de SEO: contenido fijo y revisable, sin datos de ninguna banda. */
+/** Tabla de datos o plantilla copiable dentro de una sección. */
+export interface TablaGuia {
+  titulo?: string;
+  cabeceras: string[];
+  filas: string[][];
+}
+
+/** Gráfico de líneas definido con datos (ver `graficoLineasFigura`). Las cifras de un ejemplo deben decir que lo son. */
+export interface GraficoLineas {
+  /** Descripción para lectores de pantalla: qué muestra y qué conclusión se saca. */
+  alt: string;
+  pie: string;
+  ejeX: { titulo: string; etiquetas: string[] };
+  ejeY: { titulo: string; max: number; unidad?: string };
+  series: Array<{ nombre: string; valores: number[]; tipo?: 'principal' | 'secundaria' | 'neutra' | 'referencia' }>;
+  /** Anotación sobre un punto concreto. */
+  nota?: { serie: number; indice: number; texto: string };
+}
+
+export type IdCalculadora = 'cache-minimo' | 'slot-setlist' | 'embudo-bolos';
+
 export interface SeccionGuia {
   h2: string;
   parrafos?: string[];
+  /** Infografía propia (SVG generado en servidor, ver `figuras.ts`). */
+  figura?: 'curva-setlist';
+  grafico?: GraficoLineas;
+  /** Calculadora interactiva (ver `calculadoras.ts`). */
+  calculadora?: IdCalculadora;
+  /** Recuadro destacado con la idea que no se debe olvidar. */
+  aviso?: string;
+  tablas?: TablaGuia[];
   /** Lista con viñetas. */
   lista?: string[];
   /** Lista numerada. */
