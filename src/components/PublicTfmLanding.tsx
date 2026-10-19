@@ -4,6 +4,7 @@ import { ArrowRight, Check, ChevronDown, Layers, Rocket, ShieldCheck, Sliders, S
 import { Button } from './ui';
 import { useLanguage, SupportedLanguage } from '../context/idioma';
 import { LandingChatWidget } from './LandingChatWidget';
+import { PreciosTfm } from './landing/PreciosTfm';
 
 interface PublicTfmLandingProps {
   onEntrar: () => void;
@@ -134,6 +135,7 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
             <a href="#escrow" className="hover:text-[var(--ink)]">{es ? 'Contratos y Escrow' : 'Contracts y Escrow'}</a>
             <a href="#multibanda-iris" className="hover:text-[var(--ink)]">{es ? 'Multibanda e Iris' : 'Multi-band e Iris'}</a>
             <a href="#como-funciona" className="hover:text-[var(--ink)]">{es ? 'Flujo de Trabajo' : 'Workflow'}</a>
+            <a href="#planes" className="hover:text-[var(--ink)]">{es ? 'Planes' : 'Pricing'}</a>
             <a href="#preguntas" className="hover:text-[var(--ink)]">{es ? 'Preguntas' : 'FAQs'}</a>
           </nav>
 
@@ -197,14 +199,15 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
           </div>
 
           <div className="relative mt-14">
-            <div className="rounded-[var(--r-xl)] bg-[var(--sunken)] p-2 sm:p-3">
-              <Captura
-                nombre="panel"
-                movil="movil-panel"
-                alt="Panel de control BandManager con agenda de conciertos y custodia"
-                eager
-              />
-            </div>
+            <img
+              src="/landing/hero-tfm.jpg"
+              alt={es ? 'Os Herdeiros do Código en directo' : 'Os Herdeiros do Código live on stage'}
+              width={1024}
+              height={925}
+              loading="eager"
+              decoding="async"
+              className="mx-auto h-auto max-h-[34rem] w-full rounded-[var(--r-xl)] object-cover object-center"
+            />
             <div className="absolute -bottom-4 right-4 hidden items-center gap-2 rounded-[var(--r-pill)] bg-[var(--surface)] px-3.5 py-2 text-xs font-semibold sm:flex">
               <ShieldCheck className="size-4 text-[var(--ok)]" aria-hidden />
               <span>{es ? 'Señal de 250 € retenida en custodia por Stripe Connect' : '€250 deposit held in escrow by Stripe Connect'}</span>
@@ -489,6 +492,8 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
             </div>
           </div>
         </section>
+
+        <PreciosTfm es={es} />
 
         {/* PREGUNTAS FRECUENTES */}
         <section id="preguntas" className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24">

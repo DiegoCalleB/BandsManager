@@ -128,3 +128,14 @@ describe('leadDesdeSala', () => {
     expect(lead).not.toHaveProperty('notas');
   });
 });
+
+describe('salas cerradas en Google Maps', () => {
+  it('una sala cerrada definitivamente no sale en la consulta; una cerrada temporalmente sí', () => {
+    const r = consultarSalas(
+      [sala({ id: 'a', nombre: 'Abierta' }), sala({ id: 'b', nombre: 'Cerrada', estado_negocio: 'cerrado_permanente' }), sala({ id: 'c', nombre: 'Reforma', estado_negocio: 'cerrado_temporal' })],
+      filtros(),
+      NADA,
+    );
+    expect(r.salas.map((s) => s.id).sort()).toEqual(['a', 'c']);
+  });
+});

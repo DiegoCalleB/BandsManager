@@ -8,6 +8,7 @@
  * Depende de un puerto (`PuertoCatalogo`), no de Supabase: el adaptador real vive en server/db/salasCatalogo.ts y los
  * tests usan uno en memoria.
  */
+import type { EstadoNegocio } from '../utils/estadoNegocio.js';
 import {
   calcularFiabilidad,
   camposPublicos,
@@ -32,10 +33,13 @@ export interface SalaGuardada extends CamposPublicosSala {
   bandas_con_entrega: number;
   rebotes: number;
   no_contactar: boolean;
+  /** Según Google Maps (verificarSalasEnMaps). Ausente en las filas anteriores a la migración. */
+  estado_negocio?: EstadoNegocio;
+  estado_negocio_en?: Date | null;
 }
 
 /** Lo que el servicio escribe. `no_contactar` no está: es de quien lo marca y la sincronización nunca lo toca. */
-export type SalaAGuardar = Omit<SalaGuardada, 'no_contactar'>;
+export type SalaAGuardar = Omit<SalaGuardada, 'no_contactar' | 'estado_negocio' | 'estado_negocio_en'>;
 
 export interface PuertoCatalogo {
   leerLeads(): Promise<LeadParaCatalogo[]>;

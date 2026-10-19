@@ -26,10 +26,12 @@ _Sin dependencias salientes directas._
 - [[server_routes_campanaConcierto|server/routes/campanaConcierto.ts]] *(from #route)*
 - [[server_routes_cartelria|server/routes/cartelria.ts]] *(from #route)*
 - [[server_routes_enlacesCortos|server/routes/enlacesCortos.ts]] *(from #route)*
+- [[server_routes_interesados|server/routes/interesados.ts]] *(from #route)*
 - [[server_routes_referidos|server/routes/referidos.ts]] *(from #route)*
 - [[server_routes_tracking|server/routes/tracking.ts]] *(from #route)*
 - [[server_utils_emailsCicloVida|server/utils/emailsCicloVida.ts]] *(from #service)*
 - [[server_utils_emailTemplate|server/utils/emailTemplate.ts]] *(from #service)*
+- [[server_utils_interesados|server/utils/interesados.ts]] *(from #service)*
 
 ---
 

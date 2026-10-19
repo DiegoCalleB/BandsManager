@@ -70,7 +70,7 @@ Reglas para la película:
 | **QR con UTM en los PDF** de repertorio | `src/components/repertorio/pdf_export/buildHeaderFooter.ts` | `utm_source=setlist&utm_medium=qr`: cada setlist impreso trae visitas medibles. |
 | **Páginas de concierto indexables** | `server/routes/paginaConcierto.ts` | HTML en servidor, `sitemap.xml` y `robots.txt`; vistas previas correctas en WhatsApp e Instagram. Solo conciertos publicables y con lista blanca de campos. |
 | **Landing con SEO base** | `index.html`, `src/components/PublicLanding.tsx` | `title`, `description`, Open Graph, Twitter card, `og-cover.png` 1200×630, `FAQPage` JSON-LD, i18n. |
-| **Guías y plantilla de rider en SEO** (es/en) | `server/routes/paginasSeo.ts`, `server/utils/seo/`, `server/utils/paginaRider.ts` | 14 guías y una plantilla editable bajo `/guias` y `/en/guides`: contenido para búsquedas reales de bandas, con `Article`, `BreadcrumbList` y `FAQPage`, resumen, índice con anclas, `hreflang` recíproco, UTM por guía y sitemap. |
+| **Guías y plantilla de rider en SEO** (es/en) | `server/routes/paginasSeo.ts`, `server/utils/seo/`, `server/utils/paginaRider.ts` | 20 guías y una plantilla editable bajo `/guides` (antes `/guias`, con 301) y `/en/guides`: contenido para búsquedas reales de bandas, con `Article`, `BreadcrumbList` y `FAQPage`, resumen, índice con anclas, `hreflang` recíproco, UTM por guía y sitemap. |
 | **Tres landings por audiencia** | `PublicLanding`, `PublicMusiciansLanding`, `PublicTfmLanding`, `FansLanding` | Mensaje distinto para cada público. |
 | **Planes y precios** | `src/components/Planes.tsx` | Tres niveles gratuitos y de pago. |
 | **Chat de conversión en la landing** | `src/components/LandingChatWidget.tsx` | Respuestas guionizadas, sin backend ni coste. |

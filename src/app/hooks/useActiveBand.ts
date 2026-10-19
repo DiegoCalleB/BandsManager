@@ -116,6 +116,17 @@ export function useActiveBand({ currentUser, availableBands, epkConfig, isLogged
     currentUser?.plan,
   ]);
 
+  // Interruptor de la suscripción de pago de la banda activa (apagado por defecto, lo enciende la base de datos).
+  const suscripcionHabilitada = React.useMemo(
+    () =>
+      (availableBands || []).some(
+        (b) =>
+          b.suscripcion_habilitada === true &&
+          isSameBand(b.band_id || b.id, currentActiveBandId, b.bandName || b.nombre_banda || b.name, currentActiveBandName),
+      ),
+    [availableBands, currentActiveBandId, currentActiveBandName],
+  );
+
   // Plan Promo y Promo+ (fase beta, festivales): a diferencia del resto de planes, que enseñan los
   // módulos no incluidos con un candado "Plan" (invitando a mejorar), Promo no debe ni
   // enseñar que esos módulos existen — así que el nav los oculta del todo en vez de bloquearlos.
@@ -146,5 +157,5 @@ export function useActiveBand({ currentUser, availableBands, epkConfig, isLogged
     }
   }, [isLoggedIn, cleanActiveBandId, currentUser]);
 
-  return { currentActiveBandPlan, isPromoPlan, currentActiveBandId, isSameBand, currentActiveBandName, currentActiveBandLogo, cleanActiveBandId };
+  return { currentActiveBandPlan, suscripcionHabilitada, isPromoPlan, currentActiveBandId, isSameBand, currentActiveBandName, currentActiveBandLogo, cleanActiveBandId };
 }

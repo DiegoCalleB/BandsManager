@@ -1,8 +1,9 @@
 /** `<head>` y barra superior comunes a las páginas de SEO, con `hreflang` y `og:locale` por idioma. */
 import { escapeHtml } from '../html.js';
 import { jsonLdSeguro } from '../paginaConcierto.js';
+import { avisoIdiomaHtml } from './avisoIdioma.js';
 import { ESTILOS_PAGINA_PUBLICA } from './estilos.js';
-import { OTRO_IDIOMA, RUTAS, type IdiomaSeo } from './rutas.js';
+import { OTRO_IDIOMA, RUTAS, registroUrl, type IdiomaSeo } from './rutas.js';
 import { TEXTOS } from './textos.js';
 
 export interface OpcionesCabeza {
@@ -14,6 +15,8 @@ export interface OpcionesCabeza {
   jsonLd: unknown;
   tipoOg: 'article' | 'website';
   alternativas: Array<{ hreflang: string; href: string }>;
+  /** Directiva `robots`; por defecto se indexa. Una página con poco contenido propio debe ir con `noindex,follow`. */
+  robots?: string;
 }
 
 export function cabezaHtml(o: OpcionesCabeza): string {
@@ -28,7 +31,7 @@ export function cabezaHtml(o: OpcionesCabeza): string {
 <meta name="description" content="${escapeHtml(o.descripcion)}">
 <link rel="canonical" href="${escapeHtml(url)}">
 ${alternas}
-<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="robots" content="${escapeHtml(o.robots ?? 'index,follow,max-image-preview:large')}">
 <meta property="og:type" content="${o.tipoOg}">
 <meta property="og:site_name" content="BandManager">
 <meta property="og:locale" content="${TEXTOS[o.idioma].ogLocale}">
@@ -43,8 +46,9 @@ ${alternas}
 </head>`;
 }
 
-/** Marca a la izquierda y enlace a la misma página en el otro idioma a la derecha. */
-export function barraHtml(base: string, idioma: IdiomaSeo, hrefOtroIdioma: string): string {
+/** Barra fija: marca a la izquierda; a la derecha, la misma página en el otro idioma y el botón de alta; debajo, el aviso de idioma. */
+export function barraHtml(base: string, idioma: IdiomaSeo, hrefOtroIdioma: string, campana: string): string {
   const otro = OTRO_IDIOMA[idioma];
-  return `<div class="barra no-imprimir"><a href="${escapeHtml(base)}${RUTAS[idioma].landing}">BandManager.io</a><a class="idioma" lang="${otro}" hreflang="${otro}" href="${escapeHtml(base)}${escapeHtml(hrefOtroIdioma)}">${TEXTOS[otro].otroIdiomaEtiqueta}</a></div>`;
+  const alta = registroUrl(base, idioma, 'cabecera', campana);
+  return `<div class="barra no-imprimir"><a href="${escapeHtml(base)}${RUTAS[idioma].landing}">BandManager.io</a><div class="der"><a class="idioma" lang="${otro}" hreflang="${otro}" href="${escapeHtml(base)}${escapeHtml(hrefOtroIdioma)}">${TEXTOS[idioma].otroIdiomaEtiqueta}</a><a class="boton-s" href="${escapeHtml(alta)}">${escapeHtml(TEXTOS[idioma].empieza)}</a></div></div>${avisoIdiomaHtml(base, idioma, hrefOtroIdioma)}`;
 }

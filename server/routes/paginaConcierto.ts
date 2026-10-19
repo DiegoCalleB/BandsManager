@@ -25,19 +25,26 @@ import {
 } from '../utils/paginaConcierto.js';
 import { alternativasLanding } from '../utils/cabeceraIdioma.js';
 import { renderizarPaginaRider } from '../utils/paginaRider.js';
+import { obtenerFestivales } from '../services/festivalesPublicos.js';
 import { entradasSeo } from '../utils/seo/sitemap.js';
 import { urlInsignia } from '../utils/referidos.js';
 import { obtenerPerfilPublicoBandaCacheado } from '../services/perfilPublicoBanda.js';
 import { captureError } from '../utils/errorTracking.js';
 
 import emailsCicloVidaRouter from './emailsCicloVida.js';
+import interesadosRouter from './interesados.js';
+import contactoEmpresasRouter from './contactoEmpresas.js';
+import pegatinasRouter from './pegatinas.js';
 import fansContadorRouter from './fans_contador.js';
 import paginasSeoRouter from './paginasSeo.js';
 export { startEmailsCicloVidaScheduler } from '../services/emailsCicloVida.js';
 
 const router = express.Router();
 router.use(emailsCicloVidaRouter); // baja de los emails de onboarding (/api/emails/baja)
-router.use(paginasSeoRouter); // guías de SEO (/guias)
+router.use(interesadosRouter); // lista de novedades de la landing (/api/public/interesados)
+router.use(contactoEmpresasRouter); // consultas de empresas, planes B2B (/api/public/contacto-empresas)
+router.use(pegatinasRouter); // regalo de pegatinas en la primera suscripción (/api/billing/pegatinas)
+router.use(paginasSeoRouter); // guías de SEO (/guides)
 router.use(fansContadorRouter); // número de fans para la película del TFM (/api/public/fans/contador)
 
 function responderHtml(res: express.Response, status: number, html: string, cache: string) {
@@ -48,9 +55,11 @@ function responderHtml(res: express.Response, status: number, html: string, cach
 }
 
 // Página de SEO con contenido fijo (sin datos de ninguna banda): ver server/utils/paginaRider.ts.
-router.get('/plantilla-rider-tecnico', publicoRateLimiter, (_req, res) => {
+router.get('/technical-rider-template', publicoRateLimiter, (_req, res) => {
   responderHtml(res, 200, renderizarPaginaRider(baseUrlPublica(), 'es'), 'public, max-age=3600, s-maxage=86400');
 });
+// Ruta anterior (en español): redirige para no perder los enlaces ya compartidos ni el posicionamiento.
+router.get('/plantilla-rider-tecnico', publicoRateLimiter, (_req, res) => res.redirect(301, '/technical-rider-template'));
 router.get('/en/technical-rider-template', publicoRateLimiter, (_req, res) => {
   responderHtml(res, 200, renderizarPaginaRider(baseUrlPublica(), 'en'), 'public, max-age=3600, s-maxage=86400');
 });
@@ -143,7 +152,7 @@ async function construirSitemap(base: string): Promise<string> {
   const entradas: EntradaSitemap[] = [
     { loc: `${base}/`, alternativas },
     { loc: `${base}/en`, alternativas },
-    ...entradasSeo(base),
+    ...entradasSeo(base, hoyIso(), await obtenerFestivales()),
   ];
   for (const c of filas as Array<FilaConcierto & { id: string; sala: string; fecha: string }>) {
     const nombre = nombres.get(String(c.band_id));

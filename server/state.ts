@@ -10,6 +10,7 @@ import { INITIAL_LEADS, INITIAL_REHEARSALS, INITIAL_CONCERTS, INITIAL_SOCIAL_POS
 import { ACTIVE_SESSIONS, hashPassword, getUserFromRequest, createAuthMiddleware, createLeaderMiddleware, createCronOrAuthMiddleware } from "./auth.js";
 import { generateUniqueSlugId, slugify } from "./utils/slug.js";
 import { ensureCategoryTemplatesInState } from "./promptsManager.js";
+import { crearEscritorDiferido, vaciarAlSalir } from "./utils/persistenciaEstado.js";
 
 const DATA_FILE = path.join(process.cwd(), "data.json");
 
@@ -989,22 +990,16 @@ export function loadState(): AppState {
   return defaultState;
 }
 
+// Respaldo en disco diferido y agrupado (ver server/utils/persistenciaEstado.ts); la caché en memoria
+// se actualiza al instante.
+const escritorEstado = crearEscritorDiferido({ ruta: DATA_FILE, serializar: () => (inMemoryStateCache ? JSON.stringify(inMemoryStateCache) : null) });
+vaciarAlSalir(escritorEstado);
+
 export function saveState(state: AppState) {
   try {
     ensureUniqueIdsInState(state);
     inMemoryStateCache = state;
-    const tmpFile = `${DATA_FILE}.${Date.now()}.${Math.random().toString(36).substring(2, 6)}.tmp`;
-    const content = JSON.stringify(state, null, 2);
-    fs.writeFileSync(tmpFile, content, "utf-8");
-    try {
-      fs.renameSync(tmpFile, DATA_FILE);
-    } catch {
-      // Fallback si rename falla entre montajes o permisos de disco
-      fs.writeFileSync(DATA_FILE, content, "utf-8");
-      if (fs.existsSync(tmpFile)) {
-        try { fs.unlinkSync(tmpFile); } catch { /* el temporal ya no existe: nada que limpiar */ }
-      }
-    }
+    escritorEstado.programar();
   } catch (e) {
     console.error("Error saving data.json", e);
   }

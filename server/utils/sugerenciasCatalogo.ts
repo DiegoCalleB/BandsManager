@@ -60,7 +60,7 @@ export function sugerirSalas(
   const generoBanda = palabrasDeGenero(perfil.genero);
 
   const candidatas = salas.flatMap((s) => {
-    if (s.no_contactar || agenda.ids.has(s.id) || agenda.claves.has(s.clave)) return [];
+    if (s.no_contactar || s.estado_negocio === 'cerrado_permanente' || agenda.ids.has(s.id) || agenda.claves.has(s.clave)) return [];
     const motivos: string[] = [];
     let puntos = 0;
 

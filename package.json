@@ -20,6 +20,7 @@
     "graph:sync": "tsx scripts/generate_obsidian_graph.ts",
     "spotify:bandas": "tsx scripts/arreglar-spotify-bandas.ts",
     "probar:senales": "tsx scripts/probar-senales.ts",
+    "probar:publicacion": "tsx scripts/probar-publicacion.ts",
     "test:coverage": "vitest run --coverage",
     "coverage:ratchet": "node scripts/subir-umbral-cobertura.mjs",
     "test:e2e": "playwright test",
@@ -44,6 +45,7 @@
     "eval:acordes": "tsx scripts/evaluar-acordes.ts",
     "eval:agentes": "tsx scripts/evaluar-agentes.ts",
     "catalogo:salas": "tsx scripts/catalogo-salas.ts",
+    "festivales:cargar": "tsx scripts/festivales-cargar.ts",
     "verify:ciclos": "node scripts/ciclos.mjs",
     "audit:deps": "npm audit --omit=dev --audit-level=high"
   },

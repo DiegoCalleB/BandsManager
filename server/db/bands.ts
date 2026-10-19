@@ -2,6 +2,7 @@
 // `bandId` resuelto por sesión (AGENTS.md §2.1).
 
 import { bandaDe } from '../utils/bandAccess.js';
+import { buscarBandaRegistrada } from '../utils/bandaRegistrada.js';
 import { getSupabase, cleanBandId, normalizePlan } from "./core.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 import type { BandaRegistradaGuardada } from '../stateTypes.js';
@@ -55,16 +56,17 @@ export async function ensureRegisteredBandExists(bandId: string, nombreBanda?: s
 
   const sb = getSupabase();
   try {
-    const { data, error: selectErr } = await sb
+    const { data: candidatas, error: selectErr } = await sb
       .from("registered_bands")
       .select("*")
-      .or(`band_id.in.(${candidateIds.join(',')}),id.in.(${candidateRegIds.join(',')})`)
-      .limit(1)
-      .maybeSingle();
+      .or(`band_id.in.(${candidateIds.join(',')}),id.in.(${candidateRegIds.join(',')})`);
 
     if (selectErr) {
       console.warn("Notice in ensureRegisteredBandExists select:", selectErr.message);
     }
+    // Con ids gemelos (`x` y `band-x`) un `limit(1)` devolvía cualquiera y quien llamaba escribía en la equivocada.
+    const lista = candidatas || [];
+    const data = buscarBandaRegistrada(lista, `band-${rawClean}`) || buscarBandaRegistrada(lista, cleanId);
 
     if (data) {
       if (nombreBanda && nombreBanda.trim() && nombreBanda.trim() !== "Banda" && (data.nombre_banda === "Banda" || !data.nombre_banda)) {

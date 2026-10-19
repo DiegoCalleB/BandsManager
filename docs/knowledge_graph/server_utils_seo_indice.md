@@ -22,6 +22,8 @@ Registro de las guías de SEO por idioma. Añadir una guía = añadirla a uno de
 - [[server_utils_seo_guiasBookingEn|server/utils/seo/guiasBookingEn.ts]] *(Layer: #service, Domain: #booking)*
 - [[server_utils_seo_guiasDirecto|server/utils/seo/guiasDirecto.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_guiasDirectoEn|server/utils/seo/guiasDirectoEn.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_seo_guiasExtra|server/utils/seo/guiasExtra.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_seo_guiasExtraEn|server/utils/seo/guiasExtraEn.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_guiasNegocio|server/utils/seo/guiasNegocio.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_guiasNegocioEn|server/utils/seo/guiasNegocioEn.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_rutas|server/utils/seo/rutas.ts]] *(Layer: #service, Domain: #system)*
@@ -32,13 +34,17 @@ Registro de las guías de SEO por idioma. Añadir una guía = añadirla a uno de
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_routes_paginasSeo|server/routes/paginasSeo.ts]] *(from #route)*
+- [[server_utils_seo_festivales_render|server/utils/seo/festivales/render.ts]] *(from #service)*
 - [[server_utils_seo_render|server/utils/seo/render.ts]] *(from #service)*
 - [[server_utils_seo_sitemap|server/utils/seo/sitemap.ts]] *(from #service)*
 
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/utils/seo/__tests__/avisoIdioma.test.ts`
+- `server/utils/seo/__tests__/calculadoras.test.ts`
 - `server/utils/seo/__tests__/guias.test.ts`
+- `server/utils/seo/__tests__/landingEnlaces.test.ts`
 
 ---
 

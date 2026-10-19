@@ -94,7 +94,7 @@ router.get("/bands", requireAuth, async (req, res) => {
   try {
     const dbBands = await dbGetBandContacts(userBandId);
     const state = loadState();
-    state.bands = dbBands;
+    state.bands = fusionarColeccionDeBanda(state.bands, userBandId, dbBands);
     saveState(state);
     res.json({ bands: dbBands });
   } catch (errCapturado) {
@@ -114,13 +114,7 @@ router.post("/bands", requireAuth, async (req, res) => {
   try {
     const saved = await dbUpsertBandContact(newBand, userBandId);
     const state = loadState();
-    state.bands = state.bands || [];
-    const idx = state.bands.findIndex((b) => b.id === saved.id);
-    if (idx !== -1) {
-      state.bands[idx] = saved;
-    } else {
-      state.bands.push(saved);
-    }
+    state.bands = reemplazarDeBanda(state.bands, userBandId, saved.id, saved);
     saveState(state);
 
     autoEnrichBandContact(saved, userBandId).catch(err => console.error("Error autoEnrichBandContact background:", err));
@@ -155,8 +149,7 @@ router.put("/bands/:id", requireAuth, async (req, res) => {
   try {
     const saved = await dbUpsertBandContact(updatedBand, userBandId);
     const state = loadState();
-    state.bands = state.bands || [];
-    state.bands = state.bands.map((b) => b.id === id ? saved : b);
+    state.bands = reemplazarDeBanda(state.bands, userBandId, id, saved);
     saveState(state);
 
     autoEnrichBandContact(saved, userBandId).catch(err => console.error("Error autoEnrichBandContact background:", err));
@@ -179,8 +172,7 @@ router.post("/bands/bulk-delete", requireAuth, async (req, res) => {
     await dbBulkDeleteBandContacts(ids, userBandId);
     const state = loadState();
     if (state.bands) {
-      const idsSet = new Set(ids);
-      state.bands = state.bands.filter((b) => !idsSet.has(b.id));
+      for (const id of ids) state.bands = quitarDeBanda(state.bands, userBandId, id);
       saveState(state);
     }
     res.json({ success: true, count: ids.length });
@@ -197,8 +189,7 @@ router.delete("/bands/:id", requireAuth, async (req, res) => {
   try {
     await dbDeleteBandContact(id, userBandId);
     const state = loadState();
-    state.bands = state.bands || [];
-    state.bands = state.bands.filter((b) => b.id !== id);
+    state.bands = quitarDeBanda(state.bands, userBandId, id);
     saveState(state);
     res.json({ success: true });
   } catch (errCapturado) {
@@ -221,7 +212,7 @@ router.post("/bands/sync", requireAuth, async (req, res) => {
     }
 
     const state = loadState();
-    state.bands = bands;
+    state.bands = fusionarColeccionDeBanda(state.bands, userBandId, bands);
     saveState(state);
 
     res.json({ success: true, count: bands.length });
@@ -760,7 +751,7 @@ router.get("/bands/email-account/:bandId", requireAuth, async (req, res) => {
 
 router.post("/bands/email-account", requireAuth, async (req, res) => {
   try {
-    const targetBandId = getTargetBandId(req) || req.body.band_id;
+    const targetBandId = getTargetBandId(req);
     const { provider, email, app_password, smtp_host, smtp_port, smtp_secure, imap_host, imap_port } = req.body;
     if (!targetBandId || !email || !app_password || !smtp_host || !smtp_port || !imap_host) {
       return res.status(400).json({ error: "band_id, email, app_password, smtp_host, smtp_port e imap_host son requeridos" });
@@ -916,6 +907,7 @@ import { dbGetPrintSettings, dbUpsertPrintSettings } from "../db/printSettings.j
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 import type { EPKConfig } from '../../src/types.js';
 import { responderError } from '../utils/errorHttp.js';
+import { fusionarColeccionDeBanda, quitarDeBanda, reemplazarDeBanda } from '../utils/estadoPorBanda.js';
 
 // GET /api/bands/print-settings — ajustes de impresión del setlist recordados por banda.
 router.get("/bands/print-settings", requireAuth, async (req, res) => {

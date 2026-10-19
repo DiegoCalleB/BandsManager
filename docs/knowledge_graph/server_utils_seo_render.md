@@ -13,14 +13,16 @@ tags: ["service", "system", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Renderizador de las guías de SEO (`/guias`, `/en/guides` y sus guías), en el servidor y sin I/O.
+Renderizador de las guías de SEO (`/guides`, `/en/guides` y sus guías), en el servidor y sin I/O.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_utils_html|server/utils/html.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_cabeza|server/utils/seo/cabeza.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_seo_calculadoras|server/utils/seo/calculadoras.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_estilos|server/utils/seo/estilos.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_seo_figuras|server/utils/seo/figuras.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_indice|server/utils/seo/indice.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_rutas|server/utils/seo/rutas.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_textos|server/utils/seo/textos.ts]] *(Layer: #service, Domain: #system)*
@@ -36,6 +38,8 @@ Renderizador de las guías de SEO (`/guias`, `/en/guides` y sus guías), en el s
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/utils/seo/__tests__/avisoIdioma.test.ts`
+- `server/utils/seo/__tests__/calculadoras.test.ts`
 - `server/utils/seo/__tests__/guias.test.ts`
 
 ---

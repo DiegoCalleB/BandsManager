@@ -130,6 +130,7 @@ export function consultarSalas(
   const encontradas = salas.filter(
     (s) =>
       !s.no_contactar &&
+      s.estado_negocio !== 'cerrado_permanente' &&
       PESO_NIVEL[s.nivel] >= pesoMinimo &&
       (!filtros.tipo || s.tipo.toLowerCase() === filtros.tipo) &&
       (!filtros.lugar || contiene(s.ciudad, filtros.lugar) || contiene(s.region, filtros.lugar)) &&

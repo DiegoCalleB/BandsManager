@@ -23,10 +23,14 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server_utils_seo_calculadoras|server/utils/seo/calculadoras.ts]] *(from #service)*
+- [[server_utils_seo_figuras|server/utils/seo/figuras.ts]] *(from #service)*
 - [[server_utils_seo_guiasBooking|server/utils/seo/guiasBooking.ts]] *(from #service)*
 - [[server_utils_seo_guiasBookingEn|server/utils/seo/guiasBookingEn.ts]] *(from #service)*
 - [[server_utils_seo_guiasDirecto|server/utils/seo/guiasDirecto.ts]] *(from #service)*
 - [[server_utils_seo_guiasDirectoEn|server/utils/seo/guiasDirectoEn.ts]] *(from #service)*
+- [[server_utils_seo_guiasExtra|server/utils/seo/guiasExtra.ts]] *(from #service)*
+- [[server_utils_seo_guiasExtraEn|server/utils/seo/guiasExtraEn.ts]] *(from #service)*
 - [[server_utils_seo_guiasNegocio|server/utils/seo/guiasNegocio.ts]] *(from #service)*
 - [[server_utils_seo_guiasNegocioEn|server/utils/seo/guiasNegocioEn.ts]] *(from #service)*
 - [[server_utils_seo_indice|server/utils/seo/indice.ts]] *(from #service)*

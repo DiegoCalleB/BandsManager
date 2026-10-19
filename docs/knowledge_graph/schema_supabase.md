@@ -48,6 +48,9 @@ Esquema relacional de tablas, índices pgvector, funciones y políticas RLS.
 - [[tabla_epk_configs|tabla epk_configs]] *(Layer: #schema, Domain: #epk)*
 - [[tabla_fan_link_clicks|tabla fan_link_clicks]] *(Layer: #schema, Domain: #social)*
 - [[tabla_fans|tabla fans]] *(Layer: #schema, Domain: #social)*
+- [[tabla_festival_convocatorias|tabla festival_convocatorias]] *(Layer: #schema, Domain: #system)*
+- [[tabla_festival_ediciones|tabla festival_ediciones]] *(Layer: #schema, Domain: #system)*
+- [[tabla_festivales|tabla festivales]] *(Layer: #schema, Domain: #system)*
 - [[tabla_gear_checklists|tabla gear_checklists]] *(Layer: #schema, Domain: #system)*
 - [[tabla_lead_messages|tabla lead_messages]] *(Layer: #schema, Domain: #booking)*
 - [[tabla_leads|tabla leads]] *(Layer: #schema, Domain: #booking)*
@@ -56,6 +59,7 @@ Esquema relacional de tablas, índices pgvector, funciones y políticas RLS.
 - [[tabla_metricas_bandas_amigas|tabla metricas_bandas_amigas]] *(Layer: #schema, Domain: #system)*
 - [[tabla_musicians_waitlist|tabla musicians_waitlist]] *(Layer: #schema, Domain: #system)*
 - [[tabla_payments|tabla payments]] *(Layer: #schema, Domain: #finances)*
+- [[tabla_pegatinas_pedidos|tabla pegatinas_pedidos]] *(Layer: #schema, Domain: #system)*
 - [[tabla_pitch_example_threads|tabla pitch_example_threads]] *(Layer: #schema, Domain: #booking)*
 - [[tabla_pitch_learning_examples|tabla pitch_learning_examples]] *(Layer: #schema, Domain: #booking)*
 - [[tabla_pitch_vector_store|tabla pitch_vector_store]] *(Layer: #schema, Domain: #booking)*
