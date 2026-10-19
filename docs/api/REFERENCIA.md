@@ -472,17 +472,17 @@ Salas, festivales y contactos del CRM de booking. Los agentes (Scout, Redactor, 
 
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
-| `GET` | `/api/posts` | Sesión | — |  | [`server/routes/posts.ts:23`](../../server/routes/posts.ts#L23) |
-| `POST` | `/api/posts` | Sesión | — |  | [`server/routes/posts.ts:90`](../../server/routes/posts.ts#L90) |
-| `POST` | `/api/posts/sync` | Sesión | — |  | [`server/routes/posts.ts:221`](../../server/routes/posts.ts#L221) |
-| `POST` | `/api/posts/trigger-webhook` | Sesión | — |  | [`server/routes/posts.ts:242`](../../server/routes/posts.ts#L242) |
-| `PUT` | `/api/posts/{id}` | Sesión | — |  | [`server/routes/posts.ts:35`](../../server/routes/posts.ts#L35) |
-| `DELETE` | `/api/posts/{id}` | Sesión | — |  | [`server/routes/posts.ts:109`](../../server/routes/posts.ts#L109) |
-| `GET` | `/api/social/accounts` | Sesión | — |  | [`server/routes/posts.ts:130`](../../server/routes/posts.ts#L130) |
-| `POST` | `/api/social/accounts/connect` | Sesión | — |  | [`server/routes/posts.ts:143`](../../server/routes/posts.ts#L143) |
-| `DELETE` | `/api/social/accounts/{id}` | Sesión | — |  | [`server/routes/posts.ts:175`](../../server/routes/posts.ts#L175) |
-| `POST` | `/api/social/publish-now/{id}` | Sesión | — |  | [`server/routes/posts.ts:189`](../../server/routes/posts.ts#L189) |
-| `POST` | `/api/social/run-scheduled-publisher` | Sesión | — |  | [`server/routes/posts.ts:208`](../../server/routes/posts.ts#L208) |
+| `GET` | `/api/posts` | Sesión | — |  | [`server/routes/posts.ts:26`](../../server/routes/posts.ts#L26) |
+| `POST` | `/api/posts` | Sesión | — |  | [`server/routes/posts.ts:86`](../../server/routes/posts.ts#L86) |
+| `POST` | `/api/posts/sync` | Sesión | — |  | [`server/routes/posts.ts:210`](../../server/routes/posts.ts#L210) |
+| `POST` | `/api/posts/trigger-webhook` | Sesión | — |  | [`server/routes/posts.ts:228`](../../server/routes/posts.ts#L228) |
+| `PUT` | `/api/posts/{id}` | Sesión | — |  | [`server/routes/posts.ts:40`](../../server/routes/posts.ts#L40) |
+| `DELETE` | `/api/posts/{id}` | Sesión | — |  | [`server/routes/posts.ts:101`](../../server/routes/posts.ts#L101) |
+| `GET` | `/api/social/accounts` | Sesión | — |  | [`server/routes/posts.ts:118`](../../server/routes/posts.ts#L118) |
+| `POST` | `/api/social/accounts/connect` | Sesión | — |  | [`server/routes/posts.ts:131`](../../server/routes/posts.ts#L131) |
+| `DELETE` | `/api/social/accounts/{id}` | Sesión | — |  | [`server/routes/posts.ts:163`](../../server/routes/posts.ts#L163) |
+| `POST` | `/api/social/publish-now/{id}` | Sesión | — |  | [`server/routes/posts.ts:177`](../../server/routes/posts.ts#L177) |
+| `POST` | `/api/social/run-scheduled-publisher` | Sesión | — |  | [`server/routes/posts.ts:196`](../../server/routes/posts.ts#L196) |
 
 ### reels
 

@@ -26,6 +26,8 @@ _Sin dependencias salientes directas._
 - [[server_routes_paginasSeo|server/routes/paginasSeo.ts]] *(from #route)*
 - [[server_utils_paginaRider|server/utils/paginaRider.ts]] *(from #service)*
 - [[server_utils_seo_cabeza|server/utils/seo/cabeza.ts]] *(from #service)*
+- [[server_utils_seo_calculadoras|server/utils/seo/calculadoras.ts]] *(from #service)*
+- [[server_utils_seo_figuras|server/utils/seo/figuras.ts]] *(from #service)*
 - [[server_utils_seo_indice|server/utils/seo/indice.ts]] *(from #service)*
 - [[server_utils_seo_render|server/utils/seo/render.ts]] *(from #service)*
 - [[server_utils_seo_sitemap|server/utils/seo/sitemap.ts]] *(from #service)*
