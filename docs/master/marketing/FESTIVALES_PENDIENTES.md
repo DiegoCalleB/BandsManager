@@ -132,7 +132,7 @@ Los festivales muy especializados (metal, electrónica, jazz, blues, músicas de
 | Festival de les Arts | Comunidad Valenciana | Junio | ficha mínima (falta web oficial y convocatoria) |
 | Spring Festival | Comunidad Valenciana | Mayo | pendiente |
 | Deleste Festival | Comunidad Valenciana |  | pendiente |
-| Pirata Beach Festival | Comunidad Valenciana | Julio | pendiente |
+| Pirata Beach Festival (varias sedes: Comunidad Valenciana, Madrid, Murcia y Castilla-La Mancha, según nos cuentan; falta confirmar ciudades) | Comunidad Valenciana, Madrid, Murcia, Castilla-La Mancha | Julio | pendiente |
 | Love the 90's Valencia | Comunidad Valenciana |  | pendiente |
 | Concert Music Festival | Comunidad Valenciana |  | pendiente |
 | Big Sound Valencia | Comunidad Valenciana |  | pendiente |
