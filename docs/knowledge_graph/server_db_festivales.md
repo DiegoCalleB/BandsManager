@@ -13,7 +13,7 @@ tags: ["db", "system", "auto"]
 > **Capa:** `#layer/db` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Directorio de festivales: lectura de las tres tablas (`festivales`, `festival_ediciones`, `festival_convocatorias`) y escritura de la carga.
+Directorio de festivales: lectura de las tres tablas (`catalogo_festivales`, `catalogo_festival_ediciones`, `catalogo_festival_convocatorias`) y escritura de la carga.
 
 ---
 
