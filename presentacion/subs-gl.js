@@ -246,7 +246,7 @@ window.SUBS_GL = {
 "¡Madre mía! ¡Esto tiene más pruebas que en la época del Covid!": "¡Madre miña! ¡Isto ten máis probas ca na época do Covid!",
 "Casi cuatro mil. Y se ejecutan solos: en cada commit, en cada push. Y en producción, un control de salud y Séntri vigilando los errores. Como un roadie que nunca duerme.": "Case catro mil. E execútanse soas: en cada commit, en cada push. E en produción, un control de saúde e Sentry vixiando os erros. Coma un roadie que nunca dorme.",
 "Vale, pero tengo una duda. Si esto es tan bueno… ¿cómo se entera el resto de bandas?": "Vale, pero teño unha dúbida. Se isto é tan bo… ¿como se decata o resto de bandas?",
-"De boca a oreja, tío. Una banda se lo cuenta a otra, y esa a otra. Como pasa con los buenos pedales.": "De boca a orella, tío. Unha banda cóntallo a outra, e esa a outra. Coma pasa cos bos pedais.",
+"Con el boca a boca, tío. Una banda se lo cuenta a otra, y esa a otra. Como pasa con los buenos pedales.": "Co boca a boca, tío. Unha banda cóntallo a outra, e esa a outra. Coma pasa cos bos pedais.",
 "Y le damos un empujón: todo lo que sale de la app lleva el sello de Band Mánayer. El cú-erre de los fans, el dossier, el acuerdo con la sala, el sétlist…": "E dámoslle un empurrón: todo o que sae da app leva o selo de BandManager. O QR dos fans, o dossier, o acordo coa sala, o setlist…",
 "¿Mi hoja de batería también? ¡Ya me veo en la portada, neno!": "¿A miña folla de batería tamén? ¡Xa me vexo na portada, neno!",
 "¡Cada vez que una sala lea nuestro dossier, nos hace publicidad gratis, che!": "¡Cada vez que unha sala lea o noso dossier, fainos publicidade de balde, che!",

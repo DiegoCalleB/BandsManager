@@ -127,17 +127,6 @@
   "v": "449f9315bc35",
   "who": "bateria"
  },
- "0e735b18": {
-  "d": 5.83,
-  "e": "123559817979931541676431000000000000000000016888789995833798259773455542134320023589712865650234420000000000003444238615427756527655412646655421",
-  "f": "0e735b18.mp3",
-  "h": "9ce6e2a6",
-  "oido": "De boca o oreja, tío. Una banda se lo cuenta a otra, y esa a otra, como pasa con los buenos pedales.",
-  "qa": 0.95,
-  "say": "De boca a oreja, tío. Una banda se lo cuenta a otra, y esa a otra. Como pasa con los buenos pedales.",
-  "v": "5067c7a57bab",
-  "who": "bajo"
- },
  "0f21287a": {
   "d": 5.5,
   "e": "011998300000000000000048799379421870299530006742799862653125310000000000000000034862762597301860630587543100000056414557567765444300000",
@@ -1405,6 +1394,17 @@
   "qa": 1.0,
   "say": "[softly] Esta vez, nos han contestado.",
   "v": "c851e4333775",
+  "who": "bajo"
+ },
+ "842e3170": {
+  "d": 5.78,
+  "e": "04998949915967971531244432000000000000355658795632554157672355794057775310000134555213654443124431000000000046985188247157643247544124344233100",
+  "f": "842e3170.mp3",
+  "h": "45a4f1c0",
+  "oido": "Con el boca a boca, tío. Una banda se lo cuenta otra y esa a otra. ¿Cómo pasa con los buenos pedales?",
+  "qa": 0.98,
+  "say": "Con el boca a boca, tío. Una banda se lo cuenta a otra, y esa a otra. Como pasa con los buenos pedales.",
+  "v": "b8a544d09dd0",
   "who": "bajo"
  },
  "84d68d2c": {
