@@ -8,7 +8,7 @@ import { notasParaDibujar, type VistaAcorde } from './vistaAcordes';
 import type { NivelAcorde } from './voicings';
 
 const BASE_TECLADO = 48; // Do3
-const BASE_BAJO = 36; // Do2
+const BASE_BAJO = 28; // Mi1: la cuerda al aire del bajo; la nota grave de cada acorde cae entre Mi1 y Re#2
 export const DURACION_ACORDE_S = 1.4;
 
 /**
@@ -25,8 +25,8 @@ export function midiDeAcorde(acorde: string, vista: VistaAcorde, nivel: NivelAco
     const ini = Math.min(inv, pcs.length - 1);
     const sube: number[] = [];
     pcs.map((_, i) => pcs[(ini + i) % pcs.length]).forEach((pc) => {
-      let m = BASE_BAJO + pc;
-      while (sube.length && m <= sube[sube.length - 1]) m += 12;
+      const prev = sube[sube.length - 1];
+      const m = prev === undefined ? BASE_BAJO + ((pc - (BASE_BAJO % 12) + 12) % 12) : prev + (((pc - prev) % 12 + 12) % 12 || 12);
       sube.push(m);
     });
     return sube;

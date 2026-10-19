@@ -16,7 +16,7 @@ describe('midiDeAcorde', () => {
   });
   it('bajo: las notas del acorde una a una, de grave a agudo, empezando por la de la inversión', () => {
     expect(midiDeAcorde('C', 'bajo', 'normal', 0)).toEqual([36, 40, 43]);
-    expect(midiDeAcorde('C', 'bajo', 'normal', 1)).toEqual([40, 43, 48]);
+    expect(midiDeAcorde('C', 'bajo', 'normal', 1)).toEqual([28, 31, 36]);
     expect(midiDeAcorde('C', 'bajo', 'basico', 0)).toEqual([36, 43]);
   });
   it('un acorde que no se reconoce no suena', () => {
