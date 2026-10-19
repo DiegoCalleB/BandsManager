@@ -24,7 +24,7 @@ export const GUIAS_EXTRA_EN: GuiaSeoEn[] = [
       },
       {
         h2: 'Changing the name in time',
-        parrafos: ['If you realise the name is not working, change it as early as you can. The fewer listeners, followers and gigs you have under that name, the less it costs. Announce the change and keep the old name in your bio for a while.'],
+        parrafos: ['If you realize the name is not working, change it as early as you can. The fewer listeners, followers and gigs you have under that name, the less it costs. Announce the change and keep the old name in your bio for a while.'],
       },
     ],
     faq: [
@@ -40,7 +40,7 @@ export const GUIAS_EXTRA_EN: GuiaSeoEn[] = [
     slugEs: 'como-hacer-un-cartel-de-concierto',
     titulo: 'How to Design a Gig Poster That People Read and Remember',
     h1: 'How to design a gig poster',
-    descripcion: 'What a gig poster needs, how to organise the information, which sizes to use and the mistakes that make nobody read it. With a checklist.',
+    descripcion: 'What a gig poster needs, how to organize the information, which sizes to use and the mistakes that make nobody read it. With a checklist.',
     intro: 'A poster has two seconds to say who plays, where and when. If people have to squint to understand it, it has already failed.',
     resumen: ['The essentials: band name, venue, date, time and price or where to buy tickets.', 'One clear hierarchy: band and date large, the rest small but readable.', 'Prepare a vertical version for socials and a landscape one for screens and press.'],
     secciones: [
@@ -122,11 +122,11 @@ export const GUIAS_EXTRA_EN: GuiaSeoEn[] = [
       },
       {
         h2: 'Turn it into a teaser',
-        parrafos: ['Pick the best minute of the show: an energetic start, a recognisable chorus and a clean ending. Trim it, adjust the volume and add the band name at the start or end. That gives you the video any venue can open on their phone.'],
+        parrafos: ['Pick the best minute of the show: an energetic start, a recognizable chorus and a clean ending. Trim it, adjust the volume and add the band name at the start or end. That gives you the video any venue can open on their phone.'],
       },
       {
         h2: 'Permissions and good practice',
-        parrafos: ['Ask the venue for permission if you are recording from a specific spot or if recognisable audience members will appear. And if you publish other bands’ material or third-party songs, check each platform’s terms.'],
+        parrafos: ['Ask the venue for permission if you are recording from a specific spot or if recognizable audience members will appear. And if you publish other bands’ material or third-party songs, check each platform’s terms.'],
       },
     ],
     faq: [
@@ -148,7 +148,7 @@ export const GUIAS_EXTRA_EN: GuiaSeoEn[] = [
     secciones: [
       {
         h2: 'Who to write to',
-        lista: ['The culture section of local and regional papers.', 'Blogs and outlets specialised in your style.', 'Local radio and music programmes.', 'Your city’s cultural listings, which often publish gigs for free.'],
+        lista: ['The culture section of local and regional papers.', 'Blogs and outlets specialized in your style.', 'Local radio and music programs.', 'Your city’s cultural listings, which often publish gigs for free.'],
       },
       {
         h2: 'What to send',
@@ -203,6 +203,6 @@ export const GUIAS_EXTRA_EN: GuiaSeoEn[] = [
       { q: 'What if one of the bands does not promote?', a: 'Make clear from the start what each band is expected to do. If they do not deliver, weigh whether to collaborate again.' },
     ],
     relacionadas: ['how-to-get-gigs', 'how-to-split-band-money', 'tour-day-sheet'],
-    cta: { titulo: 'Dates and contacts in order', texto: 'BandManager brings together your shows, venues and contacts so you can organise swaps without losing track.', boton: 'Try BandManager free' },
+    cta: { titulo: 'Dates and contacts in order', texto: 'BandManager brings together your shows, venues and contacts so you can organize swaps without losing track.', boton: 'Try BandManager free' },
   },
 ];

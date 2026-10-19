@@ -81,7 +81,7 @@ table.tabla tbody tr:nth-child(even) td{background:var(--bg)}
 .calc h3{margin:0 0 .75rem;font-size:17px;color:var(--ink)}
 .calc .campos{display:grid;gap:.7rem;grid-template-columns:repeat(auto-fit,minmax(9.5rem,1fr))}
 .calc label{display:grid;gap:.3rem;font-size:14px;color:var(--ink-2)}
-.calc input{width:100%;min-height:44px;padding:0 .8rem;border:0;border-radius:12px;background:var(--bg);color:var(--ink);font:inherit;font-size:16px;font-variant-numeric:tabular-nums}
+.calc input,.calc select{width:100%;min-height:44px;padding:0 .8rem;border:0;border-radius:12px;background:var(--bg);color:var(--ink);font:inherit;font-size:16px;font-variant-numeric:tabular-nums}
 .calc .res{display:grid;gap:.5rem;margin-top:1rem;padding:1rem;border-radius:18px;background:var(--bg)}
 .calc .res p{margin:0;color:var(--ink-2)}
 .calc .res strong{color:var(--ink);font-size:1.25rem;font-variant-numeric:tabular-nums}
