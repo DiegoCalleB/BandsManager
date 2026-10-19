@@ -254,6 +254,27 @@ Los festivales muy especializados (metal, electrónica, jazz, blues, músicas de
 | Iruña Rock | Navarra |  | pendiente |
 | The Juergas Fest | sin comunidad asignada |  | pendiente |
 | Festival Sónica | sin comunidad asignada |  | pendiente |
+| Pintor Rock | sin comunidad asignada |  | pendiente |
+| Ebroclub | Castilla y León |  | pendiente |
+| Festial! | sin comunidad asignada |  | pendiente |
+| Iberia Festival | sin comunidad asignada |  | pendiente |
+| Aiara Fest | sin comunidad asignada |  | pendiente |
+| Oh, See! Málaga Fest | Andalucía |  | pendiente |
+| Polar Sound | sin comunidad asignada |  | pendiente |
+| Miranda Urban Festival | Castilla y León |  | pendiente |
+| Vibra Mahou Fest Valladolid | Castilla y León |  | pendiente |
+| Blackworks Weekend Festival | sin comunidad asignada |  | pendiente |
+| Fury Hard Techno Festival | sin comunidad asignada |  | pendiente |
+| Sesión Vermú (más de 15 municipios; incluye bandas emergentes) | Madrid |  | pendiente |
+| Amusufest | sin comunidad asignada |  | pendiente |
+| Nocturna Festival | sin comunidad asignada |  | pendiente |
+| Lion Rock Festival | sin comunidad asignada |  | pendiente |
+| Blow Up Festival | sin comunidad asignada |  | pendiente |
+| Zaragoza Feliz Feliz | Aragón |  | pendiente |
+| Caribe Mix Festival | sin comunidad asignada |  | pendiente |
+| PBR Live Festival | sin comunidad asignada |  | pendiente |
+| Molan Los 2000 Logroño | La Rioja |  | pendiente |
+| Molan Los 2000 Lugo | Galicia |  | pendiente |
 
 ## Dónde seguir buscando nombres
 
