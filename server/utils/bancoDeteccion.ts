@@ -30,12 +30,14 @@ export interface ResultadoCaso {
   nombre: string;
   viral: ResultadoMetodo;
   soloVolumen: ResultadoMetodo;
+  conRepeticion: ResultadoMetodo;
 }
 
 export interface ResumenBanco {
   casos: number;
   viral: { captura: number; acierta3: number };
   soloVolumen: { captura: number; acierta3: number };
+  conRepeticion: { captura: number; acierta3: number };
 }
 
 const UMBRAL_ACIERTO = 0.8;
@@ -62,17 +64,19 @@ export function evaluarCaso(c: CasoBanco, largo = 30): ResultadoCaso {
   const porPuntuacion = [...virales].sort((a, b) => b.score - a.score);
   const volumen = ventanasConMasEnergia(c.curva, { duracion: largo, maxVentanas: 3 });
   const porVolumen = [...volumen].sort((a, b) => b.score - a.score);
-  return { nombre: c.nombre, viral: medir(porPuntuacion, c.interes, mejor), soloVolumen: medir(porVolumen, c.interes, mejor) };
+  const conRep = ventanasMasVirales(c.curva, { duracion: largo, tipo: c.tipo, cambiosDePlano: c.cambiosDePlano, maxVentanas: 3, usarRepeticion: true });
+  const porRep = [...conRep].sort((a, b) => b.score - a.score);
+  return { nombre: c.nombre, viral: medir(porPuntuacion, c.interes, mejor), soloVolumen: medir(porVolumen, c.interes, mejor), conRepeticion: medir(porRep, c.interes, mejor) };
 }
 
 const media = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
 
 export function resumirBanco(r: ResultadoCaso[]): ResumenBanco {
-  const m = (k: "viral" | "soloVolumen") => ({
+  const m = (k: "viral" | "soloVolumen" | "conRepeticion") => ({
     captura: media(r.map((x) => x[k].captura)),
     acierta3: media(r.map((x) => (x[k].acierta3 ? 1 : 0)))
   });
-  return { casos: r.length, viral: m("viral"), soloVolumen: m("soloVolumen") };
+  return { casos: r.length, viral: m("viral"), soloVolumen: m("soloVolumen"), conRepeticion: m("conRepeticion") };
 }
 
 const pct = (n: number) => `${Math.round(n * 100)}%`;
@@ -80,11 +84,12 @@ const pct = (n: number) => `${Math.round(n * 100)}%`;
 export function formatearBanco(r: ResultadoCaso[]): string {
   if (!r.length) return "Sin casos. Genera alguno con: npm run banco:deteccion -- --generar ID ficha.json salida.json";
   const s = resumirBanco(r);
-  const lineas = r.map((x) => `- ${x.nombre}: detector ${pct(x.viral.captura)} · solo volumen ${pct(x.soloVolumen.captura)}`);
+  const lineas = r.map((x) => `- ${x.nombre}: detector ${pct(x.viral.captura)} · con estribillo ${pct(x.conRepeticion.captura)} · solo volumen ${pct(x.soloVolumen.captura)}`);
   return [
     `Banco de detección (${s.casos} vídeos). "Captura" = interés real del mejor tramo elegido frente al mejor posible.`,
     ...lineas,
     `Detector:     captura ${pct(s.viral.captura)}, acierta en el top 3 ${pct(s.viral.acierta3)}`,
+    `Con estribillo (experimental): captura ${pct(s.conRepeticion.captura)}, acierta en el top 3 ${pct(s.conRepeticion.acierta3)}`,
     `Solo volumen: captura ${pct(s.soloVolumen.captura)}, acierta en el top 3 ${pct(s.soloVolumen.acierta3)}`,
     s.casos < 8 ? "Ojo: con menos de 8 vídeos las medias bailan; sirve para comparar cambios, no para fiarse del número." : ""
   ].filter(Boolean).join("\n");
