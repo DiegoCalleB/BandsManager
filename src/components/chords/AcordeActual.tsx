@@ -125,7 +125,7 @@ export const DiagramasAcordeActual: React.FC<DiagramasProps> = ({ estado, proxim
               aria-label={ir ? `Ir al acorde ${c}` : undefined}
               onClick={ir && ((e) => { if (!(e.target as HTMLElement).closest('button')) ir(); })}
               onKeyDown={ir && ((e) => { if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); ir(); } })}
-              className={`w-28 shrink-0 rounded-[var(--r-m)] ${ir ? 'cursor-pointer' : ''} ${i > 0 ? 'opacity-70' : ''}`}
+              className={`w-28 shrink-0 rounded-[var(--r-m)] ${ir ? 'cursor-pointer' : ''} ${i > 0 ? 'opacity-70' : ''} ${i > 0 ? 'max-md:hidden' : ''}`}
             >
               <CajaAcorde chord={c} vista={vista} contexto={contexto.get(c)} grado={gradoDe(c)} nivel={nivel} previo={i === 0 ? acorde : lista[i - 1].c} sonar={!ir} />
               {duraciones[i] !== null && maxDur > 0 && <BarraDuracion segundos={duraciones[i] as number} maximo={maxDur} />}

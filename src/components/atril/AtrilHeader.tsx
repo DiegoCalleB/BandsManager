@@ -2,7 +2,7 @@
  * Cabecera del Atril: título, tonalidad, ficha del tema y acciones.
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
-import { Edit3,Guitar,MessageSquare,Music,Pause,Play,Printer,Timer,Upload,UserCheck,Wand2 } from "lucide-react";
+import { Edit3,Guitar,MessageSquare,Music,Pause,Play,Printer,Theater,Timer,Upload,UserCheck,Wand2 } from "lucide-react";
 import { formatSongTitle } from "../../utils/formatSongTitle";
 import { ActionMenu,Button } from "../ui";
 import { useAtril } from "./AtrilContext";
@@ -12,7 +12,7 @@ import { useAtril } from "./AtrilContext";
  * @returns Sección de interfaz.
  */
 export function AtrilHeader() {
-  const { handleToggleAudio, isPlayingAudio, audioUrl, song, handleGenerateWithAi, isGeneratingAi, analisisAcordes, isAnalyzingChords, setShowAnalisisAcordes, handleAnalyzeChordsFromAudio, setShowStructureUploadModal, setShowShareModal, setShowMetronomeModal, setShowTunerModal, setActiveTab, esMovil } = useAtril();
+  const { handleToggleAudio, isPlayingAudio, audioUrl, song, handleGenerateWithAi, isGeneratingAi, analisisAcordes, isAnalyzingChords, setShowAnalisisAcordes, handleAnalyzeChordsFromAudio, setShowStructureUploadModal, setShowShareModal, setShowMetronomeModal, setShowTunerModal, setActiveTab, esMovil, modoEscenario, setModoEscenario } = useAtril();
   return (
     <>
       <div className="bg-[var(--sunken)] p-3 sm:p-4 pr-24 flex flex-wrap items-center justify-between gap-3 shrink-0">
@@ -110,6 +110,7 @@ export function AtrilHeader() {
               { label: "Compartir por WhatsApp o app", icon: MessageSquare, onSelect: () => setShowShareModal(true) },
               { label: "Metrónomo", icon: Timer, onSelect: () => setShowMetronomeModal(true) },
               { label: "Afinador", icon: Guitar, onSelect: () => setShowTunerModal(true) },
+              { label: modoEscenario ? "Salir del modo escenario" : "Modo escenario (letra grande)", icon: Theater, onSelect: () => setModoEscenario((v) => !v) },
               { label: "Imprimir cifrado", icon: Printer, onSelect: () => window.print() },
               { label: "Ficha de sustituto urgente", icon: UserCheck, onSelect: () => setActiveTab("substitute") },
               { label: "Editar cifrado", icon: Edit3, onSelect: () => setActiveTab("edit") },

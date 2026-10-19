@@ -61,7 +61,7 @@ export function AtrilBody() {
                   nombreTonalidad={nombreTonalidadVista}
                 />
               )}
-              <div translate="no" className="notranslate bg-[var(--sunken)] p-4 sm:p-6 rounded-[var(--r-l)] font-sans text-base leading-relaxed whitespace-pre-wrap select-text">
+              <div translate="no" className="notranslate bg-[var(--sunken)] p-4 sm:p-6 rounded-[var(--r-l)] font-sans text-base group-data-[escenario=true]/esc:text-3xl leading-relaxed whitespace-pre-wrap select-text">
                 {renderFormattedChordSheet(
                   processedText,
                   lineasConLetra && letraTranscrita && seguirEnCifrado

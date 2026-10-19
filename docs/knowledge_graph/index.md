@@ -81,7 +81,7 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 
 ## 🤖 Mapa automático (generado desde los imports reales)
 
-1785 nodos: 53 agent · 54 db · 12 external · 14 feature · 960 frontend · 43 hook · 94 route · 70 schema · 12 security · 473 service.
+1786 nodos: 53 agent · 54 db · 12 external · 14 feature · 961 frontend · 43 hook · 94 route · 70 schema · 12 security · 473 service.
 No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el test `grafoConocimiento` falla si queda desfasado.
 
 ### 🔥 Los 20 ficheros más importados
