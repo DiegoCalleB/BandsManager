@@ -230,3 +230,32 @@ Los festivales muy especializados (metal, electrónica, jazz, blues, músicas de
 | Aúpa Lumbreiras | sin comunidad asignada | Agosto | pendiente |
 | Vive Latino | sin comunidad asignada | Septiembre | pendiente |
 | Recorda Fest | sin comunidad asignada | Septiembre | pendiente |
+| Cordovibes Festival | Andalucía |  | pendiente |
+| La Movida Sound Festival | Andalucía |  | pendiente |
+| Luna Sur Festival | Andalucía |  | pendiente |
+| Candil Rock | Andalucía |  | pendiente |
+| A Pico y Pala | Andalucía |  | pendiente |
+| Rock N' Blues Festival (Don Benito) | Extremadura |  | pendiente |
+| Tormenta Fest | Extremadura |  | pendiente |
+| Centenera Rock | Extremadura |  | pendiente |
+| León Solo Música Festival | Castilla y León |  | pendiente |
+| Monoloco Festival | Castilla y León |  | pendiente |
+| Z! Live Rock Fest | Castilla y León |  | pendiente |
+| Camarzius Fest | Castilla y León |  | pendiente |
+| AbejaRock | Castilla y León |  | pendiente |
+| Festival Indispensables | Castilla-La Mancha |  | pendiente |
+| Alterna Festival | Castilla-La Mancha |  | pendiente |
+| Ripollet Rock Festival | Cataluña |  | pendiente |
+| Rock D'Aki L'Hospitalet | Cataluña |  | pendiente |
+| Radar Joven (ciclo de bandas emergentes) | Madrid |  | pendiente |
+| Huellas Music Fest | Madrid |  | pendiente |
+| Castañazo Rock | Galicia |  | pendiente |
+| Pro Weekend (showcases) | Comunidad Valenciana |  | pendiente |
+| Iruña Rock | Navarra |  | pendiente |
+| The Juergas Fest | sin comunidad asignada |  | pendiente |
+| Festival Sónica | sin comunidad asignada |  | pendiente |
+
+## Dónde seguir buscando nombres
+
+Para descubrir festivales pequeños sirven las agendas por comunidad de [La Ganzúa](https://www.laganzua.net/festivales), [DOD Magazine](https://www.dodmagazine.es/festivales/),
+[Modo Festival](https://modofestival.es/) o [Fan Music Fest](https://fanmusicfest.com/). Se usan **solo para descubrir el nombre**: sus fechas y carteles no coinciden entre sí y su base de datos tiene derechos propios, así que no se copian. Cada ficha se escribe desde la web oficial del festival.
