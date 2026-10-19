@@ -112,11 +112,11 @@ export function renderFormattedChordSheet(text: string, letra?: SincronizacionLe
                 sync.onSeek(instante);
               }}
               title={`Saltar a ${Math.floor(instante / 60)}:${String(Math.floor(instante % 60)).padStart(2, "0")}${par.coincide ? "" : " · en el audio suena otro acorde"}${funcionTitulo}`}
-              className={`font-bold px-1.5 rounded-[var(--r-s)] text-sm leading-5 cursor-pointer transition-ui ${
+              className={`font-bold px-1.5 rounded-[var(--r-s)] text-sm group-data-[escenario=true]/esc:text-xl leading-5 cursor-pointer transition-ui ${
                 k === sync.activo
                   ? "bg-[var(--surface)] text-[var(--ink)]"
                   : `${clasePasiva} hover:brightness-95`
-              } ${par.coincide ? "" : "underline decoration-dashed decoration-2 underline-offset-4"}`}
+              } ${par.coincide ? "" : "after:content-[''] after:inline-block after:w-1 after:h-1 after:ml-1 after:align-middle after:rounded-[var(--r-pill)] after:bg-[var(--ink-3)]"}`}
             >
               {contenido}
             </button>
@@ -124,7 +124,7 @@ export function renderFormattedChordSheet(text: string, letra?: SincronizacionLe
           );
         }
         return (
-          <span key={key} title={funcionTitulo ? funcionTitulo.slice(3) : undefined} className={`font-bold ${clasePasiva} px-1.5 rounded-[var(--r-s)] mr-0.5 text-sm leading-5`}>
+          <span key={key} title={funcionTitulo ? funcionTitulo.slice(3) : undefined} className={`font-bold ${clasePasiva} px-1.5 rounded-[var(--r-s)] mr-0.5 text-sm group-data-[escenario=true]/esc:text-xl leading-5`}>
             {contenido}
           </span>
         );

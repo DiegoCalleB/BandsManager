@@ -38,6 +38,7 @@ _Sin dependencias salientes directas._
 - [[server_utils_seo_figuras|server/utils/seo/figuras.ts]] *(from #service)*
 - [[server_utils_seo_listados|server/utils/seo/listados.ts]] *(from #service)*
 - [[server_utils_seo_render|server/utils/seo/render.ts]] *(from #service)*
+- [[server_utils_seo_salas_render|server/utils/seo/salas/render.ts]] *(from #service)*
 - [[service_calendar_conflicts|Avisos de choques por email]] *(from #service)*
 
 ---

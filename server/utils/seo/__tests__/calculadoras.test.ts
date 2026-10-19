@@ -85,6 +85,7 @@ describe('script de las calculadoras', () => {
     const form = {
       getAttribute: () => 'cache-minimo',
       querySelectorAll: (q: string) => (q === 'input' ? campos : resultados),
+      querySelector: () => null,
       addEventListener: () => undefined,
     };
     new Function('document', js)({ querySelectorAll: () => [form] });
@@ -109,5 +110,37 @@ describe('calcEpkChecklist', () => {
     expect(html.match(/type="checkbox"/g)).toHaveLength(8);
     expect(html).toMatch(/<svg[^>]*role="img"[^>]*aria-label="Esquema de un dossier/);
     expect(html.match(/data-calc="epk-checklist"/g)).toHaveLength(1);
+  });
+});
+
+describe('selector de moneda', () => {
+  const guiaEs = renderizarGuia(guiaPorSlug('cuanto-cobrar-por-un-concierto')!, 'https://bandmanager.io', 'es');
+  const guiaEn = renderizarGuia(guiaPorSlug('how-much-to-charge-for-a-gig', 'en')!, 'https://bandmanager.io', 'en');
+  it('la calculadora del caché lleva el selector, con el euro por defecto en español y el dólar en inglés', () => {
+    expect(guiaEs).toContain('<select name="moneda">');
+    expect(guiaEs).toMatch(/<option value="€" selected>/);
+    expect(guiaEn).toMatch(/<option value="\$" selected>/);
+    expect(guiaEn).toContain('<span data-moneda>$</span>');
+  });
+  it('las demás calculadoras no llevan selector de moneda', () => {
+    const gigs = renderizarGuia(guiaPorSlug('como-conseguir-bolos')!, 'https://bandmanager.io', 'es');
+    expect(gigs).not.toContain('name="moneda"');
+  });
+  it('el script cambia el símbolo al elegir otra moneda y no cambia las cifras', () => {
+    const js = [...guiaEn.matchAll(/<script>(.*?)<\/script>/gs)].map((m) => m[1]).find((x) => x.includes('data-calc')) ?? '';
+    const simbolos: string[] = [];
+    const salidas: Record<string, string> = {};
+    const campos = [['miembros', '4'], ['gastos', '120'], ['horas', '10'], ['valorHora', '10']].map(([name, value]) => ({ name, value }));
+    const resultados = ['total', 'porMiembro', 'soloGastos'].map((k) => ({ getAttribute: () => k, set textContent(v: string) { salidas[k] = v; } }));
+    const unidades = [{ set textContent(v: string) { simbolos.push(v); } }];
+    const form = {
+      getAttribute: () => 'cache-minimo',
+      querySelectorAll: (q: string) => (q === 'input' ? campos : q === '[data-moneda]' ? unidades : resultados),
+      querySelector: () => ({ value: '£' }),
+      addEventListener: () => undefined,
+    };
+    new Function('document', js)({ querySelectorAll: () => [form] });
+    expect(simbolos).toEqual(['£']);
+    expect(salidas.total.replace(/\D/g, '')).toBe('520');
   });
 });

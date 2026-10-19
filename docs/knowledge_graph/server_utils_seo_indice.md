@@ -36,6 +36,7 @@ Registro de las guías de SEO por idioma. Añadir una guía = añadirla a uno de
 - [[server_routes_paginasSeo|server/routes/paginasSeo.ts]] *(from #route)*
 - [[server_utils_seo_festivales_render|server/utils/seo/festivales/render.ts]] *(from #service)*
 - [[server_utils_seo_render|server/utils/seo/render.ts]] *(from #service)*
+- [[server_utils_seo_salas_render|server/utils/seo/salas/render.ts]] *(from #service)*
 - [[server_utils_seo_sitemap|server/utils/seo/sitemap.ts]] *(from #service)*
 
 ---

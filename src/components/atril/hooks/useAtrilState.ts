@@ -69,6 +69,8 @@ export function useAtrilState({ modo, song }: AtrilStateParams) {
   const [copiedText, setCopiedText] = useState<boolean>(false);
   // Pantalla completa: la hoja ocupa todo el viewport y, si el navegador deja, esconde su barra.
   const [pantallaCompleta, setPantallaCompleta] = useState<boolean>(false);
+  /** Modo escenario: sin barras, letra enorme y los diagramas fuera; para leer de pie y de lejos. */
+  const [modoEscenario, setModoEscenario] = useState<boolean>(false);
   const alternarPantallaCompleta = () => {
     const entrar = !pantallaCompleta;
     setPantallaCompleta(entrar);
@@ -94,5 +96,5 @@ export function useAtrilState({ modo, song }: AtrilStateParams) {
   const [showStructureUploadModal, setShowStructureUploadModal] =
     useState<boolean>(false);
 
-  return { ajustes, transpose, setAiSuccessMsg, setCifradoTexto, setGuiaSustituto, setIsAnalyzingChords, setOidoOculto, setShowAnalisisAcordes, analisisAcordes, isAnalyzingChords, setIsGeneratingAi, cifradoTexto, guiaSustituto, setActiveTab, notation, seguirEnCifrado, showAnalisisAcordes, scrollContainerRef, activeTab, autoScroll, setCopiedText, pantallaCompleta, alternarPantallaCompleta, isGeneratingAi, setShowStructureUploadModal, setShowShareModal, setShowMetronomeModal, setShowTunerModal, setTranspose, metronomo, setNotation, showChordDiagrams, setShowChordDiagrams, copiedText, aiSuccessMsg, setSeguirEnCifrado, vistaAcordes, setVistaAcordes, nivelAcordes, setNivelAcordes, esMovil, showShareModal, showMetronomeModal, showTunerModal, oidoOculto, showStructureUploadModal };
+  return { ajustes, transpose, setAiSuccessMsg, setCifradoTexto, setGuiaSustituto, setIsAnalyzingChords, setOidoOculto, setShowAnalisisAcordes, analisisAcordes, isAnalyzingChords, setIsGeneratingAi, cifradoTexto, guiaSustituto, setActiveTab, notation, seguirEnCifrado, showAnalisisAcordes, scrollContainerRef, activeTab, autoScroll, setCopiedText, pantallaCompleta, alternarPantallaCompleta, modoEscenario, setModoEscenario, isGeneratingAi, setShowStructureUploadModal, setShowShareModal, setShowMetronomeModal, setShowTunerModal, setTranspose, metronomo, setNotation, showChordDiagrams, setShowChordDiagrams, copiedText, aiSuccessMsg, setSeguirEnCifrado, vistaAcordes, setVistaAcordes, nivelAcordes, setNivelAcordes, esMovil, showShareModal, showMetronomeModal, showTunerModal, oidoOculto, showStructureUploadModal };
 }

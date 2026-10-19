@@ -35,11 +35,11 @@ export const GUIAS_BOOKING_EN: GuiaSeoEn[] = [
       {
         h2: 'A different EPK depending on who you send it to',
         parrafos: ['The same base press kit works, but what goes first changes. Think about who opens it.'],
-        tablas: [{ titulo: 'What to prioritise by recipient', cabeceras: ['Recipient', 'Goes first', 'What to add'], filas: [['Small venue', 'Listen and live video', 'Free dates and a light rider.'], ['Festival', 'Video and a draw figure', 'A short set format and quick changeovers.'], ['Press and blogs', 'One concrete story and photos', 'Press notes, downloadable photos and the story in three lines.'], ['Promoter or agency', 'Proof point and calendar', 'Format and conditions for touring.']] }],
+        tablas: [{ titulo: 'What to prioritize by recipient', cabeceras: ['Recipient', 'Goes first', 'What to add'], filas: [['Small venue', 'Listen and live video', 'Free dates and a light rider.'], ['Festival', 'Video and a draw figure', 'A short set format and quick changeovers.'], ['Press and blogs', 'One concrete story and photos', 'Press notes, downloadable photos and the story in three lines.'], ['Promoter or agency', 'Proof point and calendar', 'Format and conditions for touring.']] }],
       },
       {
         h2: 'Photos, video and audio: the practical side',
-        tablas: [{ titulo: 'Material and recommended format', cabeceras: ['Material', 'What works', 'Avoid'], filas: [['Band photo', 'Good light, everyone recognisable and in landscape, plus a vertical version.', 'Dark photos, from behind or with filters that hide faces.'], ['Live video', 'Thirty to sixty seconds with good sound and the band in frame.', 'Full shows or recordings with a clipping mic.'], ['Audio', 'Two tracks that play directly on the page.', 'Autoplay and links that force people to leave.'], ['Logo', 'Transparent background and a light and dark version.', 'Small images stretched up.']] }],
+        tablas: [{ titulo: 'Material and recommended format', cabeceras: ['Material', 'What works', 'Avoid'], filas: [['Band photo', 'Good light, everyone recognizable and in landscape, plus a vertical version.', 'Dark photos, from behind or with filters that hide faces.'], ['Live video', 'Thirty to sixty seconds with good sound and the band in frame.', 'Full shows or recordings with a clipping mic.'], ['Audio', 'Two tracks that play directly on the page.', 'Autoplay and links that force people to leave.'], ['Logo', 'Transparent background and a light and dark version.', 'Small images stretched up.']] }],
       },
       {
         h2: 'Link or PDF',
@@ -102,7 +102,7 @@ export const GUIAS_BOOKING_EN: GuiaSeoEn[] = [
       },
       {
         h2: 'Step 1: pick venues that fit',
-        parrafos: ['A room where bands like yours already play is a room with an audience for you. Look at its programme over the last few months before you write: style, capacity, whether it books local bands or only touring acts, and which nights it programmes music.'],
+        parrafos: ['A room where bands like yours already play is a room with an audience for you. Look at its program over the last few months before you write: style, capacity, whether it books local bands or only touring acts, and which nights it programs music.'],
         tablas: [{ titulo: 'What to check before writing to a venue', cabeceras: ['Signal', 'Where to look', 'What it means'], filas: [['Styles booked', 'Its calendar and socials', 'If there is nothing like yours, drop it.'], ['Capacity', 'Its website or a call', 'Your draw has to be reasonable for its size.'], ['Local bands', 'Posters from the last months', 'If they only book tours, you have fewer chances.'], ['Music nights', 'This week’s calendar', 'It tells you which dates you can propose.'], ['Who books', 'Website, socials or the venue itself', 'Writing to a person beats a generic inbox.']] }],
       },
       {
@@ -164,7 +164,7 @@ export const GUIAS_BOOKING_EN: GuiaSeoEn[] = [
       },
       {
         h2: 'A short template',
-        parrafos: ['Hi [name], we have followed you for a while and loved this autumn’s lineup at [venue]. We are [band], [style in a few words] from [city], and we would love to play your room. [Date 1] or [date 2] would work for us. The press kit is in my signature. Would you be up for taking a look?'],
+        parrafos: ['Hi [name], we have followed you for a while and loved this fall’s lineup at [venue]. We are [band], [style in a few words] from [city], and we would love to play your room. [Date 1] or [date 2] would work for us. The press kit is in my signature. Would you be up for taking a look?'],
       },
       {
         h2: 'Mistakes that close doors',
@@ -178,7 +178,7 @@ export const GUIAS_BOOKING_EN: GuiaSeoEn[] = [
     faq: [
       { q: 'What time should I send it?', a: 'Weekday mornings, when venue staff are in their inbox. Avoid weekends, when they are working.' },
       { q: 'Should I attach the press kit?', a: 'A link is better. An attachment is heavy, can land in spam and goes out of date the moment you change something.' },
-      { q: 'Formal or casual tone?', a: 'In independent venues and small festivals, casual and friendly. In theatres and institutions, a slightly more formal register.' },
+      { q: 'Formal or casual tone?', a: 'In independent venues and small festivals, casual and friendly. In theaters and institutions, a slightly more formal register.' },
     ],
     relacionadas: ['how-to-get-gigs', 'how-to-make-an-epk', 'apply-to-music-festivals'],
     cta: { titulo: 'Drafts you approve', texto: 'BandManager writes each proposal in your band’s voice and waits for your go-ahead before sending.', boton: 'Try BandManager free' },
@@ -207,7 +207,7 @@ export const GUIAS_BOOKING_EN: GuiaSeoEn[] = [
     ],
     faq: [
       { q: 'When should I send the application?', a: 'As early as possible within the window. Many calls are reviewed in order, and hundreds of submissions arrive in the last few days.' },
-      { q: 'Is it worth applying without an album?', a: 'Yes, if you have a strong live show. Many festivals value the performance more than a recorded catalogue.' },
+      { q: 'Is it worth applying without an album?', a: 'Yes, if you have a strong live show. Many festivals value the performance more than a recorded catalog.' },
       { q: 'Can they ask me to play for free?', a: 'Sometimes. Decide beforehand what conditions you accept and what you ask in return: real exposure, backline or accommodation.' },
     ],
     relacionadas: ['how-to-make-an-epk', '/en/technical-rider-template', 'how-much-to-charge-for-a-gig'],
@@ -231,16 +231,16 @@ export const GUIAS_BOOKING_EN: GuiaSeoEn[] = [
         h2: 'Work out your minimum',
         parrafos: ['Your floor is the figure below which the gig costs you money. It takes three steps: add up real costs (transport, backline hire, food and sound if you provide it), add the hours it takes you across rehearsal, load-in, travel and the show, and put a value on that hour. Try it with your own numbers:'],
         calculadora: 'cache-minimo',
-        tablas: [{ titulo: 'Worked example with the calculator’s values', cabeceras: ['Item', 'Working', 'Amount'], filas: [['Show costs', 'Transport, food and hire', '€120'], ['Value of your time', '4 people × 10 hours × €10', '€400'], ['Your minimum', '120 + 400', '€520'], ['Per person', '520 ÷ 4', '€130']] }],
+        tablas: [{ titulo: 'Worked example with the calculator’s values', cabeceras: ['Item', 'Working', 'Amount'], filas: [['Show costs', 'Transport, food and hire', '$120'], ['Value of your time', '4 people × 10 hours × $10', '$400'], ['Your minimum', '120 + 400', '$520'], ['Per person', '520 ÷ 4', '$130']] }],
       },
       {
         h2: 'Which model comes out better: an example in numbers',
-        parrafos: ['Let us compare the three models against the minimum above, €520. The figures are made up to illustrate the reasoning, not data from any venue: a €450 guarantee, a door deal where the band takes €5.60 per attendee (€8 tickets and 70% after costs) and a mixed deal of €200 guaranteed plus €4 per attendee above 40.'],
+        parrafos: ['Let us compare the three models against the minimum above, $520. The figures are made up to illustrate the reasoning, not data from any venue: a $450 guarantee, a door deal where the band takes $5.60 per attendee ($8 tickets and 70% after costs) and a mixed deal of $200 guaranteed plus $4 per attendee above 40.'],
         grafico: {
-          alt: 'Line chart of what the band earns by attendance under three models. The guarantee is a flat line at 450 euros. The door deal starts at zero and rises steadily. The mix starts at 200 euros and rises above 40 attendees. A dashed line marks the 520 euro minimum: the door deal passes it at around 93 people and the mix reaches it at 120.',
-          pie: 'Example figures, not real ones. What the band earns by attendance under each model, against a €520 minimum.',
+          alt: 'Line chart of what the band earns by attendance under three models. The guarantee is a flat line at 450 dollars. The door deal starts at zero and rises steadily. The mix starts at 200 euros and rises above 40 attendees. A dashed line marks the 520 euro minimum: the door deal passes it at around 93 people and the mix reaches it at 120.',
+          pie: 'Example figures, not real ones. What the band earns by attendance under each model, against a $520 minimum.',
           ejeX: { titulo: 'People attending', etiquetas: ['0', '20', '40', '60', '80', '100', '120'] },
-          ejeY: { titulo: 'What the band earns', max: 720, unidad: '€' },
+          ejeY: { titulo: 'What the band earns', max: 720, unidad: '$' },
           series: [
             { nombre: 'Door deal', valores: [0, 112, 224, 336, 448, 560, 672], tipo: 'principal' },
             { nombre: 'Mixed', valores: [200, 200, 200, 280, 360, 440, 520], tipo: 'secundaria' },
@@ -249,7 +249,7 @@ export const GUIAS_BOOKING_EN: GuiaSeoEn[] = [
           ],
           nota: { serie: 0, indice: 5, texto: 'You cover your minimum' },
         },
-        lista: ['With a small crowd the guarantee wins, but at €450 you are already below your minimum: you would play at a loss.', 'The door deal only beats your minimum from about 93 people. If you are not sure you can bring them, it is a bet.', 'The mix secures €200 and does not reach your minimum until 120 people: good if the room fills, weak if it does not.'],
+        lista: ['With a small crowd the guarantee wins, but at $450 you are already below your minimum: you would play at a loss.', 'The door deal only beats your minimum from about 93 people. If you are not sure you can bring them, it is a bet.', 'The mix secures $200 and does not reach your minimum until 120 people: good if the room fills, weak if it does not.'],
         aviso: 'The takeaway is not that one model is better, but that with your own figures you can see where each one pays off before you answer the venue.',
       },
       {

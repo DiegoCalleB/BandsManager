@@ -39,3 +39,14 @@ export function midiDeEscala(raiz: number, notas: number[], base = 60): number[]
   const grados = [...new Set(notas.map((pc) => ((pc - r) % 12 + 12) % 12))].sort((a, b) => a - b);
   return [...grados.map((d) => tonica + d), tonica + 12];
 }
+
+/** Las siete notas del modo que mejor le sienta al acorde (mayor → jónico, con 7.ª menor → mixolidio, menor → dórico, disminuido → locrio). */
+export function escalaDelAcorde(raiz: number, tercera: number | null, quinta: number, septima: number | null): number[] {
+  const d = (pc: number | null) => (pc === null ? null : (((pc - raiz) % 12) + 12) % 12);
+  const menor = d(tercera) === 3;
+  const grados = d(quinta) === 6 ? [0, 1, 3, 5, 6, 8, 10]
+    : menor ? [0, 2, 3, 5, 7, 9, 10]
+      : d(septima) === 10 ? [0, 2, 4, 5, 7, 9, 10]
+        : [0, 2, 4, 5, 7, 9, 11];
+  return grados.map((g) => (raiz + g) % 12);
+}
