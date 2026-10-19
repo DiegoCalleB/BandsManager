@@ -13,7 +13,7 @@ tags: ["service", "system", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Regalo de pegatinas en la primera suscripción de los planes altos (De Gira y Cabeza de Cartel). Puro (sin red ni BD) para poder probarlo.
+Regalo de pegatinas en la primera suscripción ANUAL de los planes altos (De Gira y Cabeza de Cartel).
 
 ---
 

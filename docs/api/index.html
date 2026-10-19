@@ -14,7 +14,7 @@
   "info": {
     "title": "BandManager.io API",
     "version": "3.0.0",
-    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (417) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
+    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (418) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
     "license": {
       "name": "AGPL-3.0-only",
       "identifier": "AGPL-3.0-only"
@@ -9915,7 +9915,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/interesados.ts:35",
+        "x-source": "server/routes/interesados.ts:37",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter",
@@ -9938,7 +9938,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/interesados.ts:90",
+        "x-source": "server/routes/interesados.ts:108",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -9951,6 +9951,7 @@
           "paginaConcierto"
         ],
         "operationId": "getApiPublicInteresadosConfirmar",
+        "description": "Comentario en el código: Abrir el enlace solo enseña un botón: confirmar es una acción y va por POST.",
         "security": [],
         "responses": {
           "200": {
@@ -9960,7 +9961,27 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/interesados.ts:71",
+        "x-source": "server/routes/interesados.ts:77",
+        "x-autenticacion": "ninguna",
+        "x-rate-limiters": [
+          "publicoRateLimiter"
+        ]
+      },
+      "post": {
+        "tags": [
+          "paginaConcierto"
+        ],
+        "operationId": "postApiPublicInteresadosConfirmar",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/interesados.ts:89",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"

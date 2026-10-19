@@ -1,22 +1,25 @@
 import { describe, expect, it } from 'vitest';
 import { packDeLaBanda, PEGATINAS_POR_PLAN, validarEnvioPegatinas } from '../pegatinas';
 
+const anual = { estado_suscripcion: 'activo', ciclo_facturacion: 'annual' };
 const bandas = [
-  { band_id: 'band-a', plan: 'local', estado_suscripcion: 'activo' },
-  { band_id: 'band-b', plan: 'de_gira', estado_suscripcion: 'activo' },
-  { band_id: 'band-c', plan: 'cabeza_de_cartel', estado_suscripcion: 'activo' },
-  { band_id: 'band-d', plan: 'local' },
-  { band_id: 'band-e', plan: 'local', estado_suscripcion: 'cancelado' },
-  { band_id: 'band-f', plan: 'ensayo', estado_suscripcion: 'activo' },
-  { band_id: 'band-g', plan: 'promo', estado_suscripcion: 'activo' },
+  { band_id: 'band-a', plan: 'local', ...anual },
+  { band_id: 'band-b', plan: 'de_gira', ...anual },
+  { band_id: 'band-c', plan: 'cabeza_de_cartel', ...anual },
+  { band_id: 'band-d', plan: 'de_gira' },
+  { band_id: 'band-e', plan: 'de_gira', estado_suscripcion: 'cancelado', ciclo_facturacion: 'annual' },
+  { band_id: 'band-f', plan: 'ensayo', ...anual },
+  { band_id: 'band-g', plan: 'promo', ...anual },
+  { band_id: 'band-h', plan: 'de_gira', estado_suscripcion: 'activo', ciclo_facturacion: 'monthly' },
+  { band_id: 'band-i', plan: 'cabeza_de_cartel', estado_suscripcion: 'activo' },
 ];
 
 describe('packDeLaBanda', () => {
-  it('solo los planes altos con suscripción activa tienen su pack', () => {
+  it('solo los planes altos con suscripción anual activa tienen su pack', () => {
     expect(packDeLaBanda(bandas, 'band-b')).toEqual({ cantidad: 150, expres: false });
     expect(packDeLaBanda(bandas, 'band-c')).toEqual({ cantidad: 300, expres: true });
   });
-  it.each(['band-a', 'band-d', 'band-e', 'band-f', 'band-g'])('%s no tiene derecho (plan Local, sin cobro activo o plan gratuito)', (id) => {
+  it.each(['band-a', 'band-d', 'band-e', 'band-f', 'band-g', 'band-h', 'band-i'])('%s no tiene derecho (Local, sin cobro activo, plan gratuito o facturación mensual)', (id) => {
     expect(packDeLaBanda(bandas, id)).toBeNull();
   });
   it('ignora el prefijo band-/reg-, pero exige la misma banda', () => {

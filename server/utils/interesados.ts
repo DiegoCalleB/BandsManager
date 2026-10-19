@@ -93,6 +93,11 @@ export function correoBienvenida(idioma: IdiomaInteresado, urlApp: string, urlBa
       };
 }
 
+/** Página con un botón: abrir el enlace del correo no confirma, solo el clic (los escáneres de enlaces no lo hacen). */
+export function paginaConfirmarInteresado(urlAccion: string): string {
+  return `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="robots" content="noindex"><title>BandManager.io</title></head><body style="font-family:Arial,sans-serif;padding:48px 24px;text-align:center;"><p>Un último paso. / One last step.</p><form method="POST" action="${escapeHtml(urlAccion)}"><button type="submit" style="background:#f2ca50;color:#1a1a1a;font-weight:bold;border:0;padding:12px 22px;border-radius:999px;font-size:15px;cursor:pointer;">Confirmar mi email / Confirm my email</button></form></body></html>`;
+}
+
 /** Página mínima que se muestra al abrir el enlace de confirmar o de baja. */
 export function paginaInteresado(mensaje: string): string {
   return `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="robots" content="noindex"><title>BandManager.io</title></head><body style="font-family:Arial,sans-serif;padding:48px 24px;text-align:center;"><p>${escapeHtml(mensaje)}</p><p><a href="/">BandManager.io</a></p></body></html>`;

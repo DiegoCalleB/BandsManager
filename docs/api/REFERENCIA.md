@@ -2,7 +2,7 @@
 
 > Generado automáticamente por `scripts/generate-openapi.mjs` a partir del código. No se edita a mano: ejecuta `npm run docs:api`.
 
-**417 rutas HTTP** (366 declaraciones de handler; el resto son alias) en 31 dominios. Contrato máquina-legible: [`openapi.json`](./openapi.json) (OpenAPI 3.1). Visor interactivo: [`index.html`](./index.html) (hay que abrirlo en un navegador; GitHub no lo renderiza). Decisión de diseño: [ADR 0012](../adr/0012-contrato-api-openapi-por-ast.md).
+**418 rutas HTTP** (367 declaraciones de handler; el resto son alias) en 31 dominios. Contrato máquina-legible: [`openapi.json`](./openapi.json) (OpenAPI 3.1). Visor interactivo: [`index.html`](./index.html) (hay que abrirlo en un navegador; GitHub no lo renderiza). Decisión de diseño: [ADR 0012](../adr/0012-contrato-api-openapi-por-ast.md).
 
 ## Cómo leerla
 
@@ -16,7 +16,7 @@
 | Sesión (comprobada en el handler) | 6 |
 | Sesión opcional | 3 |
 | Firma o secreto | 7 |
-| Pública | 68 |
+| Pública | 69 |
 
 ## Rutas sin sesión de middleware
 
@@ -54,9 +54,10 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `POST` | `/api/public/fans` | Pública | publicoRateLimiter | ★ | [`server/routes/epk_fans.ts:828`](../../server/routes/epk_fans.ts#L828) |
 | `GET` | `/api/public/fans/contador` | Pública | publicoRateLimiter |  | [`server/routes/fans_contador.ts:19`](../../server/routes/fans_contador.ts#L19) |
 | `GET` | `/api/public/insignia` | Pública | publicoRateLimiter |  | [`server/routes/referidos.ts:76`](../../server/routes/referidos.ts#L76) |
-| `POST` | `/api/public/interesados` | Pública | publicoRateLimiter, altaRateLimiter |  | [`server/routes/interesados.ts:35`](../../server/routes/interesados.ts#L35) |
-| `GET` | `/api/public/interesados/baja` | Pública | publicoRateLimiter |  | [`server/routes/interesados.ts:90`](../../server/routes/interesados.ts#L90) |
-| `GET` | `/api/public/interesados/confirmar` | Pública | publicoRateLimiter |  | [`server/routes/interesados.ts:71`](../../server/routes/interesados.ts#L71) |
+| `POST` | `/api/public/interesados` | Pública | publicoRateLimiter, altaRateLimiter |  | [`server/routes/interesados.ts:37`](../../server/routes/interesados.ts#L37) |
+| `GET` | `/api/public/interesados/baja` | Pública | publicoRateLimiter |  | [`server/routes/interesados.ts:108`](../../server/routes/interesados.ts#L108) |
+| `GET` | `/api/public/interesados/confirmar` | Pública | publicoRateLimiter |  | [`server/routes/interesados.ts:77`](../../server/routes/interesados.ts#L77) |
+| `POST` | `/api/public/interesados/confirmar` | Pública | publicoRateLimiter |  | [`server/routes/interesados.ts:89`](../../server/routes/interesados.ts#L89) |
 | `POST` | `/api/public/musicians-waitlist` | Pública | publicoRateLimiter |  | [`server/routes/epk_fans.ts:1069`](../../server/routes/epk_fans.ts#L1069) |
 | `POST` | `/api/public/track-click` | Pública | publicoRateLimiter |  | [`server/routes/epk_fans.ts:935`](../../server/routes/epk_fans.ts#L935) |
 | `GET` | `/api/r/{code}` | Pública | publicoRateLimiter |  | [`server/routes/enlacesCortos.ts:49`](../../server/routes/enlacesCortos.ts#L49) |
@@ -481,9 +482,10 @@ Salas, festivales y contactos del CRM de booking. Los agentes (Scout, Redactor, 
 | `GET` | `/api/emails/baja` | Pública | publicoRateLimiter |  | [`server/routes/emailsCicloVida.ts:13`](../../server/routes/emailsCicloVida.ts#L13) |
 | `POST` | `/api/public/contacto-empresas` | Pública | publicoRateLimiter, consultaRateLimiter |  | [`server/routes/contactoEmpresas.ts:23`](../../server/routes/contactoEmpresas.ts#L23) |
 | `GET` | `/api/public/fans/contador` | Pública | publicoRateLimiter |  | [`server/routes/fans_contador.ts:19`](../../server/routes/fans_contador.ts#L19) |
-| `POST` | `/api/public/interesados` | Pública | publicoRateLimiter, altaRateLimiter |  | [`server/routes/interesados.ts:35`](../../server/routes/interesados.ts#L35) |
-| `GET` | `/api/public/interesados/baja` | Pública | publicoRateLimiter |  | [`server/routes/interesados.ts:90`](../../server/routes/interesados.ts#L90) |
-| `GET` | `/api/public/interesados/confirmar` | Pública | publicoRateLimiter |  | [`server/routes/interesados.ts:71`](../../server/routes/interesados.ts#L71) |
+| `POST` | `/api/public/interesados` | Pública | publicoRateLimiter, altaRateLimiter |  | [`server/routes/interesados.ts:37`](../../server/routes/interesados.ts#L37) |
+| `GET` | `/api/public/interesados/baja` | Pública | publicoRateLimiter |  | [`server/routes/interesados.ts:108`](../../server/routes/interesados.ts#L108) |
+| `GET` | `/api/public/interesados/confirmar` | Pública | publicoRateLimiter |  | [`server/routes/interesados.ts:77`](../../server/routes/interesados.ts#L77) |
+| `POST` | `/api/public/interesados/confirmar` | Pública | publicoRateLimiter |  | [`server/routes/interesados.ts:89`](../../server/routes/interesados.ts#L89) |
 | `GET` | `/directories` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:80`](../../server/routes/paginasSeo.ts#L80) |
 | `GET` | `/directories/festivals` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:82`](../../server/routes/paginasSeo.ts#L82) |
 | `GET` | `/directories/festivals/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:83`](../../server/routes/paginasSeo.ts#L83) |

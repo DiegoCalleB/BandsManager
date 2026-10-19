@@ -12,7 +12,7 @@ interface Estado {
 
 /**
  * Regalo de pegatinas de la primera suscripción de pago. Solo aparece si la banda activa tiene un plan de
- * pago con cobro activo; el servidor decide (aquí no se calcula nada).
+ * pago ANUAL con cobro activo; el servidor decide (aquí no se calcula nada).
  */
 export const RegaloPegatinas: React.FC = () => {
   const [estado, setEstado] = useState<Estado | null>(null);
@@ -65,7 +65,7 @@ export const RegaloPegatinas: React.FC = () => {
       ) : (
         <form onSubmit={enviar} className="mt-4 space-y-3">
           <p className="text-sm text-[var(--ink-2)]">
-            Por tu primera suscripción{estado.expres ? ' y con envío exprés' : ''}. Dinos adónde mandarlas.
+            Por tu suscripción anual{estado.expres ? ' y con envío exprés' : ''}. Dinos adónde mandarlas.
           </p>
           <div className="grid gap-3 sm:grid-cols-2">
             <Input required value={campos.nombre} onChange={cambiar('nombre')} maxLength={120} placeholder="Nombre de quien recibe" aria-label="Nombre" />
