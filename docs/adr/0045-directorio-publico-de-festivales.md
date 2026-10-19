@@ -1,5 +1,7 @@
 # ADR 0045: Directorio público de festivales curado, sin edición abierta
 
+> **Nota (ADR 0048):** las tablas `festivales`, `festival_ediciones` y `festival_convocatorias` se llaman ahora `catalogo_festivales`, `catalogo_festival_ediciones` y `catalogo_festival_convocatorias`.
+
 - **Estado:** Aceptada
 - **Fecha:** 2026-10-19
 - **Origen:** nueva

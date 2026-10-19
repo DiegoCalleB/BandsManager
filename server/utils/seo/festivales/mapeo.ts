@@ -1,4 +1,4 @@
-/** De las filas de Supabase (`festivales`, `festival_ediciones`, `festival_convocatorias`) a la ficha pública. Puro y probado. */
+/** De las filas de Supabase (`catalogo_festivales`, `catalogo_festival_ediciones`, `catalogo_festival_convocatorias`) a la ficha pública. Puro y probado. */
 import type { EstiloFestival, Festival, Tri } from './tipos.js';
 
 export interface FilaFestival {

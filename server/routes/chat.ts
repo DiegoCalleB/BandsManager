@@ -8,7 +8,7 @@ import { loadState, getUserFromRequestLocal, getEpkConfigForBand, getAutonomyCon
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
 import { getGlobalPitchFeedbackSummary } from "./leads.js";
-import { dbGetRegisteredBandById, dbGetEpkConfig, dbGetActiveCampaign, dbGetSongs, dbGetSetlists, dbGetTours, dbContarFans } from "../db.js";
+import { dbGetRegisteredBandById, dbGetEpkConfig, dbGetActiveCampaign, dbGetSongs, dbGetSetlists, dbGetTours, dbContarFans, dbGetPayments } from "../db.js";
 import { getTargetBandId, bandaDe } from "../utils/bandAccess.js";
 import { loadBandProfile, buildBandContextBlock, displayBandName, baseHashtags, emptyBandProfile } from "../utils/bandProfile.js";
 import { computeMusicalDna } from "../utils/musicalDna.js";
@@ -326,7 +326,8 @@ router.post("/chat", requireAuth, chatRateLimiter, async (req, res) => {
     stateSummary.musicalDna = computeMusicalDna(songsFromDb, ownBandGenre, bandMembersForDna);
 
     if (isLeader) {
-      stateSummary.payments = (state.payments || []).filter(matchBand);
+      // Los pagos viven solo en Supabase: state.payments solo se llenaba si el líder abría Finanzas antes.
+      stateSummary.payments = await dbGetPayments(userBandId).catch(() => []);
     }
 
     // Instrucciones fijas en el prompt de sistema; los datos de usuario y terceros, en el turno del usuario (OWASP LLM01).

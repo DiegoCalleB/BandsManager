@@ -51,6 +51,7 @@ Devuelve los choques visibles para el usuario (ya redactados) y programa la revi
 
 ## 🧪 Tests que lo cubren
 - `server/routes/__tests__/firmaDeFeed.test.ts`
+- `server/routes/__tests__/paymentsSoloSupabase.test.ts`
 
 ---
 

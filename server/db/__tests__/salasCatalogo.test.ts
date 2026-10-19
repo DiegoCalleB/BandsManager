@@ -71,6 +71,17 @@ describe('puertoCatalogoSupabase', () => {
     expect(filas[0].updated_at).toEqual(expect.any(String));
   });
 
+  it('un lote con salas nuevas y ya existentes no lleva created_at en ninguna (la base lo gestiona)', async () => {
+    const upsert = vi.fn().mockResolvedValue({ error: null });
+    fromMock.mockReturnValue({ upsert });
+    await puertoCatalogoSupabase.guardarSalas([
+      { id: 'nueva', clave: 'a', nombre: 'Nueva', verificada_en: null } as never,
+      { id: 'vieja', clave: 'b', nombre: 'Vieja', verificada_en: null, created_at: '2026-10-01T00:00:00Z' } as never,
+    ]);
+    const [filas] = upsert.mock.calls[0];
+    expect(filas.map((f: Record<string, unknown>) => 'created_at' in f)).toEqual([false, false]);
+  });
+
   it('no llama a la base de datos si no hay nada que guardar', async () => {
     await puertoCatalogoSupabase.guardarSalas([]);
     expect(fromMock).not.toHaveBeenCalled();

@@ -6,7 +6,7 @@
  * Depende de un puerto y de una función de descarga, así que se prueba sin red ni base de datos.
  */
 import { calcularFiabilidad, idDeSala, type CamposPublicosSala } from '../utils/salaCatalogo.js';
-import { CONSULTA_OVERPASS_SALAS, completarSala, salasDeOsm, type ElementoOsm } from '../utils/osmSalas.js';
+import { REGIONES_OSM, completarSala, consultaOverpassSalas, salasDeOsm, type ElementoOsm } from '../utils/osmSalas.js';
 import type { PuertoCatalogo, SalaAGuardar, SalaGuardada } from './catalogoSalas.js';
 
 export type PuertoImportacion = Pick<PuertoCatalogo, 'leerSalas' | 'guardarSalas'>;
@@ -77,26 +77,59 @@ export function motivoDeRed(e: unknown): string {
   return causa?.code || causa?.message ? `${base} (${causa.code ?? causa.message})` : base;
 }
 
-/** Descarga real de Overpass. Tarda: la consulta recorre toda España. Prueba cada servidor y cuenta por qué falló cada uno. */
-export function crearDescargaOsm(servidores: readonly string[] = SERVIDORES_OVERPASS, fetcher: typeof fetch = fetch, timeoutMs = 300_000): DescargarOsm {
+export interface OpcionesDescargaOsm {
+  /** Comunidades a descargar (por defecto, todas). */
+  regiones?: readonly string[];
+  /** Pausa entre comunidades, para no saturar un servicio público. */
+  pausaMs?: number;
+  /** Se llama con cada comunidad que ningún servidor pudo dar; las demás siguen. */
+  alFallarRegion?: (region: string, motivo: string) => void;
+}
+
+const pausa = (ms: number) => (ms > 0 ? new Promise<void>((r) => setTimeout(r, ms)) : Promise.resolve());
+
+/**
+ * Descarga real de Overpass, comunidad por comunidad (una consulta para toda España satura los servidores públicos:
+ * respondían 500 y 502). Cada comunidad prueba los servidores en orden. Si algunas fallan, se importa lo que sí llegó
+ * (la importación es idempotente: la próxima vez se completa); solo falla si no llegó ninguna.
+ */
+export function crearDescargaOsm(servidores: readonly string[] = SERVIDORES_OVERPASS, fetcher: typeof fetch = fetch, timeoutMs = 120_000, o: OpcionesDescargaOsm = {}): DescargarOsm {
+  const regiones = o.regiones ?? REGIONES_OSM;
+  const pausaMs = o.pausaMs ?? 3000;
   return async () => {
+    const elementos = new Map<string, ElementoOsm>();
     const fallos: string[] = [];
-    for (const url of servidores) {
-      try {
-        const r = await fetcher(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'BandManager/1.0 (https://bandmanager.io)' },
-          body: `data=${encodeURIComponent(CONSULTA_OVERPASS_SALAS)}`,
-          signal: AbortSignal.timeout(timeoutMs),
-        });
-        if (!r.ok) throw new Error(`respondió ${r.status}`);
-        return ((await r.json()) as { elements?: ElementoOsm[] }).elements ?? [];
-      } catch (e) {
-        fallos.push(`${new URL(url).host}: ${motivoDeRed(e)}`);
+    for (const [i, region] of regiones.entries()) {
+      if (i > 0) await pausa(pausaMs);
+      const motivos: string[] = [];
+      let llegaron = false;
+      for (const url of servidores) {
+        try {
+          const r = await fetcher(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'BandManager/1.0 (https://bandmanager.io)' },
+            body: `data=${encodeURIComponent(consultaOverpassSalas(region))}`,
+            signal: AbortSignal.timeout(timeoutMs),
+          });
+          if (!r.ok) throw new Error(`respondió ${r.status}`);
+          for (const el of ((await r.json()) as { elements?: ElementoOsm[] }).elements ?? []) elementos.set(`${el.type}/${el.id}`, el);
+          llegaron = true;
+          break;
+        } catch (e) {
+          motivos.push(`${new URL(url).host}: ${motivoDeRed(e)}`);
+        }
+      }
+      if (!llegaron) {
+        const motivo = motivos.join('; ');
+        fallos.push(`${region} (${motivo})`);
+        o.alFallarRegion?.(region, motivo);
       }
     }
-    throw new Error(`Overpass no respondió en ningún servidor — ${fallos.join('; ')}`);
+    if (fallos.length === regiones.length) throw new Error(`Overpass no respondió en ningún servidor — ${fallos[0]}`);
+    return [...elementos.values()];
   };
 }
 
-export const descargarOsmSalas: DescargarOsm = crearDescargaOsm();
+export const descargarOsmSalas: DescargarOsm = crearDescargaOsm(SERVIDORES_OVERPASS, fetch, 120_000, {
+  alFallarRegion: (region, motivo) => console.warn(`[Catálogo] Overpass: sin datos de ${region} esta vez (${motivo}).`),
+});

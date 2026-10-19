@@ -1,6 +1,8 @@
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 
 vi.mock('../../db/salasCatalogo.js', () => ({ puertoCatalogoSupabase: {} }));
+const importar = vi.hoisted(() => vi.fn());
+vi.mock('../importarSalasOsm.js', () => ({ importarSalasDeOsm: importar, descargarOsmSalas: vi.fn() }));
 const capturar = vi.hoisted(() => vi.fn());
 vi.mock('../../utils/errorTracking.js', () => ({ captureError: capturar }));
 
@@ -31,6 +33,7 @@ afterEach(() => {
   vi.useRealTimers();
   vi.restoreAllMocks();
   delete process.env.CATALOGO_SYNC;
+  delete process.env.CATALOGO_IMPORTAR_OSM;
 });
 
 describe('sincronizarCatalogoAhora', () => {
@@ -68,3 +71,57 @@ describe('iniciarSincronizacionDelCatalogo', () => {
     expect(vi.getTimerCount()).toBe(0);
   });
 });
+
+describe('importación de OpenStreetMap', () => {
+  const ok = { simulacion: false, elementosLeidos: 10, salasEnOsm: 5, nuevas: 5, completadas: 0, sinCambios: 0 };
+  const arrancar = () => {
+    vi.useFakeTimers();
+    process.env.CATALOGO_IMPORTAR_OSM = 'true';
+    importar.mockReset();
+    iniciarSincronizacionDelCatalogo();
+  };
+
+  it('no se lanza si CATALOGO_IMPORTAR_OSM no es true', async () => {
+    vi.useFakeTimers();
+    importar.mockReset();
+    iniciarSincronizacionDelCatalogo();
+    await vi.advanceTimersByTimeAsync(20 * 60_000);
+    expect(importar).not.toHaveBeenCalled();
+  });
+
+  it('se lanza una vez a los 15 minutos y, si sale bien, no se repite', async () => {
+    arrancar();
+    importar.mockResolvedValue(ok);
+    await vi.advanceTimersByTimeAsync(14 * 60_000);
+    expect(importar).not.toHaveBeenCalled();
+    await vi.advanceTimersByTimeAsync(2 * 60_000);
+    expect(importar).toHaveBeenCalledTimes(1);
+    await vi.advanceTimersByTimeAsync(5 * 60 * 60_000);
+    expect(importar).toHaveBeenCalledTimes(1);
+  });
+
+  it('si falla, se reintenta cada hora hasta tres veces más y se registra cada fallo', async () => {
+    arrancar();
+    importar.mockRejectedValue(new Error('Overpass no respondió en ningún servidor'));
+    await vi.advanceTimersByTimeAsync(16 * 60_000);
+    expect(importar).toHaveBeenCalledTimes(1);
+    await vi.advanceTimersByTimeAsync(60 * 60_000);
+    expect(importar).toHaveBeenCalledTimes(2);
+    await vi.advanceTimersByTimeAsync(2 * 60 * 60_000);
+    expect(importar).toHaveBeenCalledTimes(4);
+    await vi.advanceTimersByTimeAsync(5 * 60 * 60_000);
+    expect(importar).toHaveBeenCalledTimes(4);
+    // La sincronización normal también puede registrar errores (aquí el puerto es de mentira): solo cuentan los de la importación.
+    expect(capturar.mock.calls.filter((c) => c[1]?.fase === 'importarSalasOsm')).toHaveLength(4);
+  });
+
+  it('un reintento que sale bien detiene los siguientes', async () => {
+    arrancar();
+    importar.mockRejectedValueOnce(new Error('x')).mockResolvedValue(ok);
+    await vi.advanceTimersByTimeAsync(16 * 60_000 + 60 * 60_000);
+    expect(importar).toHaveBeenCalledTimes(2);
+    await vi.advanceTimersByTimeAsync(5 * 60 * 60_000);
+    expect(importar).toHaveBeenCalledTimes(2);
+  });
+});
+

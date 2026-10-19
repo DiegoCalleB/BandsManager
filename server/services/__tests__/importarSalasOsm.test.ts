@@ -64,20 +64,57 @@ describe('importarSalasDeOsm', () => {
 
 describe('crearDescargaOsm', () => {
   const respuesta = (cuerpo: unknown, status = 200) => new Response(JSON.stringify(cuerpo), { status });
+  const servidores = ['https://uno.test/api', 'https://dos.test/api'];
+  const opciones = { regiones: ['ES-MD', 'ES-GA'], pausaMs: 0 };
+  const consulta = (llamada: unknown[]) => decodeURIComponent(String((llamada[1] as { body: string }).body));
 
-  it('si el primer servidor falla, usa el siguiente', async () => {
+  it('pide cada comunidad por separado, con su código ISO, y junta los resultados', async () => {
+    const fetcher = vi.fn()
+      .mockResolvedValueOnce(respuesta({ elements: [elemento('Sala Madrid', {}, 1)] }))
+      .mockResolvedValueOnce(respuesta({ elements: [elemento('Sala Vigo', {}, 2)] }));
+    const r = await crearDescargaOsm(servidores, fetcher as unknown as typeof fetch, 1000, opciones)();
+    expect(r).toHaveLength(2);
+    expect(consulta(fetcher.mock.calls[0])).toContain('"ISO3166-2"="ES-MD"');
+    expect(consulta(fetcher.mock.calls[1])).toContain('"ISO3166-2"="ES-GA"');
+    expect(consulta(fetcher.mock.calls[0])).not.toContain('ES-GA');
+  });
+
+  it('un elemento que llega en dos comunidades cuenta una sola vez', async () => {
+    const fetcher = vi.fn().mockImplementation(async () => respuesta({ elements: [elemento('Sala Frontera', {}, 7)] }));
+    expect(await crearDescargaOsm(servidores, fetcher as unknown as typeof fetch, 1000, opciones)()).toHaveLength(1);
+  });
+
+  it('si el primer servidor falla, usa el siguiente para esa comunidad', async () => {
     const fetcher = vi.fn()
       .mockRejectedValueOnce(Object.assign(new TypeError('fetch failed'), { cause: { code: 'ECONNRESET' } }))
       .mockResolvedValueOnce(respuesta({ elements: [elemento('Sala Nueva')] }));
-    const r = await crearDescargaOsm(['https://uno.test/api', 'https://dos.test/api'], fetcher as unknown as typeof fetch)();
+    const r = await crearDescargaOsm(servidores, fetcher as unknown as typeof fetch, 1000, { regiones: ['ES-MD'], pausaMs: 0 })();
     expect(r).toHaveLength(1);
     expect(fetcher).toHaveBeenCalledTimes(2);
   });
 
-  it('si fallan todos, el error dice cuál y por qué', async () => {
+  it('si una comunidad falla en todos los servidores, importa las demás y avisa de cuál faltó', async () => {
+    const fetcher = vi.fn()
+      .mockResolvedValueOnce(respuesta({}, 502))
+      .mockResolvedValueOnce(respuesta({}, 500))
+      .mockResolvedValueOnce(respuesta({ elements: [elemento('Sala Vigo', {}, 2)] }));
+    const alFallarRegion = vi.fn();
+    const r = await crearDescargaOsm(servidores, fetcher as unknown as typeof fetch, 1000, { ...opciones, alFallarRegion })();
+    expect(r).toHaveLength(1);
+    expect(alFallarRegion).toHaveBeenCalledWith('ES-MD', 'uno.test: respondió 502; dos.test: respondió 500');
+  });
+
+  it('si no llega ninguna comunidad, falla y dice cuál servidor dio qué', async () => {
     const fetcher = vi.fn()
       .mockRejectedValueOnce(Object.assign(new TypeError('fetch failed'), { cause: { code: 'ENOTFOUND' } }))
-      .mockResolvedValueOnce(respuesta({}, 429));
-    await expect(crearDescargaOsm(['https://uno.test/api', 'https://dos.test/api'], fetcher as unknown as typeof fetch)()).rejects.toThrow(/uno\.test: fetch failed \(ENOTFOUND\); dos\.test: respondió 429/);
+      .mockResolvedValue(respuesta({}, 429));
+    await expect(crearDescargaOsm(servidores, fetcher as unknown as typeof fetch, 1000, { regiones: ['ES-MD'], pausaMs: 0 })()).rejects.toThrow(/ES-MD \(uno\.test: fetch failed \(ENOTFOUND\); dos\.test: respondió 429\)/);
+  });
+
+  it('por defecto recorre las 19 comunidades y ciudades autónomas', async () => {
+    const { REGIONES_OSM } = await import('../../utils/osmSalas.js');
+    expect(REGIONES_OSM).toHaveLength(19);
+    expect(new Set(REGIONES_OSM).size).toBe(19);
+    for (const c of REGIONES_OSM) expect(c).toMatch(/^ES-[A-Z]{2}$/);
   });
 });

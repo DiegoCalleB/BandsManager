@@ -2868,7 +2868,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/concerts.ts:411",
+        "x-source": "server/routes/concerts.ts:403",
         "x-autenticacion": "middleware"
       }
     },
@@ -2885,7 +2885,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/concerts.ts:437",
+        "x-source": "server/routes/concerts.ts:429",
         "x-autenticacion": "firma",
         "x-comprobaciones-handler": [
           "firma HMAC en la URL"
@@ -9090,7 +9090,7 @@
             "$ref": "#/components/responses/SoloLider"
           }
         },
-        "x-source": "server/routes/concerts.ts:345",
+        "x-source": "server/routes/concerts.ts:348",
         "x-autenticacion": "middleware",
         "x-requires-leader": true
       },
@@ -9127,7 +9127,7 @@
             "$ref": "#/components/responses/SoloLider"
           }
         },
-        "x-source": "server/routes/concerts.ts:357",
+        "x-source": "server/routes/concerts.ts:362",
         "x-autenticacion": "middleware",
         "x-requires-leader": true
       }
@@ -9138,7 +9138,7 @@
           "concerts"
         ],
         "operationId": "postApiPaymentsSync",
-        "description": "Comentario en el código: Sync all payments/finances with Supabase (Admin only)",
+        "description": "Comentario en el código: Devuelve los pagos de Supabase (Finanzas lo usa para refrescar). Ya no hay copia en memoria que sincronizar; se conserva la ruta por compatibilidad con el cliente.",
         "parameters": [
           {
             "$ref": "#/components/parameters/BandIdActiva"
@@ -9166,7 +9166,7 @@
             "$ref": "#/components/responses/SoloLider"
           }
         },
-        "x-source": "server/routes/concerts.ts:389",
+        "x-source": "server/routes/concerts.ts:384",
         "x-autenticacion": "middleware",
         "x-requires-leader": true
       }
@@ -9213,7 +9213,7 @@
             "$ref": "#/components/responses/SoloLider"
           }
         },
-        "x-source": "server/routes/concerts.ts:370",
+        "x-source": "server/routes/concerts.ts:373",
         "x-autenticacion": "middleware",
         "x-requires-leader": true
       }
@@ -9305,7 +9305,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/posts.ts:23",
+        "x-source": "server/routes/posts.ts:26",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -9338,7 +9338,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/posts.ts:90",
+        "x-source": "server/routes/posts.ts:86",
         "x-autenticacion": "middleware"
       }
     },
@@ -9348,7 +9348,7 @@
           "posts"
         ],
         "operationId": "postApiPostsSync",
-        "description": "Comentario en el código: Sync all social posts with Supabase",
+        "description": "Comentario en el código: Devuelve las publicaciones de Supabase (el Centro de Reels lo usa para refrescar). Ya no hay copia en memoria que sincronizar; se conserva la ruta por compatibilidad con el cliente.",
         "parameters": [
           {
             "$ref": "#/components/parameters/BandIdActiva"
@@ -9373,7 +9373,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/posts.ts:221",
+        "x-source": "server/routes/posts.ts:210",
         "x-autenticacion": "middleware"
       }
     },
@@ -9408,7 +9408,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/posts.ts:242",
+        "x-source": "server/routes/posts.ts:228",
         "x-autenticacion": "middleware"
       }
     },
@@ -9451,7 +9451,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/posts.ts:35",
+        "x-source": "server/routes/posts.ts:40",
         "x-autenticacion": "middleware"
       },
       "delete": {
@@ -9492,7 +9492,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/posts.ts:109",
+        "x-source": "server/routes/posts.ts:101",
         "x-autenticacion": "middleware"
       }
     },
@@ -11369,7 +11369,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/posts.ts:130",
+        "x-source": "server/routes/posts.ts:118",
         "x-autenticacion": "middleware"
       }
     },
@@ -11404,7 +11404,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/posts.ts:143",
+        "x-source": "server/routes/posts.ts:131",
         "x-autenticacion": "middleware"
       }
     },
@@ -11447,7 +11447,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/posts.ts:175",
+        "x-source": "server/routes/posts.ts:163",
         "x-autenticacion": "middleware"
       }
     },
@@ -11490,7 +11490,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/posts.ts:189",
+        "x-source": "server/routes/posts.ts:177",
         "x-autenticacion": "middleware"
       }
     },
@@ -11525,7 +11525,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/posts.ts:208",
+        "x-source": "server/routes/posts.ts:196",
         "x-autenticacion": "middleware"
       }
     },
@@ -13832,7 +13832,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/chat.ts:521",
+        "x-source": "server/routes/chat.ts:522",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"

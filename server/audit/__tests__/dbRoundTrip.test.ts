@@ -13,13 +13,14 @@ const SALTADAS_ACEPTADAS: Record<string, string> = {
   data_change_history: 'registro append-only alimentado por triggers; no se edita',
   enlaces_bandas_amigas: 'CHECK en plataforma: el valor genérico de prueba no es válido por diseño',
   metricas_bandas_amigas: 'CHECK en fuente y periodo (YYYY-MM): el valor genérico de prueba no es válido por diseño',
-  festivales: 'CHECK en estado_revision: el valor genérico de prueba no es válido por diseño; la cubre server/migrations/__tests__/festivales.test.ts',
-  festival_ediciones: 'CHECK en anio: el valor genérico de prueba no es válido por diseño; la cubre server/migrations/__tests__/festivales.test.ts',
-  festival_convocatorias: 'CHECK en admite_independientes: el valor genérico de prueba no es válido por diseño; la cubre server/migrations/__tests__/festivales.test.ts',
-  salas_catalogo: 'CHECK en nivel (sin_verificar, probable, verificada): el valor genérico de prueba no es válido por diseño; la cubre server/migrations/__tests__/catalogoSalas.test.ts',
-  festivales: 'CHECK en estado_revision: el valor genérico de prueba no es válido por diseño',
-  festival_ediciones: 'CHECK en anio: el valor genérico de prueba no es válido por diseño',
-  festival_convocatorias: 'CHECK en admite_independientes: el valor genérico de prueba no es válido por diseño',
+  catalogo_festivales: 'CHECK en estado_revision: el valor genérico de prueba no es válido por diseño; la cubre server/migrations/__tests__/festivales.test.ts',
+  catalogo_festival_ediciones: 'CHECK en anio: el valor genérico de prueba no es válido por diseño; la cubre server/migrations/__tests__/festivales.test.ts',
+  catalogo_festival_convocatorias: 'CHECK en admite_independientes: el valor genérico de prueba no es válido por diseño; la cubre server/migrations/__tests__/festivales.test.ts',
+  catalogo_salas: 'CHECK en nivel (sin_verificar, probable, verificada): el valor genérico de prueba no es válido por diseño; la cubre server/migrations/__tests__/catalogoSalas.test.ts',
+  catalogo_generos: 'CHECK padre_id <> id: el valor genérico de prueba es el mismo en ambas columnas; la cubre server/migrations/__tests__/catalogoGlobal.test.ts',
+  catalogo_ingestas: 'CHECK en estado: el valor genérico de prueba no es válido por diseño; la cubre server/migrations/__tests__/catalogoGlobal.test.ts',
+  catalogo_staging: 'CHECK en estado: el valor genérico de prueba no es válido por diseño; la cubre server/migrations/__tests__/catalogoGlobal.test.ts',
+  catalogo_supresion: 'CHECK en email_sha256 (64 hex): el valor genérico de prueba no es válido por diseño; la cubre server/migrations/__tests__/catalogoGlobal.test.ts',
 };
 
 describe('round-trip de guardado en BD', () => {
