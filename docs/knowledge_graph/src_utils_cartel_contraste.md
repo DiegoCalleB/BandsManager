@@ -26,6 +26,7 @@ _Sin dependencias salientes directas._
 - [[src_utils_cartel_paleta|src/utils/cartel/paleta.ts]] *(from #service)*
 - [[src_utils_cartel_papel|src/utils/cartel/papel.ts]] *(from #service)*
 - [[src_utils_cartel_render|src/utils/cartel/render.ts]] *(from #service)*
+- [[src_utils_cartel_velo|src/utils/cartel/velo.ts]] *(from #service)*
 
 ---
 

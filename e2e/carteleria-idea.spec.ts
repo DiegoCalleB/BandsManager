@@ -26,7 +26,7 @@ test('un ejemplo rellena la idea y viaja al generar el fondo', async ({ page }) 
   await page.getByRole('button', { name: 'Rock de carretera' }).click();
   await expect(page.getByLabel('¿Qué se ve en el cartel?')).toHaveValue(/guitarra con alas/);
   // Los detalles se abren solos cuando ya traen algo: no se esconde lo que hay escrito.
-  await expect(page.getByLabel('Colores')).toHaveValue(/Rojo oxidado/);
+  await expect(page.getByLabel('Colores', { exact: true })).toHaveValue(/Rojo oxidado/);
   await page.getByRole('button', { name: 'Pintar fondo' }).click();
   await expect(page.getByRole('button', { name: /Fondo con IA 1/ })).toHaveAttribute('aria-pressed', 'true', { timeout: 15_000 });
   const pedido = fondoPedido(peticiones);
@@ -67,4 +67,21 @@ test('el boceto sube como JPEG, se usa al generar y se puede quitar', async ({ p
   await page.getByRole('button', { name: 'Quitar boceto' }).click();
   await expect(page.getByAltText('Tu boceto')).toHaveCount(0);
   await expect.poll(() => peticiones.some((p) => p.ruta.endsWith('/cartel/idea') && p.metodo === 'DELETE')).toBe(true);
+});
+
+test('«La IA dibuja el título y la fecha» viaja al pedir el fondo y se puede desmarcar', async ({ page }) => {
+  const { peticiones } = await abrirCarteleria(page);
+  await abrirIa(page);
+  const casilla = page.getByLabel(/La IA dibuja el título y la fecha/);
+  await expect(casilla).toBeChecked();
+  await page.getByRole('button', { name: 'Pintar fondo' }).click();
+  await expect(page.getByRole('button', { name: /Fondo con IA 1/ })).toHaveAttribute('aria-pressed', 'true', { timeout: 15_000 });
+  expect(fondoPedido(peticiones).conTexto).toBe(true);
+  expect(fondoPedido(peticiones).encuadre).toBe('sangre');
+});
+
+test('con varias bandas en el bolo no se ofrece que la IA dibuje las letras', async ({ page }) => {
+  await abrirCarteleria(page, { compartido: true });
+  await abrirIa(page);
+  await expect(page.getByLabel(/La IA dibuja el título y la fecha/)).toHaveCount(0);
 });

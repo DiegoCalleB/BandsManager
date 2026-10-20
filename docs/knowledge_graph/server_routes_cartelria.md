@@ -40,6 +40,7 @@ Cartelería: el cartel de un bolo.
 - [[src_utils_cartel_config|src/utils/cartel/config.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_formatos|src/utils/cartel/formatos.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_idea|src/utils/cartel/idea.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_cartel_texto|src/utils/cartel/texto.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
