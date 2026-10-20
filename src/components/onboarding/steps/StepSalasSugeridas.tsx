@@ -3,6 +3,7 @@ import { MapPin, Check } from "lucide-react";
 import { Button, Chip, EmptyState, Skeleton } from "../../ui";
 import { useSalasSugeridasStep } from "../wizard/hooks/useSalasSugeridasStep";
 import type { SugerenciaSala } from "../../../services/apiCatalogo";
+import { LogoSala } from "../../booking/catalogo/LogoSala";
 
 interface StepSalasSugeridasProps {
   /** Ciudad base y género que la banda ha escrito en el paso de identidad. */
@@ -78,6 +79,7 @@ export const StepSalasSugeridas: React.FC<StepSalasSugeridasProps> = ({ city, ge
                   <span className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-[var(--r-pill)] ${elegida ? "bg-[var(--acc)] text-[var(--on-acc)]" : "bg-[var(--sunken)]"}`}>
                     {elegida && <Check className="h-3 w-3" aria-hidden />}
                   </span>
+                  <LogoSala nombre={s.nombre} website={s.website} className="h-9 w-9" />
                   <span className="min-w-0 flex-1 space-y-1.5">
                     <span className="block truncate text-sm font-semibold text-[var(--ink)]">{s.nombre}</span>
                     <span className="block truncate text-xs text-[var(--ink-2)]">{resumenDeSala(s)}</span>

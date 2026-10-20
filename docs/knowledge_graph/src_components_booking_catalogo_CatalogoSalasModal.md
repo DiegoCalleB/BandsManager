@@ -18,6 +18,7 @@ Exporta: CatalogoSalasModal.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_booking_catalogo_LogoSala|src/components/booking/catalogo/LogoSala.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_catalogo_useCatalogoSalas|src/components/booking/catalogo/useCatalogoSalas.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*

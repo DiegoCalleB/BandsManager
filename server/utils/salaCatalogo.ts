@@ -277,23 +277,29 @@ export function consolidarCampos(fichas: CamposPublicosSala[]): CamposPublicosSa
  * huecos. Una sala sin verificar sí se actualiza con el consenso nuevo.
  */
 export function fusionarConExistente(existente: Partial<CamposPublicosSala> & { nivel?: NivelSala }, nuevo: CamposPublicosSala): CamposPublicosSala {
-  if (existente.nivel !== 'verificada') return nuevo;
-  const mantener = <K extends keyof CamposPublicosSala>(k: K): CamposPublicosSala[K] =>
-    (existente[k] !== null && existente[k] !== undefined && existente[k] !== '' ? existente[k] : nuevo[k]) as CamposPublicosSala[K];
+  const vacio = (v: unknown) => v === null || v === undefined || v === '';
+  const verificada = existente.nivel === 'verificada';
+  // Una sala verificada conserva lo que ya tiene. En el resto manda lo que traen los leads, pero lo que los leads no traen no
+  // se borra: el catálogo también se alimenta de otras fuentes (OpenStreetMap, directorios, la web de la sala) y la sincronización
+  // diaria no debe deshacerlo.
+  const elegir = <K extends keyof CamposPublicosSala>(k: K): CamposPublicosSala[K] => {
+    const [primero, segundo] = verificada ? [existente[k], nuevo[k]] : [nuevo[k], existente[k]];
+    return (!vacio(primero) ? primero : !vacio(segundo) ? segundo : nuevo[k]) as CamposPublicosSala[K];
+  };
   return {
     clave: nuevo.clave,
-    place_id: mantener('place_id'),
-    nombre: mantener('nombre'),
-    ciudad: mantener('ciudad'),
-    region: mantener('region'),
-    direccion: mantener('direccion'),
-    tipo: mantener('tipo'),
-    aforo: mantener('aforo'),
-    genero: mantener('genero'),
-    website: mantener('website'),
-    instagram: mantener('instagram'),
-    email_contacto: mantener('email_contacto'),
-    telefono: mantener('telefono'),
+    place_id: elegir('place_id'),
+    nombre: elegir('nombre'),
+    ciudad: elegir('ciudad'),
+    region: elegir('region'),
+    direccion: elegir('direccion'),
+    tipo: elegir('tipo'),
+    aforo: elegir('aforo'),
+    genero: elegir('genero'),
+    website: elegir('website'),
+    instagram: elegir('instagram'),
+    email_contacto: elegir('email_contacto'),
+    telefono: elegir('telefono'),
   };
 }
 

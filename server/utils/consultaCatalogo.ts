@@ -5,6 +5,7 @@
  * añadirla a su agenda (`leadDesdeSala`), que es la acción consciente. Una sala marcada «no contactar» no
  * aparece ni se puede añadir.
  */
+import { logoDeSala } from '../../src/utils/logoDeSala.js';
 import { claveSala, normalizarTexto, type NivelSala } from './salaCatalogo.js';
 import type { SalaGuardada } from '../services/catalogoSalas.js';
 
@@ -162,6 +163,7 @@ export function leadDesdeSala(s: SalaGuardada, idLead: string, bandId: string): 
     aforo: s.aforo ?? 0,
     genero: s.genero ?? '',
     website: s.website ?? undefined,
+    imagen_url: logoDeSala(s.website) ?? undefined,
     instagram: s.instagram ?? undefined,
     email_contacto: s.email_contacto ?? '',
     telefono: s.telefono ?? undefined,

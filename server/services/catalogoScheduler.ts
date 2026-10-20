@@ -8,11 +8,14 @@
  * Primera pasada unos minutos tras arrancar (los despliegues son frecuentes y un temporizador de 24 h nunca llegaría a
  * disparar) y después cada `CATALOGO_SYNC_MS` (24 h por defecto). `CATALOGO_SYNC=false` la apaga.
  */
-import { puertoCatalogoSupabase, puertoVerificacionSupabase } from "../db/salasCatalogo.js";
+import { puertoCatalogoSupabase, puertoEnriquecimientoWebSupabase, puertoVerificacionSupabase } from "../db/salasCatalogo.js";
 import { captureError } from "../utils/errorTracking.js";
 import { sincronizarCatalogo, type InformeCatalogo } from "./catalogoSalas.js";
 import { crearConsultaMaps } from "./consultaMapsSala.js";
+import { datosDeWebSala } from "../utils/datosDeWebSala.js";
+import { enriquecerSalasDesdeSuWeb } from "./enriquecerSalasDesdeSuWeb.js";
 import { importarSalasDeBandflow } from "./importarSalasBandflow.js";
+import { leerWebDeSala } from "./leerWebDeSala.js";
 import { descargarOsmSalas, importarSalasDeOsm } from "./importarSalasOsm.js";
 import { verificarSalasEnMaps } from "./verificarSalasEnMaps.js";
 
@@ -36,6 +39,7 @@ export async function sincronizarCatalogoAhora(sincronizar: () => Promise<Inform
         `${r.leadsEnlazados} leads enlazados. Verificadas ${r.porNivel.verificada}, probables ${r.porNivel.probable}.`,
     );
     await verificarEnMapsAhora();
+    await enriquecerDesdeLaWebAhora();
     return r;
   } catch (e) {
     console.warn("[Catálogo] La sincronización falló:", e instanceof Error ? e.message : e);
@@ -80,6 +84,24 @@ export async function importarSalasOsmAhora(): Promise<boolean> {
     console.warn("[Catálogo] La importación de OSM falló:", e instanceof Error ? e.message : e);
     captureError(e, { fase: "importarSalasOsm" });
     return false;
+  }
+}
+
+/**
+ * Tras cada sincronización, completa unas pocas salas con lo que dice su propia web (Instagram, email de rol, teléfono fijo, género):
+ * las que más tiempo llevan sin revisarse. Solo rellena huecos. `CATALOGO_ENRIQUECER_WEB=false` la apaga. Nunca lanza.
+ */
+export async function enriquecerDesdeLaWebAhora(): Promise<void> {
+  if (process.env.CATALOGO_ENRIQUECER_WEB === "false") return;
+  try {
+    const r = await enriquecerSalasDesdeSuWeb({ puerto: puertoEnriquecimientoWebSupabase, leerWeb: leerWebDeSala, extraer: datosDeWebSala, pausaMs: 1000 });
+    if (r.revisadas > 0) {
+      const c = r.camposRellenados;
+      console.log(`[Catálogo] Enriquecimiento desde la web: ${r.revisadas} salas revisadas (${r.sinWeb} sin web legible), ${r.completadas} completadas (${c.instagram} Instagram, ${c.email_contacto} email, ${c.telefono} teléfono, ${c.genero} género).`);
+    }
+  } catch (e) {
+    console.warn("[Catálogo] El enriquecimiento desde la web falló:", e instanceof Error ? e.message : e);
+    captureError(e, { fase: "enriquecerSalasDesdeSuWeb" });
   }
 }
 

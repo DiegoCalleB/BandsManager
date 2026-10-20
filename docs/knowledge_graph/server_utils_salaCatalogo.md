@@ -30,8 +30,10 @@ Catálogo compartido de salas: reglas puras (sin red ni base de datos).
 - [[server_services_consultaCatalogo|server/services/consultaCatalogo.ts]] *(from #service)*
 - [[server_services_importarSalasBandflow|server/services/importarSalasBandflow.ts]] *(from #service)*
 - [[server_services_importarSalasOsm|server/services/importarSalasOsm.ts]] *(from #service)*
+- [[server_services_leerWebDeSala|server/services/leerWebDeSala.ts]] *(from #service)*
 - [[server_utils_bandflowSalas|server/utils/bandflowSalas.ts]] *(from #service)*
 - [[server_utils_consultaCatalogo|server/utils/consultaCatalogo.ts]] *(from #service)*
+- [[server_utils_datosDeWebSala|server/utils/datosDeWebSala.ts]] *(from #service)*
 - [[server_utils_estadoNegocio|server/utils/estadoNegocio.ts]] *(from #service)*
 - [[server_utils_instagramEnWeb|server/utils/instagramEnWeb.ts]] *(from #service)*
 - [[server_utils_osmSalas|server/utils/osmSalas.ts]] *(from #service)*

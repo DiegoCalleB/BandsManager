@@ -21,6 +21,7 @@ export async function anadirSalaDelCatalogo(salaId: string): Promise<ResultadoAn
 export interface SugerenciaSala {
   id: string;
   nombre: string;
+  website: string | null;
   ciudad: string | null;
   region: string | null;
   tipo: string;

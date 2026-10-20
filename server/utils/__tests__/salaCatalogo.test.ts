@@ -360,3 +360,24 @@ describe('recintos masivos: no son para una banda que busca salas', () => {
     expect(esRecintoMasivo({ nombre: 'Razzmatazz (Sala 2)', aforo: 2000 })).toBe(false);
   });
 });
+
+describe('fusionarConExistente: la sincronización no borra lo que aportaron otras fuentes', () => {
+  const nuevo = (extra: Partial<CamposPublicosSala> = {}): CamposPublicosSala => ({
+    clave: 'nc:alfa|madrid', place_id: null, nombre: 'Alfa', ciudad: 'Madrid', region: null, direccion: null, tipo: 'sala', aforo: null, genero: null,
+    website: null, instagram: null, email_contacto: null, telefono: null, ...extra,
+  });
+
+  it('en una sala sin verificar, lo que traen los leads manda y lo que no traen se conserva', () => {
+    const r = fusionarConExistente({ nivel: 'sin_verificar', aforo: 300, website: 'https://osm.example/', genero: 'Rock' }, nuevo({ website: 'https://banda.example/' }));
+    expect(r).toMatchObject({ website: 'https://banda.example/', aforo: 300, genero: 'Rock' });
+  });
+
+  it('en una verificada, lo que ya tiene manda', () => {
+    const r = fusionarConExistente({ nivel: 'verificada', website: 'https://verificada.example/' }, nuevo({ website: 'https://banda.example/', aforo: 100 }));
+    expect(r).toMatchObject({ website: 'https://verificada.example/', aforo: 100 });
+  });
+
+  it('sin nada en ninguno, queda vacío', () => {
+    expect(fusionarConExistente({ nivel: 'probable' }, nuevo()).aforo).toBeNull();
+  });
+});

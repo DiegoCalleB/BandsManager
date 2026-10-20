@@ -20,6 +20,7 @@ Consulta del catálogo compartido de salas (fase 2): reglas puras, sin base de d
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_services_catalogoSalas|server/services/catalogoSalas.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_salaCatalogo|server/utils/salaCatalogo.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_logoDeSala|src/utils/logoDeSala.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

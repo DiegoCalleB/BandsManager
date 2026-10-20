@@ -2,6 +2,7 @@ import { Check, Plus, Search, X } from 'lucide-react';
 import { ModalPortal } from '../../common/ModalPortal';
 import { Button, Chip, EmptyState, IconButton, Input, Select, Skeleton } from '../../ui';
 import type { SalaDelCatalogo } from '../../../services/apiCatalogo';
+import { LogoSala } from './LogoSala';
 import { useCatalogoSalas } from './useCatalogoSalas';
 
 interface CatalogoSalasModalProps {
@@ -85,6 +86,7 @@ export function CatalogoSalasModal({ isOpen, onClose }: CatalogoSalasModalProps)
                     const sumando = anadiendo.has(s.id);
                     return (
                       <li key={s.id} className="flex items-start gap-3 rounded-[var(--r-m)] bg-[var(--bg)] p-3.5">
+                        <LogoSala nombre={s.nombre} website={s.website} />
                         <div className="min-w-0 flex-1 space-y-1.5">
                           <p className="truncate text-sm font-semibold">{s.nombre}</p>
                           <p className="truncate text-xs text-[var(--ink-2)]">{resumen(s)}</p>
