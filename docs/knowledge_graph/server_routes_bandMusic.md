@@ -27,6 +27,7 @@ Escucha y Spotify en lote para las bandas de la cuenta. Todo va acotado a la ban
 - [[server_services_metricasBandaService|server/services/metricasBandaService.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_musicPreviewService|server/services/musicPreviewService.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_spotifyService|server/services/spotifyService.ts]] *(Layer: #service, Domain: #system)*
+- [[server_services_trabajoMetricas|server/services/trabajoMetricas.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_enlacesBandas|server/utils/enlacesBandas.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_metricasBanda|server/utils/metricasBanda.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_redesBanda|server/utils/redesBanda.ts]] *(Layer: #service, Domain: #system)*
