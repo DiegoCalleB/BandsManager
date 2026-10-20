@@ -100,6 +100,7 @@ Exporta: rolDeClaveSupabase, esSupabaseNoConfigurado, getSupabase, normalizePlan
 - `server/db/__tests__/esSupabaseNoConfigurado.test.ts`
 - `server/db/__tests__/rolClaveSupabase.test.ts`
 - `server/routes/__tests__/billing.test.ts`
+- `server/routes/__tests__/billingCicloFacturacion.test.ts`
 - `server/routes/__tests__/buildAvailableBandsForUser.test.ts`
 - `server/services/__tests__/emailAgentClient.test.ts`
 - `server/services/__tests__/stemWebhookAndLocks.test.ts`

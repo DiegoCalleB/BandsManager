@@ -29,6 +29,11 @@ Exporta: FormularioInteres.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/components/landing/__tests__/FormularioInteres.test.tsx`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

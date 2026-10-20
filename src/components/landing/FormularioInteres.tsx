@@ -19,6 +19,11 @@ export const FormularioInteres: React.FC<Props> = ({ es }) => {
 
   const enviar = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!acepta) {
+      setMensajeError(es ? 'Marca la casilla para que podamos escribirte.' : 'Tick the box so we can write to you.');
+      setEstado('error');
+      return;
+    }
     setEstado('enviando');
     try {
       const r = await fetch('/api/public/interesados', {
@@ -68,7 +73,7 @@ export const FormularioInteres: React.FC<Props> = ({ es }) => {
           placeholder={es ? 'tu@email.com' : 'you@email.com'}
           className="h-11 min-w-0 flex-1 rounded-[var(--r-pill)] bg-[var(--surface)] px-4 text-sm text-[var(--ink)] placeholder:text-[var(--ink-2)] focus:outline-none"
         />
-        <Button type="submit" variant="neutral" size="md" disabled={estado === 'enviando' || !acepta}>
+        <Button type="submit" variant="neutral" size="md" disabled={estado === 'enviando'}>
           <Mail className="size-4" aria-hidden />
           {es ? 'Avísame' : 'Notify me'}
         </Button>

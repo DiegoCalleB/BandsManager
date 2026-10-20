@@ -42,6 +42,7 @@ Facturación con Stripe: checkout, portal de cliente, webhook, confirmación de 
 
 ## 🧪 Tests que lo cubren
 - `server/routes/__tests__/billing.test.ts`
+- `server/routes/__tests__/billingCicloFacturacion.test.ts`
 - `server/routes/__tests__/billingSuscripcionHabilitada.test.ts`
 - `server/routes/__tests__/codeqlPR235Rutas.test.ts`
 - `server/routes/__tests__/stripeWebhookFiabilidad.test.ts`
