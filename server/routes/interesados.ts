@@ -26,6 +26,8 @@ import {
 
 const router = express.Router();
 
+const nombreOrigen = (o?: string | null) => (o === 'tfm' ? 'landing TFM' : 'landing oficial');
+
 /** El alta manda un correo: tope más estricto que el de los formularios públicos en general. */
 const altaRateLimiter = createRateLimiter({
   nombre: 'interesados-alta',
@@ -47,8 +49,9 @@ router.post('/api/public/interesados', publicoRateLimiter, altaRateLimiter, asyn
     }
 
     const idioma = idiomaInteresado(req.body?.idioma);
-    const interesado = await dbAltaInteresado(email, idioma, 'landing');
-    if (interesado.nuevo) void avisarAlta({ tipo: 'espera', email, origen: 'landing oficial' });
+    const origen = req.body?.origen === 'tfm' ? 'tfm' : 'landing';
+    const interesado = await dbAltaInteresado(email, idioma, origen);
+    if (interesado.nuevo) void avisarAlta({ tipo: 'espera', email, origen: nombreOrigen(origen) });
     // Ya confirmado o dado de baja: no se le vuelve a escribir (la baja se respeta siempre).
     if (interesado.confirmado_at || interesado.baja_at) return hecho();
 
@@ -91,7 +94,7 @@ router.post('/api/public/interesados/confirmar', publicoRateLimiter, async (req,
     const interesado = await interesadoDelEnlace('confirmar', { ...(req.body ?? {}), ...req.query });
     if (!interesado) return res.status(400).type('html').send(ENLACE_NO_VALIDO);
     if (await dbConfirmarInteresado(interesado.id)) {
-      void avisarAlta({ tipo: 'espera_confirmada', email: interesado.email, origen: 'landing oficial' });
+      void avisarAlta({ tipo: 'espera_confirmada', email: interesado.email, origen: nombreOrigen(interesado.origen) });
       const base = getProductionAppUrl(process.env.APP_URL);
       const idioma = idiomaInteresado(interesado.idioma);
       const correo = correoBienvenida(idioma, base, urlInteresado(base, 'baja', interesado.id));

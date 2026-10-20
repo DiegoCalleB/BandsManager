@@ -15,7 +15,7 @@ describe('FormularioInteres', () => {
     vi.unstubAllGlobals();
   });
 
-  const rellenar = (email = 'ana@x.com') => fireEvent.change(document.getElementById('interes-email')!, { target: { value: email } });
+  const rellenar = (email = 'ana@x.com') => fireEvent.change(screen.getByLabelText('Email'), { target: { value: email } });
 
   it('el botón siempre se puede pulsar: sin casilla no envía y dice qué falta', async () => {
     render(<FormularioInteres es />);
@@ -47,5 +47,14 @@ describe('FormularioInteres', () => {
     fireEvent.click(screen.getByRole('button', { name: /Avísame/ }));
     expect((await screen.findByRole('alert')).textContent).toMatch(/Servicio caído/);
     expect((screen.getByRole('button', { name: /Avísame/ }) as HTMLButtonElement).disabled).toBe(false);
+  });
+
+  it('manda de qué landing viene el alta', async () => {
+    render(<FormularioInteres es origen="tfm" />);
+    rellenar();
+    fireEvent.click(screen.getByRole('checkbox'));
+    fireEvent.click(screen.getByRole('button', { name: /Avísame/ }));
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body).origen).toBe('tfm');
   });
 });

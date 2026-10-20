@@ -5,6 +5,9 @@ import { Button } from './ui';
 import { useLanguage, SupportedLanguage } from '../context/idioma';
 import { LandingChatWidget } from './LandingChatWidget';
 import { PreciosTfm } from './landing/PreciosTfm';
+import { FuncionesTfm } from './landing/FuncionesTfm';
+import { FormularioInteres } from './landing/FormularioInteres';
+import { Captura } from './landing/Captura';
 
 interface PublicTfmLandingProps {
   onEntrar: () => void;
@@ -15,47 +18,6 @@ const LANG_OPTIONS: { code: SupportedLanguage; label: string }[] = [
   { code: 'en', label: 'English' },
 ];
 
-const Par: React.FC<{
-  src: string;
-  alt: string;
-  ancho: number;
-  alto: number;
-  eager?: boolean;
-  className?: string;
-}> = ({ src, alt, ancho, alto, eager, className = '' }) => (
-  <>
-    {(['light', 'dark'] as const).map((t) => (
-      <img
-        key={t}
-        src={`/landing/${src}-${t}.jpg`}
-        alt={t === 'light' ? alt : ''}
-        aria-hidden={t === 'dark' ? true : undefined}
-        width={ancho}
-        height={alto}
-        loading={eager ? 'eager' : 'lazy'}
-        decoding="async"
-        className={`shot-${t} h-auto w-full ${className}`}
-      />
-    ))}
-  </>
-);
-
-const Captura: React.FC<{
-  nombre: string;
-  movil: string;
-  alt: string;
-  eager?: boolean;
-}> = ({ nombre, movil, alt, eager }) => (
-  <>
-    <span className="hidden overflow-hidden rounded-[var(--r-l)] bg-[var(--surface)] sm:block">
-      <Par src={nombre} alt={alt} ancho={1040} alto={800} eager={eager} />
-    </span>
-    <span className="mx-auto block w-64 overflow-hidden rounded-[var(--r-l)] bg-[var(--surface)] sm:hidden">
-      <Par src={movil} alt={alt} ancho={390} alto={844} eager={eager} />
-    </span>
-  </>
-);
-
 export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) => {
   const { language, setLanguage } = useLanguage();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -63,7 +25,7 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
   const es = language === 'es';
 
   useEffect(() => {
-    document.title = 'BandManager.io · Demostración TFM';
+    document.title = 'BandManager.io · Gestión de bandas y giras';
   }, []);
 
   const handleLangChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -124,39 +86,46 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
                 height={32}
                 className="size-8 rounded-[var(--r-s)]"
               />
-              <span className="font-display text-base font-bold tracking-tight">BandManager</span>
+              <span className="hidden font-display text-base font-bold tracking-tight sm:inline">BandManager</span>
             </a>
-            <span className="rounded-[var(--r-pill)] bg-[var(--acc)]/10 px-2.5 py-0.5 text-xs font-bold text-[var(--ink)]">
-              TFM Demo Edition
-            </span>
           </div>
 
           <nav aria-label="Secciones" className="hidden items-center gap-6 text-sm text-[var(--ink-2)] md:flex">
-            <a href="#escrow" className="hover:text-[var(--ink)]">{es ? 'Contratos y Escrow' : 'Contracts y Escrow'}</a>
-            <a href="#multibanda-iris" className="hover:text-[var(--ink)]">{es ? 'Multibanda e Iris' : 'Multi-band e Iris'}</a>
-            <a href="#como-funciona" className="hover:text-[var(--ink)]">{es ? 'Flujo de Trabajo' : 'Workflow'}</a>
-            <a href="#planes" className="hover:text-[var(--ink)]">{es ? 'Planes' : 'Pricing'}</a>
+            <a href="#funciones" className="hover:text-[var(--ink)]">{es ? 'Funciones' : 'Features'}</a>
+            <a href="#como-funciona" className="hover:text-[var(--ink)]">{es ? 'Cómo funciona' : 'How it works'}</a>
+            <a href="#multibanda-iris" className="hover:text-[var(--ink)]">{es ? 'Multibanda e Iris' : 'Multi-band and Iris'}</a>
             <a href="#preguntas" className="hover:text-[var(--ink)]">{es ? 'Preguntas' : 'FAQs'}</a>
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <a
+              href="#planes"
+              className="inline-flex h-9 items-center rounded-[var(--r-pill)] bg-[var(--sunken)] px-3 text-sm font-semibold text-[var(--ink)] transition-ui hover:brightness-95 sm:h-10 sm:px-4"
+            >
+              {es ? 'Planes' : 'Pricing'}
+            </a>
             <select
               data-raw
               value={language === 'es' || language === 'en' ? language : 'es'}
               onChange={handleLangChange}
               aria-label={es ? 'Idioma' : 'Language'}
-              className="cursor-pointer rounded-[var(--r-pill)] bg-[var(--surface)] px-3 py-1.5 text-xs font-medium text-[var(--ink-2)] transition-ui hover:text-[var(--ink)] focus:outline-none"
+              className="cursor-pointer rounded-[var(--r-pill)] bg-[var(--surface)] px-2 py-1.5 text-xs font-medium text-[var(--ink-2)] transition-ui hover:text-[var(--ink)] focus:outline-none sm:px-3"
             >
               {LANG_OPTIONS.map((l) => (
                 <option key={l.code} value={l.code}>{l.label}</option>
               ))}
             </select>
 
-            <Button variant="primary" size="md" onClick={onEntrar} id="landing-entrar-tfm">
-              {es ? 'Acceder a Demo' : 'Access Demo'}
+            <Button variant="primary" size="sm" onClick={onEntrar} id="landing-entrar-tfm">
+              {es ? 'Acceder' : 'Log in'}
             </Button>
           </div>
         </div>
+        <nav aria-label={es ? 'Acceso rápido' : 'Quick access'} className="flex gap-2 overflow-x-auto px-4 pb-2 text-sm md:hidden [scrollbar-width:none]">
+          {([['#funciones', es ? 'Funciones' : 'Features'], ['#como-funciona', es ? 'Cómo funciona' : 'How it works'], ['#preguntas', es ? 'Preguntas' : 'FAQs'], ['#avisame', es ? 'Avísame' : 'Notify me']] as const).map(([href, texto]) => (
+            <a key={href} href={href} className="shrink-0 rounded-[var(--r-pill)] bg-[var(--surface)] px-3 py-1 text-[var(--ink-2)]">{texto}</a>
+          ))}
+        </nav>
       </header>
 
       <main id="contenido-tfm">
@@ -167,7 +136,7 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
               <ShieldCheck className="size-3.5 text-[var(--ok)]" aria-hidden />
               {es
                 ? 'Sistema de Gestión de Giras y Contratos con Garantía de Depósito'
-                : 'Tour Management y Digital Contracts with Deposit Escrow Guarantee'}
+                : 'Tour management and digital contracts with Deposit Escrow Guarantee'}
             </p>
 
             <h1 className="font-display text-[2.25rem] font-bold leading-[1.08] tracking-tight text-balance sm:text-5xl lg:text-6xl">
@@ -182,20 +151,23 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
                 : 'Build interactive EPKs, manage riders, isolate stems with Iris, and secure gig deposits in trusted escrow before loading into the van.'}
             </p>
 
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Button variant="primary" size="lg" onClick={onEntrar}>
-                {es ? 'Crear cuenta gratis →' : 'Create free account →'}
+                {es ? 'Crear cuenta gratis' : 'Create free account'}
               </Button>
               <a
                 href="#como-funciona"
                 className="inline-flex h-11 items-center gap-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)] px-5 text-sm font-semibold text-[var(--ink)] transition-ui hover:brightness-95"
               >
-                {es ? 'Ver Demo de Contrato y Escrow' : 'View Contract y Escrow Demo'}
+                {es ? 'Ver cómo funciona' : 'See how it works'}
               </a>
             </div>
             <p className="mt-3 text-xs text-[var(--ink-2)]">
-              {es ? 'Sin tarjeta requerida · Configuración en 120 segundos · Demostración TFM' : 'No card required · 120-second setup · TFM Demonstration'}
+              {es ? 'Sin tarjeta · Configuración en 120 segundos' : 'No card · 120-second setup'}
             </p>
+            <div id="avisame" className="scroll-mt-28">
+              <FormularioInteres es={es} origen="tfm" className="mt-6 max-w-md" />
+            </div>
           </div>
 
           <div className="relative mt-14">
@@ -219,7 +191,7 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
         <section className="bg-[var(--sunken)]" aria-label="Resumen Ejecutivo">
           <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
             <p className="mb-2 text-xs font-bold text-[var(--acc-ink)]">
-              {es ? 'Resumen Ejecutivo (TFM Project Definition)' : 'Executive Summary (TFM Project Definition)'}
+              {es ? 'Qué es BandManager' : 'What BandManager is'}
             </p>
             <p className="text-base leading-relaxed text-[var(--ink-2)] sm:text-lg">
               {es
@@ -228,6 +200,8 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
             </p>
           </div>
         </section>
+
+        <FuncionesTfm es={es} />
 
         {/* CONTRASTE */}
         <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
@@ -347,7 +321,7 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
         <section id="multibanda-iris" className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
           <div className="mb-14">
             <p className="mb-2 text-xs font-bold text-[var(--acc-ink)]">
-              {es ? 'Caso de Estudio TFM · Multitenancy Real' : 'TFM Case Study · Real Multi-tenancy'}
+              {es ? 'Caso real · Multibanda' : 'Real case · Multi-band'}
             </p>
             <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
               {es
@@ -498,7 +472,7 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
         {/* PREGUNTAS FRECUENTES */}
         <section id="preguntas" className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24">
           <h2 className="mb-10 font-display text-3xl font-bold tracking-tight sm:text-4xl text-center">
-            {es ? 'Preguntas Frecuentes (TFM Documentation)' : 'Frequently Asked Questions (TFM)'}
+            {es ? 'Preguntas frecuentes' : 'Frequently asked questions'}
           </h2>
           <div className="space-y-3">
             {FAQS.map((faq, i) => (
@@ -552,6 +526,7 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
                   : 'Stripe escrow guarantee · No commitment · 120-second setup'}
               </span>
             </p>
+            <FormularioInteres es={es} origen="tfm" />
           </div>
         </section>
       </main>
@@ -559,7 +534,7 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
       {/* FOOTER */}
       <footer className="bg-[var(--surface)]">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-6 text-sm text-[var(--ink-2)] sm:px-6">
-          <span><ShowIcon inline emoji="©" /> {year} BandManager.io · Trabajo Fin de Máster (TFM)</span>
+          <span><ShowIcon inline emoji="©" /> {year} BandManager.io</span>
           <div className="flex items-center gap-4">
             <button
               type="button"

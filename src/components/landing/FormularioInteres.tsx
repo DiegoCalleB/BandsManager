@@ -1,16 +1,21 @@
-import React, { useState } from 'react';
+import React, { useId, useState } from 'react';
 import { Mail } from 'lucide-react';
 import { Button } from '../ui';
 import { registrarEvento } from '../../utils/analitica';
 
 interface Props {
   es: boolean;
+  /** Landing de la que viene el alta; el aviso al admin la nombra. */
+  origen?: 'landing' | 'tfm';
+  /** Márgenes y ancho del bloque (por defecto, centrado). */
+  className?: string;
 }
 
 type Estado = 'reposo' | 'enviando' | 'hecho' | 'error';
 
 /** «Avísame»: deja el email sin registrarse en la app. Doble confirmación por correo en el servidor. */
-export const FormularioInteres: React.FC<Props> = ({ es }) => {
+export const FormularioInteres: React.FC<Props> = ({ es, origen = 'landing', className = 'mx-auto mt-10 max-w-md' }) => {
+  const idEmail = useId();
   const [email, setEmail] = useState('');
   const [acepta, setAcepta] = useState(false);
   const [web, setWeb] = useState('');
@@ -29,7 +34,7 @@ export const FormularioInteres: React.FC<Props> = ({ es }) => {
       const r = await fetch('/api/public/interesados', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, consentimiento: acepta, idioma: es ? 'es' : 'en', web }),
+        body: JSON.stringify({ email, consentimiento: acepta, idioma: es ? 'es' : 'en', web, origen }),
       });
       if (!r.ok) {
         const datos = (await r.json().catch(() => ({}))) as { error?: string };
@@ -48,7 +53,7 @@ export const FormularioInteres: React.FC<Props> = ({ es }) => {
 
   if (estado === 'hecho') {
     return (
-      <p role="status" className="mx-auto mt-10 max-w-md rounded-[var(--r-l)] bg-[var(--surface)] p-5 text-sm text-[var(--ink)]">
+      <p role="status" className={`${className} rounded-[var(--r-l)] bg-[var(--surface)] p-5 text-sm text-[var(--ink)]`}>
         {es
           ? 'Revisa tu correo: te hemos enviado un enlace para confirmar tu email. Sin ese clic no te escribimos.'
           : 'Check your inbox: we sent you a link to confirm your email. Until you click it we will not write to you.'}
@@ -57,14 +62,14 @@ export const FormularioInteres: React.FC<Props> = ({ es }) => {
   }
 
   return (
-    <form onSubmit={enviar} className="mx-auto mt-10 max-w-md text-left" aria-label={es ? 'Recibir novedades' : 'Get updates'}>
+    <form onSubmit={enviar} className={`${className} text-left`} aria-label={es ? 'Recibir novedades' : 'Get updates'}>
       <p className="mb-3 text-center text-sm font-semibold text-[var(--ink)]">
         {es ? '¿Aún no te decides? Te avisamos de las novedades.' : 'Not ready yet? We will keep you posted.'}
       </p>
       <div className="flex flex-col gap-2 sm:flex-row">
-        <label className="sr-only" htmlFor="interes-email">Email</label>
+        <label className="sr-only" htmlFor={idEmail}>Email</label>
         <input
-          id="interes-email"
+          id={idEmail}
           type="email"
           required
           autoComplete="email"

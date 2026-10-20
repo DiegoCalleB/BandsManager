@@ -11,6 +11,7 @@ export interface Interesado {
   idioma: string;
   confirmado_at: string | null;
   baja_at: string | null;
+  origen?: string | null;
 }
 
 /**
@@ -21,7 +22,7 @@ export async function dbAltaInteresado(email: string, idioma: string, origen: st
   const sb = getSupabase();
   const { data: existente, error: errLeer } = await sb
     .from('musicians_waitlist')
-    .select('id, email, idioma, confirmado_at, baja_at')
+    .select('id, email, idioma, confirmado_at, baja_at, origen')
     .eq('email', email)
     .order('created_at', { ascending: true })
     .limit(1)
@@ -34,7 +35,7 @@ export async function dbAltaInteresado(email: string, idioma: string, origen: st
   const { data, error } = await sb
     .from('musicians_waitlist')
     .insert(fila)
-    .select('id, email, idioma, confirmado_at, baja_at')
+    .select('id, email, idioma, confirmado_at, baja_at, origen')
     .single();
   if (error) throw new Error(`Supabase Error (musicians_waitlist): ${error.message}`);
   return { ...(data as Interesado), nuevo: true };
@@ -43,7 +44,7 @@ export async function dbAltaInteresado(email: string, idioma: string, origen: st
 export async function dbGetInteresado(id: string): Promise<Interesado | null> {
   const { data, error } = await getSupabase()
     .from('musicians_waitlist')
-    .select('id, email, idioma, confirmado_at, baja_at')
+    .select('id, email, idioma, confirmado_at, baja_at, origen')
     .eq('id', id)
     .maybeSingle();
   if (error) throw new Error(`Supabase Error (musicians_waitlist): ${error.message}`);
