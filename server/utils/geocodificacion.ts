@@ -16,7 +16,9 @@ export interface ResultadoNominatim {
   lat?: string;
   lon?: string;
   display_name?: string;
-  /** `amenity`, `highway`, `boundary`, `place`... Una calle o un municipio no es una sala. */
+  /** `amenity`, `highway`, `boundary`, `place`... Una calle o un municipio no es una sala. En `jsonv2` se llama `category`. */
+  category?: string;
+  /** Lo mismo en el formato `json` antiguo. */
   class?: string;
 }
 
@@ -48,7 +50,8 @@ const CLASES_DE_LOCAL = new Set(['amenity', 'building', 'leisure', 'tourism', 's
 export function puntoDeLaSala(resultados: ResultadoNominatim[], ciudad: string | null): PuntoGeo | null {
   const ciudadN = normalizarTexto(ciudad ?? '');
   for (const r of resultados) {
-    if (!r.class || !CLASES_DE_LOCAL.has(r.class)) continue;
+    const clase = r.category ?? r.class;
+    if (!clase || !CLASES_DE_LOCAL.has(clase)) continue;
     if (ciudadN && !normalizarTexto(r.display_name ?? '').includes(ciudadN)) continue;
     const p = aPunto(r);
     if (p) return p;

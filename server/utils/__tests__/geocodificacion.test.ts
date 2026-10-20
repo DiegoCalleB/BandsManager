@@ -25,6 +25,14 @@ describe('puntoDeLaSala', () => {
   });
 });
 
+describe('formato jsonv2 de Nominatim', () => {
+  it('lee la clase del campo `category` (el que devuelve jsonv2), no solo de `class`', () => {
+    const jsonv2 = { lat: '40.4', lon: '-3.7', category: 'amenity', type: 'nightclub', display_name: 'Sala But, Madrid, España' };
+    expect(puntoDeLaSala([jsonv2], 'Madrid')).toEqual({ lat: 40.4, lon: -3.7 });
+    expect(puntoDeLaSala([{ ...jsonv2, category: 'highway' }], 'Madrid')).toBeNull();
+  });
+});
+
 describe('puntoDeLaCiudad y consultas', () => {
   it('toma el primer resultado dentro de España', () => {
     expect(puntoDeLaCiudad([r({ lat: '10', lon: '10' }), r({ lat: '43.01', lon: '-7.55' })])).toEqual({ lat: 43.01, lon: -7.55 });
