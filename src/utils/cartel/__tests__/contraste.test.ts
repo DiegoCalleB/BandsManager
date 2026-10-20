@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { decidirTinta, luminancia, contraste, medirLuz } from '../contraste';
+import { decidirTinta, luminancia, contraste, medirLuz, tintaSinVelo } from '../contraste';
 
 const L_CLARA = 0.89;
 const L_OSCURA = 0.011;
@@ -82,5 +82,14 @@ describe('contraste medido sobre el texto', () => {
     const r = unirPixeles([new Uint8ClampedArray([1, 2]), new Uint8ClampedArray([3]), new Uint8ClampedArray([])]);
     expect(Array.from(r)).toEqual([1, 2, 3]);
     expect(unirPixeles([]).length).toBe(0);
+  });
+});
+
+describe('tintaSinVelo', () => {
+  it('sobre fondo oscuro elige tinta clara y nunca pone velo', () => {
+    expect(tintaSinVelo({ p10: 0.01, p90: 0.05 })).toEqual({ tinta: 'clara', velo: 0 });
+  });
+  it('sobre fondo claro elige tinta oscura y nunca pone velo', () => {
+    expect(tintaSinVelo({ p10: 0.7, p90: 0.95 })).toEqual({ tinta: 'oscura', velo: 0 });
   });
 });

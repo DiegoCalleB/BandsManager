@@ -7,8 +7,9 @@ import { dbRecordAiUsage } from '../db/aiLedger.js';
 import { uploadBufferToSupabase } from '../utils/storage.js';
 import { elegirMejorVariante, type VarianteFondo } from './juezCartel.js';
 import { isSpendCapOrQuotaError } from '../ai.js';
-import { costeImagenEur, type EncuadreFondo } from '../utils/promptCartel.js';
+import { costeImagenEur, type EncuadreFondo, type TextosCartel } from '../utils/promptCartel.js';
 import { carpetaCartel } from '../utils/cartelUrl.js';
+import { PREFIJO_FONDO_CON_TEXTO, fondoConTexto } from '../../src/utils/cartel/fondoIa.js';
 import type { ImagenReferencia } from './referenciasCartel.js';
 
 export const MODELO_IMAGEN_BASE = 'gemini-2.5-flash-image';
@@ -22,9 +23,12 @@ export const RELACION_FONDO = '4:3';
 export const RELACION_FONDO_SANGRE = '3:4';
 
 /** Cada fondo de IA en su propio fichero: el historial del bolo los conserva para no repagarlos. */
-export function rutaFondoIa(bandId: string): string {
-  return `${carpetaCartel(bandId)}ia-${randomUUID()}.png`;
+export function rutaFondoIa(bandId: string, conTexto = false): string {
+  // `ia-t-`: la ilustración ya lleva el título y la fecha dibujados; el cliente no pinta los suyos encima.
+  return `${carpetaCartel(bandId)}${conTexto ? PREFIJO_FONDO_CON_TEXTO : 'ia-'}${randomUUID()}.png`;
 }
+
+export { fondoConTexto };
 
 /** Texto solo, o texto + las imágenes de referencia de la banda como partes de la misma petición. */
 export function contenidoDeFondo(prompt: string, referencias: ImagenReferencia[]) {
@@ -71,7 +75,7 @@ async function variantes(bandId: string, modelo: string, prompt: string, referen
   return ok;
 }
 
-export async function generarFondoCartel(bandId: string, prompt: string, referencias: ImagenReferencia[] = [], encuadre: EncuadreFondo = 'ventana'): Promise<string | null> {
+export async function generarFondoCartel(bandId: string, prompt: string, referencias: ImagenReferencia[] = [], encuadre: EncuadreFondo = 'ventana', textos: TextosCartel | null = null): Promise<{ url: string; textoOk: boolean } | null> {
   const relacion = encuadre === 'sangre' ? RELACION_FONDO_SANGRE : RELACION_FONDO;
   if (!getAiClient()) return null;
 
@@ -86,6 +90,8 @@ export async function generarFondoCartel(bandId: string, prompt: string, referen
   }
   if (candidatas.length === 0) return null;
 
-  const mejor = candidatas[await elegirMejorVariante(bandId, candidatas)];
-  return uploadBufferToSupabase(Buffer.from(mejor.data, 'base64'), rutaFondoIa(bandId), 'image/png');
+  const veredicto = await elegirMejorVariante(bandId, candidatas, textos);
+  const mejor = candidatas[veredicto.indice];
+  const url = await uploadBufferToSupabase(Buffer.from(mejor.data, 'base64'), rutaFondoIa(bandId, !!textos), 'image/png');
+  return url ? { url, textoOk: textos ? veredicto.textoOk : true } : null;
 }

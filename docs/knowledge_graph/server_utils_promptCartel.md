@@ -27,6 +27,7 @@ Prompt del fondo de un cartel. Función pura: la IA pinta SOLO la ilustración; 
 - [[server_routes_cartelria|server/routes/cartelria.ts]] *(from #route)*
 - [[server_services_briefCartel|server/services/briefCartel.ts]] *(from #service)*
 - [[server_services_imagenCartel|server/services/imagenCartel.ts]] *(from #service)*
+- [[server_services_juezCartel|server/services/juezCartel.ts]] *(from #service)*
 
 ---
 

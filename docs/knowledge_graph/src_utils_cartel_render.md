@@ -18,14 +18,17 @@ Pinta el cartel en un canvas a partir del layout puro. Es la única pieza con DO
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_utils_cartel_arteCanvas|src/utils/cartel/arteCanvas.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_config|src/utils/cartel/config.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_contraste|src/utils/cartel/contraste.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_cartel_fondoIa|src/utils/cartel/fondoIa.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_formatos|src/utils/cartel/formatos.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_grano|src/utils/cartel/grano.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_layout|src/utils/cartel/layout.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_logos|src/utils/cartel/logos.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_papel|src/utils/cartel/papel.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_placas|src/utils/cartel/placas.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_cartel_velo|src/utils/cartel/velo.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_ventana|src/utils/cartel/ventana.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_voces|src/utils/cartel/voces.ts]] *(Layer: #service, Domain: #system)*
 

@@ -20,6 +20,7 @@ Juez de carteles: mira las variantes del fondo y elige la que mejor encaja en un
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[db_ai_ledger|AI Token Ledger]] *(Layer: #db, Domain: #system)*
 - [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_promptCartel|server/utils/promptCartel.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
