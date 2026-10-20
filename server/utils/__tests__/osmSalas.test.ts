@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { consultaOverpassSalas, contarDescartes, REGIONES_OSM, salaDesdeOsm, salasDeOsm, type ElementoOsm } from '../osmSalas.js';
+import { consultaOverpassCiudad, consultaOverpassSalas, contarDescartes, REGIONES_OSM, salaDesdeOsm, salasDeOsm, type ElementoOsm } from '../osmSalas.js';
 import { regionDeCodigoPostal } from '../regionesEspana.js';
 
 const el = (tags: Record<string, string>, id = 1): ElementoOsm => ({ type: 'node', id, tags });
@@ -66,10 +66,16 @@ describe('salasDeOsm', () => {
 
 describe('consultaOverpassSalas', () => {
   const q = consultaOverpassSalas('ES-MD');
-  it('pide solo salas de música en directo y locales de conciertos, sin bares, cafés, restaurantes ni discotecas', () => {
+  it('pide salas de música en directo y locales de conciertos; discotecas y teatros solo si declaran música en directo, nunca bares, cafés ni restaurantes', () => {
     expect(q).toContain('"amenity"="music_venue"');
     expect(q).toContain('"amenity"="concert_hall"');
-    expect(q).not.toMatch(/nightclub|live_music|bar|pub|cafe|restaurant/);
+    expect(q).toContain('"amenity"~"^(nightclub|theatre|arts_centre)$"]["live_music"="yes"');
+    expect(q).not.toMatch(/"(bar|pub|cafe|restaurant)"|\|(bar|pub|cafe|restaurant)\|/);
+  });
+  it('la consulta de una ciudad busca dentro de su término municipal y neutraliza el nombre', () => {
+    const c = consultaOverpassCiudad('Madrid');
+    expect(c).toContain('"admin_level"="8"]["name"="Madrid"');
+    expect(consultaOverpassCiudad('Madrid"]; out;')).not.toContain('out;"');
   });
   it('limita la consulta a una comunidad por su código ISO y neutraliza cualquier otro texto', () => {
     expect(q).toContain('"ISO3166-2"="ES-MD"');

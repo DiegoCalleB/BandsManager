@@ -106,9 +106,21 @@ describe('crearDescargaOsm', () => {
     const fetcher = vi.fn()
       .mockRejectedValueOnce(Object.assign(new TypeError('fetch failed'), { cause: { code: 'ECONNRESET' } }))
       .mockResolvedValueOnce(respuesta({ elements: [elemento('Sala Nueva')] }));
-    const r = await crearDescargaOsm(servidores, fetcher as unknown as typeof fetch, 1000, { regiones: ['ES-MD'], pausaMs: 0 })();
+    const r = await crearDescargaOsm(servidores, fetcher as unknown as typeof fetch, 1000, { regiones: ['ES-GA'], pausaMs: 0 })();
     expect(r).toHaveLength(1);
     expect(fetcher).toHaveBeenCalledTimes(2);
+  });
+
+  it('en Madrid hace una segunda consulta por el término municipal y da su ciudad a lo que no la trae', async () => {
+    const sinCiudad = { type: 'node', id: 9, tags: { name: 'Sala Sin Ciudad', amenity: 'music_venue' } };
+    const conOtra = { type: 'node', id: 10, tags: { name: 'Sala Alcalá', amenity: 'music_venue', 'addr:city': 'Alcalá de Henares' } };
+    const fetcher = vi.fn()
+      .mockResolvedValueOnce(respuesta({ elements: [sinCiudad, conOtra] }))
+      .mockResolvedValueOnce(respuesta({ elements: [sinCiudad, conOtra] }));
+    const r = await crearDescargaOsm(servidores, fetcher as unknown as typeof fetch, 1000, { regiones: ['ES-MD'], pausaMs: 0 })();
+    expect(consulta(fetcher.mock.calls[1])).toContain('"admin_level"="8"');
+    expect(r.find((e) => e.id === 9)?.tags?.['addr:city']).toBe('Madrid');
+    expect(r.find((e) => e.id === 10)?.tags?.['addr:city']).toBe('Alcalá de Henares');
   });
 
   it('si una comunidad falla en todos los servidores, importa las demás y avisa de cuál faltó', async () => {

@@ -23,15 +23,28 @@ export interface ElementoOsm {
  */
 export const REGIONES_OSM = ['ES-AN', 'ES-AR', 'ES-AS', 'ES-CB', 'ES-CE', 'ES-CL', 'ES-CM', 'ES-CN', 'ES-CT', 'ES-EX', 'ES-GA', 'ES-IB', 'ES-MC', 'ES-MD', 'ES-ML', 'ES-NC', 'ES-PV', 'ES-RI', 'ES-VC'] as const;
 
-/**
- * Consulta Overpass de las salas de música en directo y los locales de conciertos de una comunidad (código ISO 3166-2,
- * por ejemplo `ES-MD`). Sin bares, cafés ni discotecas: meten mucho ruido y a una banda le sirven poco.
- */
-export const consultaOverpassSalas = (region: string): string => `[out:json][timeout:90];
-area["ISO3166-2"="${region.replace(/[^A-Z0-9-]/g, '')}"]->.r;
-(
+/** Lo que cuenta como sala: música en directo y conciertos. Sin bares ni cafés: meten mucho ruido y a una banda le sirven poco. */
+const SALAS_EN_AREA = `
   nwr["amenity"="music_venue"](area.r);
   nwr["amenity"="concert_hall"](area.r);
+  nwr["amenity"~"^(nightclub|theatre|arts_centre)$"]["live_music"="yes"](area.r);`;
+
+/** Consulta Overpass de las salas de una comunidad (código ISO 3166-2, por ejemplo `ES-MD`). */
+export const consultaOverpassSalas = (region: string): string => `[out:json][timeout:90];
+area["ISO3166-2"="${region.replace(/[^A-Z0-9-]/g, '')}"]->.r;
+(${SALAS_EN_AREA}
+);
+out tags;`;
+
+/**
+ * Ciudades con una consulta propia: muchos locales de OSM no llevan `addr:city` y sin ciudad no se pueden identificar.
+ * Lo que cae dentro del término municipal (nivel administrativo 8) toma su nombre.
+ */
+export const CIUDADES_OSM = [{ region: 'ES-MD', nombre: 'Madrid' }] as const;
+
+export const consultaOverpassCiudad = (nombre: string): string => `[out:json][timeout:90];
+area["boundary"="administrative"]["admin_level"="8"]["name"="${nombre.replace(/[^\p{L} .'-]/gu, '')}"]->.r;
+(${SALAS_EN_AREA}
 );
 out tags;`;
 

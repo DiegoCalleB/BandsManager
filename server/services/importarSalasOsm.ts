@@ -6,7 +6,7 @@
  * Depende de un puerto y de una función de descarga, así que se prueba sin red ni base de datos.
  */
 import { calcularFiabilidad, idDeSala, type CamposPublicosSala } from '../utils/salaCatalogo.js';
-import { REGIONES_OSM, completarSala, consultaOverpassSalas, contarDescartes, salasDeOsm, type ElementoOsm } from '../utils/osmSalas.js';
+import { CIUDADES_OSM, REGIONES_OSM, completarSala, consultaOverpassCiudad, consultaOverpassSalas, contarDescartes, salasDeOsm, type ElementoOsm } from '../utils/osmSalas.js';
 import type { PuertoCatalogo, SalaAGuardar, SalaGuardada } from './catalogoSalas.js';
 
 export type PuertoImportacion = Pick<PuertoCatalogo, 'leerSalas' | 'guardarSalas' | 'leerAlias'>;
@@ -109,7 +109,11 @@ export function crearDescargaOsm(servidores: readonly string[] = SERVIDORES_OVER
   return async () => {
     const elementos = new Map<string, ElementoOsm>();
     const fallos: string[] = [];
-    for (const [i, region] of regiones.entries()) {
+    const consultas = [
+      ...regiones.map((region) => ({ etiqueta: region, consulta: consultaOverpassSalas(region), ciudad: null as string | null })),
+      ...CIUDADES_OSM.filter((c) => regiones.includes(c.region)).map((c) => ({ etiqueta: c.nombre, consulta: consultaOverpassCiudad(c.nombre), ciudad: c.nombre as string | null })),
+    ];
+    for (const [i, { etiqueta, consulta, ciudad }] of consultas.entries()) {
       if (i > 0) await pausa(pausaMs);
       const motivos: string[] = [];
       let llegaron = false;
@@ -118,11 +122,14 @@ export function crearDescargaOsm(servidores: readonly string[] = SERVIDORES_OVER
           const r = await fetcher(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'BandManager/1.0 (https://bandmanager.io)' },
-            body: `data=${encodeURIComponent(consultaOverpassSalas(region))}`,
+            body: `data=${encodeURIComponent(consulta)}`,
             signal: AbortSignal.timeout(timeoutMs),
           });
           if (!r.ok) throw new Error(`respondió ${r.status}`);
-          for (const el of ((await r.json()) as { elements?: ElementoOsm[] }).elements ?? []) elementos.set(`${el.type}/${el.id}`, el);
+          for (const el of ((await r.json()) as { elements?: ElementoOsm[] }).elements ?? []) {
+            const sinCiudad = ciudad && !['addr:city', 'addr:municipality', 'addr:place'].some((k) => el.tags?.[k]?.trim());
+            elementos.set(`${el.type}/${el.id}`, sinCiudad ? { ...el, tags: { ...el.tags, 'addr:city': ciudad } } : el);
+          }
           llegaron = true;
           break;
         } catch (e) {
@@ -131,11 +138,11 @@ export function crearDescargaOsm(servidores: readonly string[] = SERVIDORES_OVER
       }
       if (!llegaron) {
         const motivo = motivos.join('; ');
-        fallos.push(`${region} (${motivo})`);
-        o.alFallarRegion?.(region, motivo);
+        fallos.push(`${etiqueta} (${motivo})`);
+        o.alFallarRegion?.(etiqueta, motivo);
       }
     }
-    if (fallos.length === regiones.length) throw new Error(`Overpass no respondió en ningún servidor — ${fallos[0]}`);
+    if (fallos.length === consultas.length) throw new Error(`Overpass no respondió en ningún servidor — ${fallos[0]}`);
     return [...elementos.values()];
   };
 }
