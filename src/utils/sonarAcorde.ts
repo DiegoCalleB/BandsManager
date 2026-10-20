@@ -7,7 +7,8 @@ import { vozTeclado } from './inversiones';
 import { lineaDeBajo, notasParaDibujar, type VistaAcorde } from './vistaAcordes';
 import type { NivelAcorde } from './voicings';
 
-const BASE_TECLADO = 48; // Do3
+const BASE_TECLADO = 60; // Do4: la mano derecha del piano; en clave de Sol cae dentro del pentagrama, no bajo las líneas adicionales
+const BASE_GUITARRA = 48; // Do3: suena una octava por debajo de lo que se escribe (midiEscrito)
 const BASE_BAJO = 28; // Mi1: la cuerda al aire del bajo; la nota grave de cada acorde cae entre Mi1 y Re#2
 export const DURACION_ACORDE_S = 1.4;
 
@@ -35,7 +36,7 @@ export function midiDeAcorde(acorde: string, vista: VistaAcorde, nivel: NivelAco
     return sube;
   }
   const notas = nivel !== 'basico' ? n.notas : n.notas.filter((pc) => pc === n.raiz || pc === n.quinta || (vista === 'teclado' && pc === n.tercera));
-  return vozTeclado(notas, Math.min(inv, notas.length - 1)).map((t) => BASE_TECLADO + t);
+  return vozTeclado(notas, Math.min(inv, notas.length - 1)).map((t) => (vista === 'guitarra' ? BASE_GUITARRA : BASE_TECLADO) + t);
 }
 
 const PASO_BAJO_S = 0.3;

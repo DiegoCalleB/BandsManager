@@ -4,8 +4,8 @@ import { bajarCancion, factorDucking, suscribirDucking } from '../utils/ducking'
 
 describe('midiDeAcorde', () => {
   it('piano: la tríada de Do en fundamental y en primera inversión', () => {
-    expect(midiDeAcorde('C', 'teclado', 'normal', 0)).toEqual([48, 52, 55]);
-    expect(midiDeAcorde('C', 'teclado', 'normal', 1)).toEqual([52, 55, 60]);
+    expect(midiDeAcorde('C', 'teclado', 'normal', 0)).toEqual([60, 64, 67]);
+    expect(midiDeAcorde('C', 'teclado', 'normal', 1)).toEqual([64, 67, 72]);
   });
   it('Normal suma la 7.ª si el acorde la lleva y Básico la quita', () => {
     expect(midiDeAcorde('G7', 'teclado', 'normal', 0)).toHaveLength(4);
