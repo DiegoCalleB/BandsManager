@@ -28,6 +28,7 @@ De las filas de Supabase (`catalogo_festivales`, `catalogo_festival_ediciones`, 
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/migrations/__tests__/catalogoGenerosFestival.test.ts`
 - `server/utils/seo/__tests__/festivalesDb.test.ts`
 
 ---
