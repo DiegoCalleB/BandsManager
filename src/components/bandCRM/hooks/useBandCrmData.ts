@@ -91,14 +91,25 @@ export function useBandCrmData({ bandName, currentBandId, leads }: BandCrmDataPa
   const actualizarMetricas = async () => {
     setActualizandoMetricas(true);
     try {
-      const r = await apiFetch<{ filas: number; bandas: number; motivos: Record<string, number> }>(
-        "/api/bands/metricas/actualizar",
-        { method: "POST" },
-      );
+      // El servidor trabaja en segundo plano (tarda minutos): aquí solo se consulta el progreso.
+      type Estado = { estado: string; hechas: number; total: number; filas: number; motivos: Record<string, number>; error?: string };
+      let r = await apiFetch<Estado>("/api/bands/metricas/actualizar", { method: "POST" });
+      let fallosSeguidos = 0;
+      while (r.estado === "en_curso") {
+        await new Promise((resolver) => setTimeout(resolver, 2000));
+        try {
+          r = await apiFetch<Estado>("/api/bands/metricas/estado");
+          fallosSeguidos = 0;
+        } catch (err) {
+          // Un corte de red del móvil no aborta la captura, que sigue en el servidor.
+          if (++fallosSeguidos >= 5) throw err;
+        }
+      }
+      if (r.estado === "error") throw new Error(r.error);
       cargarMetricas();
       const motivos = Object.entries(r.motivos || {}).map(([m, n]) => `· ${m} (${n} bandas)`);
       alert(
-        `Métricas guardadas: ${r.filas} filas de ${r.bandas} bandas.` +
+        `Métricas guardadas: ${r.filas} filas de ${r.total} bandas.` +
           (motivos.length ? `\n\nFuentes sin dato:\n${motivos.join("\n")}` : ""),
       );
     } catch {
