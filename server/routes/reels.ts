@@ -19,7 +19,7 @@ import { resumirEnergiaParaPrompt } from "../utils/audioEnergy.js";
 import { buildEstrategiaBlock, buildReglasDeRedaccion, estrategiaDe } from "../utils/reelStrategy.js";
 import { detectarTipoContenido, esTipoContenido, resumirSenalesParaPrompt, type TipoContenido } from "../utils/viralSignals.js";
 import { parseRange, formatMMSS, extractJsonObject, normalizeHighlights, buildFallbackHighlights, buildSubtitleCues, buildVtt, buildWordOffsets, buildAssSubtitles, buildKaraokeAssSubtitles, decodeTranscriptText, type CropMode, type TranscriptItem, type NormalizedHighlight } from "../utils/reelsCore.js";
-import { medirSenalesDelVideo } from "../services/senalesVideo.js";
+import { ajustarCortes, medirSenalesDelVideo } from "../services/senalesVideo.js";
 import { renderizarClip } from "../services/clipRenderer.js";
 import { perfilDeLaPeticion } from "../services/perfilDeLaPeticion.js";
 import reelsTextoRouter from "./reelsTexto.js";
@@ -275,10 +275,9 @@ router.post("/analyze-video-highlights", requireAuth, iaRateLimiter, async (req,
     const tipoContenido: TipoContenido = esTipoContenido(contentType)
       ? contentType
       : detectarTipoContenido(meta.title || tituloReal, meta.description);
-
     const analizarAudio = req.body?.analyzeAudio !== false;
     const ficha = { esMusica: meta.esMusica, heatmap: meta.heatmap, duration: duracionTotal };
-    const { ventanasEnergia, ventanasVirales, cambiosDePlano, publico } = await medirSenalesDelVideo({ videoId, objetivoClip, tipoContenido, ficha, activo: analizarAudio });
+    const { ventanasEnergia, ventanasVirales, cambiosDePlano, curva, publico } = await medirSenalesDelVideo({ videoId, objetivoClip, tipoContenido, ficha, activo: analizarAudio });
 
     // El bloque nuevo trae el desglose (volumen/arranque/ritmo visual); el antiguo, solo el
     // volumen. Se usa el que haya, para no perder la pista de energía si falla la puntuación.
@@ -330,7 +329,7 @@ ${buildReglasDeRedaccion(nombreBanda)}
 
 TU TAREA:
 Elige entre 3 y 5 fragmentos. Reglas de los rangos:
-- Cada fragmento dura unos ${objetivoClip} segundos (se acepta de ${Math.max(8, Math.round(objetivoClip * 0.7))} a ${Math.round(objetivoClip * 1.3)} s).
+- Cada fragmento dura unos ${objetivoClip} segundos (se acepta de ${Math.max(8, Math.round(objetivoClip * 0.7))} a ${Math.round(objetivoClip * 1.4)} s; elige un final natural, nunca a mitad de frase).
 - startSec y endSec son NÚMEROS en segundos, siempre dentro de 0 y ${duracionTotal}.
 - No pueden solaparse entre sí.
 - Ordénalos de mayor a menor potencial real.
@@ -424,6 +423,7 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
       });
     }
 
+    highlights = ajustarCortes(highlights, curva, cambiosDePlano, { videoDuration: duracionTotal, objetivo: objetivoClip });
     if (!optimalTime || !optimalTime.date) {
       const manana = new Date();
       manana.setDate(manana.getDate() + 1);

@@ -32,6 +32,7 @@ Detección de los fragmentos con más potencial viral.
 - [[server_services_copyPerfecto|server/services/copyPerfecto.ts]] *(from #service)*
 - [[server_services_interesDelPublico|server/services/interesDelPublico.ts]] *(from #service)*
 - [[server_services_senalesVideo|server/services/senalesVideo.ts]] *(from #service)*
+- [[server_utils_ajusteDeCortes|server/utils/ajusteDeCortes.ts]] *(from #service)*
 - [[server_utils_bancoDeteccion|server/utils/bancoDeteccion.ts]] *(from #service)*
 - [[server_utils_informeSenalesPublico|server/utils/informeSenalesPublico.ts]] *(from #service)*
 - [[server_utils_reelStrategy|server/utils/reelStrategy.ts]] *(from #service)*
