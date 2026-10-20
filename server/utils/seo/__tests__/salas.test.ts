@@ -22,6 +22,7 @@ describe('reglas de publicación', () => {
   it.each([
     ['una marcada no contactar', { no_contactar: true }],
     ['una cerrada permanentemente', { estado_negocio: 'cerrado_permanente' as const }],
+    ['una que viene de otro directorio (Bandflow): se usa en la app, no se republica', { fuentes: ['bandflow'] }],
     ['una sin web', { website: null }],
     ['una con web no https', { website: 'http://ejemplo.example/' }],
     ['una con web que no es una URL', { website: 'javascript:alert(1)' }],

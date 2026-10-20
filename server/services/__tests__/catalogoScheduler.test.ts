@@ -3,10 +3,12 @@ import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 vi.mock('../../db/salasCatalogo.js', () => ({ puertoCatalogoSupabase: {} }));
 const importar = vi.hoisted(() => vi.fn());
 vi.mock('../importarSalasOsm.js', () => ({ importarSalasDeOsm: importar, descargarOsmSalas: vi.fn() }));
+const semilla = vi.hoisted(() => vi.fn());
+vi.mock('../importarSalasBandflow.js', () => ({ importarSalasDeBandflow: semilla }));
 const capturar = vi.hoisted(() => vi.fn());
 vi.mock('../../utils/errorTracking.js', () => ({ captureError: capturar }));
 
-import { detenerSincronizacionDelCatalogo, iniciarSincronizacionDelCatalogo, sincronizarCatalogoAhora } from '../catalogoScheduler.js';
+import { detenerSincronizacionDelCatalogo, importarSalasBandflowAhora, iniciarSincronizacionDelCatalogo, sincronizarCatalogoAhora } from '../catalogoScheduler.js';
 import type { InformeCatalogo } from '../catalogoSalas.js';
 
 const informe: InformeCatalogo = {
@@ -66,9 +68,42 @@ describe('iniciarSincronizacionDelCatalogo', () => {
     delete process.env.CATALOGO_SYNC;
     iniciarSincronizacionDelCatalogo();
     iniciarSincronizacionDelCatalogo();
-    expect(vi.getTimerCount()).toBe(2); // la primera pasada y el intervalo, una sola vez
+    expect(vi.getTimerCount()).toBe(3); // la primera pasada, el intervalo y la semilla de Bandflow, una sola vez
     detenerSincronizacionDelCatalogo();
     expect(vi.getTimerCount()).toBe(0);
+  });
+});
+
+describe('semilla de Bandflow', () => {
+  afterEach(() => {
+    delete process.env.CATALOGO_SEMILLA_BANDFLOW;
+    detenerSincronizacionDelCatalogo();
+    vi.useRealTimers();
+  });
+
+  it('se carga sola unos minutos tras arrancar, sin red, y se puede apagar', async () => {
+    vi.useFakeTimers();
+    semilla.mockReset();
+    semilla.mockResolvedValue({ simulacion: false, salasEnSemilla: 3, nuevas: 3, completadas: 0, sinCambios: 0 });
+    iniciarSincronizacionDelCatalogo();
+    expect(semilla).not.toHaveBeenCalled();
+    await vi.advanceTimersByTimeAsync(9 * 60_000);
+    expect(semilla).toHaveBeenCalledTimes(1);
+    detenerSincronizacionDelCatalogo();
+
+    process.env.CATALOGO_SEMILLA_BANDFLOW = 'false';
+    semilla.mockClear();
+    iniciarSincronizacionDelCatalogo();
+    await vi.advanceTimersByTimeAsync(9 * 60_000);
+    expect(semilla).not.toHaveBeenCalled();
+  });
+
+  it('un fallo se registra y no tumba nada', async () => {
+    semilla.mockReset();
+    capturar.mockClear();
+    semilla.mockRejectedValue(new Error('sin base de datos'));
+    await importarSalasBandflowAhora();
+    expect(capturar).toHaveBeenCalledTimes(1);
   });
 });
 
