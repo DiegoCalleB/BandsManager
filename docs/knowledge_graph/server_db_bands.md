@@ -73,6 +73,7 @@ Bandas registradas (`registered_bands`) y migración de planes. Lectura y escrit
 
 ## 🧪 Tests que lo cubren
 - `server/db/__tests__/bandDnaExpresionLock.test.ts`
+- `server/db/__tests__/registeredBandsCiclo.test.ts`
 
 ---
 

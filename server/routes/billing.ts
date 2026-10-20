@@ -222,7 +222,7 @@ export async function applyPlanUpgrade(
           fecha_cambio_plan: null,
           estado_suscripcion: 'activo',
           creditos_periodo: credits,
-          creditos_usados: 0
+          creditos_usados: 0, ...(details?.billingInterval ? { ciclo_facturacion: details.billingInterval } : {})
         })
         .or(`band_id.eq.${bandId},id.eq.${bandId},band_id.eq.band-${cleanBandId},id.eq.band-${cleanBandId},band_id.eq.${cleanBandId},id.eq.${cleanBandId}`);
     }
