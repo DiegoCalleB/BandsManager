@@ -6,6 +6,7 @@
  * permite su robots.txt. Es reanudable: salta las URLs ya guardadas. Lo extraído se filtra después con
  * scripts/bandflow-semilla.ts (privacidad). No se guardan reseñas, perfiles de usuarios, descripciones ni fotos.
  */
+/* global document -- el código de page.evaluate se ejecuta dentro del navegador, no en Node */
 import { chromium } from 'playwright';
 import fs from 'node:fs';
 const SITEMAP = process.argv[2];

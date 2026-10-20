@@ -27,6 +27,12 @@ Exporta: SALAS_BANDFLOW.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/data/__tests__/bandflowSalas.test.ts`
+- `server/services/__tests__/importarSalasBandflow.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

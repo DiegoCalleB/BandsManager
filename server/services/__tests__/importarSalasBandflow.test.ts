@@ -60,8 +60,17 @@ describe('importarSalasDeBandflow', () => {
     expect(guardadas).toEqual([]);
   });
 
-  it('con la semilla vacía no hace nada', async () => {
-    const { puerto } = montar();
-    expect(await importarSalasDeBandflow({ puerto })).toMatchObject({ salasEnSemilla: 0, nuevas: 0 });
+  it('con la semilla real y un catálogo vacío entran todas, y repetirla no cambia nada', async () => {
+    const { SALAS_BANDFLOW } = await import('../../data/bandflowSalas.js');
+    const { puerto, guardadas } = montar();
+    const r = await importarSalasDeBandflow({ puerto });
+    expect(r.nuevas).toBe(SALAS_BANDFLOW.length);
+    expect(new Set(guardadas.map((g) => g.id)).size).toBe(SALAS_BANDFLOW.length);
+    expect(guardadas.every((g) => g.nivel === 'sin_verificar' && g.fuentes?.[0] === 'bandflow')).toBe(true);
+
+    const { puerto: p2, guardadas: g2 } = montar(guardadas.map((g) => ({ ...g, no_contactar: false }) as SalaGuardada));
+    const r2 = await importarSalasDeBandflow({ puerto: p2 });
+    expect(r2).toMatchObject({ nuevas: 0, completadas: 0 });
+    expect(g2).toEqual([]);
   });
 });
