@@ -14,6 +14,11 @@ describe('midiDeAcorde', () => {
   it('guitarra Básico: solo raíz y quinta (power chord)', () => {
     expect(midiDeAcorde('E', 'guitarra', 'basico', 0)).toEqual([52, 59]);
   });
+  it('guitarra: la voz no baja de Mi3, para que se escriba dentro del pentagrama', () => {
+    for (const a of ['C', 'D', 'F', 'G', 'A', 'Am', 'Em', 'G7']) {
+      expect(Math.min(...midiDeAcorde(a, 'guitarra', 'normal', 0))).toBeGreaterThanOrEqual(52);
+    }
+  });
   it('bajo: las notas del acorde una a una, de grave a agudo, empezando por la de la inversión, y cierra en la octava', () => {
     expect(midiDeAcorde('C', 'bajo', 'normal', 0)).toEqual([36, 40, 43, 48]);
     expect(midiDeAcorde('C', 'bajo', 'normal', 1)).toEqual([28, 31, 36, 40]);
