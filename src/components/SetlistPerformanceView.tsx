@@ -3,6 +3,7 @@ import React, {
   useState,
   useEffect,
   useRef,
+  useLayoutEffect,
   useCallback,
   useMemo,
 } from "react";
@@ -267,10 +268,11 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   // Transposición en tiempo real en escenario (Live Pitch Shift)
   const [liveTransposeOffset, setLiveTransposeOffset] = useState<number>(0);
 
-  // Modo teleprompter:'sections' (por bloques con pedal) o'scroll' (desplazamiento continuo)
+  // Modo atril: 'full' (toda la canción de una vez, ajustada a la pantalla — el defecto),
+  // 'sections' (por bloques con pedal) o 'scroll' (desplazamiento continuo)
   const [teleprompterMode, setTeleprompterMode] = useState<
-    "sections" | "scroll"
-  >("sections");
+    "full" | "sections" | "scroll"
+  >("full");
   const [isTeleprompterPlaying, setIsTeleprompterPlaying] =
     useState<boolean>(false);
   const [teleprompterSpeed, setTeleprompterSpeed] = useState<number>(1);
@@ -401,6 +403,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
     if (
       !isBlock &&
       !showScannedSheet &&
+      teleprompterMode === "sections" &&
       hasMultipleSections &&
       currentSectionIndex < chordSections.length - 1
     ) {
@@ -413,6 +416,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
     if (
       !isBlock &&
       !showScannedSheet &&
+      teleprompterMode === "sections" &&
       hasMultipleSections &&
       currentSectionIndex > 0
     ) {
@@ -1032,7 +1036,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             teleprompterMode={teleprompterMode}
             onToggleTeleprompterMode={() =>
               setTeleprompterMode((m) =>
-                m === "scroll" ? "sections" : "scroll",
+                m === "full" ? "sections" : m === "sections" ? "scroll" : "full",
               )
             }
             isTeleprompterPlaying={isTeleprompterPlaying}
@@ -1504,7 +1508,7 @@ const ChordSheetPage: React.FC<{
   showDetails: boolean;
   onToggleDetails: () => void;
   glareMode: boolean;
-  teleprompterMode: "sections" | "scroll";
+  teleprompterMode: "full" | "sections" | "scroll";
   onToggleTeleprompterMode: () => void;
   isTeleprompterPlaying: boolean;
   onToggleTeleprompterPlay: () => void;
@@ -1656,20 +1660,24 @@ const ChordSheetPage: React.FC<{
             type="button"
             onClick={onToggleTeleprompterMode}
             className={`px-2.5 py-1 text-xs font-sans font-bold rounded-[var(--r-pill)] transition flex items-center gap-1.5 cursor-pointer ${
-              teleprompterMode === "scroll"
+              teleprompterMode !== "full"
                 ? "bg-[var(--acc)]/20  text-[var(--ink)]"
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]"
             }`}
             title={
-              teleprompterMode === "scroll"
-                ? "Cambiar a modo pedal por secciones"
-                : "Cambiar a modo teleprompter scroll continuo"
+              teleprompterMode === "full"
+                ? "Ahora: canción completa. Pulsa para ir por secciones con pedal"
+                : teleprompterMode === "sections"
+                  ? "Ahora: por secciones. Pulsa para teleprompter con scroll continuo"
+                  : "Ahora: teleprompter. Pulsa para ver la canción completa"
             }
           >
             <span>
-              {teleprompterMode === "scroll"
-                ? "Teleprompter Auto"
-                : "Modo Secciones"}
+              {teleprompterMode === "full"
+                ? "Canción completa"
+                : teleprompterMode === "sections"
+                  ? "Modo Secciones"
+                  : "Teleprompter Auto"}
             </span>
           </button>
         </div>
@@ -1792,7 +1800,7 @@ const ChordSheetPage: React.FC<{
             </pre>
           </div>
         </div>
-      ) : hasMultipleSections ? (
+      ) : teleprompterMode === "sections" && hasMultipleSections ? (
         // NAVEGACIÓN POR SECCIONES (PEDAL / TAP)
         <div className="flex-1 flex flex-col overflow-hidden">
           <div
@@ -1843,15 +1851,57 @@ const ChordSheetPage: React.FC<{
           </div>
         </div>
       ) : (
-        // Sin encabezados de sección detectados: se muestra todo el cifrado de una vez, con scroll manual
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
-          <pre
-            className={`max-w-4xl mx-auto font-sans whitespace-pre-wrap leading-relaxed break-words ${fontSizeClass} ${chordTextClass}`}
-          >
-            {chords}
-          </pre>
-        </div>
+        // Canción completa: todo el cifrado de una vez, encogido hasta que quepa en pantalla
+        <FitToScreenPre
+          text={chords}
+          className={`max-w-4xl mx-auto font-sans whitespace-pre-wrap leading-relaxed break-words ${fontSizeClass} ${chordTextClass}`}
+        />
       )}
+    </div>
+  );
+};
+
+// Encoge el texto (zoom) hasta que la canción entera quepa sin scroll; por debajo del mínimo
+// deja de encoger y vuelve el scroll, para no dejar acordes ilegibles desde el atril.
+const MIN_FIT_ZOOM = 0.55;
+const FitToScreenPre: React.FC<{ text: string; className: string }> = ({
+  text,
+  className,
+}) => {
+  const boxRef = useRef<HTMLDivElement>(null);
+  const preRef = useRef<HTMLPreElement>(null);
+
+  const fit = useCallback(() => {
+    const box = boxRef.current;
+    const pre = preRef.current;
+    if (!box || !pre) return;
+    const cs = getComputedStyle(box);
+    const avail =
+      box.clientHeight -
+      parseFloat(cs.paddingTop) -
+      parseFloat(cs.paddingBottom);
+    let zoom = 1;
+    pre.style.zoom = "1";
+    while (pre.scrollHeight > avail && zoom > MIN_FIT_ZOOM) {
+      zoom = Math.max(MIN_FIT_ZOOM, +(zoom - 0.05).toFixed(2));
+      pre.style.zoom = String(zoom);
+    }
+  }, []);
+
+  useLayoutEffect(() => {
+    fit();
+  }, [fit, text, className]);
+
+  useEffect(() => {
+    window.addEventListener("resize", fit);
+    return () => window.removeEventListener("resize", fit);
+  }, [fit]);
+
+  return (
+    <div ref={boxRef} className="flex-1 overflow-y-auto p-4 sm:p-6">
+      <pre ref={preRef} className={className}>
+        {text}
+      </pre>
     </div>
   );
 };
