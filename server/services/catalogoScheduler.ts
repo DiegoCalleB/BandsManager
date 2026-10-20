@@ -72,7 +72,7 @@ async function verificarEnMapsAhora(): Promise<void> {
 export async function importarSalasOsmAhora(): Promise<boolean> {
   try {
     const r = await importarSalasDeOsm({ puerto: puertoCatalogoSupabase, descargar: descargarOsmSalas });
-    console.log(`[Catálogo] Importación OSM: ${r.elementosLeidos} elementos leídos (${r.descartados.sinNombre} sin nombre, ${r.descartados.sinCiudad} sin ciudad), ${r.salasEnOsm} salas en OSM, ${r.nuevas} nuevas, ${r.completadas} completadas, ${r.sinCambios} sin cambios.`);
+    console.log(`[Catálogo] Importación OSM: ${r.elementosLeidos} elementos leídos (${r.descartados.sinNombre} sin nombre, ${r.descartados.sinCiudad} sin ciudad), ${r.salasEnOsm} salas en OSM (${r.ciudadPorCercania} con la ciudad del núcleo más cercano), ${r.nuevas} nuevas, ${r.completadas} completadas, ${r.sinCambios} sin cambios.`);
     return true;
   } catch (e) {
     console.warn("[Catálogo] La importación de OSM falló:", e instanceof Error ? e.message : e);
