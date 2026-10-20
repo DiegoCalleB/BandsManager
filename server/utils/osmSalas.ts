@@ -125,6 +125,17 @@ export function salasDeOsm(elementos: ElementoOsm[]): CamposPublicosSala[] {
   return [...porClave.values()];
 }
 
+/** Dónde está cada sala de una descarga de OSM, por clave. Una sala mapeada dos veces conserva el primer punto. */
+export function coordenadasDeOsm(elementos: ElementoOsm[]): Map<string, { lat: number; lon: number }> {
+  const puntos = new Map<string, { lat: number; lon: number }>();
+  for (const el of elementos) {
+    const sala = salaDesdeOsm(el);
+    const p = sala && punto(el);
+    if (sala && p && !puntos.has(sala.clave)) puntos.set(sala.clave, p);
+  }
+  return puntos;
+}
+
 const KM_MAXIMOS_AL_NUCLEO = 12;
 
 const punto = (el: ElementoOsm): { lat: number; lon: number } | null => {

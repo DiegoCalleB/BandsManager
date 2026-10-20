@@ -80,6 +80,9 @@ BandManager UI Component Library
 - [[src_components_booking_BulkLeadsActionBar|src/components/booking/BulkLeadsActionBar.tsx]] *(from #frontend)*
 - [[src_components_booking_BulkProgressModal|src/components/booking/BulkProgressModal.tsx]] *(from #frontend)*
 - [[src_components_booking_catalogo_CatalogoSalasModal|src/components/booking/catalogo/CatalogoSalasModal.tsx]] *(from #frontend)*
+- [[src_components_booking_catalogo_FichaSalaCatalogo|src/components/booking/catalogo/FichaSalaCatalogo.tsx]] *(from #frontend)*
+- [[src_components_booking_catalogo_ListaFestivalesCatalogo|src/components/booking/catalogo/ListaFestivalesCatalogo.tsx]] *(from #frontend)*
+- [[src_components_booking_catalogo_ListaSalasCatalogo|src/components/booking/catalogo/ListaSalasCatalogo.tsx]] *(from #frontend)*
 - [[src_components_booking_ChangeLeadImageModal|src/components/booking/ChangeLeadImageModal.tsx]] *(from #frontend)*
 - [[src_components_booking_crm_ActiveFiltersBar|src/components/booking/crm/ActiveFiltersBar.tsx]] *(from #frontend)*
 - [[src_components_booking_crm_EnrichBanner|src/components/booking/crm/EnrichBanner.tsx]] *(from #frontend)*

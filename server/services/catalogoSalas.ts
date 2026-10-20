@@ -38,10 +38,14 @@ export interface SalaGuardada extends CamposPublicosSala {
   estado_negocio_en?: Date | null;
   /** De dónde salió la información pública (`osm` = OpenStreetMap). Ausente en las filas anteriores a la migración. */
   fuentes?: string[];
+  /** Dónde está. `coordenadas_aprox` = es el punto de la ciudad, no el de la sala. Ausentes en las filas anteriores a la migración. */
+  lat?: number | null;
+  lon?: number | null;
+  coordenadas_aprox?: boolean;
 }
 
 /** Lo que el servicio escribe. `no_contactar` no está: es de quien lo marca y la sincronización nunca lo toca. */
-export type SalaAGuardar = Omit<SalaGuardada, 'no_contactar' | 'estado_negocio' | 'estado_negocio_en'>;
+export type SalaAGuardar = Omit<SalaGuardada, 'no_contactar' | 'estado_negocio' | 'estado_negocio_en' | 'lat' | 'lon' | 'coordenadas_aprox'>;
 
 /** Dos claves que son la misma sala (`catalogo_sala_alias`): lo que cae en `aliasClave` va a `clave`. */
 export interface AliasSala {
@@ -57,6 +61,18 @@ export interface PuertoCatalogo {
   leerSalas(): Promise<SalaGuardada[]>;
   guardarSalas(salas: SalaAGuardar[]): Promise<void>;
   enlazarLeads(enlaces: Array<{ leadId: string; salaId: string }>): Promise<void>;
+}
+
+/** Escribe solo las coordenadas: la sincronización no las toca, así que no se pisan entre sí. */
+export interface PuertoCoordenadas {
+  guardarCoordenadas(filas: FilaCoordenadas[]): Promise<void>;
+}
+
+export interface FilaCoordenadas {
+  salaId: string;
+  lat: number;
+  lon: number;
+  aprox: boolean;
 }
 
 export interface InformeCatalogo {

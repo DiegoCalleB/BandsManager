@@ -24,6 +24,7 @@ _Sin dependencias salientes directas._
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_booking_catalogo_CatalogoSalasHost|src/components/booking/catalogo/CatalogoSalasHost.tsx]] *(from #frontend)*
+- [[src_components_booking_crm_HeaderTitleAndActions|src/components/booking/crm/HeaderTitleAndActions.tsx]] *(from #frontend)*
 - [[src_components_booking_crm_MobileToolsPanel|src/components/booking/crm/MobileToolsPanel.tsx]] *(from #frontend)*
 
 ---

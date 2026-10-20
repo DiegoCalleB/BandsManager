@@ -24,6 +24,7 @@ _Sin dependencias salientes directas._
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_utils_consultaCatalogo|server/utils/consultaCatalogo.ts]] *(from #service)*
+- [[server_utils_festivalesCatalogo|server/utils/festivalesCatalogo.ts]] *(from #service)*
 - [[src_components_booking_catalogo_LogoSala|src/components/booking/catalogo/LogoSala.tsx]] *(from #frontend)*
 
 ---

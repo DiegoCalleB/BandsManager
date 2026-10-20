@@ -26,6 +26,7 @@ Consulta del catálogo compartido de salas (fase 2): reglas puras, sin base de d
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server_routes_catalogo|server/routes/catalogo.ts]] *(from #route)*
 - [[server_services_chatCatalogo|server/services/chatCatalogo.ts]] *(from #service)*
 - [[server_services_chatLecturas|server/services/chatLecturas.ts]] *(from #service)*
 - [[server_services_consultaCatalogo|server/services/consultaCatalogo.ts]] *(from #service)*
