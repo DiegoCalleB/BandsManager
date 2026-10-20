@@ -1,10 +1,12 @@
 import { describe, it, expect } from "vitest";
 import { prepararRevisionFinal, type EntradaRevision } from "../revisionFinal";
 
+/** Siempre dentro de una semana: una fecha fija caduca y el test falla el día que pasa. */
+const EN_UNA_SEMANA = new Date(Date.now() + 7 * 86_400_000).toISOString().slice(0, 10);
 const CLIP = "https://x.supabase.co/storage/v1/object/public/clips/band/c.mp4";
 const base = (p: Partial<EntradaRevision> = {}): EntradaRevision => ({
   copy: "Nuevo directo 🎸 #rock",
-  fecha: "2026-10-20",
+  fecha: EN_UNA_SEMANA,
   hora: "20:30",
   plataforma: "Instagram",
   videoUrl: CLIP,
