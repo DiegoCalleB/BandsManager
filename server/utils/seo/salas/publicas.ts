@@ -15,6 +15,8 @@ const esHttps = (u: string | null): u is string => !!u && /^https:\/\/[^\s]+$/i.
  */
 export function salaPublica(f: FilaSalaPublica): SalaPublica | null {
   if (f.tipo !== 'sala' || f.no_contactar || f.estado_negocio === 'cerrado_permanente') return null;
+  // Lo que viene de otro directorio se usa dentro de la app, pero no se republica en páginas públicas.
+  if (f.fuentes?.includes('bandflow')) return null;
   const nombre = f.nombre?.trim();
   const ciudad = f.ciudad?.trim();
   if (!nombre || !ciudad || !esHttps(f.website)) return null;
@@ -37,6 +39,7 @@ export function salaPublica(f: FilaSalaPublica): SalaPublica | null {
     instagram: f.instagram?.trim() || null,
     nivel: f.nivel,
     deOsm: !!f.fuentes?.includes('osm'),
+    actualizadoEn: /^\d{4}-\d{2}-\d{2}/.test(f.updated_at ?? '') ? f.updated_at!.slice(0, 10) : null,
   };
 }
 
@@ -68,3 +71,7 @@ export const indexableComunidad = (salas: readonly SalaPublica[], comunidadSlug:
   salas.filter((s) => s.comunidadSlug === comunidadSlug).length >= MIN_SALAS_COMUNIDAD;
 export const indexableCiudad = (salas: readonly SalaPublica[], comunidadSlug: string, ciudadSlug: string): boolean =>
   salas.filter((s) => s.comunidadSlug === comunidadSlug && s.ciudadSlug === ciudadSlug).length >= MIN_SALAS_CIUDAD;
+
+/** Fecha más reciente (YYYY-MM-DD) entre las salas dadas, o null si ninguna la tiene. */
+export const ultimaActualizacion = (salas: readonly SalaPublica[]): string | null =>
+  salas.reduce<string | null>((max, s) => (s.actualizadoEn && (!max || s.actualizadoEn > max) ? s.actualizadoEn : max), null);

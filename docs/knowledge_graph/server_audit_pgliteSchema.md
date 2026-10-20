@@ -31,7 +31,9 @@ _Sin llamadas entrantes indexadas._
 - `server/audit/__tests__/dbRoundTrip.test.ts`
 - `server/audit/__tests__/schemaContract.test.ts`
 - `server/migrations/__tests__/catalogoGlobal.test.ts`
+- `server/migrations/__tests__/catalogoSalaAlias.test.ts`
 - `server/migrations/__tests__/catalogoSalas.test.ts`
+- `server/migrations/__tests__/excluirRecintosMasivos.test.ts`
 - `server/migrations/__tests__/festivales.test.ts`
 - `server/migrations/__tests__/renombrarCatalogoSalas.test.ts`
 - `server/migrations/__tests__/runner.test.ts`

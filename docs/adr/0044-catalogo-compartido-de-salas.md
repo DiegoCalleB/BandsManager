@@ -65,3 +65,12 @@ servidores por consulta y, si alguna comunidad falla, importa el resto (es idemp
 reintenta cada hora hasta tres veces. Además se limita a lo que le sirve a una banda: **solo `music_venue` y
 `concert_hall`**. Se quitan las discotecas y los bares, pubs, cafés y restaurantes con `live_music=yes`, que metían mucho
 ruido. La marca `osm` en `salas_catalogo.fuentes` (ADR 0046) cita a OpenStreetMap donde corresponde.
+
+## Explorar el catálogo: ficha, mapa y festivales
+
+El catálogo se abre desde el botón «Catálogo» de Escenarios (Booking) y desde el menú de herramientas. Tiene dos pestañas, **Salas** y **Festivales**, y las salas se ven en **lista** o en **mapa**; pulsar una sala abre su **ficha** (fiabilidad, completitud de la ficha, dirección, web, redes, mapa pequeño y la fuente que hay que citar).
+
+- **Coordenadas.** `catalogo_salas.lat/lon` salen solo de OpenStreetMap (ODbL): el punto de la importación de OSM y, para el resto, el geocodificador Nominatim (`geolocalizarSalas`, 80 salas por pasada a 1 consulta/s, `CATALOGO_GEOLOCALIZAR=false` lo apaga). Nunca de Google (sus condiciones no dejan guardar coordenadas). Un resultado solo vale si es un local de la ciudad de la sala y cae en España; si no, se guarda el punto de la ciudad con `coordenadas_aprox` y el mapa lo pinta más tenue y la ficha avisa. Las coordenadas se escriben aparte (`guardarCoordenadas`) y la sincronización diaria nunca las toca, así que no se pisan.
+- **Dirección.** La ficha ya enseña la dirección del local: es información pública de un negocio, no un dato personal. El email y el teléfono siguen sin salir hasta añadir la sala.
+- **Completitud.** `completitudDeSala` cuenta 10 datos que importan a una banda (ciudad, dirección, web, Instagram, email de rol, teléfono fijo, aforo, género, punto exacto en el mapa, fiabilidad). No es la fiabilidad: una sala puede estar muy completa y no haber respondido nunca a nadie.
+- **Festivales.** Se leen del directorio público (`catalogo_festivales`), que no tiene contacto; al añadir uno se crea un lead de tipo `festival` con su web y el enlace de la convocatoria en las notas.

@@ -20,6 +20,7 @@ tags: ["frontend", "booking", "auto"]
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_VenueMap|src/components/VenueMap.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_crm_BookingCrmContext|src/components/booking/crm/BookingCrmContext.ts]] *(Layer: #frontend, Domain: #booking)*
+- [[src_components_ui_Skeleton|src/components/ui/Skeleton.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_utils_bookingUtils|src/utils/bookingUtils.ts]] *(Layer: #service, Domain: #booking)*
 - [[ui_leads_table|Leads Table & Actions]] *(Layer: #frontend, Domain: #booking)*
 

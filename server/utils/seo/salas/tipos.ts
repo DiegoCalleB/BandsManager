@@ -20,6 +20,7 @@ export interface FilaSalaPublica {
   no_contactar: boolean;
   estado_negocio: 'sin_verificar' | 'operativo' | 'cerrado_temporal' | 'cerrado_permanente' | null;
   fuentes: string[] | null;
+  updated_at?: string | null;
 }
 
 export interface SalaPublica {
@@ -41,4 +42,6 @@ export interface SalaPublica {
   nivel: NivelSala;
   /** Viene (también) de OpenStreetMap: obliga a citarlo (ODbL). */
   deOsm: boolean;
+  /** Última modificación del registro (YYYY-MM-DD): alimenta `lastmod` del sitemap y `dateModified`. */
+  actualizadoEn: string | null;
 }

@@ -23,6 +23,7 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_cartel_BotonVoz|src/components/cartel/BotonVoz.tsx]] *(from #frontend)*
 - [[src_components_cartel_EstiloBanda|src/components/cartel/EstiloBanda.tsx]] *(from #frontend)*
 - [[src_components_cartel_IdeaCartel|src/components/cartel/IdeaCartel.tsx]] *(from #frontend)*
 - [[src_components_cartel_SelectorFondo|src/components/cartel/SelectorFondo.tsx]] *(from #frontend)*

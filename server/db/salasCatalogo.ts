@@ -3,8 +3,10 @@
 
 import { getSupabase } from './core.js';
 import type { LeadParaCatalogo } from '../utils/salaCatalogo.js';
-import type { PuertoCatalogo, SalaAGuardar, SalaGuardada } from '../services/catalogoSalas.js';
+import type { FilaCoordenadas, PuertoCatalogo, PuertoCoordenadas, SalaAGuardar, SalaGuardada } from '../services/catalogoSalas.js';
+import type { PuertoGeolocalizacion } from '../services/geolocalizarSalas.js';
 import type { PuertoVerificacion } from '../services/verificarSalasEnMaps.js';
+import type { PuertoEnriquecimientoWeb } from '../services/enriquecerSalasDesdeSuWeb.js';
 
 const PAGINA = 1000;
 
@@ -49,9 +51,15 @@ export async function leadsDeAgendaDeBanda(bandId: string) {
   return (data ?? []) as Array<{ id: string; sala_id: string | null; nombre_sala: string | null; ciudad: string | null; place_id: string | null }>;
 }
 
-export const puertoCatalogoSupabase: PuertoCatalogo = {
+export const puertoCatalogoSupabase: PuertoCatalogo & PuertoCoordenadas = {
   async leerLeads() {
     return (await leerTodo<FilaLeadCatalogo>('leads', COLUMNAS_LEAD)).map(leadParaCatalogo);
+  },
+
+  async leerAlias() {
+    const { data, error } = await getSupabase().from('catalogo_sala_alias').select('alias_clave,clave,nombre');
+    if (error) throw new Error(`No se pudo leer catalogo_sala_alias: ${error.message}`);
+    return ((data ?? []) as Array<{ alias_clave: string; clave: string; nombre: string | null }>).map((a) => ({ aliasClave: a.alias_clave, clave: a.clave, nombre: a.nombre }));
   },
 
   async leerSalas() {
@@ -63,7 +71,8 @@ export const puertoCatalogoSupabase: PuertoCatalogo = {
     const ahora = new Date().toISOString();
     // `created_at` es de la base de datos. Una sala ya existente lo trae al leerla y una nueva no: en un mismo lote PostgREST
     // rellena con null la que no lo tiene, y eso viola el NOT NULL (la importación de OSM fallaba así al mezclar nuevas y ya existentes).
-    const filas = salas.map(({ created_at: _creada, ...s }: SalaAGuardar & { created_at?: unknown }) => ({ ...s, verificada_en: s.verificada_en?.toISOString() ?? null, updated_at: ahora }));
+    // Lo mismo con las coordenadas: las escribe otro proceso, y una copia leída antes las pisaría con un valor viejo.
+    const filas = salas.map(({ created_at: _creada, lat: _lat, lon: _lon, coordenadas_aprox: _aprox, geolocalizada_en: _geo, ...s }: SalaAGuardar & { created_at?: unknown; lat?: unknown; lon?: unknown; coordenadas_aprox?: unknown; geolocalizada_en?: unknown }) => ({ ...s, verificada_en: s.verificada_en?.toISOString() ?? null, updated_at: ahora }));
     const { error } = await getSupabase().from('catalogo_salas').upsert(filas, { onConflict: 'id' });
     if (error) throw new Error(`No se pudo guardar el catálogo de salas: ${error.message}`);
   },
@@ -76,6 +85,45 @@ export const puertoCatalogoSupabase: PuertoCatalogo = {
       const { error } = await getSupabase().from('leads').update({ sala_id: salaId }).in('id', ids);
       if (error) throw new Error(`No se pudo enlazar leads con la sala ${salaId}: ${error.message}`);
     }
+  },
+
+  async guardarCoordenadas(filas: FilaCoordenadas[]) {
+    await escribirCoordenadas(filas, new Date());
+  },
+};
+
+/** Una actualización por sala (no se puede hacer upsert parcial), en tandas para no abrir cientos de peticiones a la vez. */
+async function escribirCoordenadas(filas: FilaCoordenadas[], en: Date): Promise<void> {
+  for (let i = 0; i < filas.length; i += 25) {
+    await Promise.all(
+      filas.slice(i, i + 25).map(async (f) => {
+        const { error } = await getSupabase().from('catalogo_salas').update({ lat: f.lat, lon: f.lon, coordenadas_aprox: f.aprox, geolocalizada_en: en.toISOString() }).eq('id', f.salaId);
+        if (error) throw new Error(`No se pudieron guardar las coordenadas de la sala ${f.salaId}: ${error.message}`);
+      }),
+    );
+  }
+}
+
+export const puertoGeolocalizacionSupabase: PuertoGeolocalizacion = {
+  async salasSinCoordenadas(limite, antesDe) {
+    const { data, error } = await getSupabase()
+      .from('catalogo_salas')
+      .select('*')
+      .eq('no_contactar', false)
+      .neq('estado_negocio', 'cerrado_permanente')
+      .is('lat', null)
+      .or(`geolocalizada_en.is.null,geolocalizada_en.lt.${antesDe.toISOString()}`)
+      .order('geolocalizada_en', { ascending: true, nullsFirst: true })
+      .limit(limite);
+    if (error) throw new Error(`No se pudieron leer las salas por geolocalizar: ${error.message}`);
+    return ((data ?? []) as FilaSala[]).map(salaDeFila);
+  },
+
+  async guardarPunto(salaId, punto, en) {
+    if (punto) return escribirCoordenadas([{ salaId, lat: punto.lat, lon: punto.lon, aprox: punto.aprox }], en);
+    // Ninguna fuente la supo situar: se anota el intento para no repetirlo cada día.
+    const { error } = await getSupabase().from('catalogo_salas').update({ geolocalizada_en: en.toISOString() }).eq('id', salaId);
+    if (error) throw new Error(`No se pudo anotar el intento de geolocalizar la sala ${salaId}: ${error.message}`);
   },
 };
 
@@ -95,5 +143,30 @@ export const puertoVerificacionSupabase: PuertoVerificacion = {
   async guardarEstado(salaId, estado, en) {
     const { error } = await getSupabase().from('catalogo_salas').update({ estado_negocio: estado, estado_negocio_en: en.toISOString() }).eq('id', salaId);
     if (error) throw new Error(`No se pudo guardar el estado de la sala ${salaId}: ${error.message}`);
+  },
+};
+
+export const puertoEnriquecimientoWebSupabase: PuertoEnriquecimientoWeb = {
+  async salasPorEnriquecer(limite, antesDe) {
+    // Con web, no «no contactar», no cerradas, y con algún dato por rellenar. Las revisadas hace poco esperan.
+    // «Sin revisar o revisada hace tiempo» Y «con algún dato vacío», en un solo filtro: PostgREST no combina de forma fiable dos `or`.
+    const sinRevisar = ['web_revisada_en.is.null', `web_revisada_en.lt.${antesDe.toISOString()}`];
+    const conHueco = ['instagram', 'email_contacto', 'telefono', 'genero'].map((c) => `${c}.is.null`);
+    const { data, error } = await getSupabase()
+      .from('catalogo_salas')
+      .select('*')
+      .eq('no_contactar', false)
+      .neq('estado_negocio', 'cerrado_permanente')
+      .not('website', 'is', null)
+      .or(sinRevisar.flatMap((r) => conHueco.map((h) => `and(${r},${h})`)).join(','))
+      .order('web_revisada_en', { ascending: true, nullsFirst: true })
+      .limit(limite);
+    if (error) throw new Error(`No se pudieron leer las salas por enriquecer: ${error.message}`);
+    return ((data ?? []) as FilaSala[]).map(salaDeFila);
+  },
+
+  async guardarEnriquecimiento(salaId, campos, en) {
+    const { error } = await getSupabase().from('catalogo_salas').update({ ...campos, web_revisada_en: en.toISOString() }).eq('id', salaId);
+    if (error) throw new Error(`No se pudo guardar el enriquecimiento de la sala ${salaId}: ${error.message}`);
   },
 };

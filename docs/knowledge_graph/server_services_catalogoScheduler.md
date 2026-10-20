@@ -21,8 +21,13 @@ Sincronización periódica del catálogo compartido de salas.
 - [[server_db_salasCatalogo|server/db/salasCatalogo.ts]] *(Layer: #db, Domain: #system)*
 - [[server_services_catalogoSalas|server/services/catalogoSalas.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_consultaMapsSala|server/services/consultaMapsSala.ts]] *(Layer: #service, Domain: #system)*
+- [[server_services_enriquecerSalasDesdeSuWeb|server/services/enriquecerSalasDesdeSuWeb.ts]] *(Layer: #service, Domain: #system)*
+- [[server_services_geolocalizarSalas|server/services/geolocalizarSalas.ts]] *(Layer: #service, Domain: #system)*
+- [[server_services_importarSalasBandflow|server/services/importarSalasBandflow.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_importarSalasOsm|server/services/importarSalasOsm.ts]] *(Layer: #service, Domain: #system)*
+- [[server_services_leerWebDeSala|server/services/leerWebDeSala.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_verificarSalasEnMaps|server/services/verificarSalasEnMaps.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_datosDeWebSala|server/utils/datosDeWebSala.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_errorTracking|server/utils/errorTracking.ts]] *(Layer: #service, Domain: #system)*
 
 ---

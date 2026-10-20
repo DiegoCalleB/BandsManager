@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { consultarSalas, fichaDeSala, leadDesdeSala, parsearFiltros, salasEnAgenda, LIMITE_MAXIMO } from '../consultaCatalogo.js';
+import { completitudDeSala, consultarSalas, fichaDeSala, leadDesdeSala, parsearFiltros, puntosDelMapa, salasEnAgenda, LIMITE_MAXIMO, MAX_PUNTOS_MAPA } from '../consultaCatalogo.js';
 import type { SalaGuardada } from '../../services/catalogoSalas.js';
 
 const sala = (o: Partial<SalaGuardada> & { id: string; nombre: string }): SalaGuardada => ({
@@ -98,12 +98,12 @@ describe('consultarSalas', () => {
 });
 
 describe('privacidad de la ficha', () => {
-  it('no contiene email, teléfono, dirección exacta ni nada de la sala que no deba verse', () => {
+  it('no contiene email, teléfono ni nada de la sala que no deba verse (la dirección del local sí: es pública)', () => {
     const ficha = fichaDeSala(sala({ id: 'a', nombre: 'Alfa', place_id: 'ChIJxxx', rebotes: 3 }), false);
     const volcado = JSON.stringify(ficha);
     expect(volcado).not.toContain('booking@ejemplo.es');
     expect(volcado).not.toContain('910000000');
-    expect(volcado).not.toContain('Calle Falsa');
+    expect(ficha.direccion).toBe('Calle Falsa 1');
     expect(volcado).not.toContain('ChIJxxx');
     expect(ficha).toMatchObject({ tiene_email: true, tiene_telefono: true });
     expect(Object.keys(ficha)).not.toContain('email_contacto');
@@ -112,6 +112,11 @@ describe('privacidad de la ficha', () => {
 });
 
 describe('leadDesdeSala', () => {
+  it('lleva el logo de la sala (el icono de su web) como imagen del lead', () => {
+    expect(leadDesdeSala(sala({ id: 'a', nombre: 'Alfa', website: 'https://www.alfa.es/' }), 'l1', 'b1').imagen_url).toBe('https://www.google.com/s2/favicons?domain=alfa.es&sz=128');
+    expect(leadDesdeSala(sala({ id: 'b', nombre: 'Beta', website: null }), 'l2', 'b1').imagen_url).toBeUndefined();
+  });
+
   it('crea un lead de la banda con el contacto de la sala y sin pitch ni estado avanzado', () => {
     const lead = leadDesdeSala(sala({ id: 'a', nombre: 'Alfa', place_id: 'ChIJxxx' }), 'lead-cat-1', 'banda-1');
     expect(lead).toMatchObject({
@@ -130,6 +135,15 @@ describe('leadDesdeSala', () => {
 });
 
 describe('salas cerradas en Google Maps', () => {
+  it('una cerrada que respondió a alguna banda no se oculta: sale con el aviso «posiblemente cerrada»', () => {
+    const r = consultarSalas(
+      [sala({ id: 'a', nombre: 'Cerrada sin contacto', estado_negocio: 'cerrado_permanente' }), sala({ id: 'b', nombre: 'Cerrada que respondió', estado_negocio: 'cerrado_permanente', bandas_con_respuesta: 1 })],
+      filtros(),
+      NADA,
+    );
+    expect(r.salas.map((s) => [s.id, s.posiblemente_cerrada])).toEqual([['b', true]]);
+  });
+
   it('una sala cerrada definitivamente no sale en la consulta; una cerrada temporalmente sí', () => {
     const r = consultarSalas(
       [sala({ id: 'a', nombre: 'Abierta' }), sala({ id: 'b', nombre: 'Cerrada', estado_negocio: 'cerrado_permanente' }), sala({ id: 'c', nombre: 'Reforma', estado_negocio: 'cerrado_temporal' })],
@@ -137,5 +151,60 @@ describe('salas cerradas en Google Maps', () => {
       NADA,
     );
     expect(r.salas.map((s) => s.id).sort()).toEqual(['a', 'c']);
+  });
+});
+
+describe('completitud de la ficha', () => {
+  it('cuenta los datos que importan a una banda y no se infla con una ficha vacía', () => {
+    const vacia = sala({ id: 'v', nombre: 'Vacia', ciudad: null, direccion: null, website: null, instagram: null, email_contacto: null, telefono: null, aforo: null, genero: null });
+    expect(completitudDeSala(vacia)).toBe(0);
+    const completa = sala({ id: 'c', nombre: 'Completa', instagram: '@c', nivel: 'verificada', lat: 40.4, lon: -3.7 });
+    expect(completitudDeSala(completa)).toBe(100);
+  });
+
+  it('el punto de la ciudad no cuenta como «situada» en la ficha', () => {
+    const exacta = sala({ id: 'a', nombre: 'A', lat: 40.4, lon: -3.7 });
+    const aprox = sala({ id: 'b', nombre: 'B', lat: 40.4, lon: -3.7, coordenadas_aprox: true });
+    expect(completitudDeSala(exacta)).toBeGreaterThan(completitudDeSala(aprox));
+  });
+
+  it('la ficha lleva dónde está, la fuente y la completitud', () => {
+    const ficha = fichaDeSala(sala({ id: 'a', nombre: 'Alfa', lat: 40.4, lon: -3.7, fuentes: ['osm'] }), false);
+    expect(ficha).toMatchObject({ lat: 40.4, lon: -3.7, coordenadas_aprox: false, fuentes: ['osm'] });
+    expect(ficha.completitud).toBeGreaterThan(0);
+  });
+});
+
+describe('puntosDelMapa', () => {
+  it('devuelve solo las salas situadas, con los mismos filtros que la lista, y cuenta cuántas faltan', () => {
+    const salas = [
+      sala({ id: 'a', nombre: 'Alfa', lat: 40.4, lon: -3.7 }),
+      sala({ id: 'b', nombre: 'Beta' }),
+      sala({ id: 'c', nombre: 'Gamma', ciudad: 'Lugo', region: 'Galicia', lat: 43, lon: -7.5, coordenadas_aprox: true }),
+    ];
+    const todas = puntosDelMapa(salas, filtros(), NADA);
+    expect(todas.total).toBe(3);
+    expect(todas.puntos.map((p) => p.id).sort()).toEqual(['a', 'c']);
+    expect(todas.puntos.find((p) => p.id === 'c')?.coordenadas_aprox).toBe(true);
+    const lugo = puntosDelMapa(salas, filtros({ lugar: 'Lugo' }), NADA);
+    expect(lugo.puntos.map((p) => p.id)).toEqual(['c']);
+  });
+
+  it('marca las que la banda ya tiene y no enseña las «no contactar» ni las cerradas', () => {
+    const salas = [
+      sala({ id: 'a', nombre: 'Alfa', lat: 1, lon: 1 }),
+      sala({ id: 'b', nombre: 'Beta', lat: 1, lon: 1, no_contactar: true }),
+      sala({ id: 'c', nombre: 'Gamma', lat: 1, lon: 1, estado_negocio: 'cerrado_permanente' }),
+    ];
+    const r = puntosDelMapa(salas, filtros(), { ids: new Set(['a']), claves: new Set() });
+    expect(r.puntos).toHaveLength(1);
+    expect(r.puntos[0]).toMatchObject({ id: 'a', ya_en_agenda: true });
+  });
+
+  it('acota la respuesta y no lleva ni email ni teléfono', () => {
+    const muchas = Array.from({ length: MAX_PUNTOS_MAPA + 5 }, (_, i) => sala({ id: `s${i}`, nombre: `Sala ${i}`, lat: 1, lon: 1 }));
+    const r = puntosDelMapa(muchas, filtros(), NADA);
+    expect(r.puntos).toHaveLength(MAX_PUNTOS_MAPA);
+    expect(JSON.stringify(r.puntos[0])).not.toContain('booking@ejemplo.es');
   });
 });

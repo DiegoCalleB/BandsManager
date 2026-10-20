@@ -13,7 +13,7 @@ tags: ["frontend", "system", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Indicador de que el asistente está escribiendo.
+Indicador de que el asistente está pensando. Dice qué hace y, si tarda, que sigue en ello:
 
 ---
 
@@ -24,6 +24,11 @@ Indicador de que el asistente está escribiendo.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_chatbot_ChatLayout|src/components/chatbot/ChatLayout.tsx]] *(from #frontend)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `src/components/chatbot/__tests__/ChatLoadingIndicator.test.tsx`
 
 ---
 

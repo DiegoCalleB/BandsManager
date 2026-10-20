@@ -106,7 +106,8 @@ async function cargarBoceto(bandId: string): Promise<ImagenReferencia | null> {
 cartelriaRouter.post('/cartel/fondo', requireAuth, imagenRateLimiter, async (req, res) => {
   try {
     const bandId = getTargetBandId(req);
-    const { concertId, estilo, instrucciones, idea: ideaRaw, conBoceto } = req.body || {};
+    const { concertId, estilo, instrucciones, idea: ideaRaw, conBoceto, encuadre: encuadreRaw } = req.body || {};
+    const encuadre = encuadreRaw === 'sangre' ? 'sangre' : 'ventana';
 
     if (typeof concertId !== 'string' || !idSeguro(concertId)) return res.status(400).json({ error: 'Concierto no válido.' });
     if (!esEstiloCartel(estilo)) return res.status(400).json({ error: 'Estilo no válido.' });
@@ -149,9 +150,10 @@ cartelriaRouter.post('/cartel/fondo', requireAuth, imagenRateLimiter, async (req
       referencias: imagenes.length,
       brief: resultado?.brief,
       conBoceto: !!boceto,
+      encuadre,
     });
 
-    const url = await generarFondoCartel(bandId, prompt, boceto ? [boceto, ...imagenes] : imagenes);
+    const url = await generarFondoCartel(bandId, prompt, boceto ? [boceto, ...imagenes] : imagenes, encuadre);
     if (!url) return res.status(503).json({ error: 'No hemos podido generar el fondo. Prueba en un rato.' });
 
     // Al historial del bolo, para no volver a pagar este fondo. Si falla, la persona tiene igual su fondo.

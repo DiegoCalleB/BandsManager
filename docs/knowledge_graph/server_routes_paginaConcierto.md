@@ -39,6 +39,7 @@ Páginas públicas indexables: /e/:slug (un concierto), /sitemap.xml y /robots.t
 - [[server_utils_paginaConcierto|server/utils/paginaConcierto.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_paginaRider|server/utils/paginaRider.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_referidos|server/utils/referidos.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_seo_rastreadores|server/utils/seo/rastreadores.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_sitemap|server/utils/seo/sitemap.ts]] *(Layer: #service, Domain: #system)*
 
 ---

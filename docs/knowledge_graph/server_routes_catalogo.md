@@ -25,7 +25,10 @@ Catálogo compartido de salas: consulta, sugerencias para una banda nueva y alta
 - [[server_db_salasCatalogo|server/db/salasCatalogo.ts]] *(Layer: #db, Domain: #system)*
 - [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(Layer: #security, Domain: #system)*
 - [[server_services_consultaCatalogo|server/services/consultaCatalogo.ts]] *(Layer: #service, Domain: #system)*
+- [[server_services_festivalesPublicos|server/services/festivalesPublicos.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_consultaCatalogo|server/utils/consultaCatalogo.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_festivalesCatalogo|server/utils/festivalesCatalogo.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_planLimits|server/utils/planLimits.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 

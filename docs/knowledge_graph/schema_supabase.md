@@ -39,7 +39,9 @@ Esquema relacional de tablas, índices pgvector, funciones y políticas RLS.
 - [[tabla_catalogo_generos|tabla catalogo_generos]] *(Layer: #schema, Domain: #system)*
 - [[tabla_catalogo_generos_alias|tabla catalogo_generos_alias]] *(Layer: #schema, Domain: #system)*
 - [[tabla_catalogo_ingestas|tabla catalogo_ingestas]] *(Layer: #schema, Domain: #system)*
+- [[tabla_catalogo_sala_alias|tabla catalogo_sala_alias]] *(Layer: #schema, Domain: #system)*
 - [[tabla_catalogo_sala_generos|tabla catalogo_sala_generos]] *(Layer: #schema, Domain: #system)*
+- [[tabla_catalogo_salas|tabla catalogo_salas]] *(Layer: #schema, Domain: #system)*
 - [[tabla_catalogo_staging|tabla catalogo_staging]] *(Layer: #schema, Domain: #system)*
 - [[tabla_catalogo_supresion|tabla catalogo_supresion]] *(Layer: #schema, Domain: #system)*
 - [[tabla_category_pitch_templates|tabla category_pitch_templates]] *(Layer: #schema, Domain: #booking)*

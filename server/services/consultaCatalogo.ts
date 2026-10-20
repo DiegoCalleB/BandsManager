@@ -5,8 +5,9 @@
  * cambia poco, así que se lee entero y se filtra en memoria con una caché corta; si crece, el filtrado se
  * mueve a SQL sin cambiar quien lo llama.
  */
+import { ocultaPorCierre } from '../utils/estadoNegocio.js';
 import { claveSala } from '../utils/salaCatalogo.js';
-import { consultarSalas, leadDesdeSala, parsearFiltros, salasEnAgenda, type ResultadoCatalogo } from '../utils/consultaCatalogo.js';
+import { consultarSalas, fichaDeSala, leadDesdeSala, parsearFiltros, puntosDelMapa, salasEnAgenda, type FichaCatalogo, type ResultadoCatalogo, type ResultadoMapa } from '../utils/consultaCatalogo.js';
 import { sugerirSalas, type PerfilBanda, type Sugerencia } from '../utils/sugerenciasCatalogo.js';
 import type { PuertoCatalogo, SalaGuardada } from './catalogoSalas.js';
 
@@ -49,7 +50,7 @@ export function crearConsultaCatalogo(puerto: PuertoConsulta, ahora: () => numbe
    */
   async function anadir(p: PeticionAlta): Promise<ResultadoAlta> {
     const sala = (await salas()).find((s) => s.id === p.salaId);
-    if (!sala || sala.no_contactar || sala.estado_negocio === 'cerrado_permanente') return { resultado: 'no_disponible' };
+    if (!sala || sala.no_contactar || ocultaPorCierre(sala)) return { resultado: 'no_disponible' };
 
     const agenda = salasEnAgenda(p.leadsDeLaBanda);
     if (agenda.ids.has(sala.id) || agenda.claves.has(sala.clave)) {
@@ -66,6 +67,19 @@ export function crearConsultaCatalogo(puerto: PuertoConsulta, ahora: () => numbe
   return {
     async consultar(entrada: Record<string, unknown> | undefined, leadsDeLaBanda: LeadDeAgenda[]): Promise<ResultadoCatalogo> {
       return consultarSalas(await salas(), parsearFiltros(entrada), salasEnAgenda(leadsDeLaBanda));
+    },
+
+    /** La ficha de una sala, o null si no existe o no se puede mostrar (marcada «no contactar» o cerrada). */
+    async ficha(salaId: string, leadsDeLaBanda: LeadDeAgenda[]): Promise<FichaCatalogo | null> {
+      const sala = (await salas()).find((s) => s.id === salaId);
+      if (!sala || sala.no_contactar || ocultaPorCierre(sala)) return null;
+      const agenda = salasEnAgenda(leadsDeLaBanda);
+      return fichaDeSala(sala, agenda.ids.has(sala.id) || agenda.claves.has(sala.clave));
+    },
+
+    /** Las salas situadas en el mapa que encajan con los filtros. */
+    async mapa(entrada: Record<string, unknown> | undefined, leadsDeLaBanda: LeadDeAgenda[]): Promise<ResultadoMapa> {
+      return puntosDelMapa(await salas(), parsearFiltros(entrada), salasEnAgenda(leadsDeLaBanda));
     },
 
     /** Salas del catálogo que encajan con la banda (su ciudad y su género), sin las que ya tiene. */

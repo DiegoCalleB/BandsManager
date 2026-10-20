@@ -25,6 +25,7 @@ Fichas del directorio de festivales. Añadir una = abrir un pull request con la 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_services_festivalesPublicos|server/services/festivalesPublicos.ts]] *(from #service)*
 - [[server_utils_seo_festivales_render|server/utils/seo/festivales/render.ts]] *(from #service)*
+- [[server_utils_seo_rastreadores|server/utils/seo/rastreadores.ts]] *(from #service)*
 - [[server_utils_seo_sitemap|server/utils/seo/sitemap.ts]] *(from #service)*
 
 ---
