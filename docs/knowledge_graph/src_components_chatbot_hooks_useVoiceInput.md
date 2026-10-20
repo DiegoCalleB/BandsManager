@@ -23,6 +23,7 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_cartel_BotonVoz|src/components/cartel/BotonVoz.tsx]] *(from #frontend)*
 - [[src_components_chatbot_hooks_useChatController|src/components/chatbot/hooks/useChatController.ts]] *(from #frontend)*
 
 ---

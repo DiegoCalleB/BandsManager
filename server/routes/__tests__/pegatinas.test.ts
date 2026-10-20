@@ -49,9 +49,10 @@ describe('regalo de pegatinas', () => {
     bandaDeLaSesion = 'band-a';
     estado = {
       registeredBands: [
-        { band_id: 'band-a', plan: 'de_gira', estado_suscripcion: 'activo' },
-        { band_id: 'band-b', plan: 'local', estado_suscripcion: 'activo' },
-        { band_id: 'band-c', plan: 'ensayo', estado_suscripcion: 'activo' },
+        { band_id: 'band-a', plan: 'de_gira', estado_suscripcion: 'activo', ciclo_facturacion: 'annual' },
+        { band_id: 'band-b', plan: 'local', estado_suscripcion: 'activo', ciclo_facturacion: 'annual' },
+        { band_id: 'band-c', plan: 'ensayo', estado_suscripcion: 'activo', ciclo_facturacion: 'annual' },
+        { band_id: 'band-m', plan: 'de_gira', estado_suscripcion: 'activo', ciclo_facturacion: 'monthly' },
       ],
     };
   });
@@ -63,7 +64,7 @@ describe('regalo de pegatinas', () => {
     expect(avisar).toHaveBeenCalledWith(expect.objectContaining({ tipo: 'pegatinas', nombre: 'Ana' }));
   });
 
-  it.each(['band-b', 'band-c', 'band-fantasma'])('%s no tiene derecho (Local, gratuito o inexistente): 403 y nada se guarda', async (id) => {
+  it.each(['band-b', 'band-c', 'band-m', 'band-fantasma'])('%s no tiene derecho (Local, gratuito, mensual o inexistente): 403 y nada se guarda', async (id) => {
     bandaDeLaSesion = id;
     const r = await pedir();
     expect(r.code).toBe(403);

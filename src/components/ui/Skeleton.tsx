@@ -74,6 +74,17 @@ export const SkeletonLeadRow: React.FC = () => (
   </div>
 );
 
+/** Listado de leads cargando: filas con la forma real de la lista, anunciadas como "ocupado" a lector de
+ *  pantalla (aria-busy + texto sr-only) para que la espera no sea muda. */
+export const SkeletonLeadList: React.FC<{ rows?: number }> = ({ rows = 6 }) => (
+  <div role="status" aria-busy="true" aria-live="polite" className="space-y-2 w-full my-4">
+    <span className="sr-only">Cargando salas…</span>
+    {Array.from({ length: rows }).map((_, i) => (
+      <SkeletonLeadRow key={i} />
+    ))}
+  </div>
+);
+
 /** Fila de canción del repertorio cargando: índice + título + tono + duración */
 export const SkeletonSongRow: React.FC = () => (
   <div className="py-2 px-3 rounded-[var(--r-s)] bg-[var(--surface)] flex items-center justify-between gap-3 w-full">

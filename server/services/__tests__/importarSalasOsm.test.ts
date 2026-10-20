@@ -1,17 +1,52 @@
 import { describe, it, expect, vi } from 'vitest';
 import { crearDescargaOsm, importarSalasDeOsm, type PuertoImportacion } from '../importarSalasOsm.js';
-import type { SalaAGuardar, SalaGuardada } from '../catalogoSalas.js';
+import type { AliasSala, FilaCoordenadas, SalaAGuardar, SalaGuardada } from '../catalogoSalas.js';
 
 const elemento = (name: string, extra: Record<string, string> = {}, id = 1) => ({ type: 'node', id, tags: { amenity: 'music_venue', name, 'addr:city': 'Madrid', ...extra } });
 
 const existente = (o: Partial<SalaGuardada> & { clave: string; id: string }): SalaGuardada =>
   ({ place_id: null, nombre: 'X', ciudad: 'Madrid', region: null, direccion: null, tipo: 'sala', aforo: null, genero: null, website: null, instagram: null, email_contacto: null, telefono: null, nivel: 'sin_verificar', puntuacion: 0, verificada_en: null, bandas_con_respuesta: 0, bandas_con_entrega: 0, rebotes: 0, no_contactar: false, ...o }) as SalaGuardada;
 
-function montar(salas: SalaGuardada[]) {
+function montar(salas: SalaGuardada[], alias: AliasSala[] = []) {
   const guardadas: SalaAGuardar[] = [];
-  const puerto: PuertoImportacion = { leerSalas: vi.fn(async () => salas), guardarSalas: vi.fn(async (s) => void guardadas.push(...s)) };
-  return { puerto, guardadas };
+  const coordenadas: FilaCoordenadas[] = [];
+  const puerto: PuertoImportacion = { leerAlias: vi.fn(async () => alias), leerSalas: vi.fn(async () => salas), guardarSalas: vi.fn(async (s) => void guardadas.push(...s)), guardarCoordenadas: vi.fn(async (f) => void coordenadas.push(...f)) };
+  return { puerto, guardadas, coordenadas };
 }
+
+describe('importarSalasDeOsm: coordenadas', () => {
+  const conPunto = (name: string, lat: number, lon: number) => ({ ...elemento(name), lat, lon });
+
+  it('guarda el punto de OSM de las salas nuevas, después de crearlas', async () => {
+    const { puerto, coordenadas } = montar([]);
+    const r = await importarSalasDeOsm({ puerto, descargar: async () => [conPunto('Sala Nueva', 40.4, -3.7)] });
+    expect(r.conCoordenadas).toBe(1);
+    expect(coordenadas[0]).toMatchObject({ lat: 40.4, lon: -3.7, aprox: false });
+    expect(coordenadas[0].salaId).toMatch(/^sala-/);
+  });
+
+  it('también sitúa las ya existentes sin punto, incluso las verificadas, y reemplaza un punto aproximado', async () => {
+    const { puerto, coordenadas } = montar([
+      existente({ id: 'sala-1', clave: 'nc:moby|madrid', nombre: 'Moby', nivel: 'verificada' }),
+      existente({ id: 'sala-2', clave: 'nc:sol|madrid', nombre: 'Sol', lat: 40, lon: -3, coordenadas_aprox: true }),
+    ]);
+    await importarSalasDeOsm({ puerto, descargar: async () => [conPunto('Moby', 40.4, -3.7), conPunto('Sol', 40.41, -3.71)] });
+    expect(coordenadas.map((c) => c.salaId).sort()).toEqual(['sala-1', 'sala-2']);
+  });
+
+  it('no pisa un punto exacto que la sala ya tiene', async () => {
+    const { puerto, coordenadas } = montar([existente({ id: 'sala-1', clave: 'nc:moby|madrid', nombre: 'Moby', lat: 40, lon: -3, coordenadas_aprox: false })]);
+    await importarSalasDeOsm({ puerto, descargar: async () => [conPunto('Moby', 40.4, -3.7)] });
+    expect(coordenadas).toEqual([]);
+  });
+
+  it('en simulación no escribe coordenadas', async () => {
+    const { puerto, coordenadas } = montar([]);
+    const r = await importarSalasDeOsm({ puerto, descargar: async () => [conPunto('Sala Nueva', 40.4, -3.7)], simulacion: true });
+    expect(r.conCoordenadas).toBe(1);
+    expect(coordenadas).toEqual([]);
+  });
+});
 
 describe('importarSalasDeOsm', () => {
   it('añade las salas nuevas como sin verificar', async () => {
@@ -62,6 +97,24 @@ describe('importarSalasDeOsm', () => {
   });
 });
 
+describe('importarSalasDeOsm con alias', () => {
+  it('una sala de OSM con alias completa la canónica y no crea una fila nueva', async () => {
+    const canonica = existente({ id: 'sala-c', clave: 'nc:nazca club|madrid', nombre: 'Nazca Club', nivel: 'probable' });
+    const { puerto, guardadas } = montar([canonica], [{ aliasClave: 'nc:sala nazca|madrid', clave: 'nc:nazca club|madrid', nombre: 'Nazca Club' }]);
+    const r = await importarSalasDeOsm({ puerto, descargar: async () => [elemento('Sala Nazca', { capacity: '500' })] });
+    expect(r).toMatchObject({ nuevas: 0, completadas: 1 });
+    expect(guardadas).toHaveLength(1);
+    expect(guardadas[0]).toMatchObject({ id: 'sala-c', aforo: 500 });
+  });
+  it('dos nombres de OSM con alias a la misma clave entran como una sola sala', async () => {
+    const alias = [{ aliasClave: 'nc:sala nazca|madrid', clave: 'nc:nazca club|madrid', nombre: null }, { aliasClave: 'nc:nazca|madrid', clave: 'nc:nazca club|madrid', nombre: null }];
+    const { puerto, guardadas } = montar([], alias);
+    await importarSalasDeOsm({ puerto, descargar: async () => [elemento('Sala Nazca', {}, 1), elemento('Nazca', {}, 2)] });
+    expect(guardadas).toHaveLength(1);
+    expect(guardadas[0].clave).toBe('nc:nazca club|madrid');
+  });
+});
+
 describe('crearDescargaOsm', () => {
   const respuesta = (cuerpo: unknown, status = 200) => new Response(JSON.stringify(cuerpo), { status });
   const servidores = ['https://uno.test/api', 'https://dos.test/api'];
@@ -97,11 +150,26 @@ describe('crearDescargaOsm', () => {
     const fetcher = vi.fn()
       .mockResolvedValueOnce(respuesta({}, 502))
       .mockResolvedValueOnce(respuesta({}, 500))
+      .mockResolvedValueOnce(respuesta({}, 502))
+      .mockResolvedValueOnce(respuesta({}, 500))
       .mockResolvedValueOnce(respuesta({ elements: [elemento('Sala Vigo', {}, 2)] }));
     const alFallarRegion = vi.fn();
     const r = await crearDescargaOsm(servidores, fetcher as unknown as typeof fetch, 1000, { ...opciones, alFallarRegion })();
     expect(r).toHaveLength(1);
     expect(alFallarRegion).toHaveBeenCalledWith('ES-MD', 'uno.test: respondió 502; dos.test: respondió 500');
+  });
+
+  it('si la consulta completa no pasa en ningún servidor, prueba la ligera (sin núcleos) antes de rendirse', async () => {
+    const fetcher = vi.fn()
+      .mockResolvedValueOnce(respuesta({}, 504))
+      .mockResolvedValueOnce(respuesta({}, 504))
+      .mockResolvedValueOnce(respuesta({ elements: [elemento('Sala Ligera', {}, 3)] }));
+    const alFallarRegion = vi.fn();
+    const r = await crearDescargaOsm(servidores, fetcher as unknown as typeof fetch, 1000, { regiones: ['ES-MD'], pausaMs: 0, alFallarRegion })();
+    expect(r).toHaveLength(1);
+    expect(alFallarRegion).not.toHaveBeenCalled();
+    expect(consulta(fetcher.mock.calls[0])).toContain('"place"');
+    expect(consulta(fetcher.mock.calls[2])).not.toContain('"place"');
   });
 
   it('si no llega ninguna comunidad, falla y dice cuál servidor dio qué', async () => {

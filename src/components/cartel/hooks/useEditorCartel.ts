@@ -162,6 +162,8 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
         logosTinta: ajustes.logosTinta,
         voz,
         composicion: resolverComposicion(ajustes.composicion, voz),
+        vozAuto: ajustes.letra === 'auto',
+        composicionAuto: ajustes.composicion === 'auto',
       };
     },
     [concierto, bandName, ajustes, enlace, marca, conLogo, logoUrl, paletaBanda, logosExtra, estiloArranque]
@@ -320,7 +322,7 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     setError(null);
     try {
       const { idea: contada, conBoceto } = idea.paraGenerar;
-      const r = await generarFondoCartel({ concertId: bolo, estilo, idea: contada, conBoceto });
+      const r = await generarFondoCartel({ concertId: bolo, estilo, idea: contada, conBoceto, encuadre: 'sangre' });
       // El servidor ya lo añadió al historial guardado; aquí se refleja sin recargar.
       setFondosIaPorBolo((p) => ({ ...p, [bolo]: conFondoIa({ ...CONFIG_INICIAL, fondosIa: p[bolo] ?? fondosIa }, r.url).fondosIa }));
       setFondoPorBolo((p) => ({ ...p, [bolo]: { tipo: 'imagen', origen: 'ia', url: r.url } }));

@@ -114,4 +114,15 @@ describe('promptCartel', () => {
     expect(construirPromptFondo({ estilo: 'neon', referencias: 2 })).toContain('The attached images');
     expect(construirPromptFondo({ estilo: 'neon' })).not.toContain('FIRST attached image');
   });
+
+  it('encuadre a sangre pide una ilustración vertical con zonas calmadas para el texto', () => {
+    const p = construirPromptFondo({ estilo: 'serigrafia', encuadre: 'sangre' });
+    expect(p).toMatch(/tall portrait illustration \(3:4\)/);
+    expect(p).toMatch(/top 25% and the bottom 28%/);
+    expect(p).not.toMatch(/landscape 4:3/);
+  });
+
+  it('sin encuadre sigue pidiendo la ilustración apaisada en ventana', () => {
+    expect(construirPromptFondo({ estilo: 'serigrafia' })).toMatch(/landscape 4:3/);
+  });
 });

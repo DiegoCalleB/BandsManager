@@ -5,6 +5,8 @@
  * añadirla a su agenda (`leadDesdeSala`), que es la acción consciente. Una sala marcada «no contactar» no
  * aparece ni se puede añadir.
  */
+import { logoDeSala } from '../../src/utils/logoDeSala.js';
+import { ocultaPorCierre, posiblementeCerrada } from './estadoNegocio.js';
 import { claveSala, normalizarTexto, type NivelSala } from './salaCatalogo.js';
 import type { SalaGuardada } from '../services/catalogoSalas.js';
 
@@ -22,6 +24,8 @@ export interface FiltrosCatalogo {
   tipo: string;
   aforoMin: number | null;
   aforoMax: number | null;
+  /** Aforo orientativo: salas de la mitad a una vez y media ese valor. Es lo que usa la interfaz; mín y máx quedan para el chat. */
+  aforoAprox: number | null;
   genero: string;
   /** Nivel mínimo de fiabilidad. */
   nivelMinimo: NivelSala;
@@ -48,7 +52,18 @@ export interface FichaCatalogo {
   bandas_con_respuesta: number;
   tiene_email: boolean;
   tiene_telefono: boolean;
+  /** Google la da por cerrada, pero respondió a alguna banda: se enseña con aviso en vez de ocultarla. */
+  posiblemente_cerrada: boolean;
   ya_en_agenda: boolean;
+  direccion: string | null;
+  /** Dónde está. `coordenadas_aprox` = es el punto de su ciudad, no el del local. */
+  lat: number | null;
+  lon: number | null;
+  coordenadas_aprox: boolean;
+  /** Cuántos de los datos que importan a una banda tiene la ficha (0-100). Lo que falta se ve en la ficha. */
+  completitud: number;
+  /** De dónde sale la información (`osm` obliga a citar OpenStreetMap). */
+  fuentes: string[];
 }
 
 export interface ResultadoCatalogo {
@@ -75,6 +90,7 @@ export function parsearFiltros(entrada: Record<string, unknown> | undefined): Fi
     tipo: texto(e.tipo, 20).toLowerCase(),
     aforoMin: numeroPositivo(e.aforoMin ?? e.aforo_min),
     aforoMax: numeroPositivo(e.aforoMax ?? e.aforo_max),
+    aforoAprox: numeroPositivo(e.aforoAprox ?? e.aforo_aprox),
     genero: normalizarTexto(texto(e.genero)),
     nivelMinimo: NIVELES.has(nivel) ? (nivel as NivelSala) : 'sin_verificar',
     conContacto: e.conContacto === true || e.conContacto === 'true' || e.con_contacto === true || e.con_contacto === 'true',
@@ -99,6 +115,22 @@ export function salasEnAgenda(leads: Array<{ sala_id?: string | null; nombre_sal
 
 const contiene = (campo: string | null | undefined, buscado: string): boolean => normalizarTexto(campo ?? '').includes(buscado);
 
+/** Datos que una banda necesita para decidir y escribir a una sala. Cada uno pesa igual: una ficha con cinco de diez está al 50 %. */
+const DATOS_DE_FICHA: Array<(s: SalaGuardada) => boolean> = [
+  (s) => !!s.ciudad,
+  (s) => !!s.direccion,
+  (s) => !!s.website,
+  (s) => !!s.instagram,
+  (s) => !!s.email_contacto,
+  (s) => !!s.telefono,
+  (s) => s.aforo !== null,
+  (s) => !!s.genero,
+  (s) => s.lat != null && s.lon != null && !s.coordenadas_aprox,
+  (s) => s.nivel !== 'sin_verificar',
+];
+
+export const completitudDeSala = (s: SalaGuardada): number => Math.round((DATOS_DE_FICHA.filter((tiene) => tiene(s)).length / DATOS_DE_FICHA.length) * 100);
+
 export function fichaDeSala(s: SalaGuardada, yaEnAgenda: boolean): FichaCatalogo {
   return {
     id: s.id,
@@ -116,37 +148,83 @@ export function fichaDeSala(s: SalaGuardada, yaEnAgenda: boolean): FichaCatalogo
     bandas_con_respuesta: s.bandas_con_respuesta,
     tiene_email: !!s.email_contacto,
     tiene_telefono: !!s.telefono,
+    posiblemente_cerrada: posiblementeCerrada(s),
     ya_en_agenda: yaEnAgenda,
+    direccion: s.direccion,
+    lat: s.lat ?? null,
+    lon: s.lon ?? null,
+    coordenadas_aprox: !!s.coordenadas_aprox,
+    completitud: completitudDeSala(s),
+    fuentes: s.fuentes ?? [],
   };
 }
 
-/** Filtra, ordena (más fiables primero) y acota. Las que la banda ya tiene salen marcadas, no ocultas. */
-export function consultarSalas(
-  salas: SalaGuardada[],
-  filtros: FiltrosCatalogo,
-  agenda: { ids: Set<string>; claves: Set<string> },
-): ResultadoCatalogo {
+/** Las salas que encajan con los filtros, las más fiables primero. Las que la banda ya tiene salen marcadas, no ocultas. */
+function filtrarYOrdenar(salas: SalaGuardada[], filtros: FiltrosCatalogo): SalaGuardada[] {
   const pesoMinimo = PESO_NIVEL[filtros.nivelMinimo];
   const encontradas = salas.filter(
     (s) =>
       !s.no_contactar &&
-      s.estado_negocio !== 'cerrado_permanente' &&
+      !ocultaPorCierre(s) &&
       PESO_NIVEL[s.nivel] >= pesoMinimo &&
       (!filtros.tipo || s.tipo.toLowerCase() === filtros.tipo) &&
       (!filtros.lugar || contiene(s.ciudad, filtros.lugar) || contiene(s.region, filtros.lugar)) &&
       (!filtros.genero || contiene(s.genero, filtros.genero)) &&
       (filtros.aforoMin === null || (s.aforo !== null && s.aforo >= filtros.aforoMin)) &&
       (filtros.aforoMax === null || (s.aforo !== null && s.aforo <= filtros.aforoMax)) &&
+      (filtros.aforoAprox === null || (s.aforo !== null && s.aforo >= filtros.aforoAprox * 0.5 && s.aforo <= filtros.aforoAprox * 1.5)) &&
       (!filtros.conContacto || !!s.email_contacto || !!s.telefono) &&
       (!filtros.texto || [s.nombre, s.ciudad, s.region, s.genero].some((c) => contiene(c, filtros.texto))),
   );
-  encontradas.sort((a, b) => PESO_NIVEL[b.nivel] - PESO_NIVEL[a.nivel] || b.puntuacion - a.puntuacion || a.nombre.localeCompare(b.nombre, 'es'));
+  return encontradas.sort((a, b) => PESO_NIVEL[b.nivel] - PESO_NIVEL[a.nivel] || b.puntuacion - a.puntuacion || a.nombre.localeCompare(b.nombre, 'es'));
+}
+
+export function consultarSalas(
+  salas: SalaGuardada[],
+  filtros: FiltrosCatalogo,
+  agenda: { ids: Set<string>; claves: Set<string> },
+): ResultadoCatalogo {
+  const encontradas = filtrarYOrdenar(salas, filtros);
   const mostradas = encontradas.slice(0, filtros.limite);
   return {
     total: encontradas.length,
     mostradas: mostradas.length,
     salas: mostradas.map((s) => fichaDeSala(s, agenda.ids.has(s.id) || agenda.claves.has(s.clave))),
   };
+}
+
+/** Lo mínimo de una sala para pintarla en el mapa: el resto se pide al abrir su ficha. */
+export interface PuntoDelMapa {
+  id: string;
+  nombre: string;
+  ciudad: string | null;
+  tipo: string;
+  nivel: NivelSala;
+  lat: number;
+  lon: number;
+  coordenadas_aprox: boolean;
+  ya_en_agenda: boolean;
+}
+
+export interface ResultadoMapa {
+  /** Salas que encajan con los filtros, estén o no situadas. */
+  total: number;
+  puntos: PuntoDelMapa[];
+}
+
+/** Máximo de puntos que viajan en una respuesta: el catálogo entero cabe, pero la petición queda acotada. */
+export const MAX_PUNTOS_MAPA = 3000;
+
+/** Las salas que encajan y están situadas en el mapa (con sus mismos filtros que la lista). */
+export function puntosDelMapa(salas: SalaGuardada[], filtros: FiltrosCatalogo, agenda: { ids: Set<string>; claves: Set<string> }): ResultadoMapa {
+  const encontradas = filtrarYOrdenar(salas, filtros);
+  const puntos: PuntoDelMapa[] = [];
+  for (const s of encontradas) {
+    if (s.lat == null || s.lon == null) continue;
+    puntos.push({ id: s.id, nombre: s.nombre, ciudad: s.ciudad, tipo: s.tipo, nivel: s.nivel, lat: s.lat, lon: s.lon, coordenadas_aprox: !!s.coordenadas_aprox, ya_en_agenda: agenda.ids.has(s.id) || agenda.claves.has(s.clave) });
+    if (puntos.length >= MAX_PUNTOS_MAPA) break;
+  }
+  return { total: encontradas.length, puntos };
 }
 
 /** Lead nuevo de la banda a partir de una sala del catálogo: aquí sí viajan el email y el teléfono. */
@@ -162,6 +240,7 @@ export function leadDesdeSala(s: SalaGuardada, idLead: string, bandId: string): 
     aforo: s.aforo ?? 0,
     genero: s.genero ?? '',
     website: s.website ?? undefined,
+    imagen_url: logoDeSala(s.website) ?? undefined,
     instagram: s.instagram ?? undefined,
     email_contacto: s.email_contacto ?? '',
     telefono: s.telefono ?? undefined,

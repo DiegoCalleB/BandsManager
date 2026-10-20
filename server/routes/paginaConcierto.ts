@@ -28,6 +28,7 @@ import { renderizarPaginaRider } from '../utils/paginaRider.js';
 import { obtenerFestivales } from '../services/festivalesPublicos.js';
 import { obtenerSalasPublicas } from '../services/salasPublicas.js';
 import { entradasSeo } from '../utils/seo/sitemap.js';
+import { estadoDirectorios, renderizarLlmsTxt, renderizarRobots } from '../utils/seo/rastreadores.js';
 import { urlInsignia } from '../utils/referidos.js';
 import { obtenerPerfilPublicoBandaCacheado } from '../services/perfilPublicoBanda.js';
 import { captureError } from '../utils/errorTracking.js';
@@ -184,10 +185,41 @@ router.get('/sitemap.xml', publicoRateLimiter, async (_req, res) => {
 });
 
 router.get('/robots.txt', (_req, res) => {
-  const base = baseUrlPublica();
   res.setHeader('Content-Type', 'text/plain; charset=utf-8');
   res.setHeader('Cache-Control', 'public, max-age=86400');
-  res.send(['User-agent: *', 'Allow: /', 'Disallow: /api/', 'Disallow: /r/', `Sitemap: ${base}/sitemap.xml`, ''].join('\n'));
+  res.send(renderizarRobots(baseUrlPublica()));
 });
+
+async function enviarLlmsTxt(res: express.Response, idioma: 'es' | 'en') {
+  const base = baseUrlPublica();
+  try {
+    const estado = estadoDirectorios(await obtenerFestivales(), await obtenerSalasPublicas());
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+    res.send(renderizarLlmsTxt(base, idioma, estado));
+  } catch (e) {
+    captureError(e instanceof Error ? e : new Error(String(e)), { ruta: '/llms.txt' });
+    // Sin base de datos, el resumen sin directorios sigue siendo válido: solo anuncia lo fijo (guías y rider).
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Cache-Control', 'no-store');
+    res.send(renderizarLlmsTxt(base, idioma, estadoDirectorios([], [])));
+  }
+}
+
+router.get('/llms.txt', publicoRateLimiter, (_req, res) => enviarLlmsTxt(res, 'es'));
+router.get('/en/llms.txt', publicoRateLimiter, (_req, res) => enviarLlmsTxt(res, 'en'));
+
+/**
+ * IndexNow (Bing, Yandex y buscadores que lo usan): prueba de propiedad en `/<INDEXNOW_KEY>.txt`. Solo existe si la variable está
+ * definida y es una clave válida (8-128 caracteres alfanuméricos o guiones). El aviso de URLs cambiadas lo hace `scripts/indexnow.mjs`.
+ */
+const claveIndexNow = process.env.INDEXNOW_KEY?.trim();
+if (claveIndexNow && /^[a-zA-Z0-9-]{8,128}$/.test(claveIndexNow)) {
+  router.use((req, res, next) => {
+    if (req.method !== 'GET' || req.path !== `/${claveIndexNow}.txt`) return next();
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.send(claveIndexNow);
+  });
+}
 
 export default router;

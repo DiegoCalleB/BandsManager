@@ -2,9 +2,10 @@
  * Título de la sección y botones de acción unificados.
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
-import { Bot, ChevronDown, ChevronUp, Download, MessageSquareText, PlusCircle } from "lucide-react";
+import { Bot, ChevronDown, ChevronUp, Download, MapPin, MessageSquareText, PlusCircle } from "lucide-react";
 import { ModuleTutorialTrigger } from "../../common/ModuleTutorialTrigger";
 import { Button } from "../../ui";
+import { ABRIR_CATALOGO_SALAS } from "../catalogo/eventosCatalogo";
 import { useBookingCrm } from "./BookingCrmContext";
 
 /**
@@ -65,6 +66,21 @@ export function HeaderTitleAndActions() {
             <PlusCircle className="w-3.5 h-3.5" />
             <span>+ {sectionTab === 'medios' ? 'Medio' : sectionTab === 'grupos' ? 'Contacto' : 'Escenario'}</span>
           </Button>
+
+          {sectionTab !== 'medios' && sectionTab !== 'grupos' && (
+            <Button
+              variant="neutral"
+              size="xs"
+              id="open-catalogo-btn"
+              type="button"
+              onClick={() => window.dispatchEvent(new CustomEvent(ABRIR_CATALOGO_SALAS))}
+              className="items-center gap-1.5"
+              title="Explorar las salas y festivales que han encontrado todas las bandas"
+            >
+              <MapPin className="w-3.5 h-3.5 text-[var(--ink-2)]" />
+              <span>Catálogo</span>
+            </Button>
+          )}
 
           <div className="hidden sm:inline-flex">
             <ModuleTutorialTrigger moduleId="booking" onClick={bookingTutorial.openTutorial} />

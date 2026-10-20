@@ -48,6 +48,7 @@ BandManager UI Component Library
 - [[src_app_MobileTopBar|src/app/MobileTopBar.tsx]] *(from #service)*
 - [[src_components_atril_AtrilBody|src/components/atril/AtrilBody.tsx]] *(from #frontend)*
 - [[src_components_atril_AtrilHeader|src/components/atril/AtrilHeader.tsx]] *(from #frontend)*
+- [[src_components_atril_AtrilTabs|src/components/atril/AtrilTabs.tsx]] *(from #frontend)*
 - [[src_components_atril_AtrilToolbar|src/components/atril/AtrilToolbar.tsx]] *(from #frontend)*
 - [[src_components_atril_AtrilView|src/components/atril/AtrilView.tsx]] *(from #frontend)*
 - [[src_components_band_switcher_BandCardsGrid|src/components/band_switcher/BandCardsGrid.tsx]] *(from #frontend)*
@@ -80,6 +81,9 @@ BandManager UI Component Library
 - [[src_components_booking_BulkLeadsActionBar|src/components/booking/BulkLeadsActionBar.tsx]] *(from #frontend)*
 - [[src_components_booking_BulkProgressModal|src/components/booking/BulkProgressModal.tsx]] *(from #frontend)*
 - [[src_components_booking_catalogo_CatalogoSalasModal|src/components/booking/catalogo/CatalogoSalasModal.tsx]] *(from #frontend)*
+- [[src_components_booking_catalogo_FichaSalaCatalogo|src/components/booking/catalogo/FichaSalaCatalogo.tsx]] *(from #frontend)*
+- [[src_components_booking_catalogo_ListaFestivalesCatalogo|src/components/booking/catalogo/ListaFestivalesCatalogo.tsx]] *(from #frontend)*
+- [[src_components_booking_catalogo_ListaSalasCatalogo|src/components/booking/catalogo/ListaSalasCatalogo.tsx]] *(from #frontend)*
 - [[src_components_booking_ChangeLeadImageModal|src/components/booking/ChangeLeadImageModal.tsx]] *(from #frontend)*
 - [[src_components_booking_crm_ActiveFiltersBar|src/components/booking/crm/ActiveFiltersBar.tsx]] *(from #frontend)*
 - [[src_components_booking_crm_EnrichBanner|src/components/booking/crm/EnrichBanner.tsx]] *(from #frontend)*
@@ -175,6 +179,7 @@ BandManager UI Component Library
 - [[src_components_campaign_CampaignManagerModal|src/components/campaign/CampaignManagerModal.tsx]] *(from #frontend)*
 - [[src_components_campaign_GlobalCampaignBar|src/components/campaign/GlobalCampaignBar.tsx]] *(from #frontend)*
 - [[src_components_cartel_AjustesCartel|src/components/cartel/AjustesCartel.tsx]] *(from #frontend)*
+- [[src_components_cartel_BotonVoz|src/components/cartel/BotonVoz.tsx]] *(from #frontend)*
 - [[src_components_cartel_CarteleriaView|src/components/cartel/CarteleriaView.tsx]] *(from #frontend)*
 - [[src_components_cartel_EstiloBanda|src/components/cartel/EstiloBanda.tsx]] *(from #frontend)*
 - [[src_components_cartel_IdeaCartel|src/components/cartel/IdeaCartel.tsx]] *(from #frontend)*

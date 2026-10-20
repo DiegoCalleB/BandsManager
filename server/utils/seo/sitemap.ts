@@ -1,7 +1,7 @@
 /** Entradas del sitemap de las páginas de SEO: cada par es/en declara sus alternativas recíprocas. */
 import type { EntradaSitemap } from '../paginaConcierto.js';
 import { FESTIVALES } from './festivales/datos.js';
-import { ciudadesDe, comunidadesDe, indexableCiudad, indexableComunidad, indexableIndice } from './salas/publicas.js';
+import { ciudadesDe, comunidadesDe, indexableCiudad, indexableComunidad, indexableIndice, ultimaActualizacion } from './salas/publicas.js';
 import type { SalaPublica } from './salas/tipos.js';
 import type { Festival } from './festivales/tipos.js';
 import { fichaIndexable, festivalesVigentes, indexable } from './festivales/vigencia.js';
@@ -34,15 +34,16 @@ export function entradasSeo(base: string, hoy: string = new Date().toISOString()
 
 /** Solo las listas con volumen suficiente; la ficha de una sala va siempre con `noindex` y no entra. */
 function entradasSalas(base: string, salas: readonly SalaPublica[]): EntradaSitemap[] {
-  const pares: Array<{ es: string; en: string }> = [];
-  if (indexableIndice(salas)) pares.push({ es: RUTAS.es.salas, en: RUTAS.en.salas });
+  const pares: Array<{ es: string; en: string; lastmod: string }> = [];
+  const fecha = (delas: readonly SalaPublica[]) => ultimaActualizacion(delas) ?? FECHA_CONTENIDO;
+  if (indexableIndice(salas)) pares.push({ es: RUTAS.es.salas, en: RUTAS.en.salas, lastmod: fecha(salas) });
   for (const c of comunidadesDe(salas)) {
     if (!indexableComunidad(salas, c.slug)) continue;
-    pares.push({ es: RUTAS.es.salasComunidad(c.slug), en: RUTAS.en.salasComunidad(c.slug) });
-    for (const ciudad of ciudadesDe(salas, c.slug)) if (indexableCiudad(salas, c.slug, ciudad.slug)) pares.push({ es: RUTAS.es.salasCiudad(c.slug, ciudad.slug), en: RUTAS.en.salasCiudad(c.slug, ciudad.slug) });
+    pares.push({ es: RUTAS.es.salasComunidad(c.slug), en: RUTAS.en.salasComunidad(c.slug), lastmod: fecha(c.salas) });
+    for (const ciudad of ciudadesDe(salas, c.slug)) if (indexableCiudad(salas, c.slug, ciudad.slug)) pares.push({ es: RUTAS.es.salasCiudad(c.slug, ciudad.slug), en: RUTAS.en.salasCiudad(c.slug, ciudad.slug), lastmod: fecha(ciudad.salas) });
   }
   return pares.flatMap((p) => {
     const alternativas = alternativasPar(base, p.es, p.en);
-    return [{ loc: `${base}${p.es}`, lastmod: FECHA_CONTENIDO, alternativas }, { loc: `${base}${p.en}`, lastmod: FECHA_CONTENIDO, alternativas }];
+    return [{ loc: `${base}${p.es}`, lastmod: p.lastmod, alternativas }, { loc: `${base}${p.en}`, lastmod: p.lastmod, alternativas }];
   });
 }

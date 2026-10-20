@@ -192,5 +192,7 @@ describe('GET /robots.txt', () => {
     expect(res.body).toContain('Disallow: /api/');
     expect(res.body).toContain('Disallow: /r/');
     expect(res.body).toContain(`Sitemap: ${BASE}/sitemap.xml`);
+    expect(res.body).toContain('User-agent: GPTBot');
+    expect(res.body).toContain('User-agent: ClaudeBot');
   });
 });

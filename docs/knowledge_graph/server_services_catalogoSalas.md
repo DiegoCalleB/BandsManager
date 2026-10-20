@@ -27,6 +27,9 @@ Sincronización del catálogo compartido de salas (fase 1).
 - [[server_db_salasCatalogo|server/db/salasCatalogo.ts]] *(from #db)*
 - [[server_services_catalogoScheduler|server/services/catalogoScheduler.ts]] *(from #service)*
 - [[server_services_consultaCatalogo|server/services/consultaCatalogo.ts]] *(from #service)*
+- [[server_services_enriquecerSalasDesdeSuWeb|server/services/enriquecerSalasDesdeSuWeb.ts]] *(from #service)*
+- [[server_services_geolocalizarSalas|server/services/geolocalizarSalas.ts]] *(from #service)*
+- [[server_services_importarSalasBandflow|server/services/importarSalasBandflow.ts]] *(from #service)*
 - [[server_services_importarSalasOsm|server/services/importarSalasOsm.ts]] *(from #service)*
 - [[server_services_verificarSalasEnMaps|server/services/verificarSalasEnMaps.ts]] *(from #service)*
 - [[server_utils_camposDesdeCatalogo|server/utils/camposDesdeCatalogo.ts]] *(from #service)*
@@ -40,6 +43,9 @@ Sincronización del catálogo compartido de salas (fase 1).
 - `server/services/__tests__/catalogoSalas.test.ts`
 - `server/services/__tests__/catalogoScheduler.test.ts`
 - `server/services/__tests__/consultaCatalogo.test.ts`
+- `server/services/__tests__/enriquecerSalasDesdeSuWeb.test.ts`
+- `server/services/__tests__/geolocalizarSalas.test.ts`
+- `server/services/__tests__/importarSalasBandflow.test.ts`
 - `server/services/__tests__/importarSalasOsm.test.ts`
 - `server/services/__tests__/verificarSalasEnMaps.test.ts`
 - `server/utils/__tests__/camposDesdeCatalogo.test.ts`

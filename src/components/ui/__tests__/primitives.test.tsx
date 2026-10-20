@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { Input, Textarea, Select, Field, Switch, Card, EmptyState, Button, Tabs, CurveSeries, ChannelChip } from '..';
+import { Input, Textarea, Select, Field, Switch, Card, EmptyState, Button, Tabs, CurveSeries, ChannelChip, SkeletonLeadList } from '..';
 import { Heart } from 'lucide-react';
 
 const html = (el: React.ReactElement) => renderToStaticMarkup(el);
@@ -115,5 +115,24 @@ describe('Tabs, CurveSeries y ChannelChip', () => {
     expect(out).toContain('aria-pressed="true"');
     expect(out).toContain('Solo');
     expect(out).toContain('var(--ok)');
+  });
+});
+
+describe('SkeletonLeadList', () => {
+  it('se anuncia como ocupado a lectores de pantalla y lleva texto sr-only', () => {
+    const out = html(<SkeletonLeadList />);
+    expect(out).toContain('role="status"');
+    expect(out).toContain('aria-busy="true"');
+    expect(out).toContain('aria-live="polite"');
+    expect(out).toContain('sr-only');
+    expect(out).toContain('Cargando salas');
+  });
+
+  it('pinta el número de filas pedido y usa tokens, no colores fijos', () => {
+    const out = html(<SkeletonLeadList rows={3} />);
+    // Cada fila lleva avatar + 2 líneas + 2 badges = 5 bloques; 3 filas = 15
+    expect(out.match(/data-carga="skeleton"/g)).toHaveLength(15);
+    expect(out).toContain('bg-[var(--sunken)]');
+    expect(out).not.toMatch(/#[0-9a-fA-F]{3,6}/);
   });
 });

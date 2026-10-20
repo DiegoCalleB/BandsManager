@@ -47,9 +47,9 @@ describe('Grabar idea en el Atril', () => {
 });
 
 describe('Jamify y cejuela', () => {
-  it('Jamify arranca activo y se analiza solo, sin aviso previo', () => {
+  it('Jamify se analiza solo y la línea de acordes arranca cerrada, sin aviso previo', () => {
     const src = leerAtril();
-    expect(src).toMatch(/showAnalisisAcordes, setShowAnalisisAcordes\] = useState<boolean>\(true\)/);
+    expect(src).toMatch(/showAnalisisAcordes, setShowAnalisisAcordes\] = useState<boolean>\(false\)/);
     expect(src).toContain('jamifyAutoIntentado');
     expect(src).toContain('"Acordes del audio"');
     expect(src).toContain('Jamify');

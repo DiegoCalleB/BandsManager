@@ -38,7 +38,7 @@ export function PlanCardDeGira() {
                       </div>
 
                       <div className="mb-3 px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/20 flex items-center gap-1.5 text-micro font-sans text-[var(--ink)] font-bold">
-                        <span>150 pegatinas gratis</span>
+                        <span>150 pegatinas gratis con el plan anual</span>
                       </div>
 
                       <ul className="space-y-2 mb-5 flex-1 text-xs">

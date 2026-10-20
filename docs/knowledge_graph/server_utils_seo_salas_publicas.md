@@ -26,6 +26,7 @@ Reglas de publicación del directorio de salas y su agrupación por zona. Puro y
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_db_salasPublicas|server/db/salasPublicas.ts]] *(from #db)*
 - [[server_routes_paginasSeo|server/routes/paginasSeo.ts]] *(from #route)*
+- [[server_utils_seo_rastreadores|server/utils/seo/rastreadores.ts]] *(from #service)*
 - [[server_utils_seo_salas_render|server/utils/seo/salas/render.ts]] *(from #service)*
 - [[server_utils_seo_sitemap|server/utils/seo/sitemap.ts]] *(from #service)*
 

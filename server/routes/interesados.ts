@@ -1,6 +1,7 @@
 // Lista de novedades de la landing oficial, con doble confirmación (sin sesión).
 //   · POST /api/public/interesados            email + consentimiento: envía el correo de confirmación.
-//   · GET  /api/public/interesados/confirmar  enlace firmado del correo: confirma y manda la bienvenida.
+//   · GET  /api/public/interesados/confirmar  enlace firmado del correo: enseña un botón (no confirma solo).
+//   · POST /api/public/interesados/confirmar  el botón: confirma y manda la bienvenida.
 //   · GET  /api/public/interesados/baja       enlace firmado de cada correo: baja.
 //
 // El alta responde SIEMPRE igual (esté o no el email ya apuntado) para no revelar quién está en la lista.
@@ -18,6 +19,7 @@ import {
   firmaInteresadoValida,
   idiomaInteresado,
   normalizarEmailInteresado,
+  paginaConfirmarInteresado,
   paginaInteresado,
   urlInteresado,
 } from '../utils/interesados.js';
@@ -62,16 +64,32 @@ router.post('/api/public/interesados', publicoRateLimiter, altaRateLimiter, asyn
 });
 
 /** Valida el enlace firmado y devuelve el interesado, o null si el enlace no vale. */
-async function interesadoDelEnlace(accion: 'confirmar' | 'baja', query: express.Request['query']) {
-  const id = String(query.i ?? '');
-  if (!id || !idSeguro(id) || !firmaInteresadoValida(accion, id, query.f)) return null;
+async function interesadoDelEnlace(accion: 'confirmar' | 'baja', datos: Record<string, unknown>) {
+  const id = String(datos.i ?? '');
+  if (!id || !idSeguro(id) || !firmaInteresadoValida(accion, id, datos.f)) return null;
   return dbGetInteresado(id);
 }
 
+const ENLACE_NO_VALIDO = paginaInteresado('Enlace no válido. / Invalid link.');
+const ERROR_TEMPORAL = paginaInteresado('Error temporal, inténtalo de nuevo. / Temporary error, please try again.');
+
+/** Abrir el enlace solo enseña un botón: confirmar es una acción y va por POST. */
 router.get('/api/public/interesados/confirmar', publicoRateLimiter, async (req, res) => {
   try {
     const interesado = await interesadoDelEnlace('confirmar', req.query);
-    if (!interesado) return res.status(400).type('html').send(paginaInteresado('Enlace no válido. / Invalid link.'));
+    if (!interesado) return res.status(400).type('html').send(ENLACE_NO_VALIDO);
+    const accion = `/api/public/interesados/confirmar?i=${encodeURIComponent(interesado.id)}&f=${encodeURIComponent(String(req.query.f))}`;
+    res.type('html').send(paginaConfirmarInteresado(accion));
+  } catch (e) {
+    captureError(e instanceof Error ? e : new Error(String(e)), { ruta: 'GET /api/public/interesados/confirmar' });
+    res.status(500).type('html').send(ERROR_TEMPORAL);
+  }
+});
+
+router.post('/api/public/interesados/confirmar', publicoRateLimiter, async (req, res) => {
+  try {
+    const interesado = await interesadoDelEnlace('confirmar', { ...(req.body ?? {}), ...req.query });
+    if (!interesado) return res.status(400).type('html').send(ENLACE_NO_VALIDO);
     if (await dbConfirmarInteresado(interesado.id)) {
       void avisarAlta({ tipo: 'espera_confirmada', email: interesado.email, origen: 'landing oficial' });
       const base = getProductionAppUrl(process.env.APP_URL);
@@ -82,8 +100,8 @@ router.get('/api/public/interesados/confirmar', publicoRateLimiter, async (req, 
     }
     res.type('html').send(paginaInteresado('¡Listo, email confirmado! Te escribiremos solo cuando haya novedades. / Done, your email is confirmed.'));
   } catch (e) {
-    captureError(e instanceof Error ? e : new Error(String(e)), { ruta: 'GET /api/public/interesados/confirmar' });
-    res.status(500).type('html').send(paginaInteresado('Error temporal, inténtalo de nuevo. / Temporary error, please try again.'));
+    captureError(e instanceof Error ? e : new Error(String(e)), { ruta: 'POST /api/public/interesados/confirmar' });
+    res.status(500).type('html').send(ERROR_TEMPORAL);
   }
 });
 

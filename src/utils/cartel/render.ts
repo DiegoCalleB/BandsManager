@@ -46,6 +46,9 @@ export interface PiezasCartel {
   voz?: VozCartel;
   /** Cómo se reparte el cartel. */
   composicion?: Composicion;
+  /** La letra / el reparto se dejaron en «automático»: sobre una ilustración a sangre el render elige los suyos. */
+  vozAuto?: boolean;
+  composicionAuto?: boolean;
   /** Una sola tinta para todos los logos (como impresos). Si no, a color sobre una placa clara. */
   logosTinta?: boolean;
   opciones: OpcionesLayout;
@@ -179,25 +182,38 @@ function tintaDeZona(ctx: CanvasRenderingContext2D, r: Rect): Tinta {
   }
 }
 
-/** Velo plano sobre la zona del texto que se desvanece hacia el centro del cartel. */
-function velar(ctx: CanvasRenderingContext2D, r: Rect, t: Tinta, haciaAbajo: boolean, fundido: number) {
+/** Color medio de la zona, muy oscurecido: la sombra del texto es de la propia imagen, no un negro de ordenador. */
+function sombraDe(ctx: CanvasRenderingContext2D, r: Rect): string | null {
+  try {
+    const d = ctx.getImageData(Math.max(0, Math.round(r.x)), Math.max(0, Math.round(r.y)), Math.max(1, Math.round(r.w)), Math.max(1, Math.round(r.h))).data;
+    let R = 0, G = 0, B = 0, n = 0;
+    for (let i = 0; i < d.length; i += 4 * 17) {
+      R += d[i]; G += d[i + 1]; B += d[i + 2]; n++;
+    }
+    return n ? `${Math.round((R / n) * 0.22)},${Math.round((G / n) * 0.22)},${Math.round((B / n) * 0.22)}` : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Velo sobre la zona del texto que se desvanece hacia el centro del cartel (con curva suave, sin escalón). */
+function velar(ctx: CanvasRenderingContext2D, r: Rect, t: Tinta, haciaAbajo: boolean, fundido: number, color?: string | null) {
   if (!t.velo) return;
-  const rgb = t.tinta === 'clara' ? '15,16,20' : '244,241,234';
+  const rgb = color ?? (t.tinta === 'clara' ? '15,16,20' : '244,241,234');
   const y0 = haciaAbajo ? r.y : r.y - fundido;
   const y1 = haciaAbajo ? r.y + r.h + fundido : r.y + r.h;
   const g = ctx.createLinearGradient(0, y0, 0, y1);
-  const lleno = `rgba(${rgb},${t.velo})`;
-  const vacio = `rgba(${rgb},0)`;
   const corte = fundido / (y1 - y0);
-  if (haciaAbajo) {
-    g.addColorStop(0, lleno);
-    g.addColorStop(1 - corte, lleno);
-    g.addColorStop(1, vacio);
-  } else {
-    g.addColorStop(0, vacio);
-    g.addColorStop(corte, lleno);
-    g.addColorStop(1, lleno);
+  // Rampa suave (smoothstep) en la parte que se desvanece.
+  const PASOS = 6;
+  for (let i = 0; i <= PASOS; i++) {
+    const k = i / PASOS;
+    const alfa = t.velo * (1 - k * k * (3 - 2 * k));
+    if (haciaAbajo) g.addColorStop(1 - corte + corte * k, `rgba(${rgb},${alfa})`);
+    else g.addColorStop(corte * (1 - k), `rgba(${rgb},${alfa})`);
   }
+  if (haciaAbajo) g.addColorStop(0, `rgba(${rgb},${t.velo})`);
+  else g.addColorStop(1, `rgba(${rgb},${t.velo})`);
   ctx.fillStyle = g;
   ctx.fillRect(0, y0, r.w, y1 - y0);
 }
@@ -353,9 +369,16 @@ export async function renderCartel(
   fondo: FondoCartel,
   piezas: PiezasCartel
 ): Promise<LayoutCartel> {
-  const voz = piezas.voz ?? 'moderna';
-  await prepararFuentes(voz);
   const imagen = fondo.tipo === 'imagen' ? await cargarImagen(fondo.url) : null;
+  const esIa = fondo.tipo === 'imagen' && fondo.origen === 'ia';
+  // Una ilustración de IA vertical (3:4) es el cartel entero: el texto va encima, en sus zonas calmadas.
+  // Una apaisada es una ventana dentro de un papel: el layout se compacta para dejarle sitio.
+  const aSangre = esIa && !!imagen && imagen.height / imagen.width >= 1.1;
+  // Letra y reparto en «automático»: sobre una ilustración a sangre, el nombre grande de cartel abajo y
+  // los datos pequeños arriba; sin filetes ni adornos que le quiten fuerza al motivo.
+  const voz = aSangre && piezas.vozAuto ? 'cartel' : (piezas.voz ?? 'moderna');
+  const composicion = aSangre && piezas.composicionAuto ? 'base' : piezas.composicion;
+  await prepararFuentes(voz);
 
   const ctx = canvas.getContext('2d', { willReadFrequently: true });
   if (!ctx) throw new Error('Tu navegador no puede dibujar el cartel.');
@@ -366,8 +389,8 @@ export async function renderCartel(
     return ctx.measureText(t).width;
   };
   const logos = await cargarLogos(piezas.logos ?? []);
-  const conIlustracion = fondo.tipo === 'imagen' && fondo.origen === 'ia';
-  const L = calcularLayout(def, ancho, piezas.datos, { ...piezas.opciones, compacto: conIlustracion, voz, composicion: piezas.composicion, logos: logos.map((l) => l.img.width / l.img.height) }, medir);
+  const conIlustracion = esIa && !aSangre;
+  const L = calcularLayout(def, ancho, piezas.datos, { ...piezas.opciones, compacto: conIlustracion, voz, composicion, logos: logos.map((l) => l.img.width / l.img.height) }, medir);
   canvas.width = L.ancho;
   canvas.height = L.alto;
   const u = L.ancho / 1080;
@@ -388,7 +411,7 @@ export async function renderCartel(
     };
     dibujarOnda(ctx, hueco, paleta.acento, piezas.semilla, u);
   } else if (imagen) {
-    if (fondo.tipo === 'imagen' && fondo.origen === 'ia') {
+    if (conIlustracion) {
       // Un fondo de IA es una ilustración ENTERA dentro de un cartel de papel: va en la ventana que dejan
       // las placas del texto y nada la corta. Si está dibujada sobre un papel liso, el cartel es de ESE papel
       // y la ilustración se funde con él (sin caja ni filetes); si no, se enmarca. La fibra se pone al final,
@@ -451,14 +474,23 @@ export async function renderCartel(
   } else {
     tArriba = tintaDeLineas(ctx, lineasArriba, L.zonas.arriba, u, voz);
     tAbajo = tintaDeLineas(ctx, lineasAbajo, L.zonas.abajo, u, voz, L.logos);
-    velar(ctx, L.zonas.arriba, tArriba, true, fundido);
-    velar(ctx, L.zonas.abajo, tAbajo, false, fundido);
+    if (aSangre) {
+      // Sobre una ilustración que ocupa todo el cartel, el texto es siempre claro sobre una sombra de la propia
+      // imagen: un velo claro de papel con letra oscura se lee como una mancha gris pegada encima del arte.
+      const sobreArte = (t: Tinta): Tinta => (t.tinta === 'oscura' ? { tinta: 'clara', velo: 0.6 } : t);
+      tArriba = sobreArte(tArriba);
+      tAbajo = sobreArte(tAbajo);
+    }
+    // A sangre el velo es largo y del color de la propia imagen; con foto o paleta, el de siempre.
+    const caida = aSangre ? 260 * u : fundido;
+    velar(ctx, L.zonas.arriba, tArriba, true, caida, aSangre ? sombraDe(ctx, L.zonas.arriba) : null);
+    velar(ctx, L.zonas.abajo, tAbajo, false, caida, aSangre ? sombraDe(ctx, { ...L.zonas.abajo, y: L.zonas.abajo.y - caida, h: L.zonas.abajo.h + caida }) : null);
     pintar(lineasArriba, tArriba);
     pintar(lineasAbajo, tAbajo);
   }
   dibujarAdornos(ctx, L.adornos, (a) => tintaDe(a.y >= L.zonas.abajo.y ? tAbajo : tArriba));
   // 3. La fibra de papel, por encima de todo menos el QR (que tiene que escanear): fondo y letras impresos juntos.
-  if (conIlustracion) aplicarGrano(ctx, L.ancho, L.alto, semillaDeTexto(piezas.semilla));
+  if (esIa) aplicarGrano(ctx, L.ancho, L.alto, semillaDeTexto(piezas.semilla));
 
   // 4. QR.
   if (L.qr && piezas.qrUrl) dibujarQr(ctx, L.qr, piezas.qrUrl);
