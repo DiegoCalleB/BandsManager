@@ -36,6 +36,7 @@ Páginas públicas del directorio de salas (`/directories/venues…`): HTML comp
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/utils/seo/__tests__/rastreadores.test.ts`
 - `server/utils/seo/__tests__/salas.test.ts`
 
 ---

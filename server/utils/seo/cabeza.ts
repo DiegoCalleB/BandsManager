@@ -19,6 +19,18 @@ export interface OpcionesCabeza {
   robots?: string;
 }
 
+/**
+ * Añade a todo JSON-LD la organización y el sitio con `@id` estable, para que buscadores y modelos de lenguaje enlacen
+ * cada página con la misma entidad (BandManager.io) en vez de tratar cada una como una isla.
+ */
+export function conEntidadesDelSitio(jsonLd: unknown, base: string, idioma: IdiomaSeo): unknown {
+  const organizacion = { '@type': 'Organization', '@id': `${base}/#organization`, name: 'BandManager.io', url: base, logo: `${base}/og-cover.png` };
+  const sitio = { '@type': 'WebSite', '@id': `${base}/#website`, url: base, name: 'BandManager.io', inLanguage: idioma, publisher: { '@id': `${base}/#organization` } };
+  const origen = (jsonLd ?? {}) as { '@graph'?: unknown[]; '@context'?: unknown };
+  const nodos = Array.isArray(origen['@graph']) ? origen['@graph'] : [(() => { const { '@context': _c, ...resto } = origen; return resto; })()];
+  return { '@context': 'https://schema.org', '@graph': [...nodos, organizacion, sitio] };
+}
+
 export function cabezaHtml(o: OpcionesCabeza): string {
   const url = `${o.base}${o.ruta}`;
   const alternas = o.alternativas.map((a) => `<link rel="alternate" hreflang="${escapeHtml(a.hreflang)}" href="${escapeHtml(a.href)}">`).join('\n');
@@ -41,7 +53,7 @@ ${alternas}
 <meta property="og:image" content="${escapeHtml(o.base)}/og-cover.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#F6F7F9">
-<script type="application/ld+json">${jsonLdSeguro(o.jsonLd)}</script>
+<script type="application/ld+json">${jsonLdSeguro(conEntidadesDelSitio(o.jsonLd, o.base, o.idioma))}</script>
 <style>${ESTILOS_PAGINA_PUBLICA}</style>
 </head>`;
 }

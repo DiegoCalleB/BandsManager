@@ -25,6 +25,7 @@ Directorio público de salas de conciertos de España. Sale del catálogo compar
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_db_salasPublicas|server/db/salasPublicas.ts]] *(from #db)*
 - [[server_services_salasPublicas|server/services/salasPublicas.ts]] *(from #service)*
+- [[server_utils_seo_rastreadores|server/utils/seo/rastreadores.ts]] *(from #service)*
 - [[server_utils_seo_salas_publicas|server/utils/seo/salas/publicas.ts]] *(from #service)*
 - [[server_utils_seo_salas_render|server/utils/seo/salas/render.ts]] *(from #service)*
 - [[server_utils_seo_sitemap|server/utils/seo/sitemap.ts]] *(from #service)*
@@ -32,6 +33,7 @@ Directorio público de salas de conciertos de España. Sale del catálogo compar
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/utils/seo/__tests__/rastreadores.test.ts`
 - `server/utils/seo/__tests__/salas.test.ts`
 
 ---

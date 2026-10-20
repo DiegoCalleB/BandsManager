@@ -32,6 +32,7 @@ _Sin dependencias salientes directas._
 - [[server_utils_seo_festivales_semilla|server/utils/seo/festivales/semilla.ts]] *(from #service)*
 - [[server_utils_seo_festivales_textos|server/utils/seo/festivales/textos.ts]] *(from #service)*
 - [[server_utils_seo_festivales_vigencia|server/utils/seo/festivales/vigencia.ts]] *(from #service)*
+- [[server_utils_seo_rastreadores|server/utils/seo/rastreadores.ts]] *(from #service)*
 - [[server_utils_seo_sitemap|server/utils/seo/sitemap.ts]] *(from #service)*
 
 ---
