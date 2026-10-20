@@ -23,6 +23,7 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server_routes_cartelria|server/routes/cartelria.ts]] *(from #route)*
 - [[src_components_cartel_CarteleriaView|src/components/cartel/CarteleriaView.tsx]] *(from #frontend)*
 - [[src_components_cartel_hooks_useEditorCartel|src/components/cartel/hooks/useEditorCartel.ts]] *(from #frontend)*
 - [[src_utils_cartel_datos|src/utils/cartel/datos.ts]] *(from #service)*

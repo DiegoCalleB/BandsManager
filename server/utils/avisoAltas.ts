@@ -30,12 +30,25 @@ export function destinoAvisoAltas(env: NodeJS.ProcessEnv = process.env): string 
   return valor.includes('@') ? valor : 'bandmanager.io.pro@gmail.com';
 }
 
-export function correoAvisoAlta(d: DatosAlta): { asunto: string; html: string } {
+/** Fecha y hora de España en formato normal (20/10/2026, 22:51), no el formato técnico UTC. */
+export function fechaLegible(fecha: Date): string {
+  return new Intl.DateTimeFormat('es-ES', {
+    timeZone: 'Europe/Madrid',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(fecha);
+}
+
+export function correoAvisoAlta(d: DatosAlta, ahora: Date = new Date()): { asunto: string; html: string } {
   const filas: Array<[string, string]> = [['Email', d.email]];
   if (d.nombre) filas.push(['Nombre', d.nombre]);
   if (d.origen) filas.push(['Origen', d.origen]);
   if (d.detalle) filas.push(['Mensaje', d.detalle]);
-  filas.push(['Fecha', new Date().toISOString()]);
+  filas.push(['Fecha', fechaLegible(ahora)]);
   const tabla = filas
     .map(([k, v]) => `<tr><td style="padding:4px 12px 4px 0;color:#666;">${escapeHtml(k)}</td><td style="padding:4px 0;"><strong>${escapeHtml(v)}</strong></td></tr>`)
     .join('');

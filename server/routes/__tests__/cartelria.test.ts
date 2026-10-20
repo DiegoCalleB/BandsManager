@@ -16,14 +16,16 @@ const PUB = 'https://x.supabase.co/storage/v1/object/public/band-media';
 const fake = crearFakeSupabaseTablas({ band_cartel_estilo: [['band_id']] });
 vi.mock('../../db/core.js', async (orig) => ({ ...(await orig<any>()), getSupabase: () => fake.client }));
 vi.mock('../../state.js', async (orig) => ({ ...(await orig<any>()), loadState: () => ({}), saveState: () => {} }));
-vi.mock('../../db.js', () => ({ dbGetEpkConfig: async () => null, dbGetRegisteredBandById: async () => null }));
+const banda = { nombre: null as string | null };
+vi.mock('../../db.js', () => ({ dbGetEpkConfig: async () => null, dbGetRegisteredBandById: async () => (banda.nombre ? { band_id: 'band-a', nombre_banda: banda.nombre } : null) }));
 
-const servicio = { url: `${PUB}/carteles/band-a/ia-1.png` as string | null, error: null as unknown, llamadas: [] as Array<[string, string, number]> };
+const servicio = { url: `${PUB}/carteles/band-a/ia-1.png` as string | null, error: null as unknown, llamadas: [] as Array<[string, string, number]>, textos: [] as unknown[], textoOk: true };
 vi.mock('../../services/imagenCartel.js', () => ({
-  generarFondoCartel: async (bandId: string, prompt: string, refs: unknown[] = []) => {
+  generarFondoCartel: async (bandId: string, prompt: string, refs: unknown[] = [], _encuadre?: string, textos: unknown = null) => {
     servicio.llamadas.push([bandId, prompt, refs.length]);
+    servicio.textos.push(textos);
     if (servicio.error) throw servicio.error;
-    return servicio.url;
+    return servicio.url ? { url: servicio.url, textoOk: servicio.textoOk } : null;
   },
 }));
 const subidas: Array<{ ruta: string; tipo: string }> = [];
@@ -80,6 +82,9 @@ beforeEach(() => {
   ];
   servicio.url = `${PUB}/carteles/band-a/ia-1.png`;
   servicio.llamadas.length = 0;
+  servicio.textos.length = 0;
+  servicio.textoOk = true;
+  banda.nombre = null;
   servicio.error = null;
   subidas.length = 0;
   borrados.length = 0;
@@ -91,9 +96,34 @@ describe('POST /cartel/fondo', () => {
   it('devuelve la url del fondo, genera con la banda de la sesión y lo guarda en el historial del bolo', async () => {
     const res = await fondo({ concertId: 'c1', estilo: 'neon', bandId: 'band-b', band_id: 'band-b' });
     expect(res.code).toBeUndefined();
-    expect(res.body).toEqual({ url: servicio.url, estilo: 'neon', referencias: 0 });
+    expect(res.body).toEqual({ url: servicio.url, estilo: 'neon', referencias: 0, conTexto: false, textoOk: true });
     expect(servicio.llamadas[0][0]).toBe('band-a');
     expect(fila('c1').cartel_config.fondosIa).toEqual([servicio.url]);
+  });
+
+  describe('con las letras dibujadas por la IA', () => {
+    it('los textos salen del bolo y de la banda del servidor, nunca del cuerpo de la petición', async () => {
+      banda.nombre = 'Los Toros';
+      const res = await fondo({ concertId: 'c1', estilo: 'neon', encuadre: 'sangre', conTexto: true, textos: { nombre: 'HACKEADO' } });
+      expect(res.body.conTexto).toBe(true);
+      expect(servicio.textos[0]).toEqual({ nombre: 'LOS TOROS', fecha: 'VIE 16 OCT 2099', lugar: 'CAPITOL · SANTIAGO' });
+      expect(servicio.llamadas[0][1]).not.toContain('HACKEADO');
+    });
+
+    it('si la IA falla alguna letra se avisa a la persona', async () => {
+      banda.nombre = 'Los Toros';
+      servicio.textoOk = false;
+      expect((await fondo({ concertId: 'c1', estilo: 'neon', encuadre: 'sangre', conTexto: true })).body.textoOk).toBe(false);
+    });
+
+    it('sin nombre de banda fiable, con encuadre de ventana o con varias bandas, la IA no dibuja letras', async () => {
+      await fondo({ concertId: 'c1', estilo: 'neon', encuadre: 'sangre', conTexto: true });
+      banda.nombre = 'Los Toros';
+      await fondo({ concertId: 'c1', estilo: 'neon', conTexto: true });
+      fila('c1').bandas_compartidas = ['Otra Banda'];
+      await fondo({ concertId: 'c1', estilo: 'neon', encuadre: 'sangre', conTexto: true });
+      expect(servicio.textos).toEqual([null, null, null]);
+    });
   });
 
   it('un concierto de otra banda es un 404 y no gasta imagen', async () => {

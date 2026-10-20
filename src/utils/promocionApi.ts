@@ -69,8 +69,8 @@ export const atribuirReferido = (codigo: string) =>
 import type { EstiloCartel } from './cartel/estilos';
 export type { EstiloCartel };
 
-export const generarFondoCartel = (datos: { concertId: string; estilo: EstiloCartel; instrucciones?: string; idea?: IdeaCartel; conBoceto?: boolean; encuadre?: 'ventana' | 'sangre' }) =>
-  apiFetch<{ url: string; estilo: EstiloCartel }>('/api/cartel/fondo', { method: 'POST', body: JSON.stringify(datos) });
+export const generarFondoCartel = (datos: { concertId: string; estilo: EstiloCartel; instrucciones?: string; idea?: IdeaCartel; conBoceto?: boolean; encuadre?: 'ventana' | 'sangre'; conTexto?: boolean }) =>
+  apiFetch<{ url: string; estilo: EstiloCartel; conTexto?: boolean; textoOk?: boolean }>('/api/cartel/fondo', { method: 'POST', body: JSON.stringify(datos) });
 
 const rutaCartel = (concertId: string, tramo: string) => `/api/cartel/${encodeURIComponent(concertId)}/${tramo}`;
 

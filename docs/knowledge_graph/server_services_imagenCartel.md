@@ -25,6 +25,7 @@ Genera el fondo de un cartel con el modelo de imagen de Gemini y lo guarda en Su
 - [[server_utils_cartelUrl|server/utils/cartelUrl.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_promptCartel|server/utils/promptCartel.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_storage|server/utils/storage.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_cartel_fondoIa|src/utils/cartel/fondoIa.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
@@ -34,6 +35,7 @@ Genera el fondo de un cartel con el modelo de imagen de Gemini y lo guarda en Su
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/services/__tests__/imagenCartel.test.ts`
 - `server/services/__tests__/referenciasCartel.test.ts`
 
 ---
