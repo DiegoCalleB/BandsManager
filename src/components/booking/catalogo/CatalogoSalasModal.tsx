@@ -84,9 +84,9 @@ export function CatalogoSalasModal({ isOpen, onClose }: CatalogoSalasModalProps)
                     <option key={t.valor} value={t.valor}>{t.texto}</option>
                   ))}
                 </Select>
-                <div className="grid grid-cols-2 gap-2 sm:col-span-3 sm:max-w-sm">
-                  <Input aria-label="Aforo mínimo" type="number" inputMode="numeric" min={0} placeholder="Aforo mín." value={c.filtros.aforoMin} onChange={(e) => c.cambiar({ aforoMin: e.target.value })} />
-                  <Input aria-label="Aforo máximo" type="number" inputMode="numeric" min={0} placeholder="Aforo máx." value={c.filtros.aforoMax} onChange={(e) => c.cambiar({ aforoMax: e.target.value })} />
+                <div className="sm:col-span-3 sm:max-w-xs">
+                  <Input aria-label="Aforo orientativo" type="number" inputMode="numeric" min={1} placeholder="Aforo orientativo (personas)" value={c.filtros.aforo} onChange={(e) => c.cambiar({ aforo: e.target.value })} />
+                  {c.filtros.aforo.trim() && Number(c.filtros.aforo) > 0 && <p className="pt-1 text-xs text-[var(--ink-3)]">Salas de unas {Math.round(Number(c.filtros.aforo) * 0.5)} a {Math.round(Number(c.filtros.aforo) * 1.5)} personas.</p>}
                 </div>
                 <label className="flex items-center gap-2 text-xs text-[var(--ink-2)] sm:col-span-3">
                   <input type="checkbox" checked={c.filtros.conContacto} onChange={(e) => c.cambiar({ conContacto: e.target.checked })} />

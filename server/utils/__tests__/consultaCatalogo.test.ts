@@ -208,3 +208,23 @@ describe('puntosDelMapa', () => {
     expect(JSON.stringify(r.puntos[0])).not.toContain('booking@ejemplo.es');
   });
 });
+
+describe('aforo orientativo', () => {
+  const salas = [
+    sala({ id: 'a', nombre: 'Pequeña', aforo: 80 }),
+    sala({ id: 'b', nombre: 'Mediana', aforo: 220 }),
+    sala({ id: 'c', nombre: 'Grande', aforo: 900 }),
+    sala({ id: 'd', nombre: 'Sin dato', aforo: null }),
+  ];
+  it('enseña las salas de la mitad a una vez y media el aforo pedido, y deja fuera las que no tienen aforo', () => {
+    const r = consultarSalas(salas, filtros({ aforoAprox: '200' }), NADA);
+    expect(r.salas.map((s) => s.id)).toEqual(['b']);
+  });
+  it('los extremos del margen entran', () => {
+    const r = consultarSalas([sala({ id: 'x', nombre: 'X', aforo: 100 }), sala({ id: 'y', nombre: 'Y', aforo: 300 })], filtros({ aforoAprox: '200' }), NADA);
+    expect(r.salas).toHaveLength(2);
+  });
+  it('sin aforo orientativo no filtra', () => {
+    expect(consultarSalas(salas, filtros(), NADA).total).toBe(4);
+  });
+});
