@@ -34,15 +34,30 @@ export const REGIONES_OSM = ['ES-AN', 'ES-AR', 'ES-AS', 'ES-CB', 'ES-CE', 'ES-CL
  * mucho ruido y a una banda le sirven poco. Trae también las
  * ciudades, pueblos y aldeas de la comunidad: muchas salas no llevan `addr:city` y su ciudad se saca del núcleo más cercano.
  */
-export const consultaOverpassSalas = (region: string): string => `[out:json][timeout:90];
-area["ISO3166-2"="${region.replace(/[^A-Z0-9-]/g, '')}"]->.r;
-(
-  nwr["amenity"="music_venue"](area.r);
+const FILTROS_SALAS = `  nwr["amenity"="music_venue"](area.r);
   nwr["amenity"="concert_hall"](area.r);
-  nwr["amenity"~"^(nightclub|theatre|arts_centre)$"]["live_music"="yes"](area.r);
+  nwr["amenity"~"^(nightclub|theatre|arts_centre)$"]["live_music"="yes"](area.r);`;
+
+const areaDe = (region: string) => `area["ISO3166-2"="${region.replace(/[^A-Z0-9-]/g, '')}"]->.r;`;
+
+export const consultaOverpassSalas = (region: string): string => `[out:json][timeout:90];
+${areaDe(region)}
+(
+${FILTROS_SALAS}
 );
 out tags center;
 node["place"~"^(city|town|village)$"](area.r);
+out tags center;`;
+
+/**
+ * Lo mismo sin los núcleos de población: es mucho más ligera (los pueblos de una comunidad son miles de nodos) y responde
+ * cuando el servicio público está saturado. Las salas sin `addr:city` se quedan fuera esta vez y entran cuando la consulta completa pase.
+ */
+export const consultaOverpassSoloSalas = (region: string): string => `[out:json][timeout:60];
+${areaDe(region)}
+(
+${FILTROS_SALAS}
+);
 out tags center;`;
 
 const CAPACIDAD_MAXIMA = 200_000;

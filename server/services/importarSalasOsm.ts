@@ -6,7 +6,7 @@
  * Depende de un puerto y de una función de descarga, así que se prueba sin red ni base de datos.
  */
 import { calcularFiabilidad, idDeSala, type CamposPublicosSala } from '../utils/salaCatalogo.js';
-import { REGIONES_OSM, completarSala, conCiudadResuelta, coordenadasDeOsm, consultaOverpassSalas, contarDescartes, salasDeOsm, type ElementoOsm } from '../utils/osmSalas.js';
+import { REGIONES_OSM, completarSala, conCiudadResuelta, coordenadasDeOsm, consultaOverpassSalas, consultaOverpassSoloSalas, contarDescartes, salasDeOsm, type ElementoOsm } from '../utils/osmSalas.js';
 import type { FilaCoordenadas, PuertoCatalogo, PuertoCoordenadas, SalaAGuardar, SalaGuardada } from './catalogoSalas.js';
 
 export type PuertoImportacion = Pick<PuertoCatalogo, 'leerSalas' | 'guardarSalas' | 'leerAlias'> & Partial<PuertoCoordenadas>;
@@ -132,24 +132,29 @@ export function crearDescargaOsm(servidores: readonly string[] = SERVIDORES_OVER
       if (i > 0) await pausa(pausaMs);
       const motivos: string[] = [];
       let llegaron = false;
-      for (const url of servidores) {
-        try {
-          const r = await fetcher(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'BandManager/1.0 (https://bandmanager.io)' },
-            body: `data=${encodeURIComponent(consultaOverpassSalas(region))}`,
-            signal: AbortSignal.timeout(timeoutMs),
-          });
-          if (!r.ok) throw new Error(`respondió ${r.status}`);
-          for (const el of ((await r.json()) as { elements?: ElementoOsm[] }).elements ?? []) elementos.set(`${el.type}/${el.id}`, el);
-          llegaron = true;
-          break;
-        } catch (e) {
-          motivos.push(`${new URL(url).host}: ${motivoDeRed(e)}`);
+      // Primero la consulta completa (con los núcleos, para poner ciudad a las salas que no la traen) y, si ningún servidor
+      // la contesta, la ligera, que sí suele pasar cuando el servicio público anda saturado.
+      for (const [consulta, espera] of [[consultaOverpassSalas(region), timeoutMs], [consultaOverpassSoloSalas(region), Math.min(timeoutMs, 45_000)]] as const) {
+        for (const url of servidores) {
+          try {
+            const r = await fetcher(url, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'BandManager/1.0 (https://bandmanager.io)' },
+              body: `data=${encodeURIComponent(consulta)}`,
+              signal: AbortSignal.timeout(espera),
+            });
+            if (!r.ok) throw new Error(`respondió ${r.status}`);
+            for (const el of ((await r.json()) as { elements?: ElementoOsm[] }).elements ?? []) elementos.set(`${el.type}/${el.id}`, el);
+            llegaron = true;
+            break;
+          } catch (e) {
+            motivos.push(`${new URL(url).host}: ${motivoDeRed(e)}`);
+          }
         }
+        if (llegaron) break;
       }
       if (!llegaron) {
-        const motivo = motivos.join('; ');
+        const motivo = motivos.slice(0, servidores.length).join('; ');
         fallos.push(`${region} (${motivo})`);
         o.alFallarRegion?.(region, motivo);
       }
@@ -159,6 +164,6 @@ export function crearDescargaOsm(servidores: readonly string[] = SERVIDORES_OVER
   };
 }
 
-export const descargarOsmSalas: DescargarOsm = crearDescargaOsm(SERVIDORES_OVERPASS, fetch, 120_000, {
+export const descargarOsmSalas: DescargarOsm = crearDescargaOsm(SERVIDORES_OVERPASS, fetch, 75_000, {
   alFallarRegion: (region, motivo) => console.warn(`[Catálogo] Overpass: sin datos de ${region} esta vez (${motivo}).`),
 });
