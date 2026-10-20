@@ -99,7 +99,7 @@ const TIPOS_CATALOGABLES = new Set(['sala', 'festival', 'ayuntamiento', 'discote
  * la lista por nombre; el tope de aforo recoge los que no estén en ella. Los festivales no se miden por aforo.
  */
 export const AFORO_MAXIMO_SALA = 5000;
-const RECINTOS_MASIVOS = ['wizink center', 'movistar arena', 'palau sant jordi', 'estadio metropolitano', 'civitas metropolitano', 'santiago bernabeu', 'camp nou', 'spotify camp nou'];
+const RECINTOS_MASIVOS = ['wizink center', 'movistar arena', 'palau sant jordi', 'estadio metropolitano', 'civitas metropolitano', 'santiago bernabeu', 'camp nou', 'spotify camp nou', 'palacio de vistalegre'];
 
 export function esRecintoMasivo(p: { nombre?: unknown; aforo?: unknown; tipo?: unknown }): boolean {
   const nombre = normalizarTexto(p.nombre);
