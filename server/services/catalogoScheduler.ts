@@ -8,12 +8,13 @@
  * Primera pasada unos minutos tras arrancar (los despliegues son frecuentes y un temporizador de 24 h nunca llegaría a
  * disparar) y después cada `CATALOGO_SYNC_MS` (24 h por defecto). `CATALOGO_SYNC=false` la apaga.
  */
-import { puertoCatalogoSupabase, puertoEnriquecimientoWebSupabase, puertoVerificacionSupabase } from "../db/salasCatalogo.js";
+import { puertoCatalogoSupabase, puertoEnriquecimientoWebSupabase, puertoGeolocalizacionSupabase, puertoVerificacionSupabase } from "../db/salasCatalogo.js";
 import { captureError } from "../utils/errorTracking.js";
 import { sincronizarCatalogo, type InformeCatalogo } from "./catalogoSalas.js";
 import { crearConsultaMaps } from "./consultaMapsSala.js";
 import { datosDeWebSala } from "../utils/datosDeWebSala.js";
 import { enriquecerSalasDesdeSuWeb } from "./enriquecerSalasDesdeSuWeb.js";
+import { buscarEnNominatim, geolocalizarSalas } from "./geolocalizarSalas.js";
 import { importarSalasDeBandflow } from "./importarSalasBandflow.js";
 import { leerWebDeSala } from "./leerWebDeSala.js";
 import { descargarOsmSalas, importarSalasDeOsm } from "./importarSalasOsm.js";
@@ -42,6 +43,7 @@ export async function sincronizarCatalogoAhora(sincronizar: () => Promise<Inform
     );
     await verificarEnMapsAhora();
     await enriquecerDesdeLaWebAhora();
+    await geolocalizarAhora();
     return r;
   } catch (e) {
     console.warn("[Catálogo] La sincronización falló:", e instanceof Error ? e.message : e);
@@ -80,7 +82,7 @@ async function verificarEnMapsAhora(): Promise<void> {
 export async function importarSalasOsmAhora(): Promise<boolean> {
   try {
     const r = await importarSalasDeOsm({ puerto: puertoCatalogoSupabase, descargar: descargarOsmSalas });
-    console.log(`[Catálogo] Importación OSM: ${r.elementosLeidos} elementos leídos (${r.descartados.sinNombre} sin nombre, ${r.descartados.sinCiudad} sin ciudad), ${r.salasEnOsm} salas en OSM (${r.ciudadPorCercania} con la ciudad del núcleo más cercano), ${r.nuevas} nuevas, ${r.completadas} completadas, ${r.sinCambios} sin cambios.`);
+    console.log(`[Catálogo] Importación OSM: ${r.elementosLeidos} elementos leídos (${r.descartados.sinNombre} sin nombre, ${r.descartados.sinCiudad} sin ciudad), ${r.salasEnOsm} salas en OSM (${r.ciudadPorCercania} con la ciudad del núcleo más cercano), ${r.nuevas} nuevas, ${r.completadas} completadas, ${r.sinCambios} sin cambios, ${r.conCoordenadas} con su punto en el mapa.`);
     return true;
   } catch (e) {
     console.warn("[Catálogo] La importación de OSM falló:", e instanceof Error ? e.message : e);
@@ -104,6 +106,21 @@ export async function enriquecerDesdeLaWebAhora(): Promise<void> {
   } catch (e) {
     console.warn("[Catálogo] El enriquecimiento desde la web falló:", e instanceof Error ? e.message : e);
     captureError(e, { fase: "enriquecerSalasDesdeSuWeb" });
+  }
+}
+
+/**
+ * Tras cada sincronización, sitúa en el mapa unas pocas salas que no tienen coordenadas (con el geocodificador de OpenStreetMap,
+ * a una consulta por segundo). `CATALOGO_GEOLOCALIZAR=false` la apaga. Nunca lanza.
+ */
+export async function geolocalizarAhora(): Promise<void> {
+  if (process.env.CATALOGO_GEOLOCALIZAR === "false") return;
+  try {
+    const r = await geolocalizarSalas({ puerto: puertoGeolocalizacionSupabase, buscar: buscarEnNominatim });
+    if (r.revisadas + r.errores > 0) console.log(`[Catálogo] Geolocalización: ${r.revisadas} salas revisadas (${r.exactas} con su punto, ${r.deLaCiudad} con el de su ciudad, ${r.sinPunto} sin punto), ${r.errores} errores.`);
+  } catch (e) {
+    console.warn("[Catálogo] La geolocalización falló:", e instanceof Error ? e.message : e);
+    captureError(e, { fase: "geolocalizarSalas" });
   }
 }
 

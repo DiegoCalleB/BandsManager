@@ -13,7 +13,7 @@ tags: ["frontend", "booking", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/booking`
 
 ## 📖 Descripción
-Exporta: FiltrosUi, FILTROS_INICIALES, useCatalogoSalas.
+Exporta: FiltrosUi, VistaCatalogo, FILTROS_INICIALES, useCatalogoSalas.
 
 ---
 

@@ -26,6 +26,7 @@ Proveedor de las fichas públicas de festivales: base de datos con respaldo en l
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server_routes_catalogo|server/routes/catalogo.ts]] *(from #route)*
 - [[server_routes_paginaConcierto|server/routes/paginaConcierto.ts]] *(from #route)*
 - [[server_routes_paginasSeo|server/routes/paginasSeo.ts]] *(from #route)*
 

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { crearDescargaOsm, importarSalasDeOsm, type PuertoImportacion } from '../importarSalasOsm.js';
-import type { AliasSala, SalaAGuardar, SalaGuardada } from '../catalogoSalas.js';
+import type { AliasSala, FilaCoordenadas, SalaAGuardar, SalaGuardada } from '../catalogoSalas.js';
 
 const elemento = (name: string, extra: Record<string, string> = {}, id = 1) => ({ type: 'node', id, tags: { amenity: 'music_venue', name, 'addr:city': 'Madrid', ...extra } });
 
@@ -9,9 +9,44 @@ const existente = (o: Partial<SalaGuardada> & { clave: string; id: string }): Sa
 
 function montar(salas: SalaGuardada[], alias: AliasSala[] = []) {
   const guardadas: SalaAGuardar[] = [];
-  const puerto: PuertoImportacion = { leerAlias: vi.fn(async () => alias), leerSalas: vi.fn(async () => salas), guardarSalas: vi.fn(async (s) => void guardadas.push(...s)) };
-  return { puerto, guardadas };
+  const coordenadas: FilaCoordenadas[] = [];
+  const puerto: PuertoImportacion = { leerAlias: vi.fn(async () => alias), leerSalas: vi.fn(async () => salas), guardarSalas: vi.fn(async (s) => void guardadas.push(...s)), guardarCoordenadas: vi.fn(async (f) => void coordenadas.push(...f)) };
+  return { puerto, guardadas, coordenadas };
 }
+
+describe('importarSalasDeOsm: coordenadas', () => {
+  const conPunto = (name: string, lat: number, lon: number) => ({ ...elemento(name), lat, lon });
+
+  it('guarda el punto de OSM de las salas nuevas, después de crearlas', async () => {
+    const { puerto, coordenadas } = montar([]);
+    const r = await importarSalasDeOsm({ puerto, descargar: async () => [conPunto('Sala Nueva', 40.4, -3.7)] });
+    expect(r.conCoordenadas).toBe(1);
+    expect(coordenadas[0]).toMatchObject({ lat: 40.4, lon: -3.7, aprox: false });
+    expect(coordenadas[0].salaId).toMatch(/^sala-/);
+  });
+
+  it('también sitúa las ya existentes sin punto, incluso las verificadas, y reemplaza un punto aproximado', async () => {
+    const { puerto, coordenadas } = montar([
+      existente({ id: 'sala-1', clave: 'nc:moby|madrid', nombre: 'Moby', nivel: 'verificada' }),
+      existente({ id: 'sala-2', clave: 'nc:sol|madrid', nombre: 'Sol', lat: 40, lon: -3, coordenadas_aprox: true }),
+    ]);
+    await importarSalasDeOsm({ puerto, descargar: async () => [conPunto('Moby', 40.4, -3.7), conPunto('Sol', 40.41, -3.71)] });
+    expect(coordenadas.map((c) => c.salaId).sort()).toEqual(['sala-1', 'sala-2']);
+  });
+
+  it('no pisa un punto exacto que la sala ya tiene', async () => {
+    const { puerto, coordenadas } = montar([existente({ id: 'sala-1', clave: 'nc:moby|madrid', nombre: 'Moby', lat: 40, lon: -3, coordenadas_aprox: false })]);
+    await importarSalasDeOsm({ puerto, descargar: async () => [conPunto('Moby', 40.4, -3.7)] });
+    expect(coordenadas).toEqual([]);
+  });
+
+  it('en simulación no escribe coordenadas', async () => {
+    const { puerto, coordenadas } = montar([]);
+    const r = await importarSalasDeOsm({ puerto, descargar: async () => [conPunto('Sala Nueva', 40.4, -3.7)], simulacion: true });
+    expect(r.conCoordenadas).toBe(1);
+    expect(coordenadas).toEqual([]);
+  });
+});
 
 describe('importarSalasDeOsm', () => {
   it('añade las salas nuevas como sin verificar', async () => {

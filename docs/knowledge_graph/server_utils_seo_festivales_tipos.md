@@ -24,6 +24,7 @@ _Sin dependencias salientes directas._
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_db_festivales|server/db/festivales.ts]] *(from #db)*
+- [[server_utils_festivalesCatalogo|server/utils/festivalesCatalogo.ts]] *(from #service)*
 - [[server_utils_seo_festivales_datos|server/utils/seo/festivales/datos.ts]] *(from #service)*
 - [[server_utils_seo_festivales_importar|server/utils/seo/festivales/importar.ts]] *(from #service)*
 - [[server_utils_seo_festivales_mapeo|server/utils/seo/festivales/mapeo.ts]] *(from #service)*
@@ -38,6 +39,7 @@ _Sin dependencias salientes directas._
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/utils/__tests__/festivalesCatalogo.test.ts`
 - `server/utils/seo/__tests__/festivales.test.ts`
 
 ---

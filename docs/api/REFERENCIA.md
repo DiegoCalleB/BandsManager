@@ -2,7 +2,7 @@
 
 > Generado automáticamente por `scripts/generate-openapi.mjs` a partir del código. No se edita a mano: ejecuta `npm run docs:api`.
 
-**420 rutas HTTP** (369 declaraciones de handler; el resto son alias) en 31 dominios. Contrato máquina-legible: [`openapi.json`](./openapi.json) (OpenAPI 3.1). Visor interactivo: [`index.html`](./index.html) (hay que abrirlo en un navegador; GitHub no lo renderiza). Decisión de diseño: [ADR 0012](../adr/0012-contrato-api-openapi-por-ast.md).
+**424 rutas HTTP** (373 declaraciones de handler; el resto son alias) en 31 dominios. Contrato máquina-legible: [`openapi.json`](./openapi.json) (OpenAPI 3.1). Visor interactivo: [`index.html`](./index.html) (hay que abrirlo en un navegador; GitHub no lo renderiza). Decisión de diseño: [ADR 0012](../adr/0012-contrato-api-openapi-por-ast.md).
 
 ## Cómo leerla
 
@@ -12,7 +12,7 @@
 
 | Acceso | Rutas |
 |---|---|
-| Sesión | 333 |
+| Sesión | 337 |
 | Sesión (comprobada en el handler) | 6 |
 | Sesión opcional | 3 |
 | Firma o secreto | 7 |
@@ -371,10 +371,14 @@ Salas, festivales y contactos del CRM de booking. Los agentes (Scout, Redactor, 
 | `GET` | `/api/ai/providers` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/leads/crud.ts:27`](../../server/routes/leads/crud.ts#L27) |
 | `POST` | `/api/batch-enrich-campaign` | Sesión | enriquecimientoRateLimiter |  | [`server/routes/leads/enrichment.ts:953`](../../server/routes/leads/enrichment.ts#L953) |
 | `POST` | `/api/campaign-mass-search` | Sesión | — |  | [`server/routes/leads/places.ts:412`](../../server/routes/leads/places.ts#L412) |
-| `GET` | `/api/catalogo/salas` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/catalogo.ts:31`](../../server/routes/catalogo.ts#L31) |
-| `POST` | `/api/catalogo/salas/anadir-varias` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/catalogo.ts:85`](../../server/routes/catalogo.ts#L85) |
-| `POST` | `/api/catalogo/salas/{id}/anadir` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/catalogo.ts:42`](../../server/routes/catalogo.ts#L42) |
-| `GET` | `/api/catalogo/sugerencias` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/catalogo.ts:68`](../../server/routes/catalogo.ts#L68) |
+| `GET` | `/api/catalogo/festivales` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/catalogo.ts:69`](../../server/routes/catalogo.ts#L69) |
+| `POST` | `/api/catalogo/festivales/{slug}/anadir` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/catalogo.ts:82`](../../server/routes/catalogo.ts#L82) |
+| `GET` | `/api/catalogo/salas` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/catalogo.ts:34`](../../server/routes/catalogo.ts#L34) |
+| `POST` | `/api/catalogo/salas/anadir-varias` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/catalogo.ts:143`](../../server/routes/catalogo.ts#L143) |
+| `GET` | `/api/catalogo/salas/mapa` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/catalogo.ts:45`](../../server/routes/catalogo.ts#L45) |
+| `GET` | `/api/catalogo/salas/{id}` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/catalogo.ts:56`](../../server/routes/catalogo.ts#L56) |
+| `POST` | `/api/catalogo/salas/{id}/anadir` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/catalogo.ts:100`](../../server/routes/catalogo.ts#L100) |
+| `GET` | `/api/catalogo/sugerencias` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/catalogo.ts:126`](../../server/routes/catalogo.ts#L126) |
 | `POST` | `/api/detect-all-dates` | Sesión | enriquecimientoRateLimiter |  | [`server/routes/leads/enrichment.ts:876`](../../server/routes/leads/enrichment.ts#L876) |
 | `GET` | `/api/example-threads` | Sesión | — |  | [`server/routes/leads/exampleThreads.ts:32`](../../server/routes/leads/exampleThreads.ts#L32) |
 | `POST` | `/api/example-threads` | Sesión | — |  | [`server/routes/leads/exampleThreads.ts:45`](../../server/routes/leads/exampleThreads.ts#L45) |
