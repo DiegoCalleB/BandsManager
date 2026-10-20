@@ -152,7 +152,7 @@ export const puertoEnriquecimientoWebSupabase: PuertoEnriquecimientoWeb = {
     // Con web, no «no contactar», no cerradas, y con algún dato por rellenar. Las revisadas hace poco esperan.
     // «Sin revisar o revisada hace tiempo» Y «con algún dato vacío», en un solo filtro: PostgREST no combina de forma fiable dos `or`.
     const sinRevisar = ['web_revisada_en.is.null', `web_revisada_en.lt.${antesDe.toISOString()}`];
-    const conHueco = ['instagram', 'email_contacto', 'telefono', 'genero'].map((c) => `${c}.is.null`);
+    const conHueco = ['instagram', 'email_contacto', 'telefono', 'genero', 'aforo'].map((c) => `${c}.is.null`);
     const { data, error } = await getSupabase()
       .from('catalogo_salas')
       .select('*')

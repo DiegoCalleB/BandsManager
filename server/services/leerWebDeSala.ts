@@ -3,6 +3,9 @@ import { fetchUrlExternaSegura } from '../utils/ssrfGuard.js';
 import { urlPublica } from '../utils/salaCatalogo.js';
 
 const RUTAS_DE_CONTACTO = ['/contacto', '/contact', '/contactos'];
+/** Donde las salas suelen poner su aforo y ficha técnica. Se leen hasta `MAX_PAGINAS_DE_LA_SALA` de las que existan. */
+const RUTAS_DE_LA_SALA = ['/la-sala', '/sala', '/el-espacio', '/espacio', '/ficha-tecnica', '/rider', '/alquiler', '/info'];
+const MAX_PAGINAS_DE_LA_SALA = 2;
 
 async function leer(url: string): Promise<string | null> {
   try {
@@ -33,6 +36,15 @@ export async function leerWebDeSala(website: string): Promise<string[] | null> {
     if (contacto) {
       paginas.push(contacto);
       break;
+    }
+  }
+  let deLaSala = 0;
+  for (const ruta of RUTAS_DE_LA_SALA) {
+    if (deLaSala >= MAX_PAGINAS_DE_LA_SALA) break;
+    const pagina = await leer(`${origen}${ruta}`);
+    if (pagina) {
+      paginas.push(pagina);
+      deLaSala++;
     }
   }
   return paginas;

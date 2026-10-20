@@ -6,14 +6,14 @@ import type { DatosDeWebSala } from '../../utils/datosDeWebSala.js';
 const sala = (id: string, extra: Partial<SalaGuardada> = {}): SalaGuardada =>
   ({ id, clave: `nc:${id}|madrid`, nombre: `Sala ${id}`, website: `https://${id}.es/`, instagram: null, email_contacto: null, telefono: null, genero: null, ...extra }) as SalaGuardada;
 
-const nada: DatosDeWebSala = { instagram: null, email_contacto: null, telefono: null, genero: null };
+const nada: DatosDeWebSala = { instagram: null, email_contacto: null, telefono: null, genero: null, aforo: null };
 const AHORA = new Date('2026-10-20T12:00:00Z');
 
 function montar(salas: SalaGuardada[]) {
-  const guardado: Array<[string, Record<string, string>]> = [];
+  const guardado: Array<[string, Record<string, string | number>]> = [];
   const puerto: PuertoEnriquecimientoWeb = {
     salasPorEnriquecer: vi.fn(async () => salas),
-    guardarEnriquecimiento: vi.fn(async (id, campos) => void guardado.push([id, campos as Record<string, string>])),
+    guardarEnriquecimiento: vi.fn(async (id, campos) => void guardado.push([id, campos as Record<string, string | number>])),
   };
   return { puerto, guardado };
 }
@@ -23,10 +23,16 @@ describe('enriquecerSalasDesdeSuWeb', () => {
     const { puerto, guardado } = montar([sala('a', { instagram: 'propio', email_contacto: 'info@a.es' })]);
     const r = await enriquecerSalasDesdeSuWeb({
       puerto, ahora: () => AHORA, leerWeb: async () => ['<html>'],
-      extraer: () => ({ instagram: 'otro', email_contacto: 'booking@a.es', telefono: '910000000', genero: 'Rock' }),
+      extraer: () => ({ instagram: 'otro', email_contacto: 'booking@a.es', telefono: '910000000', genero: 'Rock', aforo: 300 }),
     });
-    expect(guardado).toEqual([['a', { telefono: '910000000', genero: 'Rock' }]]);
-    expect(r).toMatchObject({ revisadas: 1, completadas: 1, camposRellenados: { instagram: 0, email_contacto: 0, telefono: 1, genero: 1 } });
+    expect(guardado).toEqual([['a', { telefono: '910000000', genero: 'Rock', aforo: 300 }]]);
+    expect(r).toMatchObject({ revisadas: 1, completadas: 1, camposRellenados: { instagram: 0, email_contacto: 0, telefono: 1, genero: 1, aforo: 1 } });
+  });
+
+  it('rellena el aforo de una sala que no lo tenía y no pisa el que ya conocemos', async () => {
+    const { puerto, guardado } = montar([sala('a'), sala('b', { aforo: 150 })]);
+    await enriquecerSalasDesdeSuWeb({ puerto, ahora: () => AHORA, leerWeb: async () => ['<html>'], extraer: () => ({ ...nada, aforo: 400 }) });
+    expect(guardado).toEqual([['a', { aforo: 400 }], ['b', {}]]);
   });
 
   it('anota la revisión aunque no encuentre nada, para que la sala pase al final de la cola', async () => {
