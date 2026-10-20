@@ -125,7 +125,7 @@ export const SelectorVistaAcorde: React.FC<{ vista: VistaAcorde; onCambio: (v: V
 );
 
 /** Nivel de detalle de los diagramas: Básico (power chords) · Normal · Pro (inversiones, intervalos, nota de paso). */
-export const SelectorNivel: React.FC<{ nivel: NivelAcorde; onCambio: (n: NivelAcorde) => void; /** false en la tira del Atril: ahí el pentagrama no sale, así que «♪ Siempre» no pinta nada. */ conPentagrama?: boolean }> = ({ nivel, onCambio, conPentagrama = true }) => {
+export const SelectorNivel: React.FC<{ nivel: NivelAcorde; onCambio: (n: NivelAcorde) => void; /** false en la tira del Atril: ahí el pentagrama no sale, así que «Siempre» no pinta nada. */ conPentagrama?: boolean }> = ({ nivel, onCambio, conPentagrama = true }) => {
   const [ensayo, setEnsayo] = useModoEnsayo();
   const [siempre, setSiempre] = usePentagramaSiempre();
   return (
@@ -157,7 +157,7 @@ export const SelectorNivel: React.FC<{ nivel: NivelAcorde; onCambio: (n: NivelAc
       title="Pentagrama siempre visible en todas las fichas"
       className={`px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-sans cursor-pointer transition-ui ${siempre ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
     >
-      ♪ Siempre
+      Siempre
     </button>}
   </span>
   );
@@ -261,7 +261,7 @@ export const CajaAcorde: React.FC<{ chord: string; vista: VistaAcorde; contexto?
       ) : <p className="text-micro text-[var(--ink-2)] font-sans">[Acorde estándar]</p>}
       {!tapar && conPentagrama && (
         <>
-          <button type="button" aria-pressed={conNotas} title="Ver las notas en el pentagrama" onClick={() => setManual(!conNotas)} className={`px-3 py-1 rounded-[var(--r-pill)] text-micro font-sans cursor-pointer bg-[var(--surface)] text-[var(--ink)] ${conNotas ? 'font-bold' : ''}`}>{conNotas ? 'Ocultar pentagrama' : '♪ Ver pentagrama'}</button>
+          <button type="button" aria-pressed={conNotas} title="Ver las notas en el pentagrama" onClick={() => setManual(!conNotas)} className={`px-3 py-1 rounded-[var(--r-pill)] text-micro font-sans cursor-pointer bg-[var(--surface)] text-[var(--ink)] ${conNotas ? 'font-bold' : ''}`}>{conNotas ? 'Ocultar pentagrama' : 'Ver pentagrama'}</button>
           {conNotas && <PentagramaFicha chord={chord} vista={vista} nivel={nivel} siguiente={contexto?.siguiente} invSonido={invSonido} invLineaBajo={invLineaBajo} />}
         </>
       )}
