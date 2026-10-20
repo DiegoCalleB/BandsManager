@@ -5,7 +5,7 @@ import { ESTILOS_PAGINA_PUBLICA } from '../estilos.js';
 import { slugEquivalente } from '../indice.js';
 import { RUTAS, alternativasPar, registroUrl, type IdiomaSeo } from '../rutas.js';
 import { TEXTOS } from '../textos.js';
-import { ciudadesDe, comunidadesDe, indexableCiudad, indexableComunidad, indexableIndice, type GrupoZona } from './publicas.js';
+import { ciudadesDe, comunidadesDe, indexableCiudad, indexableComunidad, indexableIndice, ultimaActualizacion, type GrupoZona } from './publicas.js';
 import { TEXTOS_SALAS } from './textos.js';
 import type { SalaPublica } from './tipos.js';
 
@@ -28,8 +28,18 @@ const listaGrupos = (base: string, idioma: IdiomaSeo, grupos: GrupoZona[], ruta:
 const listaSalas = (base: string, idioma: IdiomaSeo, salas: readonly SalaPublica[]): string =>
   `<ul class="rel">${salas.map((s) => `<li><a href="${escapeHtml(base)}${escapeHtml(RUTAS[idioma].sala(s.comunidadSlug, s.ciudadSlug, s.slug))}">${escapeHtml(s.nombre)}<small>${escapeHtml([s.ciudad, s.genero, s.aforo ? TEXTOS_SALAS[idioma].aforoPersonas(s.aforo) : ''].filter(Boolean).join(' · '))}</small></a></li>`).join('')}</ul>`;
 
+/** Fecha visible y `dateModified`: señal de frescura para buscadores y modelos de lenguaje. */
+const actualizadoHtml = (idioma: IdiomaSeo, fecha: string | null): string =>
+  fecha ? `<p class="lectura">${escapeHtml(TEXTOS_SALAS[idioma].actualizado)} <time datetime="${escapeHtml(fecha)}">${escapeHtml(fecha)}</time>.</p>` : '';
+const modificado = (fecha: string | null) => (fecha ? { dateModified: fecha } : {});
+
 function breadcrumbLd(base: string, items: Array<{ nombre: string; ruta: string }>) {
   return { '@type': 'BreadcrumbList', itemListElement: items.map((it, i) => ({ '@type': 'ListItem', position: i + 1, name: it.nombre, item: `${base}${it.ruta}` })) };
+}
+
+/** Dataset (Google Dataset Search y modelos de lenguaje): qué contiene, cuántas filas, de cuándo y bajo qué licencia de origen. */
+function datasetLd(base: string, idioma: IdiomaSeo, nombre: string, descripcion: string, salas: readonly SalaPublica[]) {
+  return { '@type': 'Dataset', name: nombre, description: descripcion, url: `${base}${RUTAS[idioma].salas}`, inLanguage: idioma, isAccessibleForFree: true, creator: { '@id': `${base}/#organization` }, spatialCoverage: { '@type': 'Country', name: idioma === 'es' ? 'España' : 'Spain' }, variableMeasured: ['name', 'city', 'region', 'capacity', 'website'], size: `${salas.length}`, ...modificado(ultimaActualizacion(salas)), ...(salas.some((s) => s.deOsm) ? { isBasedOn: 'https://www.openstreetmap.org/copyright' } : {}) };
 }
 
 /** Preguntas frecuentes visibles y su `FAQPage`: los modelos de lenguaje y los fragmentos destacados citan pregunta y respuesta. Solo con datos reales de la zona. */
@@ -58,14 +68,14 @@ export function renderizarIndiceSalas(base: string, idioma: IdiomaSeo, salas: re
   const r = RUTAS[idioma];
   const comunidades = comunidadesDe(salas);
   const preguntasIndice = t.preguntasIndice(salas.length, comunidades.length);
-  const jsonLd = { '@context': 'https://schema.org', '@graph': [{ '@type': 'CollectionPage', name: t.h1, url: `${base}${r.salas}`, inLanguage: idioma, hasPart: comunidades.map((g) => ({ '@type': 'WebPage', name: g.nombre, url: `${base}${r.salasComunidad(g.slug)}` })) }, breadcrumbLd(base, [{ nombre: TEXTOS[idioma].inicio, ruta: r.landing }, { nombre: t.directorios, ruta: r.listados }, { nombre: t.h1, ruta: r.salas }]), faqLd(preguntasIndice)] };
+  const jsonLd = { '@context': 'https://schema.org', '@graph': [{ '@type': 'CollectionPage', name: t.h1, url: `${base}${r.salas}`, inLanguage: idioma, ...modificado(ultimaActualizacion(salas)), hasPart: comunidades.map((g) => ({ '@type': 'WebPage', name: g.nombre, url: `${base}${r.salasComunidad(g.slug)}` })) }, breadcrumbLd(base, [{ nombre: TEXTOS[idioma].inicio, ruta: r.landing }, { nombre: t.directorios, ruta: r.listados }, { nombre: t.h1, ruta: r.salas }]), faqLd(preguntasIndice), datasetLd(base, idioma, t.h1, t.descripcionIndice, salas)] };
   return pagina({
     base, idioma, ruta: r.salas, paresRutas: pares((i) => RUTAS[i].salas), titulo: t.tituloIndice, descripcion: t.descripcionIndice, indexar: indexableIndice(salas), jsonLd, campana: 'salas',
     cuerpo: `${migas(base, idioma, [{ nombre: t.directorios, ruta: r.listados }, { nombre: t.h1 }])}
 <h1>${escapeHtml(t.h1)}</h1>
 <p class="intro">${escapeHtml(t.intro)}</p>
 <section class="seccion"><h2>${escapeHtml(t.comunidades)}</h2>${comunidades.length ? listaGrupos(base, idioma, comunidades, (g) => r.salasComunidad(g.slug)) : `<p>${escapeHtml(t.sinSalas)}</p>`}</section>
-<section class="seccion"><h2>${escapeHtml(t.metodo)}</h2><p>${escapeHtml(t.metodoTexto)}</p></section>
+<section class="seccion"><h2>${escapeHtml(t.metodo)}</h2><p>${escapeHtml(t.metodoTexto)}</p>${actualizadoHtml(idioma, ultimaActualizacion(salas))}</section>
 ${faqHtml(idioma, preguntasIndice)}
 ${pie(base, idioma, salas.some((s) => s.deOsm))}`,
   });
@@ -80,13 +90,13 @@ export function renderizarComunidad(base: string, idioma: IdiomaSeo, salas: read
   const nombre = delas[0].comunidad;
   const ciudades = ciudadesDe(salas, comunidadSlug);
   const preguntas = t.preguntasZona(nombre, delas.length, ciudades.map((c) => c.nombre));
-  const jsonLd = { '@context': 'https://schema.org', '@graph': [{ '@type': 'CollectionPage', name: t.h1Comunidad(nombre), url: `${base}${r.salasComunidad(comunidadSlug)}`, inLanguage: idioma, hasPart: ciudades.map((g) => ({ '@type': 'WebPage', name: g.nombre, url: `${base}${r.salasCiudad(comunidadSlug, g.slug)}` })) }, breadcrumbLd(base, [{ nombre: TEXTOS[idioma].inicio, ruta: r.landing }, { nombre: t.directorios, ruta: r.listados }, { nombre: t.h1, ruta: r.salas }, { nombre, ruta: r.salasComunidad(comunidadSlug) }]), faqLd(preguntas)] };
+  const jsonLd = { '@context': 'https://schema.org', '@graph': [{ '@type': 'CollectionPage', name: t.h1Comunidad(nombre), url: `${base}${r.salasComunidad(comunidadSlug)}`, inLanguage: idioma, ...modificado(ultimaActualizacion(delas)), hasPart: ciudades.map((g) => ({ '@type': 'WebPage', name: g.nombre, url: `${base}${r.salasCiudad(comunidadSlug, g.slug)}` })) }, breadcrumbLd(base, [{ nombre: TEXTOS[idioma].inicio, ruta: r.landing }, { nombre: t.directorios, ruta: r.listados }, { nombre: t.h1, ruta: r.salas }, { nombre, ruta: r.salasComunidad(comunidadSlug) }]), faqLd(preguntas)] };
   return pagina({
     base, idioma, ruta: r.salasComunidad(comunidadSlug), paresRutas: pares((i) => RUTAS[i].salasComunidad(comunidadSlug)), titulo: t.tituloComunidad(nombre, delas.length), descripcion: t.descripcionComunidad(nombre, delas.length), indexar: indexableComunidad(salas, comunidadSlug), jsonLd, campana: `salas-${comunidadSlug}`,
     cuerpo: `${migas(base, idioma, [{ nombre: t.directorios, ruta: r.listados }, { nombre: t.h1, ruta: r.salas }, { nombre }])}
 <h1>${escapeHtml(t.h1Comunidad(nombre))}</h1>
 <p class="intro">${escapeHtml(t.nSalas(delas.length))}</p>
-<section class="seccion"><h2>${escapeHtml(t.ciudades)}</h2>${listaGrupos(base, idioma, ciudades, (g) => r.salasCiudad(comunidadSlug, g.slug))}</section>
+<section class="seccion"><h2>${escapeHtml(t.ciudades)}</h2>${listaGrupos(base, idioma, ciudades, (g) => r.salasCiudad(comunidadSlug, g.slug))}${actualizadoHtml(idioma, ultimaActualizacion(delas))}</section>
 ${faqHtml(idioma, preguntas)}
 ${pie(base, idioma, delas.some((s) => s.deOsm))}`,
   });
@@ -101,13 +111,13 @@ export function renderizarCiudad(base: string, idioma: IdiomaSeo, salas: readonl
   const ruta = r.salasCiudad(comunidadSlug, ciudadSlug);
   const preguntas = t.preguntasZona(ciudad, delas.length, []);
   const itemList = { '@type': 'ItemList', name: t.h1Ciudad(ciudad), numberOfItems: delas.length, itemListElement: delas.map((s, i) => ({ '@type': 'ListItem', position: i + 1, name: s.nombre, url: `${base}${r.sala(s.comunidadSlug, s.ciudadSlug, s.slug)}` })) };
-  const jsonLd = { '@context': 'https://schema.org', '@graph': [{ '@type': 'CollectionPage', name: t.h1Ciudad(ciudad), url: `${base}${ruta}`, inLanguage: idioma, mainEntity: itemList }, breadcrumbLd(base, [{ nombre: TEXTOS[idioma].inicio, ruta: r.landing }, { nombre: t.directorios, ruta: r.listados }, { nombre: t.h1, ruta: r.salas }, { nombre: comunidad, ruta: r.salasComunidad(comunidadSlug) }, { nombre: ciudad, ruta }]), faqLd(preguntas)] };
+  const jsonLd = { '@context': 'https://schema.org', '@graph': [{ '@type': 'CollectionPage', name: t.h1Ciudad(ciudad), url: `${base}${ruta}`, inLanguage: idioma, ...modificado(ultimaActualizacion(delas)), mainEntity: itemList }, breadcrumbLd(base, [{ nombre: TEXTOS[idioma].inicio, ruta: r.landing }, { nombre: t.directorios, ruta: r.listados }, { nombre: t.h1, ruta: r.salas }, { nombre: comunidad, ruta: r.salasComunidad(comunidadSlug) }, { nombre: ciudad, ruta }]), faqLd(preguntas)] };
   return pagina({
     base, idioma, ruta, paresRutas: pares((i) => RUTAS[i].salasCiudad(comunidadSlug, ciudadSlug)), titulo: t.tituloCiudad(ciudad, delas.length), descripcion: t.descripcionCiudad(ciudad, comunidad), indexar: indexableCiudad(salas, comunidadSlug, ciudadSlug), jsonLd, campana: `salas-${ciudadSlug}`,
     cuerpo: `${migas(base, idioma, [{ nombre: t.directorios, ruta: r.listados }, { nombre: t.h1, ruta: r.salas }, { nombre: comunidad, ruta: r.salasComunidad(comunidadSlug) }, { nombre: ciudad }])}
 <h1>${escapeHtml(t.h1Ciudad(ciudad))}</h1>
 <p class="intro">${escapeHtml(t.nSalas(delas.length))}</p>
-<section class="seccion"><h2>${escapeHtml(t.salas)}</h2>${listaSalas(base, idioma, delas)}</section>
+<section class="seccion"><h2>${escapeHtml(t.salas)}</h2>${listaSalas(base, idioma, delas)}${actualizadoHtml(idioma, ultimaActualizacion(delas))}</section>
 ${faqHtml(idioma, preguntas)}
 ${pie(base, idioma, delas.some((s) => s.deOsm))}`,
   });

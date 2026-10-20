@@ -209,4 +209,17 @@ async function enviarLlmsTxt(res: express.Response, idioma: 'es' | 'en') {
 router.get('/llms.txt', publicoRateLimiter, (_req, res) => enviarLlmsTxt(res, 'es'));
 router.get('/en/llms.txt', publicoRateLimiter, (_req, res) => enviarLlmsTxt(res, 'en'));
 
+/**
+ * IndexNow (Bing, Yandex y buscadores que lo usan): prueba de propiedad en `/<INDEXNOW_KEY>.txt`. Solo existe si la variable está
+ * definida y es una clave válida (8-128 caracteres alfanuméricos o guiones). El aviso de URLs cambiadas lo hace `scripts/indexnow.mjs`.
+ */
+const claveIndexNow = process.env.INDEXNOW_KEY?.trim();
+if (claveIndexNow && /^[a-zA-Z0-9-]{8,128}$/.test(claveIndexNow)) {
+  router.use((req, res, next) => {
+    if (req.method !== 'GET' || req.path !== `/${claveIndexNow}.txt`) return next();
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.send(claveIndexNow);
+  });
+}
+
 export default router;
