@@ -5,6 +5,7 @@ import { getSupabase } from './core.js';
 import type { LeadParaCatalogo } from '../utils/salaCatalogo.js';
 import type { PuertoCatalogo, SalaAGuardar, SalaGuardada } from '../services/catalogoSalas.js';
 import type { PuertoVerificacion } from '../services/verificarSalasEnMaps.js';
+import type { PuertoEnriquecimientoWeb } from '../services/enriquecerSalasDesdeSuWeb.js';
 
 const PAGINA = 1000;
 
@@ -101,5 +102,30 @@ export const puertoVerificacionSupabase: PuertoVerificacion = {
   async guardarEstado(salaId, estado, en) {
     const { error } = await getSupabase().from('catalogo_salas').update({ estado_negocio: estado, estado_negocio_en: en.toISOString() }).eq('id', salaId);
     if (error) throw new Error(`No se pudo guardar el estado de la sala ${salaId}: ${error.message}`);
+  },
+};
+
+export const puertoEnriquecimientoWebSupabase: PuertoEnriquecimientoWeb = {
+  async salasPorEnriquecer(limite, antesDe) {
+    // Con web, no «no contactar», no cerradas, y con algún dato por rellenar. Las revisadas hace poco esperan.
+    // «Sin revisar o revisada hace tiempo» Y «con algún dato vacío», en un solo filtro: PostgREST no combina de forma fiable dos `or`.
+    const sinRevisar = ['web_revisada_en.is.null', `web_revisada_en.lt.${antesDe.toISOString()}`];
+    const conHueco = ['instagram', 'email_contacto', 'telefono', 'genero'].map((c) => `${c}.is.null`);
+    const { data, error } = await getSupabase()
+      .from('catalogo_salas')
+      .select('*')
+      .eq('no_contactar', false)
+      .neq('estado_negocio', 'cerrado_permanente')
+      .not('website', 'is', null)
+      .or(sinRevisar.flatMap((r) => conHueco.map((h) => `and(${r},${h})`)).join(','))
+      .order('web_revisada_en', { ascending: true, nullsFirst: true })
+      .limit(limite);
+    if (error) throw new Error(`No se pudieron leer las salas por enriquecer: ${error.message}`);
+    return ((data ?? []) as FilaSala[]).map(salaDeFila);
+  },
+
+  async guardarEnriquecimiento(salaId, campos, en) {
+    const { error } = await getSupabase().from('catalogo_salas').update({ ...campos, web_revisada_en: en.toISOString() }).eq('id', salaId);
+    if (error) throw new Error(`No se pudo guardar el enriquecimiento de la sala ${salaId}: ${error.message}`);
   },
 };
