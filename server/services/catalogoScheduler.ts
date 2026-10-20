@@ -15,6 +15,7 @@ import { crearConsultaMaps } from "./consultaMapsSala.js";
 import { datosDeWebSala } from "../utils/datosDeWebSala.js";
 import { enriquecerSalasDesdeSuWeb } from "./enriquecerSalasDesdeSuWeb.js";
 import { buscarEnNominatim, geolocalizarSalas } from "./geolocalizarSalas.js";
+import { consultarWikidata, importarDeWikidata } from "./importarDeWikidata.js";
 import { importarSalasDeBandflow } from "./importarSalasBandflow.js";
 import { leerWebDeSala } from "./leerWebDeSala.js";
 import { descargarOsmSalas, importarSalasDeOsm } from "./importarSalasOsm.js";
@@ -30,6 +31,7 @@ let primera: ReturnType<typeof setTimeout> | null = null;
 let enCurso = false;
 let importacion: ReturnType<typeof setTimeout> | null = null;
 let semilla: ReturnType<typeof setTimeout> | null = null;
+let wikidata: ReturnType<typeof setTimeout> | null = null;
 
 /** Una pasada. Nunca lanza: un fallo se registra y la siguiente pasada lo reintenta. Devuelve null si falló o ya había una en curso. */
 export async function sincronizarCatalogoAhora(sincronizar: () => Promise<InformeCatalogo> = () => sincronizarCatalogo(puertoCatalogoSupabase)): Promise<InformeCatalogo | null> {
@@ -138,6 +140,26 @@ export async function importarSalasBandflowAhora(): Promise<void> {
   }
 }
 
+/**
+ * Salas y festivales de Wikidata (CC0). `CATALOGO_IMPORTAR_WIKIDATA=true` escribe; `false` la apaga; sin definir solo SIMULA y
+ * dice en el log cuántas traería y algunos nombres, para comprobar la fuente antes de dejarla escribir. Nunca lanza.
+ */
+export async function importarDeWikidataAhora(): Promise<void> {
+  const modo = process.env.CATALOGO_IMPORTAR_WIKIDATA;
+  if (modo === "false") return;
+  const simulacion = modo !== "true";
+  try {
+    const r = await importarDeWikidata({ puerto: puertoCatalogoSupabase, consultar: consultarWikidata, simulacion });
+    console.log(
+      `[Catálogo] Wikidata${simulacion ? " (simulación, no escribe)" : ""}: ${r.porTipo.festival} festivales y ${r.porTipo.sala} salas, ` +
+        `${r.nuevas} nuevas, ${r.completadas} completadas, ${r.sinCambios} sin cambios, ${r.conCoordenadas} con su punto. Ejemplos: ${r.ejemplos.join("; ") || "ninguno"}.`,
+    );
+  } catch (e) {
+    console.warn("[Catálogo] La importación de Wikidata falló:", e instanceof Error ? e.message : e);
+    captureError(e, { fase: "importarDeWikidata" });
+  }
+}
+
 const REINTENTOS_IMPORTACION = 3;
 const ESPERA_REINTENTO_MS = 60 * 60 * 1000;
 
@@ -164,6 +186,11 @@ export function iniciarSincronizacionDelCatalogo(): void {
     semilla = setTimeout(() => void importarSalasBandflowAhora(), 8 * 60 * 1000);
     semilla.unref?.();
   }
+  if (process.env.CATALOGO_IMPORTAR_WIKIDATA !== "false") {
+    // Tras la semilla de Bandflow y antes de OSM: dos consultas ligeras.
+    wikidata = setTimeout(() => void importarDeWikidataAhora(), 11 * 60 * 1000);
+    wikidata.unref?.();
+  }
   if (process.env.CATALOGO_IMPORTAR_OSM === "true") {
     // Después de la primera sincronización, para que las salas de las bandas ya estén y no se dupliquen.
     programarImportacion(15 * 60 * 1000);
@@ -175,6 +202,8 @@ export function detenerSincronizacionDelCatalogo(): void {
   if (intervalo) clearInterval(intervalo);
   if (importacion) clearTimeout(importacion);
   if (semilla) clearTimeout(semilla);
+  if (wikidata) clearTimeout(wikidata);
+  wikidata = null;
   importacion = null;
   semilla = null;
   primera = null;

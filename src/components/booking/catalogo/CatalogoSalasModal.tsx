@@ -12,6 +12,8 @@ const MapaCatalogo = lazy(() => import('./MapaCatalogo'));
 interface CatalogoSalasModalProps {
   isOpen: boolean;
   onClose: () => void;
+  /** Abre «Añadir escenario» para la sala o el festival que no está en el catálogo. */
+  onFaltaSala?: () => void;
 }
 
 type Seccion = 'salas' | 'festivales';
@@ -21,6 +23,7 @@ const TIPOS = [
   { valor: 'sala', texto: 'Salas' },
   { valor: 'festival', texto: 'Festivales' },
   { valor: 'discoteca', texto: 'Discotecas' },
+  { valor: 'bar', texto: 'Bares con directo' },
   { valor: 'ayuntamiento', texto: 'Ayuntamientos' },
 ];
 
@@ -35,7 +38,7 @@ const VISTAS = [
 ];
 
 /** Explorar el catálogo compartido (salas y festivales) y añadir lo que encaje a la agenda de la banda, en lista, en mapa o ficha a ficha. */
-export function CatalogoSalasModal({ isOpen, onClose }: CatalogoSalasModalProps) {
+export function CatalogoSalasModal({ isOpen, onClose, onFaltaSala }: CatalogoSalasModalProps) {
   const [seccion, setSeccion] = useState<Seccion>('salas');
   const [vista, setVista] = useState<VistaCatalogo>('lista');
   const c = useCatalogoSalas(isOpen, vista);
@@ -109,13 +112,14 @@ export function CatalogoSalasModal({ isOpen, onClose }: CatalogoSalasModalProps)
                   ) : c.fallo ? (
                     <EmptyState compact title="No hemos podido abrir el catálogo." description="Prueba otra vez en un momento." action={<Button size="sm" variant="neutral" onClick={c.reintentar}>Reintentar</Button>} />
                   ) : !c.resultado || c.resultado.salas.length === 0 ? (
-                    <EmptyState compact title="Ninguna sala encaja con eso." description="Prueba con otra ciudad o quita algún filtro. Si no está, pídele al chat que la busque por ti." />
+                    <EmptyState compact title="Ninguna sala encaja con eso." description="Prueba con otra ciudad o quita algún filtro. Si conoces una que falta, añádela: la completamos y queda para todas las bandas." action={onFaltaSala && <Button size="sm" variant="neutral" onClick={onFaltaSala}>Añadir una sala que falta</Button>} />
                   ) : (
                     <>
                       <p className="pb-2 text-xs text-[var(--ink-2)] tabular-nums" aria-live="polite">
                         {c.resultado.total > c.resultado.mostradas ? `Mostrando ${c.resultado.mostradas} de ${c.resultado.total}. Afina la búsqueda o mira el mapa para ver el resto.` : `${c.resultado.total} ${c.resultado.total === 1 ? 'sala' : 'salas'}`}
                       </p>
                       <ListaSalasCatalogo salas={c.resultado.salas} cargando={c.cargando} anadiendo={c.anadiendo} onAnadir={(id) => void c.anadir(id)} onAbrir={(s) => void c.abrirFicha(s)} />
+                      {onFaltaSala && <FaltaSala onClick={onFaltaSala} />}
                     </>
                   )}
                 </div>
@@ -125,6 +129,17 @@ export function CatalogoSalasModal({ isOpen, onClose }: CatalogoSalasModalProps)
         </div>
       </div>
     </ModalPortal>
+  );
+}
+
+/** Invitación a añadir lo que no está: entra a la agenda de la banda y, desde ahí, al catálogo, donde se verifica y completa solo. */
+function FaltaSala({ onClick }: { onClick: () => void }) {
+  return (
+    <p className="pt-3 text-center text-xs text-[var(--ink-2)]">
+      ¿Falta una sala o un festival?{' '}
+      <button type="button" onClick={onClick} className="font-medium text-[var(--acc-ink)] underline-offset-2 hover:underline">Añádelo</button>
+      {' '}y lo completamos para todas las bandas.
+    </p>
   );
 }
 
