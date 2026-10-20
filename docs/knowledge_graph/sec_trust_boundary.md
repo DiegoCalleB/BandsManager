@@ -86,6 +86,7 @@ Resolución forzosa del band_id desde la sesión autenticada. Bloquea inyeccione
 - [[server_services_perfilDeLaPeticion|server/services/perfilDeLaPeticion.ts]] *(from #service)*
 - [[server_utils_bandDna|server/utils/bandDna.ts]] *(from #service)*
 - [[server_utils_estadoPorBanda|server/utils/estadoPorBanda.ts]] *(from #service)*
+- [[server_utils_permisosConcierto|server/utils/permisosConcierto.ts]] *(from #service)*
 - [[service_calendar_conflicts|Avisos de choques por email]] *(from #service)*
 - [[ui_leads_table|Leads Table & Actions]] *(from #frontend)*
 - [[util_calendar_conflicts|Detector de choques del calendario]] *(from #service)*
