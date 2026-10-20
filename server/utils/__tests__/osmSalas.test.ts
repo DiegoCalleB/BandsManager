@@ -143,3 +143,10 @@ describe('conCiudadResuelta', () => {
     expect(q.match(/out tags center;/g)).toHaveLength(2);
   });
 });
+
+describe('salaDesdeOsm: recintos masivos', () => {
+  it('no recoge un pabellón de estadio', () => {
+    expect(salaDesdeOsm({ type: 'node', id: 1, tags: { amenity: 'concert_hall', name: 'Movistar Arena', 'addr:city': 'Madrid', capacity: '17000' } })).toBeNull();
+    expect(salaDesdeOsm({ type: 'node', id: 2, tags: { amenity: 'concert_hall', name: 'Sala Pequeña', 'addr:city': 'Madrid', capacity: '300' } })).not.toBeNull();
+  });
+});
