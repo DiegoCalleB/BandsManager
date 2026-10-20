@@ -29,7 +29,8 @@ export async function dbAltaInteresado(email: string, idioma: string, origen: st
   if (errLeer) throw new Error(`Supabase Error (musicians_waitlist): ${errLeer.message}`);
   if (existente) return { ...(existente as Interesado), nuevo: false };
 
-  const fila = { id: `interesado-${crypto.randomUUID()}`, email, idioma, origen, consentimiento_at: new Date().toISOString() };
+  // nombre_banda y nombre_contacto son NOT NULL en producción: van vacíos (aquí solo hay email).
+  const fila = { id: `interesado-${crypto.randomUUID()}`, nombre_banda: '', nombre_contacto: '', email, idioma, origen, consentimiento_at: new Date().toISOString() };
   const { data, error } = await sb
     .from('musicians_waitlist')
     .insert(fila)
@@ -85,6 +86,7 @@ export async function dbAltaContactoEmpresa(c: FilaContactoEmpresa): Promise<voi
   const { error } = await getSupabase().from('musicians_waitlist').insert({
     id: `b2b-${crypto.randomUUID()}`,
     nombre_banda: c.empresa,
+    nombre_contacto: '', // NOT NULL en producción
     email: c.email,
     interes_principal: c.tipo,
     notas: c.mensaje,
