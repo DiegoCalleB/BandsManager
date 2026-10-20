@@ -25,6 +25,7 @@ Exporta: ButtonProps, Button, IconButtonProps, IconButton.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_chords_ProfesorIA|src/components/chords/ProfesorIA.tsx]] *(from #frontend)*
+- [[src_components_GmailOAuthEstado|src/components/GmailOAuthEstado.tsx]] *(from #security)*
 - [[src_components_repertorio_ActiveSetlistHeader|src/components/repertorio/ActiveSetlistHeader.tsx]] *(from #frontend)*
 - [[src_components_ui_ActionMenu|src/components/ui/ActionMenu.tsx]] *(from #frontend)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(from #frontend)*
