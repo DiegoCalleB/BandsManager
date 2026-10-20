@@ -25,6 +25,7 @@ Devuelve los choques visibles para el usuario (ya redactados) y programa la revi
 - [[server_routes_tiposCalendarioIcs|server/routes/tiposCalendarioIcs.ts]] *(Layer: #route, Domain: #system)*
 - [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_estadoPorBanda|server/utils/estadoPorBanda.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_permisosConcierto|server/utils/permisosConcierto.ts]] *(Layer: #service, Domain: #system)*
 - [[service_calendar_conflicts|Avisos de choques por email]] *(Layer: #service, Domain: #booking)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
@@ -50,6 +51,7 @@ Devuelve los choques visibles para el usuario (ya redactados) y programa la revi
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/routes/__tests__/conciertosGirasDireccion.test.ts`
 - `server/routes/__tests__/firmaDeFeed.test.ts`
 - `server/routes/__tests__/paymentsSoloSupabase.test.ts`
 

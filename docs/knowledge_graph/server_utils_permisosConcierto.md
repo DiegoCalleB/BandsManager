@@ -24,7 +24,7 @@ Conciertos y giras son cosa de la dirección (líder o admin): el caché, el con
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- `server/routes/concerts.ts` *(from #route)*
+- [[route_calendar_conflicts|GET /api/calendar/conflicts]] *(from #route)*
 
 ---
 
