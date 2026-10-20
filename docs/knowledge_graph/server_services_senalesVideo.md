@@ -21,6 +21,7 @@ Señales medidas sobre el vídeo real: volumen, contraste al arrancar y cambios 
 - [[ext_ffmpeg|FFmpeg]] *(Layer: #external, Domain: #system)*
 - [[server_services_interesDelPublico|server/services/interesDelPublico.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_youtubeMeta|server/services/youtubeMeta.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_ajusteDeCortes|server/utils/ajusteDeCortes.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_audioEnergy|server/utils/audioEnergy.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_utils_viralSignals|server/utils/viralSignals.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_youtubeSource|server/utils/youtubeSource.ts]] *(Layer: #service, Domain: #system)*
