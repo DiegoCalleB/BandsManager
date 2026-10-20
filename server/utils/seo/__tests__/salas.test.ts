@@ -120,6 +120,19 @@ describe('sitemap y portada de listados', () => {
     expect(locs.some((l) => /venues\/comunidad-de-madrid\/madrid\/sala-/.test(l))).toBe(false);
     expect(e.find((x) => x.loc.endsWith('/directories/venues'))!.alternativas!.map((a) => a.hreflang)).toEqual(['es', 'en', 'x-default']);
   });
+  it('lastmod es la fecha real más reciente de las salas de la zona, y cae a la del contenido sin datos', () => {
+    const salas = muchas(MIN_SALAS_INDEX, (i) => ({ updated_at: i === 3 ? '2026-10-17T08:00:00Z' : '2026-09-01T00:00:00Z' }));
+    const e = entradasSeo(BASE, '2026-10-19', [], salas);
+    expect(e.find((x) => x.loc.endsWith('/directories/venues'))!.lastmod).toBe('2026-10-17');
+    const sin = entradasSeo(BASE, '2026-10-19', [], muchas(MIN_SALAS_INDEX));
+    expect(sin.find((x) => x.loc.endsWith('/directories/venues'))!.lastmod).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  });
+  it('el índice declara dateModified, fecha visible y un Dataset', () => {
+    const html = renderizarIndiceSalas(BASE, 'en', muchas(MIN_SALAS_INDEX, () => ({ updated_at: '2026-10-17T08:00:00Z' })));
+    expect(html).toContain('"dateModified":"2026-10-17"');
+    expect(html).toContain('<time datetime="2026-10-17">');
+    expect(html).toContain('"@type":"Dataset"');
+  });
   it('con pocas salas no entra nada de salas en el sitemap', () => {
     expect(entradasSeo(BASE, '2026-10-19', [], muchas(3)).some((x) => x.loc.includes('/venues'))).toBe(false);
   });
