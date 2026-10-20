@@ -33,6 +33,7 @@ Renderizador de las guías de SEO (`/guides`, `/en/guides` y sus guías), en el 
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_routes_paginasSeo|server/routes/paginasSeo.ts]] *(from #route)*
+- [[server_utils_seo_rastreadores|server/utils/seo/rastreadores.ts]] *(from #service)*
 - [[server_utils_seo_sitemap|server/utils/seo/sitemap.ts]] *(from #service)*
 
 ---

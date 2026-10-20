@@ -40,7 +40,8 @@ describe.each(IDIOMAS)('guías de SEO (%s)', (idioma) => {
       const ld = html.match(/<script type="application\/ld\+json">(.*?)<\/script>/s)?.[1] ?? '';
       expect(ld).not.toContain('<');
       const grafo = JSON.parse(ld)['@graph'];
-      expect(grafo).toHaveLength(3);
+      // Artículo, migas y FAQ de la guía, más la organización y el sitio que añade `cabezaHtml` a todas las páginas.
+      expect(grafo.map((n: { '@type': string }) => n['@type'])).toEqual(['Article', 'BreadcrumbList', 'FAQPage', 'Organization', 'WebSite']);
       expect(grafo[0].dateModified).toBe(FECHA_CONTENIDO);
       expect(grafo[0].image).toBe(`${BASE}/og-cover.png`);
       // Resumen visible y cada enlace del índice apunta a un id que existe.
