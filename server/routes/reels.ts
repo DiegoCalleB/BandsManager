@@ -423,7 +423,7 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
       });
     }
 
-    highlights = ajustarCortes(highlights, curva, cambiosDePlano, { videoDuration: duracionTotal, objetivo: objetivoClip });
+    highlights = ajustarCortes(highlights, curva, cambiosDePlano, { videoDuration: duracionTotal, objetivo: objetivoClip, transcript });
     if (!optimalTime || !optimalTime.date) {
       const manana = new Date();
       manana.setDate(manana.getDate() + 1);

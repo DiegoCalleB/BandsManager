@@ -8,7 +8,7 @@
  */
 import { type PuntoEnergia } from "./audioEnergy.js";
 import { encajarEnElGolpe, type VentanaViral } from "./viralSignals.js";
-import { formatMMSS } from "./reelsCore.js";
+import { formatMMSS, type TranscriptItem } from "./reelsCore.js";
 
 export interface CorteAjustable {
   startSec: number;
@@ -22,6 +22,26 @@ export interface OpcionesAjuste {
   videoDuration: number;
   /** Duración deseada del clip, en segundos. */
   objetivo: number;
+  /** Transcripción del vídeo: si existe, el final cae en el límite de una frase. */
+  transcript?: TranscriptItem[];
+}
+
+/** Aire que se deja tras la última palabra para no cortarla en seco (s). */
+const COLA_FRASE = 0.3;
+/** Pausa mínima (s) entre dos líneas de subtítulo para tratarla como fin de frase. */
+const PAUSA_FRASE = 0.4;
+
+/** Instantes (s) en los que termina una frase: acaba en puntuación o hay una pausa después. */
+export function finesDeFrase(transcript: TranscriptItem[] | undefined): number[] {
+  if (!Array.isArray(transcript)) return [];
+  const t = [...transcript].filter((x) => Number.isFinite(x.offset) && Number.isFinite(x.duration)).sort((a, b) => a.offset - b.offset);
+  const fines: number[] = [];
+  t.forEach((x, i) => {
+    const fin = (x.offset + x.duration) / 1000;
+    const siguiente = t[i + 1] ? t[i + 1].offset / 1000 : Infinity;
+    if (/[.!?…]["')»]*\s*$/.test(x.text || "") || siguiente - fin >= PAUSA_FRASE) fines.push(fin);
+  });
+  return fines;
 }
 
 /** El final puede adelantarse o retrasarse esto (s) buscando un respiro. */
@@ -45,6 +65,13 @@ export function mejorFinal(start: number, end: number, curva: PuntoEnergia[], ca
   const maxDur = Math.min(90, Math.round(o.objetivo * 1.4));
   const desde = Math.max(start + minDur, end - ADELANTAR_MAX);
   const hasta = Math.min(start + maxDur, end + RETRASAR_MAX, o.videoDuration);
+  // Con transcripción manda la frase: el límite más cercano al final actual, con su cola.
+  const fines = finesDeFrase(o.transcript);
+  if (fines.length) {
+    if (fines.some((f) => Math.abs(f + COLA_FRASE - end) <= 0.5)) return end;
+    const dentro = fines.map((f) => f + COLA_FRASE).filter((t) => t >= desde && t <= hasta);
+    if (dentro.length) return Number(dentro.sort((a, b) => Math.abs(a - end) - Math.abs(b - end))[0].toFixed(1));
+  }
   const coste = (t: number) => {
     const db = dbEn(curva, t - 0.5, t + 0.5);
     if (db === null) return null;
@@ -62,16 +89,17 @@ export function mejorFinal(start: number, end: number, curva: PuntoEnergia[], ca
 }
 
 export function ajustarCortes<T extends CorteAjustable>(cortes: T[], curva: PuntoEnergia[], cambios: number[], o: OpcionesAjuste): T[] {
-  if (!Array.isArray(curva) || curva.length < 2) return cortes;
-  const ultimo = Math.max(...curva.map((p) => p.t));
+  const hayAudio = Array.isArray(curva) && curva.length >= 2;
+  if (!hayAudio && !finesDeFrase(o.transcript).length) return cortes;
+  const ultimo = hayAudio ? Math.max(...curva.map((p) => p.t)) : 0;
   return cortes.map((c) => {
     const base = { start: c.startSec, end: c.endSec, energia: 0, arranque: 0, dinamismo: 0, score: 0, motivo: "" } as VentanaViral;
-    const enGolpe = encajarEnElGolpe(base, curva, ultimo);
+    const enGolpe = hayAudio ? encajarEnElGolpe(base, curva, ultimo) : base;
     const end = mejorFinal(enGolpe.start, enGolpe.end, curva, cambios, o);
     if (enGolpe.start === c.startSec && end === c.endSec) return c;
     const notas = [
       enGolpe.start !== c.startSec ? "inicio en el golpe" : "",
-      end !== enGolpe.end ? "final en un respiro, no a mitad de frase" : ""
+      end !== enGolpe.end ? (o.transcript?.length ? "final al terminar una frase" : "final en un respiro, no a mitad de frase") : ""
     ].filter(Boolean).join(" y ");
     return {
       ...c,
