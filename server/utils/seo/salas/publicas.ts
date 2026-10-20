@@ -15,6 +15,8 @@ const esHttps = (u: string | null): u is string => !!u && /^https:\/\/[^\s]+$/i.
  */
 export function salaPublica(f: FilaSalaPublica): SalaPublica | null {
   if (f.tipo !== 'sala' || f.no_contactar || f.estado_negocio === 'cerrado_permanente') return null;
+  // Lo que viene de otro directorio se usa dentro de la app, pero no se republica en páginas públicas.
+  if (f.fuentes?.includes('bandflow')) return null;
   const nombre = f.nombre?.trim();
   const ciudad = f.ciudad?.trim();
   if (!nombre || !ciudad || !esHttps(f.website)) return null;

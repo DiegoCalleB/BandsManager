@@ -12,6 +12,7 @@ import { puertoCatalogoSupabase, puertoVerificacionSupabase } from "../db/salasC
 import { captureError } from "../utils/errorTracking.js";
 import { sincronizarCatalogo, type InformeCatalogo } from "./catalogoSalas.js";
 import { crearConsultaMaps } from "./consultaMapsSala.js";
+import { importarSalasDeBandflow } from "./importarSalasBandflow.js";
 import { descargarOsmSalas, importarSalasDeOsm } from "./importarSalasOsm.js";
 import { verificarSalasEnMaps } from "./verificarSalasEnMaps.js";
 
@@ -22,6 +23,7 @@ let intervalo: ReturnType<typeof setInterval> | null = null;
 let primera: ReturnType<typeof setTimeout> | null = null;
 let enCurso = false;
 let importacion: ReturnType<typeof setTimeout> | null = null;
+let semilla: ReturnType<typeof setTimeout> | null = null;
 
 /** Una pasada. Nunca lanza: un fallo se registra y la siguiente pasada lo reintenta. Devuelve null si falló o ya había una en curso. */
 export async function sincronizarCatalogoAhora(sincronizar: () => Promise<InformeCatalogo> = () => sincronizarCatalogo(puertoCatalogoSupabase)): Promise<InformeCatalogo | null> {
@@ -81,6 +83,20 @@ export async function importarSalasOsmAhora(): Promise<boolean> {
   }
 }
 
+/**
+ * Carga la semilla de Bandflow en el catálogo. Va con el código (no hay red) y solo añade lo que falta, así que repetirla en cada
+ * arranque es inofensiva. `CATALOGO_SEMILLA_BANDFLOW=false` la apaga.
+ */
+export async function importarSalasBandflowAhora(): Promise<void> {
+  try {
+    const r = await importarSalasDeBandflow({ puerto: puertoCatalogoSupabase });
+    if (r.nuevas + r.completadas > 0) console.log(`[Catálogo] Semilla Bandflow: ${r.salasEnSemilla} salas, ${r.nuevas} nuevas, ${r.completadas} completadas, ${r.sinCambios} sin cambios.`);
+  } catch (e) {
+    console.warn("[Catálogo] La semilla de Bandflow falló:", e instanceof Error ? e.message : e);
+    captureError(e, { fase: "importarSalasBandflow" });
+  }
+}
+
 const REINTENTOS_IMPORTACION = 3;
 const ESPERA_REINTENTO_MS = 60 * 60 * 1000;
 
@@ -103,6 +119,10 @@ export function iniciarSincronizacionDelCatalogo(): void {
   intervalo = setInterval(() => void sincronizarCatalogoAhora(), PERIODO_MS);
   primera.unref?.();
   intervalo.unref?.();
+  if (process.env.CATALOGO_SEMILLA_BANDFLOW !== "false") {
+    semilla = setTimeout(() => void importarSalasBandflowAhora(), 8 * 60 * 1000);
+    semilla.unref?.();
+  }
   if (process.env.CATALOGO_IMPORTAR_OSM === "true") {
     // Después de la primera sincronización, para que las salas de las bandas ya estén y no se dupliquen.
     programarImportacion(15 * 60 * 1000);
@@ -113,7 +133,9 @@ export function detenerSincronizacionDelCatalogo(): void {
   if (primera) clearTimeout(primera);
   if (intervalo) clearInterval(intervalo);
   if (importacion) clearTimeout(importacion);
+  if (semilla) clearTimeout(semilla);
   importacion = null;
+  semilla = null;
   primera = null;
   intervalo = null;
 }
