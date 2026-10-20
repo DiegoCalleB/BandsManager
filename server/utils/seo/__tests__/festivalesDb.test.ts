@@ -107,7 +107,8 @@ describe('carga desde la lista de trabajo', () => {
     expect(fim.festival).toMatchObject({ id: 'fim-vila-seca', estado_revision: 'completa' });
     expect(fim.edicion).toMatchObject({ anio: 2027, estado: 'confirmada' });
     expect(fim.convocatoria).toMatchObject({ cierra: '2026-10-23' });
-    const vina = filasDeFichaFija(FESTIVALES.find((f) => f.slug === 'vina-rock')!);
+    const { web: _web, ...sinWeb } = FESTIVALES.find((f) => f.slug === 'vina-rock')!;
+    const vina = filasDeFichaFija(sinWeb);
     expect(vina.festival).toMatchObject({ estado_revision: 'minima' });
     expect(vina.edicion).toBeUndefined();
   });

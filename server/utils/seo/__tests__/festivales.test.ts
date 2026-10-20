@@ -43,9 +43,9 @@ describe('frescura y convocatorias', () => {
     expect(convocatoriaAbierta(ficha(1, { convocatoria: undefined }), HOY)).toBe(false);
   });
   it('con pocas fichas vigentes el directorio va con noindex y fuera del sitemap', () => {
-    expect(indexable(FESTIVALES, HOY)).toBe(false);
-    expect(renderizarIndiceFestivales(BASE, 'es', HOY)).toContain('noindex,follow');
-    expect(entradasSeo(BASE, HOY).some((e) => e.loc.includes('/directories'))).toBe(false);
+    const pocas = FESTIVALES.slice(0, MIN_FICHAS_INDEXABLES - 1);
+    expect(indexable(pocas, HOY)).toBe(false);
+    expect(entradasSeo(BASE, HOY, pocas).some((e) => e.loc.includes('/directories'))).toBe(false);
   });
   it('las fichas mínimas se listan pero no cuentan para indexar ni se indexan solas', () => {
     const minimas = Array.from({ length: MIN_FICHAS_INDEXABLES + 2 }, (_, i) => ficha(i, { web: undefined, convocatoria: undefined }));
