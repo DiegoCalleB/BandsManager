@@ -6,11 +6,13 @@ export interface FiltrosUi {
   lugar: string;
   tipo: string;
   conContacto: boolean;
+  /** Aforo orientativo. */
+  aforo: string;
 }
 
 export type VistaCatalogo = 'lista' | 'mapa';
 
-export const FILTROS_INICIALES: FiltrosUi = { texto: '', lugar: '', tipo: '', conContacto: false };
+export const FILTROS_INICIALES: FiltrosUi = { texto: '', lugar: '', tipo: '', conContacto: false, aforo: '' };
 const ESPERA_MS = 300;
 
 const esAborto = (e: unknown) => (e as { name?: string })?.name === 'AbortError';

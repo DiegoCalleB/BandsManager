@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { datosDeWebSala, generoDeLaWeb } from '../datosDeWebSala.js';
+import { aforoDeLaWeb, datosDeWebSala, generoDeLaWeb } from '../datosDeWebSala.js';
 
 const portada = `<html><body><h1>Sala Moby Dick</h1>
 <a href="https://www.instagram.com/p/XYZ/">post</a><a href="https://instagram.com/cervezas_sol">patrocinador</a>
@@ -31,7 +31,7 @@ describe('datosDeWebSala', () => {
   });
 
   it('una web vacía no da nada', () => {
-    expect(datosDeWebSala([], 'Sala X')).toEqual({ instagram: null, email_contacto: null, telefono: null, genero: null });
+    expect(datosDeWebSala([], 'Sala X')).toEqual({ instagram: null, email_contacto: null, telefono: null, genero: null, aforo: null });
   });
 });
 
@@ -56,5 +56,38 @@ describe('generoDeLaWeb', () => {
 
   it('no cuenta palabras que contienen el género', () => {
     expect(generoDeLaWeb([pagina('Rocky rockero rocks karaoke. Popular popurrí. Metalúrgica metálico.')])).toBeNull();
+  });
+});
+
+describe('aforoDeLaWeb', () => {
+  const web = (texto: string) => [`<html><body><p>${texto}</p></body></html>`];
+
+  it('lee las formas habituales de decir el aforo', () => {
+    expect(aforoDeLaWeb(web('Aforo: 300 personas'))).toBe(300);
+    expect(aforoDeLaWeb(web('Capacidad para 250 personas'))).toBe(250);
+    expect(aforoDeLaWeb(web('Aforo máximo de 450'))).toBe(450);
+    expect(aforoDeLaWeb(web('Una sala con 180 personas de aforo'))).toBe(180);
+    expect(aforoDeLaWeb(web('CAPACIDAD HASTA 1.200 PERSONAS'))).toBe(1200);
+  });
+
+  it('acepta el mismo número repetido (portada y ficha)', () => {
+    expect(aforoDeLaWeb([...web('Aforo 300 personas'), ...web('Capacidad: 300 personas')])).toBe(300);
+  });
+
+  it('con dos salas distintas no apuesta', () => {
+    expect(aforoDeLaWeb(web('Sala A aforo 300 personas. Sala B aforo 800 personas.'))).toBeNull();
+  });
+
+  it('descarta números absurdos, años sueltos y textos sin aforo', () => {
+    expect(aforoDeLaWeb(web('Aforo 5'))).toBeNull();
+    expect(aforoDeLaWeb(web('Aforo completo en 2024'))).toBeNull();
+    expect(aforoDeLaWeb(web('Aforo 999999 personas'))).toBeNull();
+    expect(aforoDeLaWeb(web('Programación de otoño. Teléfono 981 574 399'))).toBeNull();
+    expect(aforoDeLaWeb([])).toBeNull();
+  });
+
+  it('un año con la unidad sí es un aforo, y los scripts no cuentan', () => {
+    expect(aforoDeLaWeb(web('Capacidad 2000 personas'))).toBe(2000);
+    expect(aforoDeLaWeb(['<script>var aforo = 300 personas</script><p>hola</p>'])).toBeNull();
   });
 });

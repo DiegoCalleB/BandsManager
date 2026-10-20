@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { consultaOverpassSalas, contarDescartes, REGIONES_OSM, salaDesdeOsm, salasDeOsm, type ElementoOsm } from '../osmSalas.js';
+import { consultaOverpassSalas, consultaOverpassSoloSalas, contarDescartes, REGIONES_OSM, salaDesdeOsm, salasDeOsm, type ElementoOsm } from '../osmSalas.js';
 import { regionDeCodigoPostal } from '../regionesEspana.js';
 
 const el = (tags: Record<string, string>, id = 1): ElementoOsm => ({ type: 'node', id, tags });
@@ -141,6 +141,17 @@ describe('conCiudadResuelta', () => {
     const q = consultaOverpassSalas('ES-GA');
     expect(q).toContain('"place"~"^(city|town|village)$"');
     expect(q.match(/out tags center;/g)).toHaveLength(2);
+  });
+});
+
+describe('consultaOverpassSoloSalas', () => {
+  it('pide las mismas salas sin los núcleos de población y con su región saneada', () => {
+    const q = consultaOverpassSoloSalas('ES-GA');
+    expect(q).toContain('"ISO3166-2"="ES-GA"');
+    expect(q).toContain('"amenity"="music_venue"');
+    expect(q).not.toContain('place');
+    expect(q.match(/out tags center;/g)).toHaveLength(1);
+    expect(consultaOverpassSoloSalas('ES-GA"; out;')).not.toContain('out;"');
   });
 });
 

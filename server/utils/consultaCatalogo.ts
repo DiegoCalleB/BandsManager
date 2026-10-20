@@ -24,6 +24,8 @@ export interface FiltrosCatalogo {
   tipo: string;
   aforoMin: number | null;
   aforoMax: number | null;
+  /** Aforo orientativo: salas de la mitad a una vez y media ese valor. Es lo que usa la interfaz; mín y máx quedan para el chat. */
+  aforoAprox: number | null;
   genero: string;
   /** Nivel mínimo de fiabilidad. */
   nivelMinimo: NivelSala;
@@ -88,6 +90,7 @@ export function parsearFiltros(entrada: Record<string, unknown> | undefined): Fi
     tipo: texto(e.tipo, 20).toLowerCase(),
     aforoMin: numeroPositivo(e.aforoMin ?? e.aforo_min),
     aforoMax: numeroPositivo(e.aforoMax ?? e.aforo_max),
+    aforoAprox: numeroPositivo(e.aforoAprox ?? e.aforo_aprox),
     genero: normalizarTexto(texto(e.genero)),
     nivelMinimo: NIVELES.has(nivel) ? (nivel as NivelSala) : 'sin_verificar',
     conContacto: e.conContacto === true || e.conContacto === 'true' || e.con_contacto === true || e.con_contacto === 'true',
@@ -169,6 +172,7 @@ function filtrarYOrdenar(salas: SalaGuardada[], filtros: FiltrosCatalogo): SalaG
       (!filtros.genero || contiene(s.genero, filtros.genero)) &&
       (filtros.aforoMin === null || (s.aforo !== null && s.aforo >= filtros.aforoMin)) &&
       (filtros.aforoMax === null || (s.aforo !== null && s.aforo <= filtros.aforoMax)) &&
+      (filtros.aforoAprox === null || (s.aforo !== null && s.aforo >= filtros.aforoAprox * 0.5 && s.aforo <= filtros.aforoAprox * 1.5)) &&
       (!filtros.conContacto || !!s.email_contacto || !!s.telefono) &&
       (!filtros.texto || [s.nombre, s.ciudad, s.region, s.genero].some((c) => contiene(c, filtros.texto))),
   );

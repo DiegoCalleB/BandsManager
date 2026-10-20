@@ -101,7 +101,7 @@ export async function enriquecerDesdeLaWebAhora(): Promise<void> {
     const r = await enriquecerSalasDesdeSuWeb({ puerto: puertoEnriquecimientoWebSupabase, leerWeb: leerWebDeSala, extraer: datosDeWebSala, pausaMs: 1000 });
     if (r.revisadas > 0) {
       const c = r.camposRellenados;
-      console.log(`[Catálogo] Enriquecimiento desde la web: ${r.revisadas} salas revisadas (${r.sinWeb} sin web legible), ${r.completadas} completadas (${c.instagram} Instagram, ${c.email_contacto} email, ${c.telefono} teléfono, ${c.genero} género).`);
+      console.log(`[Catálogo] Enriquecimiento desde la web: ${r.revisadas} salas revisadas (${r.sinWeb} sin web legible), ${r.completadas} completadas (${c.instagram} Instagram, ${c.email_contacto} email, ${c.telefono} teléfono, ${c.genero} género, ${c.aforo} aforo).`);
     }
   } catch (e) {
     console.warn("[Catálogo] El enriquecimiento desde la web falló:", e instanceof Error ? e.message : e);

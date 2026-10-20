@@ -150,11 +150,26 @@ describe('crearDescargaOsm', () => {
     const fetcher = vi.fn()
       .mockResolvedValueOnce(respuesta({}, 502))
       .mockResolvedValueOnce(respuesta({}, 500))
+      .mockResolvedValueOnce(respuesta({}, 502))
+      .mockResolvedValueOnce(respuesta({}, 500))
       .mockResolvedValueOnce(respuesta({ elements: [elemento('Sala Vigo', {}, 2)] }));
     const alFallarRegion = vi.fn();
     const r = await crearDescargaOsm(servidores, fetcher as unknown as typeof fetch, 1000, { ...opciones, alFallarRegion })();
     expect(r).toHaveLength(1);
     expect(alFallarRegion).toHaveBeenCalledWith('ES-MD', 'uno.test: respondió 502; dos.test: respondió 500');
+  });
+
+  it('si la consulta completa no pasa en ningún servidor, prueba la ligera (sin núcleos) antes de rendirse', async () => {
+    const fetcher = vi.fn()
+      .mockResolvedValueOnce(respuesta({}, 504))
+      .mockResolvedValueOnce(respuesta({}, 504))
+      .mockResolvedValueOnce(respuesta({ elements: [elemento('Sala Ligera', {}, 3)] }));
+    const alFallarRegion = vi.fn();
+    const r = await crearDescargaOsm(servidores, fetcher as unknown as typeof fetch, 1000, { regiones: ['ES-MD'], pausaMs: 0, alFallarRegion })();
+    expect(r).toHaveLength(1);
+    expect(alFallarRegion).not.toHaveBeenCalled();
+    expect(consulta(fetcher.mock.calls[0])).toContain('"place"');
+    expect(consulta(fetcher.mock.calls[2])).not.toContain('"place"');
   });
 
   it('si no llega ninguna comunidad, falla y dice cuál servidor dio qué', async () => {

@@ -11,6 +11,8 @@ export interface DatosDeWebSala {
   email_contacto: string | null;
   telefono: string | null;
   genero: string | null;
+  /** Personas. Solo si la web da UN número claro de aforo. */
+  aforo: number | null;
 }
 
 const EXTENSIONES_NO_EMAIL = /\.(png|jpe?g|gif|webp|svg|js|css|woff2?)$/i;
@@ -62,8 +64,33 @@ export function generoDeLaWeb(paginas: readonly string[]): string | null {
   return cuentas.filter(([, n]) => n >= maximo * 0.4).slice(0, 3).map(([nombre]) => nombre).join(' / ');
 }
 
+const UNIDAD = '(personas|pax|asistentes|espectadores|plazas|localidades)';
+const NUMERO = '(\\d{1,3}(?:\\.\\d{3})+|\\d{2,5})';
+const ANTES = new RegExp(`${NUMERO}\\s*${UNIDAD}\\s*(?:de|en)\\s*(?:aforo|capacidad)`, 'g');
+const DESPUES = new RegExp(`(?:aforo|capacidad)\\s*(?:(?:maxim[oa]|total|aproximad[oa]|de|para|hasta|del local|de la sala)\\s*)*:?\\s*(?:de|para|hasta)?\\s*${NUMERO}\\s*${UNIDAD}?`, 'g');
+const AFORO_MINIMO = 20;
+const AFORO_MAXIMO = 20_000;
+
+/**
+ * El aforo que declara la web («aforo 300 personas», «capacidad para 1.200», «250 personas de aforo»). Solo se da si todas las
+ * menciones coinciden: una web con dos salas («Sala A: 300 · Sala B: 800») no dice cuál es la que importa, y es mejor dejarlo
+ * vacío que apostar. Un año suelto («aforo 2024») no cuenta como aforo si no lleva la unidad.
+ */
+export function aforoDeLaWeb(paginas: readonly string[]): number | null {
+  const texto = paginas.map((h) => h.replace(/<(script|style|noscript)[\s\S]*?<\/\1>/gi, ' ').replace(/<[^>]+>/g, ' ')).join(' ').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ');
+  const valores = new Set<number>();
+  for (const [re, iNumero, iUnidad] of [[ANTES, 1, 2], [DESPUES, 1, 2]] as const) {
+    for (const m of texto.matchAll(re)) {
+      const n = Number(m[iNumero].replace(/\./g, ''));
+      const esAnio = n >= 1900 && n <= 2100;
+      if (n >= AFORO_MINIMO && n <= AFORO_MAXIMO && (!esAnio || m[iUnidad])) valores.add(n);
+    }
+  }
+  return valores.size === 1 ? [...valores][0] : null;
+}
+
 /** Lo que dicen las páginas de la web de una sala (portada, contacto…) de la propia sala. */
 export function datosDeWebSala(paginas: readonly string[], nombreSala: string): DatosDeWebSala {
   const instagram = instagramPublico(elegirInstagram(paginas.flatMap(usuariosDeInstagram), nombreSala) ?? null);
-  return { instagram, email_contacto: emailDeLaWeb(paginas), telefono: telefonoDeLaWeb(paginas), genero: generoDeLaWeb(paginas) };
+  return { instagram, email_contacto: emailDeLaWeb(paginas), telefono: telefonoDeLaWeb(paginas), genero: generoDeLaWeb(paginas), aforo: aforoDeLaWeb(paginas) };
 }

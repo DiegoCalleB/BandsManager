@@ -71,8 +71,9 @@ export const puertoCatalogoSupabase: PuertoCatalogo & PuertoCoordenadas = {
     const ahora = new Date().toISOString();
     // `created_at` es de la base de datos. Una sala ya existente lo trae al leerla y una nueva no: en un mismo lote PostgREST
     // rellena con null la que no lo tiene, y eso viola el NOT NULL (la importación de OSM fallaba así al mezclar nuevas y ya existentes).
+    // `pais` (NOT NULL, por defecto 'ES') igual: en un lote que mezcla salas nuevas y existentes PostgREST la rellena con null en las nuevas.
     // Lo mismo con las coordenadas: las escribe otro proceso, y una copia leída antes las pisaría con un valor viejo.
-    const filas = salas.map(({ created_at: _creada, lat: _lat, lon: _lon, coordenadas_aprox: _aprox, geolocalizada_en: _geo, ...s }: SalaAGuardar & { created_at?: unknown; lat?: unknown; lon?: unknown; coordenadas_aprox?: unknown; geolocalizada_en?: unknown }) => ({ ...s, verificada_en: s.verificada_en?.toISOString() ?? null, updated_at: ahora }));
+    const filas = salas.map(({ created_at: _creada, lat: _lat, lon: _lon, coordenadas_aprox: _aprox, geolocalizada_en: _geo, ...s }: SalaAGuardar & { created_at?: unknown; lat?: unknown; lon?: unknown; coordenadas_aprox?: unknown; geolocalizada_en?: unknown }) => ({ pais: 'ES', ...s, verificada_en: s.verificada_en?.toISOString() ?? null, updated_at: ahora }));
     const { error } = await getSupabase().from('catalogo_salas').upsert(filas, { onConflict: 'id' });
     if (error) throw new Error(`No se pudo guardar el catálogo de salas: ${error.message}`);
   },
@@ -111,8 +112,8 @@ export const puertoGeolocalizacionSupabase: PuertoGeolocalizacion = {
       .select('*')
       .eq('no_contactar', false)
       .neq('estado_negocio', 'cerrado_permanente')
-      .is('lat', null)
-      .or(`geolocalizada_en.is.null,geolocalizada_en.lt.${antesDe.toISOString()}`)
+      // Sin punto, o solo con el de su ciudad (se vuelve a intentar el local), y sin intentar hace poco. Un solo `or`: PostgREST no combina dos de forma fiable.
+      .or(['lat.is.null', 'coordenadas_aprox.eq.true'].flatMap((falta) => [`and(${falta},geolocalizada_en.is.null)`, `and(${falta},geolocalizada_en.lt.${antesDe.toISOString()})`]).join(','))
       .order('geolocalizada_en', { ascending: true, nullsFirst: true })
       .limit(limite);
     if (error) throw new Error(`No se pudieron leer las salas por geolocalizar: ${error.message}`);
@@ -151,7 +152,7 @@ export const puertoEnriquecimientoWebSupabase: PuertoEnriquecimientoWeb = {
     // Con web, no «no contactar», no cerradas, y con algún dato por rellenar. Las revisadas hace poco esperan.
     // «Sin revisar o revisada hace tiempo» Y «con algún dato vacío», en un solo filtro: PostgREST no combina de forma fiable dos `or`.
     const sinRevisar = ['web_revisada_en.is.null', `web_revisada_en.lt.${antesDe.toISOString()}`];
-    const conHueco = ['instagram', 'email_contacto', 'telefono', 'genero'].map((c) => `${c}.is.null`);
+    const conHueco = ['instagram', 'email_contacto', 'telefono', 'genero', 'aforo'].map((c) => `${c}.is.null`);
     const { data, error } = await getSupabase()
       .from('catalogo_salas')
       .select('*')
