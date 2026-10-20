@@ -24,8 +24,10 @@ Estado del negocio de una sala según Google Maps: reglas puras.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_services_catalogoSalas|server/services/catalogoSalas.ts]] *(from #service)*
+- [[server_services_consultaCatalogo|server/services/consultaCatalogo.ts]] *(from #service)*
 - [[server_services_consultaMapsSala|server/services/consultaMapsSala.ts]] *(from #service)*
 - [[server_services_verificarSalasEnMaps|server/services/verificarSalasEnMaps.ts]] *(from #service)*
+- [[server_utils_consultaCatalogo|server/utils/consultaCatalogo.ts]] *(from #service)*
 
 ---
 

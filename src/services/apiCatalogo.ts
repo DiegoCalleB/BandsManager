@@ -70,6 +70,7 @@ export interface SalaDelCatalogo {
   bandas_con_respuesta: number;
   tiene_email: boolean;
   tiene_telefono: boolean;
+  posiblemente_cerrada: boolean;
   ya_en_agenda: boolean;
 }
 

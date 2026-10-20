@@ -135,6 +135,15 @@ describe('leadDesdeSala', () => {
 });
 
 describe('salas cerradas en Google Maps', () => {
+  it('una cerrada que respondió a alguna banda no se oculta: sale con el aviso «posiblemente cerrada»', () => {
+    const r = consultarSalas(
+      [sala({ id: 'a', nombre: 'Cerrada sin contacto', estado_negocio: 'cerrado_permanente' }), sala({ id: 'b', nombre: 'Cerrada que respondió', estado_negocio: 'cerrado_permanente', bandas_con_respuesta: 1 })],
+      filtros(),
+      NADA,
+    );
+    expect(r.salas.map((s) => [s.id, s.posiblemente_cerrada])).toEqual([['b', true]]);
+  });
+
   it('una sala cerrada definitivamente no sale en la consulta; una cerrada temporalmente sí', () => {
     const r = consultarSalas(
       [sala({ id: 'a', nombre: 'Abierta' }), sala({ id: 'b', nombre: 'Cerrada', estado_negocio: 'cerrado_permanente' }), sala({ id: 'c', nombre: 'Reforma', estado_negocio: 'cerrado_temporal' })],

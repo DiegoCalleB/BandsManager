@@ -94,6 +94,7 @@ export function CatalogoSalasModal({ isOpen, onClose }: CatalogoSalasModalProps)
                             {nivel && <Chip tone={nivel.tono}>{nivel.etiqueta}</Chip>}
                             {s.tipo !== 'sala' && <Chip>{s.tipo}</Chip>}
                             {s.bandas_con_respuesta > 0 && <Chip tone="acc">{s.bandas_con_respuesta === 1 ? 'Ha respondido a 1 banda' : `Ha respondido a ${s.bandas_con_respuesta} bandas`}</Chip>}
+                            {s.posiblemente_cerrada && <Chip tone="alert">Google la da por cerrada</Chip>}
                             {!s.tiene_email && !s.tiene_telefono && <Chip>Sin contacto</Chip>}
                           </div>
                         </div>

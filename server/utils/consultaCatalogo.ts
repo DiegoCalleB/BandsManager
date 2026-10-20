@@ -6,6 +6,7 @@
  * aparece ni se puede añadir.
  */
 import { logoDeSala } from '../../src/utils/logoDeSala.js';
+import { ocultaPorCierre, posiblementeCerrada } from './estadoNegocio.js';
 import { claveSala, normalizarTexto, type NivelSala } from './salaCatalogo.js';
 import type { SalaGuardada } from '../services/catalogoSalas.js';
 
@@ -49,6 +50,8 @@ export interface FichaCatalogo {
   bandas_con_respuesta: number;
   tiene_email: boolean;
   tiene_telefono: boolean;
+  /** Google la da por cerrada, pero respondió a alguna banda: se enseña con aviso en vez de ocultarla. */
+  posiblemente_cerrada: boolean;
   ya_en_agenda: boolean;
 }
 
@@ -117,6 +120,7 @@ export function fichaDeSala(s: SalaGuardada, yaEnAgenda: boolean): FichaCatalogo
     bandas_con_respuesta: s.bandas_con_respuesta,
     tiene_email: !!s.email_contacto,
     tiene_telefono: !!s.telefono,
+    posiblemente_cerrada: posiblementeCerrada(s),
     ya_en_agenda: yaEnAgenda,
   };
 }
@@ -131,7 +135,7 @@ export function consultarSalas(
   const encontradas = salas.filter(
     (s) =>
       !s.no_contactar &&
-      s.estado_negocio !== 'cerrado_permanente' &&
+      !ocultaPorCierre(s) &&
       PESO_NIVEL[s.nivel] >= pesoMinimo &&
       (!filtros.tipo || s.tipo.toLowerCase() === filtros.tipo) &&
       (!filtros.lugar || contiene(s.ciudad, filtros.lugar) || contiene(s.region, filtros.lugar)) &&
