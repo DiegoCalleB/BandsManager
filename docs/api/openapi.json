@@ -3,7 +3,7 @@
   "info": {
     "title": "BandManager.io API",
     "version": "3.0.0",
-    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (424) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
+    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (425) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
     "license": {
       "name": "AGPL-3.0-only",
       "identifier": "AGPL-3.0-only"
@@ -1891,7 +1891,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bandMusic.ts:180",
+        "x-source": "server/routes/bandMusic.ts:190",
         "x-autenticacion": "middleware"
       }
     },
@@ -1901,7 +1901,7 @@
           "bandMusic"
         ],
         "operationId": "postApiBandsMetricasActualizar",
-        "description": "Comentario en el código: POST /api/bands/metricas/actualizar — captura el mes en curso de las bandas de la cuenta.",
+        "description": "Comentario en el código: POST /api/bands/metricas/actualizar — arranca en segundo plano la captura del mes en curso de las bandas de la cuenta y responde al instante; el progreso se lee en GET /api/bands/metricas/estado.",
         "parameters": [
           {
             "$ref": "#/components/parameters/BandIdActiva"
@@ -1926,7 +1926,42 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bandMusic.ts:154",
+        "x-source": "server/routes/bandMusic.ts:158",
+        "x-autenticacion": "middleware"
+      }
+    },
+    "/api/bands/metricas/estado": {
+      "get": {
+        "tags": [
+          "bandMusic"
+        ],
+        "operationId": "getApiBandsMetricasEstado",
+        "description": "Comentario en el código: GET /api/bands/metricas/estado — progreso de la última captura lanzada para la cuenta.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BandIdActiva"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "cookieAuth": []
+          },
+          {
+            "authTokenHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "401": {
+            "$ref": "#/components/responses/NoAutenticado"
+          }
+        },
+        "x-source": "server/routes/bandMusic.ts:185",
         "x-autenticacion": "middleware"
       }
     },
@@ -1961,7 +1996,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bandMusic.ts:58",
+        "x-source": "server/routes/bandMusic.ts:59",
         "x-autenticacion": "middleware"
       }
     },
@@ -2176,7 +2211,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bandMusic.ts:118",
+        "x-source": "server/routes/bandMusic.ts:119",
         "x-autenticacion": "middleware"
       }
     },
@@ -2507,7 +2542,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bandMusic.ts:38",
+        "x-source": "server/routes/bandMusic.ts:39",
         "x-autenticacion": "middleware"
       }
     },
@@ -4879,7 +4914,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bandMusic.ts:208",
+        "x-source": "server/routes/bandMusic.ts:218",
         "x-autenticacion": "middleware"
       }
     },

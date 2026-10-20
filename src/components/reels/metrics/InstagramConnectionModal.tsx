@@ -275,8 +275,8 @@ export function InstagramConnectionModal() {
                   .
                 </li>
                 <li>
-                  En <em>Permisos (Permissions)</em>, activa exactamente estos
-                  4 scopes oficiales:
+                  En <em>Permisos (Permissions)</em>, activa estos
+                  5 scopes oficiales (el último es el que permite publicar Reels):
                   <div className="mt-1 flex flex-wrap gap-1">
                     <code className="px-1.5 py-0.5 rounded bg-[var(--alert)]/15 text-[var(--ink)] font-sans text-micro">
                       instagram_manage_insights
@@ -289,6 +289,9 @@ export function InstagramConnectionModal() {
                     </code>
                     <code className="px-1.5 py-0.5 rounded bg-[var(--alert)]/15 text-[var(--ink)] font-sans text-micro">
                       pages_read_engagement
+                    </code>
+                    <code className="px-1.5 py-0.5 rounded bg-[var(--alert)]/15 text-[var(--ink)] font-sans text-micro">
+                      instagram_content_publish
                     </code>
                   </div>
                 </li>
