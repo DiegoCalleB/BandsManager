@@ -4,9 +4,6 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { RevisionFinalDialog } from "../RevisionFinalDialog";
 import { prepararRevisionFinal, type EntradaRevision } from "../revisionFinal";
 
-// Siempre en el futuro: una fecha fija caduca y el test falla el día que se cumple.
-const MANANA = new Date(Date.now() + 2 * 24 * 3600 * 1000).toISOString().slice(0, 10);
-
 afterEach(cleanup);
 
 // Siempre en el futuro: con una fecha fija el test se rompía solo al pasar esa hora.
