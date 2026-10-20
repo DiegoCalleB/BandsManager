@@ -43,8 +43,17 @@ export interface SalaGuardada extends CamposPublicosSala {
 /** Lo que el servicio escribe. `no_contactar` no está: es de quien lo marca y la sincronización nunca lo toca. */
 export type SalaAGuardar = Omit<SalaGuardada, 'no_contactar' | 'estado_negocio' | 'estado_negocio_en'>;
 
+/** Dos claves que son la misma sala (`catalogo_sala_alias`): lo que cae en `aliasClave` va a `clave`. */
+export interface AliasSala {
+  aliasClave: string;
+  clave: string;
+  /** Nombre público de la sala resultante; la moda de los leads puede quedarse con una errata. */
+  nombre: string | null;
+}
+
 export interface PuertoCatalogo {
   leerLeads(): Promise<LeadParaCatalogo[]>;
+  leerAlias(): Promise<AliasSala[]>;
   leerSalas(): Promise<SalaGuardada[]>;
   guardarSalas(salas: SalaAGuardar[]): Promise<void>;
   enlazarLeads(enlaces: Array<{ leadId: string; salaId: string }>): Promise<void>;
@@ -103,6 +112,19 @@ function unirGruposDeLaMismaSala(grupos: Map<string, Miembro[]>): void {
   }
 }
 
+/** Lleva a cada grupo con alias a su sala canónica, aunque la canónica aún no tenga leads. Devuelve el nombre público fijado por clave. */
+function aplicarAlias(grupos: Map<string, Miembro[]>, alias: AliasSala[]): Map<string, string> {
+  const nombres = new Map<string, string>();
+  for (const { aliasClave, clave, nombre } of alias) {
+    if (nombre) nombres.set(clave, nombre);
+    const miembros = grupos.get(aliasClave);
+    if (!miembros) continue;
+    grupos.set(clave, [...(grupos.get(clave) ?? []), ...miembros]);
+    grupos.delete(aliasClave);
+  }
+  return nombres;
+}
+
 export async function sincronizarCatalogo(
   puerto: PuertoCatalogo,
   opciones: { ahora?: Date; simulacion?: boolean } = {},
@@ -110,7 +132,7 @@ export async function sincronizarCatalogo(
   const ahora = opciones.ahora ?? new Date();
   const simulacion = opciones.simulacion ?? false;
 
-  const [leads, guardadas] = await Promise.all([puerto.leerLeads(), puerto.leerSalas()]);
+  const [leads, guardadas, alias] = await Promise.all([puerto.leerLeads(), puerto.leerSalas(), puerto.leerAlias()]);
   const porClave = new Map(guardadas.map((s) => [s.clave, s]));
 
   const grupos = new Map<string, Miembro[]>();
@@ -127,6 +149,7 @@ export async function sincronizarCatalogo(
     grupos.set(ficha.clave, grupo);
   }
 
+  const nombresFijados = aplicarAlias(grupos, alias);
   unirGruposDeLaMismaSala(grupos);
 
   const aGuardar: SalaAGuardar[] = [];
@@ -137,7 +160,9 @@ export async function sincronizarCatalogo(
   let sinCambios = 0;
 
   for (const [clave, miembros] of grupos) {
-    const consolidada = consolidarCampos(miembros.map((m) => m.ficha));
+    const consolidada = { ...consolidarCampos(miembros.map((m) => m.ficha)), clave };
+    const nombreFijado = nombresFijados.get(clave);
+    if (nombreFijado) consolidada.nombre = nombreFijado;
     // Una sala que antes se catalogó por nombre y ciudad y ahora tiene place_id conserva su fila (y su id).
     const claveNombreCiudad = claveSala({ nombre: consolidada.nombre, ciudad: consolidada.ciudad });
     const previa = porClave.get(clave) ?? (consolidada.place_id && claveNombreCiudad ? porClave.get(claveNombreCiudad) : undefined);

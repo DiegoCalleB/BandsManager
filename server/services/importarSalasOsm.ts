@@ -9,7 +9,7 @@ import { calcularFiabilidad, idDeSala, type CamposPublicosSala } from '../utils/
 import { REGIONES_OSM, completarSala, consultaOverpassSalas, contarDescartes, salasDeOsm, type ElementoOsm } from '../utils/osmSalas.js';
 import type { PuertoCatalogo, SalaAGuardar, SalaGuardada } from './catalogoSalas.js';
 
-export type PuertoImportacion = Pick<PuertoCatalogo, 'leerSalas' | 'guardarSalas'>;
+export type PuertoImportacion = Pick<PuertoCatalogo, 'leerSalas' | 'guardarSalas' | 'leerAlias'>;
 export type DescargarOsm = () => Promise<ElementoOsm[]>;
 
 export interface InformeImportacion {
@@ -36,7 +36,15 @@ function nuevaSala(c: CamposPublicosSala, ahora: Date): SalaAGuardar {
 export async function importarSalasDeOsm(p: { puerto: PuertoImportacion; descargar: DescargarOsm; simulacion?: boolean; ahora?: () => Date }): Promise<InformeImportacion> {
   const ahora = (p.ahora ?? (() => new Date()))();
   const elementos = await p.descargar();
-  const deOsm = salasDeOsm(elementos);
+  // Una sala de OSM con un alias es la canónica: no se crea otra fila con su nombre.
+  const alias = new Map((await p.puerto.leerAlias()).map((a) => [a.aliasClave, a.clave]));
+  const porClave = new Map<string, CamposPublicosSala>();
+  for (const c of salasDeOsm(elementos)) {
+    const clave = alias.get(c.clave) ?? c.clave;
+    const previa = porClave.get(clave);
+    porClave.set(clave, previa ? completarSala(previa, c) : { ...c, clave });
+  }
+  const deOsm = [...porClave.values()];
   const existentes = new Map((await p.puerto.leerSalas()).map((s) => [s.clave, s]));
 
   const aGuardar: SalaAGuardar[] = [];

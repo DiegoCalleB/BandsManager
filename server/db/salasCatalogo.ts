@@ -54,6 +54,12 @@ export const puertoCatalogoSupabase: PuertoCatalogo = {
     return (await leerTodo<FilaLeadCatalogo>('leads', COLUMNAS_LEAD)).map(leadParaCatalogo);
   },
 
+  async leerAlias() {
+    const { data, error } = await getSupabase().from('catalogo_sala_alias').select('alias_clave,clave,nombre');
+    if (error) throw new Error(`No se pudo leer catalogo_sala_alias: ${error.message}`);
+    return ((data ?? []) as Array<{ alias_clave: string; clave: string; nombre: string | null }>).map((a) => ({ aliasClave: a.alias_clave, clave: a.clave, nombre: a.nombre }));
+  },
+
   async leerSalas() {
     return (await leerTodo<FilaSala>('catalogo_salas', '*')).map(salaDeFila);
   },

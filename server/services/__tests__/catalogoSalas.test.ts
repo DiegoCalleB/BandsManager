@@ -1,16 +1,19 @@
 import { describe, it, expect } from 'vitest';
-import { sincronizarCatalogo, type PuertoCatalogo, type SalaAGuardar, type SalaGuardada } from '../catalogoSalas.js';
+import { sincronizarCatalogo, type AliasSala, type PuertoCatalogo, type SalaAGuardar, type SalaGuardada } from '../catalogoSalas.js';
 import type { LeadParaCatalogo } from '../../utils/salaCatalogo.js';
 
 const AHORA = new Date('2026-10-18T12:00:00Z');
 const hace = (dias: number) => new Date(AHORA.getTime() - dias * 86_400_000).toISOString();
 
 /** Puerto en memoria: guarda lo que le piden y deja inspeccionar qué se escribió. */
-function puertoEnMemoria(leads: LeadParaCatalogo[], salas: SalaGuardada[] = []) {
+function puertoEnMemoria(leads: LeadParaCatalogo[], salas: SalaGuardada[] = [], alias: AliasSala[] = []) {
   const estado = { leads: leads.map((l) => ({ ...l })), salas: [...salas], escrituras: 0, lotesDeSalas: [] as number[], lotesDeEnlaces: [] as number[] };
   const puerto: PuertoCatalogo = {
     async leerLeads() {
       return estado.leads.map((l) => ({ ...l }));
+    },
+    async leerAlias() {
+      return alias;
     },
     async leerSalas() {
       return estado.salas.map((s) => ({ ...s }));
@@ -199,5 +202,31 @@ describe('sincronizarCatalogo', () => {
     const r = await sincronizarCatalogo(puerto, { ahora: AHORA });
     expect(r).toMatchObject({ leadsLeidos: 0, salasResultantes: 0, duplicadosFusionados: 0 });
     expect(estado.escrituras).toBe(0);
+  });
+
+  it('un alias lleva los leads de las dos claves a una sola sala, con el nombre público fijado', async () => {
+    const alias: AliasSala[] = [
+      { aliasClave: 'nc:nazca|madrid', clave: 'nc:nazca club|madrid', nombre: 'Nazca Club' },
+      { aliasClave: 'nc:sala nazca|madrid', clave: 'nc:nazca club|madrid', nombre: 'Nazca Club' },
+    ];
+    const { puerto, estado } = puertoEnMemoria([
+      lead({ id: '1', nombre_sala: 'Nazca', ciudad: 'Madrid' }),
+      lead({ id: '2', band_id: 'b', nombre_sala: 'Sala Nazca', ciudad: 'Madrid' }),
+      lead({ id: '3', band_id: 'c', nombre_sala: 'Sala Nazca', ciudad: 'Madrid' }),
+    ], [], alias);
+    const r = await sincronizarCatalogo(puerto, { ahora: AHORA });
+    expect(r.salasResultantes).toBe(1);
+    expect(estado.salas).toHaveLength(1);
+    expect(estado.salas[0]).toMatchObject({ clave: 'nc:nazca club|madrid', nombre: 'Nazca Club' });
+    expect(new Set(estado.leads.map((l) => l.sala_id)).size).toBe(1);
+  });
+
+  it('con alias la segunda ejecución sigue sin escribir nada', async () => {
+    const alias: AliasSala[] = [{ aliasClave: 'nc:sala clamores|madrid', clave: 'nc:clamores|madrid', nombre: 'Sala Clamores' }];
+    const { puerto, estado } = puertoEnMemoria([lead({ id: '1', nombre_sala: 'Clamores', ciudad: 'Madrid' }), lead({ id: '2', band_id: 'b', nombre_sala: 'Sala Clamores', ciudad: 'Madrid' })], [], alias);
+    await sincronizarCatalogo(puerto, { ahora: AHORA });
+    const antes = estado.escrituras;
+    expect(await sincronizarCatalogo(puerto, { ahora: AHORA })).toMatchObject({ salasNuevas: 0, salasActualizadas: 0, leadsEnlazados: 0 });
+    expect(estado.escrituras).toBe(antes);
   });
 });
