@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { describe, it, expect } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { claveMezclaAtril, leerMezcla, MEZCLA_VACIA, serializarMezcla } from '../utils/mezclaGuardada';
@@ -34,5 +35,21 @@ describe('mezcla y velocidad guardadas del Atril', () => {
     expect(html).toContain('50%');
     expect(html).toContain('100%');
     expect(html).not.toContain('border');
+  });
+
+  it('ofrece velocidades más lentas para practicar y más rápidas para perfeccionar, y las recuerda', () => {
+    const html = renderToStaticMarkup(<ControlVelocidad velocidad={1.25} onVelocidad={() => {}} />);
+    expect(html).toContain('90%');
+    expect(html).toContain('125%');
+    expect(leerMezcla(JSON.stringify({ ajustes: {}, velocidad: 1.25 })).velocidad).toBe(1.25);
+  });
+
+  it('el Atril muestra la velocidad fuera de «Más»', () => {
+    const toolbar = readFileSync(new URL('../components/atril/AtrilToolbar.tsx', import.meta.url), 'utf8');
+    const velocidad = toolbar.indexOf('<ControlVelocidad');
+    const mas = toolbar.indexOf("masControles ? 'Menos'");
+    expect(velocidad).toBeGreaterThan(-1);
+    expect(mas).toBeGreaterThan(-1);
+    expect(velocidad).toBeLessThan(mas);
   });
 });

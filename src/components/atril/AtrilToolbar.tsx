@@ -128,6 +128,9 @@ export function AtrilToolbar() {
               <ControlMetronomo metronomo={metronomo} />
             </div>
 
+            {/* La velocidad es lo que más se toca al practicar: siempre a la vista, no tras «Más». */}
+            {audioUrl && <ControlVelocidad velocidad={velocidad} onVelocidad={setVelocidad} />}
+
             <Button variant="neutral" size="xs" type="button" onClick={() => setMasControles((v) => !v)} aria-expanded={masControles}>
               {masControles ? 'Menos' : 'Más'}
             </Button>
@@ -145,7 +148,6 @@ export function AtrilToolbar() {
             )}
             {audioUrl && (
               <div className="flex flex-wrap items-center gap-2">
-                <ControlVelocidad velocidad={velocidad} onVelocidad={setVelocidad} />
                 <ControlTonoAudio transpose={transpose} sigue={audioSigueTono} onSigue={setAudioSigueTono} />
                 <ControlBucle bucle={bucle} onMarcar={marcarBucle} onLimpiar={limpiarBucle} />
               </div>
