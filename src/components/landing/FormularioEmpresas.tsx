@@ -16,6 +16,11 @@ export const FormularioEmpresas: React.FC<{ es: boolean }> = ({ es }) => {
 
   const enviar = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!acepta) {
+      setError(es ? 'Marca la casilla para que podamos contestarte.' : 'Tick the box so we can reply to you.');
+      setEstado('error');
+      return;
+    }
     setEstado('enviando');
     try {
       const r = await fetch('/api/public/contacto-empresas', {
@@ -67,7 +72,7 @@ export const FormularioEmpresas: React.FC<{ es: boolean }> = ({ es }) => {
         <span>{es ? 'Acepto que BandManager.io use estos datos para contestar a mi consulta.' : 'I agree BandManager.io may use this data to reply to my enquiry.'}</span>
       </label>
       {estado === 'error' && <p role="alert" className="text-xs text-[var(--alert)]">{error}</p>}
-      <Button type="submit" variant="primary" size="md" disabled={estado === 'enviando' || !acepta}>
+      <Button type="submit" variant="primary" size="md" disabled={estado === 'enviando'}>
         {es ? 'Enviar consulta' : 'Send enquiry'}
       </Button>
     </form>
