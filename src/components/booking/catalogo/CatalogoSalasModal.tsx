@@ -84,6 +84,10 @@ export function CatalogoSalasModal({ isOpen, onClose }: CatalogoSalasModalProps)
                     <option key={t.valor} value={t.valor}>{t.texto}</option>
                   ))}
                 </Select>
+                <div className="grid grid-cols-2 gap-2 sm:col-span-3 sm:max-w-sm">
+                  <Input aria-label="Aforo mínimo" type="number" inputMode="numeric" min={0} placeholder="Aforo mín." value={c.filtros.aforoMin} onChange={(e) => c.cambiar({ aforoMin: e.target.value })} />
+                  <Input aria-label="Aforo máximo" type="number" inputMode="numeric" min={0} placeholder="Aforo máx." value={c.filtros.aforoMax} onChange={(e) => c.cambiar({ aforoMax: e.target.value })} />
+                </div>
                 <label className="flex items-center gap-2 text-xs text-[var(--ink-2)] sm:col-span-3">
                   <input type="checkbox" checked={c.filtros.conContacto} onChange={(e) => c.cambiar({ conContacto: e.target.checked })} />
                   Solo salas con contacto para escribirles

@@ -141,4 +141,14 @@ describe('CatalogoSalasModal', () => {
     expect(api.anadirFestivalDelDirectorio).toHaveBeenCalledWith('fest');
     expect(screen.getByText('En tu agenda')).toBeTruthy();
   });
+
+  it('filtra por aforo mínimo y máximo y los manda al servidor', async () => {
+    api.buscarSalasDelCatalogo.mockResolvedValue({ total: 0, mostradas: 0, salas: [] });
+    render(<CatalogoSalasModal isOpen onClose={() => {}} />);
+    await pasar();
+    fireEvent.change(screen.getByLabelText('Aforo mínimo'), { target: { value: '150' } });
+    fireEvent.change(screen.getByLabelText('Aforo máximo'), { target: { value: '400' } });
+    await pasar();
+    expect(api.buscarSalasDelCatalogo.mock.calls.at(-1)?.[0]).toMatchObject({ aforoMin: '150', aforoMax: '400' });
+  });
 });
