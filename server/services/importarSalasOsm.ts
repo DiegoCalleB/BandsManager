@@ -6,7 +6,7 @@
  * Depende de un puerto y de una función de descarga, así que se prueba sin red ni base de datos.
  */
 import { calcularFiabilidad, idDeSala, type CamposPublicosSala } from '../utils/salaCatalogo.js';
-import { CIUDADES_OSM, REGIONES_OSM, completarSala, consultaOverpassCiudad, consultaOverpassSalas, contarDescartes, salasDeOsm, type ElementoOsm } from '../utils/osmSalas.js';
+import { REGIONES_OSM, completarSala, conCiudadResuelta, consultaOverpassSalas, contarDescartes, salasDeOsm, type ElementoOsm } from '../utils/osmSalas.js';
 import type { PuertoCatalogo, SalaAGuardar, SalaGuardada } from './catalogoSalas.js';
 
 export type PuertoImportacion = Pick<PuertoCatalogo, 'leerSalas' | 'guardarSalas' | 'leerAlias'>;
@@ -17,6 +17,8 @@ export interface InformeImportacion {
   elementosLeidos: number;
   /** Elementos sin nombre (no se pueden identificar) y con nombre pero sin ciudad (tampoco): lo que hace que entren menos salas de las que hay en el mapa. */
   descartados: { sinNombre: number; sinCiudad: number };
+  /** Salas a las que se les puso la ciudad del núcleo de población más cercano porque OSM no la traía. */
+  ciudadPorCercania: number;
   salasEnOsm: number;
   nuevas: number;
   completadas: number;
@@ -35,7 +37,7 @@ function nuevaSala(c: CamposPublicosSala, ahora: Date): SalaAGuardar {
 
 export async function importarSalasDeOsm(p: { puerto: PuertoImportacion; descargar: DescargarOsm; simulacion?: boolean; ahora?: () => Date }): Promise<InformeImportacion> {
   const ahora = (p.ahora ?? (() => new Date()))();
-  const elementos = await p.descargar();
+  const { salas: elementos, porCercania } = conCiudadResuelta(await p.descargar());
   // Una sala de OSM con un alias es la canónica: no se crea otra fila con su nombre.
   const alias = new Map((await p.puerto.leerAlias()).map((a) => [a.aliasClave, a.clave]));
   const porClave = new Map<string, CamposPublicosSala>();
@@ -48,7 +50,7 @@ export async function importarSalasDeOsm(p: { puerto: PuertoImportacion; descarg
   const existentes = new Map((await p.puerto.leerSalas()).map((s) => [s.clave, s]));
 
   const aGuardar: SalaAGuardar[] = [];
-  const informe: InformeImportacion = { simulacion: !!p.simulacion, elementosLeidos: elementos.length, descartados: contarDescartes(elementos), salasEnOsm: deOsm.length, nuevas: 0, completadas: 0, sinCambios: 0 };
+  const informe: InformeImportacion = { simulacion: !!p.simulacion, elementosLeidos: elementos.length, descartados: contarDescartes(elementos), ciudadPorCercania: porCercania, salasEnOsm: deOsm.length, nuevas: 0, completadas: 0, sinCambios: 0 };
 
   for (const c of deOsm) {
     const previa = existentes.get(c.clave);
@@ -109,11 +111,7 @@ export function crearDescargaOsm(servidores: readonly string[] = SERVIDORES_OVER
   return async () => {
     const elementos = new Map<string, ElementoOsm>();
     const fallos: string[] = [];
-    const consultas = [
-      ...regiones.map((region) => ({ etiqueta: region, consulta: consultaOverpassSalas(region), ciudad: null as string | null })),
-      ...CIUDADES_OSM.filter((c) => regiones.includes(c.region)).map((c) => ({ etiqueta: c.nombre, consulta: consultaOverpassCiudad(c.nombre), ciudad: c.nombre as string | null })),
-    ];
-    for (const [i, { etiqueta, consulta, ciudad }] of consultas.entries()) {
+    for (const [i, region] of regiones.entries()) {
       if (i > 0) await pausa(pausaMs);
       const motivos: string[] = [];
       let llegaron = false;
@@ -122,14 +120,11 @@ export function crearDescargaOsm(servidores: readonly string[] = SERVIDORES_OVER
           const r = await fetcher(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'BandManager/1.0 (https://bandmanager.io)' },
-            body: `data=${encodeURIComponent(consulta)}`,
+            body: `data=${encodeURIComponent(consultaOverpassSalas(region))}`,
             signal: AbortSignal.timeout(timeoutMs),
           });
           if (!r.ok) throw new Error(`respondió ${r.status}`);
-          for (const el of ((await r.json()) as { elements?: ElementoOsm[] }).elements ?? []) {
-            const sinCiudad = ciudad && !['addr:city', 'addr:municipality', 'addr:place'].some((k) => el.tags?.[k]?.trim());
-            elementos.set(`${el.type}/${el.id}`, sinCiudad ? { ...el, tags: { ...el.tags, 'addr:city': ciudad } } : el);
-          }
+          for (const el of ((await r.json()) as { elements?: ElementoOsm[] }).elements ?? []) elementos.set(`${el.type}/${el.id}`, el);
           llegaron = true;
           break;
         } catch (e) {
@@ -138,11 +133,11 @@ export function crearDescargaOsm(servidores: readonly string[] = SERVIDORES_OVER
       }
       if (!llegaron) {
         const motivo = motivos.join('; ');
-        fallos.push(`${etiqueta} (${motivo})`);
-        o.alFallarRegion?.(etiqueta, motivo);
+        fallos.push(`${region} (${motivo})`);
+        o.alFallarRegion?.(region, motivo);
       }
     }
-    if (fallos.length === consultas.length) throw new Error(`Overpass no respondió en ningún servidor — ${fallos[0]}`);
+    if (fallos.length === regiones.length) throw new Error(`Overpass no respondió en ningún servidor — ${fallos[0]}`);
     return [...elementos.values()];
   };
 }

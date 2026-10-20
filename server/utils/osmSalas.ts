@@ -15,6 +15,11 @@ export interface ElementoOsm {
   type: string;
   id: number;
   tags?: Record<string, string>;
+  /** Coordenadas de un nodo. */
+  lat?: number;
+  lon?: number;
+  /** Punto central de una vía o relación (`out center`). */
+  center?: { lat: number; lon: number };
 }
 
 /**
@@ -23,30 +28,22 @@ export interface ElementoOsm {
  */
 export const REGIONES_OSM = ['ES-AN', 'ES-AR', 'ES-AS', 'ES-CB', 'ES-CE', 'ES-CL', 'ES-CM', 'ES-CN', 'ES-CT', 'ES-EX', 'ES-GA', 'ES-IB', 'ES-MC', 'ES-MD', 'ES-ML', 'ES-NC', 'ES-PV', 'ES-RI', 'ES-VC'] as const;
 
-/** Lo que cuenta como sala: música en directo y conciertos. Sin bares ni cafés: meten mucho ruido y a una banda le sirven poco. */
-const SALAS_EN_AREA = `
-  nwr["amenity"="music_venue"](area.r);
-  nwr["amenity"="concert_hall"](area.r);
-  nwr["amenity"~"^(nightclub|theatre|arts_centre)$"]["live_music"="yes"](area.r);`;
-
-/** Consulta Overpass de las salas de una comunidad (código ISO 3166-2, por ejemplo `ES-MD`). */
+/**
+ * Consulta Overpass de las salas de música en directo y los locales de conciertos de una comunidad (código ISO 3166-2,
+ * por ejemplo `ES-MD`). Discotecas, teatros y centros de arte solo si declaran música en directo; sin bares ni cafés: meten
+ * mucho ruido y a una banda le sirven poco. Trae también las
+ * ciudades, pueblos y aldeas de la comunidad: muchas salas no llevan `addr:city` y su ciudad se saca del núcleo más cercano.
+ */
 export const consultaOverpassSalas = (region: string): string => `[out:json][timeout:90];
 area["ISO3166-2"="${region.replace(/[^A-Z0-9-]/g, '')}"]->.r;
-(${SALAS_EN_AREA}
+(
+  nwr["amenity"="music_venue"](area.r);
+  nwr["amenity"="concert_hall"](area.r);
+  nwr["amenity"~"^(nightclub|theatre|arts_centre)$"]["live_music"="yes"](area.r);
 );
-out tags;`;
-
-/**
- * Ciudades con una consulta propia: muchos locales de OSM no llevan `addr:city` y sin ciudad no se pueden identificar.
- * Lo que cae dentro del término municipal (nivel administrativo 8) toma su nombre.
- */
-export const CIUDADES_OSM = [{ region: 'ES-MD', nombre: 'Madrid' }] as const;
-
-export const consultaOverpassCiudad = (nombre: string): string => `[out:json][timeout:90];
-area["boundary"="administrative"]["admin_level"="8"]["name"="${nombre.replace(/[^\p{L} .'-]/gu, '')}"]->.r;
-(${SALAS_EN_AREA}
-);
-out tags;`;
+out tags center;
+node["place"~"^(city|town|village)$"](area.r);
+out tags center;`;
 
 const CAPACIDAD_MAXIMA = 200_000;
 
@@ -125,6 +122,57 @@ export function salasDeOsm(elementos: ElementoOsm[]): CamposPublicosSala[] {
     porClave.set(sala.clave, previa ? completar(previa, sala) : sala);
   }
   return [...porClave.values()];
+}
+
+const KM_MAXIMOS_AL_NUCLEO = 12;
+
+const punto = (el: ElementoOsm): { lat: number; lon: number } | null => {
+  const p = el.center ?? (typeof el.lat === 'number' && typeof el.lon === 'number' ? { lat: el.lat, lon: el.lon } : null);
+  return p && Number.isFinite(p.lat) && Number.isFinite(p.lon) ? p : null;
+};
+
+/** Distancia en km entre dos puntos (fórmula de Haversine). */
+export function distanciaKm(a: { lat: number; lon: number }, b: { lat: number; lon: number }): number {
+  const rad = (g: number) => (g * Math.PI) / 180;
+  const h = Math.sin(rad(b.lat - a.lat) / 2) ** 2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(rad(b.lon - a.lon) / 2) ** 2;
+  return 12742 * Math.asin(Math.sqrt(h));
+}
+
+const NUCLEO = /^(city|town|village)$/;
+const tieneCiudad = (t: Record<string, string>) => !!textoPublico(etiqueta(t, 'addr:city', 'addr:municipality', 'addr:place'), 80);
+
+/**
+ * Las salas de una descarga con su ciudad resuelta. Muchas no llevan `addr:city`; a esas se les pone el nombre del núcleo
+ * de población (ciudad, pueblo o aldea) más cercano, si está a menos de 12 km. Es una aproximación, no una dirección, así que
+ * se cuenta aparte (`porCercania`). Los núcleos no son salas y no salen en el resultado.
+ */
+export function conCiudadResuelta(elementos: ElementoOsm[]): { salas: ElementoOsm[]; porCercania: number } {
+  const nucleos: Array<{ nombre: string; p: { lat: number; lon: number } }> = [];
+  const candidatas: ElementoOsm[] = [];
+  for (const el of elementos) {
+    const t = el.tags ?? {};
+    const p = punto(el);
+    if (t.place && NUCLEO.test(t.place) && !t.amenity) {
+      const nombre = textoPublico(t.name, 80);
+      if (nombre && p) nucleos.push({ nombre, p });
+    } else candidatas.push(el);
+  }
+
+  let porCercania = 0;
+  const salas = candidatas.map((el) => {
+    const t = el.tags ?? {};
+    const p = punto(el);
+    if (tieneCiudad(t) || !p) return el;
+    let mejor: { nombre: string; km: number } | null = null;
+    for (const n of nucleos) {
+      const km = distanciaKm(p, n.p);
+      if (km <= KM_MAXIMOS_AL_NUCLEO && (!mejor || km < mejor.km)) mejor = { nombre: n.nombre, km };
+    }
+    if (!mejor) return el;
+    porCercania++;
+    return { ...el, tags: { ...t, 'addr:city': mejor.nombre } };
+  });
+  return { salas, porCercania };
 }
 
 export { completar as completarSala };
