@@ -175,7 +175,7 @@ export const VenueProfileColumn: React.FC<VenueProfileColumnProps> = ({
             className="p-2.5 rounded-[var(--r-m)] bg-pink-500/10 hover:bg-pink-500/20 text-pink-600 dark:text-pink-400 border border-pink-500/25 font-bold text-xs flex items-center justify-center gap-1.5 transition-ui cursor-pointer shadow-xs group"
             title={`Visitar Instagram: @${cleanInstagramHandle}`}
           >
-            <Instagram className="w-4 h-4 text-pink-500 group-hover:scale-110 transition-transform shrink-0" />
+            <Instagram className="w-4 h-4 text-pink-500 shrink-0" />
             <span className="truncate">@{cleanInstagramHandle}</span>
             <ExternalLink className="w-3 h-3 opacity-60 shrink-0" />
           </a>
