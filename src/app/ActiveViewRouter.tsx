@@ -6,7 +6,7 @@ import { RefreshCw,ShieldAlert } from "lucide-react";
 import { Suspense } from "react";
 import Dashboard from "../components/Dashboard";
 import ErrorBoundary from "../components/ErrorBoundary";
-import { SkeletonDashboard } from "../components/ui/Skeleton";
+import { SkeletonDashboard,SkeletonLeadList } from "../components/ui/Skeleton";
 import { estaCargandoLeads } from "../utils/estadoCargaLeads";
 import type { Rehearsal } from "../types";
 import { LeadStatus } from "../types";
@@ -32,9 +32,14 @@ export function ActiveViewRouter() {
             ) : (
               <Suspense
                 fallback={
-                  <div className="flex flex-col items-center justify-center py-24 text-center gap-3">
-                    <RefreshCw className="w-8 h-8 animate-spin text-[var(--acc)]" />
-                  </div>
+                  // Mientras baja el trozo de código del CRM se pinta ya la forma de la lista, no un spinner.
+                  currentView === "booking" || currentView === "medios" || currentView === "management" ? (
+                    <SkeletonLeadList />
+                  ) : (
+                    <div className="flex flex-col items-center justify-center py-24 text-center gap-3">
+                      <RefreshCw className="w-8 h-8 animate-spin text-[var(--acc)]" />
+                    </div>
+                  )
                 }
               >
                 {currentView === "resumen" && (
