@@ -111,7 +111,7 @@ export function FichaSalaCatalogo({ sala, anadiendo, onAnadir, onVolver }: Ficha
 
       {sala.fuentes.includes('osm') && (
         <p className="text-xs text-[var(--ink-3)]">
-          Parte de estos datos vienen de <Enlace href="https://www.openstreetmap.org/copyright">OpenStreetMap</Enlace> (© colaboradores de OpenStreetMap, licencia ODbL).
+          Parte de estos datos vienen de <Enlace href="https://www.openstreetmap.org/copyright">OpenStreetMap</Enlace> (datos de sus colaboradores, licencia ODbL).
         </p>
       )}
 
