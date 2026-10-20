@@ -22,6 +22,8 @@ import {
 } from '../salaCatalogo.js';
 
 const AHORA = new Date('2026-10-18T12:00:00Z');
+/** Estos tests prueban el cálculo con interacciones de cualquier fecha; el corte de «interacciones reales» tiene sus propios tests. */
+const DESDE_SIEMPRE = new Date(0);
 const hace = (dias: number) => new Date(AHORA.getTime() - dias * 86_400_000).toISOString();
 const lead = (c: Partial<LeadParaCatalogo> = {}): LeadParaCatalogo => ({ id: 'l1', band_id: 'b1', nombre_sala: 'Sala Apolo', ciudad: 'Barcelona', ...c });
 const senales = (c: Partial<SenalesFiabilidad> = {}): SenalesFiabilidad => ({
@@ -225,28 +227,30 @@ describe('senalesDeLeads', () => {
 
   it('cuenta bandas, no leads, y una respuesta implica que el correo llegó', () => {
     const s = senalesDeLeads(
-      [lead({ id: '1', band_id: 'a', estado: 'negociando' }), lead({ id: '2', band_id: 'a', estado: 'interesado' }), lead({ id: '3', band_id: 'b', estado: 'enviado', fecha_envio: hace(10) })],
+      [lead({ id: '1', band_id: 'a', estado: 'negociando', fecha_envio: hace(12) }), lead({ id: '2', band_id: 'a', estado: 'interesado', fecha_envio: hace(12) }), lead({ id: '3', band_id: 'b', estado: 'enviado', fecha_envio: hace(10) })],
       AHORA,
       consolidada,
+      null,
+      DESDE_SIEMPRE,
     );
     expect(s).toMatchObject({ bandasConRespuesta: 1, bandasConEntrega: 2, rebotes: 0 });
   });
 
   it('un envío reciente (menos de 3 días) aún no cuenta como entregado: puede rebotar', () => {
-    expect(senalesDeLeads([lead({ fecha_envio: hace(1), estado: 'enviado' })], AHORA, consolidada).bandasConEntrega).toBe(0);
+    expect(senalesDeLeads([lead({ fecha_envio: hace(1), estado: 'enviado' })], AHORA, consolidada, null, DESDE_SIEMPRE).bandasConEntrega).toBe(0);
   });
 
   it('un rebote cuenta aparte y anula la entrega de ese lead', () => {
-    const s = senalesDeLeads([lead({ fecha_envio: hace(20), rebotado: true, estado: 'enviado' })], AHORA, consolidada);
+    const s = senalesDeLeads([lead({ fecha_envio: hace(20), rebotado: true, estado: 'enviado' })], AHORA, consolidada, null, DESDE_SIEMPRE);
     expect(s).toMatchObject({ rebotes: 1, bandasConEntrega: 0 });
   });
 
   it('un lead nuevo sin contactar no aporta nada', () => {
-    expect(senalesDeLeads([lead({ estado: 'nuevo' })], AHORA, consolidada)).toMatchObject({ bandasConEntrega: 0, bandasConRespuesta: 0, rebotes: 0 });
+    expect(senalesDeLeads([lead({ estado: 'nuevo' })], AHORA, consolidada, null, DESDE_SIEMPRE)).toMatchObject({ bandasConEntrega: 0, bandasConRespuesta: 0, rebotes: 0 });
   });
 
   it('fechas inválidas no rompen nada', () => {
-    expect(senalesDeLeads([lead({ fecha_envio: 'ayer', estado: 'enviado' })], AHORA, consolidada).bandasConEntrega).toBe(0);
+    expect(senalesDeLeads([lead({ fecha_envio: 'ayer', estado: 'enviado' })], AHORA, consolidada, null, DESDE_SIEMPRE).bandasConEntrega).toBe(0);
   });
 });
 
@@ -379,5 +383,25 @@ describe('fusionarConExistente: la sincronización no borra lo que aportaron otr
 
   it('sin nada en ninguno, queda vacío', () => {
     expect(fusionarConExistente({ nivel: 'probable' }, nuevo()).aforo).toBeNull();
+  });
+});
+
+describe('senalesDeLeads: solo cuentan las interacciones reales', () => {
+  const lead = (extra: Partial<LeadParaCatalogo>): LeadParaCatalogo => ({ id: 'l', band_id: 'a', nombre_sala: 'Sala', ...extra });
+  const consolidada = { clave: 'nc:sala|madrid', place_id: null, nombre: 'Sala', ciudad: 'Madrid', region: null, direccion: null, tipo: 'sala', aforo: null, genero: null, website: null, instagram: null, email_contacto: null, telefono: null } as CamposPublicosSala;
+  const AHORA_REAL = new Date('2026-11-05T12:00:00Z');
+
+  it('lo anterior a la fecha de corte (datos ficticios o de pruebas) no cuenta: ni respuesta, ni entrega, ni rebote', () => {
+    const s = senalesDeLeads([lead({ estado: 'interesado', fecha_envio: '2026-10-01T10:00:00Z' }), lead({ id: 'm', band_id: 'b', estado: 'enviado', fecha_envio: '2026-10-05T10:00:00Z', rebotado: true })], AHORA_REAL, consolidada);
+    expect(s).toMatchObject({ bandasConRespuesta: 0, bandasConEntrega: 0, rebotes: 0 });
+  });
+
+  it('una respuesta sin fecha de envío (un estado puesto a mano) tampoco cuenta', () => {
+    expect(senalesDeLeads([lead({ estado: 'interesado' })], AHORA_REAL, consolidada)).toMatchObject({ bandasConRespuesta: 0, bandasConEntrega: 0 });
+  });
+
+  it('lo posterior a la fecha de corte sí cuenta', () => {
+    const s = senalesDeLeads([lead({ estado: 'interesado', fecha_envio: '2026-10-25T10:00:00Z' }), lead({ id: 'm', band_id: 'b', estado: 'enviado', fecha_envio: '2026-10-25T10:00:00Z', rebotado: true })], AHORA_REAL, consolidada);
+    expect(s).toMatchObject({ bandasConRespuesta: 1, bandasConEntrega: 1, rebotes: 1 });
   });
 });

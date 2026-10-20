@@ -127,7 +127,7 @@ function aplicarAlias(grupos: Map<string, Miembro[]>, alias: AliasSala[]): Map<s
 
 export async function sincronizarCatalogo(
   puerto: PuertoCatalogo,
-  opciones: { ahora?: Date; simulacion?: boolean } = {},
+  opciones: { ahora?: Date; simulacion?: boolean; interaccionesDesde?: Date } = {},
 ): Promise<InformeCatalogo> {
   const ahora = opciones.ahora ?? new Date();
   const simulacion = opciones.simulacion ?? false;
@@ -168,7 +168,7 @@ export async function sincronizarCatalogo(
     const previa = porClave.get(clave) ?? (consolidada.place_id && claveNombreCiudad ? porClave.get(claveNombreCiudad) : undefined);
 
     const campos = previa ? fusionarConExistente(previa, { ...consolidada, clave }) : consolidada;
-    const senales = senalesDeLeads(miembros.map((m) => m.lead), ahora, campos, previa?.verificada_en);
+    const senales = senalesDeLeads(miembros.map((m) => m.lead), ahora, campos, previa?.verificada_en, opciones.interaccionesDesde);
     const { puntuacion, nivel } = calcularFiabilidad(senales, ahora);
     const sala: SalaAGuardar = {
       ...campos,
