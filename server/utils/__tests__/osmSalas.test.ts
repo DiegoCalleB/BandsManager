@@ -66,10 +66,11 @@ describe('salasDeOsm', () => {
 
 describe('consultaOverpassSalas', () => {
   const q = consultaOverpassSalas('ES-MD');
-  it('pide solo salas de música en directo y locales de conciertos, sin bares, cafés, restaurantes ni discotecas', () => {
+  it('pide salas de música en directo y locales de conciertos; discotecas y teatros solo si declaran música en directo, nunca bares, cafés ni restaurantes', () => {
     expect(q).toContain('"amenity"="music_venue"');
     expect(q).toContain('"amenity"="concert_hall"');
-    expect(q).not.toMatch(/nightclub|live_music|bar|pub|cafe|restaurant/);
+    expect(q).toContain('"amenity"~"^(nightclub|theatre|arts_centre)$"]["live_music"="yes"');
+    expect(q).not.toMatch(/"(bar|pub|cafe|restaurant)"|\|(bar|pub|cafe|restaurant)\|/);
   });
   it('limita la consulta a una comunidad por su código ISO y neutraliza cualquier otro texto', () => {
     expect(q).toContain('"ISO3166-2"="ES-MD"');

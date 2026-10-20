@@ -30,7 +30,8 @@ export const REGIONES_OSM = ['ES-AN', 'ES-AR', 'ES-AS', 'ES-CB', 'ES-CE', 'ES-CL
 
 /**
  * Consulta Overpass de las salas de música en directo y los locales de conciertos de una comunidad (código ISO 3166-2,
- * por ejemplo `ES-MD`). Sin bares, cafés ni discotecas: meten mucho ruido y a una banda le sirven poco. Trae también las
+ * por ejemplo `ES-MD`). Discotecas, teatros y centros de arte solo si declaran música en directo; sin bares ni cafés: meten
+ * mucho ruido y a una banda le sirven poco. Trae también las
  * ciudades, pueblos y aldeas de la comunidad: muchas salas no llevan `addr:city` y su ciudad se saca del núcleo más cercano.
  */
 export const consultaOverpassSalas = (region: string): string => `[out:json][timeout:90];
@@ -38,6 +39,7 @@ area["ISO3166-2"="${region.replace(/[^A-Z0-9-]/g, '')}"]->.r;
 (
   nwr["amenity"="music_venue"](area.r);
   nwr["amenity"="concert_hall"](area.r);
+  nwr["amenity"~"^(nightclub|theatre|arts_centre)$"]["live_music"="yes"](area.r);
 );
 out tags center;
 node["place"~"^(city|town|village)$"](area.r);

@@ -1,15 +1,15 @@
 import { describe, it, expect, vi } from 'vitest';
 import { crearDescargaOsm, importarSalasDeOsm, type PuertoImportacion } from '../importarSalasOsm.js';
-import type { SalaAGuardar, SalaGuardada } from '../catalogoSalas.js';
+import type { AliasSala, SalaAGuardar, SalaGuardada } from '../catalogoSalas.js';
 
 const elemento = (name: string, extra: Record<string, string> = {}, id = 1) => ({ type: 'node', id, tags: { amenity: 'music_venue', name, 'addr:city': 'Madrid', ...extra } });
 
 const existente = (o: Partial<SalaGuardada> & { clave: string; id: string }): SalaGuardada =>
   ({ place_id: null, nombre: 'X', ciudad: 'Madrid', region: null, direccion: null, tipo: 'sala', aforo: null, genero: null, website: null, instagram: null, email_contacto: null, telefono: null, nivel: 'sin_verificar', puntuacion: 0, verificada_en: null, bandas_con_respuesta: 0, bandas_con_entrega: 0, rebotes: 0, no_contactar: false, ...o }) as SalaGuardada;
 
-function montar(salas: SalaGuardada[]) {
+function montar(salas: SalaGuardada[], alias: AliasSala[] = []) {
   const guardadas: SalaAGuardar[] = [];
-  const puerto: PuertoImportacion = { leerSalas: vi.fn(async () => salas), guardarSalas: vi.fn(async (s) => void guardadas.push(...s)) };
+  const puerto: PuertoImportacion = { leerAlias: vi.fn(async () => alias), leerSalas: vi.fn(async () => salas), guardarSalas: vi.fn(async (s) => void guardadas.push(...s)) };
   return { puerto, guardadas };
 }
 
@@ -59,6 +59,24 @@ describe('importarSalasDeOsm', () => {
     const r = await importarSalasDeOsm({ puerto, descargar: async () => [elemento('Moby', { capacity: '300' })] });
     expect(r.sinCambios).toBe(1);
     expect(guardadas).toEqual([]);
+  });
+});
+
+describe('importarSalasDeOsm con alias', () => {
+  it('una sala de OSM con alias completa la canónica y no crea una fila nueva', async () => {
+    const canonica = existente({ id: 'sala-c', clave: 'nc:nazca club|madrid', nombre: 'Nazca Club', nivel: 'probable' });
+    const { puerto, guardadas } = montar([canonica], [{ aliasClave: 'nc:sala nazca|madrid', clave: 'nc:nazca club|madrid', nombre: 'Nazca Club' }]);
+    const r = await importarSalasDeOsm({ puerto, descargar: async () => [elemento('Sala Nazca', { capacity: '500' })] });
+    expect(r).toMatchObject({ nuevas: 0, completadas: 1 });
+    expect(guardadas).toHaveLength(1);
+    expect(guardadas[0]).toMatchObject({ id: 'sala-c', aforo: 500 });
+  });
+  it('dos nombres de OSM con alias a la misma clave entran como una sola sala', async () => {
+    const alias = [{ aliasClave: 'nc:sala nazca|madrid', clave: 'nc:nazca club|madrid', nombre: null }, { aliasClave: 'nc:nazca|madrid', clave: 'nc:nazca club|madrid', nombre: null }];
+    const { puerto, guardadas } = montar([], alias);
+    await importarSalasDeOsm({ puerto, descargar: async () => [elemento('Sala Nazca', {}, 1), elemento('Nazca', {}, 2)] });
+    expect(guardadas).toHaveLength(1);
+    expect(guardadas[0].clave).toBe('nc:nazca club|madrid');
   });
 });
 
