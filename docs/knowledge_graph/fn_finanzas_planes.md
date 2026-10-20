@@ -21,6 +21,7 @@ Ingresos, gastos, merchan, donaciones, planes y cobro con Stripe.
 - [[db_leads|Leads DB Handlers]] *(Layer: #db, Domain: #booking)*
 - [[db_payments|Pagos y suscripciones (Stripe)]] *(Layer: #db, Domain: #finances)*
 - [[ext_stripe|Stripe]] *(Layer: #external, Domain: #system)*
+- [[route_calendar_conflicts|GET /api/calendar/conflicts]] *(Layer: #route, Domain: #booking)*
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_concerts|server/db/concerts.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_dealSupport|server/db/dealSupport.ts]] *(Layer: #db, Domain: #system)*
@@ -30,7 +31,6 @@ Ingresos, gastos, merchan, donaciones, planes y cobro con Stripe.
 - [[server_db_tolerantWrite|server/db/tolerantWrite.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_billing|server/routes/billing.ts]] *(Layer: #route, Domain: #finances)*
-- [[server_routes_concerts|server/routes/concerts.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_donations|server/routes/donations.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_tiposBilling|server/routes/tiposBilling.ts]] *(Layer: #route, Domain: #finances)*
 - [[server_routes_tiposCalendarioIcs|server/routes/tiposCalendarioIcs.ts]] *(Layer: #route, Domain: #system)*

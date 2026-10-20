@@ -18,32 +18,40 @@ Bolos confirmados, calendario, página pública del concierto, QR y enlaces cort
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[db_calendar_conflicts|Persistencia de avisos de choque]] *(Layer: #db, Domain: #booking)*
 - [[ext_ffmpeg|FFmpeg]] *(Layer: #external, Domain: #system)*
 - [[ext_gemini|Gemini (Google GenAI)]] *(Layer: #external, Domain: #system)*
 - [[ext_resend|Resend]] *(Layer: #external, Domain: #system)*
 - [[ext_supabase_storage|Supabase Storage]] *(Layer: #external, Domain: #system)*
+- [[route_calendar_conflicts|GET /api/calendar/conflicts]] *(Layer: #route, Domain: #booking)*
 - [[server_db_alertSettings|server/db/alertSettings.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
-- [[server_db_calendarConflicts|server/db/calendarConflicts.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_cartelEstilo|server/db/cartelEstilo.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_concerts|server/db/concerts.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_emailsCicloVida|server/db/emailsCicloVida.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_enlacesCortos|server/db/enlacesCortos.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_epk|server/db/epk.ts]] *(Layer: #db, Domain: #epk)*
+- [[server_db_festivales|server/db/festivales.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_interesados|server/db/interesados.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_mergeWithExisting|server/db/mergeWithExisting.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_pegatinas|server/db/pegatinas.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_referidos|server/db/referidos.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_salasPublicas|server/db/salasPublicas.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_tiposAdn|server/db/tiposAdn.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_tolerantWrite|server/db/tolerantWrite.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_campanaConcierto|server/routes/campanaConcierto.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_cartelria|server/routes/cartelria.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_concert_to_album|server/routes/concert_to_album.ts]] *(Layer: #route, Domain: #system)*
-- [[server_routes_concerts|server/routes/concerts.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_contactoEmpresas|server/routes/contactoEmpresas.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_emailsCicloVida|server/routes/emailsCicloVida.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_enlacesCortos|server/routes/enlacesCortos.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_fans_contador|server/routes/fans_contador.ts]] *(Layer: #route, Domain: #social)*
+- [[server_routes_interesados|server/routes/interesados.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_paginaConcierto|server/routes/paginaConcierto.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_paginasSeo|server/routes/paginasSeo.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_pegatinas|server/routes/pegatinas.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_presentacionTfm|server/routes/presentacionTfm.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_seguridadConcertToAlbum|server/routes/seguridadConcertToAlbum.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_tiposCalendarioIcs|server/routes/tiposCalendarioIcs.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_tiposConcertToAlbum|server/routes/tiposConcertToAlbum.ts]] *(Layer: #route, Domain: #system)*

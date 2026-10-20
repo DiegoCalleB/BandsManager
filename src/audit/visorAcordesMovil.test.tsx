@@ -22,7 +22,7 @@ describe('Visor de acordes en móvil: siempre se puede llegar a la letra', () =>
 
   it('la barra del acorde y los diagramas van en el dock inferior en móvil, siempre a la vista', () => {
     expect(visor.match(/max-md:order-last/g)?.length).toBeGreaterThanOrEqual(2);
-    expect(visor).toContain('max-md:max-h-[32dvh]');
+    expect(visor).toContain('max-md:max-h-[24dvh]');
   });
 
   it('los diagramas empiezan cerrados (la barra fija ya enseña el que suena)', () => {
@@ -77,5 +77,19 @@ describe('Atril: pantalla completa', () => {
     expect(visor).toContain('h-[100dvh]');
     expect(visor).toContain('fullscreenchange');
     expect(visor).toContain('aria-pressed={pantallaCompleta}');
+  });
+});
+
+describe('Atril: modo escenario', () => {
+  it('se alterna desde el menú, oculta barras y diagramas y agranda la letra', () => {
+    expect(visor).toContain('setModoEscenario');
+    expect(visor).toContain('Modo escenario');
+    expect(visor).toContain('!modoEscenario && activeTab === "chords" && <AtrilToolbar />');
+    expect(visor).toContain('group-data-[escenario=true]/esc:text-3xl');
+  });
+
+  it('en móvil los diagramas enseñan solo el acorde actual y el siguiente', () => {
+    const acordeActual = fs.readFileSync(path.join(__dirname, '..', 'components', 'chords', 'AcordeActual.tsx'), 'utf-8');
+    expect(acordeActual).toContain("'max-md:hidden'");
   });
 });

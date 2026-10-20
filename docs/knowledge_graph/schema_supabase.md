@@ -36,6 +36,14 @@ Esquema relacional de tablas, índices pgvector, funciones y políticas RLS.
 - [[tabla_calendar_conflict_notifications|tabla calendar_conflict_notifications]] *(Layer: #schema, Domain: #system)*
 - [[tabla_campaign_pitch_training|tabla campaign_pitch_training]] *(Layer: #schema, Domain: #booking)*
 - [[tabla_campaigns|tabla campaigns]] *(Layer: #schema, Domain: #system)*
+- [[tabla_catalogo_generos|tabla catalogo_generos]] *(Layer: #schema, Domain: #system)*
+- [[tabla_catalogo_generos_alias|tabla catalogo_generos_alias]] *(Layer: #schema, Domain: #system)*
+- [[tabla_catalogo_ingestas|tabla catalogo_ingestas]] *(Layer: #schema, Domain: #system)*
+- [[tabla_catalogo_sala_alias|tabla catalogo_sala_alias]] *(Layer: #schema, Domain: #system)*
+- [[tabla_catalogo_sala_generos|tabla catalogo_sala_generos]] *(Layer: #schema, Domain: #system)*
+- [[tabla_catalogo_salas|tabla catalogo_salas]] *(Layer: #schema, Domain: #system)*
+- [[tabla_catalogo_staging|tabla catalogo_staging]] *(Layer: #schema, Domain: #system)*
+- [[tabla_catalogo_supresion|tabla catalogo_supresion]] *(Layer: #schema, Domain: #system)*
 - [[tabla_category_pitch_templates|tabla category_pitch_templates]] *(Layer: #schema, Domain: #booking)*
 - [[tabla_concert_deals|tabla concert_deals]] *(Layer: #schema, Domain: #system)*
 - [[tabla_concerts|tabla concerts]] *(Layer: #schema, Domain: #system)*
@@ -48,6 +56,9 @@ Esquema relacional de tablas, índices pgvector, funciones y políticas RLS.
 - [[tabla_epk_configs|tabla epk_configs]] *(Layer: #schema, Domain: #epk)*
 - [[tabla_fan_link_clicks|tabla fan_link_clicks]] *(Layer: #schema, Domain: #social)*
 - [[tabla_fans|tabla fans]] *(Layer: #schema, Domain: #social)*
+- [[tabla_festival_convocatorias|tabla festival_convocatorias]] *(Layer: #schema, Domain: #system)*
+- [[tabla_festival_ediciones|tabla festival_ediciones]] *(Layer: #schema, Domain: #system)*
+- [[tabla_festivales|tabla festivales]] *(Layer: #schema, Domain: #system)*
 - [[tabla_gear_checklists|tabla gear_checklists]] *(Layer: #schema, Domain: #system)*
 - [[tabla_lead_messages|tabla lead_messages]] *(Layer: #schema, Domain: #booking)*
 - [[tabla_leads|tabla leads]] *(Layer: #schema, Domain: #booking)*
@@ -56,6 +67,7 @@ Esquema relacional de tablas, índices pgvector, funciones y políticas RLS.
 - [[tabla_metricas_bandas_amigas|tabla metricas_bandas_amigas]] *(Layer: #schema, Domain: #system)*
 - [[tabla_musicians_waitlist|tabla musicians_waitlist]] *(Layer: #schema, Domain: #system)*
 - [[tabla_payments|tabla payments]] *(Layer: #schema, Domain: #finances)*
+- [[tabla_pegatinas_pedidos|tabla pegatinas_pedidos]] *(Layer: #schema, Domain: #system)*
 - [[tabla_pitch_example_threads|tabla pitch_example_threads]] *(Layer: #schema, Domain: #booking)*
 - [[tabla_pitch_learning_examples|tabla pitch_learning_examples]] *(Layer: #schema, Domain: #booking)*
 - [[tabla_pitch_vector_store|tabla pitch_vector_store]] *(Layer: #schema, Domain: #booking)*
@@ -89,6 +101,7 @@ Esquema relacional de tablas, índices pgvector, funciones y políticas RLS.
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[db_agent_schedule|Estado del Scheduler de agentes]] *(from #db)*
 - [[db_ai_ledger|AI Token Ledger]] *(from #db)*
+- [[db_calendar_conflicts|Persistencia de avisos de choque]] *(from #db)*
 - [[db_lead_messages|Lead Messages & Thread DB]] *(from #db)*
 - [[db_leads|Leads DB Handlers]] *(from #db)*
 - [[db_payments|Pagos y suscripciones (Stripe)]] *(from #db)*

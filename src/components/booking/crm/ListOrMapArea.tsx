@@ -3,6 +3,7 @@
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
 import { normalizeType } from "../../../utils/bookingUtils";
+import { SkeletonLeadList } from "../../ui/Skeleton";
 import { VenueMap } from "../../VenueMap";
 import { LeadsTable } from "../LeadsTable";
 import { useBookingCrm } from "./BookingCrmContext";
@@ -12,7 +13,7 @@ import { useBookingCrm } from "./BookingCrmContext";
  * @returns Sección de interfaz.
  */
 export function ListOrMapArea() {
-  const { viewMode, filteredLeads, selectedLead, handleOpenLead, onUpdateLead, selectedCityFilter, handleDeleteSingleLead, activeCampaign, handleLeadLogoUpload, getStatusBadgeClass, getStatusLabel, sectionTab, selectedLeadIds, setSelectedLeadIds, setRouteAnchorCity, effectiveBandName, concerts } = useBookingCrm();
+  const { cargando, viewMode, filteredLeads, selectedLead, handleOpenLead, onUpdateLead, selectedCityFilter, handleDeleteSingleLead, activeCampaign, handleLeadLogoUpload, getStatusBadgeClass, getStatusLabel, sectionTab, selectedLeadIds, setSelectedLeadIds, setRouteAnchorCity, effectiveBandName, concerts } = useBookingCrm();
   return (
     <>
       {/* Main Display Area: Map vs List */}
@@ -25,6 +26,8 @@ export function ListOrMapArea() {
         activeCityFilter={selectedCityFilter}
         activeRegionFilter=""
       />
+      ) : cargando ? (
+      <SkeletonLeadList />
       ) : (
       <LeadsTable
         onDeleteLead={handleDeleteSingleLead}

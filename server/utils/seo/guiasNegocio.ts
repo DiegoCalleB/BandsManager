@@ -7,6 +7,7 @@ export const GUIAS_NEGOCIO: GuiaSeo[] = [
     h1: 'Cómo captar emails de fans de tu banda',
     descripcion: 'Por qué la lista de correo es el activo más valioso de una banda y cómo conseguirla: QR en conciertos, incentivo, formulario corto y primer email.',
     intro: 'Los seguidores de redes son de la plataforma. Un email es tuyo. Una lista de correo te permite avisar de cada concierto sin depender de ningún algoritmo.',
+    resumen: ['El correo es tuyo; los seguidores de redes son de la plataforma.', 'Pídelo en el concierto con un QR, con un solo campo y un incentivo concreto.', 'Consentimiento expreso, baja en cada correo y una bienvenida inmediata.'],
     secciones: [
       {
         h2: 'Por qué el correo',
@@ -39,6 +40,7 @@ export const GUIAS_NEGOCIO: GuiaSeo[] = [
     h1: 'Cómo repartir el dinero en una banda',
     descripcion: 'Cómo repartir ingresos y gastos entre los miembros de una banda: fondo común, reparto por igual o por trabajo, y cómo evitar discusiones.',
     intro: 'El dinero rompe más bandas que las discusiones de estilo. Un acuerdo claro desde el principio, por escrito, evita la mayoría de los conflictos.',
+    resumen: ['Decide primero gastos comunes y fondo de la banda; después reparte.', 'Elige modelo: partes iguales, por trabajo o mixto, y déjalo por escrito.', 'Cuentas visibles para todos y acuerdo revisable cuando cambie la banda.'],
     secciones: [
       {
         h2: 'Decide los gastos antes del reparto',
@@ -71,6 +73,7 @@ export const GUIAS_NEGOCIO: GuiaSeo[] = [
     h1: 'Contrato de actuación musical: qué debe incluir',
     descripcion: 'Lista de comprobación de los apartados de un contrato de actuación: partes, fecha, caché, pago, rider, cancelación y derechos. Orientación general.',
     intro: 'Un concierto cerrado por mensaje es un concierto en riesgo. Un contrato breve y claro protege a la banda y a la sala. Esta guía es orientación general, no asesoramiento jurídico.',
+    resumen: ['Incluye partes, fecha, caché, forma de pago, riders, cancelación y derechos.', 'Comprueba que lo escrito coincide con lo hablado, sobre todo dinero y cancelación.', 'Si no hay contrato, un correo de confirmación con un «conforme» es mejor que nada.'],
     secciones: [
       {
         h2: 'Qué debe incluir',
@@ -90,7 +93,7 @@ export const GUIAS_NEGOCIO: GuiaSeo[] = [
       { q: '¿Quién redacta el contrato?', a: 'Puede hacerlo la sala o la banda. Lo importante es revisarlo con calma antes de firmar.' },
       { q: '¿Necesito un abogado?', a: 'Para contratos sencillos de un concierto, un modelo claro suele bastar. Para giras, exclusividades o cachés altos, consulta a un profesional.' },
     ],
-    relacionadas: ['cuanto-cobrar-por-un-concierto', 'rider-de-hospitalidad', '/plantilla-rider-tecnico'],
+    relacionadas: ['cuanto-cobrar-por-un-concierto', 'rider-de-hospitalidad', '/technical-rider-template'],
     cta: { titulo: 'Tus bolos y condiciones, ordenados', texto: 'BandManager guarda las fechas, el caché y las condiciones de cada concierto en un solo sitio.', boton: 'Probar BandManager gratis' },
   },
   {
@@ -99,6 +102,7 @@ export const GUIAS_NEGOCIO: GuiaSeo[] = [
     h1: 'Software para gestionar una banda de música',
     descripcion: 'Qué necesita una banda independiente para organizarse mejor que con hojas de cálculo y chats: booking, repertorio, calendario, EPK, finanzas y fans.',
     intro: 'La mayoría de las bandas se gestionan con una hoja de cálculo, un grupo de WhatsApp y mucha memoria. Funciona hasta que hay más de cinco salas, dos ensayos y una gira.',
+    resumen: ['La hoja de cálculo sirve al principio; con más salas y ensayos se queda corta.', 'Busca booking, repertorio, calendario, EPK, finanzas y captación de fans.', 'Que funcione bien en el móvil y no envíe nada en tu nombre sin tu aprobación.'],
     secciones: [
       {
         h2: 'Dónde se pierde el tiempo',

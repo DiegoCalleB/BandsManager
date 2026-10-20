@@ -11,6 +11,9 @@ import { checkRecordLimit } from "../utils/planLimits.js";
 import { dbGetLeads, dbUpsertLead } from "../db.js";
 import { leadsDeAgendaDeBanda } from "../db/salasCatalogo.js";
 import { consultaCatalogo } from "../db/consultaCatalogoSupabase.js";
+import { obtenerFestivales } from "../services/festivalesPublicos.js";
+import { claveDeFestival, consultarFestivales, leadDesdeFestival, parsearFiltrosFestivales } from "../utils/festivalesCatalogo.js";
+import { salasEnAgenda } from "../utils/consultaCatalogo.js";
 import { MAX_ALTAS_POR_PETICION } from "../services/consultaCatalogo.js";
 import { comoErrorCapturado } from "../../src/utils/errorCapturado.js";
 import { responderError } from "../utils/errorHttp.js";
@@ -36,6 +39,61 @@ router.get("/catalogo/salas", requireAuth, apiAutenticadaRateLimiter, async (req
     const error = comoErrorCapturado(errorCapturado);
     console.error("Error in GET /api/catalogo/salas:", error);
     responderError(res, error, "No se pudo consultar el catálogo de salas.");
+  }
+});
+
+router.get("/catalogo/salas/mapa", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
+  try {
+    const bandId = getTargetBandId(req);
+    res.json(await consultaCatalogo.mapa(req.query as Record<string, unknown>, await leadsDeAgendaDeBanda(bandId)));
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
+    console.error("Error in GET /api/catalogo/salas/mapa:", error);
+    responderError(res, error, "No se pudo cargar el mapa del catálogo.");
+  }
+});
+
+router.get("/catalogo/salas/:id", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
+  try {
+    const bandId = getTargetBandId(req);
+    const ficha = await consultaCatalogo.ficha(req.params.id, await leadsDeAgendaDeBanda(bandId));
+    if (!ficha) return res.status(404).json({ error: "Esa sala ya no está disponible en el catálogo." });
+    res.json(ficha);
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
+    console.error("Error in GET /api/catalogo/salas/:id:", error);
+    responderError(res, error, "No se pudo abrir la ficha de la sala.");
+  }
+});
+
+router.get("/catalogo/festivales", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
+  try {
+    const bandId = getTargetBandId(req);
+    const [festivales, agenda] = await Promise.all([obtenerFestivales(), leadsDeAgendaDeBanda(bandId)]);
+    const fichas = consultarFestivales(festivales, parsearFiltrosFestivales(req.query as Record<string, unknown>), salasEnAgenda(agenda).claves);
+    res.json({ total: fichas.length, festivales: fichas.slice(0, 100) });
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
+    console.error("Error in GET /api/catalogo/festivales:", error);
+    responderError(res, error, "No se pudo consultar el directorio de festivales.");
+  }
+});
+
+router.post("/catalogo/festivales/:slug/anadir", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
+  try {
+    const bandId = getTargetBandId(req);
+    const festival = (await obtenerFestivales()).find((f) => f.slug === req.params.slug);
+    if (!festival) return res.status(404).json({ error: "Ese festival ya no está en el directorio." });
+    const [leadsDeLaBanda, agenda] = await Promise.all([leadsDeAgendaDeBanda(bandId), dbGetLeads(bandId)]);
+    if (salasEnAgenda(leadsDeLaBanda).claves.has(claveDeFestival(festival))) return res.status(409).json({ error: "Ese festival ya está en tu agenda." });
+    const limite = checkRecordLimit(req.user?.plan || "ensayo", "leads", agenda.filter((l) => !esMedio(l.tipo)).length);
+    if (!limite.allowed) return res.status(403).json({ error: limite.message, codigo: "limite_plan_alcanzado" });
+    const guardado = await dbUpsertLead(leadDesdeFestival(festival, idNuevo(), bandId), bandId);
+    res.json({ success: true, leadId: guardado.id });
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
+    console.error("Error in POST /api/catalogo/festivales/:slug/anadir:", error);
+    responderError(res, error, "No se pudo añadir el festival a tu agenda.");
   }
 });
 

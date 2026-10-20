@@ -36,6 +36,10 @@
 
 **Probar las señales con un vídeo real sin red ni IA:** `npm run probar:senales -- ficha.json [comentarios.json] [segundosDelClip]` (la ficha es la salida de `yt-dlp --dump-json`, los comentarios la respuesta de `commentThreads`). Imprime si cuenta como música, qué datos trae y qué tramos saldrían por interés del público.
 
+**Comprobar que un Reel puede salir solo y avisar si falla:** `npm run probar:publicacion [-- ID_DE_BANDA]` (solo lee: no publica ni envía nada). Revisa la clave de Resend, `APP_URL`, la conexión a Supabase, las tablas y columnas de las migraciones y, con el id de banda, sus ajustes de avisos, el destinatario y la conexión de Instagram. Termina con código 1 si falta algo.
+
+**Medir la detección de momentos:** `npm run banco:deteccion -- --generar ID ficha.json banco/x.json` crea un caso (audio, planos y el gráfico de «más repetido» de YouTube como verdad) y `npm run banco:deteccion -- banco` compara el detector con elegir solo por volumen y con la variante experimental de estribillo (`usarRepeticion`, apagada por defecto hasta que el banco demuestre que mejora). Los cortes además ajustan su inicio (hasta 3 s) a la entrada de la banda (`encajarEnElGolpe`). El final también es flexible (hasta 1,4× la duración elegida): `ajustarCortes` lo mueve al respiro de volumen más cercano, mejor si coincide con un cambio de plano, para no cortar a mitad de frase. Si hay transcripción, manda ella: el final cae al terminar una frase (puntuación o pausa ≥ 0,4 s) más 0,3 s de cola.
+
 **Pendiente** (en orden): YouTube Shorts y TikTok reales · ingesta de `online_followers` · aplicar la
 auditoría de copy también al análisis inicial · validar con una cuenta real los nombres de las
 métricas de Meta (`views`, `ig_reels_avg_watch_time`) ·

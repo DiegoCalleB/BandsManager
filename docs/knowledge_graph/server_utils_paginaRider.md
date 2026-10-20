@@ -13,25 +13,27 @@ tags: ["service", "system", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Página pública de SEO «plantilla de rider técnico» (`/plantilla-rider-tecnico`), generada en el servidor.
+Página pública de SEO «plantilla de rider técnico» (`/technical-rider-template` y `/en/technical-rider-template`),
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_utils_html|server/utils/html.ts]] *(Layer: #service, Domain: #system)*
-- [[server_utils_paginaConcierto|server/utils/paginaConcierto.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_seo_cabeza|server/utils/seo/cabeza.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_seo_rutas|server/utils/seo/rutas.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_seo_textos|server/utils/seo/textos.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_routes_paginaConcierto|server/routes/paginaConcierto.ts]] *(from #route)*
-- [[server_utils_seo_indice|server/utils/seo/indice.ts]] *(from #service)*
-- [[server_utils_seo_render|server/utils/seo/render.ts]] *(from #service)*
 
 ---
 
 ## 🧪 Tests que lo cubren
 - `server/utils/__tests__/paginaRider.test.ts`
+- `server/utils/seo/__tests__/avisoIdioma.test.ts`
+- `server/utils/seo/__tests__/guias.test.ts`
 
 ---
 

@@ -77,7 +77,7 @@ export function liberarEvento(eventId: string): void {
 // de "email válido" en el repo. Se reexporta porque este módulo ya la exportaba.
 export { isValidEmail } from "../utils/email.js";
 import { isValidEmail } from "../utils/email.js";
-import { bandaFacturableDelUsuario, mismaBanda } from "../utils/bandAccess.js";
+import { bandaFacturableDelUsuario, mismaBanda, suscripcionHabilitada, SUSCRIPCION_NO_HABILITADA } from "../utils/bandAccess.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 import type { AppState } from '../stateTypes.js';
 import type { BandaFacturable, FacturaStripeLegada, SesionCheckoutLegada, SuscripcionStripeLegada } from './tiposBilling.js';
@@ -222,7 +222,7 @@ export async function applyPlanUpgrade(
           fecha_cambio_plan: null,
           estado_suscripcion: 'activo',
           creditos_periodo: credits,
-          creditos_usados: 0
+          creditos_usados: 0, ...(details?.billingInterval ? { ciclo_facturacion: details.billingInterval } : {})
         })
         .or(`band_id.eq.${bandId},id.eq.${bandId},band_id.eq.band-${cleanBandId},id.eq.band-${cleanBandId},band_id.eq.${cleanBandId},id.eq.${cleanBandId}`);
     }
@@ -560,9 +560,7 @@ router.post(["/billing/create-checkout-session", "/stripe/create-checkout-sessio
     if (!banda) {
       return res.status(403).json({ success: false, error: "No tienes acceso a la facturación de esta banda." });
     }
-    const bandId = banda.bandId;
-    const userEmail = banda.email;
-
+    const { bandId, email: userEmail } = banda;
     const normalizedPlan = normalizePlan(planId);
 
     if (normalizedPlan === "ensayo") {
@@ -571,7 +569,7 @@ router.post(["/billing/create-checkout-session", "/stripe/create-checkout-sessio
     }
 
     const planPrices: Record<string, { monthly: number; annual: number; name: string }> = {
-      local: { monthly: 1500, annual: 14400, name: "Plan LOCAL - BandManager.io" },
+      local: { monthly: 1200, annual: 11500, name: "Plan LOCAL - BandManager.io" },
       de_gira: { monthly: 2900, annual: 27800, name: "Plan DE GIRA - BandManager.io" },
       cabeza_de_cartel: { monthly: 7900, annual: 75800, name: "Plan CABEZA DE CARTEL - BandManager.io" }
     };
@@ -580,6 +578,8 @@ router.post(["/billing/create-checkout-session", "/stripe/create-checkout-sessio
     if (!planInfo) {
       return res.status(400).json({ success: false, error: `Plan "${planId}" no válido para suscripción.` });
     }
+
+    if (!suscripcionHabilitada(loadState().registeredBands, bandId)) return res.status(403).json(SUSCRIPCION_NO_HABILITADA);
 
     const stripe = getStripe();
     const unitAmount = billingInterval === "annual" ? planInfo.annual : planInfo.monthly;

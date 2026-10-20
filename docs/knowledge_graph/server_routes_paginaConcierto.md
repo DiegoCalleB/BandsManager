@@ -21,11 +21,17 @@ Páginas públicas indexables: /e/:slug (un concierto), /sitemap.xml y /robots.t
 - [[server_db_concerts|server/db/concerts.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_enlacesCortos|server/db/enlacesCortos.ts]] *(Layer: #db, Domain: #system)*
 - [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(Layer: #security, Domain: #system)*
+- [[server_routes_contactoEmpresas|server/routes/contactoEmpresas.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_emailsCicloVida|server/routes/emailsCicloVida.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_fans_contador|server/routes/fans_contador.ts]] *(Layer: #route, Domain: #social)*
+- [[server_routes_interesados|server/routes/interesados.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_paginasSeo|server/routes/paginasSeo.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_pegatinas|server/routes/pegatinas.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_presentacionTfm|server/routes/presentacionTfm.ts]] *(Layer: #route, Domain: #system)*
 - [[server_services_emailsCicloVida|server/services/emailsCicloVida.ts]] *(Layer: #service, Domain: #system)*
+- [[server_services_festivalesPublicos|server/services/festivalesPublicos.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_perfilPublicoBanda|server/services/perfilPublicoBanda.ts]] *(Layer: #service, Domain: #system)*
+- [[server_services_salasPublicas|server/services/salasPublicas.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_bandHash|server/utils/bandHash.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_cabeceraIdioma|server/utils/cabeceraIdioma.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_enlacesCortos|server/utils/enlacesCortos.ts]] *(Layer: #service, Domain: #system)*
@@ -33,8 +39,8 @@ Páginas públicas indexables: /e/:slug (un concierto), /sitemap.xml y /robots.t
 - [[server_utils_paginaConcierto|server/utils/paginaConcierto.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_paginaRider|server/utils/paginaRider.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_referidos|server/utils/referidos.ts]] *(Layer: #service, Domain: #system)*
-- [[server_utils_seo_indice|server/utils/seo/indice.ts]] *(Layer: #service, Domain: #system)*
-- [[server_utils_seo_render|server/utils/seo/render.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_seo_rastreadores|server/utils/seo/rastreadores.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_seo_sitemap|server/utils/seo/sitemap.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
@@ -46,6 +52,7 @@ Páginas públicas indexables: /e/:slug (un concierto), /sitemap.xml y /robots.t
 
 ## 🧪 Tests que lo cubren
 - `server/routes/__tests__/paginaConcierto.test.ts`
+- `server/routes/__tests__/paginasSeo.test.ts`
 
 ---
 

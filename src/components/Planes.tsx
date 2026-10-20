@@ -50,12 +50,12 @@ const PLANS_DATA: PlanCardData[] = [
     annualEquivalentMonthly: 0,
     description:
       "Para solistas y bandas noveles que arrancan su local de ensayo.",
-    creditsLabel: "20 créditos IA / mes",
+    creditsLabel: "100 créditos IA / mes",
     creditsSub: "Pitches básicos y consultas IA",
     ctaText: "Empezar gratis",
     ctaVariant: "secondary",
     features: [
-      { text: "20 créditos IA / mes", included: true },
+      { text: "100 créditos IA / mes", included: true },
       { text: "10 salas", included: true },
       { text: "Calendario", included: true },
       { text: "Repertorio", included: true },
@@ -76,17 +76,12 @@ const PLANS_DATA: PlanCardData[] = [
     annualEquivalentMonthly: 9.58,
     description:
       "El kit esencial para bandas activas tocando en su circuito local.",
-    creditsLabel: "150 créditos IA / mes",
+    creditsLabel: "300 créditos IA / mes",
     creditsSub: "Booking guiado y generación de ideas",
     ctaText: "Elegir Local",
     ctaVariant: "silver",
-    stickerGift: {
-      qty: "50 pegatinas de tu banda gratis",
-      description: "Pack de pegatinas de vinilo gratis con tu suscripción",
-      tag: "50 uds gratis",
-    },
     features: [
-      { text: "150 créditos IA / mes", included: true },
+      { text: "300 créditos IA / mes", included: true },
       { text: "50 salas", included: true },
       { text: "20 medios", included: true },
       { text: "100 fans", included: true },
@@ -113,9 +108,9 @@ const PLANS_DATA: PlanCardData[] = [
     ctaText: "Probar 30 días gratis",
     ctaVariant: "gold",
     stickerGift: {
-      qty: "100 pegatinas de tu banda gratis",
-      description: "Pack de pegatinas de vinilo gratis con tu suscripción",
-      tag: "100 uds gratis",
+      qty: "150 pegatinas de tu banda gratis",
+      description: "Pack de pegatinas de vinilo gratis con tu suscripción anual",
+      tag: "150 uds gratis",
     },
     features: [
       { text: "800 créditos IA / mes", included: true, highlight: true },
@@ -144,9 +139,9 @@ const PLANS_DATA: PlanCardData[] = [
     ctaText: "Elegir Cabeza de Cartel",
     ctaVariant: "emerald",
     stickerGift: {
-      qty: "200 pegatinas + entrega prioritaria",
-      description: "Pack de pegatinas de vinilo con envío express gratis",
-      tag: "200 uds + Envío Express",
+      qty: "300 pegatinas + entrega prioritaria",
+      description: "Pack de pegatinas de vinilo con envío express gratis, con tu suscripción anual",
+      tag: "300 uds + Envío Express",
     },
     features: [
       { text: "2.500 créditos IA / mes", included: true, highlight: true },
@@ -212,8 +207,8 @@ const COMPARISON_TABLE: ComparisonSection[] = [
     items: [
       {
         name: "Créditos de IA incluidos al mes",
-        ensayo: "20 créditos",
-        local: "150 créditos",
+        ensayo: "100 créditos",
+        local: "300 créditos",
         de_gira: "800 créditos",
         cabeza_de_cartel: "2.500 créditos",
       },
@@ -845,7 +840,7 @@ export const Planes: React.FC<PlanesProps> = ({
                       </span>
                     </div>
                     <span className="text-micro font-sans font-bold text-[var(--ink-2)]">
-                      Solo pago
+                      Solo planes altos (anual)
                     </span>
                   </div>
                 )}

@@ -1,4 +1,7 @@
 import React, { useRef, useState } from 'react';
+// Las letras de cartel (nombre y día de la fecha): solo se cargan con esta vista.
+import '@fontsource/anton/latin-400.css';
+import '@fontsource/dm-serif-display/latin-400.css';
 import { Download, FileArchive, Settings2, Share2 } from 'lucide-react';
 import type { Concert } from '../../types';
 import { ActionMenu, Button, EmptyState, Select, Tabs } from '../ui';

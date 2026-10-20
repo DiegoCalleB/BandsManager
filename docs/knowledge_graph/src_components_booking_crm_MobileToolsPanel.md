@@ -18,6 +18,7 @@ Panel desplegable de herramientas e IA (agentes, plantillas, importación, dupli
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_booking_catalogo_eventosCatalogo|src/components/booking/catalogo/eventosCatalogo.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_crm_BookingCrmContext|src/components/booking/crm/BookingCrmContext.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 

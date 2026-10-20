@@ -30,6 +30,7 @@ Contexto de la aplicación: reparte el estado del controlador a la puerta de ent
 - [[src_app_AppProvider|src/app/AppProvider.tsx]] *(from #service)*
 - [[src_app_AppShell|src/app/AppShell.tsx]] *(from #service)*
 - [[src_app_DesktopSidebar|src/app/DesktopSidebar.tsx]] *(from #service)*
+- [[src_app_EntradaPlanes|src/app/EntradaPlanes.tsx]] *(from #service)*
 - [[src_app_MobileBottomTabBar|src/app/MobileBottomTabBar.tsx]] *(from #service)*
 - [[src_app_MobileDrawer|src/app/MobileDrawer.tsx]] *(from #service)*
 - [[src_app_MobileGroupSheet|src/app/MobileGroupSheet.tsx]] *(from #service)*

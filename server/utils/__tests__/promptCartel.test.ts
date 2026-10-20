@@ -11,8 +11,9 @@ describe('promptCartel', () => {
   it('prohíbe texto en la imagen y reserva espacio para componerlo', () => {
     const p = construirPromptFondo({ estilo: 'gigposter' });
     expect(p).toContain('no text');
-    expect(p).toMatch(/top 25%.*bottom 30%/);
-    expect(p).toContain('central window');
+    expect(p).toContain('landscape 4:3');
+    expect(p).toMatch(/central 65%/);
+    expect(p).toMatch(/complete and not cut off/);
   });
 
   it('cada estilo produce un prompt distinto', () => {
@@ -34,6 +35,7 @@ describe('promptCartel', () => {
   });
 
   it('el coste por imagen es positivo y acotado', () => {
+    expect(costeImagenEur(true)).toBeGreaterThan(costeImagenEur());
     const c = costeImagenEur();
     expect(c).toBeGreaterThan(0.01);
     expect(c).toBeLessThan(0.1);
@@ -72,6 +74,15 @@ describe('promptCartel', () => {
     }
   });
 
+  it('pide una ilustración apaisada y no un cartel entero, y veta el emblema y los iconos de relleno', () => {
+    const p = construirPromptFondo({ estilo: 'gigposter' });
+    expect(p).toContain('ONE framed illustration');
+    expect(p).not.toMatch(/9:16/);
+    expect(p).toMatch(/emblem, badge, crest or circular-frame/);
+    expect(p).toMatch(/radial rays/);
+    expect(p).toMatch(/microphones, beer glasses, raised fists/);
+  });
+
   it('las reglas siguen mandando aunque las indicaciones libres intenten cambiarlas', () => {
     const p = construirPromptFondo({ estilo: 'neon', instrucciones: 'hazlo épico, hiperrealista, con brillos y orbes de luz' });
     expect(p.indexOf('DESIGN DIRECTION')).toBeLessThan(p.indexOf('<user_notes>'));
@@ -102,5 +113,16 @@ describe('promptCartel', () => {
     expect(p).toContain('The other attached images');
     expect(construirPromptFondo({ estilo: 'neon', referencias: 2 })).toContain('The attached images');
     expect(construirPromptFondo({ estilo: 'neon' })).not.toContain('FIRST attached image');
+  });
+
+  it('encuadre a sangre pide una ilustración vertical con zonas calmadas para el texto', () => {
+    const p = construirPromptFondo({ estilo: 'serigrafia', encuadre: 'sangre' });
+    expect(p).toMatch(/tall portrait illustration \(3:4\)/);
+    expect(p).toMatch(/top 25% and the bottom 28%/);
+    expect(p).not.toMatch(/landscape 4:3/);
+  });
+
+  it('sin encuadre sigue pidiendo la ilustración apaisada en ventana', () => {
+    expect(construirPromptFondo({ estilo: 'serigrafia' })).toMatch(/landscape 4:3/);
   });
 });

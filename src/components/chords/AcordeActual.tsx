@@ -106,7 +106,7 @@ export const DiagramasAcordeActual: React.FC<DiagramasProps> = ({ estado, proxim
     const info = contexto.get(c)?.info;
     return info && estiloArmonia && estiloArmonia.mostrar !== 'nombre' ? gradoVisible(info.grado, estiloArmonia) : undefined;
   };
-  const actual = <CajaAcorde key={acorde} chord={acorde} vista={vista} contexto={contexto.get(acorde)} grado={gradoDe(acorde)} sonando={Boolean(sonando)} nivel={nivel} previo={previo} conReloj={Boolean(reloj)} />;
+  const actual = <CajaAcorde key={acorde} chord={acorde} vista={vista} contexto={contexto.get(acorde)} grado={gradoDe(acorde)} sonando={Boolean(sonando)} nivel={nivel} previo={previo} conReloj={Boolean(reloj)} conPentagrama={false} />;
   return (
     <section translate="no" aria-label="Diagramas de los acordes que vienen" className="notranslate mx-4 mt-3 bg-[var(--sunken)] rounded-[var(--r-l)] p-2.5 space-y-2 shrink-0">
       <div className="flex items-start gap-2 overflow-x-auto p-1">
@@ -125,15 +125,15 @@ export const DiagramasAcordeActual: React.FC<DiagramasProps> = ({ estado, proxim
               aria-label={ir ? `Ir al acorde ${c}` : undefined}
               onClick={ir && ((e) => { if (!(e.target as HTMLElement).closest('button')) ir(); })}
               onKeyDown={ir && ((e) => { if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); ir(); } })}
-              className={`w-28 shrink-0 rounded-[var(--r-m)] ${ir ? 'cursor-pointer' : ''} ${i > 0 ? 'opacity-70' : ''}`}
+              className={`w-28 shrink-0 rounded-[var(--r-m)] ${ir ? 'cursor-pointer' : ''} ${i > 0 ? 'opacity-70' : ''} ${i > 0 ? 'max-md:hidden' : ''}`}
             >
-              <CajaAcorde chord={c} vista={vista} contexto={contexto.get(c)} grado={gradoDe(c)} nivel={nivel} previo={i === 0 ? acorde : lista[i - 1].c} sonar={!ir} />
+              <CajaAcorde chord={c} vista={vista} contexto={contexto.get(c)} grado={gradoDe(c)} nivel={nivel} previo={i === 0 ? acorde : lista[i - 1].c} sonar={!ir} conPentagrama={false} />
               {duraciones[i] !== null && maxDur > 0 && <BarraDuracion segundos={duraciones[i] as number} maximo={maxDur} />}
             </div>
           );
         })}
       </div>
-      <div className="flex justify-end gap-2 flex-wrap"><SelectorVistaAcorde vista={vista} onCambio={onVista} />{onNivel && <SelectorNivel nivel={nivel} onCambio={onNivel} />}</div>
+      <div className="flex justify-end gap-2 flex-wrap"><SelectorVistaAcorde vista={vista} onCambio={onVista} />{onNivel && <SelectorNivel nivel={nivel} onCambio={onNivel} conPentagrama={false} />}</div>
     </section>
   );
 };

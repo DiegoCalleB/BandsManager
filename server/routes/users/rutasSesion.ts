@@ -2,6 +2,7 @@
  * Sesión activa: quién soy, cambio de banda (solo a bandas de las que eres miembro) y cierre de sesión.
  */
 import express from 'express';
+import { buscarBandaRegistrada } from '../../utils/bandaRegistrada.js';
 import type { UsuarioGuardado } from '../../stateTypes.js';
 import { ACTIVE_SESSIONS } from '../../auth.js';
 import { loadState, saveState } from '../../state.js';
@@ -224,28 +225,7 @@ router.post('/auth/switch-band', async (req, res) => {
     targetUser = legacyTargetUser;
   }
 
-  const cleanCheck = cleanTargetBand.toLowerCase().trim();
-  const bandInfo =
-    (state.registeredBands || []).find((b) => {
-      const bBid = (b.band_id || '')
-        .replace(/^(band|reg)-/, '')
-        .toLowerCase()
-        .trim();
-      const bId = (b.id || '')
-        .replace(/^(band|reg)-/, '')
-        .toLowerCase()
-        .trim();
-      const bName = (b.nombre_banda || b.bandName || b.name || '')
-        .toLowerCase()
-        .trim();
-      return (
-        b.band_id === band_id ||
-        b.id === band_id ||
-        bBid === cleanCheck ||
-        bId === cleanCheck ||
-        (cleanCheck.length > 1 && bName === cleanCheck)
-      );
-    });
+  const bandInfo = buscarBandaRegistrada(state.registeredBands, band_id);
 
   const resolvedName = bandInfo
     ? bandInfo.nombre_banda || bandInfo.bandName || bandInfo.name

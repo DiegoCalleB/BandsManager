@@ -23,6 +23,7 @@ Bandas registradas (`registered_bands`) y migración de planes. Lectura y escrit
 - [[server_db_tiposAdn|server/db/tiposAdn.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
 - [[server_stateTypes|server/stateTypes.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_bandaRegistrada|server/utils/bandaRegistrada.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
 - [[tabla_users|tabla users]] *(Layer: #schema, Domain: #system)*
@@ -72,6 +73,7 @@ Bandas registradas (`registered_bands`) y migración de planes. Lectura y escrit
 
 ## 🧪 Tests que lo cubren
 - `server/db/__tests__/bandDnaExpresionLock.test.ts`
+- `server/db/__tests__/registeredBandsCiclo.test.ts`
 
 ---
 

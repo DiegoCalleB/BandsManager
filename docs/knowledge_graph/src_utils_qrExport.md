@@ -13,11 +13,12 @@ tags: ["service", "system", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: QrExportOptions, urlToDataUrl, getCleanSvgString, downloadQrAsSvg, downloadQrAsHighResPng, printHighQualityFlyer.
+Exporta: QrExportOptions, urlToDataUrl, downloadQrAsSvg, downloadQrAsHighResPng, printHighQualityFlyer.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_utils_qrMarca|src/utils/qrMarca.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_qrSvg|src/utils/qrSvg.ts]] *(Layer: #service, Domain: #system)*
 
 ---

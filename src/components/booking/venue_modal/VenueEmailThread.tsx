@@ -691,7 +691,7 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
       {loadingMessages && sortedMessages.length === 0 ? (
         <div className="flex-1 flex items-center justify-center py-16 text-[var(--ink-2)] text-xs">
           <RefreshCw className="w-5 h-5 animate-spin mr-2 text-[var(--acc)]" />
-          <span>Cargando conversación con la sala...</span>
+          <span>Cargando conversación con la sala…</span>
         </div>
       ) : sortedMessages.length === 0 ? (
         <div className="flex-1 flex flex-col items-center justify-center py-16 px-4 text-center rounded-[var(--r-l)] bg-[var(--sunken)]/40 border border-dashed border-[var(--hair)]">

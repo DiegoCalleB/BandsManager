@@ -31,7 +31,7 @@ Ajustes de alertas por banda (`band_alert_settings`).
 - [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
 - [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
 - [[server_services_avisosPublicacion|server/services/avisosPublicacion.ts]] *(from #service)*
-- [[server_services_calendarConflictService|server/services/calendarConflictService.ts]] *(from #service)*
+- [[service_calendar_conflicts|Avisos de choques por email]] *(from #service)*
 
 ---
 

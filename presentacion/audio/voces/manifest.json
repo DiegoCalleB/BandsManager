@@ -127,17 +127,6 @@
   "v": "449f9315bc35",
   "who": "bateria"
  },
- "0e735b18": {
-  "d": 5.83,
-  "e": "123559817979931541676431000000000000000000016888789995833798259773455542134320023589712865650234420000000000003444238615427756527655412646655421",
-  "f": "0e735b18.mp3",
-  "h": "9ce6e2a6",
-  "oido": "De boca o oreja, tío. Una banda se lo cuenta a otra, y esa a otra, como pasa con los buenos pedales.",
-  "qa": 0.95,
-  "say": "De boca a oreja, tío. Una banda se lo cuenta a otra, y esa a otra. Como pasa con los buenos pedales.",
-  "v": "5067c7a57bab",
-  "who": "bajo"
- },
  "0f21287a": {
   "d": 5.5,
   "e": "011998300000000000000048799379421870299530006742799862653125310000000000000000034862762597301860630587543100000056414557567765444300000",
@@ -168,6 +157,17 @@
   "say": "[sarcastic] Sigue cantando en el que le da la gana. Pero ahora, por lo menos, sale en la hoja.",
   "v": "3d8da69d2159",
   "who": "guitarra"
+ },
+ "123b6266": {
+  "d": 5.11,
+  "e": "044678899995100058962565544300000000003787568732422333100000000000000000000000018899962574596731365612521674554145212443210000",
+  "f": "123b6266.mp3",
+  "h": "017a5bde",
+  "oido": "Y ahora, lo bueno, la música. Quedan tres horas para que cierre el cartel.",
+  "qa": 1.0,
+  "say": "Y ahora, lo bueno: la música. Quedan tres horas para que cierre el cartel.",
+  "v": "33328d9c3671",
+  "who": "bajo"
  },
  "13ba2c1f": {
   "d": 3.74,
@@ -364,6 +364,17 @@
   "say": "[softly] El bajista soy yo. Necesito volver a tocar.",
   "v": "9096eec42678",
   "who": "diego"
+ },
+ "1e12ef82": {
+  "d": 2.66,
+  "e": "15667998829996217778227654222664144310000000000001575767665423410",
+  "f": "1e12ef82.mp3",
+  "h": "92dedb62",
+  "oido": "Y ahora que nos conozca más gente, queda una hora.",
+  "qa": 1.0,
+  "say": "Y ahora, que nos conozca más gente. Queda una hora.",
+  "v": "e2c5a4116bf7",
+  "who": "bajo"
  },
  "1e551ec0": {
   "d": 4.66,
@@ -671,17 +682,6 @@
   "v": "e1bbae2004b9",
   "who": "bajo"
  },
- "406be4f0": {
-  "d": 2.86,
-  "e": "036889998973100000299963886543210000000000000000367867873134124431000",
-  "f": "406be4f0.mp3",
-  "h": "d6e961c7",
-  "oido": "Y ahora lo bueno. La música.",
-  "qa": 1.0,
-  "say": "Y ahora, lo bueno: la música.",
-  "v": "cc96555d1def",
-  "who": "bajo"
- },
  "411098e3": {
   "d": 3.58,
   "e": "025239668784319831000001269596310641241272423231576211000168553118959313621121111210110",
@@ -747,17 +747,6 @@
   "say": "¡Cada vez que una sala lea nuestro dossier, nos hace publicidad gratis, che!",
   "v": "eaa3abc52414",
   "who": "voz"
- },
- "42a113d7": {
-  "d": 3.62,
-  "e": "05877219888997100000000000000388614478994789851187544432000000000000000046431185541332110",
-  "f": "42a113d7.mp3",
-  "h": "be1b1919",
-  "oido": "Y al final lo que nunca nos cuadra, las cuentas.",
-  "qa": 1.0,
-  "say": "Y al final, lo que nunca nos cuadra: las cuentas.",
-  "v": "92456721fb0a",
-  "who": "bajo"
  },
  "4417506d": {
   "d": 5.59,
@@ -944,17 +933,6 @@
   "v": "1df9d7ed36ce",
   "who": "guitarra"
  },
- "56e69e14": {
-  "d": 2.06,
-  "e": "05588998975200000000002767225789413756422576224420",
-  "f": "56e69e14.mp3",
-  "h": "ab188789",
-  "oido": "Y ahora, que nos conozca más gente.",
-  "qa": 1.0,
-  "say": "Y ahora, que nos conozca más gente.",
-  "v": "de8cd0546043",
-  "who": "bajo"
- },
  "57b02ab3": {
   "d": 2.81,
   "e": "00222110000233210127998742100000789612668518944454431145797876642110",
@@ -1063,15 +1041,15 @@
   "v": "7f925ace915a",
   "who": "bateria"
  },
- "6280848d": {
-  "d": 11.4,
-  "e": "9988971988954864432100000000000000000000068257176159378534985432110000000000000455249697159654320000000024442666511454321000000000000000003778259594116999963100004998267751698576156678455318796117566214456687555525524524431000000000000000000003546789656886424320000255654363454454321",
-  "f": "6280848d.mp3",
-  "h": "43ccbd44",
-  "oido": "más de 2000 y se ejecutan solos en cada Comet, en Canapush y en producción un control de salud y sentí vigilando los errores como un rovadi que nunca duerme.",
-  "qa": 0.81,
-  "say": "Más de dos mil. Y se ejecutan solos: en cada commit, en cada push. Y en producción, un control de salud y Séntri vigilando los errores. Como un roadie que nunca duerme.",
-  "v": "8a445602f3d5",
+ "63571d0c": {
+  "d": 5.35,
+  "e": "046674198878962000000000047784256999935877721276443422000000000004674213755413431000000000000000000044799981799877731751166886544210",
+  "f": "63571d0c.mp3",
+  "h": "eddca29d",
+  "oido": "Y al final, lo que nunca nos cuadra. Las cuentas. ¡Vente minutos, chavales!",
+  "qa": 0.92,
+  "say": "Y al final, lo que nunca nos cuadra: las cuentas. Veinte minutos, chavales.",
+  "v": "4fff76d20282",
   "who": "bajo"
  },
  "639a544e": {
@@ -1083,6 +1061,17 @@
   "qa": 0.8,
   "say": "Y si Claudio y Guglio programan, ¿quién manda aquí? ¿Quién es el líder de la banda?",
   "v": "952cf9d14e9c",
+  "who": "bateria"
+ },
+ "645ab7bc": {
+  "d": 3.62,
+  "e": "00188842861100006912736794135821534443874980376255443411001247897189754424894154102345210",
+  "f": "645ab7bc.mp3",
+  "h": "da9b4bbb",
+  "oido": "Y hago que Pelaez les ha mandado otra banda, solo queda un hueco, tío",
+  "qa": 0.89,
+  "say": "[worried] Iago, que Peláez les ha mandado otra banda. ¡Solo queda un hueco, tío!",
+  "v": "774f18015417",
   "who": "bateria"
  },
  "6503901e": {
@@ -1150,17 +1139,6 @@
   "say": "[excited] ¡Esto es como Tinder, pero para bandas! ¡Y sin tener que hablar con nadie!",
   "v": "63bf416e9cd0",
   "who": "guitarra"
- },
- "685d67db": {
-  "d": 3.07,
-  "e": "132998589979218956463242144311125621565852153343333532464641233232111122221",
-  "f": "685d67db.mp3",
-  "h": "31d9cb75",
-  "oido": "Yo había dejado de tocar, este máster me devolvió las ganas",
-  "qa": 1.0,
-  "say": "Yo había dejado de tocar. Este máster me devolvió las ganas.",
-  "v": "707dce72120d",
-  "who": "diego"
  },
  "68bd029b": {
   "d": 4.3,
@@ -1418,6 +1396,17 @@
   "v": "c851e4333775",
   "who": "bajo"
  },
+ "842e3170": {
+  "d": 5.78,
+  "e": "04998949915967971531244432000000000000355658795632554157672355794057775310000134555213654443124431000000000046985188247157643247544124344233100",
+  "f": "842e3170.mp3",
+  "h": "45a4f1c0",
+  "oido": "Con el boca a boca, tío. Una banda se lo cuenta otra y esa a otra. ¿Cómo pasa con los buenos pedales?",
+  "qa": 0.98,
+  "say": "Con el boca a boca, tío. Una banda se lo cuenta a otra, y esa a otra. Como pasa con los buenos pedales.",
+  "v": "b8a544d09dd0",
+  "who": "bajo"
+ },
  "84d68d2c": {
   "d": 4.3,
   "e": "0888401978979720284697585158311761744320034137621242100003756430159964345554358538998787246622673124320000",
@@ -1450,15 +1439,6 @@
   "say": "¿Y las otras bandas? Siempre terminamos llamando a los mismos tres amigos del celular.",
   "v": "34bed342ee46",
   "who": "voz"
- },
- "868f6e03": {
-  "d": 15.5,
-  "e": "19999953912991993399971961086068677278117543100100000000000000000663066426455785367317672211158810000378730674760475554300000000000000000000000369969743923126999772213677863176630598536778712731785356326755444100000000000000000000000014412783984695889651046565497536766513766322432100000000000000000000000049789861379877165157722554433300000000000000057832655213787477752554622445333331",
-  "f": "868f6e03.mp3",
-  "h": "a276d282",
-  "say": "Más de cuatrocientos ficheros de test, el compilador de Taipscript en cada commit, pruebas de extremo a extremo con Playwright y tests visuales. Y cada error inesperado va a Séntri. No me fío de que funcione: lo compruebo en cada cambio.",
-  "v": "80127c93c780",
-  "who": "bajo"
  },
  "86d5e7aa": {
   "d": 4.13,
@@ -1697,6 +1677,17 @@
   "say": "[amazed] ¡Ai, mi madriña! ¡Me acaba de salvar el miércoles! ¡Esto vale su peso en oro, neno!",
   "v": "f10723a49cef",
   "who": "bateria"
+ },
+ "9e42075d": {
+  "d": 14.38,
+  "e": "9889955921989997195217515867524610674220000000000003552266316554479865741577622115893010035542565631675554100000000000001598798626522069988743117989851576624888547776610000056103865300226423754443200000000000000000000004521796998497879752046586697367666414655312532100000000000000000000699996229996715614762286543200000000006651454414897487652564632554434331",
+  "f": "9e42075d.mp3",
+  "h": "ce0da807",
+  "oido": "En más de 500 ficheros de test, el compilador de typescript en cada commit, pruebas de extremo a extremo con playwrite y test visuales. Y cada error inesperado va a sentry. No me fío de que funcione, lo compruebo en cada cambio.",
+  "qa": 0.87,
+  "say": "Más de quinientos ficheros de test, el compilador de Taipscript en cada commit, pruebas de extremo a extremo con Playwright y tests visuales. Y cada error inesperado va a Séntri. No me fío de que funcione: lo compruebo en cada cambio.",
+  "v": "14cc24ad413b",
+  "who": "bajo"
  },
  "9fa54719": {
   "d": 3.7,
@@ -2330,6 +2321,17 @@
   "v": "a5b7c49918e5",
   "who": "bajo"
  },
+ "d2c09fde": {
+  "d": 11.9,
+  "e": "06762295159714876654321000000000000000000000000682571761991999329854332000000000000000565277772197975200000000056627567116543110000000000000000000037884565831079999631000000678438871498769227589982100014521689932594661056877555541652553432000000000000000000004457989847998725511367773484574444310",
+  "f": "d2c09fde.mp3",
+  "h": "c38e8bf4",
+  "oido": "casi 4.000 y se ejecutan solos en cada Comet, en cada Push y en producción un control de salud y se entre vigilando los errores como un roa disc que nunca duerme.",
+  "qa": 0.81,
+  "say": "Casi cuatro mil. Y se ejecutan solos: en cada commit, en cada push. Y en producción, un control de salud y Séntri vigilando los errores. Como un roadie que nunca duerme.",
+  "v": "837968471786",
+  "who": "bajo"
+ },
  "d306571c": {
   "d": 6.31,
   "e": "699201999634985121543310000000000000000000000563343088879994178489986613566863215511433100000000000344222761432443166089586653200000244543543535444430124310",
@@ -2585,15 +2587,6 @@
   "say": "Y con todo esto, ¿ni el mejor hacker del mundo nos va a tumbar la aplicación?",
   "v": "13b7b2cd7222",
   "who": "bateria"
- },
- "ef128b43": {
-  "d": 7.34,
-  "e": "0599941877982776531975577746661564433431253210003521198418998226466531111100165567214842778977721564321110142156576796163165539755674555653211147987811321145565996522353554332110010",
-  "f": "ef128b43.mp3",
-  "h": "a1994ff6",
-  "say": "Y ya estamos montando un grupo de métal. Nos falta batería… [softly] Con muchísima ilusión, y sabiendo que con Band Mánayer toda la gestión va a ir rodada.",
-  "v": "3b09f0721959",
-  "who": "diego"
  },
  "efed9c47": {
   "d": 2.45,

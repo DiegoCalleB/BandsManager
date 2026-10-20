@@ -2,31 +2,37 @@
 
 import express from "express";
 import { SocialPost } from "../../src/types.js";
-import { loadState, saveState, requireAuth } from "../state.js";
+import { loadState, requireAuth } from "../state.js";
 import { 
   dbGetSocialPosts, 
   dbUpsertSocialPost, 
   dbDeleteSocialPost,
   dbGetBandSocialAccounts,
   dbUpsertBandSocialAccount,
-  dbDeleteBandSocialAccount
+  dbDeleteBandSocialAccount,
+  esSupabaseNoConfigurado
 } from "../db.js";
-import { getTargetBandId, bandaDe } from "../utils/bandAccess.js";
+import { getTargetBandId, bandaDe, mismaBanda } from "../utils/bandAccess.js";
 import { publishSocialPostNow, publishDueScheduledPosts } from "../services/socialPublisher.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 import { responderError } from '../utils/errorHttp.js';
 
 const router = express.Router();
 
+// Las publicaciones viven solo en Supabase: ninguna ruta lee ni escribe `state.posts` (datos de
+// todas las bandas). La única lectura del estado es la semilla del arranque local sin Supabase.
+
 // GET social posts
 router.get("/posts", requireAuth, async (req, res) => {
   const userBandId = getTargetBandId(req);
   try {
-    const posts = await dbGetSocialPosts(userBandId);
-    res.json(posts);
-  } catch {
-    const state = loadState();
-    res.json((state.posts || []).filter((p) => bandaDe(p) === userBandId));
+    res.json(await dbGetSocialPosts(userBandId));
+  } catch (errCapturado) {
+    // Con Supabase configurado, servir la semilla escondería la caída con datos falsos.
+    if (!esSupabaseNoConfigurado(errCapturado)) {
+      return responderError(res, comoErrorCapturado(errCapturado), "Error al cargar las publicaciones.");
+    }
+    res.json((loadState().posts || []).filter((p) => mismaBanda(bandaDe(p), userBandId)));
   }
 });
 
@@ -41,15 +47,6 @@ router.put("/posts/:id", requireAuth, async (req, res) => {
   let saved: SocialPost;
   try {
     saved = await dbUpsertSocialPost(merged, userBandId);
-
-    const state = loadState();
-    const idx = state.posts.findIndex((p: SocialPost) => p.id === id);
-    if (idx !== -1) {
-      state.posts[idx] = saved;
-    } else {
-      state.posts.push(saved);
-    }
-    saveState(state);
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error updating social post:", err);
@@ -92,10 +89,6 @@ router.post("/posts", requireAuth, async (req, res) => {
   try {
     const saved: SocialPost = await dbUpsertSocialPost(newPost, userBandId);
 
-    const state = loadState();
-    state.posts.push(saved);
-    saveState(state);
-
     res.json({ success: true, post: saved });
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
@@ -110,10 +103,6 @@ router.delete("/posts/:id", requireAuth, async (req, res) => {
   const { id } = req.params;
   try {
     await dbDeleteSocialPost(id, userBandId);
-
-    const state = loadState();
-    state.posts = state.posts.filter((p: SocialPost) => p.id !== id);
-    saveState(state);
 
     res.json({ success: true });
   } catch (errCapturado) {
@@ -216,15 +205,13 @@ router.post("/social/run-scheduled-publisher", requireAuth, async (req, res) => 
   }
 });
 
-// Sync all social posts with Supabase
+// Devuelve las publicaciones de Supabase (el Centro de Reels lo usa para refrescar). Ya no hay
+// copia en memoria que sincronizar; se conserva la ruta por compatibilidad con el cliente.
 router.post("/posts/sync", requireAuth, async (req, res) => {
   const userBandId = getTargetBandId(req);
   try {
     const posts: SocialPost[] = await dbGetSocialPosts(userBandId);
-    const state = loadState();
-    state.posts = posts;
-    saveState(state);
-    
+
     res.json({
       success: true,
       message: `¡Se han sincronizado correctamente ${posts.length} publicaciones de redes sociales con Supabase!`,

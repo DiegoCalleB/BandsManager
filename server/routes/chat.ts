@@ -8,7 +8,7 @@ import { loadState, getUserFromRequestLocal, getEpkConfigForBand, getAutonomyCon
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
 import { getGlobalPitchFeedbackSummary } from "./leads.js";
-import { dbGetRegisteredBandById, dbGetEpkConfig, dbGetActiveCampaign, dbGetSongs, dbGetSetlists } from "../db.js";
+import { dbGetRegisteredBandById, dbGetEpkConfig, dbGetActiveCampaign, dbGetSongs, dbGetSetlists, dbGetTours, dbContarFans, dbGetPayments } from "../db.js";
 import { getTargetBandId, bandaDe } from "../utils/bandAccess.js";
 import { loadBandProfile, buildBandContextBlock, displayBandName, baseHashtags, emptyBandProfile } from "../utils/bandProfile.js";
 import { computeMusicalDna } from "../utils/musicalDna.js";
@@ -22,7 +22,6 @@ import { instruccionesChat, contextoDeDatosChat, mensajeConDatos } from "../serv
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 import { registrarErrorInesperado } from '../utils/errorHttp.js';
 import type { AccionPropuesta, CancionParaChat, ParametrosAgenteChat, SetlistParaChat, TurnoChat, VistaRespuestaIA, ErrorDeFailover } from './tiposChat.js';
-
 
 const router = express.Router();
 
@@ -235,9 +234,11 @@ router.post("/chat", requireAuth, chatRateLimiter, async (req, res) => {
     // loadState() (ver comentario en repertorio.ts) — así que a diferencia de leads/conciertos,
     // state.songs/state.setlists son datos de semilla desactualizados, nunca lo que la banda
     // guarda de verdad. Se leen aquí en vivo para que el chatbot vea el repertorio real.
-    const [songsFromDb, setlistsFromDb] = await Promise.all([
+    const [songsFromDb, setlistsFromDb, toursFromDb, fansCount] = await Promise.all([
       dbGetSongs(userBandId).catch(() => []),
-      dbGetSetlists(userBandId).catch(() => [])
+      dbGetSetlists(userBandId).catch(() => []),
+      dbGetTours(userBandId).catch(() => []), // las giras y los fans también viven solo en Supabase
+      dbContarFans(userBandId).catch(() => 0)
     ]);
 
     const stateSummary: Record<string, unknown> = {
@@ -271,7 +272,7 @@ router.post("/chat", requireAuth, chatRateLimiter, async (req, res) => {
         icono: b.icono,
         imagen_url: b.imagen_url
       })),
-      tours: (state.tours || []).filter(matchBand).map((t) => ({
+      tours: toursFromDb.map((t) => ({
         id: t.id,
         nombre: t.nombre,
         vehiculo: t.vehiculo,
@@ -283,7 +284,7 @@ router.post("/chat", requireAuth, chatRateLimiter, async (req, res) => {
       })),
       songs: (songsFromDb as CancionParaChat[]).map((s) => ({ id: s.id, titulo: s.titulo, estado: s.estado, duracion: s.duracion, bpm: s.bpm, tonalidad: s.tonalidad, genero: s.genero })),
       setlists: (setlistsFromDb as SetlistParaChat[]).map((st) => ({ id: st.id, titulo: st.nombre, fecha: st.fecha_ultima_edicion, duracionTotal: st.duracion_total_estimada_minutos })),
-      fansCount: (state.fans || []).filter(matchBand).length,
+      fansCount,
       rehearsals: (state.rehearsals || []).filter(matchBand),
       concerts: (state.concerts || []).filter(matchBand).map((c: Concert) => ({
         id: c.id,
@@ -325,7 +326,8 @@ router.post("/chat", requireAuth, chatRateLimiter, async (req, res) => {
     stateSummary.musicalDna = computeMusicalDna(songsFromDb, ownBandGenre, bandMembersForDna);
 
     if (isLeader) {
-      stateSummary.payments = (state.payments || []).filter(matchBand);
+      // Los pagos viven solo en Supabase: state.payments solo se llenaba si el líder abría Finanzas antes.
+      stateSummary.payments = await dbGetPayments(userBandId).catch(() => []);
     }
 
     // Instrucciones fijas en el prompt de sistema; los datos de usuario y terceros, en el turno del usuario (OWASP LLM01).

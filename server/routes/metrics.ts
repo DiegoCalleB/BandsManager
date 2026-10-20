@@ -10,7 +10,6 @@ import { getAiClient, generateContentWithFallback, GEMINI_MODEL } from "../ai.js
 
 const router = express.Router();
 
-
 // GET all metrics
 router.get("/metrics", requireAuth, async (req, res) => {
   const userBandId = req.user?.band_id ;
@@ -82,7 +81,7 @@ router.post("/metrics/sync", requireAuth, async (req, res) => {
   try {
     const dbMetrics = (await dbGetSocialMetrics(userBandId)) as SocialMetric[];
     const state = loadState();
-    state.metrics = dbMetrics;
+    state.metrics = fusionarColeccionDeBanda(state.metrics, userBandId, dbMetrics);
     saveState(state);
 
     res.json({
@@ -101,6 +100,7 @@ import { executeSocialRadar, scrapeChannelMetrics } from "../services/socialRada
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 import type { CuentaInstagramVerificada, DatosCapturaIA, InsightsInstagram, PaginaFacebook } from './tiposMetricas.js';
 import { responderError } from '../utils/errorHttp.js';
+import { fusionarColeccionDeBanda } from '../utils/estadoPorBanda.js';
 
 // Fetch real-world social statistics of the active band from live networks / YouTube API
 router.post("/metrics/real", requireAuth, async (req, res) => {
@@ -374,7 +374,7 @@ router.get("/metrics/instagram/status", requireAuth, async (req, res) => {
         connected: false,
         method: "scraping_fallback",
         docsUrl: "https://developers.facebook.com/documentation/instagram-platform/insights",
-        requiredPermissions: ["instagram_basic", "instagram_manage_insights", "pages_show_list", "pages_read_engagement"],
+        requiredPermissions: ["instagram_basic", "instagram_manage_insights", "pages_show_list", "pages_read_engagement", "instagram_content_publish"],
         message: "Sin token oficial de Meta Graph API configurado. El radar opera en modo scraping de alta resiliencia."
       });
     }

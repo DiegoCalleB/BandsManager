@@ -8,6 +8,7 @@
  * Depende de un puerto (`PuertoCatalogo`), no de Supabase: el adaptador real vive en server/db/salasCatalogo.ts y los
  * tests usan uno en memoria.
  */
+import type { EstadoNegocio } from '../utils/estadoNegocio.js';
 import {
   calcularFiabilidad,
   camposPublicos,
@@ -32,16 +33,46 @@ export interface SalaGuardada extends CamposPublicosSala {
   bandas_con_entrega: number;
   rebotes: number;
   no_contactar: boolean;
+  /** Según Google Maps (verificarSalasEnMaps). Ausente en las filas anteriores a la migración. */
+  estado_negocio?: EstadoNegocio;
+  estado_negocio_en?: Date | null;
+  /** De dónde salió la información pública (`osm` = OpenStreetMap). Ausente en las filas anteriores a la migración. */
+  fuentes?: string[];
+  /** Dónde está. `coordenadas_aprox` = es el punto de la ciudad, no el de la sala. Ausentes en las filas anteriores a la migración. */
+  lat?: number | null;
+  lon?: number | null;
+  coordenadas_aprox?: boolean;
 }
 
 /** Lo que el servicio escribe. `no_contactar` no está: es de quien lo marca y la sincronización nunca lo toca. */
-export type SalaAGuardar = Omit<SalaGuardada, 'no_contactar'>;
+export type SalaAGuardar = Omit<SalaGuardada, 'no_contactar' | 'estado_negocio' | 'estado_negocio_en' | 'lat' | 'lon' | 'coordenadas_aprox'>;
+
+/** Dos claves que son la misma sala (`catalogo_sala_alias`): lo que cae en `aliasClave` va a `clave`. */
+export interface AliasSala {
+  aliasClave: string;
+  clave: string;
+  /** Nombre público de la sala resultante; la moda de los leads puede quedarse con una errata. */
+  nombre: string | null;
+}
 
 export interface PuertoCatalogo {
   leerLeads(): Promise<LeadParaCatalogo[]>;
+  leerAlias(): Promise<AliasSala[]>;
   leerSalas(): Promise<SalaGuardada[]>;
   guardarSalas(salas: SalaAGuardar[]): Promise<void>;
   enlazarLeads(enlaces: Array<{ leadId: string; salaId: string }>): Promise<void>;
+}
+
+/** Escribe solo las coordenadas: la sincronización no las toca, así que no se pisan entre sí. */
+export interface PuertoCoordenadas {
+  guardarCoordenadas(filas: FilaCoordenadas[]): Promise<void>;
+}
+
+export interface FilaCoordenadas {
+  salaId: string;
+  lat: number;
+  lon: number;
+  aprox: boolean;
 }
 
 export interface InformeCatalogo {
@@ -97,14 +128,27 @@ function unirGruposDeLaMismaSala(grupos: Map<string, Miembro[]>): void {
   }
 }
 
+/** Lleva a cada grupo con alias a su sala canónica, aunque la canónica aún no tenga leads. Devuelve el nombre público fijado por clave. */
+function aplicarAlias(grupos: Map<string, Miembro[]>, alias: AliasSala[]): Map<string, string> {
+  const nombres = new Map<string, string>();
+  for (const { aliasClave, clave, nombre } of alias) {
+    if (nombre) nombres.set(clave, nombre);
+    const miembros = aliasClave === clave ? undefined : grupos.get(aliasClave);
+    if (!miembros) continue;
+    grupos.set(clave, [...(grupos.get(clave) ?? []), ...miembros]);
+    grupos.delete(aliasClave);
+  }
+  return nombres;
+}
+
 export async function sincronizarCatalogo(
   puerto: PuertoCatalogo,
-  opciones: { ahora?: Date; simulacion?: boolean } = {},
+  opciones: { ahora?: Date; simulacion?: boolean; interaccionesDesde?: Date } = {},
 ): Promise<InformeCatalogo> {
   const ahora = opciones.ahora ?? new Date();
   const simulacion = opciones.simulacion ?? false;
 
-  const [leads, guardadas] = await Promise.all([puerto.leerLeads(), puerto.leerSalas()]);
+  const [leads, guardadas, alias] = await Promise.all([puerto.leerLeads(), puerto.leerSalas(), puerto.leerAlias()]);
   const porClave = new Map(guardadas.map((s) => [s.clave, s]));
 
   const grupos = new Map<string, Miembro[]>();
@@ -121,6 +165,7 @@ export async function sincronizarCatalogo(
     grupos.set(ficha.clave, grupo);
   }
 
+  const nombresFijados = aplicarAlias(grupos, alias);
   unirGruposDeLaMismaSala(grupos);
 
   const aGuardar: SalaAGuardar[] = [];
@@ -131,13 +176,15 @@ export async function sincronizarCatalogo(
   let sinCambios = 0;
 
   for (const [clave, miembros] of grupos) {
-    const consolidada = consolidarCampos(miembros.map((m) => m.ficha));
+    const consolidada = { ...consolidarCampos(miembros.map((m) => m.ficha)), clave };
+    const nombreFijado = nombresFijados.get(clave);
+    if (nombreFijado) consolidada.nombre = nombreFijado;
     // Una sala que antes se catalogó por nombre y ciudad y ahora tiene place_id conserva su fila (y su id).
     const claveNombreCiudad = claveSala({ nombre: consolidada.nombre, ciudad: consolidada.ciudad });
     const previa = porClave.get(clave) ?? (consolidada.place_id && claveNombreCiudad ? porClave.get(claveNombreCiudad) : undefined);
 
     const campos = previa ? fusionarConExistente(previa, { ...consolidada, clave }) : consolidada;
-    const senales = senalesDeLeads(miembros.map((m) => m.lead), ahora, campos, previa?.verificada_en);
+    const senales = senalesDeLeads(miembros.map((m) => m.lead), ahora, campos, previa?.verificada_en, opciones.interaccionesDesde);
     const { puntuacion, nivel } = calcularFiabilidad(senales, ahora);
     const sala: SalaAGuardar = {
       ...campos,

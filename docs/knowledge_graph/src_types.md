@@ -32,12 +32,12 @@ _Sin dependencias salientes directas._
 - [[db_state_sync|In-Memory State & Supabase Sync]] *(from #db)*
 - [[hook_app_data|useAppData Hook]] *(from #hook)*
 - [[hook_booking_pipeline|useBookingPipeline Hook]] *(from #hook)*
+- [[route_calendar_conflicts|GET /api/calendar/conflicts]] *(from #route)*
 - [[route_leads_crud|Leads CRUD Route]] *(from #route)*
 - [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(from #route)*
 - [[route_repertoire|Repertoire & Setlists Route]] *(from #route)*
 - [[server|server.ts]] *(from #route)*
 - [[server_ai|server/ai.ts]] *(from #service)*
-- [[server_controllers_tours_controller|server/controllers/tours.controller.ts]] *(from #service)*
 - [[server_db_alertSettings|server/db/alertSettings.ts]] *(from #db)*
 - [[server_db_campaigns|server/db/campaigns.ts]] *(from #db)*
 - [[server_db_contacts|server/db/contacts.ts]] *(from #db)*
@@ -57,7 +57,6 @@ _Sin dependencias salientes directas._
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
 - [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
 - [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
-- [[server_routes_concerts|server/routes/concerts.ts]] *(from #route)*
 - [[server_routes_deals|server/routes/deals.ts]] *(from #route)*
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(from #route)*
 - [[server_routes_leads_feedback|server/routes/leads/feedback.ts]] *(from #route)*
@@ -258,7 +257,6 @@ _Sin dependencias salientes directas._
 - [[src_components_calendar_hooks_useUpcomingEvents|src/components/calendar/hooks/useUpcomingEvents.ts]] *(from #frontend)*
 - [[src_components_calendar_logistics_EventSetlistWidget|src/components/calendar/logistics/EventSetlistWidget.tsx]] *(from #frontend)*
 - [[src_components_calendar_PromocionConciertoModal|src/components/calendar/PromocionConciertoModal.tsx]] *(from #frontend)*
-- [[src_components_calendar_useCalendarConflicts|src/components/calendar/useCalendarConflicts.ts]] *(from #frontend)*
 - [[src_components_calendar_useCalendarRoadbook|src/components/calendar/useCalendarRoadbook.ts]] *(from #frontend)*
 - [[src_components_calendar_views_CalendarOverlays|src/components/calendar/views/CalendarOverlays.tsx]] *(from #frontend)*
 - [[src_components_campaign_CampaignManagerModal|src/components/campaign/CampaignManagerModal.tsx]] *(from #frontend)*
@@ -553,7 +551,6 @@ _Sin dependencias salientes directas._
 - [[src_utils_bookingTourContext|src/utils/bookingTourContext.ts]] *(from #service)*
 - [[src_utils_bookingUtils|src/utils/bookingUtils.ts]] *(from #service)*
 - [[src_utils_breakEvenCalculator|src/utils/breakEvenCalculator.ts]] *(from #service)*
-- [[src_utils_calendarConflicts|src/utils/calendarConflicts.ts]] *(from #service)*
 - [[src_utils_calendarViewPreferences|src/utils/calendarViewPreferences.ts]] *(from #service)*
 - [[src_utils_campaignMatch|src/utils/campaignMatch.ts]] *(from #service)*
 - [[src_utils_cartel_datos|src/utils/cartel/datos.ts]] *(from #service)*
@@ -596,9 +593,11 @@ _Sin dependencias salientes directas._
 - [[src_utils_userPreferences|src/utils/userPreferences.ts]] *(from #service)*
 - [[src_utils_whatsappUtils|src/utils/whatsappUtils.ts]] *(from #service)*
 - [[ui_booking_crm|Booking CRM Component]] *(from #frontend)*
+- [[ui_calendar_conflicts|Avisos de choque en el calendario]] *(from #frontend)*
 - [[ui_leads_table|Leads Table & Actions]] *(from #frontend)*
 - [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 - [[ui_venue_detail|Venue Detail & Pitch Simulator]] *(from #frontend)*
+- [[util_calendar_conflicts|Detector de choques del calendario]] *(from #service)*
 
 ---
 
@@ -624,6 +623,7 @@ _Sin dependencias salientes directas._
 - `src/components/booking/leads_table/__tests__/LeadRowContact.aviso.test.tsx`
 - `src/components/booking/leads_table/__tests__/leadsTableContracts.test.ts`
 - `src/components/booking/leads_table/hooks/__tests__/useLeadsBatchDateScan.behavior.test.ts`
+- `src/components/booking/venue_panel/__tests__/VenuePitchComposer.aviso.test.tsx`
 - `src/components/booking/venue_panel/__tests__/venuePanelSections.test.tsx`
 - `src/components/dashboard/widgets/__tests__/MarketingWidget.test.tsx`
 - `src/components/ensayos/__tests__/ensayosAgenda.test.ts`

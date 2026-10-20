@@ -51,6 +51,10 @@ Usamos el formato [plantilla](./0000-plantilla.md) (inspirado en MADR).
 | [0042](./0042-modularizacion-ai-music.md) | Modularización de server/routes/ai_music.ts (4183 → 48 líneas) en sub-routers y motores; fuera una llamada a Gemini que no se usaba | Aceptada | nueva |
 | [0043](./0043-modularizacion-users.md) | Modularización de server/routes/users.ts (3652 → 42 líneas) en once sub-routers montados en el orden original | Aceptada | nueva |
 | [0044](./0044-catalogo-compartido-de-salas.md) | Compartir entre bandas un catálogo de salas con solo datos públicos, fiabilidad calculada y contacto revelado al añadir | Aceptada | nueva |
+| [0045](./0045-directorio-publico-de-festivales.md) | Directorio público de festivales curado, sin edición abierta | Aceptada | nueva |
+| [0046](./0046-directorio-publico-de-salas.md) | Directorio público de salas de conciertos de España | Aceptada | nueva |
+| [0047](./0047-base-del-catalogo-global.md) | Preparar el catálogo de salas para ser global sin tocar lo que ya funciona | Aceptada | nueva |
+| [0048](./0048-renombrar-salas-catalogo-a-catalogo-salas.md) | Renombrar `salas_catalogo` y las tablas de festivales bajo el prefijo `catalogo_` | Aceptada | nueva |
 
 ## Cómo añadir uno
 

@@ -41,6 +41,7 @@ Publicaciones sociales y cuentas conectadas de la banda.
 
 ## 🧪 Tests que lo cubren
 - `server/routes/__tests__/auditoriaSeguridadPR2.test.ts`
+- `server/routes/__tests__/postsSoloSupabase.test.ts`
 
 ---
 

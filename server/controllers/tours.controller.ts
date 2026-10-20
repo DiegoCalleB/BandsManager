@@ -1,97 +1,59 @@
 import { Request, Response } from "express";
-import { bandaDe } from '../utils/bandAccess.js';
-import { loadState, saveState } from "../state.js";
-import { Tour } from "../../src/types.js";
-import { dbGetTours, dbUpsertTour, dbDeleteTour } from "../db.js";
+import { bandaDe, mismaBanda } from '../utils/bandAccess.js';
+import { loadState } from "../state.js";
+import { dbGetTours, dbUpsertTour, dbDeleteTour, esSupabaseNoConfigurado } from "../db.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 import { responderError } from '../utils/errorHttp.js';
+
+// Las giras viven solo en Supabase: ninguna operación lee ni escribe `state.tours` (datos de todas
+// las bandas). La única lectura del estado es la semilla del arranque local sin Supabase.
+const SIN_SESION = { error: "Acceso no autorizado. Inicie sesión para continuar." };
 
 export const toursController = {
   async getTours(req: Request, res: Response) {
     // Las 4 rutas de este controller están detrás de requireAuth, así que band_id nunca debería
     // faltar; si falta es un bug de sesión, no un caso a tolerar cayendo en una banda por defecto.
     const userBandId = req.user?.band_id;
-    if (!userBandId) {
-      return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
-    }
+    if (!userBandId) return res.status(401).json(SIN_SESION);
     try {
-      const tours = await dbGetTours(userBandId);
-
-      const state = loadState();
-      state.tours = tours;
-      saveState(state);
-
-      res.json({ tours });
-    } catch {
-      const state = loadState();
-      res.json({ tours: (state.tours || []).filter((t) => bandaDe(t) === userBandId) });
+      res.json({ tours: await dbGetTours(userBandId) });
+    } catch (errorCapturado) {
+      // Con Supabase configurado, devolver la semilla en memoria escondería la caída con datos falsos.
+      if (!esSupabaseNoConfigurado(errorCapturado)) {
+        return responderError(res, comoErrorCapturado(errorCapturado), "Error al cargar las giras");
+      }
+      res.json({ tours: (loadState().tours || []).filter((t) => mismaBanda(bandaDe(t), userBandId)) });
     }
   },
 
   async createTour(req: Request, res: Response) {
     const userBandId = req.user?.band_id;
-    if (!userBandId) {
-      return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
-    }
+    if (!userBandId) return res.status(401).json(SIN_SESION);
     try {
-      const newTour: Tour = req.body;
-      if (!newTour.band_id) {
-        newTour.band_id = userBandId;
-      }
-      const saved = await dbUpsertTour(newTour, userBandId);
-
-      const state = loadState();
-      state.tours = state.tours || [];
-      state.tours.push(saved);
-      saveState(state);
-
-      res.json(saved);
+      res.json(await dbUpsertTour(req.body, userBandId));
     } catch (errorCapturado) {
-      const error = comoErrorCapturado(errorCapturado);
-      responderError(res, error, "Error al crear la gira");
+      responderError(res, comoErrorCapturado(errorCapturado), "Error al crear la gira");
     }
   },
 
   async updateTour(req: Request, res: Response) {
     const userBandId = req.user?.band_id;
-    if (!userBandId) {
-      return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
-    }
+    if (!userBandId) return res.status(401).json(SIN_SESION);
     try {
-      const { id } = req.params;
-      const updatedTour: Tour = { ...req.body, id };
-      const saved = await dbUpsertTour(updatedTour, userBandId);
-
-      const state = loadState();
-      state.tours = state.tours || [];
-      state.tours = state.tours.map((t: Tour) => t.id === id ? saved : t);
-      saveState(state);
-
-      res.json(saved);
+      res.json(await dbUpsertTour({ ...req.body, id: req.params.id }, userBandId));
     } catch (errorCapturado) {
-      const error = comoErrorCapturado(errorCapturado);
-      responderError(res, error, "Error al actualizar la gira");
+      responderError(res, comoErrorCapturado(errorCapturado), "Error al actualizar la gira");
     }
   },
 
   async deleteTour(req: Request, res: Response) {
     const userBandId = req.user?.band_id;
-    if (!userBandId) {
-      return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
-    }
+    if (!userBandId) return res.status(401).json(SIN_SESION);
     try {
-      const { id } = req.params;
-      await dbDeleteTour(id, userBandId);
-
-      const state = loadState();
-      state.tours = state.tours || [];
-      state.tours = state.tours.filter((t: Tour) => t.id !== id);
-      saveState(state);
-
+      await dbDeleteTour(req.params.id, userBandId);
       res.json({ success: true });
     } catch (errorCapturado) {
-      const error = comoErrorCapturado(errorCapturado);
-      responderError(res, error, "Error al eliminar la gira");
+      responderError(res, comoErrorCapturado(errorCapturado), "Error al eliminar la gira");
     }
   }
 };

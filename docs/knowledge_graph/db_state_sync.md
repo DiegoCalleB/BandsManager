@@ -25,6 +25,7 @@ Copia en memoria de alta velocidad sincronizada con Supabase al arranque.
 - [[server_db_tiposRepertorio|server/db/tiposRepertorio.ts]] *(Layer: #db, Domain: #system)*
 - [[server_promptsManager|server/promptsManager.ts]] *(Layer: #service, Domain: #system)*
 - [[server_stateTypes|server/stateTypes.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_persistenciaEstado|server/utils/persistenciaEstado.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_slug|server/utils/slug.ts]] *(Layer: #service, Domain: #system)*
 - [[src_db_seed|src/db_seed.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
@@ -37,6 +38,7 @@ Copia en memoria de alta velocidad sincronizada con Supabase al arranque.
 - [[agent_scout|Scout Discovery Agent]] *(from #agent)*
 - [[db_leads|Leads DB Handlers]] *(from #db)*
 - [[hook_app_data|useAppData Hook]] *(from #hook)*
+- [[route_calendar_conflicts|GET /api/calendar/conflicts]] *(from #route)*
 - [[route_leads_crud|Leads CRUD Route]] *(from #route)*
 - [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(from #route)*
 - [[route_leads_pitch|Leads Pitch Generation Route]] *(from #route)*
@@ -60,7 +62,6 @@ Copia en memoria de alta velocidad sincronizada con Supabase al arranque.
 - [[server_routes_catalogo|server/routes/catalogo.ts]] *(from #route)*
 - [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
 - [[server_routes_concert_to_album|server/routes/concert_to_album.ts]] *(from #route)*
-- [[server_routes_concerts|server/routes/concerts.ts]] *(from #route)*
 - [[server_routes_deals|server/routes/deals.ts]] *(from #route)*
 - [[server_routes_donations|server/routes/donations.ts]] *(from #route)*
 - [[server_routes_enlacesCortos|server/routes/enlacesCortos.ts]] *(from #route)*
@@ -73,6 +74,7 @@ Copia en memoria de alta velocidad sincronizada con Supabase al arranque.
 - [[server_routes_leads_simulation|server/routes/leads/simulation.ts]] *(from #route)*
 - [[server_routes_leads_templates|server/routes/leads/templates.ts]] *(from #route)*
 - [[server_routes_metrics|server/routes/metrics.ts]] *(from #route)*
+- [[server_routes_pegatinas|server/routes/pegatinas.ts]] *(from #route)*
 - [[server_routes_posts|server/routes/posts.ts]] *(from #route)*
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
 - [[server_routes_reelsAprendizaje|server/routes/reelsAprendizaje.ts]] *(from #route)*

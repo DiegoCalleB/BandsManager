@@ -3,9 +3,9 @@
 
 import express from "express";
 import crypto from "crypto";
-import { Rehearsal, Concert, Payment, Message } from "../../src/types.js";
+import { Rehearsal, Concert, Payment } from "../../src/types.js";
 import { loadState, saveState, requireAuth, requireLeader } from "../state.js";
-import { getTargetBandId, puedeEscribirEnBanda, bandaDe } from "../utils/bandAccess.js";
+import { getTargetBandId, puedeEscribirEnBanda, bandaDe, mismaBanda } from "../utils/bandAccess.js";
 import {
   dbGetRehearsals,
   dbUpsertRehearsal,
@@ -14,6 +14,7 @@ import {
   dbUpsertConcert,
   dbDeleteConcert,
   dbGetPayments,
+  esSupabaseNoConfigurado,
   dbUpsertPayment,
   dbGetRunOfShow,
   dbSyncRunOfShowForDate,
@@ -28,6 +29,7 @@ import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 import type { CancionDeFeed, ConciertoDeFeed, EnsayoDeFeed, MaterialFeed, PuntoRunOfShowFeed, SalaDeFeed, SetlistDeFeed, TemaDeSetlistFeed } from './tiposCalendarioIcs.js';
 import { responderError } from '../utils/errorHttp.js';
 import { soloDireccionSiTocaDinero } from '../utils/permisosConcierto.js';
+import { fusionarColeccionDeBanda } from '../utils/estadoPorBanda.js';
 
 const router = express.Router();
 
@@ -137,7 +139,10 @@ router.delete("/rehearsals/:id", requireAuth, async (req, res) => {
     try {
       await dbDeleteRehearsal(id, targetBand);
     } catch (err) {
-      console.warn("No se pudo eliminar el ensayo en Supabase:", err);
+      // Sin Supabase (arranque local) se borra solo en memoria; con Supabase, un fallo no se oculta:
+      // el registro reaparecería en la siguiente carga.
+      if (!esSupabaseNoConfigurado(err)) throw err;
+      console.warn("Supabase no configurado: ensayo borrado solo en memoria.");
     }
 
     if (state.rehearsals) {
@@ -220,7 +225,10 @@ router.delete("/concerts/:id", requireAuth, requireLeader, async (req, res) => {
     try {
       await dbDeleteConcert(id, targetBand);
     } catch (err) {
-      console.warn("No se pudo eliminar el concierto en Supabase:", err);
+      // Sin Supabase (arranque local) se borra solo en memoria; con Supabase, un fallo no se oculta:
+      // el registro reaparecería en la siguiente carga.
+      if (!esSupabaseNoConfigurado(err)) throw err;
+      console.warn("Supabase no configurado: concierto borrado solo en memoria.");
     }
 
     if (state.concerts) {
@@ -241,7 +249,7 @@ router.post("/concerts/sync", requireAuth, async (req, res) => {
   try {
     const dbConcerts = await dbGetConcerts(userBandId);
     const state = loadState();
-    state.concerts = dbConcerts;
+    state.concerts = fusionarColeccionDeBanda(state.concerts, userBandId, dbConcerts);
     saveState(state);
 
     res.json({
@@ -333,15 +341,20 @@ router.post("/logistics/gear", requireAuth, async (req, res) => {
   res.json({ success: true, dateKey, items });
 });
 
+// Los pagos viven solo en Supabase: ninguna ruta lee ni escribe `state.payments` (datos de todas las
+// bandas). La única lectura del estado es la semilla del arranque local sin Supabase.
+
 // Get payments (Admin only)
 router.get("/payments", requireAuth, requireLeader, async (req, res) => {
   const userBandId = getTargetBandId(req);
   try {
-    const dbPayments = await dbGetPayments(userBandId);
-    res.json(dbPayments);
-  } catch {
-    const state = loadState();
-    res.json((state.payments || []).filter((p) => bandaDe(p) === userBandId));
+    res.json(await dbGetPayments(userBandId));
+  } catch (errCapturado) {
+    // Con Supabase configurado, servir la semilla escondería la caída con cifras falsas.
+    if (!esSupabaseNoConfigurado(errCapturado)) {
+      return responderError(res, comoErrorCapturado(errCapturado), "Error al cargar los pagos.");
+    }
+    res.json((loadState().payments || []).filter((p) => mismaBanda(bandaDe(p), userBandId)));
   }
 });
 
@@ -349,42 +362,29 @@ router.get("/payments", requireAuth, requireLeader, async (req, res) => {
 router.post("/payments", requireAuth, requireLeader, async (req, res) => {
   const userBandId = getTargetBandId(req);
   const newPayment: Payment = req.body;
-  const saved = await dbUpsertPayment(newPayment, userBandId);
-
-  const state = loadState();
-  state.payments.push(saved);
-  saveState(state);
-  
-  res.json({ success: true, payment: saved });
+  try {
+    res.json({ success: true, payment: await dbUpsertPayment(newPayment, userBandId) });
+  } catch (errCapturado) {
+    responderError(res, comoErrorCapturado(errCapturado), "Error al guardar el pago.");
+  }
 });
 
 // Update payment status (Admin only)
 router.put("/payments/:id", requireAuth, requireLeader, async (req, res) => {
   const userBandId = getTargetBandId(req);
-  const { id } = req.params;
-  const updated = { ...req.body, id };
-  const saved = await dbUpsertPayment(updated, userBandId);
-
-  const state = loadState();
-  const idx = state.payments.findIndex((p: Payment) => p.id === id);
-  if (idx !== -1) {
-    state.payments[idx] = saved;
-  } else {
-    state.payments.push(saved);
+  try {
+    res.json({ success: true, payment: await dbUpsertPayment({ ...req.body, id: req.params.id }, userBandId) });
+  } catch (errCapturado) {
+    responderError(res, comoErrorCapturado(errCapturado), "Error al actualizar el pago.");
   }
-  saveState(state);
-  
-  res.json({ success: true, payment: saved });
 });
 
-// Sync all payments/finances with Supabase (Admin only)
+// Devuelve los pagos de Supabase (Finanzas lo usa para refrescar). Ya no hay copia en memoria que
+// sincronizar; se conserva la ruta por compatibilidad con el cliente.
 router.post("/payments/sync", requireAuth, requireLeader, async (req, res) => {
   const userBandId = getTargetBandId(req);
   try {
     const dbPayments = await dbGetPayments(userBandId);
-    const state = loadState();
-    state.payments = dbPayments;
-    saveState(state);
 
     res.json({
       success: true,
@@ -396,15 +396,6 @@ router.post("/payments/sync", requireAuth, requireLeader, async (req, res) => {
     console.error("Error in /api/payments/sync:", error);
     responderError(res, error, "Error al sincronizar con Supabase.");
   }
-});
-
-// Create logistics message
-router.post("/messages", requireAuth, (req, res) => {
-  const newMessage: Message = req.body;
-  const state = loadState();
-  state.messages.push(newMessage);
-  saveState(state);
-  res.json({ success: true, message: newMessage });
 });
 
 // Devuelve la URL firmada del feed para las bandas del usuario. Es lo que la aplicación

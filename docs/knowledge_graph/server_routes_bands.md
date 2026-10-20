@@ -33,6 +33,7 @@ CRUD de bandas, borrado en bloque y sincronización. Toda operación resuelve la
 - [[server_services_transactionalEmail|server/services/transactionalEmail.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_emailTemplate|server/utils/emailTemplate.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_estadoPorBanda|server/utils/estadoPorBanda.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_hostUrl|server/utils/hostUrl.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*

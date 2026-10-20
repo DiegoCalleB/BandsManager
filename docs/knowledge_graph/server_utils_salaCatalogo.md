@@ -23,17 +23,32 @@ Catálogo compartido de salas: reglas puras (sin red ni base de datos).
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server_data_bandflowSalas|server/data/bandflowSalas.ts]] *(from #service)*
 - [[server_db_salasCatalogo|server/db/salasCatalogo.ts]] *(from #db)*
 - [[server_evals_catalogoGolden|server/evals/catalogoGolden.ts]] *(from #service)*
 - [[server_services_catalogoSalas|server/services/catalogoSalas.ts]] *(from #service)*
 - [[server_services_consultaCatalogo|server/services/consultaCatalogo.ts]] *(from #service)*
+- [[server_services_importarSalasBandflow|server/services/importarSalasBandflow.ts]] *(from #service)*
+- [[server_services_importarSalasOsm|server/services/importarSalasOsm.ts]] *(from #service)*
+- [[server_services_leerWebDeSala|server/services/leerWebDeSala.ts]] *(from #service)*
+- [[server_utils_bandflowSalas|server/utils/bandflowSalas.ts]] *(from #service)*
 - [[server_utils_consultaCatalogo|server/utils/consultaCatalogo.ts]] *(from #service)*
+- [[server_utils_datosDeWebSala|server/utils/datosDeWebSala.ts]] *(from #service)*
+- [[server_utils_estadoNegocio|server/utils/estadoNegocio.ts]] *(from #service)*
+- [[server_utils_festivalesCatalogo|server/utils/festivalesCatalogo.ts]] *(from #service)*
+- [[server_utils_geocodificacion|server/utils/geocodificacion.ts]] *(from #service)*
+- [[server_utils_instagramEnWeb|server/utils/instagramEnWeb.ts]] *(from #service)*
+- [[server_utils_osmSalas|server/utils/osmSalas.ts]] *(from #service)*
+- [[server_utils_seo_salas_tipos|server/utils/seo/salas/tipos.ts]] *(from #service)*
 - [[server_utils_sugerenciasCatalogo|server/utils/sugerenciasCatalogo.ts]] *(from #service)*
 
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/data/__tests__/bandflowSalas.test.ts`
+- `server/migrations/__tests__/catalogoGlobal.test.ts`
 - `server/services/__tests__/catalogoSalas.test.ts`
+- `server/services/__tests__/importarSalasBandflow.test.ts`
 - `server/utils/__tests__/salaCatalogo.test.ts`
 
 ---

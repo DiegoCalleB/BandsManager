@@ -4,6 +4,7 @@ import { ModalPortal } from '../common/ModalPortal';
 import { Field, IconButton, Input, Select, Switch } from '../ui';
 import { TODAS } from '../../utils/cartel/datos';
 import { MAX_LOGOS } from '../../utils/cartel/config';
+import { ELECCIONES_COMPOSICION, ETIQUETA_COMPOSICION, ETIQUETA_LETRA, LETRAS_CARTEL, type ComposicionElegida, type LetraCartel } from '../../utils/cartel/voces';
 import type { AjustesBolo } from './hooks/useEditorCartel';
 
 interface Props {
@@ -60,6 +61,22 @@ export function AjustesCartel({ abierto, onCerrar, ajustes, onCambiar, bandas, t
               </Select>
             </Field>
           )}
+
+          <Field label="Letra del nombre y la fecha" hint="Automática elige según el estilo de vuestra banda.">
+            <Select value={ajustes.letra} onChange={(e) => onCambiar({ letra: e.target.value as LetraCartel })}>
+              {LETRAS_CARTEL.map((l) => (
+                <option key={l} value={l}>{ETIQUETA_LETRA[l]}</option>
+              ))}
+            </Select>
+          </Field>
+
+          <Field label="Composición" hint="Cómo se reparte el cartel. Automática la elige según la letra.">
+            <Select value={ajustes.composicion} onChange={(e) => onCambiar({ composicion: e.target.value as ComposicionElegida })}>
+              {ELECCIONES_COMPOSICION.map((k) => (
+                <option key={k} value={k}>{ETIQUETA_COMPOSICION[k]}</option>
+              ))}
+            </Select>
+          </Field>
 
           <Field label="Línea extra" optional hint="Precio, invitada, «Entrada libre»… Máximo 40 caracteres.">
             <Input maxLength={40} value={ajustes.extra} placeholder="Anticipada 10 € · Taquilla 12 €" onChange={(e) => onCambiar({ extra: e.target.value })} />

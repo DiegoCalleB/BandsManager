@@ -33,7 +33,7 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 - [[ext_gemini|Gemini (Google GenAI)]] — 18 ficheros lo usan
 - [[ext_google_oauth_gmail|Google OAuth / Gmail API]] — 7 ficheros lo usan
 - [[ext_replicate|Replicate]] — 11 ficheros lo usan
-- [[ext_resend|Resend]] — 6 ficheros lo usan
+- [[ext_resend|Resend]] — 7 ficheros lo usan
 - [[ext_sentry|Sentry]] — 2 ficheros lo usan
 - [[ext_spotify|Spotify]] — 7 ficheros lo usan
 - [[ext_stripe|Stripe]] — 4 ficheros lo usan
@@ -52,6 +52,14 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 - [[agent_enviador|Enviador Agent (Human-in-the-Loop)]]
 - [[agent_lector|Lector Agent (Gmail OAuth2/IMAP)]]
 - [[service_pitch_engine|Motor Multi-Modelo (Gemini / DeepSeek / OpenAI)]]
+
+### 📅 Calendario & Choques
+- [[ui_calendar_conflicts|Avisos en el calendario]]
+- [[util_calendar_conflicts|Detector de choques]]
+- [[util_viaje_estimado|Estimador de viaje]]
+- [[service_calendar_conflicts|Avisos por email]]
+- [[db_calendar_conflicts|Persistencia de avisos]]
+- [[route_calendar_conflicts|GET /api/calendar/conflicts]]
 
 ### 🔒 2. Seguridad & Trust Boundary
 - [[sec_trust_boundary|Límite de Confianza (getTargetBandId)]]
@@ -73,29 +81,29 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 
 ## 🤖 Mapa automático (generado desde los imports reales)
 
-1718 nodos: 53 agent · 51 db · 12 external · 14 feature · 953 frontend · 43 hook · 91 route · 66 schema · 12 security · 423 service.
+1831 nodos: 53 agent · 55 db · 12 external · 14 feature · 974 frontend · 43 hook · 95 route · 78 schema · 12 security · 495 service.
 No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el test `grafoConocimiento` falla si queda desfasado.
 
 ### 🔥 Los 20 ficheros más importados
-- [[src_types|src/types.ts]] — 576 ficheros dependen de él
-- [[src_components_ui_index|src/components/ui/index.ts]] — 359 ficheros dependen de él
+- [[src_types|src/types.ts]] — 575 ficheros dependen de él
+- [[src_components_ui_index|src/components/ui/index.ts]] — 370 ficheros dependen de él
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] — 180 ficheros dependen de él
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] — 173 ficheros dependen de él
-- [[src_utils_api|src/utils/api.ts]] — 94 ficheros dependen de él
-- [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] — 79 ficheros dependen de él
-- [[tabla_registered_bands|tabla registered_bands]] — 71 ficheros dependen de él
-- [[db_state_sync|In-Memory State & Supabase Sync]] — 70 ficheros dependen de él
-- [[server_db_core|server/db/core.ts]] — 64 ficheros dependen de él
-- [[sec_trust_boundary|Trust Boundary & Band Scoping]] — 59 ficheros dependen de él
-- [[server_db|server/db.ts]] — 52 ficheros dependen de él
+- [[src_utils_api|src/utils/api.ts]] — 95 ficheros dependen de él
+- [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] — 80 ficheros dependen de él
+- [[tabla_registered_bands|tabla registered_bands]] — 72 ficheros dependen de él
+- [[db_state_sync|In-Memory State & Supabase Sync]] — 71 ficheros dependen de él
+- [[server_db_core|server/db/core.ts]] — 68 ficheros dependen de él
+- [[sec_trust_boundary|Trust Boundary & Band Scoping]] — 62 ficheros dependen de él
+- [[server_db|server/db.ts]] — 53 ficheros dependen de él
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] — 49 ficheros dependen de él
-- [[server_ai|server/ai.ts]] — 47 ficheros dependen de él
+- [[server_ai|server/ai.ts]] — 48 ficheros dependen de él
 - [[src_services_api|src/services/api.ts]] — 45 ficheros dependen de él
 - [[server_utils_errorHttp|server/utils/errorHttp.ts]] — 39 ficheros dependen de él
 - [[server_db_bands|server/db/bands.ts]] — 37 ficheros dependen de él
+- [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] — 37 ficheros dependen de él
 - [[ext_ffmpeg|FFmpeg]] — 34 ficheros dependen de él
 - [[server_routes_bands|server/routes/bands.ts]] — 34 ficheros dependen de él
-- [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] — 33 ficheros dependen de él
 - [[src_utils_errorMessage|src/utils/errorMessage.ts]] — 33 ficheros dependen de él
 
 ---

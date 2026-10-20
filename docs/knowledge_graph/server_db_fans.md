@@ -37,6 +37,7 @@ Fans de la banda (`fans`) y lista de espera de músicos (`musicians_waitlist`).
 
 ## 🧪 Tests que lo cubren
 - `server/db/__tests__/fans.test.ts`
+- `server/db/__tests__/fansContar.test.ts`
 
 ---
 

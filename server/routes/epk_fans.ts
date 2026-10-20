@@ -1,10 +1,11 @@
 // EPK y captación de fans: configuración de autonomía de agentes, EPK editable/traducible, listas de
 // fans y su telemetría.
 
+import { avisarAlta } from '../services/avisoAltas.js';
 import { publicoRateLimiter } from '../middleware/rateLimiter.js';
 import express from 'express';
 import { loadState, saveState, requireAuth, getEpkConfigForBand, getAutonomyConfigForBand } from '../state.js';
-import { EPKConfig, Fan } from '../../src/types.js';
+import { EPKConfig, Fan, type Concert, type RegisteredBand, type Song } from '../../src/types.js';
 import {
   dbGetAutonomyConfig,
   dbUpsertAutonomyConfig,
@@ -30,22 +31,18 @@ import {
   CLAVES_DATOS_TRADUCIBLES,
   IDIOMA_ORIGEN,
 } from '../../src/utils/epkTraducciones.js';
-import { EPK_LANGUAGES } from '../../src/i18n/epkTranslations.js';
+import { EPK_LANGUAGES, type EpkLanguage } from '../../src/i18n/epkTranslations.js';
 import {
   getTargetBandId,
   puedeEscribirEnBanda,
   bandaSolicitada,
-  bandaDe,
 } from '../utils/bandAccess.js';
 import { checkRecordLimit } from '../utils/planLimits.js';
 import { buildFanIncentive } from '../utils/fanIncentive.js';
 import { decodeBandId } from '../utils/bandHash.js';
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
-import type { Concert, RegisteredBand, Song } from '../../src/types.js';
-import type { EpkLanguage } from '../../src/i18n/epkTranslations.js';
 import type { RespuestaTraduccionEpk } from '../tiposRespuestasIA.js';
 import { responderError } from '../utils/errorHttp.js';
-
 const router = express.Router();
 
 // Get Autonomy Config
@@ -757,22 +754,12 @@ router.get('/public/epk', async (req, res) => {
   }
 });
 
-// Get Fans List (Authenticated)
+// Get Fans List (Authenticated). Los fans viven solo en Supabase: nunca se sirve una copia en memoria.
 router.get('/fans', requireAuth, async (req, res) => {
-  const userBandId = req.user?.band_id;
   try {
-    const fans = await dbGetFans(userBandId);
-    const state = loadState();
-    state.fans = fans;
-    saveState(state);
-    res.json(fans);
-  } catch {
-    const state = loadState();
-    res.json(
-      (state.fans || []).filter(
-        (f) => bandaDe(f) === userBandId
-      )
-    );
+    res.json(await dbGetFans(req.user?.band_id));
+  } catch (errCapturado) {
+    responderError(res, comoErrorCapturado(errCapturado), 'Error al cargar los fans.');
   }
 });
 
@@ -802,11 +789,6 @@ router.post('/fans', requireAuth, async (req, res) => {
 
     const saved = await dbUpsertFan(newFan, userBandId);
 
-    const state = loadState();
-    if (!state.fans) state.fans = [];
-    state.fans.unshift(saved);
-    saveState(state);
-
     res.json({ success: true, fan: saved });
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
@@ -815,33 +797,16 @@ router.post('/fans', requireAuth, async (req, res) => {
   }
 });
 
-// Update Fan (Authenticated)
+// Update Fan (Authenticated). Se busca entre los fans de la banda activa: el de otra banda es un 404.
 router.patch('/fans/:id', requireAuth, async (req, res) => {
   try {
     const { id } = req.params;
     const userBandId = req.user?.band_id;
-    const updates = req.body;
-
-    const state = loadState();
-    if (!state.fans) state.fans = [];
-    const index = state.fans.findIndex((f: Fan) => f.id === id);
-    if (index !== -1) {
-      // state.fans es un array global compartido por todas las bandas: sin esta comprobación,
-      // cualquier usuario autenticado podía modificar el fan (nombre, email, consentimiento RGPD)
-      // de otra banda adivinando su id.
-      const ownerBandId =
-        state.fans[index].band_id || (state.fans[index] as Fan & { bandId?: string }).bandId;
-      if (!puedeEscribirEnBanda(req, ownerBandId || userBandId)) {
-        return res
-          .status(403)
-          .json({ error: 'No puedes modificar un fan de otra banda.' });
-      }
-      state.fans[index] = { ...state.fans[index], ...updates };
-      await dbUpsertFan(state.fans[index], userBandId);
-      saveState(state);
-      return res.json({ success: true, fan: state.fans[index] });
-    }
-    res.status(404).json({ error: 'Fan no encontrado' });
+    const actual = (await dbGetFans(userBandId)).find((f: Fan) => f.id === id);
+    if (!actual) return res.status(404).json({ error: 'Fan no encontrado' });
+    // El id de la URL manda: el cuerpo no puede reescribir el de otro fan.
+    const saved = await dbUpsertFan({ ...actual, ...req.body, id: actual.id }, userBandId);
+    res.json({ success: true, fan: saved });
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error('Error updating fan:', err);
@@ -851,16 +816,12 @@ router.patch('/fans/:id', requireAuth, async (req, res) => {
 
 // Delete Fan (Authenticated)
 router.delete('/fans/:id', requireAuth, async (req, res) => {
-  const userBandId = req.user?.band_id;
-  const { id } = req.params;
-  await dbDeleteFan(id, userBandId);
-
-  const state = loadState();
-  if (state.fans) {
-    state.fans = state.fans.filter((f: Fan) => f.id !== id);
-    saveState(state);
+  try {
+    await dbDeleteFan(req.params.id, req.user?.band_id);
+    res.json({ success: true });
+  } catch (errCapturado) {
+    responderError(res, comoErrorCapturado(errCapturado), 'Error al eliminar fan.');
   }
-  res.json({ success: true });
 });
 
 // Public Fan Capture Endpoint (No Auth required - QR Code Submission)
@@ -933,12 +894,7 @@ router.post('/public/fans', publicoRateLimiter, async (req, res) => {
       reacciones: { likes: 0, fire: 0, applause: 0, guitars: 0 },
     };
 
-    const saved = await dbUpsertFan(newFan, targetBandId);
-
-    const state = loadState();
-    if (!state.fans) state.fans = [];
-    state.fans.unshift(saved);
-    saveState(state);
+    await dbUpsertFan(newFan, targetBandId);
 
     // Supabase es la fuente de verdad del incentivo (ver AGENTS.md); el `state` en memoria de
     // esta ruta puede llevar cacheado, para la banda por defecto, el incentivo de ejemplo
@@ -952,7 +908,7 @@ router.post('/public/fans', publicoRateLimiter, async (req, res) => {
       // Fallback abajo
     }
     if (!epkConf) {
-      epkConf = getEpkConfigForBand(state, targetBandId);
+      epkConf = getEpkConfigForBand(loadState(), targetBandId);
     }
     const bandName =
       epkConf?.contactoBooking?.nombre || epkConf?.nombre_banda || 'la banda';
@@ -1158,6 +1114,7 @@ router.post('/public/musicians-waitlist', publicoRateLimiter, async (req, res) =
     };
 
     const saved = await dbUpsertMusicianWaitlist(waitlistItem);
+    void avisarAlta({ tipo: 'espera', email: waitlistItem.email, nombre: waitlistItem.nombreBanda, origen: 'formulario de músicos' });
 
     const state = loadState();
     if (!state.musiciansWaitlist) state.musiciansWaitlist = [];

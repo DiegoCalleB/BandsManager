@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
+import { repeticionPorInicio, encajarEnElGolpe,
   parseCambiosDePlano,
   detectarCambiosDePlano,
   detectarTipoContenido,
@@ -271,5 +271,47 @@ describe('ventanasMasVirales · interés del público', () => {
     const texto = resumirSenalesParaPrompt(vs, 'concierto');
     expect(texto).toMatch(/público \d+/);
     expect(texto).toMatch(/reproduce|repeticiones/i);
+  });
+});
+
+describe("encajarEnElGolpe", () => {
+  // Silencio hasta 20,0 s y golpe fuerte desde ahí.
+  const curva = Array.from({ length: 600 }, (_, i) => ({ t: i / 10, db: i / 10 >= 20 ? -8 : -50 }));
+  const v = (start: number) => ({ start, end: start + 30, energia: 80, arranque: 50, dinamismo: 50, score: 70, motivo: "x" });
+
+  it("mueve el inicio al golpe si empezaba antes, en el silencio", () => {
+    const r = encajarEnElGolpe(v(18), curva, 60);
+    expect(r.start).toBeCloseTo(20, 0);
+    expect(r.end - r.start).toBe(30);
+    expect(r.motivo).toContain("golpe");
+  });
+
+  it("no toca un corte que ya cae en el golpe", () => {
+    expect(encajarEnElGolpe(v(20), curva, 60).start).toBe(20);
+  });
+
+  it("no se sale del vídeo", () => {
+    const r = encajarEnElGolpe(v(30), curva, 60);
+    expect(r.end).toBeLessThanOrEqual(61);
+  });
+});
+
+describe("repeticionPorInicio", () => {
+  // 120 s: un patrón de volumen de 20 s que se repite en 10-30 y 70-90, y ruido plano en medio.
+  const patron = (t: number) => -40 + 25 * Math.abs(Math.sin((t % 20) * 0.5));
+  const curva = Array.from({ length: 1200 }, (_, i) => {
+    const t = i / 10;
+    return { t, db: (t >= 10 && t < 30) || (t >= 70 && t < 90) ? patron(t) : -40 + (((Math.floor(t) * 2654435761) >>> 0) % 17) };
+  });
+
+  it("puntúa alto el tramo que se repite y bajo el que no", () => {
+    const r = repeticionPorInicio(curva, 20, [10, 40])!;
+    expect(r.get(10)!).toBeGreaterThan(80);
+    expect(r.get(10)!).toBeGreaterThan(r.get(40)!);
+  });
+
+  it("no calcula nada en vídeos larguísimos", () => {
+    const larga = [{ t: 0, db: -30 }, { t: 5000, db: -30 }];
+    expect(repeticionPorInicio(larga, 20, [0])).toBeNull();
   });
 });

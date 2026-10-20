@@ -67,42 +67,11 @@ router.put('/users/:id', requireAuth, async (req, res) => {
 
   if (plan !== undefined) {
     const targetBandId = req.body.band_id || user.band_id;
-    const loggedUserEmail = (
-      loggedUser.email ||
-      loggedUser.username ||
-      ''
-    ).toLowerCase();
-    const cleanTargetCheck = targetBandId
-      ? targetBandId.replace(/^(band|reg)-/, '')
-      : '';
-
-    // Antes esto era `role === 'leader' || role === 'admin'`, y como en esta app todos los
-    // usuarios reales son 'leader', anulaba las dos comprobaciones correctas de más abajo:
-    // cualquiera podía cambiar el plan de suscripción de cualquier banda. El único escape
-    // global legítimo es el admin de la plataforma.
-    const isPlatformAdmin = loggedUser.role === 'admin';
-    const isBandLeaderInUserBands = (state.userBands || []).some(
-      (ub) =>
-        (ub.user_id === loggedUser.id ||
-          (loggedUserEmail && ub.email?.toLowerCase() === loggedUserEmail)) &&
-        ub.band_id &&
-        ub.band_id.replace(/^(band|reg)-/, '') === cleanTargetCheck &&
-        (ub.role === 'leader' || ub.role === 'admin')
-    );
-    const isBandOwner = (state.registeredBands || []).some(
-      (b) =>
-        (b.user_id === loggedUser.id ||
-          (loggedUserEmail && b.email?.toLowerCase() === loggedUserEmail)) &&
-        ((b.band_id &&
-          b.band_id.replace(/^(band|reg)-/, '') === cleanTargetCheck) ||
-          (b.id && b.id.replace(/^(band|reg)-/, '') === cleanTargetCheck))
-    );
-
     // El plan de pago solo cambia por el flujo de Stripe (webhook / confirm-success). Que el
-    // líder pudiera escribir `plan` aquí le daba un plan de pago sin pagar.
-    void isBandLeaderInUserBands;
-    void isBandOwner;
-    if (!isPlatformAdmin) {
+    // líder pudiera escribir `plan` aquí le daba un plan de pago sin pagar. El único escape global
+    // legítimo es el admin de la plataforma (antes `role === 'leader' || 'admin'` abría el plan de
+    // cualquier banda a cualquier usuario).
+    if (loggedUser.role !== 'admin') {
       return res.status(403).json({
         error: 'El plan de suscripción solo se cambia desde la facturación.',
       });

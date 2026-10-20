@@ -11,9 +11,12 @@ import { spotifyArtistId } from "../../src/utils/spotifyEmbed.js";
 import { estadoSpotifyBanda, planificarSpotifyBanda, PlanSpotifyBanda } from "../utils/spotifyMatch.js";
 import { periodoMensual } from "../utils/metricasBanda.js";
 import { capturarMetricasBanda, guardarMetricasBanda } from "../services/metricasBandaService.js";
+import { estadoMetricas, iniciarMetricas } from "../services/trabajoMetricas.js";
 import { getSupabase } from "../db/core.js";
 import { cargarEnlacesDeContactos, guardarEnlace } from "../db/enlacesBandas.js";
 import { EnlacesPorPlataforma } from "../utils/enlacesBandas.js";
+import { enlacesParaMetricas } from "../utils/redesBanda.js";
+import { CredencialesInstagram, credencialesInstagram } from "../services/instagramDescubrimiento.js";
 
 const router = express.Router();
 
@@ -148,29 +151,39 @@ router.post("/bands/spotify-sweep", requireAuth, async (req, res) => {
   }
 });
 
-/** POST /api/bands/metricas/actualizar — captura el mes en curso de las bandas de la cuenta. */
+/**
+ * POST /api/bands/metricas/actualizar — arranca en segundo plano la captura del mes en curso de las
+ * bandas de la cuenta y responde al instante; el progreso se lee en GET /api/bands/metricas/estado.
+ */
 router.post("/bands/metricas/actualizar", requireAuth, async (req, res) => {
   try {
     const bandId = getTargetBandId(req);
     const bandas = ((await dbGetBandContacts(bandId)) as BandaCuenta[]).filter((b) => b?.nombre_banda).slice(0, MAX_BANDAS_LOTE);
     const periodo = periodoMensual();
-    let filas = 0;
-    const motivos: Record<string, number> = {};
-    for (const b of bandas) {
-      const { filas: capturadas, motivos: fallos } = await capturarMetricasBanda(String(b.nombre_banda), spotifyDe(b));
-      filas += await guardarMetricasBanda({ id: b.id, band_id: bandId }, periodo, capturadas);
-      for (const f of fallos) {
-        const clave = `${f.fuente}: ${f.motivo}`;
-        motivos[clave] = (motivos[clave] || 0) + 1;
+    const instagram = await credencialesInstagram(bandId);
+    const arrancado = iniciarMetricas(bandId, bandas.length, periodo, async (estado) => {
+      for (const b of bandas) {
+        const { filas: capturadas, motivos: fallos } = await capturarMetricasBanda(String(b.nombre_banda), enlacesParaMetricas(b.enlaces), instagram);
+        estado.filas += await guardarMetricasBanda({ id: b.id, band_id: bandId }, periodo, capturadas);
+        // Resumen por motivo: así se ve en pantalla por qué una fuente sale vacía.
+        for (const f of fallos) {
+          const clave = `${f.fuente}: ${f.motivo}`;
+          estado.motivos[clave] = (estado.motivos[clave] || 0) + 1;
+        }
+        estado.hechas++;
+        await sleep(PAUSA_METRICAS_MS);
       }
-      await sleep(PAUSA_METRICAS_MS);
-    }
-    // Resumen por motivo: así se ve en pantalla por qué una fuente sale vacía.
-    res.json({ success: true, periodo, bandas: bandas.length, filas, motivos });
+    });
+    res.status(202).json({ success: true, yaEnCurso: !arrancado, ...estadoMetricas(bandId) });
   } catch (err) {
     console.error("[BandMusic] metricas/actualizar error:", err);
     res.status(500).json({ error: "No se pudieron actualizar las métricas." });
   }
+});
+
+/** GET /api/bands/metricas/estado — progreso de la última captura lanzada para la cuenta. */
+router.get("/bands/metricas/estado", requireAuth, (req, res) => {
+  res.json({ success: true, ...estadoMetricas(getTargetBandId(req)) });
 });
 
 /** GET /api/bands/metricas — último periodo disponible por banda de la cuenta. */
@@ -184,12 +197,12 @@ router.get("/bands/metricas", requireAuth, async (req, res) => {
       .order("periodo", { ascending: false });
     if (error) throw new Error(error.message);
 
-    const porBanda: Record<string, { periodo: string; spotify?: unknown; youtube?: unknown; deezer?: unknown }> = {};
+    const porBanda: Record<string, { periodo: string; spotify?: unknown; youtube?: unknown; deezer?: unknown; instagram?: unknown }> = {};
     for (const fila of data || []) {
       const actual = porBanda[fila.band_contact_id] || (porBanda[fila.band_contact_id] = { periodo: fila.periodo });
       // Solo el periodo más reciente de cada banda (las filas vienen ordenadas por periodo desc).
       if (actual.periodo !== fila.periodo) continue;
-      actual[fila.fuente as "spotify" | "youtube" | "deezer"] = fila;
+      actual[fila.fuente as "spotify" | "youtube" | "deezer" | "instagram"] = fila;
     }
     res.json({ success: true, metricas: porBanda });
   } catch (err) {
@@ -209,10 +222,16 @@ router.post("/cron/metricas-mensual", requireCronOrAuth, async (_req, res) => {
     const enlacesPorContacto = await cargarEnlacesDeContactos((data || []).map((b) => b.id));
     const periodo = periodoMensual();
     let filas = 0;
+    // Una consulta de credenciales por banda activa, no por contacto.
+    const instagramPorBanda = new Map<string, Promise<CredencialesInstagram>>();
     for (const b of (data || []) as (BandaCuenta & { band_id: string })[]) {
       if (!b.nombre_banda) continue;
-      const spotify = enlacesPorContacto.get(b.id)?.spotify?.url || "";
-      const { filas: capturadas } = await capturarMetricasBanda(String(b.nombre_banda), spotify);
+      if (!instagramPorBanda.has(b.band_id)) instagramPorBanda.set(b.band_id, credencialesInstagram(b.band_id));
+      const { filas: capturadas } = await capturarMetricasBanda(
+        String(b.nombre_banda),
+        enlacesParaMetricas(enlacesPorContacto.get(b.id)),
+        await (instagramPorBanda.get(b.band_id) as Promise<CredencialesInstagram>),
+      );
       filas += await guardarMetricasBanda({ id: b.id, band_id: b.band_id }, periodo, capturadas);
       await sleep(PAUSA_METRICAS_MS);
     }

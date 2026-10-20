@@ -43,7 +43,7 @@ export function AtrilBody() {
                       Ver ficha completa →
                     </LinkButton>
                   </div>
-                  <p className="text-[var(--ink-2)] text-sm font-semibold bg-[var(--sunken)] p-2 rounded-[var(--r-s)]5">
+                  <p className="text-[var(--ink-2)] text-sm font-semibold bg-[var(--sunken)] p-2 rounded-[var(--r-s)]">
                     {guiaSustituto.estructura}
                   </p>
                 </div>
@@ -61,7 +61,7 @@ export function AtrilBody() {
                   nombreTonalidad={nombreTonalidadVista}
                 />
               )}
-              <div translate="no" className="notranslate bg-[var(--sunken)] p-6 rounded-[var(--r-l)] font-sans text-sm leading-relaxed whitespace-pre-wrap select-text">
+              <div translate="no" className="notranslate bg-[var(--sunken)] p-4 sm:p-6 rounded-[var(--r-l)] font-sans text-base group-data-[escenario=true]/esc:text-3xl leading-relaxed whitespace-pre-wrap select-text">
                 {renderFormattedChordSheet(
                   processedText,
                   lineasConLetra && letraTranscrita && seguirEnCifrado
