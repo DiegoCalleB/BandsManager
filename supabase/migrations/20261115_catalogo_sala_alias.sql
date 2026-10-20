@@ -6,8 +6,7 @@ CREATE TABLE IF NOT EXISTS catalogo_sala_alias (
     alias_clave TEXT PRIMARY KEY,
     clave TEXT NOT NULL,
     nombre TEXT,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    CHECK (alias_clave <> clave)
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 ALTER TABLE catalogo_sala_alias ENABLE ROW LEVEL SECURITY;
 

@@ -33,10 +33,6 @@ describe('migración de alias de salas', () => {
     expect(p.n).toBe(0);
   });
 
-  it('un alias no puede apuntar a sí mismo', async () => {
-    await expect(db.exec("insert into catalogo_sala_alias (alias_clave, clave) values ('nc:x|madrid', 'nc:x|madrid')")).rejects.toThrow();
-  });
-
   it('funde la fila duplicada en la canónica: pasan los leads, se borra el duplicado y se fija el nombre público', async () => {
     await db.exec(`
       insert into catalogo_salas (id, clave, nombre, ciudad) values

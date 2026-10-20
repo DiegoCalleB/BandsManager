@@ -117,7 +117,7 @@ function aplicarAlias(grupos: Map<string, Miembro[]>, alias: AliasSala[]): Map<s
   const nombres = new Map<string, string>();
   for (const { aliasClave, clave, nombre } of alias) {
     if (nombre) nombres.set(clave, nombre);
-    const miembros = grupos.get(aliasClave);
+    const miembros = aliasClave === clave ? undefined : grupos.get(aliasClave);
     if (!miembros) continue;
     grupos.set(clave, [...(grupos.get(clave) ?? []), ...miembros]);
     grupos.delete(aliasClave);

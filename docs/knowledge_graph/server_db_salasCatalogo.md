@@ -22,6 +22,7 @@ Catálogo compartido de salas (`catalogo_salas`): adaptador de Supabase del puer
 - [[server_services_catalogoSalas|server/services/catalogoSalas.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_verificarSalasEnMaps|server/services/verificarSalasEnMaps.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_salaCatalogo|server/utils/salaCatalogo.ts]] *(Layer: #service, Domain: #system)*
+- [[tabla_catalogo_sala_alias|tabla catalogo_sala_alias]] *(Layer: #schema, Domain: #system)*
 - [[tabla_leads|tabla leads]] *(Layer: #schema, Domain: #booking)*
 
 ---
