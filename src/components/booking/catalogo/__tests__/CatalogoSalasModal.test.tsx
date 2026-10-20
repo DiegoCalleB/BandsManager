@@ -11,7 +11,7 @@ import { CatalogoSalasModal } from '../CatalogoSalasModal';
 
 const sala = (o: Partial<SalaDelCatalogo> & { id: string; nombre: string }): SalaDelCatalogo => ({
   ciudad: 'Madrid', region: 'Comunidad de Madrid', tipo: 'sala', aforo: 300, genero: 'Rock', website: null, instagram: null,
-  nivel: 'probable', bandas_con_respuesta: 0, tiene_email: true, tiene_telefono: false, ya_en_agenda: false, ...o,
+  nivel: 'probable', bandas_con_respuesta: 0, tiene_email: true, tiene_telefono: false, posiblemente_cerrada: false, ya_en_agenda: false, ...o,
 });
 
 const pasar = async (ms = 400) => act(async () => void (await vi.advanceTimersByTimeAsync(ms)));

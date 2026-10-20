@@ -306,11 +306,27 @@ export function fusionarConExistente(existente: Partial<CamposPublicosSala> & { 
 const diasEntre = (desde: Date, hasta: Date) => (hasta.getTime() - desde.getTime()) / MS_DIA;
 
 /** Señales de fiabilidad de una sala a partir de los leads de todas las bandas que la tienen. Cuenta bandas, no sus datos. */
-export function senalesDeLeads(leads: LeadParaCatalogo[], ahora: Date, consolidada: CamposPublicosSala, verificadaEn?: Date | null): SenalesFiabilidad {
+/**
+ * Las interacciones con salas (correos enviados, respuestas, rebotes) anteriores a esta fecha eran ficticias o de pruebas: el
+ * dueño del proyecto lo confirmó el 2026-10-20. No cuentan como señal de fiabilidad, para que ninguna sala salga «probable» o
+ * «verificada» por datos de test. Cuando haya historial real, esta fecha ya no tiene efecto (todo lo nuevo es posterior).
+ */
+export const INTERACCIONES_REALES_DESDE = new Date('2026-10-21T00:00:00Z');
+
+export function senalesDeLeads(
+  leads: LeadParaCatalogo[],
+  ahora: Date,
+  consolidada: CamposPublicosSala,
+  verificadaEn?: Date | null,
+  interaccionesDesde: Date = INTERACCIONES_REALES_DESDE,
+): SenalesFiabilidad {
   const conRespuesta = new Set<string>();
   const conEntrega = new Set<string>();
   let rebotes = 0;
   for (const lead of leads) {
+    // Sin un envío posterior a la fecha de corte no hay interacción real con la sala (ni respuesta, ni entrega, ni rebote).
+    const envioReal = lead.fecha_envio ? new Date(lead.fecha_envio) : null;
+    if (!envioReal || !Number.isFinite(envioReal.getTime()) || envioReal < interaccionesDesde) continue;
     if (lead.rebotado) {
       rebotes++;
       continue;

@@ -33,3 +33,14 @@ export function esLaMismaSala(sala: { place_id: string | null; nombre: string },
   const [corto, largo] = a.length <= b.length ? [a, b] : [b, a];
   return corto.every((p) => largo.includes(p));
 }
+
+/**
+ * ¿Hay que ocultar la sala porque está cerrada? Google puede equivocarse (otra ficha, datos viejos), así que una sala a la que
+ * alguna banda ya contactó y respondió no se oculta por su veredicto: se enseña avisando de que Google la da por cerrada.
+ */
+export const ocultaPorCierre = (s: { estado_negocio?: EstadoNegocio; bandas_con_respuesta: number }): boolean =>
+  s.estado_negocio === 'cerrado_permanente' && s.bandas_con_respuesta === 0;
+
+/** Google la da por cerrada pero hay constancia de que respondió a alguna banda: se enseña con aviso. */
+export const posiblementeCerrada = (s: { estado_negocio?: EstadoNegocio; bandas_con_respuesta: number }): boolean =>
+  s.estado_negocio === 'cerrado_permanente' && s.bandas_con_respuesta > 0;

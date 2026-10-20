@@ -19,6 +19,8 @@ import { leerWebDeSala } from "./leerWebDeSala.js";
 import { descargarOsmSalas, importarSalasDeOsm } from "./importarSalasOsm.js";
 import { verificarSalasEnMaps } from "./verificarSalasEnMaps.js";
 
+/** Salas que se comprueban en Maps por pasada. Más que el mínimo del servicio mientras entran salas nuevas de otras fuentes; `CATALOGO_MAPS_POR_PASADA` lo ajusta. */
+const SALAS_MAPS_POR_PASADA = Number(process.env.CATALOGO_MAPS_POR_PASADA) || 100;
 const PERIODO_MS = Number(process.env.CATALOGO_SYNC_MS) || 24 * 60 * 60 * 1000;
 const RETRASO_INICIAL_MS = 5 * 60 * 1000;
 
@@ -58,7 +60,7 @@ async function verificarEnMapsAhora(): Promise<void> {
   const clave = process.env.GOOGLE_PLACES_API_KEY;
   if (!clave || process.env.CATALOGO_VERIFICAR_MAPS === "false") return;
   try {
-    const r = await verificarSalasEnMaps({ puerto: puertoVerificacionSupabase, consultarMaps: crearConsultaMaps(clave) });
+    const r = await verificarSalasEnMaps({ puerto: puertoVerificacionSupabase, consultarMaps: crearConsultaMaps(clave), limite: SALAS_MAPS_POR_PASADA });
     if (r.revisadas + r.errores > 0) {
       console.log(
         `[Catálogo] Verificación en Maps: ${r.revisadas} revisadas (${r.operativas} abiertas, ${r.cerradasTemporal} cerradas temporalmente, ` +
