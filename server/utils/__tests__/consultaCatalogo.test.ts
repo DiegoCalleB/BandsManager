@@ -112,6 +112,11 @@ describe('privacidad de la ficha', () => {
 });
 
 describe('leadDesdeSala', () => {
+  it('lleva el logo de la sala (el icono de su web) como imagen del lead', () => {
+    expect(leadDesdeSala(sala({ id: 'a', nombre: 'Alfa', website: 'https://www.alfa.es/' }), 'l1', 'b1').imagen_url).toBe('https://www.google.com/s2/favicons?domain=alfa.es&sz=128');
+    expect(leadDesdeSala(sala({ id: 'b', nombre: 'Beta', website: null }), 'l2', 'b1').imagen_url).toBeUndefined();
+  });
+
   it('crea un lead de la banda con el contacto de la sala y sin pitch ni estado avanzado', () => {
     const lead = leadDesdeSala(sala({ id: 'a', nombre: 'Alfa', place_id: 'ChIJxxx' }), 'lead-cat-1', 'banda-1');
     expect(lead).toMatchObject({

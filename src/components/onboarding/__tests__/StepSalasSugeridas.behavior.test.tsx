@@ -11,6 +11,7 @@ import { StepSalasSugeridas } from '../steps/StepSalasSugeridas';
 const sala = (id: string, nombre: string, extra: Partial<SugerenciaSala> = {}): SugerenciaSala => ({
   id,
   nombre,
+  website: null,
   ciudad: 'Madrid',
   region: 'Comunidad de Madrid',
   tipo: 'sala',
