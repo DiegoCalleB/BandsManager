@@ -48,6 +48,7 @@ BandManager UI Component Library
 - [[src_app_MobileTopBar|src/app/MobileTopBar.tsx]] *(from #service)*
 - [[src_components_atril_AtrilBody|src/components/atril/AtrilBody.tsx]] *(from #frontend)*
 - [[src_components_atril_AtrilHeader|src/components/atril/AtrilHeader.tsx]] *(from #frontend)*
+- [[src_components_atril_AtrilTabs|src/components/atril/AtrilTabs.tsx]] *(from #frontend)*
 - [[src_components_atril_AtrilToolbar|src/components/atril/AtrilToolbar.tsx]] *(from #frontend)*
 - [[src_components_atril_AtrilView|src/components/atril/AtrilView.tsx]] *(from #frontend)*
 - [[src_components_band_switcher_BandCardsGrid|src/components/band_switcher/BandCardsGrid.tsx]] *(from #frontend)*

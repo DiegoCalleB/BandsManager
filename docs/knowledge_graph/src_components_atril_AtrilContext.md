@@ -30,6 +30,7 @@ Contexto del Atril: reparte el estado del controlador y las props a las vistas.
 - [[src_components_atril_AtrilHeader|src/components/atril/AtrilHeader.tsx]] *(from #frontend)*
 - [[src_components_atril_AtrilModals|src/components/atril/AtrilModals.tsx]] *(from #frontend)*
 - [[src_components_atril_AtrilProvider|src/components/atril/AtrilProvider.tsx]] *(from #frontend)*
+- [[src_components_atril_AtrilTabs|src/components/atril/AtrilTabs.tsx]] *(from #frontend)*
 - [[src_components_atril_AtrilToolbar|src/components/atril/AtrilToolbar.tsx]] *(from #frontend)*
 - [[src_components_atril_AtrilView|src/components/atril/AtrilView.tsx]] *(from #frontend)*
 - [[src_components_atril_DetectedChordsPanel|src/components/atril/DetectedChordsPanel.tsx]] *(from #frontend)*
