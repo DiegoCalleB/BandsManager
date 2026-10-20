@@ -25,6 +25,7 @@ Señales de público: lo que la gente ya ha demostrado que le interesa de un ví
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_services_interesDelPublico|server/services/interesDelPublico.ts]] *(from #service)*
 - [[server_services_youtubeMeta|server/services/youtubeMeta.ts]] *(from #service)*
+- [[server_utils_bancoDeteccion|server/utils/bancoDeteccion.ts]] *(from #service)*
 - [[server_utils_informeSenalesPublico|server/utils/informeSenalesPublico.ts]] *(from #service)*
 - [[server_utils_viralSignals|server/utils/viralSignals.ts]] *(from #service)*
 - [[server_utils_youtubeSource|server/utils/youtubeSource.ts]] *(from #service)*

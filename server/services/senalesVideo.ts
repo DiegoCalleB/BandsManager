@@ -6,7 +6,8 @@
  * no distingue nada; por eso se mide también el CONTRASTE al arrancar el corte y el ritmo de
  * montaje. Best-effort y con tope de tiempo: si no se pueden medir, el análisis sigue igual.
  */
-import { analizarEnergiaAudio, ventanasConMasEnergia } from "../utils/audioEnergy.js";
+import { analizarEnergiaAudio, ventanasConMasEnergia, type PuntoEnergia } from "../utils/audioEnergy.js";
+export { ajustarCortes } from "../utils/ajusteDeCortes.js";
 import { detectarCambiosDePlano, ventanasMasVirales, type TipoContenido, type VentanaViral } from "../utils/viralSignals.js";
 import { urlDeAudioDirecta, urlDeVideoDirecta } from "../utils/youtubeSource.js";
 import { canonicalYouTubeUrl } from "./youtubeMeta.js";
@@ -17,19 +18,22 @@ export interface SenalesVideo {
   ventanasEnergia: ReturnType<typeof ventanasConMasEnergia>;
   ventanasVirales: VentanaViral[];
   cambiosDePlano: number[];
+  /** Curva de volumen medida (solo para ajustar cortes en el servidor; no se envía al cliente). */
+  curva: PuntoEnergia[];
   /** Qué se usó (o por qué no) de lo que la gente ya reproduce y comenta en YouTube. */
   publico: InteresDelPublico;
 }
 
 export async function medirSenalesDelVideo(p: { videoId: string; objetivoClip: number; tipoContenido: TipoContenido; ficha: FichaPublico; activo?: boolean }): Promise<SenalesVideo> {
   const { videoId, objetivoClip, tipoContenido } = p;
-  const senales: SenalesVideo = { ventanasEnergia: [], ventanasVirales: [], cambiosDePlano: [], publico: { curva: null, nota: "" } };
+  const senales: SenalesVideo = { ventanasEnergia: [], ventanasVirales: [], cambiosDePlano: [], curva: [], publico: { curva: null, nota: "" } };
   // Sin id de vídeo (fichero subido) o con el análisis de señales desactivado no hay nada que medir.
   if (!videoId || p.activo === false) return senales;
   try {
     const urlAudio = await urlDeAudioDirecta(canonicalYouTubeUrl(videoId));
     if (!urlAudio) return senales;
     const curva = await analizarEnergiaAudio(urlAudio, { timeoutMs: 120_000 });
+    senales.curva = curva;
 
     // La señal visual solo se pide cuando de verdad va a pesar en la puntuación: en un
     // ensayo grabado con el móvil en una silla, contar planos es gastar CPU para nada.
