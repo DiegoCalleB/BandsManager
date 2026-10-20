@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { correoAvisoAlta, destinoAvisoAltas } from '../avisoAltas';
+import { correoAvisoAlta, destinoAvisoAltas, fechaLegible } from '../avisoAltas';
 
 describe('destinoAvisoAltas', () => {
   it('usa el buzón del proyecto por defecto', () => {
@@ -29,5 +29,19 @@ describe('correoAvisoAlta', () => {
   it('el asunto no admite saltos de línea', () => {
     const c = correoAvisoAlta({ tipo: 'espera', email: 'a@b.com\nBcc: x@y.com' });
     expect(c.asunto).not.toMatch(/[\r\n]/);
+  });
+});
+
+describe('fechaLegible', () => {
+  it('muestra la hora de España (verano, UTC+2) en formato normal', () => {
+    expect(fechaLegible(new Date('2026-10-20T20:51:22.034Z'))).toBe('20/10/2026, 22:51');
+  });
+  it('y la de invierno (UTC+1)', () => {
+    expect(fechaLegible(new Date('2026-12-01T12:00:00Z'))).toBe('01/12/2026, 13:00');
+  });
+  it('el aviso lleva la fecha legible y no el formato técnico', () => {
+    const c = correoAvisoAlta({ tipo: 'registro', email: 'a@b.com' }, new Date('2026-10-20T20:51:22.034Z'));
+    expect(c.html).toContain('20/10/2026, 22:51');
+    expect(c.html).not.toMatch(/T\d\d:\d\d:\d\d/);
   });
 });
