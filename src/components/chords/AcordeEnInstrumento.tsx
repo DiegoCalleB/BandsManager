@@ -125,7 +125,7 @@ export const SelectorVistaAcorde: React.FC<{ vista: VistaAcorde; onCambio: (v: V
 );
 
 /** Nivel de detalle de los diagramas: Básico (power chords) · Normal · Pro (inversiones, intervalos, nota de paso). */
-export const SelectorNivel: React.FC<{ nivel: NivelAcorde; onCambio: (n: NivelAcorde) => void }> = ({ nivel, onCambio }) => {
+export const SelectorNivel: React.FC<{ nivel: NivelAcorde; onCambio: (n: NivelAcorde) => void; /** false en la tira del Atril: ahí el pentagrama no sale, así que «♪ Siempre» no pinta nada. */ conPentagrama?: boolean }> = ({ nivel, onCambio, conPentagrama = true }) => {
   const [ensayo, setEnsayo] = useModoEnsayo();
   const [siempre, setSiempre] = usePentagramaSiempre();
   return (
@@ -150,7 +150,7 @@ export const SelectorNivel: React.FC<{ nivel: NivelAcorde; onCambio: (n: NivelAc
     >
       Ensayo
     </button>
-    <button
+    {conPentagrama && <button
       type="button"
       aria-pressed={siempre}
       onClick={() => setSiempre(!siempre)}
@@ -158,7 +158,7 @@ export const SelectorNivel: React.FC<{ nivel: NivelAcorde; onCambio: (n: NivelAc
       className={`px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-sans cursor-pointer transition-ui ${siempre ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
     >
       ♪ Siempre
-    </button>
+    </button>}
   </span>
   );
 };
@@ -175,12 +175,12 @@ const ChipsInversion: React.FC<{ opciones: number[]; activa: number | null; reco
 );
 
 /** Una ficha de acorde en el instrumento elegido (guitarra: tabla de formas; piano y bajo: calculados). */
-export const CajaAcorde: React.FC<{ chord: string; vista: VistaAcorde; contexto?: ContextoAcorde; grado?: string; sonando?: boolean; nivel?: NivelAcorde; previo?: string | null; conReloj?: boolean; id?: string; /** false si tocar la ficha ya hace otra cosa (saltar la canción a ese acorde). */ sonar?: boolean }> = ({ chord, vista, contexto, grado, sonando, nivel = 'normal', previo, conReloj, id, sonar = true }) => {
+export const CajaAcorde: React.FC<{ chord: string; vista: VistaAcorde; contexto?: ContextoAcorde; grado?: string; sonando?: boolean; nivel?: NivelAcorde; previo?: string | null; conReloj?: boolean; id?: string; /** false si tocar la ficha ya hace otra cosa (saltar la canción a ese acorde). */ sonar?: boolean; /** false en la tira del Atril, que tiene que dejar sitio a la letra: el pentagrama vive en el cajón de diagramas. */ conPentagrama?: boolean }> = ({ chord, vista, contexto, grado, sonando, nivel = 'normal', previo, conReloj, id, sonar = true, conPentagrama = true }) => {
   const [ensayo] = useModoEnsayo();
   const [visto, setVisto] = useState(false);
   const [siempre] = usePentagramaSiempre();
   const [manual, setManual] = useState<boolean | null>(null);
-  const conNotas = manual ?? siempre;
+  const conNotas = conPentagrama && (manual ?? siempre);
   // La inversión que menos mueve la mano desde el acorde anterior viene puesta en piano y en guitarra Pro (y se puede cambiar);
   // en guitarra Normal sale la forma de siempre y en bajo la raíz, hasta que se elige otra.
   const [invElegida, setInvElegida] = useState<number | null>(null);
@@ -259,7 +259,7 @@ export const CajaAcorde: React.FC<{ chord: string; vista: VistaAcorde; contexto?
           </div>
         </div>
       ) : <p className="text-micro text-[var(--ink-2)] font-sans">[Acorde estándar]</p>}
-      {!tapar && (
+      {!tapar && conPentagrama && (
         <>
           <button type="button" aria-pressed={conNotas} title="Ver las notas en el pentagrama" onClick={() => setManual(!conNotas)} className={`px-3 py-1 rounded-[var(--r-pill)] text-micro font-sans cursor-pointer bg-[var(--surface)] text-[var(--ink)] ${conNotas ? 'font-bold' : ''}`}>{conNotas ? 'Ocultar pentagrama' : '♪ Ver pentagrama'}</button>
           {conNotas && <PentagramaFicha chord={chord} vista={vista} nivel={nivel} siguiente={contexto?.siguiente} invSonido={invSonido} invLineaBajo={invLineaBajo} />}
