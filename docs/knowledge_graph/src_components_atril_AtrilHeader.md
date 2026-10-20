@@ -19,6 +19,7 @@ Cabecera del Atril: título, tonalidad, ficha del tema y acciones.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_atril_AtrilContext|src/components/atril/AtrilContext.ts]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_atril_AtrilTabs|src/components/atril/AtrilTabs.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_utils_formatSongTitle|src/utils/formatSongTitle.ts]] *(Layer: #service, Domain: #repertoire)*
 

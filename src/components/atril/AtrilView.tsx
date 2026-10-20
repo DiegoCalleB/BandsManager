@@ -23,7 +23,7 @@ import { useAtril } from "./AtrilContext";
  * @returns El modal del Atril.
  */
 export function AtrilView() {
-  const { pantallaCompleta, alternarPantallaCompleta, onClose, activeTab, acordeSonando, sincronizado, acordeActivo, proximosAcordes, proximosIndices, setAudioCurrentTime, contextoAcordes, vistaAcordes, setVistaAcordes, nivelAcordes, setNivelAcordes, estiloArmonia, isPlayingAudio, audioUrl, handleToggleAudio, tiemposAcordes, analisisAcordes, audioRef, modoEscenario } = useAtril();
+  const { pantallaCompleta, alternarPantallaCompleta, onClose, activeTab, acordeSonando, showChordDiagrams, sincronizado, acordeActivo, proximosAcordes, proximosIndices, setAudioCurrentTime, contextoAcordes, vistaAcordes, setVistaAcordes, nivelAcordes, setNivelAcordes, estiloArmonia, isPlayingAudio, audioUrl, handleToggleAudio, tiemposAcordes, analisisAcordes, audioRef, modoEscenario } = useAtril();
   const estadoActual = useAcordeActual(acordeSonando);
   const proximos = sincronizado && acordeActivo >= 0 ? proximosAcordes : undefined;
 
@@ -67,7 +67,7 @@ export function AtrilView() {
     <div className="shrink-0 max-md:shrink max-md:min-h-0 max-md:max-h-[26dvh] max-md:overflow-y-auto max-md:overscroll-contain md:contents">
       <AtrilHeader />
       {/* TOOLBAR CONTROLS BAR (LaCuerda / Ultimate Guitar Toolbar) */}
-      {!modoEscenario && <AtrilToolbar />}
+      {!modoEscenario && activeTab === "chords" && <AtrilToolbar />}
       {/* AI SUCCESS NOTIFICATION BANNER */}
       {!modoEscenario && <AiSuccessBanner />}
       {/* ACORDES DETECTADOS DEL AUDIO (en móvil dentro de la franja, para no robarle sitio a la letra) */}
@@ -89,7 +89,7 @@ export function AtrilView() {
 
     {/* DIAGRAMAS: en móvil, justo bajo la barra en el dock; con tope de altura y scroll interno */}
     {activeTab === "chords" && !modoEscenario && (
-      <div className="shrink-0 max-md:shrink max-md:min-h-0 max-md:order-last max-md:max-h-[24dvh] max-md:overflow-y-auto max-md:overscroll-contain max-md:pb-[env(safe-area-inset-bottom)]">
+      <div className={`shrink-0 max-md:shrink max-md:min-h-0 max-md:order-last max-md:max-h-[24dvh] ${showChordDiagrams ? "max-md:hidden" : ""} max-md:overflow-y-auto max-md:overscroll-contain max-md:pb-[env(safe-area-inset-bottom)]`}>
         <DiagramasAcordeActual
           estado={estadoActual}
           sonando={acordeSonando}

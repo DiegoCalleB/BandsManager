@@ -34,7 +34,7 @@ export interface AtrilHarmonyParams {
  * @param params Estado y callbacks del contenedor ({@link AtrilHarmonyParams}).
  * @returns Estado derivado y handlers expuestos al contenedor.
  */
-export function useAtrilHarmony({ cifradoTexto, transpose, notation, analisisAcordes, seguirEnCifrado, showAnalisisAcordes, audioCurrentTime, isPlayingAudio, scrollContainerRef, activeTab, song, autoScroll, setCopiedText }: AtrilHarmonyParams) {
+export function useAtrilHarmony({ cifradoTexto, transpose, notation, analisisAcordes, seguirEnCifrado, audioCurrentTime, isPlayingAudio, scrollContainerRef, activeTab, song, autoScroll, setCopiedText }: AtrilHarmonyParams) {
   // Process text according to current transpose and notation
   const processedText = processChordText(cifradoTexto, transpose, notation);
 
@@ -44,7 +44,7 @@ export function useAtrilHarmony({ cifradoTexto, transpose, notation, analisisAco
     () => (analisisAcordes ? alinearCifradoConAudio(cifradoTexto, analisisAcordes.segmentos) : null),
     [cifradoTexto, analisisAcordes],
   );
-  const sincronizado = Boolean(alineacion?.usable && seguirEnCifrado && showAnalisisAcordes);
+  const sincronizado = Boolean(alineacion?.usable && seguirEnCifrado);
 
   // Letra con tiempos (Whisper): cada línea del cifrado sabe cuándo suena y la actual se resalta.
   const letraTranscrita = analisisAcordes?.letra?.lineas;

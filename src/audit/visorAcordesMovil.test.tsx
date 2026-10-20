@@ -84,7 +84,7 @@ describe('Atril: modo escenario', () => {
   it('se alterna desde el menú, oculta barras y diagramas y agranda la letra', () => {
     expect(visor).toContain('setModoEscenario');
     expect(visor).toContain('Modo escenario');
-    expect(visor).toContain('!modoEscenario && <AtrilToolbar />');
+    expect(visor).toContain('!modoEscenario && activeTab === "chords" && <AtrilToolbar />');
     expect(visor).toContain('group-data-[escenario=true]/esc:text-3xl');
   });
 

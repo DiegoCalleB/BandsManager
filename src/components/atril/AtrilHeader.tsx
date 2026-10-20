@@ -5,6 +5,7 @@
 import { Edit3,Guitar,MessageSquare,Music,Pause,Play,Printer,Theater,Timer,Upload,UserCheck,Wand2 } from "lucide-react";
 import { formatSongTitle } from "../../utils/formatSongTitle";
 import { ActionMenu,Button } from "../ui";
+import { AtrilTabs } from "./AtrilTabs";
 import { useAtril } from "./AtrilContext";
 
 /**
@@ -58,6 +59,8 @@ export function AtrilHeader() {
             </p>
           </div>
         </div>
+
+        {!modoEscenario && <AtrilTabs />}
 
         <div className="flex items-center gap-1.5 absolute top-3 right-14 z-20 sm:static">
           {/* AI Generate — la acción principal en pantalla ancha; en móvil vive en ⋯ para dejar sitio al cifrado */}

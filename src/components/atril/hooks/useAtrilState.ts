@@ -57,7 +57,8 @@ export function useAtrilState({ modo, song }: AtrilStateParams) {
 
   // Análisis de acordes del audio (detección propia, sin IA generativa)
   const [isAnalyzingChords, setIsAnalyzingChords] = useState<boolean>(false);
-  const [showAnalisisAcordes, setShowAnalisisAcordes] = useState<boolean>(true);
+  // La línea con todos los acordes de la canción ocupa sitio a la letra: cerrada por defecto (la sincronización no depende de ella).
+  const [showAnalisisAcordes, setShowAnalisisAcordes] = useState<boolean>(false);
   const analisisAcordes: AnalisisAcordes | undefined = song.analisisAcordes;
   const [seguirEnCifrado, setSeguirEnCifrado] = useState<boolean>(true);
 

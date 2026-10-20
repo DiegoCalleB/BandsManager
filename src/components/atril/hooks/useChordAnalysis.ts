@@ -27,7 +27,7 @@ export interface ChordAnalysisParams {
  * @param params Estado y callbacks del contenedor ({@link ChordAnalysisParams}).
  * @returns Estado derivado y handlers expuestos al contenedor.
  */
-export function useChordAnalysis({ setCifradoTexto, song, setGuiaSustituto, setIsAnalyzingChords, setOidoOculto, setAiSuccessMsg, onUpdateSong, setShowAnalisisAcordes, audioUrl, analisisAcordes, isAnalyzingChords }: ChordAnalysisParams) {
+export function useChordAnalysis({ setCifradoTexto, song, setGuiaSustituto, setIsAnalyzingChords, setOidoOculto, setAiSuccessMsg, onUpdateSong, audioUrl, analisisAcordes, isAnalyzingChords }: ChordAnalysisParams) {
   // El estado de edición solo se inicializa desde `song` al montar (useState no vuelve a leer
   // sus argumentos). Cuando la subida de estructura o la generación con IA actualizan `song`
   // desde fuera del formulario de edición, había que cerrar y reabrir el modal para verlo:
@@ -46,7 +46,6 @@ export function useChordAnalysis({ setCifradoTexto, song, setGuiaSustituto, setI
       setAiSuccessMsg(null);
       const analisis = await analizarAcordesDelAudio(song.id, sobrescribir);
       onUpdateSong({ ...song, analisisAcordes: analisis });
-      setShowAnalisisAcordes(true);
       setAiSuccessMsg(resumenAnalisisAcordes(analisis));
     } catch (err) {
       setAiSuccessMsg(`⚠️ ${mensajeDeError(err, "No se pudieron analizar los acordes del audio. Prueba en un momento.")}`);

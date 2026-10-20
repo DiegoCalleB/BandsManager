@@ -39,6 +39,7 @@ Exporta: TecladoAcorde, BajoAcorde, SelectorVistaAcorde, SelectorNivel, CajaAcor
 
 ## 🧪 Tests que lo cubren
 - `src/audit/cajaAcorde.test.tsx`
+- `src/audit/pentagramaPaso.test.tsx`
 
 ---
 
