@@ -39,6 +39,11 @@ Lista de novedades de la landing oficial, con doble confirmación (sin sesión).
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/interesadosConfirmar.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

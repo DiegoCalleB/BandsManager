@@ -1,4 +1,5 @@
-// Regalo de pegatinas en la primera suscripción de los planes altos (De Gira y Cabeza de Cartel). Puro (sin red ni BD) para poder probarlo.
+// Regalo de pegatinas en la primera suscripción ANUAL de los planes altos (De Gira y Cabeza de Cartel).
+// Puro (sin red ni BD) para poder probarlo.
 // Las cantidades son las que enseñan la pantalla Planes y la landing TFM: un test las mantiene juntas.
 
 export const PEGATINAS_POR_PLAN: Readonly<Record<string, { cantidad: number; expres: boolean }>> = {
@@ -10,20 +11,22 @@ interface BandaConPlan {
   band_id?: string;
   plan?: string;
   estado_suscripcion?: string;
+  /** 'annual' | 'monthly' (lo fija billing.ts al activar la suscripción). */
+  ciclo_facturacion?: string;
 }
 
 const sinPrefijo = (id: string) => id.replace(/^(band|reg)-/i, '').toLowerCase().trim();
 
 /**
- * Banda con derecho al pack, con su `band_id` real y su plan, o null. Exige plan de pago Y suscripción
- * activa: un plan puesto a mano sin cobro no regala nada. Coincidencia exacta de `band_id`, sin nombres
- * parecidos.
+ * Banda con derecho al pack, con su `band_id` real y su plan, o null. Exige plan de pago, suscripción
+ * activa y facturación ANUAL (el pack cuesta una fracción pequeña de un año pagado, no de un mes). Un plan
+ * puesto a mano sin cobro no regala nada. Coincidencia exacta de `band_id`, sin nombres parecidos.
  */
 export function bandaConPack(bandas: ReadonlyArray<BandaConPlan> | undefined, bandId: string | undefined) {
   const buscada = sinPrefijo(bandId || '');
   if (!buscada || buscada === 'default') return null;
   const banda = (bandas || []).find((b) => sinPrefijo(b.band_id || '') === buscada);
-  if (!banda?.band_id || banda.estado_suscripcion !== 'activo') return null;
+  if (!banda?.band_id || banda.estado_suscripcion !== 'activo' || banda.ciclo_facturacion !== 'annual') return null;
   const plan = (banda.plan || '').toLowerCase();
   const pack = PEGATINAS_POR_PLAN[plan];
   return pack ? { bandId: banda.band_id, plan, ...pack } : null;
