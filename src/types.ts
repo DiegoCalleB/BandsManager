@@ -59,6 +59,7 @@ export type LeadType =
   | "productora"
   | "medio"
   | "discoteca"
+  | "bar"
   | "agencia"
   | "manager"
   | "sello"

@@ -79,3 +79,7 @@ El catálogo se abre desde el botón «Catálogo» de Escenarios (Booking) y des
 ## Wikidata como fuente
 
 Salas de conciertos (clases Q8719053 y Q1060829) y festivales de música (Q868557) de España desde el servicio SPARQL de Wikidata, que es CC0: se puede guardar y mostrar sin condiciones. Se recogen nombre, ciudad, comunidad autónoma, web, aforo y punto en el mapa; nunca contactos. Los elementos con fecha de disolución, de cierre o de fin no entran, ni los recintos de estadio. La importación es común a cualquier fuente externa (`importarDeFuente`): solo añade, rellena huecos, no toca las verificadas, respeta los alias y anota `wikidata` en `fuentes`. Se lanza una vez por arranque. `CATALOGO_IMPORTAR_WIKIDATA` sin definir solo simula (el log dice cuántas traería y algunos nombres), `true` escribe y `false` la apaga.
+
+## Bares con música en directo y salas que faltan
+
+La importación de OSM incluye también `bar`, `pub` y `cafe` **solo si llevan `live_music=yes`** (los bares sin esa etiqueta y los restaurantes siguen fuera) y los guarda con tipo `bar`: donde tocan muchas bandas pequeñas. El filtro «Tipo» del catálogo los ofrece como «Bares con directo». En el catálogo, un botón «¿Falta una sala o un festival? Añádelo» abre «Añadir escenario»; lo que añade la banda entra al catálogo en la siguiente sincronización y se verifica y completa solo (Maps, su web, aforo).

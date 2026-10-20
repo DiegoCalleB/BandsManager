@@ -91,7 +91,7 @@ const DOMINIOS_PERSONALES = new Set([
 ]);
 
 /** Solo los recintos donde se puede tocar. Medios, agencias, productoras o bandas amigas no son salas, y las bandas son datos de otras bandas. */
-const TIPOS_CATALOGABLES = new Set(['sala', 'festival', 'ayuntamiento', 'discoteca']);
+const TIPOS_CATALOGABLES = new Set(['sala', 'festival', 'ayuntamiento', 'discoteca', 'bar']);
 
 /**
  * Recintos para artistas de estadio y pabellón: no son un sitio donde pueda tocar una banda que busca salas, así que no

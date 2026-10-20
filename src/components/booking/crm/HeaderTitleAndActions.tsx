@@ -6,6 +6,7 @@ import { Bot, ChevronDown, ChevronUp, Download, MapPin, MessageSquareText, PlusC
 import { ModuleTutorialTrigger } from "../../common/ModuleTutorialTrigger";
 import { Button } from "../../ui";
 import { ABRIR_CATALOGO_SALAS } from "../catalogo/eventosCatalogo";
+import { leadVacio } from "./leadVacio";
 import { useBookingCrm } from "./BookingCrmContext";
 
 /**
@@ -37,27 +38,7 @@ export function HeaderTitleAndActions() {
             id="add-new-lead-btn"
             type="button"
             onClick={() => {
-              setNewLeadData({
-                nombre_sala: '',
-                ciudad: '',
-                region: 'Nacional',
-                direccion: '',
-                aforo: 0,
-                tipo: sectionTab === 'medios' ? 'medio' : sectionTab === 'grupos' ? 'productora' : 'sala',
-                email_contacto: '',
-                email_secundario: '',
-                telefono: '',
-                telefono_movil: '',
-                telefono_fijo: '',
-                website: '',
-                instagram: '',
-                fuente: '',
-                genero: sectionTab === 'medios' ? 'Radio' : sectionTab === 'grupos' ? 'Management / Booking' : 'Variado',
-                notas: '',
-                pitch_generado: '',
-                icono: sectionTab === 'medios' ? '📻' : sectionTab === 'grupos' ? '💼' : '🏛️',
-                imagen_url: '',
-              });
+              setNewLeadData(leadVacio(sectionTab));
               setIsAddingLeadModalOpen(true);
             }}
             className="items-center gap-1.5"

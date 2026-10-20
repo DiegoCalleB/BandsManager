@@ -66,11 +66,19 @@ describe('salasDeOsm', () => {
 
 describe('consultaOverpassSalas', () => {
   const q = consultaOverpassSalas('ES-MD');
-  it('pide salas de música en directo y locales de conciertos; discotecas y teatros solo si declaran música en directo, nunca bares, cafés ni restaurantes', () => {
+  it('pide salas de música en directo y locales de conciertos; discotecas, teatros, bares, pubs y cafés solo si declaran música en directo; nunca restaurantes', () => {
     expect(q).toContain('"amenity"="music_venue"');
     expect(q).toContain('"amenity"="concert_hall"');
     expect(q).toContain('"amenity"~"^(nightclub|theatre|arts_centre)$"]["live_music"="yes"');
-    expect(q).not.toMatch(/"(bar|pub|cafe|restaurant)"|\|(bar|pub|cafe|restaurant)\|/);
+    expect(q).toContain('"amenity"~"^(bar|pub|cafe)$"]["live_music"="yes"');
+    expect(q).not.toMatch(/"amenity"="(bar|pub|cafe)"/);
+    expect(q).not.toContain('restaurant');
+  });
+
+  it('un bar, pub o café con música en directo entra como «bar»', () => {
+    for (const amenity of ['bar', 'pub', 'cafe']) {
+      expect(salaDesdeOsm({ type: 'node', id: 1, tags: { amenity, live_music: 'yes', name: 'El Sótano', 'addr:city': 'Madrid' } })?.tipo).toBe('bar');
+    }
   });
   it('limita la consulta a una comunidad por su código ISO y neutraliza cualquier otro texto', () => {
     expect(q).toContain('"ISO3166-2"="ES-MD"');

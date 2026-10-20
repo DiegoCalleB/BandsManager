@@ -36,7 +36,8 @@ export const REGIONES_OSM = ['ES-AN', 'ES-AR', 'ES-AS', 'ES-CB', 'ES-CE', 'ES-CL
  */
 const FILTROS_SALAS = `  nwr["amenity"="music_venue"](area.r);
   nwr["amenity"="concert_hall"](area.r);
-  nwr["amenity"~"^(nightclub|theatre|arts_centre)$"]["live_music"="yes"](area.r);`;
+  nwr["amenity"~"^(nightclub|theatre|arts_centre)$"]["live_music"="yes"](area.r);
+  nwr["amenity"~"^(bar|pub|cafe)$"]["live_music"="yes"](area.r);`;
 
 const areaDe = (region: string) => `area["ISO3166-2"="${region.replace(/[^A-Z0-9-]/g, '')}"]->.r;`;
 
@@ -98,7 +99,7 @@ export function salaDesdeOsm(el: ElementoOsm): CamposPublicosSala | null {
     ciudad,
     region: regionDeCodigoPostal(t['addr:postcode']) ?? textoPublico(t['addr:state'] ?? t['addr:province'], 60),
     direccion,
-    tipo: t.amenity === 'nightclub' ? 'discoteca' : 'sala',
+    tipo: t.amenity === 'nightclub' ? 'discoteca' : ['bar', 'pub', 'cafe'].includes(t.amenity ?? '') ? 'bar' : 'sala',
     aforo: aforoDe(t.capacity),
     genero: textoPublico(t['music:genre'] ?? t.genre, 80),
     website: urlPublica(etiqueta(t, 'website', 'contact:website', 'url')),
