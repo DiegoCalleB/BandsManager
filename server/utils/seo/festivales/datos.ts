@@ -37,6 +37,7 @@ export const FESTIVALES: readonly Festival[] = [
     provincia: 'La Rioja',
     pais: 'ES',
     estilos: ['emergente'],
+    web: 'https://actualfestival.com/',
     fuente: 'https://www.eldiario.es/la-rioja/guerra-bandas-trampolin-actual-2028-buscan-grupos-emergentes-13-edicion_1_13440466.html',
     verificadoEn: '2026-10-19',
     descripcion: {
@@ -58,6 +59,7 @@ export const FESTIVALES: readonly Festival[] = [
     provincia: 'Albacete',
     pais: 'ES',
     estilos: ['rock', 'urbano'],
+    web: 'https://www.vina-rock.com/',
     fuente: 'https://www.santandersmusic.com/magazine/festivales/festivales-espana',
     verificadoEn: '2026-10-19',
     descripcion: {
@@ -72,6 +74,7 @@ export const FESTIVALES: readonly Festival[] = [
     provincia: 'Álava',
     pais: 'ES',
     estilos: ['rock'],
+    web: 'https://azkenarockfestival.com/',
     fuente: 'https://www.santandersmusic.com/magazine/festivales/festivales-espana',
     verificadoEn: '2026-10-19',
     descripcion: {
@@ -86,6 +89,7 @@ export const FESTIVALES: readonly Festival[] = [
     provincia: 'Barcelona',
     pais: 'ES',
     estilos: ['indie', 'rock', 'pop', 'electronica'],
+    web: 'https://www.primaverasound.com/',
     fuente: 'https://www.santandersmusic.com/magazine/festivales/festivales-espana',
     verificadoEn: '2026-10-19',
     descripcion: {
@@ -100,6 +104,7 @@ export const FESTIVALES: readonly Festival[] = [
     provincia: 'Valencia',
     pais: 'ES',
     estilos: ['pop', 'indie', 'rock'],
+    web: 'https://festivaldelesarts.com/',
     fuente: 'https://www.santandersmusic.com/magazine/festivales/festivales-espana',
     verificadoEn: '2026-10-19',
     descripcion: {
@@ -114,6 +119,7 @@ export const FESTIVALES: readonly Festival[] = [
     provincia: 'Barcelona',
     pais: 'ES',
     estilos: ['electronica'],
+    web: 'https://sonar.es/',
     fuente: 'https://www.santandersmusic.com/magazine/festivales/festivales-espana',
     verificadoEn: '2026-10-19',
     descripcion: {
@@ -128,6 +134,7 @@ export const FESTIVALES: readonly Festival[] = [
     provincia: 'Bizkaia',
     pais: 'ES',
     estilos: ['rock', 'pop', 'indie', 'electronica'],
+    web: 'https://bilbaobbklive.com/',
     fuente: 'https://www.santandersmusic.com/magazine/festivales/festivales-espana',
     verificadoEn: '2026-10-19',
     descripcion: {
@@ -142,6 +149,7 @@ export const FESTIVALES: readonly Festival[] = [
     provincia: 'Madrid',
     pais: 'ES',
     estilos: ['rock', 'pop'],
+    web: 'https://madcoolfestival.es/',
     fuente: 'https://www.santandersmusic.com/magazine/festivales/festivales-espana',
     verificadoEn: '2026-10-19',
     descripcion: {
@@ -156,6 +164,7 @@ export const FESTIVALES: readonly Festival[] = [
     provincia: 'Castellón',
     pais: 'ES',
     estilos: ['pop', 'indie', 'rock', 'electronica'],
+    web: 'https://fiberfib.com/',
     fuente: 'https://www.santandersmusic.com/magazine/festivales/festivales-espana',
     verificadoEn: '2026-10-19',
     descripcion: {
@@ -170,6 +179,7 @@ export const FESTIVALES: readonly Festival[] = [
     provincia: 'Castellón',
     pais: 'ES',
     estilos: ['indie', 'pop', 'electronica', 'urbano'],
+    web: 'https://arenalsound.com/',
     fuente: 'https://www.santandersmusic.com/magazine/festivales/festivales-espana',
     verificadoEn: '2026-10-19',
     descripcion: {
@@ -184,6 +194,7 @@ export const FESTIVALES: readonly Festival[] = [
     provincia: 'Burgos',
     pais: 'ES',
     estilos: ['indie', 'emergente'],
+    web: 'https://sonorama-aranda.com/',
     fuente: 'https://www.santandersmusic.com/magazine/festivales/festivales-espana',
     verificadoEn: '2026-10-19',
     descripcion: {

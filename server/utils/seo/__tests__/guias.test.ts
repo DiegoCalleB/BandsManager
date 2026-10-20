@@ -79,7 +79,7 @@ describe('las dos versiones de cada guía', () => {
   });
 
   it('el sitemap lista cada página en los dos idiomas con las mismas alternativas', () => {
-    const entradas = entradasSeo(BASE);
+    const entradas = entradasSeo(BASE, undefined, []);
     expect(entradas).toHaveLength((GUIAS.length + 2) * 2);
     for (const e of entradas) {
       expect(e.alternativas?.map((a) => a.hreflang)).toEqual(['es', 'en', 'x-default']);
