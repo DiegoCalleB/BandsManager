@@ -14,6 +14,10 @@ interface Props {
   fondosIa: string[];
   onGenerarIa: (estilo: EstiloCartel) => Promise<boolean>;
   generando: boolean;
+  /** La IA dibuja el título y la fecha dentro del arte (en vez de pintarlos la app encima). */
+  letrasIa: boolean;
+  onLetrasIa: (v: boolean) => void;
+  puedeLetrasIa: boolean;
   /** Estilo con el que arranca el panel de IA (el de la banda: plantilla del dossier, género, favoritos). */
   estiloInicial: EstiloCartel;
   /** «Tus colores», sacados del logo. */
@@ -48,7 +52,7 @@ function Muestra({ activa, etiqueta, onClick, children }: { activa: boolean; eti
   );
 }
 
-export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenerarIa, generando, estiloInicial, paletaBanda, panelBanda, panelIdea }: Props) {
+export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenerarIa, generando, letrasIa, onLetrasIa, puedeLetrasIa, estiloInicial, paletaBanda, panelBanda, panelIdea }: Props) {
   const [iaAbierta, setIaAbierta] = useState(false);
   // Hasta que la persona toca un estilo, manda el de su banda (que puede llegar tarde, al cargar su ADN).
   const [estiloElegido, setEstiloElegido] = useState<EstiloCartel | null>(null);
@@ -111,6 +115,14 @@ export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenera
           </div>
           {panelIdea}
           {panelBanda}
+          {puedeLetrasIa && (
+            <label className="flex cursor-pointer items-start gap-2 text-xs text-[var(--ink-2)]">
+              <input type="checkbox" checked={letrasIa} onChange={(e) => onLetrasIa(e.target.checked)} className="mt-0.5 size-4 shrink-0 accent-[var(--acc)]" />
+              <span className="text-pretty">
+                <span className="font-medium text-[var(--ink)]">La IA dibuja el título y la fecha</span>: letras integradas en el arte, más de cartel. Puede fallar alguna letra; si pasa, te lo decimos y puedes repetir sin esta opción.
+              </span>
+            </label>
+          )}
           <Button variant="soft" disabled={generando} onClick={async () => { if (await onGenerarIa(estilo)) setIaAbierta(false); }}>
             <Sparkles className="size-4" aria-hidden />
             {generando ? 'Pintando el fondo…' : 'Pintar fondo'}

@@ -4,6 +4,7 @@
 import { getAiClient, GEMINI_MODEL, TIMEOUT_IA_MS } from '../ai.js';
 import { dbRecordAiUsage } from '../db/aiLedger.js';
 import { costEurFromTokens } from '../ai.js';
+import type { TextosCartel } from '../utils/promptCartel.js';
 
 export interface VarianteFondo {
   mimeType: string;
@@ -18,11 +19,27 @@ const CRITERIO = [
   'Answer ONLY with JSON: {"best": <index>}.',
 ].join('\n');
 
-/** Índice de la variante ganadora. */
-export async function elegirMejorVariante(bandId: string, variantes: VarianteFondo[]): Promise<number> {
-  if (variantes.length <= 1) return 0;
+export interface Veredicto {
+  indice: number;
+  /** Solo si había textos que comprobar: la variante elegida los lleva escritos exactamente. */
+  textoOk: boolean;
+}
+
+const CRITERIO_TEXTO = (t: TextosCartel) =>
+  [
+    'The poster must contain EXACTLY these three texts and nothing else written:',
+    `1) "${t.nombre}"  2) "${t.fecha}"  3) "${t.lugar}"`,
+    'For every candidate, read the lettering and decide text_ok = true only if all three texts are present and every character matches exactly (accents, capitals, digits) and no other words, numbers or small print appear. Prefer a candidate with text_ok = true over any better-looking one with a spelling error.',
+    'Answer ONLY with JSON: {"best": <index>, "text_ok": [<boolean per candidate, in order>]}.',
+  ].join('\n');
+
+/** Variante ganadora; con textos, además dice si lleva las letras bien escritas. */
+export async function elegirMejorVariante(bandId: string, variantes: VarianteFondo[], textos?: TextosCartel | null): Promise<Veredicto> {
+  const sinJuez: Veredicto = { indice: 0, textoOk: false };
+  // Con textos hay que leerlos aunque solo haya una variante: la persona debe saber si salieron bien.
+  if (variantes.length <= 1 && !textos) return { indice: 0, textoOk: !textos };
   const client = getAiClient();
-  if (!client) return 0;
+  if (!client) return sinJuez;
   try {
     const respuesta = await client.models.generateContent({
       model: GEMINI_MODEL,
@@ -30,7 +47,7 @@ export async function elegirMejorVariante(bandId: string, variantes: VarianteFon
         {
           role: 'user',
           parts: [
-            { text: CRITERIO },
+            { text: textos ? `${CRITERIO.replace(/Answer ONLY with JSON: .*$/m, '')}\n${CRITERIO_TEXTO(textos)}` : CRITERIO },
             ...variantes.flatMap((v, i) => [{ text: `Candidate ${i}:` }, { inlineData: { mimeType: v.mimeType, data: v.data } }]),
           ],
         },
@@ -45,11 +62,21 @@ export async function elegirMejorVariante(bandId: string, variantes: VarianteFon
       modelName: GEMINI_MODEL,
       estimatedCostEur: costEurFromTokens('gemini', uso?.promptTokenCount || 0, uso?.candidatesTokenCount || 0),
     }).catch((err) => console.warn('[cartel] No se pudo registrar el consumo del juez:', err?.message || err));
-    const parsed = JSON.parse(respuesta.text || '{}') as { best?: unknown };
-    const i = Number(parsed.best);
-    return Number.isInteger(i) && i >= 0 && i < variantes.length ? i : 0;
+    const parsed = JSON.parse(respuesta.text || '{}') as { best?: unknown; text_ok?: unknown };
+    const oks = Array.isArray(parsed.text_ok) ? parsed.text_ok.map((v) => v === true) : [];
+    let i = Number(parsed.best);
+    if (!Number.isInteger(i) || i < 0 || i >= variantes.length) i = 0;
+    if (textos) {
+      // Si la elegida tiene una falta pero otra está bien escrita, gana la que está bien escrita.
+      if (!oks[i]) {
+        const buena = oks.findIndex(Boolean);
+        if (buena >= 0 && buena < variantes.length) i = buena;
+      }
+      return { indice: i, textoOk: oks[i] === true };
+    }
+    return { indice: i, textoOk: true };
   } catch (e) {
     console.warn('[cartel] El juez de variantes falló, se usa la primera:', (e as Error)?.message || e);
-    return 0;
+    return sinJuez;
   }
 }

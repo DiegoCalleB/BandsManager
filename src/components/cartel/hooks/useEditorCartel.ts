@@ -314,6 +314,10 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     });
   };
 
+  // Que la IA dibuje el título y la fecha dentro del arte: más de cartel, pero solo con una banda (con varias va el lineup).
+  const [letrasIa, setLetrasIa] = useState(true);
+  const puedeLetrasIa = !compartido;
+
   /** Devuelve si salió bien (la vista cierra el panel de IA para que Compartir vuelva a verse). */
   const generarIa = async (estilo: EstiloCartel): Promise<boolean> => {
     if (!id) return false;
@@ -322,7 +326,7 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     setError(null);
     try {
       const { idea: contada, conBoceto } = idea.paraGenerar;
-      const r = await generarFondoCartel({ concertId: bolo, estilo, idea: contada, conBoceto, encuadre: 'sangre' });
+      const r = await generarFondoCartel({ concertId: bolo, estilo, idea: contada, conBoceto, encuadre: 'sangre', conTexto: letrasIa && puedeLetrasIa });
       // El servidor ya lo añadió al historial guardado; aquí se refleja sin recargar.
       setFondosIaPorBolo((p) => ({ ...p, [bolo]: conFondoIa({ ...CONFIG_INICIAL, fondosIa: p[bolo] ?? fondosIa }, r.url).fondosIa }));
       setFondoPorBolo((p) => ({ ...p, [bolo]: { tipo: 'imagen', origen: 'ia', url: r.url } }));
@@ -330,6 +334,9 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
       const ambiente = [contada?.escena, contada?.ambiente].filter(Boolean).join(' · ').slice(0, 300);
       setMetaIa((p) => ({ ...p, [r.url]: { estilo, ambiente } }));
       marcar();
+      if (r.conTexto && r.textoOk === false) {
+        setError('La IA ha fallado alguna letra del título o la fecha. Desmarca «La IA dibuja el título y la fecha» y vuelve a pintar para usar el texto exacto.');
+      }
       return true;
     } catch (e) {
       console.warn('[Cartelería] Falló la generación del fondo:', e);
@@ -457,6 +464,9 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     fondosIa,
     generarIa,
     generando,
+    letrasIa,
+    setLetrasIa,
+    puedeLetrasIa,
     ajustes,
     cambiarAjustes,
     compartido,
