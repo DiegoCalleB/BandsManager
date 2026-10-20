@@ -289,7 +289,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
                   <Euro className="w-4 h-4 text-[var(--ok)]" />
                   <span>Compensación Económica</span>
                 </div>
-                <div className="flex items-center gap-1 bg-[var(--sunken)] p-0.5 rounded-[var(--r-s)] text-[11px]">
+                <div className="flex items-center gap-1 bg-[var(--surface)] p-0.5 rounded-[var(--r-s)] text-[11px]">
                   <button
                     type="button"
                     onClick={() => setTipoRemuneracion('cache_fijo')}
