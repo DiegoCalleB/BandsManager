@@ -64,7 +64,7 @@ export const DealSupportCard: React.FC<DealSupportCardProps> = ({ deal, onDismis
           )}
         </div>
 
-        <p className="text-xs text-[var(--ink-3)]">
+        <p className="text-xs text-[var(--ink-2)]">
           Es opcional. En el siguiente paso puedes cambiar la cifra o cerrar sin pagar.
         </p>
         {error && (

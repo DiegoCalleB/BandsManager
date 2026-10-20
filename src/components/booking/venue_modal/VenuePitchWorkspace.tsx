@@ -229,7 +229,7 @@ export const VenuePitchWorkspace: React.FC<VenuePitchWorkspaceProps> = ({
             {isCreatingDraft ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Despachando...</span>
+                <span>Despachando…</span>
               </>
             ) : (
               <>

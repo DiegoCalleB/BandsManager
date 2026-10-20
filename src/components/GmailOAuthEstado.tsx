@@ -1,4 +1,5 @@
 import { AlertCircle, CheckCircle2, Loader2, Mail, Unlink } from "lucide-react";
+import { Button } from "./ui/Button";
 import type { EstadoGmailOAuth } from "../services/tiposApi";
 
 interface Props {
@@ -27,15 +28,10 @@ export function GmailOAuthEstado({ estado, cargando, conectando, desconectando, 
           están en pausa y no leen respuestas de las salas hasta que vuelvas a conectar.
         </span>
       </div>
-      <button
-        type="button"
-        onClick={onConectar}
-        disabled={conectando}
-        className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)] font-bold text-xs font-sans transition-ui active:scale-[0.97] disabled:opacity-50 flex items-center gap-2 cursor-pointer"
-      >
+      <Button size="sm" onClick={onConectar} disabled={conectando}>
         {conectando ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Mail className="w-3.5 h-3.5" />}
-        <span>{conectando ? "Redirigiendo a Google..." : "Reconectar con Google"}</span>
-      </button>
+        <span>{conectando ? "Redirigiendo a Google…" : "Reconectar con Google"}</span>
+      </Button>
     </div>
   ) : estado.connected ? (
       <div
@@ -75,7 +71,7 @@ export function GmailOAuthEstado({ estado, cargando, conectando, desconectando, 
         )}
         <span>
           {conectando
-            ? "Redirigiendo a Google..."
+            ? "Redirigiendo a Google…"
             : "Conectar con Google"}
         </span>
       </button>
