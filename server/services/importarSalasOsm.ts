@@ -6,7 +6,7 @@
  * Depende de un puerto y de una función de descarga, así que se prueba sin red ni base de datos.
  */
 import { calcularFiabilidad, idDeSala, type CamposPublicosSala } from '../utils/salaCatalogo.js';
-import { REGIONES_OSM, completarSala, consultaOverpassSalas, contarDescartes, salasDeOsm, type ElementoOsm } from '../utils/osmSalas.js';
+import { REGIONES_OSM, completarSala, conCiudadResuelta, consultaOverpassSalas, contarDescartes, salasDeOsm, type ElementoOsm } from '../utils/osmSalas.js';
 import type { PuertoCatalogo, SalaAGuardar, SalaGuardada } from './catalogoSalas.js';
 
 export type PuertoImportacion = Pick<PuertoCatalogo, 'leerSalas' | 'guardarSalas'>;
@@ -17,6 +17,8 @@ export interface InformeImportacion {
   elementosLeidos: number;
   /** Elementos sin nombre (no se pueden identificar) y con nombre pero sin ciudad (tampoco): lo que hace que entren menos salas de las que hay en el mapa. */
   descartados: { sinNombre: number; sinCiudad: number };
+  /** Salas a las que se les puso la ciudad del núcleo de población más cercano porque OSM no la traía. */
+  ciudadPorCercania: number;
   salasEnOsm: number;
   nuevas: number;
   completadas: number;
@@ -35,12 +37,12 @@ function nuevaSala(c: CamposPublicosSala, ahora: Date): SalaAGuardar {
 
 export async function importarSalasDeOsm(p: { puerto: PuertoImportacion; descargar: DescargarOsm; simulacion?: boolean; ahora?: () => Date }): Promise<InformeImportacion> {
   const ahora = (p.ahora ?? (() => new Date()))();
-  const elementos = await p.descargar();
+  const { salas: elementos, porCercania } = conCiudadResuelta(await p.descargar());
   const deOsm = salasDeOsm(elementos);
   const existentes = new Map((await p.puerto.leerSalas()).map((s) => [s.clave, s]));
 
   const aGuardar: SalaAGuardar[] = [];
-  const informe: InformeImportacion = { simulacion: !!p.simulacion, elementosLeidos: elementos.length, descartados: contarDescartes(elementos), salasEnOsm: deOsm.length, nuevas: 0, completadas: 0, sinCambios: 0 };
+  const informe: InformeImportacion = { simulacion: !!p.simulacion, elementosLeidos: elementos.length, descartados: contarDescartes(elementos), ciudadPorCercania: porCercania, salasEnOsm: deOsm.length, nuevas: 0, completadas: 0, sinCambios: 0 };
 
   for (const c of deOsm) {
     const previa = existentes.get(c.clave);

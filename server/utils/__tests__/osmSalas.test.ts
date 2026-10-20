@@ -90,3 +90,55 @@ describe('contarDescartes', () => {
   });
 });
 
+
+describe('conCiudadResuelta', () => {
+  const nucleo = (name: string, lat: number, lon: number, place = 'town'): ElementoOsm => ({ type: 'node', id: Math.round(lat * 1000), lat, lon, tags: { place, name } });
+  const sala = (name: string, lat: number, lon: number, extra: Record<string, string> = {}): ElementoOsm => ({ type: 'node', id: Math.round(lon * 1000), lat, lon, tags: { amenity: 'music_venue', name, ...extra } });
+
+  it('le pone a una sala sin ciudad el núcleo de población más cercano', async () => {
+    const { conCiudadResuelta, salasDeOsm } = await import('../osmSalas.js');
+    const { salas, porCercania } = conCiudadResuelta([nucleo('Lugo', 43.01, -7.55, 'city'), nucleo('Monforte', 42.52, -7.51), sala('Sala Vella', 43.0, -7.56)]);
+    expect(porCercania).toBe(1);
+    expect(salasDeOsm(salas)[0]).toMatchObject({ nombre: 'Sala Vella', ciudad: 'Lugo' });
+  });
+
+  it('los núcleos de población no se cuelan como salas', async () => {
+    const { conCiudadResuelta } = await import('../osmSalas.js');
+    const { salas } = conCiudadResuelta([nucleo('Lugo', 43.01, -7.55, 'city'), sala('Sala Vella', 43.0, -7.56)]);
+    expect(salas).toHaveLength(1);
+    expect(salas[0].tags?.name).toBe('Sala Vella');
+  });
+
+  it('respeta la ciudad que OSM ya trae', async () => {
+    const { conCiudadResuelta } = await import('../osmSalas.js');
+    const { salas, porCercania } = conCiudadResuelta([nucleo('Lugo', 43.01, -7.55, 'city'), sala('Sala Vella', 43.0, -7.56, { 'addr:city': 'Outeiro' })]);
+    expect(porCercania).toBe(0);
+    expect(salas[0].tags?.['addr:city']).toBe('Outeiro');
+  });
+
+  it('si el núcleo está a más de 12 km, no inventa la ciudad', async () => {
+    const { conCiudadResuelta } = await import('../osmSalas.js');
+    const { salas, porCercania } = conCiudadResuelta([nucleo('Lugo', 43.01, -7.55, 'city'), sala('Sala Lejana', 42.0, -7.0)]);
+    expect(porCercania).toBe(0);
+    expect(salas[0].tags?.['addr:city']).toBeUndefined();
+  });
+
+  it('usa el punto central de una vía o relación', async () => {
+    const { conCiudadResuelta } = await import('../osmSalas.js');
+    const via: ElementoOsm = { type: 'way', id: 9, center: { lat: 43.0, lon: -7.56 }, tags: { amenity: 'concert_hall', name: 'Auditorio' } };
+    expect(conCiudadResuelta([nucleo('Lugo', 43.01, -7.55, 'city'), via]).salas[0].tags?.['addr:city']).toBe('Lugo');
+  });
+
+  it('sin coordenadas no puede resolver nada y la deja como estaba', async () => {
+    const { conCiudadResuelta } = await import('../osmSalas.js');
+    const sinPunto: ElementoOsm = { type: 'node', id: 1, tags: { amenity: 'music_venue', name: 'Sin punto' } };
+    expect(conCiudadResuelta([nucleo('Lugo', 43.01, -7.55, 'city'), sinPunto]).porCercania).toBe(0);
+  });
+
+  it('la consulta pide también los núcleos de población', async () => {
+    const { consultaOverpassSalas } = await import('../osmSalas.js');
+    const q = consultaOverpassSalas('ES-GA');
+    expect(q).toContain('"place"~"^(city|town|village)$"');
+    expect(q.match(/out tags center;/g)).toHaveLength(2);
+  });
+});
