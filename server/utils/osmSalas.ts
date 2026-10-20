@@ -6,7 +6,7 @@
  * de rol, teléfono solo fijo e Instagram solo si se parece al nombre de la sala.
  */
 import {
-  claveSala, emailDeRol, instagramDeLaSala, instagramPublico, telefonoFijoEs, textoPublico, urlPublica,
+  claveSala, emailDeRol, esRecintoMasivo, instagramDeLaSala, instagramPublico, telefonoFijoEs, textoPublico, urlPublica,
   type CamposPublicosSala,
 } from './salaCatalogo.js';
 import { regionDeCodigoPostal } from './regionesEspana.js';
@@ -70,6 +70,7 @@ export function salaDesdeOsm(el: ElementoOsm): CamposPublicosSala | null {
   const ciudad = textoPublico(etiqueta(t, 'addr:city', 'addr:municipality', 'addr:place'), 80);
   const clave = nombre && ciudad ? claveSala({ nombre, ciudad }) : null;
   if (!nombre || !clave) return null;
+  if (esRecintoMasivo({ nombre, aforo: aforoDe(t.capacity), tipo: 'sala' })) return null;
 
   const calle = [t['addr:street'], t['addr:housenumber']].filter(Boolean).join(' ');
   const direccion = textoPublico([calle, t['addr:postcode']].filter(Boolean).join(', '), 160);

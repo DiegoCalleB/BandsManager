@@ -10,6 +10,7 @@ import {
   idDeSala,
   instagramDeLaSala,
   instagramPublico,
+  esRecintoMasivo,
   motivoExclusion,
   senalesDeLeads,
   siguienteVerificadaEn,
@@ -339,5 +340,23 @@ describe('motivoExclusion: las agencias no son salas', () => {
   it('un nombre que solo se parece no se excluye', () => {
     expect(motivoExclusion(lead({ nombre_sala: 'Sala Mánager' }))).toBeNull();
     expect(motivoExclusion(lead({ nombre_sala: 'Booking Club' }))).toBeNull();
+  });
+});
+
+describe('recintos masivos: no son para una banda que busca salas', () => {
+  it('el WiZink Center y similares quedan fuera aunque el lead traiga un aforo absurdo', () => {
+    for (const nombre of ['WiZink Center', 'WiZink Center (La Sala / Pista)', 'Movistar Arena', 'Palau Sant Jordi']) {
+      expect(motivoExclusion(lead({ nombre_sala: nombre, ciudad: 'Madrid', aforo: 11 })), nombre).toBe('tipo');
+    }
+  });
+  it('por encima de 5.000 de aforo, una sala o discoteca queda fuera; un festival no se mide por aforo', () => {
+    expect(esRecintoMasivo({ nombre: 'Gran Pabellón', aforo: 5001, tipo: 'sala' })).toBe(true);
+    expect(esRecintoMasivo({ nombre: 'Gran Pabellón', aforo: 5000, tipo: 'sala' })).toBe(false);
+    expect(esRecintoMasivo({ nombre: 'Viña Rock', aforo: 50000, tipo: 'festival' })).toBe(false);
+  });
+  it('no confunde salas con nombre parecido ni deja fuera las que no declaran aforo', () => {
+    expect(esRecintoMasivo({ nombre: 'Sala Movistar Arenal', aforo: 300 })).toBe(false);
+    expect(esRecintoMasivo({ nombre: 'Razzmatazz', aforo: null })).toBe(false);
+    expect(esRecintoMasivo({ nombre: 'Razzmatazz (Sala 2)', aforo: 2000 })).toBe(false);
   });
 });

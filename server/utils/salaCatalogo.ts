@@ -93,6 +93,21 @@ const DOMINIOS_PERSONALES = new Set([
 /** Solo los recintos donde se puede tocar. Medios, agencias, productoras o bandas amigas no son salas, y las bandas son datos de otras bandas. */
 const TIPOS_CATALOGABLES = new Set(['sala', 'festival', 'ayuntamiento', 'discoteca']);
 
+/**
+ * Recintos para artistas de estadio y pabellón: no son un sitio donde pueda tocar una banda que busca salas, así que no
+ * entran al catálogo. El aforo solo no basta (los leads traen cifras equivocadas, como 11 para el WiZink Center), de ahí
+ * la lista por nombre; el tope de aforo recoge los que no estén en ella. Los festivales no se miden por aforo.
+ */
+export const AFORO_MAXIMO_SALA = 5000;
+const RECINTOS_MASIVOS = ['wizink center', 'movistar arena', 'palau sant jordi', 'estadio metropolitano', 'civitas metropolitano', 'santiago bernabeu', 'camp nou', 'spotify camp nou'];
+
+export function esRecintoMasivo(p: { nombre?: unknown; aforo?: unknown; tipo?: unknown }): boolean {
+  const nombre = normalizarTexto(p.nombre);
+  if (nombre && RECINTOS_MASIVOS.some((r) => nombre === r || nombre.startsWith(`${r} `))) return true;
+  const tipo = typeof p.tipo === 'string' ? p.tipo.trim().toLowerCase() : '';
+  return tipo !== 'festival' && typeof p.aforo === 'number' && p.aforo > AFORO_MAXIMO_SALA;
+}
+
 /** Leads de prueba que se cuelan en las bases reales («Test», «Test 178652...», «Prueba»). */
 const NOMBRE_DE_PRUEBA = /^(test|prueba)(\s|\d|$)/i;
 
@@ -195,6 +210,7 @@ export function motivoExclusion(lead: LeadParaCatalogo): MotivoExclusion | null 
   if (!TIPOS_CATALOGABLES.has((lead.tipo ?? '').trim().toLowerCase() || 'sala')) return 'tipo';
   if (NOMBRE_DE_PRUEBA.test((lead.nombre_sala ?? '').trim())) return 'prueba';
   if (NOMBRE_DE_AGENCIA.test(lead.nombre_sala ?? '')) return 'tipo';
+  if (esRecintoMasivo({ nombre: lead.nombre_sala, aforo: lead.aforo, tipo: lead.tipo })) return 'tipo';
   return claveSala({ placeId: lead.place_id, nombre: lead.nombre_sala, ciudad: lead.ciudad }) ? null : 'sin_clave';
 }
 
