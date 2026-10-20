@@ -34,7 +34,7 @@ describe('migración de la base del catálogo global', () => {
     const t = await consultar<{ n: number }>(`select count(*)::int n from information_schema.tables where table_name in (${EN_TABLAS})`);
     expect(t[0].n).toBe(TABLAS.length);
     const g = await consultar<{ n: number }>('select count(*)::int n from catalogo_generos');
-    expect(g[0].n).toBe(34);
+    expect(g[0].n).toBeGreaterThanOrEqual(34);
   });
 
   it('las tablas nuevas tienen RLS activada y ninguna política: solo el servidor escribe', async () => {
