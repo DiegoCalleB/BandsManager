@@ -18,6 +18,7 @@ Exporta: CatalogoSalasModal.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_booking_catalogo_AforoRango|src/components/booking/catalogo/AforoRango.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_catalogo_FichaSalaCatalogo|src/components/booking/catalogo/FichaSalaCatalogo.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_catalogo_ListaFestivalesCatalogo|src/components/booking/catalogo/ListaFestivalesCatalogo.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_catalogo_ListaSalasCatalogo|src/components/booking/catalogo/ListaSalasCatalogo.tsx]] *(Layer: #frontend, Domain: #booking)*

@@ -1,7 +1,8 @@
 import { lazy, Suspense, useState } from 'react';
-import { List, Map as MapaIcono, Search, X } from 'lucide-react';
+import { List, Map as MapaIcono, Search, SlidersHorizontal, X } from 'lucide-react';
 import { ModalPortal } from '../../common/ModalPortal';
 import { Button, EmptyState, IconButton, Input, Select, Skeleton, Tabs } from '../../ui';
+import { AforoRango } from './AforoRango';
 import { FichaSalaCatalogo } from './FichaSalaCatalogo';
 import { ListaFestivalesCatalogo } from './ListaFestivalesCatalogo';
 import { ListaSalasCatalogo } from './ListaSalasCatalogo';
@@ -41,19 +42,21 @@ const VISTAS = [
 export function CatalogoSalasModal({ isOpen, onClose, onFaltaSala }: CatalogoSalasModalProps) {
   const [seccion, setSeccion] = useState<Seccion>('salas');
   const [vista, setVista] = useState<VistaCatalogo>('lista');
+  const [filtrosAbiertos, setFiltrosAbiertos] = useState(false);
   const c = useCatalogoSalas(isOpen, vista);
   if (!isOpen) return null;
 
   const enFicha = seccion === 'salas' && c.ficha !== null;
+  const filtrosActivos = [c.filtros.lugar.trim(), c.filtros.tipo, (c.filtros.aforoMin + c.filtros.aforoMax).trim(), c.filtros.conContacto].filter(Boolean).length;
 
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] flex items-start justify-center overflow-y-auto overscroll-contain bg-[var(--scrim)]/90 p-2 pb-24 pt-2 sm:items-center sm:p-6 animate-fadeIn">
         <div role="dialog" aria-modal="true" aria-label="Catálogo de salas" className="my-auto flex h-[92dvh] w-full max-w-3xl flex-col overflow-hidden rounded-[var(--r-l)] bg-[var(--surface)] text-[var(--ink)] sm:h-[90vh]">
-          <div className="flex shrink-0 items-start justify-between gap-3 bg-[var(--bg)]/60 p-4 sm:p-5">
+          <div className="flex shrink-0 items-start justify-between gap-3 bg-[var(--bg)]/60 px-4 py-3 sm:p-5">
             <div>
               <h2 className="text-base font-bold text-[var(--acc-ink)]">Catálogo de salas y festivales</h2>
-              <p className="text-xs text-[var(--ink-2)] text-pretty">Lo que han encontrado todas las bandas, lo más fiable primero. Al añadirlo, pasa a tu agenda con su contacto.</p>
+              <p className="hidden text-xs text-[var(--ink-2)] text-pretty sm:block">Lo que han encontrado todas las bandas, lo más fiable primero. Al añadirlo, pasa a tu agenda con su contacto.</p>
             </div>
             <IconButton label="Cerrar catálogo" onClick={onClose}>
               <X className="h-4 w-4" />
@@ -61,7 +64,7 @@ export function CatalogoSalasModal({ isOpen, onClose, onFaltaSala }: CatalogoSal
           </div>
 
           {!enFicha && (
-            <div className="flex shrink-0 items-center justify-between gap-3 px-4 pt-3 sm:px-5">
+            <div className="flex shrink-0 items-center justify-between gap-3 px-4 pt-2 sm:px-5 sm:pt-3">
               <Tabs aria-label="Qué buscar" items={SECCIONES} value={seccion} onChange={(id) => setSeccion(id as Seccion)} layout="fill" className="w-52" />
               {seccion === 'salas' && <Tabs aria-label="Cómo verlas" items={VISTAS} value={vista} onChange={(id) => setVista(id as VistaCatalogo)} layout="fill" className="w-44" />}
             </div>
@@ -76,25 +79,30 @@ export function CatalogoSalasModal({ isOpen, onClose, onFaltaSala }: CatalogoSal
             </div>
           ) : (
             <>
-              <div className="grid shrink-0 grid-cols-1 gap-2 p-4 sm:grid-cols-[1fr_1fr_auto] sm:px-5">
-                <div className="relative">
-                  <Search aria-hidden className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--ink-3)]" />
-                  <Input aria-label="Buscar por nombre o género" className="pl-9" placeholder="Nombre o género" value={c.filtros.texto} onChange={(e) => c.cambiar({ texto: e.target.value })} />
+              <div className="grid shrink-0 grid-cols-1 gap-2 px-4 py-2 sm:grid-cols-[1fr_1fr_auto] sm:p-4 sm:px-5">
+                <div className="flex gap-2 sm:contents">
+                  <div className="relative min-w-0 flex-1">
+                    <Search aria-hidden className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--ink-3)]" />
+                    <Input aria-label="Buscar por nombre o género" className="pl-9" placeholder="Nombre o género" value={c.filtros.texto} onChange={(e) => c.cambiar({ texto: e.target.value })} />
+                  </div>
+                  <Button size="sm" variant="neutral" className="shrink-0 sm:hidden" aria-expanded={filtrosAbiertos} aria-controls="filtros-catalogo" onClick={() => setFiltrosAbiertos((a) => !a)}>
+                    <SlidersHorizontal className="h-4 w-4" aria-hidden />
+                    Filtros{filtrosActivos > 0 && <span className="tabular-nums"> · {filtrosActivos}</span>}
+                  </Button>
                 </div>
-                <Input aria-label="Ciudad o región" placeholder="Ciudad o región" value={c.filtros.lugar} onChange={(e) => c.cambiar({ lugar: e.target.value })} />
-                <Select aria-label="Tipo de espacio" value={c.filtros.tipo} onChange={(e) => c.cambiar({ tipo: e.target.value })}>
-                  {TIPOS.map((t) => (
-                    <option key={t.valor} value={t.valor}>{t.texto}</option>
-                  ))}
-                </Select>
-                <div className="sm:col-span-3 sm:max-w-xs">
-                  <Input aria-label="Aforo orientativo" type="number" inputMode="numeric" min={1} placeholder="Aforo orientativo (personas)" value={c.filtros.aforo} onChange={(e) => c.cambiar({ aforo: e.target.value })} />
-                  {c.filtros.aforo.trim() && Number(c.filtros.aforo) > 0 && <p className="pt-1 text-xs text-[var(--ink-3)]">Salas de unas {Math.round(Number(c.filtros.aforo) * 0.5)} a {Math.round(Number(c.filtros.aforo) * 1.5)} personas.</p>}
+                <AforoRango min={c.filtros.aforoMin} max={c.filtros.aforoMax} onChange={c.cambiar} />
+                <div id="filtros-catalogo" className={`${filtrosAbiertos ? 'grid' : 'hidden'} grid-cols-1 gap-2 sm:contents`}>
+                  <Input aria-label="Ciudad o región" placeholder="Ciudad o región" value={c.filtros.lugar} onChange={(e) => c.cambiar({ lugar: e.target.value })} />
+                  <Select aria-label="Tipo de espacio" value={c.filtros.tipo} onChange={(e) => c.cambiar({ tipo: e.target.value })}>
+                    {TIPOS.map((t) => (
+                      <option key={t.valor} value={t.valor}>{t.texto}</option>
+                    ))}
+                  </Select>
+                  <label className="flex items-center gap-2 text-xs text-[var(--ink-2)] sm:col-span-3">
+                    <input type="checkbox" checked={c.filtros.conContacto} onChange={(e) => c.cambiar({ conContacto: e.target.checked })} />
+                    Solo salas con contacto para escribirles
+                  </label>
                 </div>
-                <label className="flex items-center gap-2 text-xs text-[var(--ink-2)] sm:col-span-3">
-                  <input type="checkbox" checked={c.filtros.conContacto} onChange={(e) => c.cambiar({ conContacto: e.target.checked })} />
-                  Solo salas con contacto para escribirles
-                </label>
               </div>
 
               {c.errorAlta && <p role="alert" className="mx-4 mb-2 rounded-[var(--r-m)] bg-[var(--alert-soft)] px-3.5 py-2.5 text-sm text-[var(--alert)] sm:mx-5">{c.errorAlta}</p>}

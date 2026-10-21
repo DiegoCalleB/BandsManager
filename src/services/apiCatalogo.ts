@@ -88,8 +88,9 @@ export interface FiltrosDelCatalogo {
   lugar?: string;
   tipo?: string;
   conContacto?: boolean;
-  /** Aforo orientativo (personas): salas de la mitad a una vez y media ese valor. Vacío = sin filtro. */
-  aforo?: string | number;
+  /** Rango de aforo (personas). Vacío = sin límite por ese lado; las salas sin dato de aforo quedan fuera si hay alguno. */
+  aforoMin?: string | number;
+  aforoMax?: string | number;
   limite?: number;
 }
 
@@ -114,7 +115,8 @@ function parametros(filtros: FiltrosDelCatalogo): URLSearchParams {
   if (filtros.lugar?.trim()) q.set('lugar', filtros.lugar.trim());
   if (filtros.tipo) q.set('tipo', filtros.tipo);
   if (filtros.conContacto) q.set('conContacto', 'true');
-  if (String(filtros.aforo ?? '').trim()) q.set('aforoAprox', String(filtros.aforo).trim());
+  if (String(filtros.aforoMin ?? '').trim()) q.set('aforoMin', String(filtros.aforoMin).trim());
+  if (String(filtros.aforoMax ?? '').trim()) q.set('aforoMax', String(filtros.aforoMax).trim());
   return q;
 }
 
