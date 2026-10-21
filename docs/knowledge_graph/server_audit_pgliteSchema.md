@@ -30,6 +30,7 @@ _Sin llamadas entrantes indexadas._
 ## 🧪 Tests que lo cubren
 - `server/audit/__tests__/dbRoundTrip.test.ts`
 - `server/audit/__tests__/schemaContract.test.ts`
+- `server/migrations/__tests__/catalogoGenerosFestival.test.ts`
 - `server/migrations/__tests__/catalogoGlobal.test.ts`
 - `server/migrations/__tests__/catalogoSalaAlias.test.ts`
 - `server/migrations/__tests__/catalogoSalas.test.ts`

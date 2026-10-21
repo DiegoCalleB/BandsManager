@@ -13,7 +13,7 @@ tags: ["schema", "tabla", "auto"]
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Tabla de Supabase `registered_bands` (33 columnas).
+Tabla de Supabase `registered_bands` (34 columnas).
 
 ---
 
@@ -132,8 +132,9 @@ _Sin dependencias salientes directas._
 - `referido_por`
 - `referido_en`
 - `suscripcion_habilitada`
+- `ciclo_facturacion`
 
-**Definida en:** `supabase_schema.sql`, `supabase_migration_only_new.sql`, `supabase/migrations/20260915_ai_token_ledger_band_scope.sql`, `supabase/migrations/20261009_sincronizar_esquema_auditoria.sql`, `supabase/migrations/20261016_referidos_banda.sql`, `supabase/migrations/20261108_suscripcion_habilitada.sql`
+**Definida en:** `supabase_schema.sql`, `supabase_migration_only_new.sql`, `supabase/migrations/20260915_ai_token_ledger_band_scope.sql`, `supabase/migrations/20261009_sincronizar_esquema_auditoria.sql`, `supabase/migrations/20261016_referidos_banda.sql`, `supabase/migrations/20261108_suscripcion_habilitada.sql`, `supabase/migrations/20261120_ciclo_facturacion.sql`
 
 ---
 

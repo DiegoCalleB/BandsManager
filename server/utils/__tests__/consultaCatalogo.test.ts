@@ -228,3 +228,10 @@ describe('aforo orientativo', () => {
     expect(consultarSalas(salas, filtros(), NADA).total).toBe(4);
   });
 });
+
+describe('un bar con directo al añadirlo a la agenda', () => {
+  it('pasa a ser una sala de la banda (el tipo «bar» solo existe en el catálogo)', () => {
+    expect(leadDesdeSala(sala({ id: 'b', nombre: 'El Sótano', tipo: 'bar' }), 'lead-1', 'banda-1').tipo).toBe('sala');
+    expect(leadDesdeSala(sala({ id: 'd', nombre: 'Club', tipo: 'discoteca' }), 'lead-2', 'banda-1').tipo).toBe('discoteca');
+  });
+});

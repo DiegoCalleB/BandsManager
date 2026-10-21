@@ -1,7 +1,7 @@
 import React from 'react';
 import { VELOCIDADES_ATRIL } from '../../utils/mezclaGuardada';
 
-/** Velocidad de práctica del Atril (el tono se mantiene): 50% · 75% · 100%. */
+/** Velocidad de práctica del Atril (el tono se mantiene): más lento para practicar (50–90 %) o más rápido para perfeccionar (110–125 %). */
 export const ControlVelocidad: React.FC<{ velocidad: number; onVelocidad: (v: number) => void }> = ({ velocidad, onVelocidad }) => (
   <span className="flex items-center gap-1 bg-[var(--sunken)] rounded-[var(--r-pill)] p-0.5" role="group" aria-label="Velocidad">
     {VELOCIDADES_ATRIL.map((v) => (

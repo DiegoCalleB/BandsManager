@@ -138,7 +138,7 @@ export const VenueModalHeader: React.FC<VenueModalHeaderProps> = ({
             title="Saltar a otra sala sin salir del modal"
           >
             <Search className="w-3.5 h-3.5 text-[var(--acc)]" />
-            <span>Cambiar sala...</span>
+            <span>Cambiar sala…</span>
           </button>
 
           {isSearchOpen && (

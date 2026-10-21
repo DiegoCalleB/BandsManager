@@ -82,6 +82,9 @@ const CarteleriaView: React.FC<Props> = ({ concerts, bandName, plan, banda, onCa
           fondosIa={ed.fondosIa}
           onGenerarIa={ed.generarIa}
           generando={ed.generando}
+          letrasIa={ed.letrasIa}
+          onLetrasIa={ed.setLetrasIa}
+          puedeLetrasIa={ed.puedeLetrasIa}
           estiloInicial={ed.adn.estiloSugerido}
           paletaBanda={ed.adn.paletaBanda}
           panelIdea={<IdeaCartel idea={ed.idea} />}

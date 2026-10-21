@@ -87,7 +87,7 @@ export const EmailDeliveryTicks: React.FC<EmailDeliveryTicksProps> = ({ lead, si
   // 3. Enviado pero todavía no abierto (Tick simple gris de WhatsApp)
   return (
     <span
-      className="inline-flex items-center gap-1.5 text-xs text-slate-300 bg-slate-800 border border-slate-700 px-2.5 py-1 rounded-[var(--r-pill)]"
+      className="inline-flex items-center gap-1.5 text-xs text-[var(--ink-2)] bg-[var(--sunken)] px-2.5 py-1 rounded-[var(--r-pill)]"
       title={lead.fecha_envio ? `Enviado el ${lead.fecha_envio}` : 'Enviado a la sala'}
     >
       <Check className={size === 'sm' ? 'w-3.5 h-3.5 text-slate-400' : 'w-4 h-4 text-slate-400'} />

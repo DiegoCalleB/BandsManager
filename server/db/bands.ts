@@ -156,7 +156,9 @@ export async function dbUpsertRegisteredBand(band: EntradaBandaRegistrada) {
     spotify_youtube: band.spotify_youtube || band.spotifyYoutube || "",
     aforo_promedio: Number(band.aforo_promedio || band.aforoPromedio || 0),
     estado_cuenta: band.estado_cuenta || "activo",
-    notas: band.notas || ""
+    notas: band.notas || "",
+    // Solo si viene: un guardado cualquiera no debe borrar el ciclo ya guardado.
+    ...(band.ciclo_facturacion ? { ciclo_facturacion: band.ciclo_facturacion } : {})
   };
 
   const { data, error } = await sb.from("registered_bands").upsert(payload).select().single();

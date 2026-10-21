@@ -238,18 +238,18 @@ Son las que un revisor de seguridad querrá mirar primero.
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
 | `POST` | `/api/campana-concierto/redactar` | Sesión | iaRateLimiter |  | [`server/routes/campanaConcierto.ts:105`](../../server/routes/campanaConcierto.ts#L105) |
-| `GET` | `/api/cartel/adn` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:333`](../../server/routes/cartelria.ts#L333) |
-| `PUT` | `/api/cartel/adn` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:344`](../../server/routes/cartelria.ts#L344) |
-| `POST` | `/api/cartel/brief` | Sesión | iaRateLimiter |  | [`server/routes/cartelria.ts:314`](../../server/routes/cartelria.ts#L314) |
-| `POST` | `/api/cartel/fondo` | Sesión | imagenRateLimiter |  | [`server/routes/cartelria.ts:106`](../../server/routes/cartelria.ts#L106) |
-| `POST` | `/api/cartel/idea` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:289`](../../server/routes/cartelria.ts#L289) |
-| `DELETE` | `/api/cartel/idea` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:304`](../../server/routes/cartelria.ts#L304) |
-| `POST` | `/api/cartel/referencias` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:360`](../../server/routes/cartelria.ts#L360) |
-| `PUT` | `/api/cartel/{concertId}/config` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:175`](../../server/routes/cartelria.ts#L175) |
-| `POST` | `/api/cartel/{concertId}/foto` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:210`](../../server/routes/cartelria.ts#L210) |
-| `PUT` | `/api/cartel/{concertId}/imagen` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:188`](../../server/routes/cartelria.ts#L188) |
-| `POST` | `/api/cartel/{concertId}/logo` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:233`](../../server/routes/cartelria.ts#L233) |
-| `DELETE` | `/api/cartel/{concertId}/logo` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:267`](../../server/routes/cartelria.ts#L267) |
+| `GET` | `/api/cartel/adn` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:350`](../../server/routes/cartelria.ts#L350) |
+| `PUT` | `/api/cartel/adn` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:361`](../../server/routes/cartelria.ts#L361) |
+| `POST` | `/api/cartel/brief` | Sesión | iaRateLimiter |  | [`server/routes/cartelria.ts:331`](../../server/routes/cartelria.ts#L331) |
+| `POST` | `/api/cartel/fondo` | Sesión | imagenRateLimiter |  | [`server/routes/cartelria.ts:107`](../../server/routes/cartelria.ts#L107) |
+| `POST` | `/api/cartel/idea` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:306`](../../server/routes/cartelria.ts#L306) |
+| `DELETE` | `/api/cartel/idea` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:321`](../../server/routes/cartelria.ts#L321) |
+| `POST` | `/api/cartel/referencias` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:377`](../../server/routes/cartelria.ts#L377) |
+| `PUT` | `/api/cartel/{concertId}/config` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:192`](../../server/routes/cartelria.ts#L192) |
+| `POST` | `/api/cartel/{concertId}/foto` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:227`](../../server/routes/cartelria.ts#L227) |
+| `PUT` | `/api/cartel/{concertId}/imagen` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:205`](../../server/routes/cartelria.ts#L205) |
+| `POST` | `/api/cartel/{concertId}/logo` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:250`](../../server/routes/cartelria.ts#L250) |
+| `DELETE` | `/api/cartel/{concertId}/logo` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:284`](../../server/routes/cartelria.ts#L284) |
 
 ### chat
 
@@ -281,10 +281,10 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `GET` | `/api/calendar-feed-url` | Sesión | — |  | [`server/routes/concerts.ts:403`](../../server/routes/concerts.ts#L403) |
 | `GET` | `/api/calendar.ics` | Firma o secreto | — |  | [`server/routes/concerts.ts:429`](../../server/routes/concerts.ts#L429) |
 | `GET` | `/api/calendar/conflicts` | Sesión | — |  | [`server/routes/concerts.ts:61`](../../server/routes/concerts.ts#L61) |
-| `POST` | `/api/concerts` | Sesión | — |  | [`server/routes/concerts.ts:187`](../../server/routes/concerts.ts#L187) |
+| `POST` | `/api/concerts` | Sesión + líder | — |  | [`server/routes/concerts.ts:187`](../../server/routes/concerts.ts#L187) |
 | `POST` | `/api/concerts/sync` | Sesión | — |  | [`server/routes/concerts.ts:247`](../../server/routes/concerts.ts#L247) |
 | `PUT` | `/api/concerts/{id}` | Sesión | — |  | [`server/routes/concerts.ts:161`](../../server/routes/concerts.ts#L161) |
-| `DELETE` | `/api/concerts/{id}` | Sesión | — |  | [`server/routes/concerts.ts:210`](../../server/routes/concerts.ts#L210) |
+| `DELETE` | `/api/concerts/{id}` | Sesión + líder | — |  | [`server/routes/concerts.ts:210`](../../server/routes/concerts.ts#L210) |
 | `GET` | `/api/logistics` | Sesión | — |  | [`server/routes/concerts.ts:268`](../../server/routes/concerts.ts#L268) |
 | `POST` | `/api/logistics/gear` | Sesión | — |  | [`server/routes/concerts.ts:318`](../../server/routes/concerts.ts#L318) |
 | `POST` | `/api/logistics/runofshow` | Sesión | — |  | [`server/routes/concerts.ts:291`](../../server/routes/concerts.ts#L291) |
@@ -639,9 +639,9 @@ Salud del servicio, estado de la sesión y páginas legales servidas por server.
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
 | `GET` | `/api/tours` | Sesión | — |  | [`server/routes/tours.ts:9`](../../server/routes/tours.ts#L9) |
-| `POST` | `/api/tours` | Sesión | — |  | [`server/routes/tours.ts:10`](../../server/routes/tours.ts#L10) |
-| `PUT` | `/api/tours/{id}` | Sesión | — |  | [`server/routes/tours.ts:11`](../../server/routes/tours.ts#L11) |
-| `DELETE` | `/api/tours/{id}` | Sesión | — |  | [`server/routes/tours.ts:12`](../../server/routes/tours.ts#L12) |
+| `POST` | `/api/tours` | Sesión + líder | — |  | [`server/routes/tours.ts:10`](../../server/routes/tours.ts#L10) |
+| `PUT` | `/api/tours/{id}` | Sesión + líder | — |  | [`server/routes/tours.ts:11`](../../server/routes/tours.ts#L11) |
+| `DELETE` | `/api/tours/{id}` | Sesión + líder | — |  | [`server/routes/tours.ts:12`](../../server/routes/tours.ts#L12) |
 
 ### tracking
 

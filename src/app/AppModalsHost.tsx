@@ -123,12 +123,12 @@ export function AppModalsHost() {
             <button
               id="floating-chat-trigger-btn"
               onClick={() => setIsFloatingChatOpen(!isFloatingChatOpen)}
-              className={`fixed bottom-20 lg:bottom-5 right-5 z-40 px-3.5 py-2.5 rounded-full flex items-center gap-2.5 transition-ui duration-300 cursor-pointer active:scale-[0.97] group shadow-lg ${
+              className={`fixed bottom-20 lg:bottom-5 right-5 z-40 px-3.5 py-2.5 rounded-full flex items-center gap-2.5 transition-ui duration-300 cursor-pointer active:scale-[0.97] group ${
                 isFloatingChatOpen
-                  ? "max-sm:hidden bg-[var(--alert-soft)] text-[var(--alert)] border border-[var(--alert)]/30 hover:bg-[var(--alert)]/20"
+                  ? "max-sm:hidden bg-[var(--alert-soft)] text-[var(--alert)] hover:bg-[var(--alert)]/20"
                   : isChatLoading
-                    ? "bg-[var(--surface)] text-[var(--acc-ink)] border border-[var(--acc)]/30 animate-pulse"
-                    : "bg-[var(--surface)] text-[var(--ink)] border border-[var(--hair)] hover:border-[var(--acc)]/40 hover:bg-[var(--sunken)]"
+                    ? "bg-[var(--acc-soft)] text-[var(--acc-ink)] animate-pulse" /* cargando */
+                    : "bg-[var(--acc-soft)] text-[var(--acc-ink)] hover:brightness-95"
               }`}
               title={
                 isChatLoading

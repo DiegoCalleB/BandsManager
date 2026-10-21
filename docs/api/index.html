@@ -3385,7 +3385,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:333",
+        "x-source": "server/routes/cartelria.ts:350",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -3423,7 +3423,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:344",
+        "x-source": "server/routes/cartelria.ts:361",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -3464,7 +3464,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:314",
+        "x-source": "server/routes/cartelria.ts:331",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"
@@ -3504,7 +3504,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:106",
+        "x-source": "server/routes/cartelria.ts:107",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "imagenRateLimiter"
@@ -3544,7 +3544,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:289",
+        "x-source": "server/routes/cartelria.ts:306",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "ficherosRateLimiter"
@@ -3582,7 +3582,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:304",
+        "x-source": "server/routes/cartelria.ts:321",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -3622,7 +3622,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:360",
+        "x-source": "server/routes/cartelria.ts:377",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "ficherosRateLimiter"
@@ -3670,7 +3670,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:175",
+        "x-source": "server/routes/cartelria.ts:192",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -3718,7 +3718,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:210",
+        "x-source": "server/routes/cartelria.ts:227",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "ficherosRateLimiter"
@@ -3766,7 +3766,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:188",
+        "x-source": "server/routes/cartelria.ts:205",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "ficherosRateLimiter"
@@ -3814,7 +3814,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:233",
+        "x-source": "server/routes/cartelria.ts:250",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "ficherosRateLimiter"
@@ -3861,7 +3861,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:267",
+        "x-source": "server/routes/cartelria.ts:284",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -4731,10 +4731,14 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "403": {
+            "$ref": "#/components/responses/SoloLider"
           }
         },
         "x-source": "server/routes/concerts.ts:187",
-        "x-autenticacion": "middleware"
+        "x-autenticacion": "middleware",
+        "x-requires-leader": true
       }
     },
     "/api/concerts/sync": {
@@ -4850,10 +4854,14 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "403": {
+            "$ref": "#/components/responses/SoloLider"
           }
         },
         "x-source": "server/routes/concerts.ts:210",
-        "x-autenticacion": "middleware"
+        "x-autenticacion": "middleware",
+        "x-requires-leader": true
       }
     },
     "/api/create-band": {
@@ -12951,11 +12959,15 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "403": {
+            "$ref": "#/components/responses/SoloLider"
           }
         },
         "x-source": "server/routes/tours.ts:10",
         "x-handler": "toursController.createTour",
-        "x-autenticacion": "middleware"
+        "x-autenticacion": "middleware",
+        "x-requires-leader": true
       }
     },
     "/api/tours/{id}": {
@@ -12994,11 +13006,15 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "403": {
+            "$ref": "#/components/responses/SoloLider"
           }
         },
         "x-source": "server/routes/tours.ts:11",
         "x-handler": "toursController.updateTour",
-        "x-autenticacion": "middleware"
+        "x-autenticacion": "middleware",
+        "x-requires-leader": true
       },
       "delete": {
         "tags": [
@@ -13035,11 +13051,15 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "403": {
+            "$ref": "#/components/responses/SoloLider"
           }
         },
         "x-source": "server/routes/tours.ts:12",
         "x-handler": "toursController.deleteTour",
-        "x-autenticacion": "middleware"
+        "x-autenticacion": "middleware",
+        "x-requires-leader": true
       }
     },
     "/api/tracking/click": {

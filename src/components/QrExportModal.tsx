@@ -151,8 +151,8 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
         </div>
 
         {/* Preview del QR estilizado */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 bg-[var(--sunken)]/60 rounded-[var(--r-l)] p-4 border border-[var(--acc)]/20">
-          <div className="shrink-0 bg-[var(--surface)] p-2 rounded-[var(--r-m)] shadow-sm">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 bg-[var(--sunken)]/60 rounded-[var(--r-l)] p-4">
+          <div className="shrink-0 bg-[var(--surface)] p-2 rounded-[var(--r-m)]">
             <CustomizableBandQr
               id="qr-export-preview-svg"
               value={url}

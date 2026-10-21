@@ -20,6 +20,7 @@ Cabecera del gestor de giras.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_tour_manager_TourManagerContext|src/components/tour_manager/TourManagerContext.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_utils_permisosDireccion|src/utils/permisosDireccion.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

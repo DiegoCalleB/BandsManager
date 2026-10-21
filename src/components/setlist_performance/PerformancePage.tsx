@@ -70,7 +70,7 @@ export function PerformancePage() {
       teleprompterMode={teleprompterMode}
       onToggleTeleprompterMode={() =>
       setTeleprompterMode((m) =>
-        m === "scroll" ? "sections" : "scroll",
+        m === "full" ? "sections" : m === "sections" ? "scroll" : "full",
       )
       }
       isTeleprompterPlaying={isTeleprompterPlaying}

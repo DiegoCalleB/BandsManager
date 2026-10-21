@@ -50,6 +50,11 @@ function veloPara(l: number, meta: number, lVelo: number): number {
   return (l - meta) / (l - lVelo);
 }
 
+/** Tinta (clara u oscura) con más contraste sobre esa luz, SIN velo: para imágenes que no se deben tapar. */
+export function tintaSinVelo({ p10, p90 }: LuzZona): Tinta {
+  return { tinta: contraste(L_CLARA, p90) >= contraste(L_OSCURA, p10) ? 'clara' : 'oscura', velo: 0 };
+}
+
 export function decidirTinta({ p10, p90 }: LuzZona): Tinta {
   const vClara = veloPara(p90, TECHO_CLARA, L_VELO_OSCURO);
   const vOscura = veloPara(p10, SUELO_OSCURA, L_VELO_CLARO);

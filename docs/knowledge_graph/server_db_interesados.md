@@ -31,6 +31,11 @@ Interesados de la landing oficial en la lista de espera (`musicians_waitlist`): 
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/db/__tests__/interesadosColumnas.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

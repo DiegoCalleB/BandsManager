@@ -28,6 +28,7 @@ Catálogo compartido de salas: reglas puras (sin red ni base de datos).
 - [[server_evals_catalogoGolden|server/evals/catalogoGolden.ts]] *(from #service)*
 - [[server_services_catalogoSalas|server/services/catalogoSalas.ts]] *(from #service)*
 - [[server_services_consultaCatalogo|server/services/consultaCatalogo.ts]] *(from #service)*
+- [[server_services_importarDeFuente|server/services/importarDeFuente.ts]] *(from #service)*
 - [[server_services_importarSalasBandflow|server/services/importarSalasBandflow.ts]] *(from #service)*
 - [[server_services_importarSalasOsm|server/services/importarSalasOsm.ts]] *(from #service)*
 - [[server_services_leerWebDeSala|server/services/leerWebDeSala.ts]] *(from #service)*
@@ -41,13 +42,16 @@ Catálogo compartido de salas: reglas puras (sin red ni base de datos).
 - [[server_utils_osmSalas|server/utils/osmSalas.ts]] *(from #service)*
 - [[server_utils_seo_salas_tipos|server/utils/seo/salas/tipos.ts]] *(from #service)*
 - [[server_utils_sugerenciasCatalogo|server/utils/sugerenciasCatalogo.ts]] *(from #service)*
+- [[server_utils_wikidataSalas|server/utils/wikidataSalas.ts]] *(from #service)*
 
 ---
 
 ## 🧪 Tests que lo cubren
 - `server/data/__tests__/bandflowSalas.test.ts`
+- `server/migrations/__tests__/catalogoGenerosFestival.test.ts`
 - `server/migrations/__tests__/catalogoGlobal.test.ts`
 - `server/services/__tests__/catalogoSalas.test.ts`
+- `server/services/__tests__/importarDeFuente.test.ts`
 - `server/services/__tests__/importarSalasBandflow.test.ts`
 - `server/utils/__tests__/salaCatalogo.test.ts`
 

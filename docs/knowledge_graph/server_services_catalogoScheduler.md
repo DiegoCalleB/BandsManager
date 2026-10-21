@@ -23,6 +23,7 @@ Sincronización periódica del catálogo compartido de salas.
 - [[server_services_consultaMapsSala|server/services/consultaMapsSala.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_enriquecerSalasDesdeSuWeb|server/services/enriquecerSalasDesdeSuWeb.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_geolocalizarSalas|server/services/geolocalizarSalas.ts]] *(Layer: #service, Domain: #system)*
+- [[server_services_importarDeWikidata|server/services/importarDeWikidata.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_importarSalasBandflow|server/services/importarSalasBandflow.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_importarSalasOsm|server/services/importarSalasOsm.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_leerWebDeSala|server/services/leerWebDeSala.ts]] *(Layer: #service, Domain: #system)*

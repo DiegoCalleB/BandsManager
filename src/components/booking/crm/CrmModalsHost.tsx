@@ -16,6 +16,7 @@ import { LeadDuplicatesModal } from "../LeadDuplicatesModal";
 import { NegotiationSimulationModal } from "../NegotiationSimulationModal";
 import { RoadbookContractModal } from "../RoadbookContractModal";
 import { useBookingCrm } from "./BookingCrmContext";
+import { leadVacio } from "./leadVacio";
 import { isStitchLight } from "./crmTheme";
 
 /**
@@ -69,7 +70,12 @@ export function CrmModalsHost() {
       onLeadLogoUpload={(file) => handleLeadLogoUpload(file, false)}
       />
 
-      <CatalogoSalasHost />
+      <CatalogoSalasHost
+      onFaltaSala={() => {
+        setNewLeadData(leadVacio('escenarios'));
+        setIsAddingLeadModalOpen(true);
+      }}
+      />
 
       <GooglePlacesExplorerModal
       isOpen={isPlacesExplorerOpen}
