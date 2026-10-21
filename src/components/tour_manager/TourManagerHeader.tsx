@@ -5,13 +5,14 @@
 import { Plus,Truck } from "lucide-react";
 import { Button } from "../ui";
 import { useTourManager } from "./TourManagerContext";
+import { puedeCrearConcierto } from "../../utils/permisosDireccion";
 
 /**
  * Cabecera del gestor de giras.
  * @returns Sección de interfaz.
  */
 export function TourManagerHeader() {
-  const { colors, currentBandName, handleOpenCreateModal } = useTourManager();
+  const { colors, currentBandName, currentUser, handleOpenCreateModal } = useTourManager();
   return (
     <>
 <div className={`p-5 sm:p-6 rounded-[var(--r-l)] ${colors.card}`}>
@@ -27,6 +28,7 @@ export function TourManagerHeader() {
             </p>
           </div>
 
+{puedeCrearConcierto(currentUser?.role) && (
           <Button
             variant="primary"
             onClick={handleOpenCreateModal}
@@ -35,6 +37,7 @@ export function TourManagerHeader() {
             <Plus className="w-4 h-4 shrink-0" />
             <span>Nueva gira</span>
           </Button>
+)}
         </div>
       </div>
     </>
