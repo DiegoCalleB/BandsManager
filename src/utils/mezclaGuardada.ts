@@ -6,7 +6,7 @@ export interface MezclaGuardada {
   velocidad: number;
 }
 
-export const VELOCIDADES_ATRIL = [0.5, 0.75, 1] as const;
+export const VELOCIDADES_ATRIL = [0.5, 0.75, 0.9, 1, 1.1, 1.25] as const;
 export const MEZCLA_VACIA: MezclaGuardada = { ajustes: {}, velocidad: 1 };
 
 export const claveMezclaAtril = (songId: string | number) => `bm_mezcla_atril:${songId}`;
