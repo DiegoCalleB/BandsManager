@@ -142,13 +142,19 @@ describe('CatalogoSalasModal', () => {
     expect(screen.getByText('En tu agenda')).toBeTruthy();
   });
 
-  it('filtra por un aforo orientativo, dice el margen y lo manda al servidor', async () => {
+  it('filtra por un rango de aforo con el slider y lo manda al servidor; los extremos son «sin límite»', async () => {
     api.buscarSalasDelCatalogo.mockResolvedValue({ total: 0, mostradas: 0, salas: [] });
     render(<CatalogoSalasModal isOpen onClose={() => {}} />);
     await pasar();
-    fireEvent.change(screen.getByLabelText('Aforo orientativo'), { target: { value: '200' } });
-    expect(screen.getByText('Salas de unas 100 a 300 personas.')).toBeTruthy();
+    expect(screen.getByText('Cualquier aforo')).toBeTruthy();
+    fireEvent.change(screen.getByLabelText('Aforo mínimo'), { target: { value: '3' } });
+    fireEvent.change(screen.getByLabelText('Aforo máximo'), { target: { value: '9' } });
+    expect(screen.getByText('150 – 1000 personas')).toBeTruthy();
     await pasar();
-    expect(api.buscarSalasDelCatalogo.mock.calls.at(-1)?.[0]).toMatchObject({ aforo: '200' });
+    expect(api.buscarSalasDelCatalogo.mock.calls.at(-1)?.[0]).toMatchObject({ aforoMin: '150', aforoMax: '1000' });
+    fireEvent.change(screen.getByLabelText('Aforo máximo'), { target: { value: '13' } });
+    expect(screen.getByText('Más de 150 personas')).toBeTruthy();
+    await pasar();
+    expect(api.buscarSalasDelCatalogo.mock.calls.at(-1)?.[0]).toMatchObject({ aforoMin: '150', aforoMax: '' });
   });
 });
