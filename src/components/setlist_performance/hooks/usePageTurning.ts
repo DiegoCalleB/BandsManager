@@ -18,7 +18,7 @@ export interface PageTurningParams {
   setCurrentSectionIndex: Dispatch<SetStateAction<number>>;
   handleNext: () => void;
   handlePrev: () => void;
-  teleprompterMode: "sections" | "scroll";
+  teleprompterMode: "full" | "sections" | "scroll";
   setIsTeleprompterPlaying: Dispatch<SetStateAction<boolean>>;
   onClose: () => void;
   toggleFullscreen: () => void;
@@ -40,6 +40,7 @@ export function usePageTurning({ isBlock, showScannedSheet, hasMultipleSections,
     if (
       !isBlock &&
       !showScannedSheet &&
+      teleprompterMode === "sections" &&
       hasMultipleSections &&
       currentSectionIndex < chordSections.length - 1
     ) {
@@ -53,6 +54,7 @@ export function usePageTurning({ isBlock, showScannedSheet, hasMultipleSections,
     if (
       !isBlock &&
       !showScannedSheet &&
+      teleprompterMode === "sections" &&
       hasMultipleSections &&
       currentSectionIndex > 0
     ) {

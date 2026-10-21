@@ -9,10 +9,11 @@ import { useEffect,useRef,useState } from "react";
  * @returns Estado derivado y handlers expuestos al contenedor.
  */
 export function useTeleprompter() {
-  // Modo teleprompter:'sections' (por bloques con pedal) o'scroll' (desplazamiento continuo)
+  // Modo atril: 'full' (toda la canción de una vez, ajustada a la pantalla — el defecto),
+  // 'sections' (por bloques con pedal) o 'scroll' (desplazamiento continuo)
   const [teleprompterMode, setTeleprompterMode] = useState<
-    "sections" | "scroll"
-  >("sections");
+    "full" | "sections" | "scroll"
+  >("full");
 
   const [isTeleprompterPlaying, setIsTeleprompterPlaying] =
     useState<boolean>(false);
