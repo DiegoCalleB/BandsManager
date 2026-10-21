@@ -8,13 +8,14 @@ import { Button } from "../../ui";
 import { PopoverAncla } from "../../ui/PopoverAncla";
 import { ShowIcon } from "../../ui/ShowIcon";
 import { useCalendar } from "../CalendarContext";
+import { puedeCrearConcierto } from "../../../utils/permisosDireccion";
 
 /**
  * Título del calendario, contadores y botones de acción (alta, sincronización, menú).
  * @returns Sección de interfaz.
  */
 export function CalendarTitleBar() {
-  const { filteredConcerts, filteredRehearsals, concerts, rehearsals, openTutorial, setShowAddEventDropdown, showAddEventDropdown, setConcIsPosible, setShowCreateModal, isPromoPlan, setShowSyncModal, showMobileSearch, setShowMobileSearch, setShowCalMoreMenu, showCalMoreMenu } = useCalendar();
+  const { currentUser, filteredConcerts, filteredRehearsals, concerts, rehearsals, openTutorial, setShowAddEventDropdown, showAddEventDropdown, setConcIsPosible, setShowCreateModal, isPromoPlan, setShowSyncModal, showMobileSearch, setShowMobileSearch, setShowCalMoreMenu, showCalMoreMenu } = useCalendar();
   return (
     <>
       <div className={`pb-4 mb-4 ${''}`}>
@@ -83,6 +84,7 @@ export function CalendarTitleBar() {
                     <div className="px-3 py-1 text-micro font-sans text-[var(--ink-2)] /40 mb-1">
                       Añadir al calendario
                     </div>
+{puedeCrearConcierto(currentUser?.role) && (
                     <button
                       type="button"
                       onClick={() => {
@@ -95,6 +97,7 @@ export function CalendarTitleBar() {
                       <span><ShowIcon inline emoji="🎸" /></span>
                       <span>+ Concierto</span>
                     </button>
+)}
                     <button
                       type="button"
                       onClick={() => {
