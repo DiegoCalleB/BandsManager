@@ -53,7 +53,7 @@ export interface PrintDocumentBuilderParams {
  * @returns El documento y la información de hojas, o `null` si no hay entorno de navegador.
  */
 export async function buildPrintDocument(
-  { handwritingFont, handwritingColor, membersToExport, stylePreset, activeSetlist, songs, showGeneralNotes, showSongNumbers, markedSongs, showTonality, badgesScope, showBpm, showDuration, showSetlistNotes, isCentered, showBandLogo, customLogoUrl, bandName, showAppBranding, columnsChoice, pagesChoice, showWatermark }: PrintDocumentBuilderParams,
+  { handwritingFont, handwritingColor, membersToExport, stylePreset, activeSetlist, songs, showGeneralNotes, showSongNumbers, markedSongs, showTonality, badgesScope, showBpm, showDuration, showSetlistNotes, isCentered, showBandLogo, customLogoUrl, bandName, columnsChoice, pagesChoice, showWatermark }: PrintDocumentBuilderParams,
   opts: {
     members: BandMemberOption[];
     mode: "print" | "preview";
@@ -112,7 +112,7 @@ const getInkColorHex = () => {
 
   const { printCss } = buildPrintStyles({ stylePreset, inkColor, showSongNumbers, handFont });
 
-  const { buildHeaderHtml, buildFooterHtml } = buildHeaderFooter({ membersToExport, isCentered, showBandLogo, customLogoUrl, bandName, activeSetlist, showAppBranding });
+  const { buildHeaderHtml, buildFooterHtml } = buildHeaderFooter({ membersToExport, isCentered, showBandLogo, customLogoUrl, bandName, activeSetlist });
 
   // Maquetación (ver setlistPaginator.ts): mide la altura REAL del contenido en un iframe
   // oculto (aislado del resto de la app — un <div> con <style> inyectado contaminaría los
@@ -239,11 +239,9 @@ const getInkColorHex = () => {
       `<div style="width:${PAGE_CONTENT_WIDTH_PX}px;display:flow-root">${buildHeaderHtml(member, isMaster)}</div>`,
     );
     // El texto exacto del pie ("Hoja X de Y") no cambia su alto, basta con relleno.
-    const footerHeightPx = showAppBranding
-      ? measureHtmlHeightPx(
-          `<div style="width:${PAGE_CONTENT_WIDTH_PX}px;display:flow-root">${buildFooterHtml(member, 1, 1)}</div>`,
-        )
-      : 0;
+    const footerHeightPx = measureHtmlHeightPx(
+      `<div style="width:${PAGE_CONTENT_WIDTH_PX}px;display:flow-root">${buildFooterHtml(member, 1, 1)}</div>`,
+    );
     // 6px de colchón: el redondeo de subpíxel de la impresión no debe empujar una fila fuera.
     const pageAvailableHeightPx =
       PAGE_TOTAL_HEIGHT_PX - headerHeightPx - footerHeightPx - 6;

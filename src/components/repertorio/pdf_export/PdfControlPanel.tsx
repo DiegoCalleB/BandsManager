@@ -14,7 +14,7 @@ import { usePdfExport } from "./PdfExportContext";
  * @returns Sección de interfaz.
  */
 export function PdfControlPanel() {
-  const { showAdvancedSettings, handwritingFont, setHandwritingFont, setHandwritingColor, handwritingColor, showBandLogo, setShowBandLogo, showWatermark, setShowWatermark, showTonality, setShowTonality, showBpm, setShowBpm, showDuration, setShowDuration, showGeneralNotes, setShowGeneralNotes, showAppBranding, setShowAppBranding, badgesScope, setBadgesScope, setShowMarksPanel, showMarksPanel, markedCountForMember, saveFailed, currentPreviewMember, setAllMarks, activeSetlist, songs, isMarked, setMark } = usePdfExport();
+  const { showAdvancedSettings, handwritingFont, setHandwritingFont, setHandwritingColor, handwritingColor, showBandLogo, setShowBandLogo, showWatermark, setShowWatermark, showTonality, setShowTonality, showBpm, setShowBpm, showDuration, setShowDuration, showGeneralNotes, setShowGeneralNotes, badgesScope, setBadgesScope, setShowMarksPanel, showMarksPanel, markedCountForMember, saveFailed, currentPreviewMember, setAllMarks, activeSetlist, songs, isMarked, setMark } = usePdfExport();
   return (
     <>
       <div
@@ -169,15 +169,6 @@ export function PdfControlPanel() {
             <span>Notas generales</span>
           </label>
 
-          <label className="flex items-center gap-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer select-none">
-            <input
-              type="checkbox"
-              checked={showAppBranding}
-              onChange={(e) => setShowAppBranding(e.target.checked)}
-              className="rounded accent-[var(--ok)] cursor-pointer"
-            />
-            <span>Pie BandManager</span>
-          </label>
           {(showTonality || showBpm) && (
             <div className="flex items-center gap-1.5 flex-wrap">
               <div className="flex items-center gap-1 p-0.5 rounded-[var(--r-m)] bg-[var(--surface)]">
