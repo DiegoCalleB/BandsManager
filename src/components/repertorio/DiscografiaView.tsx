@@ -96,12 +96,8 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
   onDeleteSong,
   onShareSong,
 }) => {
-  const [activeFilterTab, setActiveFilterTab] = useState<
-    "todos" | "albumes" | "singles"
-  >("todos");
-  const [expandedAlbums, setExpandedAlbums] = useState<Record<string, boolean>>(
-    {},
-  );
+  const [activeFilterTab, setActiveFilterTab] = useState<"todos" | "albumes" | "singles">("todos");
+  const [expandedAlbums, setExpandedAlbums] = useState<Record<string, boolean>>({});
   const [isLiveConcertModalOpen, setIsLiveConcertModalOpen] = useState(false);
   const [isSpotifyModalOpen, setIsSpotifyModalOpen] = useState(false);
   const [bulkUploadAlbum, setBulkUploadAlbum] = useState<{

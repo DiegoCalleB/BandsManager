@@ -67,11 +67,7 @@ export function BulkAlbumAudioUploaderModal({
     current: number;
     total: number;
     currentName: string;
-  }>({
-    current: 0,
-    total: 0,
-    currentName: "",
-  });
+  }>({ current: 0, total: 0, currentName: "" });
   const [playingItemIndex, setPlayingItemIndex] = useState<number | null>(null);
   const [feedbackMsg, setFeedbackMsg] = useState<{
     type: "success" | "error";
