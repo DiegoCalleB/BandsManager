@@ -17,6 +17,7 @@ interface BulkAlbumAudioUploaderModalProps {
   albumSongs?: Song[];
   colors: ThemeColors;
   bandId?: string;
+  bandName?: string;
   isNewAlbumMode?: boolean;
   onSaveUpdatedSongs: (updatedSongs: Song[], newAlbumName?: string) => void;
 }
@@ -50,6 +51,7 @@ export function BulkAlbumAudioUploaderModal({
   albumName: initialAlbumName = "",
   albumSongs = [],
   bandId,
+  bandName,
   isNewAlbumMode = false,
   onSaveUpdatedSongs
 }: BulkAlbumAudioUploaderModalProps) {
@@ -414,7 +416,7 @@ export function BulkAlbumAudioUploaderModal({
           const newSong: Song = {
             id: idUnico("song_bulk", i),
             titulo: item.title || `Pista ${i + 1}`,
-            artista: bandId,
+            artista: bandName || "Tu Banda",
             album: finalAlbumTitle,
             albumDisco: finalAlbumTitle,
             ordenAlbum: item.trackNumber || i + 1,
