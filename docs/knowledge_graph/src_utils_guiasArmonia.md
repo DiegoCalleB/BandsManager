@@ -25,6 +25,7 @@ Exporta: GuiaProfesor, DiagramaEscalaDatos, guiasDelProfesor.
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_chords_DiagramaEscala|src/components/chords/DiagramaEscala.tsx]] *(from #frontend)*
 - [[src_components_chords_PanelArmonia|src/components/chords/PanelArmonia.tsx]] *(from #frontend)*
+- [[src_utils_guiasBateria|src/utils/guiasBateria.ts]] *(from #service)*
 
 ---
 

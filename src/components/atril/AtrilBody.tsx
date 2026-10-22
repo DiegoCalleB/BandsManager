@@ -3,6 +3,8 @@
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
 import { Edit3,GraduationCap,Save,UserCheck,Zap } from "lucide-react";
+import { useState } from "react";
+import { instrumentoDelUsuario, type InstrumentoProfesor } from "../../utils/instrumentoProfesor";
 import { DrawerDiagramas } from "../chords/DrawerDiagramas";
 import { PanelArmonia } from "../chords/PanelArmonia";
 import { ProfesorIA } from "../chords/ProfesorIA";
@@ -17,6 +19,7 @@ import { renderFormattedChordSheet } from "./chordSheetRender";
  */
 export function AtrilBody() {
   const { buscarEnAudio, scrollContainerRef, activeTab, guiaSustituto, setActiveTab, armonia, estiloArmonia, cambiarEstiloArmonia, funcionesPresentes, acordesPorFuncion, nombreTonalidadVista, processedText, lineasConLetra, letraTranscrita, seguirEnCifrado, letraActiva, audioRef, sincronizado, alineacion, analisisAcordes, tiemposAcordes, acordeActivo, transpose, song, notation, pedirProfesor, handleSaveEdits, cifradoTexto, setCifradoTexto, setGuiaSustituto, showChordDiagrams, uniqueChords, contextoAcordes, vistaAcordes, setVistaAcordes, nivelAcordes, setNivelAcordes, setShowChordDiagrams, acordeSonando } = useAtril();
+  const [instrumentoArmonia, setInstrumentoArmonia] = useState<InstrumentoProfesor>(() => analisisAcordes?.profesor?.instrumento ?? instrumentoDelUsuario() ?? 'guitarra');
   return (
     <>
       <div className="flex-1 min-h-0 max-md:min-h-[9.5rem] overflow-hidden flex flex-col md:flex-row relative">
@@ -98,9 +101,11 @@ export function AtrilBody() {
                 notation={notation}
                 transpose={transpose}
                 estilo={estiloArmonia}
+                instrumento={instrumentoArmonia}
+                onInstrumento={setInstrumentoArmonia}
                 profesor={
                   analisisAcordes ? (
-                    <ProfesorIA profesor={analisisAcordes.profesor} onPedir={pedirProfesor} />
+                    <ProfesorIA profesor={analisisAcordes.profesor} instrumento={instrumentoArmonia} onPedir={pedirProfesor} />
                   ) : (
                     <p className="text-xs text-[var(--ink-2)]">Para pedir la explicación del profesor, primero analiza los acordes del audio («Acordes del audio»).</p>
                   )

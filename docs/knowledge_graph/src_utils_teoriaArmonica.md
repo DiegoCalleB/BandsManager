@@ -34,6 +34,7 @@ _Sin dependencias salientes directas._
 - [[src_utils_armoniaVisor|src/utils/armoniaVisor.ts]] *(from #service)*
 - [[src_utils_estiloArmonia|src/utils/estiloArmonia.ts]] *(from #service)*
 - [[src_utils_guiasArmonia|src/utils/guiasArmonia.ts]] *(from #service)*
+- [[src_utils_guiasBateria|src/utils/guiasBateria.ts]] *(from #service)*
 - [[src_utils_vistaAcordes|src/utils/vistaAcordes.ts]] *(from #service)*
 
 ---
@@ -44,6 +45,7 @@ _Sin dependencias salientes directas._
 - `src/utils/__tests__/armoniaVisor.test.ts`
 - `src/utils/__tests__/estiloArmonia.test.ts`
 - `src/utils/__tests__/guiasArmonia.test.ts`
+- `src/utils/__tests__/guiasBateria.test.ts`
 - `src/utils/__tests__/teoriaArmonica.test.ts`
 - `src/utils/__tests__/vistaAcordes.test.ts`
 

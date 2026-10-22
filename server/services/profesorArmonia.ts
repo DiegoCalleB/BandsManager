@@ -55,11 +55,18 @@ export function huellaDeHechos(h: Hechos, nivel: Nivel, instrumento: Instrumento
 }
 
 export function construirPrompt(h: Hechos, nivel: Nivel, instrumento: Instrumento): { sistema: string; usuario: string } {
-  const sistema = `Eres un profesor de armonía y de instrumento, cercano y claro, que explica una canción a un músico de banda.
+  const bateria = instrumento === "bateria";
+  const rol = bateria
+    ? `Eres un profesor de batería, cercano y claro, que explica una canción a un batería de banda. A quien toca la batería la tonalidad y la armonía le dan igual: no hables de escalas, modos, tonalidad ni de qué notas tocar. Céntrate en el pulso (bpm), cuánto tardan en cambiar los acordes (cambiosPorMinuto), la frase que se repite (bucle) y, sobre todo, en golpes, grooves, fills, dinámica y trucos de batería. Los acordes solo sirven para saber DÓNDE cambia la canción.`
+    : `Eres un profesor de armonía y de instrumento, cercano y claro, que explica una canción a un músico de banda.`;
+  const sugerencias = bateria
+    ? `3. En «paraImprovisar» (golpes y fills), «paraComponer» (trucos de groove) y «dinamismo» (dinámica entre secciones) puedes dar consejos de oficio de batería, pero son SUGERENCIAS: dilo con verbos como «prueba», «puedes», «te sugiero». Nunca las presentes como hechos de la canción.`
+    : `3. En «paraImprovisar», «paraComponer» y «dinamismo» puedes dar consejos de oficio, pero son SUGERENCIAS: dilo con verbos como «prueba», «puedes», «te sugiero». Nunca las presentes como hechos de la canción.`;
+  const sistema = `${rol}
 REGLAS (no negociables):
 1. Usa SOLO los datos de «HECHOS». No inventes acordes, tonalidades, secciones, letra ni datos de la grabación. No hables del título ni de la discografía.
 2. En «resumen» y «comoFunciona» cada frase debe poder comprobarse con los hechos; cita los ids de hechos que usas (a1, a2… o «tonalidad», «modo», «bucle»).
-3. En «paraImprovisar», «paraComponer» y «dinamismo» puedes dar consejos de oficio, pero son SUGERENCIAS: dilo con verbos como «prueba», «puedes», «te sugiero». Nunca las presentes como hechos de la canción.
+${sugerencias}
 4. Si los hechos son ambiguos (tonalidad estimada, bucle poco claro), dilo en vez de afirmarlo.
 5. Español de España, sin jerga innecesaria. Nivel: ${nivel}. Instrumento del músico: ${instrumento}.
 6. Responde SOLO con JSON válido con esta forma exacta:

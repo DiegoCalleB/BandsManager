@@ -25,6 +25,7 @@ Cuerpo del Atril: cifrado, estructura, diagramas y panel de ideas según la pest
 - [[src_components_chords_ProfesorIA|src/components/chords/ProfesorIA.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_SelectorArmonia|src/components/chords/SelectorArmonia.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_utils_instrumentoProfesor|src/utils/instrumentoProfesor.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

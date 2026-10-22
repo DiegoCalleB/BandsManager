@@ -12,11 +12,12 @@ interface Props {
   /** Pide la explicación al servidor; devuelve el profesor guardado o lanza con el motivo. */
   /** Abre la explicación extendida desde el principio. */
   extendida?: boolean;
+  /** Instrumento elegido en la pestaña (lo controla el padre); si falta, el del perfil. */
+  instrumento?: Profesor['instrumento'];
   onPedir: (opciones: { nivel: Profesor['nivel']; instrumento: Profesor['instrumento']; forzar: boolean }) => Promise<Profesor>;
 }
 
 const NIVELES: Array<[Profesor['nivel'], string]> = [['principiante', 'Principiante'], ['intermedio', 'Intermedio'], ['avanzado', 'Avanzado']];
-const INSTRUMENTOS: Array<[Profesor['instrumento'], string]> = [['guitarra', 'Guitarra'], ['bajo', 'Bajo'], ['teclado', 'Teclado'], ['voz', 'Voz'], ['bateria', 'Batería']];
 
 const Lista: React.FC<{ titulo: string; items: string[]; idea?: boolean }> = ({ titulo, items, idea }) =>
   items.length === 0 ? null : (
@@ -35,9 +36,10 @@ const Lista: React.FC<{ titulo: string; items: string[]; idea?: boolean }> = ({ 
  * El «profesor» con IA: redacta lo que el código ya sabe de la canción. Bajo demanda (no gasta nada
  * hasta que se pide) y avisa de qué es dato y qué es sugerencia.
  */
-export const ProfesorIA: React.FC<Props> = ({ profesor, onPedir, extendida = false }) => {
+export const ProfesorIA: React.FC<Props> = ({ profesor, onPedir, extendida = false, instrumento: instrumentoPadre }) => {
   const [nivel, setNivel] = useState<Profesor['nivel']>(profesor?.nivel ?? 'intermedio');
-  const [instrumento, setInstrumento] = useState<Profesor['instrumento']>(profesor?.instrumento ?? instrumentoDelUsuario() ?? 'guitarra');
+  const instrumento = instrumentoPadre ?? profesor?.instrumento ?? instrumentoDelUsuario() ?? 'guitarra';
+  const bateria = instrumento === 'bateria';
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [ext, setExt] = useState(extendida);
@@ -65,11 +67,6 @@ export const ProfesorIA: React.FC<Props> = ({ profesor, onPedir, extendida = fal
             {NIVELES.map(([v, n]) => <option key={v} value={v}>{n}</option>)}
           </select>
         </label>
-        <label className="flex items-center gap-1 text-[var(--ink-2)]">Instrumento
-          <select value={instrumento} onChange={(ev) => setInstrumento(ev.target.value as Profesor['instrumento'])} className="bg-[var(--sunken)] text-[var(--ink)] rounded-[var(--r-pill)] px-2 py-1">
-            {INSTRUMENTOS.map(([v, n]) => <option key={v} value={v}>{n}</option>)}
-          </select>
-        </label>
         <Button type="button" size="xs" variant="primary" disabled={cargando} onClick={() => pedir(Boolean(profesor))}>
           {cargando ? 'Pensando…' : profesor ? 'Volver a explicar' : 'Pedir la explicación del profesor'}
         </Button>
@@ -90,8 +87,8 @@ export const ProfesorIA: React.FC<Props> = ({ profesor, onPedir, extendida = fal
           )}
           {ext && (
             <>
-            <Lista titulo="Para improvisar" items={e.paraImprovisar} idea />
-            <Lista titulo="Para componer" items={e.paraComponer} idea />
+            <Lista titulo={bateria ? 'Golpes y fills' : 'Para improvisar'} items={e.paraImprovisar} idea />
+            <Lista titulo={bateria ? 'Trucos de groove' : 'Para componer'} items={e.paraComponer} idea />
             {e.dinamismo.length > 0 && (
               <div className="space-y-1.5">
                 <h4 className="font-bold text-[var(--ink)] flex items-center gap-2">

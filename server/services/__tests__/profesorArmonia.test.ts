@@ -34,6 +34,19 @@ describe('prompt', () => {
   });
 });
 
+describe('prompt de batería', () => {
+  const h = construirHechos(analizarArmonia([{ t0: 0, t1: 2, acorde: 'E' }, { t0: 2, t1: 4, acorde: 'A' }], 'E')!, { bpm: 120 });
+  it('pide golpes y fills y prohíbe hablar de armonía; los demás instrumentos conservan el prompt', () => {
+    const b = construirPrompt(h, 'intermedio', 'bateria').sistema;
+    expect(b).toMatch(/profesor de batería/);
+    expect(b).toMatch(/no hables de escalas/);
+    expect(b).toMatch(/SUGERENCIAS/);
+    const g = construirPrompt(h, 'intermedio', 'guitarra').sistema;
+    expect(g).toMatch(/profesor de armonía/);
+    expect(g).not.toMatch(/batería/);
+  });
+});
+
 describe('validarExplicacion: lo que afirma hechos tiene que cumplirse', () => {
   it('detecta acordes ajenos a la canción (en notación inglesa y española)', () => {
     expect(mencionaAcordeAjeno('Toca E y A, luego D', h)).toBeNull();

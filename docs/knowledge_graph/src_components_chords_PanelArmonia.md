@@ -19,11 +19,14 @@ Exporta: PanelArmonia.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_chords_DiagramaEscala|src/components/chords/DiagramaEscala.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_chords_SelectorInstrumentoProfesor|src/components/chords/SelectorInstrumentoProfesor.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_chordUtils|src/utils/chordUtils.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_cuadriculaCompases|src/utils/cuadriculaCompases.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_estiloArmonia|src/utils/estiloArmonia.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_guiasArmonia|src/utils/guiasArmonia.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_guiasBateria|src/utils/guiasBateria.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_instrumentoProfesor|src/utils/instrumentoProfesor.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_teoriaArmonica|src/utils/teoriaArmonica.ts]] *(Layer: #service, Domain: #system)*
 
 ---
