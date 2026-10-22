@@ -27,6 +27,7 @@ Exporta: SupportedLanguage, LanguageOption, SUPPORTED_LANGUAGES, LanguageContext
 - [[src_app_hooks_useAppNavigation|src/app/hooks/useAppNavigation.ts]] *(from #service)*
 - [[src_components_finanzas_FinanceSummaryCards|src/components/finanzas/FinanceSummaryCards.tsx]] *(from #frontend)*
 - [[src_components_landing_GuiasDestacadas|src/components/landing/GuiasDestacadas.tsx]] *(from #frontend)*
+- [[src_components_landing_SeccionAutor|src/components/landing/SeccionAutor.tsx]] *(from #frontend)*
 - [[src_components_LandingChatWidget|src/components/LandingChatWidget.tsx]] *(from #frontend)*
 - [[src_components_LoginModal|src/components/LoginModal.tsx]] *(from #frontend)*
 - [[src_components_onboarding_MusicianOnboardingModal|src/components/onboarding/MusicianOnboardingModal.tsx]] *(from #frontend)*

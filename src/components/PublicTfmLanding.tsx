@@ -5,6 +5,7 @@ import { Button } from './ui';
 import { useLanguage, SupportedLanguage } from '../context/idioma';
 import { LandingChatWidget } from './LandingChatWidget';
 import { PreciosTfm } from './landing/PreciosTfm';
+import { SeccionAutor } from './landing/SeccionAutor';
 
 interface PublicTfmLandingProps {
   onEntrar: () => void;
@@ -492,6 +493,8 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
             </div>
           </div>
         </section>
+
+        <SeccionAutor />
 
         <PreciosTfm es={es} />
 
