@@ -585,8 +585,9 @@ export function BulkAlbumAudioUploaderModal({
 
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain">
       <div
-        className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-[var(--r-l)] overflow-hidden ${"bg-[var(--surface)] text-[var(--ink)]"}`}
+        className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-[var(--r-l)] overflow-hidden my-auto ${"bg-[var(--surface)] text-[var(--ink)]"}`}
       >
         {/* Modal Header */}
         <div className="p-6 flex items-center justify-between shrink-0 bg-[var(--ok)]/10 ">
@@ -979,6 +980,7 @@ export function BulkAlbumAudioUploaderModal({
             )}
           </button>
         </div>
+      </div>
       </div>
     </ModalPortal>
   );
