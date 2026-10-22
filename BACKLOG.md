@@ -138,6 +138,31 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 
 ## 💡 Ideas por explorar
 
+### Instagram: enlazar la cuenta de BandManager.io y obtener seguidores (2026-10-22)
+* **Qué:** `business_discovery` (`server/services/instagramDescubrimiento.ts`) ya está hecho, pero no devuelve nada hasta tener un token de Facebook Login (los `IG…` no sirven). Una sola cuenta de la app consulta a todas las bandas.
+* **Por qué importa:** es la única fuente de seguidores fiable (Spotify ya no los da y Deezer no es representativo). Limitación: solo se pueden consultar cuentas **profesionales**; las bandas con perfil personal saldrán «no disponible».
+* **Pasos:** (1) cuenta de Instagram propia de la app pasada a profesional; (2) página de Facebook enlazada (la página ya existe); (3) portfolio comercial gratis (no pide empresa registrada); (4) app de Meta tipo Empresa con `instagram_basic`, `pages_show_list`, `pages_read_engagement`; (5) token **de usuario del sistema** (no caduca) o de larga duración (~60 días); (6) variable `META_GRAPH_TOKEN` en Railway; (7) Métricas → Actualizar.
+* **Estado:** bloqueado por una restricción temporal de Meta (cuenta nueva); esperar 24-48 h, no reintentar, verificar teléfono y correo, subir 2-3 publicaciones reales.
+
+### Contenido viral por banda (depende de tener Instagram enlazado)
+* **Qué:** tres piezas, en este orden de valor. Ya existen Hook Doctor, estrategia por tipo de material y auditoría determinista del copy; esto es lo que falta.
+  1. **Plan semanal atado a los conciertos** de la banda: cuenta atrás, teaser, recap del día siguiente. Usa `concerts`, setlists y cartel; es lo que un generador genérico no puede hacer.
+  2. **Auditoría por múltiplo sobre la mediana propia** de cada banda con `social_metrics`: qué post batió a su mediana y con qué fórmula, no una comparación con cuentas de otro tamaño.
+  3. **Puntuación determinista del gancho** con una biblioteca de fórmulas (rankear 3 ganchos en 0 ms antes de gastar IA), en TypeScript y en español.
+* **Referencia:** `Jakeschincariol/instagram-agent-skill` (MIT, 13 skills de escritura + 5 scripts locales de Python, sin red). Inspira 2 y 3 (`hooks.json` con 26 fórmulas, `beats.py`, `ig-audit`); no se integra tal cual (está en inglés y para creadores genéricos). Si se copia algo, citar la licencia.
+* **Opcional, sin esfuerzo:** instalarla como skill personal para la cuenta propia de la app.
+* **Línea roja:** nada de mensajes directos masivos a salas desde Instagram (va contra las condiciones de Meta y arriesga la cuenta); para contactar salas se mantiene el email. Nada se publica sin que la persona diga que sí.
+* **Estado:** idea; retomar cuando Instagram devuelva datos reales.
+
+### Métricas: lo que queda
+* **Spotify:** las apps en modo desarrollo ya no reciben seguidores ni popularidad (febrero de 2026); hoy esa fuente sale vacía. Hay que decidir una fuente alternativa o dejarla solo como enlace de escucha.
+* **Filas vacías de Spotify:** una banda tiene 12 filas sin dato en `metricas_bandas_amigas`; borrarlas es opcional y necesita confirmación explícita.
+* **Captura en segundo plano:** el estado del trabajo vive en memoria (`trabajoMetricas.ts`); si Railway reinicia durante una captura se pierde el progreso (las filas ya guardadas se mantienen). Si molesta, persistirlo en una tabla.
+
+### Bandas con id gemelo (`x` y `band-x`)
+* **Hecho:** cambio de banda, `ensureRegisteredBandExists` y `dbUpsertRegisteredBand` ya prefieren el id canónico `band-x`.
+* **Pendiente:** una banda gemela vacía no se puede borrar del todo porque sus filas de `agent_execution_logs` son de auditoría append-only; está desactivada (`radar_enabled=false`, cuenta inactiva) y marcada «no usar». Si se quisiera borrar habría que desactivar el trigger de auditoría; no se recomienda.
+
 ### Agente de chat: herramientas de Supabase, botón de aprobar y memoria (investigado 2026-10-14)
 
 * **Las cuatro preguntas, con lo que se comprobó en el código** (`server/routes/chat.ts`, `server/utils/conversacionChat.ts`, `src/components/chatbot/`):
