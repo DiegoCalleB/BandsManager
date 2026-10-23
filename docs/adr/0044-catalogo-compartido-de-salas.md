@@ -83,3 +83,7 @@ Salas de conciertos (clases Q8719053 y Q1060829) y festivales de música (Q86855
 ## Bares con música en directo y salas que faltan
 
 La importación de OSM incluye también `bar`, `pub` y `cafe` **solo si llevan `live_music=yes`** (los bares sin esa etiqueta y los restaurantes siguen fuera) y los guarda con tipo `bar`: donde tocan muchas bandas pequeñas. El filtro «Tipo» del catálogo los ofrece como «Bares con directo». En el catálogo, un botón «¿Falta una sala o un festival? Añádelo» abre «Añadir escenario»; lo que añade la banda entra al catálogo en la siguiente sincronización y se verifica y completa solo (Maps, su web, aforo).
+
+## Salas de Cataluña (datos abiertos de la Generalitat)
+
+Del conjunto «Equipaments culturals de Catalunya» (Departament de Cultura, API abierta de `analisi.transparenciacatalunya.cat`) entran solo las **50 «Sales de concerts»**, todas con su punto exacto (Razzmatazz, Apolo, Bikini, Luz de Gas, Jamboree…). Las ~310 salas polivalentes quedan fuera: son sobre todo centros sociales, ateneos y salas municipales con nombres genéricos. Se recogen nombre (pasado de mayúsculas a título), dirección, municipio, aforo, web, teléfono fijo y email de rol; la ficha cita la fuente. Se importa con `importarDeFuente` en cada arranque (solo añade y rellena huecos); `CATALOGO_IMPORTAR_GENCAT=false` la apaga. La licencia que declara el conjunto es «ver términos de uso» de la Generalitat: se cita la autoría, pero conviene que el dueño confirme los términos antes de dar el catálogo por redistribuible.

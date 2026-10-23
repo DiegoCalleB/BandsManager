@@ -68,7 +68,7 @@ describe('iniciarSincronizacionDelCatalogo', () => {
     delete process.env.CATALOGO_SYNC;
     iniciarSincronizacionDelCatalogo();
     iniciarSincronizacionDelCatalogo();
-    expect(vi.getTimerCount()).toBe(4); // la primera pasada, el intervalo, la semilla de Bandflow y Wikidata, una sola vez
+    expect(vi.getTimerCount()).toBe(5); // la primera pasada, el intervalo, la semilla de Bandflow, Wikidata y la Generalitat, una sola vez
     detenerSincronizacionDelCatalogo();
     expect(vi.getTimerCount()).toBe(0);
   });
