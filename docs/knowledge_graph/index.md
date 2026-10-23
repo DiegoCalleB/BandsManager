@@ -91,7 +91,7 @@ No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el t
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] — 173 ficheros dependen de él
 - [[src_utils_api|src/utils/api.ts]] — 95 ficheros dependen de él
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] — 80 ficheros dependen de él
-- [[tabla_registered_bands|tabla registered_bands]] — 72 ficheros dependen de él
+- [[tabla_registered_bands|tabla registered_bands]] — 73 ficheros dependen de él
 - [[db_state_sync|In-Memory State & Supabase Sync]] — 71 ficheros dependen de él
 - [[server_db_core|server/db/core.ts]] — 68 ficheros dependen de él
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] — 63 ficheros dependen de él

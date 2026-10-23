@@ -39,6 +39,7 @@ _Sin dependencias salientes directas._
 - [[fn_scout_salas|Búsqueda de salas y festivales]] *(from #feature)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 - [[server_db_bands|server/db/bands.ts]] *(from #db)*
+- [[server_db_core|server/db/core.ts]] *(from #db)*
 - [[server_db_epk|server/db/epk.ts]] *(from #db)*
 - [[server_db_referidos|server/db/referidos.ts]] *(from #db)*
 - [[server_db_social|server/db/social.ts]] *(from #db)*

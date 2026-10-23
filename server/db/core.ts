@@ -13,6 +13,35 @@ export function rolDeClaveSupabase(jwt: string): string | null {
 }
 
 /**
+ * Qué clase de clave es, sin revelarla: «sb_secret», «jwt:service_role», «ausente»... Avisa si lleva
+ * espacios o saltos de línea (se cuelan al pegar en el panel de variables y la dejan inválida).
+ */
+export function describirClaveSupabase(clave: string | undefined): string {
+  if (!clave) return "ausente";
+  const tipo = clave.startsWith("sb_secret_")
+    ? "sb_secret"
+    : clave.startsWith("sb_publishable_")
+      ? "sb_publishable (no vale para el backend)"
+      : clave.startsWith("eyJ")
+        ? `jwt:${rolDeClaveSupabase(clave) ?? "?"}`
+        : "formato desconocido";
+  return /\s/.test(clave) ? `${tipo}, CONTIENE ESPACIOS O SALTOS DE LÍNEA` : tipo;
+}
+
+/** Una consulta mínima al crear el cliente: deja en el log de arranque si la clave funciona o por qué no. Nunca imprime la clave. */
+async function diagnosticarSupabase(cliente: SupabaseClient, clave: string): Promise<void> {
+  const clase = describirClaveSupabase(clave);
+  const inicio = Date.now();
+  try {
+    const { error } = await cliente.from("registered_bands").select("band_id").limit(1);
+    if (error) console.error(`[Supabase] clave ${clase}: la consulta de prueba FALLÓ (${error.code ?? "sin código"}): ${error.message}`);
+    else console.info(`[Supabase] clave ${clase}: consulta de prueba OK en ${Date.now() - inicio} ms`);
+  } catch (err) {
+    console.error(`[Supabase] clave ${clase}: no se pudo ni lanzar la consulta de prueba:`, err);
+  }
+}
+
+/**
  * ¿El error es solo "Supabase no está configurado" (arranque local sin .env)? En ese modo la app
  * trabaja con el estado en memoria; cualquier otro fallo de Supabase es una escritura perdida.
  */
@@ -58,6 +87,7 @@ export function getSupabase(): SupabaseClient {
   supabaseInstance = createClient(url, jwtKey, {
     auth: { persistSession: false }
   });
+  if (process.env.NODE_ENV !== "test") void diagnosticarSupabase(supabaseInstance, jwtKey);
 
   return supabaseInstance;
 }

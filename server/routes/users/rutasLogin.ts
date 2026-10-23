@@ -6,7 +6,7 @@ import type { UsuarioGuardado } from '../../stateTypes.js';
 import crypto from 'crypto';
 import { ACTIVE_SESSIONS, verifyPassword } from '../../auth.js';
 import { loadState, saveState } from '../../state.js';
-import { dbGetUsers, normalizePlan } from '../../db.js';
+import { dbGetUsers, esSupabaseNoConfigurado, normalizePlan } from '../../db.js';
 import { loginRateLimiter } from '../../middleware/rateLimiter.js';
 import { cleanBandId, buildAvailableBandsForUser } from './bandasDisponibles.js';
 
@@ -25,6 +25,7 @@ router.post('/auth/login', loginRateLimiter, async (req, res) => {
   const cleanInput = username.trim().toLowerCase();
 
   // Sync users from Supabase to support persistent logins across serverless restarts
+  let errorDeBd: unknown = null;
   try {
     const dbUsers = await dbGetUsers();
     if (dbUsers && dbUsers.length > 0) {
@@ -58,8 +59,11 @@ router.post('/auth/login', loginRateLimiter, async (req, res) => {
       });
       saveState(state);
     }
-  } catch {
-    // Continue with memory state if database call fails
+  } catch (err) {
+    // Sigue con el estado en memoria si la BD falla, pero se anota: antes una clave de Supabase
+    // inválida se veía en pantalla como «contraseña incorrecta».
+    errorDeBd = err;
+    if (!esSupabaseNoConfigurado(err)) console.warn('[Login] no se pudo sincronizar los usuarios con Supabase:', err);
   }
 
   // Find all user records matching this username or email
@@ -71,6 +75,10 @@ router.post('/auth/login', loginRateLimiter, async (req, res) => {
   );
 
   if (matchingUsers.length === 0) {
+    // Sin BD y sin el usuario en memoria no se sabe si existe: no es una contraseña incorrecta.
+    if (errorDeBd && !esSupabaseNoConfigurado(errorDeBd)) {
+      return res.status(503).json({ error: 'No se pudo consultar la base de datos. Inténtalo de nuevo en unos minutos.' });
+    }
     return res.status(401).json({ error: 'Usuario o contraseña incorrectos' });
   }
 
