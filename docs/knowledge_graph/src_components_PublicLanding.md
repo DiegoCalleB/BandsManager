@@ -33,6 +33,7 @@ Exporta: PublicLanding.
 ---
 
 ## 🧪 Tests que lo cubren
+- `src/components/__tests__/LandingsEnlazanDirectorios.test.tsx`
 - `src/components/__tests__/PublicLandingDatosEstructurados.test.tsx`
 
 ---

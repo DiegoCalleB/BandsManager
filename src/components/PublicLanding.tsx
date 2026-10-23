@@ -69,6 +69,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
 
   const es = language === 'es';
   const guiasHref = es ? '/guides' : '/en/guides';
+  const directoriosHref = es ? '/directories' : '/en/directories';
 
   useEffect(() => {
     const title = t('landing.meta.title');
@@ -180,6 +181,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
             <a href="#setlists-miembros" className="hover:text-[var(--ink)]">Setlists</a>
             <a href="#fans" className="hover:text-[var(--ink)]">Fans y QR</a>
             <a href={guiasHref} className="hover:text-[var(--ink)]">{t('landing.nav.guides')}</a>
+            <a href={directoriosHref} className="hover:text-[var(--ink)]">{t('landing.nav.directories')}</a>
             <a href="#preguntas" className="hover:text-[var(--ink)]">{t('landing.nav.faq')}</a>
           </nav>
 
@@ -552,6 +554,9 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
           <div className="flex items-center gap-4">
             <a href={guiasHref} className="hover:underline">
               {t('landing.footer.guides')}
+            </a>
+            <a href={directoriosHref} className="hover:underline">
+              {t('landing.footer.directories')}
             </a>
             <button
               type="button"
