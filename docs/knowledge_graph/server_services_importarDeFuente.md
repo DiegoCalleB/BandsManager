@@ -25,7 +25,9 @@ Importación al catálogo de las fichas de una fuente externa (Wikidata, directo
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server_services_importarDeGencat|server/services/importarDeGencat.ts]] *(from #service)*
 - [[server_services_importarDeWikidata|server/services/importarDeWikidata.ts]] *(from #service)*
+- [[server_utils_gencatSalas|server/utils/gencatSalas.ts]] *(from #service)*
 - [[server_utils_wikidataSalas|server/utils/wikidataSalas.ts]] *(from #service)*
 
 ---

@@ -37,6 +37,7 @@ Catálogo compartido de salas: reglas puras (sin red ni base de datos).
 - [[server_utils_datosDeWebSala|server/utils/datosDeWebSala.ts]] *(from #service)*
 - [[server_utils_estadoNegocio|server/utils/estadoNegocio.ts]] *(from #service)*
 - [[server_utils_festivalesCatalogo|server/utils/festivalesCatalogo.ts]] *(from #service)*
+- [[server_utils_gencatSalas|server/utils/gencatSalas.ts]] *(from #service)*
 - [[server_utils_geocodificacion|server/utils/geocodificacion.ts]] *(from #service)*
 - [[server_utils_instagramEnWeb|server/utils/instagramEnWeb.ts]] *(from #service)*
 - [[server_utils_osmSalas|server/utils/osmSalas.ts]] *(from #service)*

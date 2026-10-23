@@ -137,6 +137,7 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
             <a href="#como-funciona" className="hover:text-[var(--ink)]">{es ? 'Flujo de Trabajo' : 'Workflow'}</a>
             <a href="#planes" className="hover:text-[var(--ink)]">{es ? 'Planes' : 'Pricing'}</a>
             <a href="#preguntas" className="hover:text-[var(--ink)]">{es ? 'Preguntas' : 'FAQs'}</a>
+            <a href={es ? '/directories' : '/en/directories'} className="hover:text-[var(--ink)]">{es ? 'Salas y festivales' : 'Venues and festivals'}</a>
           </nav>
 
           <div className="flex items-center gap-3">
@@ -561,6 +562,9 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-6 text-sm text-[var(--ink-2)] sm:px-6">
           <span><ShowIcon inline emoji="©" /> {year} BandManager.io · Trabajo Fin de Máster (TFM)</span>
           <div className="flex items-center gap-4">
+            <a href={es ? '/directories' : '/en/directories'} className="hover:underline">
+              {es ? 'Salas y festivales de España' : 'Venues and festivals in Spain'}
+            </a>
             <button
               type="button"
               onClick={onEntrar}

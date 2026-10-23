@@ -115,6 +115,12 @@ export function FichaSalaCatalogo({ sala, anadiendo, onAnadir, onVolver }: Ficha
         </p>
       )}
 
+      {sala.fuentes.includes('gencat') && (
+        <p className="text-xs text-[var(--ink-3)]">
+          Parte de estos datos vienen de <Enlace href="https://analisi.transparenciacatalunya.cat/d/48s6-82h2">Equipaments culturals de Catalunya</Enlace> (Departament de Cultura, Generalitat de Catalunya, datos abiertos).
+        </p>
+      )}
+
       <div className="sticky bottom-0 -mx-1 flex justify-end bg-[var(--surface)] px-1 pt-2">
         {sala.ya_en_agenda ? (
           <span className="flex items-center gap-1.5 py-2 text-sm font-medium text-[var(--ok)]"><Check className="h-4 w-4" aria-hidden />En tu agenda</span>

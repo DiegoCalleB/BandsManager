@@ -16,6 +16,7 @@ import { datosDeWebSala } from "../utils/datosDeWebSala.js";
 import { enriquecerSalasDesdeSuWeb } from "./enriquecerSalasDesdeSuWeb.js";
 import { buscarEnNominatim, geolocalizarSalas } from "./geolocalizarSalas.js";
 import { consultarWikidata, importarDeWikidata } from "./importarDeWikidata.js";
+import { descargarGencat, importarDeGencat } from "./importarDeGencat.js";
 import { importarSalasDeBandflow } from "./importarSalasBandflow.js";
 import { leerWebDeSala } from "./leerWebDeSala.js";
 import { descargarOsmSalas, importarSalasDeOsm } from "./importarSalasOsm.js";
@@ -32,6 +33,7 @@ let enCurso = false;
 let importacion: ReturnType<typeof setTimeout> | null = null;
 let semilla: ReturnType<typeof setTimeout> | null = null;
 let wikidata: ReturnType<typeof setTimeout> | null = null;
+let gencat: ReturnType<typeof setTimeout> | null = null;
 
 /** Una pasada. Nunca lanza: un fallo se registra y la siguiente pasada lo reintenta. Devuelve null si falló o ya había una en curso. */
 export async function sincronizarCatalogoAhora(sincronizar: () => Promise<InformeCatalogo> = () => sincronizarCatalogo(puertoCatalogoSupabase)): Promise<InformeCatalogo | null> {
@@ -160,6 +162,23 @@ export async function importarDeWikidataAhora(): Promise<void> {
   }
 }
 
+/**
+ * Salas de conciertos de Cataluña de los datos abiertos de la Generalitat (unas 50, con su punto exacto). Solo añade y rellena
+ * huecos, así que repetirla en cada arranque es inofensiva. `CATALOGO_IMPORTAR_GENCAT=false` la apaga. Nunca lanza.
+ */
+export async function importarDeGencatAhora(): Promise<void> {
+  if (process.env.CATALOGO_IMPORTAR_GENCAT === "false") return;
+  try {
+    const r = await importarDeGencat({ puerto: puertoCatalogoSupabase, descargar: descargarGencat });
+    if (r.nuevas + r.completadas + r.conCoordenadas > 0) {
+      console.log(`[Catálogo] Generalitat: ${r.fichas} salas, ${r.nuevas} nuevas, ${r.completadas} completadas, ${r.sinCambios} sin cambios, ${r.conCoordenadas} con su punto. Ejemplos: ${r.ejemplos.join("; ") || "ninguno"}.`);
+    }
+  } catch (e) {
+    console.warn("[Catálogo] La importación de la Generalitat falló:", e instanceof Error ? e.message : e);
+    captureError(e, { fase: "importarDeGencat" });
+  }
+}
+
 const REINTENTOS_IMPORTACION = 3;
 const ESPERA_REINTENTO_MS = 60 * 60 * 1000;
 
@@ -191,6 +210,10 @@ export function iniciarSincronizacionDelCatalogo(): void {
     wikidata = setTimeout(() => void importarDeWikidataAhora(), 11 * 60 * 1000);
     wikidata.unref?.();
   }
+  if (process.env.CATALOGO_IMPORTAR_GENCAT !== "false") {
+    gencat = setTimeout(() => void importarDeGencatAhora(), 12 * 60 * 1000);
+    gencat.unref?.();
+  }
   if (process.env.CATALOGO_IMPORTAR_OSM === "true") {
     // Después de la primera sincronización, para que las salas de las bandas ya estén y no se dupliquen.
     programarImportacion(15 * 60 * 1000);
@@ -203,7 +226,9 @@ export function detenerSincronizacionDelCatalogo(): void {
   if (importacion) clearTimeout(importacion);
   if (semilla) clearTimeout(semilla);
   if (wikidata) clearTimeout(wikidata);
+  if (gencat) clearTimeout(gencat);
   wikidata = null;
+  gencat = null;
   importacion = null;
   semilla = null;
   primera = null;
