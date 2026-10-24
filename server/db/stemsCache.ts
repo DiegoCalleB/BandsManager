@@ -56,7 +56,8 @@ export async function getStemsFromPersistentCache(
   // 1. Capa L1: Memoria rápida
   if (stemsMemoryCache.has(cacheKey)) {
     const memoryHit = stemsMemoryCache.get(cacheKey)!;
-    if ((!memoryHit.status || memoryHit.status === 'completed') && memoryHit.stemsMap && Object.keys(memoryHit.stemsMap).length > 0) {
+    // Un resultado degradado (DSP de respaldo tras fallar la IA) no es un acierto: se reintenta la IA.
+    if ((!memoryHit.status || memoryHit.status === 'completed') && !memoryHit.degraded && memoryHit.stemsMap && Object.keys(memoryHit.stemsMap).length > 0) {
       console.log(`[Stems Cache] ⚡ L1 Memory HIT para ${cacheKey}`);
       return memoryHit;
     }
@@ -73,7 +74,7 @@ export async function getStemsFromPersistentCache(
       .eq("engine", selectedEngine)
       .maybeSingle();
 
-    if (!error && data && (data.status === 'completed' || !data.status) && data.stems_map && Object.keys(data.stems_map).length > 0) {
+    if (!error && data && (data.status === 'completed' || !data.status) && !data.degraded && data.stems_map && Object.keys(data.stems_map).length > 0) {
       const record: StemsCacheRecord = {
         bandId: data.band_id,
         songHash: data.song_hash,
@@ -127,7 +128,7 @@ export async function acquireStemsSeparationLock(
   // 1. Verificación previa en L1
   const memExisting = stemsMemoryCache.get(cacheKey);
   if (memExisting) {
-    if (memExisting.status === 'completed' && memExisting.stemsMap && Object.keys(memExisting.stemsMap).length > 0) {
+    if (memExisting.status === 'completed' && !memExisting.degraded && memExisting.stemsMap && Object.keys(memExisting.stemsMap).length > 0) {
       return {
         acquired: false,
         reason: 'already_completed',
@@ -162,7 +163,8 @@ export async function acquireStemsSeparationLock(
       .maybeSingle();
 
     if (!selectErr && existing) {
-      if ((existing.status === 'completed' || !existing.status) && existing.stems_map && Object.keys(existing.stems_map).length > 0) {
+      // Una fila degradada cae a la reclamación 2b: se vuelve a lanzar la IA en vez de devolver el DSP.
+      if ((existing.status === 'completed' || !existing.status) && !existing.degraded && existing.stems_map && Object.keys(existing.stems_map).length > 0) {
         const completedRecord: StemsCacheRecord = {
           bandId: existing.band_id,
           songHash: existing.song_hash,
