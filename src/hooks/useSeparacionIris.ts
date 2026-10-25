@@ -4,7 +4,7 @@ import { apiFetch } from '../utils/api';
 import { computeAutoBalanceVolumes } from '../utils/audioLatency';
 import { resolveAudioUrl, saveAudioToStorage, uploadFileToServer } from '../utils/audioStorage';
 import { resolverAudioUrlParaSubida } from '../utils/audioParaSubida';
-import { getIdeaTracks, pistasDeCancion } from '../utils/irisTracks';
+import { getIdeaTracks, hasIrisStems, pistasDeCancion } from '../utils/irisTracks';
 import { separateAudioIntoStems, type IsolatedStemResult } from '../utils/stemSeparator';
 import {
   autorDeSeparacion,
@@ -137,6 +137,8 @@ export function useSeparacionIris({ song, onUpdateSong, motor, pistasElegidas, a
       key: cancion.tonalidad,
       forceEngine: engineToUse,
       requestedStems: activeStemsToInclude,
+      // Si la canción ya tiene pistas, pulsar separar es pedir un resultado nuevo, no el guardado.
+      forzar: hasIrisStems(cancion),
     };
 
     try {
