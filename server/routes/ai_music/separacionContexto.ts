@@ -26,6 +26,8 @@ interface CuerpoSeparacion {
   falApiKey?: string;
   preprocesarDirecto?: boolean;
   requestedStems?: string[];
+  /** El usuario pide separar de nuevo: no se reutiliza la separación guardada. */
+  forzar?: boolean;
 }
 
 /** Todo lo que necesita un motor de separación, ya resuelto y validado. */
@@ -39,6 +41,8 @@ export interface ContextoSeparacion {
   preprocesarDirecto: boolean;
   /** Motor pedido: 'auto', 'fal', 'mvsep-mdx23', 'demucs', 'replicate', 'dsp-server'… */
   selectedEngine: string;
+  /** Separar de nuevo aunque haya una separación guardada. */
+  forzar: boolean;
   /** El usuario eligió DSP a propósito: no es un resultado «degradado». */
   isUserExplicitDsp: boolean;
   bandId: string;
@@ -84,6 +88,7 @@ export function contextoDesdePeticion(req: express.Request): ContextoSeparacion 
     requestedStems: cuerpo.requestedStems,
     preprocesarDirecto: Boolean(cuerpo.preprocesarDirecto),
     selectedEngine,
+    forzar: cuerpo.forzar === true,
     isUserExplicitDsp: selectedEngine === 'dsp-server' || selectedEngine === 'dsp',
     bandId,
     songHash,

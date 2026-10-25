@@ -120,7 +120,8 @@ export async function acquireStemsSeparationLock(
   bandId: string,
   songHash: string,
   engine: string,
-  instanceId: string = `instance_${process.pid}_${Math.random().toString(36).substring(2, 7)}`
+  instanceId: string = `instance_${process.pid}_${Math.random().toString(36).substring(2, 7)}`,
+  forzar = false
 ): Promise<LockAcquireResult> {
   const cacheKey = `${bandId}:${songHash}:${engine}`;
   const nowIso = new Date().toISOString();
@@ -128,7 +129,7 @@ export async function acquireStemsSeparationLock(
   // 1. Verificación previa en L1
   const memExisting = stemsMemoryCache.get(cacheKey);
   if (memExisting) {
-    if (memExisting.status === 'completed' && !memExisting.degraded && memExisting.stemsMap && Object.keys(memExisting.stemsMap).length > 0) {
+    if (!forzar && memExisting.status === 'completed' && !memExisting.degraded && memExisting.stemsMap && Object.keys(memExisting.stemsMap).length > 0) {
       return {
         acquired: false,
         reason: 'already_completed',
@@ -164,7 +165,7 @@ export async function acquireStemsSeparationLock(
 
     if (!selectErr && existing) {
       // Una fila degradada cae a la reclamación 2b: se vuelve a lanzar la IA en vez de devolver el DSP.
-      if ((existing.status === 'completed' || !existing.status) && !existing.degraded && existing.stems_map && Object.keys(existing.stems_map).length > 0) {
+      if (!forzar && (existing.status === 'completed' || !existing.status) && !existing.degraded && existing.stems_map && Object.keys(existing.stems_map).length > 0) {
         const completedRecord: StemsCacheRecord = {
           bandId: existing.band_id,
           songHash: existing.song_hash,
