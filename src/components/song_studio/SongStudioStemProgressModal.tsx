@@ -19,6 +19,8 @@ interface StemProgressBase {
   minimized?: boolean;
   errorType?: string;
   errorDetail?: string;
+  degraded?: boolean;
+  degradedReason?: string;
 }
 
 interface SongStudioStemProgressModalProps<S extends StemProgressBase> {
@@ -36,6 +38,8 @@ export function SongStudioStemProgressModal<S extends StemProgressBase>({
 
   const terminado = stemProgressModal.stage === 'completed' || stemProgressModal.stage === 'error';
   const esError = stemProgressModal.stage === 'error';
+  // La IA no pudo y se usó el DSP de filtros: las pistas se montan, pero no están realmente separadas.
+  const esDegradado = !esError && !!stemProgressModal.degraded;
 
   if (stemProgressModal.minimized) {
     return (
@@ -75,7 +79,7 @@ export function SongStudioStemProgressModal<S extends StemProgressBase>({
         <div className="mt-2 w-full h-1.5 bg-[var(--sunken)] rounded-[var(--r-pill)] overflow-hidden ">
           <div
             className={`h-full rounded-[var(--r-pill)] transition-ui duration-300 ${
-              !terminado ? 'bg-[var(--acc)] ' : esError ? 'bg-[var(--alert)]' : 'bg-[var(--ok)]'
+              !terminado ? 'bg-[var(--acc)] ' : esError || esDegradado ? 'bg-[var(--alert)]' : 'bg-[var(--ok)]'
             }`}
             style={{ width: `${terminado ? 100 : Math.max(5, stemProgressModal.progressPct || 0)}%` }}
           />
@@ -98,14 +102,14 @@ export function SongStudioStemProgressModal<S extends StemProgressBase>({
             <div
               className={`w-10 h-10 rounded-[var(--r-m)] flex items-center justify-center relative ${
                 terminado
-                  ? esError
+                  ? esError || esDegradado
                     ? 'bg-[var(--alert)]/20 '
                     : 'bg-[var(--ok)]/20 '
                   : 'bg-[var(--acc)]/20 '
               }`}
             >
               {terminado ? (
-                esError ? (
+                esError || esDegradado ? (
                   <AlertTriangle className="w-5 h-5 text-[var(--alert)]" />
                 ) : (
                   <CheckCircle2 className="w-5 h-5 text-[var(--ok)]" />
@@ -116,7 +120,7 @@ export function SongStudioStemProgressModal<S extends StemProgressBase>({
             </div>
             <div>
               <h3 className="font-bold text-sm font-mono">
-                {terminado ? (esError ? 'Error en separación de Iris' : '¡Pistas separadas con éxito!') : 'Iris Espectro en proceso...'}
+                {terminado ? (esError ? 'Error en separación de Iris' : esDegradado ? 'Separación no conseguida' : '¡Pistas separadas con éxito!') : 'Iris Espectro en proceso...'}
               </h3>
               <p className="text-xs text-[var(--ink-2)] font-mono">{stemProgressModal.ideaTitle || 'Pista de Audio'}</p>
             </div>
@@ -147,7 +151,19 @@ export function SongStudioStemProgressModal<S extends StemProgressBase>({
             </div>
           )}
 
-          {terminado && !esError && (
+          {esDegradado && (
+            <div role="alert" className="p-4 rounded-[var(--r-m)] bg-[var(--alert)]/40 space-y-2">
+              <p className="text-[var(--alert)] font-bold flex items-center gap-2">
+                <AlertTriangle className="w-4 h-4" /> Las pistas no están bien separadas.
+              </p>
+              <p className="text-xs text-[var(--ink-2)] font-sans leading-relaxed">
+                {stemProgressModal.degradedReason || 'La IA no estuvo disponible y se usaron filtros básicos de frecuencia.'}{' '}
+                Cada pista conserva parte del resto de instrumentos. Vuelve a separar con otro motor de Iris cuando el servicio esté disponible.
+              </p>
+            </div>
+          )}
+
+          {terminado && !esError && !esDegradado && (
             <div className="p-4 rounded-[var(--r-m)] bg-[var(--ok)]/40 space-y-3">
               <p className="text-[var(--ok)] font-bold flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4" /> Las pistas aisladas ya están disponibles en la vista multicanal.
