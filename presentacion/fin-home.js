@@ -97,7 +97,7 @@
     mas.insertBefore(rec, ads ? ads.nextSibling : mas.firstChild);
     mas.appendChild(filaPelis('Comedias con morriña', MORRINA));
   }
-  // Fila «Juegos móviles»: el juego de Diego (Scroll Challenge, con su enlace de Google Play) y las apps de MoureDev. Cada una abre su ficha; el icono real, si existe, va en img/juegos/<id>.jpg (o .png)
+  // Fila «Juegos y apps» (antes «Juegos móviles»): el juego de Diego (Scroll Challenge, con su enlace de Google Play) y las apps de MoureDev. Cada una abre su ficha; el icono real, si existe, va en img/juegos/<id>.jpg (o .png)
   // (sin él sale el icono dibujado). Para poner el enlace directo a cada tienda basta cambiar el último campo.
   var PORTFOLIO = 'https://mouredev.com/portfolio/';
   var JUEGOS = [
@@ -109,14 +109,15 @@
     ['wookieator', 'Wookieator', 'App móvil · el traductor wookiee · App Store', '#c99a1c,#2a2a2a', 'app', 'https://itunes.apple.com/lr/app/wookieator-the-wookiee-translator/id919286486?mt=8'],
     ['tpcast', 'TP Cast', 'App móvil · Todopoderosos', '#d8c000,#222', 'app', 'https://tpcast.app/'],
     ['pumpkin', 'Pumpkin', 'App móvil · para socios de Pilbeo · Google Play', '#f0a020,#555', 'app', 'https://play.google.com/store/apps/details?id=com.pilbeo.pilbeo_pumpkin_android&hl=es'],
-    ['pilbeo', 'Pilbeo', 'App móvil · Camino de Santiago', '#f0b030,#4a9a3a', 'app', PORTFOLIO]
+    ['pilbeo', 'Pilbeo', 'App móvil · Camino de Santiago', '#f0b030,#4a9a3a', 'app', PORTFOLIO],
+    ['silvestre', 'Silvestre', 'App web · reservas y carta del restaurante', '#1a1a1a,#c8a64b', 'app', 'https://restaurantes-silvestre.up.railway.app/']
   ];
   ICONOS.juego = '<rect x="2" y="7" width="20" height="11" rx="5.5"/><path d="M7 10.5v4M5 12.5h4"/><circle cx="16" cy="11.5" r=".6"/><circle cx="18.2" cy="13.8" r=".6"/>';
   ICONOS.pajaro = '<ellipse cx="11" cy="13" rx="7" ry="5.5"/><circle cx="14" cy="11" r="1"/><path d="M18 13l3.5 1.2-3.5 1.4M8 13c1.5 2 4 2 5 0M6 17.5l-2 2.5M10 18.5l-1 2.5"/>';
   ICONOS.app = '<rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/>';
   if (mas) {
     var jg = document.createElement('div'); jg.className = 'nx-filas2 nx-ads';
-    jg.innerHTML = '<h3>Juegos móviles <span class="nx-ad-chip">Android · iOS</span></h3><div class="nx-games">' + JUEGOS.map(function (g) {
+    jg.innerHTML = '<h3>Juegos y apps <span class="nx-ad-chip">Android · iOS · Web</span></h3><div class="nx-games">' + JUEGOS.map(function (g) {
       return '<a class="nx-game" href="' + g[5] + '" target="_blank" rel="noopener"><i style="--c1:' + g[3].split(',')[0] + ';--c2:' + g[3].split(',')[1] + '"' + (ARTE[g[0]] ? ' class="arte"><svg viewBox="0 0 100 100" aria-hidden="true">' + ARTE[g[0]] : '><svg viewBox="0 0 24 24" aria-hidden="true">' + ICONOS[g[4]]) + '</svg><img class="nx-gicono" src="img/juegos/' + g[0] + '.jpg" alt="" onerror="if(!this.dataset.r){this.dataset.r=1;this.src=this.src.replace(\'.jpg\',\'.png\')}else this.remove()"></i><b>' + cerrado(g[1]) + '</b><small>' + cerrado(g[2]) + '</small><span>Obtener</span></a>';
     }).join('') + '</div>';
     var ads0 = mas.querySelector('.nx-ads'); mas.insertBefore(jg, ads0 ? ads0.nextSibling : mas.firstChild);
@@ -154,4 +155,23 @@
       var reproducir = document.getElementById('gatePeli'); if (reproducir) reproducir.focus({ preventScroll: true });
     }
   }
+})();
+
+// Música del inicio: «Compila nu bravu» de Os Herdeiros do Código, en bucle y bajito. El navegador solo la deja sonar
+// tras un gesto del usuario, así que arranca con el primero (clic o tecla) dentro del inicio, y se para al salir de él
+// (película, «Sin sonido»…), para que no se mezcle con la música de las escenas.
+(function () {
+  var cancion = new Audio('audio/musica/compila.mp3');
+  cancion.loop = true; cancion.volume = 0.22; cancion.preload = 'auto';
+  var arranca = function () {
+    if (!document.body.classList.contains('gate')) return;
+    cancion.play().catch(function () { /* sin permiso de audio: el inicio funciona igual */ });
+    document.removeEventListener('pointerdown', arranca, true);
+    document.removeEventListener('keydown', arranca, true);
+  };
+  document.addEventListener('pointerdown', arranca, true);
+  document.addEventListener('keydown', arranca, true);
+  new MutationObserver(function () {
+    if (!document.body.classList.contains('gate')) { cancion.pause(); this.disconnect(); }
+  }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
 })();
