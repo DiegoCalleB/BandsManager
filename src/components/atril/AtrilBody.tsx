@@ -10,7 +10,9 @@ import { PanelArmonia } from "../chords/PanelArmonia";
 import { ProfesorIA } from "../chords/ProfesorIA";
 import { SelectorArmonia } from "../chords/SelectorArmonia";
 import { Button,Input,LinkButton,Textarea } from "../ui";
+import { AtrilCompases,SelectorVistaAtril } from "./AtrilCompases";
 import { useAtril } from "./AtrilContext";
+import { useVistaAtril } from "./hooks/useVistaAtril";
 import { renderFormattedChordSheet } from "./chordSheetRender";
 
 /**
@@ -20,6 +22,8 @@ import { renderFormattedChordSheet } from "./chordSheetRender";
 export function AtrilBody() {
   const { buscarEnAudio, scrollContainerRef, activeTab, guiaSustituto, setActiveTab, armonia, estiloArmonia, cambiarEstiloArmonia, funcionesPresentes, acordesPorFuncion, nombreTonalidadVista, processedText, lineasConLetra, letraTranscrita, seguirEnCifrado, letraActiva, audioRef, sincronizado, alineacion, analisisAcordes, tiemposAcordes, acordeActivo, transpose, song, notation, pedirProfesor, handleSaveEdits, cifradoTexto, setCifradoTexto, setGuiaSustituto, showChordDiagrams, uniqueChords, contextoAcordes, vistaAcordes, setVistaAcordes, nivelAcordes, setNivelAcordes, setShowChordDiagrams, acordeSonando } = useAtril();
   const [instrumentoArmonia, setInstrumentoArmonia] = useState<InstrumentoProfesor>(() => analisisAcordes?.profesor?.instrumento ?? instrumentoDelUsuario() ?? 'guitarra');
+  const [vista, setVista] = useVistaAtril();
+  const enCompases = vista === "compases" && Boolean(analisisAcordes);
   return (
     <>
       <div className="flex-1 min-h-0 max-md:min-h-[9.5rem] overflow-hidden flex flex-col md:flex-row relative">
@@ -52,8 +56,11 @@ export function AtrilBody() {
                 </div>
               )}
 
+              {analisisAcordes && <SelectorVistaAtril vista={vista} onVista={setVista} />}
+              {enCompases && <AtrilCompases />}
+
               {/* THE CHORD SHEET DISPLAY */}
-              {armonia && (
+              {!enCompases && armonia && (
                 <SelectorArmonia
                   compacto
                   estilo={estiloArmonia}
@@ -64,7 +71,7 @@ export function AtrilBody() {
                   nombreTonalidad={nombreTonalidadVista}
                 />
               )}
-              <div translate="no" className="notranslate bg-[var(--sunken)] p-4 sm:p-6 rounded-[var(--r-l)] font-sans text-base group-data-[escenario=true]/esc:text-3xl leading-relaxed whitespace-pre-wrap select-text">
+              {!enCompases && <div translate="no" className="notranslate bg-[var(--sunken)] p-4 sm:p-6 rounded-[var(--r-l)] font-sans text-base group-data-[escenario=true]/esc:text-3xl leading-relaxed whitespace-pre-wrap select-text">
                 {renderFormattedChordSheet(
                   processedText,
                   lineasConLetra && letraTranscrita && seguirEnCifrado
@@ -87,7 +94,7 @@ export function AtrilBody() {
                     : undefined,
                   armonia ? { tonalidad: armonia.tonalidad, transpose, estilo: estiloArmonia, nombreTonalidad: nombreTonalidadVista } : undefined,
                 )}
-              </div>
+              </div>}
             </div>
           )}
 

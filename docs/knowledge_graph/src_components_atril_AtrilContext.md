@@ -27,6 +27,7 @@ Contexto del Atril: reparte el estado del controlador y las props a las vistas.
 - [[src_components_atril_AiSuccessBanner|src/components/atril/AiSuccessBanner.tsx]] *(from #frontend)*
 - [[src_components_atril_AtrilAudioElement|src/components/atril/AtrilAudioElement.tsx]] *(from #frontend)*
 - [[src_components_atril_AtrilBody|src/components/atril/AtrilBody.tsx]] *(from #frontend)*
+- [[src_components_atril_AtrilCompases|src/components/atril/AtrilCompases.tsx]] *(from #frontend)*
 - [[src_components_atril_AtrilHeader|src/components/atril/AtrilHeader.tsx]] *(from #frontend)*
 - [[src_components_atril_AtrilModals|src/components/atril/AtrilModals.tsx]] *(from #frontend)*
 - [[src_components_atril_AtrilProvider|src/components/atril/AtrilProvider.tsx]] *(from #frontend)*

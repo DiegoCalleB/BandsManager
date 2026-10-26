@@ -18,8 +18,10 @@ Cuerpo del Atril: cifrado, estructura, diagramas y panel de ideas según la pest
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_atril_AtrilCompases|src/components/atril/AtrilCompases.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_atril_AtrilContext|src/components/atril/AtrilContext.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_atril_chordSheetRender|src/components/atril/chordSheetRender.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_atril_hooks_useVistaAtril|src/components/atril/hooks/useVistaAtril.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_DrawerDiagramas|src/components/chords/DrawerDiagramas.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_PanelArmonia|src/components/chords/PanelArmonia.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_ProfesorIA|src/components/chords/ProfesorIA.tsx]] *(Layer: #frontend, Domain: #repertoire)*
