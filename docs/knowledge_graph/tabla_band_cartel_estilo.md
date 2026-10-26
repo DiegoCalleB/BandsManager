@@ -3,13 +3,13 @@ id: tabla_band_cartel_estilo
 title: "tabla band_cartel_estilo"
 layer: schema
 domain: system
-file: "supabase/migrations/20261105_band_cartel_estilo.sql"
+file: "supabase_schema.sql"
 tags: ["schema", "tabla", "auto"]
 ---
 
 # 📌 tabla band_cartel_estilo
 
-> **Ubicación:** `supabase/migrations/20261105_band_cartel_estilo.sql`  
+> **Ubicación:** `supabase_schema.sql`  
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
@@ -35,7 +35,7 @@ _Sin dependencias salientes directas._
 - `created_at`
 - `updated_at`
 
-**Definida en:** `supabase/migrations/20261105_band_cartel_estilo.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migrations/20261105_band_cartel_estilo.sql`
 
 ---
 

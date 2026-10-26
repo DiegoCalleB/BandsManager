@@ -3,13 +3,13 @@ id: tabla_reel_clips
 title: "tabla reel_clips"
 layer: schema
 domain: social
-file: "supabase/migrations/20261104_reels_publicacion_real.sql"
+file: "supabase_schema.sql"
 tags: ["schema", "tabla", "auto"]
 ---
 
 # 📌 tabla reel_clips
 
-> **Ubicación:** `supabase/migrations/20261104_reels_publicacion_real.sql`  
+> **Ubicación:** `supabase_schema.sql`  
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/social`
 
 ## 📖 Descripción
@@ -42,7 +42,7 @@ Tabla de Supabase `reel_clips` (12 columnas).
 - `control_calidad`
 - `duracion_seg`
 
-**Definida en:** `supabase/migrations/20261104_reels_publicacion_real.sql`, `supabase/migrations/20261105_reel_clips_control_calidad.sql`, `supabase/migrations/20261106_reel_metricas.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migrations/20261104_reels_publicacion_real.sql`, `supabase/migrations/20261105_reel_clips_control_calidad.sql`, `supabase/migrations/20261106_reel_metricas.sql`
 
 ---
 

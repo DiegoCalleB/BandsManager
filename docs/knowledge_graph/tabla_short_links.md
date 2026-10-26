@@ -3,13 +3,13 @@ id: tabla_short_links
 title: "tabla short_links"
 layer: schema
 domain: system
-file: "supabase/migrations/20261015_enlaces_cortos.sql"
+file: "supabase_schema.sql"
 tags: ["schema", "tabla", "auto"]
 ---
 
 # 📌 tabla short_links
 
-> **Ubicación:** `supabase/migrations/20261015_enlaces_cortos.sql`  
+> **Ubicación:** `supabase_schema.sql`  
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
@@ -38,7 +38,7 @@ _Sin dependencias salientes directas._
 - `clave`
 - `created_at`
 
-**Definida en:** `supabase/migrations/20261015_enlaces_cortos.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migrations/20261015_enlaces_cortos.sql`
 
 ---
 

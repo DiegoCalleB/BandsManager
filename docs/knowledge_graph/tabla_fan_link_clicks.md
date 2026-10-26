@@ -3,13 +3,13 @@ id: tabla_fan_link_clicks
 title: "tabla fan_link_clicks"
 layer: schema
 domain: social
-file: "supabase/migration_fan_link_clicks.sql"
+file: "supabase_schema.sql"
 tags: ["schema", "tabla", "auto"]
 ---
 
 # 📌 tabla fan_link_clicks
 
-> **Ubicación:** `supabase/migration_fan_link_clicks.sql`  
+> **Ubicación:** `supabase_schema.sql`  
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/social`
 
 ## 📖 Descripción
@@ -33,13 +33,13 @@ _Sin dependencias salientes directas._
 - `id`
 - `band_id`
 - `button_type`
+- `concert_id`
 - `concert_date`
 - `user_agent`
 - `referer`
 - `created_at`
-- `concert_id`
 
-**Definida en:** `supabase/migration_fan_link_clicks.sql`, `supabase/migrations/20261009_sincronizar_esquema_auditoria.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migration_fan_link_clicks.sql`, `supabase/migrations/20261009_sincronizar_esquema_auditoria.sql`
 
 ---
 

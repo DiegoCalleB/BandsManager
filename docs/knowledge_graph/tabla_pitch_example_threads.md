@@ -35,7 +35,7 @@ Tabla de Supabase `pitch_example_threads` (8 columnas).
 - `category`
 - `titulo`
 - `mensajes`
-- `texto`
+- `resultado`
 - `notas`
 - `created_at`
 

@@ -3,13 +3,13 @@ id: tabla_band_alert_settings
 title: "tabla band_alert_settings"
 layer: schema
 domain: system
-file: "supabase/migrations/20260920_add_alert_settings_table.sql"
+file: "supabase_schema.sql"
 tags: ["schema", "tabla", "auto"]
 ---
 
 # 📌 tabla band_alert_settings
 
-> **Ubicación:** `supabase/migrations/20260920_add_alert_settings_table.sql`  
+> **Ubicación:** `supabase_schema.sql`  
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
@@ -40,7 +40,7 @@ _Sin dependencias salientes directas._
 - `created_at`
 - `updated_at`
 
-**Definida en:** `supabase/migrations/20260920_add_alert_settings_table.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migrations/20260920_add_alert_settings_table.sql`
 
 ---
 

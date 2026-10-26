@@ -3,13 +3,13 @@ id: tabla_catalogo_ingestas
 title: "tabla catalogo_ingestas"
 layer: schema
 domain: system
-file: "supabase/migrations/20261113_catalogo_global_base.sql"
+file: "supabase_schema.sql"
 tags: ["schema", "tabla", "auto"]
 ---
 
 # 📌 tabla catalogo_ingestas
 
-> **Ubicación:** `supabase/migrations/20261113_catalogo_global_base.sql`  
+> **Ubicación:** `supabase_schema.sql`  
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
@@ -42,7 +42,7 @@ _Sin dependencias salientes directas._
 - `descartadas`
 - `error`
 
-**Definida en:** `supabase/migrations/20261113_catalogo_global_base.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migrations/20261113_catalogo_global_base.sql`
 
 ---
 

@@ -3,13 +3,13 @@ id: tabla_letras_jobs
 title: "tabla letras_jobs"
 layer: schema
 domain: repertoire
-file: "supabase/migrations/20261014_letras_automaticas.sql"
+file: "supabase_schema.sql"
 tags: ["schema", "tabla", "auto"]
 ---
 
 # 📌 tabla letras_jobs
 
-> **Ubicación:** `supabase/migrations/20261014_letras_automaticas.sql`  
+> **Ubicación:** `supabase_schema.sql`  
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/repertoire`
 
 ## 📖 Descripción
@@ -41,7 +41,7 @@ _Sin dependencias salientes directas._
 - `created_at`
 - `updated_at`
 
-**Definida en:** `supabase/migrations/20261014_letras_automaticas.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migrations/20261014_letras_automaticas.sql`
 
 ---
 

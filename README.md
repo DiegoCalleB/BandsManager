@@ -258,7 +258,7 @@ Un agente que escribe a terceros en nombre de la banda es lo más delicado del p
 
 Lo que todavía no está resuelto:
 
-- **Row Level Security de Supabase no restringe nada.** Las políticas de `supabase_schema.sql` son todas `USING (true)`. El aislamiento entre bandas es 100 % de aplicación, sin una red de seguridad por debajo.
+- **Row Level Security de Supabase no protege al servidor.** De las 60 políticas de `supabase_schema.sql`, la mitad son `USING (true)` y la otra mitad filtran por banda, pero el servidor entra con la service role, que se salta RLS. El aislamiento entre bandas es 100 % de aplicación, sin una red de seguridad por debajo.
 - **La `Content-Security-Policy` es mínima** (`object-src`, `base-uri` y `frame-ancestors`). La completa choca con Stripe, YouTube, Spotify y Google Translate, que van embebidos, así que un XSS tendría poca contención.
 - **La cookie de sesión no es `HttpOnly`** a propósito, porque el cliente también usa el token desde `localStorage`. Migrar a sesión solo por cookie está en el backlog.
 - **El limitador de ritmo vive en memoria del proceso.** Se reinicia al desplegar y no se comparte si se escalara a varias instancias. Además solo cubre las superficies de la tabla: el resto de endpoints mutantes confía solo en `requireAuth`.
@@ -361,7 +361,7 @@ Sin `.env` la app también arranca, con los usuarios semilla de `src/db_seed.ts`
 ```
 server/        Express: routes/ (HTTP) · services/ (agentes, scheduler, emails) · db/ (Supabase) · utils/ · middleware/
 src/           React: components/ · hooks/ · utils/ · services/api.ts (cliente HTTP único) · context/
-supabase/      migrations/ (las aplica el runner al arrancar) y .sql sueltos anteriores; el esquema completo está en supabase_schema.sql
+supabase/      migrations/ (las aplica el runner al arrancar) y .sql sueltos anteriores. El esquema completo está en supabase_schema.sql
 e2e/           Playwright: smoke, journeys y superficies públicas
 scripts/       Runner de migraciones, auditorías de diseño, verificación de la documentación y utilidades
 skills/        Skills para agentes de código (espejadas en .claude/, .gemini/, .opencode/ y .cursor/)

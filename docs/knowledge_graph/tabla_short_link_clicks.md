@@ -3,13 +3,13 @@ id: tabla_short_link_clicks
 title: "tabla short_link_clicks"
 layer: schema
 domain: system
-file: "supabase/migrations/20261015_enlaces_cortos.sql"
+file: "supabase_schema.sql"
 tags: ["schema", "tabla", "auto"]
 ---
 
 # 📌 tabla short_link_clicks
 
-> **Ubicación:** `supabase/migrations/20261015_enlaces_cortos.sql`  
+> **Ubicación:** `supabase_schema.sql`  
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
@@ -37,7 +37,7 @@ Tabla de Supabase `short_link_clicks` (7 columnas).
 - `dispositivo`
 - `origen`
 
-**Definida en:** `supabase/migrations/20261015_enlaces_cortos.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migrations/20261015_enlaces_cortos.sql`
 
 ---
 

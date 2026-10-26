@@ -3,13 +3,13 @@ id: tabla_emails_ciclo_vida
 title: "tabla emails_ciclo_vida"
 layer: schema
 domain: system
-file: "supabase/migrations/20261103_emails_ciclo_vida.sql"
+file: "supabase_schema.sql"
 tags: ["schema", "tabla", "auto"]
 ---
 
 # 📌 tabla emails_ciclo_vida
 
-> **Ubicación:** `supabase/migrations/20261103_emails_ciclo_vida.sql`  
+> **Ubicación:** `supabase_schema.sql`  
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
@@ -33,7 +33,7 @@ Tabla de Supabase `emails_ciclo_vida` (3 columnas).
 - `tipo`
 - `enviado_en`
 
-**Definida en:** `supabase/migrations/20261103_emails_ciclo_vida.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migrations/20261103_emails_ciclo_vida.sql`
 
 ---
 
