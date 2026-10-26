@@ -42,8 +42,8 @@ Si falla alguna, se queda en **cuando duela** (🔵, con un disparador concreto 
 | Módulo | Máster | Repo | Evidencia | Decisión | Apuntes |
 |---|---|:-:|---|---|---|
 | Ciclo de vida del desarrollo | Completada | ✅ | `release-please-config.json`, `CHANGELOG.md`, CI de tres workflows, commitlint | — | |
-| Análisis de requisitos: tipologías, UML, validación | Completada | 🟡 | `SDD.md` (241 líneas), `BACKLOG.md`. No he verificado si hay diagramas UML *(sin verificar)* | 🟢 Solo 2–3 diagramas de los flujos críticos (login, pitch, pago) en `docs/ARCHITECTURE.md`. ⚪ Documentación UML completa. | |
-| Spec Driven Development | Completada | 🟡 | `SDD.md` y skills; no hay spec por cambio | 🟢 Versión ligera: una spec corta solo para **funcionalidad nueva** que cambie comportamiento. ⚪ Para refactors y arreglos de seguridad: el PR y el ADR ya bastan. | |
+| Análisis de requisitos: tipologías, UML, validación | Completada | 🟡 | `docs/SDD.md` (241 líneas), `BACKLOG.md`. No he verificado si hay diagramas UML *(sin verificar)* | 🟢 Solo 2–3 diagramas de los flujos críticos (login, pitch, pago) en `docs/ARCHITECTURE.md`. ⚪ Documentación UML completa. | |
+| Spec Driven Development | Completada | 🟡 | `docs/SDD.md` y skills; no hay spec por cambio | 🟢 Versión ligera: una spec corta solo para **funcionalidad nueva** que cambie comportamiento. ⚪ Para refactors y arreglos de seguridad: el PR y el ADR ya bastan. | |
 | Paradigmas de programación | Completada | ✅ | TypeScript multiparadigma; utilidades puras testeables | — | |
 | Principios de diseño: SOLID, DRY/KISS/YAGNI, patrones, antipatrones | Incompleta | 🟡 | Ficheros dios (`leads/enrichment.ts` 1.700, `concert_to_album.ts` 1.585), 9 ciclos, `db` importa `services` | 🟢 SRP y dependencias en un solo sentido, hechas cumplir por guardarraíles (Fase 0.1–0.3). ⚪ Aplicar patrones de diseño «porque existen»: solo si el código los pide. | |
 
@@ -135,7 +135,7 @@ Si falla alguna, se queda en **cuando duela** (🔵, con un disparador concreto 
 
 | Módulo | Máster | Repo | Nota | Decisión |
 |---|---|:-:|---|---|
-| Proyectos front, IA, backend y mobile; práctica de desarrollo moderno con IA | Incompleta | ➖ | Son prácticas del máster. Sus lecciones sobre Engram, Skills y SDD encajan con `AGENTS.md`, `skills/` y `SDD.md` | — |
+| Proyectos front, IA, backend y mobile; práctica de desarrollo moderno con IA | Incompleta | ➖ | Son prácticas del máster. Sus lecciones sobre Engram, Skills y SDD encajan con `AGENTS.md`, `skills/` y `docs/SDD.md` | — |
 | Primeros pasos del TFM | Incompleta | ➖ | Si BandManager.io es el TFM, esta matriz sirve de evidencia de aplicación crítica de cada módulo | — |
 | Masterclass: DDD, evaluar LLMs, Docker con IA, GitHub + agentes | Incompleta | 🟡 | **DDD**: ⚪ (formal es excesivo, ver §3). **Evaluar LLMs**: 🟢 útil para el golden set (Fase 6.2). **Docker**: ⚪ (ver §8). **GitHub + agentes**: ya cubierto | según fila |
 | Productividad, soft skills, emprendimiento, inglés, comunicación | Incompleta | ➖ | No aplican al código | — |

@@ -41,7 +41,7 @@ Tabla de Supabase `setlist_shortcuts` (10 columnas).
 - `created_at`
 - `updated_at`
 
-**Definida en:** `supabase_schema.sql`, `supabase_migration_only_new.sql`, `supabase/migrations/20260908_create_setlist_shortcuts.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migration_only_new.sql`, `supabase/migrations/20260908_create_setlist_shortcuts.sql`
 
 ---
 

@@ -57,7 +57,7 @@ Tabla de Supabase `band_contacts` (24 columnas).
 - `created_at`
 - `updated_at`
 
-**Definida en:** `supabase_schema.sql`, `supabase_migration_only_new.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migration_only_new.sql`
 
 ---
 

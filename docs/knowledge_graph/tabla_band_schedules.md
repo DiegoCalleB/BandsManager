@@ -38,7 +38,7 @@ _Sin dependencias salientes directas._
 - `created_at`
 - `updated_at`
 
-**Definida en:** `supabase_schema.sql`, `supabase_migration_only_new.sql`, `supabase/migrations/20261009_sincronizar_esquema_auditoria.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migration_only_new.sql`, `supabase/migrations/20261009_sincronizar_esquema_auditoria.sql`
 
 ---
 

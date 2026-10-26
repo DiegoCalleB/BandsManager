@@ -71,7 +71,7 @@ Tabla de Supabase `concerts` (36 columnas).
 - `created_at`
 - `updated_at`
 
-**Definida en:** `supabase_schema.sql`, `supabase_migration_only_new.sql`, `supabase/migrations/20261017_concerts_columnas_faltantes.sql`, `supabase/migrations/20261104_concerts_cartel_config.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migration_only_new.sql`, `supabase/migrations/20261017_concerts_columnas_faltantes.sql`, `supabase/migrations/20261104_concerts_cartel_config.sql`
 
 ---
 

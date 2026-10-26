@@ -62,7 +62,7 @@ Tabla de Supabase `users` (22 columnas).
 - `fecha_cambio_plan`
 - `estado_suscripcion`
 
-**Definida en:** `supabase_schema.sql`, `supabase_migration_only_new.sql`, `supabase/migration_user_ui_preferences.sql`, `supabase/migrations/20260914_ai_token_ledger.sql`, `supabase/migrations/20261009_sincronizar_esquema_auditoria.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migration_only_new.sql`, `supabase/migration_user_ui_preferences.sql`, `supabase/migrations/20260914_ai_token_ledger.sql`, `supabase/migrations/20261009_sincronizar_esquema_auditoria.sql`
 
 ---
 
