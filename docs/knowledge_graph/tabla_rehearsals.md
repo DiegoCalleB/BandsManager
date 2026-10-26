@@ -60,7 +60,7 @@ Tabla de Supabase `rehearsals` (28 columnas).
 - `asunto`
 - `enlace_reunion`
 
-**Definida en:** `supabase_schema.sql`, `supabase_migration_only_new.sql`, `supabase/migrations/20260916_add_ensayos_pro_fields.sql`, `supabase/migrations/20261102_columnas_escritas_sin_migracion.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migration_only_new.sql`, `supabase/migrations/20260916_add_ensayos_pro_fields.sql`, `supabase/migrations/20261102_columnas_escritas_sin_migracion.sql`
 
 ---
 

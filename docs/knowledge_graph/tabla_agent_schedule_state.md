@@ -33,7 +33,7 @@ _Sin dependencias salientes directas._
 - `last_run_at`
 - `updated_at`
 
-**Definida en:** `supabase_schema.sql`, `supabase_migration_only_new.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migration_only_new.sql`
 
 ---
 

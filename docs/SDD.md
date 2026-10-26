@@ -7,9 +7,9 @@
 > instrucciones operativas ni reglas de negocio — esas viven, completas y como fuente única de
 > verdad, en:
 >
-> - **[`AGENTS.md`](./AGENTS.md)** — reglas de negocio no-negociables (seguridad, multi-tenancy,
+> - **[`AGENTS.md`](../AGENTS.md)** — reglas de negocio no-negociables (seguridad, multi-tenancy,
 >   agentes IA human-in-the-loop). Si algo en este SDD contradice `AGENTS.md`, gana `AGENTS.md`.
-> - **[`CLAUDE.md`](./CLAUDE.md)** — guía técnica de implementación (comandos, estructura de
+> - **[`CLAUDE.md`](../CLAUDE.md)** — guía técnica de implementación (comandos, estructura de
 >   ficheros, convenciones de test).
 >
 > El SDD es el **porqué arquitectónico**; `AGENTS.md`/`CLAUDE.md` son el **qué/cómo operativo**.
@@ -236,6 +236,6 @@ para prevenir una *clase* de bug, no una instancia.
 
 ## 9. Referencias
 
-- [`AGENTS.md`](./AGENTS.md) — reglas de negocio y directivas operativas completas (fuente de
+- [`AGENTS.md`](../AGENTS.md) — reglas de negocio y directivas operativas completas (fuente de
   verdad; no duplicar contenido de aquí allí ni viceversa).
-- [`CLAUDE.md`](./CLAUDE.md) — comandos, estructura de ficheros, convenciones de CI/testing.
+- [`CLAUDE.md`](../CLAUDE.md) — comandos, estructura de ficheros, convenciones de CI/testing.

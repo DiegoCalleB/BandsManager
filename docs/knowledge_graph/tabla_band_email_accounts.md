@@ -40,7 +40,7 @@ Tabla de Supabase `band_email_accounts` (10 columnas).
 - `imap_port`
 - `updated_at`
 
-**Definida en:** `supabase_schema.sql`, `supabase_migration_only_new.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migration_only_new.sql`
 
 ---
 

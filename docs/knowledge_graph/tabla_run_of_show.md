@@ -38,7 +38,7 @@ Tabla de Supabase `run_of_show` (8 columnas).
 - `created_at`
 - `updated_at`
 
-**Definida en:** `supabase_schema.sql`, `supabase_migration_only_new.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migration_only_new.sql`
 
 ---
 

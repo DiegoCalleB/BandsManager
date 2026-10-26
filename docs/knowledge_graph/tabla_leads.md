@@ -119,7 +119,7 @@ Tabla de Supabase `leads` (70 columnas).
 - `sala_id`
 - `datos_fuentes`
 
-**Definida en:** `supabase_schema.sql`, `supabase_migration_only_new.sql`, `supabase/migration_add_email_secundario_to_leads.sql`, `supabase/migration_gmail_thread_id.sql`, `supabase/migrations/20260923_add_telefono_movil_fijo_to_leads.sql`, `supabase/migrations/20260924_add_ai_deal_analysis_to_leads.sql`, `supabase/migrations/20261009_sincronizar_esquema_auditoria.sql`, `supabase/migrations/20261106_aprobacion_leads.sql`, `supabase/migrations/20261108_catalogo_salas.sql`, `supabase/migrations/20261109_datos_fuentes_leads.sql`, `supabase/postgres_trigger_respuesta_inmediata.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migration_only_new.sql`, `supabase/migration_add_email_secundario_to_leads.sql`, `supabase/migration_gmail_thread_id.sql`, `supabase/migrations/20260923_add_telefono_movil_fijo_to_leads.sql`, `supabase/migrations/20260924_add_ai_deal_analysis_to_leads.sql`, `supabase/migrations/20261009_sincronizar_esquema_auditoria.sql`, `supabase/migrations/20261106_aprobacion_leads.sql`, `supabase/migrations/20261108_catalogo_salas.sql`, `supabase/migrations/20261109_datos_fuentes_leads.sql`, `supabase/postgres_trigger_respuesta_inmediata.sql`
 
 ---
 

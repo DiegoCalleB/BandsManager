@@ -17,7 +17,7 @@
 CREATE EXTENSION IF NOT EXISTS pg_net;
 
 -- Campos de threading para respuestas dentro de un hilo de email existente (ya en
--- supabase_schema.sql / supabase_migration_only_new.sql, se repite aquí por si esta hoja se
+-- supabase_schema.sql / supabase/migration_only_new.sql, se repite aquí por si esta hoja se
 -- aplica sola).
 ALTER TABLE IF EXISTS leads
   ADD COLUMN IF NOT EXISTS thread_id TEXT,

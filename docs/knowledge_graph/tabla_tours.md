@@ -51,7 +51,7 @@ Tabla de Supabase `tours` (20 columnas).
 - `sincronizar_calendario`
 - `sincronizar_finanzas`
 
-**Definida en:** `supabase_schema.sql`, `supabase_migration_only_new.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migration_only_new.sql`
 
 ---
 

@@ -34,7 +34,7 @@ _Sin dependencias salientes directas._
 - `payload`
 - `processed_at`
 
-**Definida en:** `supabase_schema.sql`, `supabase_migration_only_new.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migration_only_new.sql`
 
 ---
 

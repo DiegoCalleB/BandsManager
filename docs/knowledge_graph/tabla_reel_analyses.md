@@ -48,7 +48,7 @@ Tabla de Supabase `reel_analyses` (17 columnas).
 - `updated_at`
 - `video_key`
 
-**Definida en:** `supabase_schema.sql`, `supabase_migration_only_new.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migration_only_new.sql`
 
 ---
 
