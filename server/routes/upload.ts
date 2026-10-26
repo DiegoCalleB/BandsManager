@@ -12,6 +12,7 @@ import { requireAuth } from "../state.js";
 import { getTargetBandId, puedeEscribirEnBanda, bandaSolicitada } from "../utils/bandAccess.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 import { responderError } from '../utils/errorHttp.js';
+import { MENSAJE_TIPO_NO_PERMITIDO, mensajeFirmaNoValida } from '../utils/erroresSubida.js';
 
 export function detectMimeType(ext: string, fallback?: string): string {
   const cleanExt = (ext || '').toLowerCase().replace('.', '');
@@ -135,11 +136,6 @@ export const EXTENSIONES_PERMITIDAS = new Set([
   'pdf', 'doc', 'docx'
 ]);
 
-/** Mensajes que ve la persona usuaria (salen tal cual en el aviso de «No se pudo guardar el cambio»). */
-const MENSAJE_TIPO_NO_PERMITIDO = 'Este tipo de archivo no se puede subir. Admitimos audio (MP3, WAV, M4A, FLAC, OGG), imagen (JPG, PNG, WEBP, GIF), vídeo, PDF y Word.';
-const mensajeFirmaNoValida = (ext: string) =>
-  `El contenido del archivo no es un ${ext ? ext.toUpperCase() : ''} válido: puede estar dañado o tener la extensión cambiada. Expórtalo de nuevo (por ejemplo a MP3 o WAV) e inténtalo otra vez.`;
-
 export function extensionPermitida(originalname: string): boolean {
   if (!originalname || typeof originalname !== 'string') return false;
   const ext = path.extname(originalname).slice(1).toLowerCase();
@@ -155,7 +151,6 @@ export function extensionPermitida(originalname: string): boolean {
 export function validarMagicBytes(buffer: Buffer, ext: string): boolean {
   if (!buffer || buffer.length === 0) return false;
   const cleanExt = (ext || '').toLowerCase().replace('.', '');
-  
   if (buffer.length < 4) return false;
 
   // JPEG: FF D8 FF
