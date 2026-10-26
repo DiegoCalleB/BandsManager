@@ -19,6 +19,7 @@ Exporta: resolverAudioUrlParaSubida.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[src_utils_extensionDeAudio|src/utils/extensionDeAudio.ts]] *(Layer: #service, Domain: #repertoire)*
 
 ---
 

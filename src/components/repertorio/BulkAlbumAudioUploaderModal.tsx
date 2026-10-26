@@ -7,6 +7,7 @@ import { formatSecondsToMmSs } from "../../utils/repertorioUtils";
 import { apiFetch } from "../../utils/api";
 import { analizarAcordesDelAudio } from "../../utils/analisisAcordesCliente";
 import { IconButton, Input, Select } from '../ui';
+import { siguientePista } from '../../utils/pistasDeDisco';
 import '../../services/sesionLocal';
 import { comoErrorCapturado } from '../../utils/errorCapturado';
 
@@ -17,6 +18,7 @@ interface BulkAlbumAudioUploaderModalProps {
   albumSongs?: Song[];
   colors: ThemeColors;
   bandId?: string;
+  bandName?: string;
   isNewAlbumMode?: boolean;
   onSaveUpdatedSongs: (updatedSongs: Song[], newAlbumName?: string) => void;
 }
@@ -50,6 +52,7 @@ export function BulkAlbumAudioUploaderModal({
   albumName: initialAlbumName = "",
   albumSongs = [],
   bandId,
+  bandName,
   isNewAlbumMode = false,
   onSaveUpdatedSongs
 }: BulkAlbumAudioUploaderModalProps) {
@@ -65,11 +68,7 @@ export function BulkAlbumAudioUploaderModal({
     current: number;
     total: number;
     currentName: string;
-  }>({
-    current: 0,
-    total: 0,
-    currentName: "",
-  });
+  }>({ current: 0, total: 0, currentName: "" });
   const [playingItemIndex, setPlayingItemIndex] = useState<number | null>(null);
   const [feedbackMsg, setFeedbackMsg] = useState<{
     type: "success" | "error";
@@ -345,17 +344,6 @@ export function BulkAlbumAudioUploaderModal({
       return;
     }
 
-    if (!isCreatingBrandNewAlbum) {
-      const validMatches = items.filter((it) => it.matchedSongId !== null);
-      if (validMatches.length === 0) {
-        setFeedbackMsg({
-          type: "error",
-          text: "Debes emparejar al menos un archivo de audio con una canción existente.",
-        });
-        return;
-      }
-    }
-
     setIsUploading(true);
     stopPreview();
     setFeedbackMsg(null);
@@ -414,10 +402,10 @@ export function BulkAlbumAudioUploaderModal({
           const newSong: Song = {
             id: idUnico("song_bulk", i),
             titulo: item.title || `Pista ${i + 1}`,
-            artista: bandId,
+            artista: bandName || "Tu Banda",
             album: finalAlbumTitle,
             albumDisco: finalAlbumTitle,
-            ordenAlbum: item.trackNumber || i + 1,
+            ordenAlbum: isCreatingBrandNewAlbum ? item.trackNumber || i + 1 : siguientePista(albumSongs, newlyCreatedSongs),
             duracion: newDurationFormatted,
             duracionSegundos: item.durationSeconds,
             duracionMinutos: newDurationMins,
@@ -570,12 +558,7 @@ export function BulkAlbumAudioUploaderModal({
 
     setIsUploading(false);
 
-    if (isCreatingBrandNewAlbum) {
-      onSaveUpdatedSongs(newlyCreatedSongs, finalAlbumTitle);
-    } else {
-      const finalUpdatedList = Array.from(updatedSongsMap.values());
-      onSaveUpdatedSongs(finalUpdatedList, finalAlbumTitle);
-    }
+    onSaveUpdatedSongs(isCreatingBrandNewAlbum ? newlyCreatedSongs : [...updatedSongsMap.values(), ...newlyCreatedSongs], finalAlbumTitle);
 
     setFeedbackMsg({
       type: "success",
@@ -585,8 +568,9 @@ export function BulkAlbumAudioUploaderModal({
 
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/80 overflow-y-auto overscroll-contain">
       <div
-        className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-[var(--r-l)] overflow-hidden ${"bg-[var(--surface)] text-[var(--ink)]"}`}
+        className={`w-full max-w-4xl max-h-[90vh] flex flex-col rounded-[var(--r-l)] overflow-hidden my-auto ${"bg-[var(--surface)] text-[var(--ink)]"}`}
       >
         {/* Modal Header */}
         <div className="p-6 flex items-center justify-between shrink-0 bg-[var(--ok)]/10 ">
@@ -810,11 +794,13 @@ export function BulkAlbumAudioUploaderModal({
                         </button>
 
                         <div className="min-w-0 flex-1">
-                          {isCreatingBrandNewAlbum ? (
+                          {isCreatingBrandNewAlbum || !item.matchedSongId ? (
                             <div className="flex items-center gap-2">
-                              <span className="text-xs font-sans text-[var(--ink-2)] w-5">
-                                #{item.trackNumber || idx + 1}
-                              </span>
+                              {isCreatingBrandNewAlbum && (
+                                <span className="text-xs font-sans text-[var(--ink-2)] w-5">
+                                  #{item.trackNumber || idx + 1}
+                                </span>
+                              )}
                               <Input
                                 size="sm"
                                 type="text"
@@ -851,7 +837,7 @@ export function BulkAlbumAudioUploaderModal({
                             }
                             wrapperClassName="w-full"
                           >
-                            <option value="">-- No asignar a ninguna --</option>
+                            <option value="">+ Crear como canción nueva</option>
                             {albumSongs.map((s, sIdx) => (
                               <option key={s.id} value={s.id}>
                                 Pista {s.ordenAlbum || sIdx + 1}: {s.titulo} (
@@ -979,6 +965,7 @@ export function BulkAlbumAudioUploaderModal({
             )}
           </button>
         </div>
+      </div>
       </div>
     </ModalPortal>
   );

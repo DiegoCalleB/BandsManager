@@ -13,7 +13,7 @@ tags: ["schema", "tabla", "auto"]
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/social`
 
 ## 📖 Descripción
-Tabla de Supabase `reel_analyses` (17 columnas).
+Tabla de Supabase `reel_analyses` (16 columnas).
 
 ---
 
@@ -32,7 +32,7 @@ Tabla de Supabase `reel_analyses` (17 columnas).
 ## 🗄️ Columnas
 - `id`
 - `band_id`
-- `o`
+- `video_key`
 - `source_type`
 - `source_url`
 - `video_title`
@@ -46,9 +46,8 @@ Tabla de Supabase `reel_analyses` (17 columnas).
 - `notice`
 - `created_at`
 - `updated_at`
-- `video_key`
 
-**Definida en:** `supabase_schema.sql`, `supabase_migration_only_new.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migration_only_new.sql`
 
 ---
 

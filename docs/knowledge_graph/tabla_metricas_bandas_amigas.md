@@ -3,13 +3,13 @@ id: tabla_metricas_bandas_amigas
 title: "tabla metricas_bandas_amigas"
 layer: schema
 domain: system
-file: "supabase/migrations/20261020_metricas_bandas_amigas.sql"
+file: "supabase_schema.sql"
 tags: ["schema", "tabla", "auto"]
 ---
 
 # 📌 tabla metricas_bandas_amigas
 
-> **Ubicación:** `supabase/migrations/20261020_metricas_bandas_amigas.sql`  
+> **Ubicación:** `supabase_schema.sql`  
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
@@ -44,7 +44,7 @@ Tabla de Supabase `metricas_bandas_amigas` (11 columnas).
 - `popularidad`
 - `capturado_at`
 
-**Definida en:** `supabase/migrations/20261020_metricas_bandas_amigas.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migrations/20261020_metricas_bandas_amigas.sql`
 
 ---
 

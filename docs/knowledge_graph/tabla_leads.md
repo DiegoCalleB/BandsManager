@@ -13,11 +13,12 @@ tags: ["schema", "tabla", "auto"]
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/booking`
 
 ## 📖 Descripción
-Tabla de Supabase `leads` (70 columnas).
+Tabla de Supabase `leads` (69 columnas).
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[tabla_catalogo_salas|tabla catalogo_salas]] *(Layer: #schema, Domain: #system)*
 - [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
 - [[tabla_salas_catalogo|tabla salas_catalogo]] *(Layer: #schema, Domain: #system)*
 
@@ -82,7 +83,7 @@ Tabla de Supabase `leads` (70 columnas).
 - `pitch_feedback_comentario`
 - `historial_feedback_pitch`
 - `historial_contacto`
-- `pero`
+- `hilo_emails`
 - `roster`
 - `festival_start_date`
 - `festival_end_date`
@@ -103,23 +104,22 @@ Tabla de Supabase `leads` (70 columnas).
 - `gmail_draft_id`
 - `created_at`
 - `updated_at`
-- `hilo_emails`
-- `thread_id`
-- `gmail_thread_id`
-- `gmail_message_id`
 - `place_id`
 - `clics_epk`
 - `ultimo_clic_at`
 - `email_abierto`
 - `veces_abierto`
 - `ultimo_abierto_at`
+- `gmail_thread_id`
+- `gmail_message_id`
 - `aprobado_por`
 - `aprobado_at`
 - `pitch_aprobado_hash`
 - `sala_id`
 - `datos_fuentes`
+- `thread_id`
 
-**Definida en:** `supabase_schema.sql`, `supabase_migration_only_new.sql`, `supabase/migration_add_email_secundario_to_leads.sql`, `supabase/migration_gmail_thread_id.sql`, `supabase/migrations/20260923_add_telefono_movil_fijo_to_leads.sql`, `supabase/migrations/20260924_add_ai_deal_analysis_to_leads.sql`, `supabase/migrations/20261009_sincronizar_esquema_auditoria.sql`, `supabase/migrations/20261106_aprobacion_leads.sql`, `supabase/migrations/20261108_catalogo_salas.sql`, `supabase/migrations/20261109_datos_fuentes_leads.sql`, `supabase/postgres_trigger_respuesta_inmediata.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migration_only_new.sql`, `supabase/migration_add_email_secundario_to_leads.sql`, `supabase/migration_gmail_thread_id.sql`, `supabase/migrations/20260923_add_telefono_movil_fijo_to_leads.sql`, `supabase/migrations/20260924_add_ai_deal_analysis_to_leads.sql`, `supabase/migrations/20261009_sincronizar_esquema_auditoria.sql`, `supabase/migrations/20261106_aprobacion_leads.sql`, `supabase/migrations/20261108_catalogo_salas.sql`, `supabase/migrations/20261109_datos_fuentes_leads.sql`, `supabase/postgres_trigger_respuesta_inmediata.sql`
 
 ---
 

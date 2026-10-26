@@ -39,6 +39,7 @@ _Sin dependencias salientes directas._
 - [[fn_scout_salas|Búsqueda de salas y festivales]] *(from #feature)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 - [[server_db_bands|server/db/bands.ts]] *(from #db)*
+- [[server_db_core|server/db/core.ts]] *(from #db)*
 - [[server_db_epk|server/db/epk.ts]] *(from #db)*
 - [[server_db_referidos|server/db/referidos.ts]] *(from #db)*
 - [[server_db_social|server/db/social.ts]] *(from #db)*
@@ -134,7 +135,7 @@ _Sin dependencias salientes directas._
 - `suscripcion_habilitada`
 - `ciclo_facturacion`
 
-**Definida en:** `supabase_schema.sql`, `supabase_migration_only_new.sql`, `supabase/migrations/20260915_ai_token_ledger_band_scope.sql`, `supabase/migrations/20261009_sincronizar_esquema_auditoria.sql`, `supabase/migrations/20261016_referidos_banda.sql`, `supabase/migrations/20261108_suscripcion_habilitada.sql`, `supabase/migrations/20261120_ciclo_facturacion.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migration_only_new.sql`, `supabase/migrations/20260915_ai_token_ledger_band_scope.sql`, `supabase/migrations/20261009_sincronizar_esquema_auditoria.sql`, `supabase/migrations/20261016_referidos_banda.sql`, `supabase/migrations/20261108_suscripcion_habilitada.sql`, `supabase/migrations/20261120_ciclo_facturacion.sql`
 
 ---
 

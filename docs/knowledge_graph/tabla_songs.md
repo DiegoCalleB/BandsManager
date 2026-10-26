@@ -60,17 +60,14 @@ Tabla de Supabase `songs` (46 columnas).
 - `guia_sustituto`
 - `created_at`
 - `updated_at`
-- `notas_repertorio`
-- `notas_miembros`
-- `notas_por_miembro`
-- `energia_variacion`
-- `energia_variacion_calculada_en`
 - `energia_db_promedio`
 - `energia_bpm_detectado`
 - `energia_manual`
 - `bpm_detectado_en`
 - `tonalidad_detectada_en`
 - `energia_onset_density`
+- `notas_miembros`
+- `notas_por_miembro`
 - `analisis_acordes`
 - `pistas`
 - `stems_meta`
@@ -78,8 +75,11 @@ Tabla de Supabase `songs` (46 columnas).
 - `estructura_documento_nombre`
 - `estructura_documento_procesado_en`
 - `estructura_verificada`
+- `notas_repertorio`
+- `energia_variacion`
+- `energia_variacion_calculada_en`
 
-**Definida en:** `supabase_schema.sql`, `supabase_migration_only_new.sql`, `supabase/migration_song_energia_variacion.sql`, `supabase/migrations/20260903_add_energia_db_promedio.sql`, `supabase/migrations/20260904_add_energia_bpm_detectado.sql`, `supabase/migrations/20260904_add_energia_manual.sql`, `supabase/migrations/20260915_add_bpm_tonalidad_detectados_en.sql`, `supabase/migrations/20260915b_add_energia_onset_density.sql`, `supabase/migrations/20261009_sincronizar_esquema_auditoria.sql`, `supabase/migrations/20261010_analisis_acordes.sql`, `supabase/migrations/20261018_songs_pistas.sql`, `supabase/migrations/20261019_songs_stems_meta.sql`, `supabase/migrations/20261102_columnas_escritas_sin_migracion.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migration_only_new.sql`, `supabase/migration_song_energia_variacion.sql`, `supabase/migrations/20260903_add_energia_db_promedio.sql`, `supabase/migrations/20260904_add_energia_bpm_detectado.sql`, `supabase/migrations/20260904_add_energia_manual.sql`, `supabase/migrations/20260915_add_bpm_tonalidad_detectados_en.sql`, `supabase/migrations/20260915b_add_energia_onset_density.sql`, `supabase/migrations/20261009_sincronizar_esquema_auditoria.sql`, `supabase/migrations/20261010_analisis_acordes.sql`, `supabase/migrations/20261018_songs_pistas.sql`, `supabase/migrations/20261019_songs_stems_meta.sql`, `supabase/migrations/20261102_columnas_escritas_sin_migracion.sql`
 
 ---
 

@@ -19,6 +19,7 @@ Exporta: PublicLanding.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_LandingChatWidget|src/components/LandingChatWidget.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_landing_DirectoriosDestacados|src/components/landing/DirectoriosDestacados.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_landing_FormularioInteres|src/components/landing/FormularioInteres.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_landing_GuiasDestacadas|src/components/landing/GuiasDestacadas.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
@@ -33,6 +34,7 @@ Exporta: PublicLanding.
 ---
 
 ## 🧪 Tests que lo cubren
+- `src/components/__tests__/LandingsEnlazanDirectorios.test.tsx`
 - `src/components/__tests__/PublicLandingDatosEstructurados.test.tsx`
 
 ---

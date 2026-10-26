@@ -23,6 +23,18 @@ interface RespuestaDemucsFal {
 }
 
 /**
+ * Entrada de fal-ai/demucs. Los valores por defecto de Fal (`shifts: 1`, `overlap: 0.25`) son los de
+ * menor calidad y dejan restos de otros instrumentos en cada pista; con 2 y 0.5 se limpian bastante
+ * a cambio de ~2x de tiempo y coste (centavos por tema). Se mantienen los 6 stems (`htdemucs_6s`).
+ */
+export const cuerpoDemucs = (audioUrl: string) => ({
+  audio_url: audioUrl,
+  model: 'htdemucs_6s',
+  shifts: 2,
+  overlap: 0.5,
+});
+
+/**
  * Adaptador para Fal.ai (fal-ai/demucs) en GPU A100.
  * Inferencia ultrarrápida (~10-15s) con $10 de saldo de prueba gratuito sin suscripción ni pagos mínimos.
  */
@@ -94,9 +106,7 @@ export class FalAiService extends AudioSeparatorService {
           'Authorization': authHeader,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          audio_url: resolvedUrl
-        }),
+        body: JSON.stringify(cuerpoDemucs(resolvedUrl)),
         signal: AbortSignal.timeout(180000) // 180s (3 min) para canciones completas y cold-starts
       });
 
@@ -109,9 +119,7 @@ export class FalAiService extends AudioSeparatorService {
             'Authorization': bearerAuth,
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({
-            audio_url: resolvedUrl
-          }),
+          body: JSON.stringify(cuerpoDemucs(resolvedUrl)),
           signal: AbortSignal.timeout(180000)
         }).catch(() => null);
         if (retryRes && (retryRes.ok || retryRes.status !== 401)) {
@@ -150,7 +158,7 @@ export class FalAiService extends AudioSeparatorService {
                 'Authorization': authHeader,
                 'Content-Type': 'application/json'
               },
-              body: JSON.stringify({ audio_url: resolvedUrl }),
+              body: JSON.stringify(cuerpoDemucs(resolvedUrl)),
               signal: AbortSignal.timeout(60000)
             });
 

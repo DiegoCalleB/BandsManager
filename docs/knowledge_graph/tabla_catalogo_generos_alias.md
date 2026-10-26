@@ -3,13 +3,13 @@ id: tabla_catalogo_generos_alias
 title: "tabla catalogo_generos_alias"
 layer: schema
 domain: system
-file: "supabase/migrations/20261113_catalogo_global_base.sql"
+file: "supabase_schema.sql"
 tags: ["schema", "tabla", "auto"]
 ---
 
 # 📌 tabla catalogo_generos_alias
 
-> **Ubicación:** `supabase/migrations/20261113_catalogo_global_base.sql`  
+> **Ubicación:** `supabase_schema.sql`  
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
@@ -31,7 +31,7 @@ Tabla de Supabase `catalogo_generos_alias` (2 columnas).
 - `alias`
 - `genero_id`
 
-**Definida en:** `supabase/migrations/20261113_catalogo_global_base.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migrations/20261113_catalogo_global_base.sql`
 
 ---
 

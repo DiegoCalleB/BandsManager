@@ -3,13 +3,13 @@ id: tabla_data_change_history
 title: "tabla data_change_history"
 layer: schema
 domain: system
-file: "supabase/migrations/20260922_data_change_history.sql"
+file: "supabase_schema.sql"
 tags: ["schema", "tabla", "auto"]
 ---
 
 # 📌 tabla data_change_history
 
-> **Ubicación:** `supabase/migrations/20260922_data_change_history.sql`  
+> **Ubicación:** `supabase_schema.sql`  
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
@@ -36,7 +36,7 @@ _Sin dependencias salientes directas._
 - `datos_anteriores`
 - `changed_at`
 
-**Definida en:** `supabase/migrations/20260922_data_change_history.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migrations/20260922_data_change_history.sql`
 
 ---
 

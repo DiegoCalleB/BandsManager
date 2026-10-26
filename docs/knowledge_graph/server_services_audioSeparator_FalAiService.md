@@ -13,7 +13,7 @@ tags: ["service", "repertoire", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/repertoire`
 
 ## 📖 Descripción
-Exporta: ACTIVE_FAL_KEY, FalAiService.
+Exporta: cuerpoDemucs, ACTIVE_FAL_KEY, FalAiService.
 
 ---
 
@@ -36,6 +36,7 @@ Exporta: ACTIVE_FAL_KEY, FalAiService.
 
 ## 🧪 Tests que lo cubren
 - `server/routes/__tests__/auditoriaSeguridadPR2.test.ts`
+- `server/services/audioSeparator/__tests__/cuerpoDemucs.test.ts`
 
 ---
 

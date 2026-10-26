@@ -4,6 +4,8 @@ import { ArrowRight, Check, ChevronDown, Layers, Rocket, ShieldCheck, Sliders, S
 import { Button } from './ui';
 import { useLanguage, SupportedLanguage } from '../context/idioma';
 import { LandingChatWidget } from './LandingChatWidget';
+import { DirectoriosDestacados } from './landing/DirectoriosDestacados';
+import { GuiasDestacadas } from './landing/GuiasDestacadas';
 import { PreciosTfm } from './landing/PreciosTfm';
 
 interface PublicTfmLandingProps {
@@ -137,6 +139,8 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
             <a href="#como-funciona" className="hover:text-[var(--ink)]">{es ? 'Flujo de Trabajo' : 'Workflow'}</a>
             <a href="#planes" className="hover:text-[var(--ink)]">{es ? 'Planes' : 'Pricing'}</a>
             <a href="#preguntas" className="hover:text-[var(--ink)]">{es ? 'Preguntas' : 'FAQs'}</a>
+            <a href={es ? '/guides' : '/en/guides'} className="hover:text-[var(--ink)]">{es ? 'Guías' : 'Guides'}</a>
+            <a href={es ? '/directories' : '/en/directories'} className="hover:text-[var(--ink)]">{es ? 'Salas y festivales' : 'Venues and festivals'}</a>
           </nav>
 
           <div className="flex items-center gap-3">
@@ -496,6 +500,9 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
         <PreciosTfm es={es} />
 
         {/* PREGUNTAS FRECUENTES */}
+        <GuiasDestacadas />
+        <DirectoriosDestacados />
+
         <section id="preguntas" className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24">
           <h2 className="mb-10 font-display text-3xl font-bold tracking-tight sm:text-4xl text-center">
             {es ? 'Preguntas Frecuentes (TFM Documentation)' : 'Frequently Asked Questions (TFM)'}
@@ -561,6 +568,12 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-6 text-sm text-[var(--ink-2)] sm:px-6">
           <span><ShowIcon inline emoji="©" /> {year} BandManager.io · Trabajo Fin de Máster (TFM)</span>
           <div className="flex items-center gap-4">
+            <a href={es ? '/guides' : '/en/guides'} className="hover:underline">
+              {es ? 'Guías para bandas' : 'Guides for bands'}
+            </a>
+            <a href={es ? '/directories' : '/en/directories'} className="hover:underline">
+              {es ? 'Salas y festivales de España' : 'Venues and festivals in Spain'}
+            </a>
             <button
               type="button"
               onClick={onEntrar}

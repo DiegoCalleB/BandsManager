@@ -161,7 +161,7 @@ export async function dbUpsertFan(fan: EntradaFan, bandId: string) {
   let data = primero.data;
 
   // Reintenta sin las columnas nuevas si el esquema remoto de Supabase aún
-  // no tiene la migración aplicada (ver supabase_migration_only_new.sql).
+  // no tiene la migración aplicada (ver supabase/migration_only_new.sql).
   if (error && error.message && (
     error.message.toLowerCase().includes("mensaje") ||
     error.message.toLowerCase().includes("cancion_favorita") ||

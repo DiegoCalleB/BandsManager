@@ -367,7 +367,7 @@ function escanearTests(): string[] {
 }
 
 // ─── Tablas de Supabase ─────────────────────────────────────────────────────────────────────────
-const FUENTES_SQL = ['supabase_schema.sql', 'supabase_migration_only_new.sql', 'server/migrations/runner.ts'];
+const FUENTES_SQL = ['supabase_schema.sql', 'supabase/migration_only_new.sql', 'server/migrations/runner.ts'];
 
 function ficherosSql(): string[] {
   const sueltos: string[] = [];

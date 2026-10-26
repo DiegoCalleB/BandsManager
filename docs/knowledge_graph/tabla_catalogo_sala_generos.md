@@ -3,13 +3,13 @@ id: tabla_catalogo_sala_generos
 title: "tabla catalogo_sala_generos"
 layer: schema
 domain: system
-file: "supabase/migrations/20261113_catalogo_global_base.sql"
+file: "supabase_schema.sql"
 tags: ["schema", "tabla", "auto"]
 ---
 
 # 📌 tabla catalogo_sala_generos
 
-> **Ubicación:** `supabase/migrations/20261113_catalogo_global_base.sql`  
+> **Ubicación:** `supabase_schema.sql`  
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
@@ -19,6 +19,7 @@ Tabla de Supabase `catalogo_sala_generos` (4 columnas).
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[tabla_catalogo_generos|tabla catalogo_generos]] *(Layer: #schema, Domain: #system)*
+- [[tabla_catalogo_salas|tabla catalogo_salas]] *(Layer: #schema, Domain: #system)*
 - [[tabla_salas_catalogo|tabla salas_catalogo]] *(Layer: #schema, Domain: #system)*
 
 ---
@@ -34,7 +35,7 @@ Tabla de Supabase `catalogo_sala_generos` (4 columnas).
 - `fuente`
 - `created_at`
 
-**Definida en:** `supabase/migrations/20261113_catalogo_global_base.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migrations/20261113_catalogo_global_base.sql`
 
 ---
 

@@ -45,7 +45,7 @@ export function renderFormattedChordSheet(text: string, letra?: SincronizacionLe
   if (!text)
     return (
       <span className="text-[var(--ink-2)] italic">
-        Sin cifrado todavía. Escríbelo, sube un PDF o imagen, o pulsa «Letra del audio» para transcribirlo de la voz.
+        Sin cifrado todavía. Escríbelo, sube un PDF o imagen, o pulsa «Transcribir letra» para transcribirlo de la voz.
       </span>
     );
 

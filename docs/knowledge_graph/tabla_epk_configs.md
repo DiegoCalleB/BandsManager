@@ -70,7 +70,7 @@ Tabla de Supabase `epk_configs` (35 columnas).
 - `font_style`
 - `tipografia`
 
-**Definida en:** `supabase_schema.sql`, `supabase_migration_only_new.sql`, `supabase/migrations/20260909_add_epk_plantilla_and_sections.sql`, `supabase/migrations/20261005_epk_configs_campos_editables.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migration_only_new.sql`, `supabase/migrations/20260909_add_epk_plantilla_and_sections.sql`, `supabase/migrations/20261005_epk_configs_campos_editables.sql`
 
 ---
 

@@ -12,6 +12,7 @@ import { requireAuth } from "../state.js";
 import { getTargetBandId, puedeEscribirEnBanda, bandaSolicitada } from "../utils/bandAccess.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 import { responderError } from '../utils/errorHttp.js';
+import { MENSAJE_TIPO_NO_PERMITIDO, mensajeFirmaNoValida } from '../utils/erroresSubida.js';
 
 export function detectMimeType(ext: string, fallback?: string): string {
   const cleanExt = (ext || '').toLowerCase().replace('.', '');
@@ -150,7 +151,6 @@ export function extensionPermitida(originalname: string): boolean {
 export function validarMagicBytes(buffer: Buffer, ext: string): boolean {
   if (!buffer || buffer.length === 0) return false;
   const cleanExt = (ext || '').toLowerCase().replace('.', '');
-  
   if (buffer.length < 4) return false;
 
   // JPEG: FF D8 FF
@@ -239,7 +239,7 @@ export function validarMagicBytes(buffer: Buffer, ext: string): boolean {
 
 const multerFileFilter = (req: express.Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
   if (!extensionPermitida(file.originalname)) {
-    return cb(new Error('Tipo de archivo no permitido.'));
+    return cb(new Error(MENSAJE_TIPO_NO_PERMITIDO));
   }
   cb(null, true);
 };
@@ -259,7 +259,7 @@ const multerChunkFileFilter = (req: express.Request, file: Express.Multer.File, 
   ) {
     return cb(null, true);
   }
-  return cb(new Error('Tipo de archivo no permitido.'));
+  return cb(new Error(MENSAJE_TIPO_NO_PERMITIDO));
 };
 
 // Multer storage engine for direct binary disk streaming (handles files > 1GB)
@@ -531,7 +531,7 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
       // Esta rama (subida por base64) no pasa por el fileFilter de Multer: necesita su propia
       // comprobación de extensión permitida.
       if (!extensionPermitida(originalFilename)) {
-        return res.status(400).json({ error: "Tipo de archivo no permitido." });
+        return res.status(400).json({ error: MENSAJE_TIPO_NO_PERMITIDO });
       }
       const ext = path.extname(originalFilename) || '';
       const baseNameSanitized = path.basename(originalFilename, ext).replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 50);
@@ -564,7 +564,7 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
       if (fs.existsSync(filePath)) {
         try { fs.unlinkSync(filePath); } catch { /* el archivo rechazado ya no existe: nada que limpiar */ }
       }
-      return res.status(400).json({ error: "Firma binaria del archivo no válida para el formato declarado (Magic Bytes mismatch)." });
+      return res.status(400).json({ error: mensajeFirmaNoValida(rawExt) });
     }
 
     // Optimizador transparente: si es un audio pesado (.wav, .flac, .m4a, etc.), se comprime a MP3 256k
@@ -656,7 +656,7 @@ router.post("/chunk", requireAuth, conManejoDeErrorMulter(uploadChunkMiddleware.
     }
 
     if (!extensionPermitida(filename)) {
-      return res.status(400).json({ error: "Tipo de archivo no permitido." });
+      return res.status(400).json({ error: MENSAJE_TIPO_NO_PERMITIDO });
     }
 
     const cIdx = parseInt(chunkIndex, 10);
@@ -717,7 +717,7 @@ router.post("/chunk", requireAuth, conManejoDeErrorMulter(uploadChunkMiddleware.
 
     if (bytesReadChunk >= 4 && !validarMagicBytes(headerChunkBytes, rawChunkExt)) {
       try { fs.unlinkSync(finalFilePath); } catch { /* el archivo rechazado ya no existe: nada que limpiar */ }
-      return res.status(400).json({ error: "Firma binaria del archivo reensamblado no coincide con la extensión declarada." });
+      return res.status(400).json({ error: mensajeFirmaNoValida(rawChunkExt) });
     }
 
     // Clean up temporary chunk folder

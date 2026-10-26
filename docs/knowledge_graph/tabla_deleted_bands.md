@@ -38,7 +38,7 @@ Tabla de Supabase `deleted_bands` (7 columnas).
 - `deleted_at`
 - `data`
 
-**Definida en:** `supabase_schema.sql`, `supabase_migration_only_new.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migration_only_new.sql`
 
 ---
 

@@ -57,12 +57,12 @@ Tabla de Supabase `users` (22 columnas).
 - `ui_preferences`
 - `created_at`
 - `updated_at`
-- `tier`
 - `plan_pendiente`
 - `fecha_cambio_plan`
 - `estado_suscripcion`
+- `tier`
 
-**Definida en:** `supabase_schema.sql`, `supabase_migration_only_new.sql`, `supabase/migration_user_ui_preferences.sql`, `supabase/migrations/20260914_ai_token_ledger.sql`, `supabase/migrations/20261009_sincronizar_esquema_auditoria.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migration_only_new.sql`, `supabase/migration_user_ui_preferences.sql`, `supabase/migrations/20260914_ai_token_ledger.sql`, `supabase/migrations/20261009_sincronizar_esquema_auditoria.sql`
 
 ---
 

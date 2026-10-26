@@ -3,13 +3,13 @@ id: tabla_catalogo_staging
 title: "tabla catalogo_staging"
 layer: schema
 domain: system
-file: "supabase/migrations/20261113_catalogo_global_base.sql"
+file: "supabase_schema.sql"
 tags: ["schema", "tabla", "auto"]
 ---
 
 # 📌 tabla catalogo_staging
 
-> **Ubicación:** `supabase/migrations/20261113_catalogo_global_base.sql`  
+> **Ubicación:** `supabase_schema.sql`  
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
@@ -19,6 +19,7 @@ Tabla de Supabase `catalogo_staging` (11 columnas).
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[tabla_catalogo_ingestas|tabla catalogo_ingestas]] *(Layer: #schema, Domain: #system)*
+- [[tabla_catalogo_salas|tabla catalogo_salas]] *(Layer: #schema, Domain: #system)*
 - [[tabla_salas_catalogo|tabla salas_catalogo]] *(Layer: #schema, Domain: #system)*
 
 ---
@@ -41,7 +42,7 @@ Tabla de Supabase `catalogo_staging` (11 columnas).
 - `motivo`
 - `created_at`
 
-**Definida en:** `supabase/migrations/20261113_catalogo_global_base.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migrations/20261113_catalogo_global_base.sql`
 
 ---
 

@@ -1,6 +1,6 @@
 /**
  * Postgres local en memoria (PGlite) con el esquema REAL del proyecto: supabase_schema.sql y
- * después todas las migraciones en orden. Es la base de la auditoría de guardado: aquí se
+ * después las migraciones posteriores a las que ya incluye, en orden. Es la base de la auditoría de guardado: aquí se
  * ejecutan triggers, CHECK y NOT NULL de verdad, a diferencia de un fake en memoria.
  *
  * Diferencias asumidas con Supabase: pgvector no está en PGlite, así que las columnas
@@ -47,9 +47,11 @@ export function dividirSentencias(sql: string): string[] {
 }
 
 export function ficherosDeEsquema(): string[] {
+  // supabase_schema.sql ya incluye las migraciones hasta la de su cabecera: solo se aplican las posteriores.
+  const incluidas = /incluye-migraciones-hasta:\s*(\S+)/.exec(fs.readFileSync(path.join(RAIZ, 'supabase_schema.sql'), 'utf8'))?.[1] ?? '';
   const migraciones = fs
     .readdirSync(path.join(RAIZ, 'supabase/migrations'))
-    .filter((f) => f.endsWith('.sql'))
+    .filter((f) => f.endsWith('.sql') && f > incluidas)
     .sort()
     .map((f) => path.join('supabase/migrations', f));
   return ['supabase_schema.sql', ...migraciones];
