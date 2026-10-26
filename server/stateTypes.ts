@@ -47,7 +47,6 @@ export type UsuarioGuardado = Omit<UserWithHash, 'passwordHash' | 'salt'> & {
   salt?: string;
   main_band_id?: string;
   band_order?: string[];
-  initialPassword?: string;
   /** Recuperación de contraseña: código, caducidad (ms) e intentos fallidos. */
   resetCode?: string;
   resetCodeExpires?: number;

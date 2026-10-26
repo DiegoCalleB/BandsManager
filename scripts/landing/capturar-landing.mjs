@@ -53,7 +53,7 @@ async function contexto(browser, tema, dispositivo) {
   await page.goto(BASE + '/');
   await page.getByRole('button', { name: 'Entrar', exact: true }).first().click();
   await page.getByPlaceholder('Correo electrónico o Usuario').fill('diego');
-  await page.getByPlaceholder('Contraseña').fill('demo2026');
+  await page.getByPlaceholder('Contraseña').fill(process.env.SEED_USER_PASSWORD || 'demo2026');
   await page.getByRole('button', { name: 'Entrar a mi cuenta' }).click();
   await page.getByText('Configurar más tarde').click({ timeout: 20000 }).catch(() => undefined);
   await page.getByText('Explorar por mi cuenta').click({ timeout: 3000 }).catch(() => undefined);

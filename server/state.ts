@@ -11,6 +11,7 @@ import { ACTIVE_SESSIONS, hashPassword, getUserFromRequest, createAuthMiddleware
 import { generateUniqueSlugId, slugify } from "./utils/slug.js";
 import { ensureCategoryTemplatesInState } from "./promptsManager.js";
 import { crearEscritorDiferido, vaciarAlSalir } from "./utils/persistenciaEstado.js";
+import { contrasenaSemilla } from "./utils/contrasenaSemilla.js";
 
 const DATA_FILE = path.join(process.cwd(), "data.json");
 
@@ -868,11 +869,9 @@ export function loadState(): AppState {
       }
 
       for (const initUser of INITIAL_USERS) {
-        const existing = state.users.find(
-          (u) => u.username.toLowerCase() === initUser.username.toLowerCase()
-        );
+        const existing = state.users.find((u) => u.username.toLowerCase() === initUser.username.toLowerCase());
         if (!existing) {
-          const { hash, salt } = hashPassword(initUser.initialPassword);
+          const { hash, salt } = hashPassword(contrasenaSemilla());
           state.users.push({
             id: initUser.id,
             username: initUser.username,
@@ -962,7 +961,7 @@ export function loadState(): AppState {
     bands: INITIAL_BANDS,
     tours: INITIAL_TOURS,
     users: INITIAL_USERS.map((u) => {
-      const { hash, salt } = hashPassword(u.initialPassword);
+      const { hash, salt } = hashPassword(contrasenaSemilla());
       return {
         id: u.id,
         username: u.username,

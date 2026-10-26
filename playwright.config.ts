@@ -43,6 +43,8 @@ export default defineConfig({
     env: {
       NODE_ENV: 'development',
       AGENT_EMAIL_MODE: 'draft',
+      // Clave de las cuentas de ejemplo en este servidor local de pruebas (la semilla no lleva contraseñas).
+      SEED_USER_PASSWORD: 'demo2026',
     },
   },
 });

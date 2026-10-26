@@ -334,7 +334,7 @@ cp .env.example .env     # mínimo: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, GEM
 npm run dev              # Express + Vite en http://localhost:3000
 ```
 
-Sin `.env` la app también arranca, con los usuarios semilla de `src/db_seed.ts` y estado en memoria, pero sin IA ni Supabase reales. Cada integración opcional (Stripe, Resend, Gmail OAuth, Sentry, stems) se degrada sola si falta su variable; la referencia completa está comentada en [`.env.example`](./.env.example).
+Sin `.env` la app también arranca, con los usuarios semilla de `src/db_seed.ts` y estado en memoria, pero sin IA ni Supabase reales. El repositorio es público y la semilla no lleva contraseñas: para entrar con esas cuentas define `SEED_USER_PASSWORD` (mínimo 8 caracteres); sin ella cada cuenta recibe una contraseña aleatoria. Cada integración opcional (Stripe, Resend, Gmail OAuth, Sentry, stems) se degrada sola si falta su variable; la referencia completa está comentada en [`.env.example`](./.env.example).
 
 `AGENT_EMAIL_MODE` está en `draft` por defecto: los agentes dejan borradores y **no envían** hasta que se pone a `send` en el servidor.
 
@@ -387,7 +387,7 @@ El mapa detallado está en [AGENTS.md §7](./AGENTS.md). El backlog de producto,
 
 *Situación a 26 de octubre de 2026, día de la entrega.* La aplicación funciona de punta a punta. Queda probarla con bandas reales, reactivar el cobro y cerrar los riesgos legales.
 
-**Tamaño del proyecto:** unas 307.000 líneas de TypeScript sin contar tests (≈221.000 en `src/`, ≈86.000 en `server/`), 425 rutas HTTP (374 declaraciones de handler; el resto son alias, ver [docs/api](./docs/api/index.html)), 57 tablas en producción (con RLS activo en todas), 76 migraciones SQL en el runner, 711 componentes React y 4.489 tests unitarios declarados (casos `it`/`test` del código; Vitest ejecuta más por los parametrizados), además de los E2E de Playwright. Las cifras las comprueba `npm run verify:docs` en cada cambio de documentación.
+**Tamaño del proyecto:** unas 307.000 líneas de TypeScript sin contar tests (≈221.000 en `src/`, ≈86.000 en `server/`), 425 rutas HTTP (374 declaraciones de handler; el resto son alias, ver [docs/api](./docs/api/index.html)), 57 tablas en producción (con RLS activo en todas), 76 migraciones SQL en el runner, 711 componentes React y 4.494 tests unitarios declarados (casos `it`/`test` del código; Vitest ejecuta más por los parametrizados), además de los E2E de Playwright. Las cifras las comprueba `npm run verify:docs` en cada cambio de documentación.
 
 ### Construido y funcionando
 
