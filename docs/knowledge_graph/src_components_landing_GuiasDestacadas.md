@@ -24,6 +24,7 @@ Bloque de la landing que lleva a las guías públicas (`/guides` y `/en/guides`,
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_PublicLanding|src/components/PublicLanding.tsx]] *(from #frontend)*
+- [[src_components_PublicTfmLanding|src/components/PublicTfmLanding.tsx]] *(from #frontend)*
 
 ---
 

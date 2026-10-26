@@ -9,22 +9,31 @@ vi.mock('../LandingChatWidget', () => ({ LandingChatWidget: () => null }));
 
 const enlacesA = (contenedor: HTMLElement, ruta: string) => [...contenedor.querySelectorAll('a')].filter((a) => a.getAttribute('href') === ruta);
 
+const landings = [
+  ['oficial', () => <PublicLanding onEntrar={() => {}} />],
+  ['del TFM', () => <PublicTfmLanding onEntrar={() => {}} />],
+] as const;
+
 describe.each([
-  ['es', '/directories'],
-  ['en', '/en/directories'],
-] as const)('las dos landing enlazan los directorios públicos de salas y festivales (%s)', (idioma, ruta) => {
+  ['es', '', '/guides', '/directories'],
+  ['en', '/en', '/en/guides', '/en/directories'],
+] as const)('las dos landing enlazan guías y listados públicos de salas y festivales (%s)', (idioma, base, guias, directorios) => {
   beforeEach(() => {
     cleanup();
     localStorage.setItem('bandmanager_language', idioma);
   });
 
-  it('la landing oficial, en el menú y en el pie', () => {
-    const { container } = render(<LanguageProvider><PublicLanding onEntrar={() => {}} /></LanguageProvider>);
-    expect(enlacesA(container, ruta).length).toBeGreaterThanOrEqual(2);
-  });
+  describe.each(landings)('landing %s', (_nombre, pagina) => {
+    it('los listados: menú, bloque propio con salas y festivales, y pie', () => {
+      const { container } = render(<LanguageProvider>{pagina()}</LanguageProvider>);
+      expect(enlacesA(container, directorios).length).toBeGreaterThanOrEqual(3);
+      expect(enlacesA(container, `${base}/directories/venues`)).toHaveLength(1);
+      expect(enlacesA(container, `${base}/directories/festivals`)).toHaveLength(1);
+    });
 
-  it('la landing del TFM, en el menú y en el pie', () => {
-    const { container } = render(<LanguageProvider><PublicTfmLanding onEntrar={() => {}} /></LanguageProvider>);
-    expect(enlacesA(container, ruta).length).toBeGreaterThanOrEqual(2);
+    it('las guías: menú, bloque propio y pie', () => {
+      const { container } = render(<LanguageProvider>{pagina()}</LanguageProvider>);
+      expect(enlacesA(container, guias).length).toBeGreaterThanOrEqual(3);
+    });
   });
 });
