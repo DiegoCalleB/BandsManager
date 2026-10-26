@@ -5,6 +5,7 @@ import { useLanguage, SupportedLanguage } from '../context/idioma';
 import { registrarEvento } from '../utils/analitica';
 import { LandingChatWidget } from './LandingChatWidget';
 import { FormularioInteres } from './landing/FormularioInteres';
+import { DirectoriosDestacados } from './landing/DirectoriosDestacados';
 import { GuiasDestacadas } from './landing/GuiasDestacadas';
 
 interface PublicLandingProps {
@@ -487,6 +488,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
         </section>
 
         <GuiasDestacadas />
+        <DirectoriosDestacados />
 
         {/* PREGUNTAS */}
         <section id="preguntas">
