@@ -13,7 +13,7 @@ tags: ["frontend", "repertoire", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/repertoire`
 
 ## 📖 Descripción
-Exporta: INSTRUMENTOS_PROFESOR, SelectorInstrumentoProfesor.
+Exporta: SelectorInstrumentoProfesor.
 
 ---
 

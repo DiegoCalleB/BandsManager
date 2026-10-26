@@ -1,7 +1,7 @@
 import React from 'react';
 import type { InstrumentoProfesor } from '../../utils/instrumentoProfesor';
 
-export const INSTRUMENTOS_PROFESOR: Array<[InstrumentoProfesor, string]> = [['guitarra', 'Guitarra'], ['bajo', 'Bajo'], ['teclado', 'Teclado'], ['voz', 'Voz'], ['bateria', 'Batería']];
+const INSTRUMENTOS_PROFESOR: Array<[InstrumentoProfesor, string]> = [['guitarra', 'Guitarra'], ['bajo', 'Bajo'], ['teclado', 'Teclado'], ['voz', 'Voz'], ['bateria', 'Batería']];
 
 interface Props {
   valor: InstrumentoProfesor;
