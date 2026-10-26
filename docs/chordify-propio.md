@@ -32,7 +32,7 @@ Red de seguridad: si el resultado no es creíble (un acorde en una canción larg
 **Sigue sin medirse sobre canciones reales con verdad escrita a mano.**
 
 ## Letra con tiempos (reconocimiento de voz, nunca generativo)
-`POST /api/songs/:id/letra-sincronizada` («Letra del audio» en el visor):
+`POST /api/songs/:id/letra-sincronizada` («Transcribir letra» en el visor):
 1. Audio: la pista **Voz** aislada de Iris si existe (confianza «media»), si no la mezcla (confianza «baja» y aviso).
 2. `server/services/transcripcionLetra.ts`: Whisper en Replicate. El esquema del modelo se **descubre en tiempo de ejecución** (qué parámetros declara: audio, tiempos por palabra, idioma) y la salida se normaliza de las formas conocidas; una salida **sin tiempos se rechaza**. Modelos por defecto: `vaibhavs10/incredibly-fast-whisper`, `openai/whisper`; se puede forzar otro con `WHISPER_REPLICATE_MODEL`. Usa `REPLICATE_API_TOKEN` (ya configurado en Railway).
 3. `limpiarLineas`: quita lo que Whisper alucina con música (créditos de subtítulos, marcas ♪, bucles de la misma frase, tramos largos con casi nada de texto). Menos de 8 palabras = «sin letra».

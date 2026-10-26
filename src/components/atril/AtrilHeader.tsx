@@ -80,7 +80,7 @@ export function AtrilHeader() {
             <Wand2
               className={`w-4 h-4 text-[var(--acc-ink)] ${isGeneratingAi ? "animate-spin" : ""}`}
             />
-            <span>{isGeneratingAi ? "Escuchando…" : "Letra del audio"}</span>
+            <span>{isGeneratingAi ? "Escuchando…" : "Transcribir letra"}</span>
           </Button>
 
           {/* Detección propia de acordes con tiempos, sin IA generativa */}
@@ -107,7 +107,7 @@ export function AtrilHeader() {
           <ActionMenu
             label="Más acciones de la canción"
             items={[
-              { label: isGeneratingAi ? "Escuchando…" : "Letra del audio", icon: Wand2, onSelect: handleGenerateWithAi, hidden: !esMovil },
+              { label: isGeneratingAi ? "Escuchando…" : "Transcribir letra", icon: Wand2, onSelect: handleGenerateWithAi, hidden: !esMovil },
               { label: isAnalyzingChords ? "Analizando..." : "Acordes del audio", icon: Music, onSelect: analisisAcordes && !isAnalyzingChords ? () => setShowAnalisisAcordes((v) => !v) : () => handleAnalyzeChordsFromAudio(), hidden: !esMovil || !audioUrl },
               { label: "Subir PDF, imagen o Word con acordes", icon: Upload, onSelect: () => setShowStructureUploadModal(true) },
               { label: "Compartir por WhatsApp o app", icon: MessageSquare, onSelect: () => setShowShareModal(true) },
