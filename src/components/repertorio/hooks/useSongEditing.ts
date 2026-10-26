@@ -58,7 +58,7 @@ export function useSongEditing({ setStatusBanner, setSongs, editingSong, activeP
     });
     try {
       // Solo se detectan los ACORDES (cálculo propio, sin IA generativa): la letra nunca se genera
-      // en segundo plano; se pide a propósito con «Letra del audio» y se transcribe de la voz.
+      // en segundo plano; se pide a propósito con «Transcribir letra» y se transcribe de la voz.
       const analisis = await analizarAcordesDelAudio(song.id);
       setSongs((prev) => {
         const next = prev.map((s) => (s.id === song.id ? { ...s, analisisAcordes: analisis } : s));
