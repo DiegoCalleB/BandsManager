@@ -28,7 +28,7 @@
   "server/routes/repertorio.ts": 1003,
   "server/routes/billing.ts": 991,
   "src/components/repertorio/EscenarioView.tsx": 989,
-  "src/components/repertorio/BulkAlbumAudioUploaderModal.tsx": 986,
+  "src/components/repertorio/BulkAlbumAudioUploaderModal.tsx": 973,
   "server/services/spotifyService.ts": 935,
   "src/components/booking/venue_modal/VenueEmailThread.tsx": 930,
   "src/components/repertorio/EnergyChart.tsx": 915,
