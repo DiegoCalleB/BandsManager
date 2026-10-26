@@ -40,6 +40,25 @@ export interface Cuadricula {
   bloques: Bloque[];
   /** 0-1: fracción media de los cambios de acorde que caen sobre un pulso. */
   calidad: number;
+  /** La rejilla no se apoya en nada firme (acordes escasos o irregulares): se dibuja, pero avisando. */
+  aproximada: boolean;
+  /** Por qué es aproximada. */
+  causa?: 'pocos-acordes' | 'no-encaja';
+}
+
+/** Por qué no hay rejilla ni siquiera aproximada. */
+export type MotivoSinCuadricula = 'sin-bpm' | 'pista-corta' | 'pocos-compases';
+
+/** Correcciones del músico: mandan sobre lo deducido. `inicio` es el instante (s) de un inicio de compás. */
+export interface AjusteCompases {
+  bpm?: number;
+  inicio?: number;
+  tiempos?: 3 | 4;
+}
+
+export interface ResultadoCuadricula {
+  cuadricula: Cuadricula | null;
+  motivo?: MotivoSinCuadricula;
 }
 
 export interface PosicionEnCuadricula {
@@ -97,18 +116,39 @@ const similitud = (a: string[], b: string[]): number => {
   return iguales / Math.max(a.length, b.length);
 };
 
+/** Solo rejillas firmes (las que se apoyan en los acordes o en el pulso medido); las aproximadas dan null. */
 export function construirCuadricula(
   segmentos: SegmentoAcordeAnalizado[],
   bpm: number | undefined,
   duracion: number,
   pulso?: { bpm: number; fase: number; confianza: number } | null
 ): Cuadricula | null {
+  const { cuadricula } = analizarCuadricula(segmentos, bpm, duracion, pulso);
+  return cuadricula && !cuadricula.aproximada ? cuadricula : null;
+}
+
+const bpmValido = (b: number | undefined): b is number => !!b && Number.isFinite(b) && b >= 40 && b <= 240;
+
+/**
+ * Como `construirCuadricula`, pero en vez de rendirse dibuja una rejilla aproximada cuando hay BPM
+ * pero los acordes no la confirman, admite las correcciones del músico y, si no hay rejilla, dice por qué.
+ */
+export function analizarCuadricula(
+  segmentos: SegmentoAcordeAnalizado[],
+  bpm: number | undefined,
+  duracion: number,
+  pulso?: { bpm: number; fase: number; confianza: number } | null,
+  ajuste?: AjusteCompases
+): ResultadoCuadricula {
   // Con el pulso medido en el audio se usa su tempo y su fase tal cual; el BPM de la ficha solo es el plan B.
-  const medido = pulso && pulso.confianza >= 0.35 && pulso.bpm >= 40 && pulso.bpm <= 240 ? pulso : null;
-  if (medido) bpm = medido.bpm;
-  if (!bpm || !Number.isFinite(bpm) || bpm < 40 || bpm > 240 || duracion < 8) return null;
+  // Si el músico fija el BPM a mano, manda su BPM y la fase se busca de nuevo.
+  const manual = bpmValido(ajuste?.bpm);
+  const medido = !manual && pulso && pulso.confianza >= 0.35 && pulso.bpm >= 40 && pulso.bpm <= 240 ? pulso : null;
+  if (manual) bpm = ajuste!.bpm;
+  else if (medido) bpm = medido.bpm;
+  if (!bpmValido(bpm)) return { cuadricula: null, motivo: 'sin-bpm' };
+  if (duracion < 8) return { cuadricula: null, motivo: 'pista-corta' };
   const cambios = cambiosDeAcorde(segmentos);
-  if (cambios.length < 4) return null;
 
   // 1) Para cada BPM candidato (el de la ficha, su mitad y su doble) se busca el desfase de pulso
   //    y el compás (4 o 3 tiempos, y en qué pulso empieza) que mejor reúnen los cambios de acorde.
@@ -140,22 +180,40 @@ export function construirCuadricula(
   };
 
   let mejor: ReturnType<typeof evaluar> | null = null;
-  for (const factor of medido ? [1] : [1, 0.5, 2]) {
-    const candidato = bpm * factor;
-    if (candidato < 40 || candidato > 240) continue;
-    const e = evaluar(candidato);
-    // El BPM de la ficha manda salvo que otro tempo encaje claramente mejor: con acordes que cambian
-    // cada 2 compases, el doble de tempo también encaja y no hay forma de distinguirlos.
-    if (!mejor || e.total > mejor.total + 0.15) mejor = e;
+  let causa: Cuadricula['causa'];
+  if (cambios.length < 4) {
+    // Con pocos cambios no hay de dónde deducir fase ni compás: 4/4 desde el pulso medido (o desde 0).
+    causa = 'pocos-acordes';
+    mejor = { bpm, T: 60 / bpm, fase: medido?.fase ?? 0, calidadPulso: 0, tiempos: 4, pulsoInicial: 0, calidadCompas: 0, total: 0 };
+  } else {
+    for (const factor of medido || manual ? [1] : [1, 0.5, 2]) {
+      const candidato = bpm * factor;
+      if (candidato < 40 || candidato > 240) continue;
+      const e = evaluar(candidato);
+      // El BPM de la ficha manda salvo que otro tempo encaje claramente mejor: con acordes que cambian
+      // cada 2 compases, el doble de tempo también encaja y no hay forma de distinguirlos.
+      if (!mejor || e.total > mejor.total + 0.15) mejor = e;
+    }
   }
-  if (!mejor || mejor.calidadPulso < (medido ? 0.35 : CALIDAD_MINIMA)) return null;
+  if (!mejor) return { cuadricula: null, motivo: 'sin-bpm' };
+  if (!causa && !manual && mejor.calidadPulso < (medido ? 0.35 : CALIDAD_MINIMA)) causa = 'no-encaja';
 
   const T = mejor.T;
-  const tiempos = mejor.tiempos;
-  const pulsoInicial = mejor.pulsoInicial;
+  let tiempos = mejor.tiempos;
+  let pulsoInicial = mejor.pulsoInicial;
+  let fase = mejor.fase;
+  // El músico marca un inicio de compás y/o el compás: lo suyo manda y la rejilla deja de ser aproximada.
+  if (ajuste?.tiempos) tiempos = ajuste.tiempos;
+  if (ajuste?.inicio !== undefined && Number.isFinite(ajuste.inicio)) {
+    const barra = tiempos * T;
+    fase = ((ajuste.inicio % barra) + barra) % barra;
+    pulsoInicial = 0;
+  }
+  pulsoInicial = Math.min(pulsoInicial, tiempos - 1);
+  if (manual || ajuste?.inicio !== undefined) causa = undefined;
 
   const duracionCompas = tiempos * T;
-  let inicio = mejor.fase + pulsoInicial * T;
+  let inicio = fase + pulsoInicial * T;
   inicio -= Math.ceil(inicio / duracionCompas) * duracionCompas; // primer inicio de compás ≤ 0
   if (inicio > 1e-6) inicio -= duracionCompas;
 
@@ -167,7 +225,7 @@ export function construirCuadricula(
     for (let i = 0; i < tiempos; i++) acordes.push(acordeEn(segmentos, Math.max(0, t + (i + 0.5) * T)));
     compases.push({ n, t0: Math.max(0, t), t1: Math.min(duracion, t + duracionCompas), bloque: 0, acordes });
   }
-  if (compases.length < 4) return null;
+  if (compases.length < 4) return { cuadricula: null, motivo: 'pocos-compases' };
 
   // 4) Bloques: longitud (4 u 8 compases) con la que los bloques consecutivos más se repiten.
   const claves = compases.map((c) => c.acordes.filter((a, i, v) => i === 0 || a !== v[i - 1]).join('·'));
@@ -213,7 +271,9 @@ export function construirCuadricula(
     };
   });
 
-  return { bpm: mejor.bpm, tiemposPorCompas: tiempos, duracionPulso: T, inicioRejilla: inicio, compases, bloques, calidad: mejor.calidadPulso };
+  return {
+    cuadricula: { bpm: mejor.bpm, tiemposPorCompas: tiempos, duracionPulso: T, inicioRejilla: inicio, compases, bloques, calidad: mejor.calidadPulso, aproximada: !!causa, ...(causa ? { causa } : {}) },
+  };
 }
 
 /** Dónde cae el instante t: compás, tiempo dentro del compás, fracción del pulso y bloque. */

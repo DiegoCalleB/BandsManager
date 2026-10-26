@@ -5,7 +5,7 @@ import type { Cuadricula } from '../cuadriculaCompases';
 // 8 compases de 4/4 a 120 BPM (2 s por compás), dos bloques A y B.
 const compas = (n: number, acordes: string[], bloque: number) => ({ n, t0: (n - 1) * 2, t1: n * 2, bloque, acordes });
 const cuadricula: Cuadricula = {
-  bpm: 120, tiemposPorCompas: 4, duracionPulso: 0.5, inicioRejilla: 0, calidad: 0.9,
+  bpm: 120, tiemposPorCompas: 4, duracionPulso: 0.5, inicioRejilla: 0, calidad: 0.9, aproximada: false,
   compases: [
     compas(1, ['E', 'E', 'E', 'E'], 0), compas(2, ['E', 'E', 'A', 'A'], 0), compas(3, ['D', 'D', 'D', 'D'], 0), compas(4, ['D', 'D', 'E', 'B7'], 0),
     compas(5, ['A', 'A', 'A', 'A'], 1), compas(6, ['A', 'A', 'A', 'A'], 1), compas(7, ['N', 'N', 'E', 'E'], 1), compas(8, ['E', 'E', 'E', 'E'], 1),
