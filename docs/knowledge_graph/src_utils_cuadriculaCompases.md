@@ -23,14 +23,19 @@ Exporta: Compas, Bloque, Cuadricula, PosicionEnCuadricula, construirCuadricula, 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_atril_AtrilCompases|src/components/atril/AtrilCompases.tsx]] *(from #frontend)*
 - [[src_components_chords_LineaTiempoAcordes|src/components/chords/LineaTiempoAcordes.tsx]] *(from #frontend)*
 - [[src_components_chords_PanelArmonia|src/components/chords/PanelArmonia.tsx]] *(from #frontend)*
 - [[src_components_chords_RegletaCompases|src/components/chords/RegletaCompases.tsx]] *(from #frontend)*
+- [[src_components_chords_VistaCompases|src/components/chords/VistaCompases.tsx]] *(from #frontend)*
+- [[src_utils_vistaCompases|src/utils/vistaCompases.ts]] *(from #service)*
 
 ---
 
 ## 🧪 Tests que lo cubren
+- `src/audit/vistaCompases.test.tsx`
 - `src/utils/__tests__/cuadriculaCompases.test.ts`
+- `src/utils/__tests__/vistaCompases.test.ts`
 
 ---
 

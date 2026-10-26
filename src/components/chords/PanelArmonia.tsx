@@ -9,6 +9,9 @@ import {
 import { CLASE_FUNCION, LETRA_FUNCION, gradoVisible, type EstiloArmonia } from '../../utils/estiloArmonia';
 import { construirCuadricula } from '../../utils/cuadriculaCompases';
 import { guiasDelProfesor } from '../../utils/guiasArmonia';
+import { guiasBateria } from '../../utils/guiasBateria';
+import type { InstrumentoProfesor } from '../../utils/instrumentoProfesor';
+import { SelectorInstrumentoProfesor } from './SelectorInstrumentoProfesor';
 import { DiagramaEscala } from './DiagramaEscala';
 
 interface Props {
@@ -22,6 +25,10 @@ interface Props {
   profesor?: React.ReactNode;
   /** Abre la explicación extendida desde el principio (por defecto solo se ve lo esencial). */
   extendida?: boolean;
+  /** Instrumento al que se explica; con «bateria» se deja la armonía y se habla de golpes y fills. */
+  instrumento?: InstrumentoProfesor;
+  /** Si se pasa, se muestra el selector de instrumento arriba. */
+  onInstrumento?: (i: InstrumentoProfesor) => void;
 }
 
 const ORDEN: Funcion[] = ['T', 'S', 'D', 'M', 'X'];
@@ -33,7 +40,7 @@ const ritmoArmonico = (cpm: number) => (cpm < 12 ? 'lento' : cpm < 30 ? 'tranqui
  * (todo sale de `analizarArmonia`). Cada afirmación es un dato calculado; la fiabilidad la marca el
  * origen de los acordes (audio corregido por la banda, audio detectado o cifrado escrito).
  */
-export const PanelArmonia: React.FC<Props> = ({ armonia, analisis, bpm, notation, transpose, estilo, profesor, extendida = false }) => {
+export const PanelArmonia: React.FC<Props> = ({ armonia, analisis, bpm, notation, transpose, estilo, profesor, extendida = false, instrumento, onInstrumento }) => {
   const [ext, setExt] = useState(extendida);
   const { tonalidad, modo } = armonia;
   const grado = (g: string) => gradoVisible(g, estilo);
@@ -75,8 +82,57 @@ export const PanelArmonia: React.FC<Props> = ({ armonia, analisis, bpm, notation
     return [...porLetra.values()];
   }, [cuadricula, analisis, armonia, estilo]);
 
+  const esBateria = instrumento === 'bateria';
+  const guiasBat = useMemo(
+    () => (esBateria ? guiasBateria(armonia, { bpm: analisis?.pulso?.bpm ?? bpm, tiemposPorCompas: cuadricula?.tiemposPorCompas, bloques: bloques.length }) : []),
+    [esBateria, armonia, analisis, bpm, cuadricula, bloques.length],
+  );
+  const selector = onInstrumento && instrumento ? <SelectorInstrumentoProfesor valor={instrumento} onCambio={onInstrumento} /> : null;
+
+  if (esBateria) {
+    const bpmMostrado = analisis?.pulso?.bpm ?? bpm;
+    return (
+      <div className="space-y-5 max-w-3xl mx-auto font-sans text-sm" translate="no">
+        {selector}
+        <section className="bg-[var(--sunken)] rounded-[var(--r-m)] p-4 space-y-1" aria-label="Pulso de la canción">
+          <div className="text-lg font-bold text-[var(--ink)]">
+            {bpmMostrado ? `${Math.round(bpmMostrado)} BPM` : 'Sin BPM en la ficha'}{cuadricula ? ` · ${cuadricula.tiemposPorCompas}/4` : ''}
+          </div>
+          <p className="text-[var(--ink-2)]">Para la batería importa el pulso y dónde cambia la canción, no la tonalidad.</p>
+        </section>
+        {bloques.length > 0 && (
+          <section className="space-y-2" aria-label="Secciones de la canción">
+            <h3 className="font-bold text-[var(--ink)]">Secciones</h3>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {bloques.map((b) => (
+                <div key={b.letra} className="bg-[var(--sunken)] rounded-[var(--r-m)] p-3 flex items-baseline justify-between">
+                  <span className="font-bold text-[var(--ink)]">Bloque {b.letra}</span>
+                  <span className="text-xs text-[var(--ink-2)]">{b.compases}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+        <section className="space-y-2" aria-label="Golpes y trucos de batería">
+          <h3 className="font-bold text-[var(--ink)]">Golpes y trucos</h3>
+          <ul className="space-y-2">
+            {guiasBat.map((g) => (
+              <li key={g.id} className="bg-[var(--sunken)] rounded-[var(--r-m)] p-3 text-[var(--ink)]">
+                {g.tipo === 'idea' && <span className="mr-2 px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc-soft)] text-[var(--acc-ink)] text-xs font-bold">Idea</span>}
+                <b className="font-bold">{g.titulo}.</b> {g.texto}
+              </li>
+            ))}
+          </ul>
+        </section>
+        {profesor}
+        <p className="text-xs text-[var(--ink-2)]">Basado en {origen}. Los consejos marcados «Idea» son oficio, no datos de la canción.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-5 max-w-3xl mx-auto font-sans text-sm" translate="no">
+      {selector}
       {/* 1. Resumen tonal */}
       <section className="bg-[var(--sunken)] rounded-[var(--r-m)] p-4 space-y-3" aria-label="Resumen tonal">
         <div>

@@ -46,3 +46,24 @@ export function useNivelAcordes(): [NivelAcorde, (n: NivelAcorde) => void] {
   };
   return [nivel, cambiar];
 }
+
+/** Cómo se lee la pestaña de letra y acordes del Atril: el cifrado de siempre o la rejilla de compases. */
+export type VistaAtril = 'cifrado' | 'compases';
+
+const CLAVE_VISTA_ATRIL = 'bm_vista_atril';
+
+/** Vista elegida en la pestaña de letra y acordes, recordada en este dispositivo (preferencia de interfaz). */
+export function useVistaAtril(): [VistaAtril, (v: VistaAtril) => void] {
+  const [vista, setVista] = useState<VistaAtril>(() => {
+    try {
+      return localStorage.getItem(CLAVE_VISTA_ATRIL) === 'compases' ? 'compases' : 'cifrado';
+    } catch {
+      return 'cifrado';
+    }
+  });
+  const cambiar = (v: VistaAtril) => {
+    setVista(v);
+    try { localStorage.setItem(CLAVE_VISTA_ATRIL, v); } catch { /* vale solo esta sesión */ }
+  };
+  return [vista, cambiar];
+}

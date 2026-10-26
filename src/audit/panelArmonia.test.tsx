@@ -120,3 +120,35 @@ describe('lo esencial primero', () => {
     expect(corto).not.toContain('Para improvisar y componer');
   });
 });
+
+describe('modo batería', () => {
+  const bat = renderToStaticMarkup(<PanelArmonia armonia={armonia} bpm={146} notation="ES" transpose={0} instrumento="bateria" onInstrumento={() => {}} />);
+
+  it('se centra en golpes y trucos, sin tonalidad ni escalas', () => {
+    expect(bat).toContain('Golpes y trucos');
+    expect(bat).toContain('146');
+    expect(bat).not.toContain('Mi mayor · mixolidio');
+    expect(bat).not.toContain('Pentatónica');
+  });
+
+  it('muestra el selector de instrumento y respeta la ley sin bordes ni hex', () => {
+    expect(bat).toContain('aria-pressed');
+    expect(bat).not.toMatch(/\bborder/);
+    expect(bat).not.toMatch(/#[0-9a-fA-F]{6}/);
+  });
+
+  it('el profesor habla de golpes y fills solo con batería', () => {
+    const p = { huella: 'x', nivel: 'intermedio' as const, instrumento: 'bateria' as const, generadoEn: 'x', descartadas: 0, explicacion: { resumen: 'r', comoFunciona: [], paraImprovisar: ['Prueba un fill.'], paraComponer: ['Prueba un groove.'], dinamismo: [] } };
+    const b = renderToStaticMarkup(<ProfesorIA extendida profesor={p} instrumento="bateria" onPedir={async () => p} />);
+    expect(b).toContain('Golpes y fills');
+    expect(b).not.toContain('Para improvisar');
+    const g = renderToStaticMarkup(<ProfesorIA extendida profesor={{ ...p, instrumento: 'guitarra' }} instrumento="guitarra" onPedir={async () => p} />);
+    expect(g).toContain('Para improvisar');
+  });
+
+  it('con otro instrumento el panel no cambia', () => {
+    const g = renderToStaticMarkup(<PanelArmonia armonia={armonia} bpm={146} notation="ES" transpose={0} extendida instrumento="guitarra" />);
+    expect(g).toContain('Mi mayor · mixolidio');
+    expect(g).not.toContain('Golpes y trucos');
+  });
+});
