@@ -11,6 +11,16 @@ El sistema operativo de una banda independiente: **encontrar salas, cerrar fecha
 
 > Las reglas de desarrollo (seguridad, multi-tenancy, agentes, estilo) viven en **[AGENTS.md](./AGENTS.md)**. Este README es la puerta de entrada; no las duplica.
 
+## En 30 segundos
+
+- **Qué es.** Una plataforma web para bandas y artistas independientes que reúne en un solo sitio la gestión que hoy se hace en Excel, correos y WhatsApps: booking, ensayos y setlists, EPK y fans, calendario y finanzas.
+- **Qué problema resuelve.** Una banda sin mánager hace gratis el trabajo de booker, tour manager, director musical, contable y community manager. BandManager.io lo concentra y deja que la IA haga lo repetitivo.
+- **Dónde usa IA y dónde no.** Cuatro agentes (Scout, Redactor, Enviador y Lector) descubren salas, redactan un pitch breve con el tono de la banda, leen las respuestas y proponen la réplica. **Nada sale sin que una persona lo apruebe**, y el código lo impide, no solo la interfaz.
+- **Dónde verlo.** La aplicación está en producción en [bandmanager.io](https://bandmanager.io), con una landing pública (banda de demo ficticia) y una página propia del TFM en `/tfm`. La defensa, una película interactiva, está en [`presentacion/`](./presentacion/) y sus tiempos en [`presentacion/DEFENSA.md`](./presentacion/DEFENSA.md).
+- **Qué se evalúa aquí.** El producto y, sobre todo, **cómo se construyó con agentes de código**: reglas compartidas ([AGENTS.md](./AGENTS.md)), skills, y tests y comprobaciones automáticas que impiden que un agente rompa lo que no debe. Qué prácticas del máster se aplicaron, cuáles no y por qué: [docs/master/MATRIZ_APLICACION.md](./docs/master/MATRIZ_APLICACION.md).
+- **Estado, sin adornos.** Completa y funcional de punta a punta. Se puede usar hoy con usuarios de prueba; **antes de abrirla a clientes de pago** faltan cerrar riesgos legales y de seguridad, que están contados con franqueza en [Límites conocidos](#límites-conocidos-honestidad-antes-que-marketing) y en [Hasta dónde hemos llegado](#hasta-dónde-hemos-llegado).
+- **Si solo tienes diez minutos:** esta página, [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) y `npm run verify:docs` (comprueba que la documentación coincide con el código).
+
 ## Guía rápida para evaluadores
 
 Autor: [@DiegoCalleB](https://github.com/DiegoCalleB). Este repositorio es el núcleo técnico del Trabajo Fin de Máster de Desarrollo con IA (The Big School). Está pensado para que se pueda **comprobar**, no solo leer: casi todo lo que afirma esta documentación se puede verificar con un comando o con un fichero concreto.
@@ -34,11 +44,13 @@ Autor: [@DiegoCalleB](https://github.com/DiegoCalleB). Este repositorio es el n�
 |---|---|
 | Qué problema resuelve y para quién | [Para qué existe](#para-qué-existe) y [Qué hace](#qué-hace) |
 | La arquitectura, en diez minutos | [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) (diagramas de contexto y contenedores) |
-| **Por qué** se decidió cada cosa, y qué se descartó | [docs/adr/](./docs/adr/README.md): 13 registros de decisión. Los retroactivos están marcados y sus alternativas son razonadas a posteriori |
+| **Por qué** se decidió cada cosa, y qué se descartó | [docs/adr/](./docs/adr/README.md): 48 registros de decisión. Los retroactivos están marcados y sus alternativas son razonadas a posteriori |
 | La API completa | [docs/api/REFERENCIA.md](./docs/api/REFERENCIA.md): todas las rutas, quién puede llamarlas y con qué límites, con enlace a la línea de código. Contrato máquina-legible en [openapi.json](./docs/api/openapi.json) |
 | La seguridad y sus límites | [Seguridad](#seguridad), incluidos los [límites conocidos](#límites-conocidos-honestidad-antes-que-marketing) |
 | Cómo se trabajó con agentes de IA | [AGENTS.md](./AGENTS.md) y [skills/](./skills/README.md): reglas compartidas, skills y tests que impiden que un agente rompa lo que no debe |
 | Qué está hecho y qué no | [Hasta dónde hemos llegado](#hasta-dónde-hemos-llegado) |
+| La defensa del TFM | [`presentacion/`](./presentacion/) (película interactiva) y sus tiempos en [`presentacion/DEFENSA.md`](./presentacion/DEFENSA.md) |
+| Qué del máster se aplicó y qué no | [docs/master/MATRIZ_APLICACION.md](./docs/master/MATRIZ_APLICACION.md) |
 
 ### Comprobarlo uno mismo
 
@@ -112,7 +124,7 @@ Nada sale sin que una persona apruebe el borrador. Con `AGENT_EMAIL_MODE=draft` 
 
 ### Repertorio y setlists
 
-- **Canciones y discografía:** catálogo con filtros, álbumes, portadas, letras, acordes, notas por miembro y subida de audio en bloque.
+- **Canciones y discografía:** catálogo con filtros, álbumes, portadas, letras, acordes, notas por miembro y subida de audio en bloque (un archivo sin emparejar crea una canción nueva en el disco).
 - **Análisis de audio:** tonalidad, BPM, densidad de onsets, energía y *cues*, tanto del audio de la banda como del original en las versiones.
 - **Setlists:** gráfico de energía, comprobación de compatibilidad de tonalidad/BPM entre temas contiguos, análisis con IA, un generador de setlist perfecto y exportación a PDF.
 - **Modo Escenario** para tocar en directo con el reproductor del setlist, afinador y metrónomo.
@@ -121,7 +133,7 @@ Nada sale sin que una persona apruebe el borrador. Con `AGENT_EMAIL_MODE=draft` 
 ### Estudio de canciones y música IA
 
 - Generación de pistas de acompañamiento y jingles con Gemini, y bases rítmicas con instrumentos sintetizados (guitarra, violín, handpan, percusión) con Tone.js.
-- Separación de stems en la nube y transposición de audio, con caché y cola de reintentos.
+- **Iris** separa un tema en voz, batería, bajo, guitarras, teclados y otros instrumentos con Demucs (en Fal.ai o Replicate; hay un motor básico gratuito de filtros). Guarda el resultado en caché, avisa cuando la IA no estuvo disponible y el resultado es degradado, y deja las pistas en un mezclador con silencio, solo y volumen por pista. También transpone audio.
 - Exportación a MIDI, y subida de la estructura de una canción.
 - Las maquetas y stems son de la banda: se guardan en Storage bajo una ruta acotada por `bandId`.
 
@@ -155,7 +167,7 @@ Chatbot con herramientas (`server/services/chatTools.ts`) para consultar y actua
 ### Práctica, directo y estudio personal
 
 - **Modo práctica** (`PracticeModePanel`): reproduce varias pistas de una canción a la vez, con transposición en tiempo real, bucle de compases, metrónomo y balance de volumen. **Modo Escenario** para tocar en directo siguiendo el setlist.
-- **Afinador y metrónomo** integrados, y un visor de **acordes** por canción.
+- **Afinador y metrónomo** integrados, y el **Atril (Jamify)**, una hoja de acordes que sigue el audio. «Acordes del audio» detecta los acordes con sus tiempos (cálculo propio, sin IA generativa) y «Transcribir letra» transcribe la voz con tiempos y la sincroniza con los acordes. Ambos son automáticos y se revisan de oído.
 - **Audio por canción:** forma de onda, pistas por instrumento, ideas con comentarios, y ayudas para llevar los stems a un DAW (guía para Cubase incluida).
 
 ### Landing pública, PWA y demo
@@ -192,7 +204,7 @@ Una banda guarda en la plataforma maquetas inéditas, contactos privados de prog
 |---|---|---|
 | **Aislamiento por banda** | La banda se resuelve siempre en el servidor desde la sesión (`getTargetBandId`); está prohibido leer `band_id` del cuerpo o de `x-band-id` para autorizar. Toda ruta con `:bandId` comprueba `puedeEscribirEnBanda` (403) y las cachés se filtran por banda. Un test estático rompe el build si reaparece `cleanBandId(objeto.band_id \|\| bandId)`. | `server/utils/bandAccess.ts`, `server/db/__tests__/bandIdTrustBoundary.test.ts` |
 | **Autenticación** | Login con Google verificado contra Google en el servidor, sin fiarse del email del cliente. Contraseñas con PBKDF2-SHA512 (100.000 iteraciones, sal propia) y comparación en tiempo constante. Sesión con caducidad de 30 días. | `server/auth.ts`, `server/utils/googleVerify.ts` |
-| **Cuentas y privilegios** | La contraseña del admin solo sale de `ADMIN_PASSWORD` (mínimo 12 caracteres), nunca del código. Las cuentas especiales se reconocen por id o email exacto. El plan solo cambia por Stripe. Un líder solo restablece cuentas que son únicamente de su banda. | `server/utils/cuentaBrais.ts`, `server/routes/users.ts` |
+| **Cuentas y privilegios** | La contraseña del admin solo sale de `ADMIN_PASSWORD` (mínimo 12 caracteres), nunca del código. Ninguna banda ni cuenta es especial: los permisos salen solo del rol y de la pertenencia a la banda ([ADR 0027](./docs/adr/0027-ninguna-banda-privilegiada.md)). El plan solo cambia por Stripe. Un líder solo restablece cuentas que son únicamente de su banda. | `server/routes/users.ts` |
 | **Recuperación e invitaciones** | El reseteo exige el identificador exacto, admite 5 intentos por código y no lo escribe en logs. Las invitaciones usan un token de un solo uso del que solo se guarda el hash. | `server/utils/invitacion.ts` |
 | **Limitación de ritmo** | Límites por IP o por usuario según la superficie (tabla abajo). La IP se toma de la **última** entrada de `X-Forwarded-For`, porque la primera la escribe el cliente. | `server/middleware/rateLimiter.ts` |
 | **Tamaño de cuerpo** | 1 MB para anónimos y 50 MB solo con sesión válida, para que nadie sin cuenta fuerce al servidor a bufferizar archivos enormes. | `server/middleware/limiteCuerpo.ts` |
@@ -250,7 +262,7 @@ No todo está blindado y conviene tenerlo presente:
 - **La cookie de sesión no es `HttpOnly`** a propósito, porque el cliente también usa el token desde `localStorage`. Migrar a sesión solo por cookie está en el backlog.
 - **El limitador de ritmo vive en memoria del proceso.** Se reinicia al desplegar y no se comparte si se escalara a varias instancias. Además solo cubre las superficies de la tabla: el resto de endpoints mutantes confía solo en `requireAuth`.
 - **Las contraseñas de aplicación de correo se guardan sin cifrar** en Supabase (se ocultan en las respuestas, no en reposo). Es uno de los dos bloqueantes antes de abrir a usuarios reales.
-- **La CI no ejecuta escaneo de dependencias ni de secretos** (`npm audit`, Dependabot, CodeQL o similares).
+- **Escaneo de dependencias y secretos en CI.** La CI ejecuta `npm audit` (falla con vulnerabilidades altas en producción), `gitleaks` sobre el historial, CodeQL y Dependabot. A 26 de octubre de 2026 `npm audit` da 0 avisos en producción; queda uno en `happy-dom`, solo de desarrollo, cuyo arreglo exige un cambio mayor.
 - Se aceptan todavía hashes de contraseña antiguos de 1.000 iteraciones por compatibilidad.
 
 Los riesgos legales (YouTube, RGPD, baja en emails comerciales) están en [AGENTS.md §8](./AGENTS.md).
@@ -298,7 +310,7 @@ El código es **pasivo por diseño**: sin esas variables Sentry es un no-op tota
 
 ### Lo que mejoraría el rendimiento de Sentry ahora que está activo
 
-- **Sin source maps ni `release`.** El build de producción genera `sourcemap: false` y no se etiqueta la versión, así que las pilas de Sentry salen minificadas y no se agrupan por despliegue. Es lo primero que conviene arreglar, porque cada error que llega ya está llegando sin símbolos legibles.
+- **Sin source maps.** El build de producción genera `sourcemap: false`, así que las pilas de Sentry salen minificadas. La versión sí se envía como `release` (`bandmanager@X.Y.Z`), por lo que los errores se agrupan por despliegue. Subir los source maps es lo primero que conviene arreglar.
 - **Cobertura parcial en el servidor:** hay unas 280 llamadas a `console.error` y solo 9 a `captureError`. Un fallo capturado por un `try/catch` que solo escribe en consola no llega a Sentry.
 - **Sin trazas de rendimiento en el servidor** (`tracesSampleRate: 0`): solo se reportan errores.
 - **Las alertas** (correo, Slack, umbrales) se configuran en la consola de Sentry, no están versionadas en el repositorio.
@@ -336,6 +348,7 @@ Sin `.env` la app también arranca, con los usuarios semilla de `src/db_seed.ts`
 | `npm run typecheck` | `tsc --noEmit`. |
 | `npm test` | Tests unitarios (Vitest). |
 | `npm run check:fast` | Typecheck + test de la frontera de confianza `band_id`. |
+| `npm run check:all` | La puerta de calidad completa: typecheck, toda la suite de tests y `verify:docs`. |
 | `npm run test:e2e` | Smoke suite y journey de onboarding (Playwright, sin credenciales). |
 | `npm run test:visual` | Regresión visual (`:update` solo para cambios de diseño deliberados). |
 | `npm run lint:eslint` | ESLint (la deuda existente va con ratchet en CI). |
@@ -370,9 +383,9 @@ El mapa detallado está en [AGENTS.md §7](./AGENTS.md). El backlog de producto,
 
 ## Hasta dónde hemos llegado
 
-*Situación a 6 de octubre de 2026.* La aplicación es completa y funciona de punta a punta; lo que queda es validar con bandas reales, reactivar el cobro y cerrar riesgos legales.
+*Situación a 26 de octubre de 2026.* La aplicación es completa y funciona de punta a punta; lo que queda es validar con bandas reales, reactivar el cobro y cerrar riesgos legales.
 
-**Tamaño del proyecto:** unas 270.000 líneas de TypeScript (≈197.000 en `src/`, ≈76.000 en `server/`), 425 rutas HTTP (374 declaraciones de handler; el resto son alias, ver [docs/api](./docs/api/index.html)), 57 tablas en producción (con RLS activo en todas), 76 migraciones SQL en el runner, 710 componentes React y 4.466 tests unitarios declarados (casos `it`/`test` del código; Vitest ejecuta más por los parametrizados), además de los E2E de Playwright y 15 capturas de regresión visual. Las cifras las comprueba `npm run verify:docs` en cada cambio de documentación.
+**Tamaño del proyecto:** unas 270.000 líneas de TypeScript (≈197.000 en `src/`, ≈76.000 en `server/`), 425 rutas HTTP (374 declaraciones de handler; el resto son alias, ver [docs/api](./docs/api/index.html)), 57 tablas en producción (con RLS activo en todas), 76 migraciones SQL en el runner, 710 componentes React y 4.489 tests unitarios declarados (casos `it`/`test` del código; Vitest ejecuta más por los parametrizados), además de los E2E de Playwright y 15 capturas de regresión visual. Las cifras las comprueba `npm run verify:docs` en cada cambio de documentación.
 
 ### Construido y funcionando
 
@@ -381,7 +394,8 @@ El mapa detallado está en [AGENTS.md §7](./AGENTS.md). El backlog de producto,
 | Booking CRM, descubrimiento y enriquecimiento de salas | Funcional, con importación y exportación. |
 | Agentes Scout, Redactor, Enviador y Lector | Funcionales, con cola de trabajos, tope diario y revisión humana. |
 | Acuerdos de concierto con enlace público y firma por nombre, cargo y marca de tiempo, con hash SHA-256 | Funcional. |
-| Repertorio, setlists, análisis de audio, estudio y stems | Funcional. |
+| Repertorio, setlists, análisis de audio, estudio y stems (Iris) | Funcional. |
+| Atril (Jamify): acordes detectados del audio con tiempos, letra transcrita de la voz y sincronizada con los acordes | Funcional. Es automático: se revisa de oído. |
 | Calendario, ensayos y Tour Manager | Funcional. |
 | EPK público, fans con consentimiento RGPD y QR | Funcional. |
 | Reels, redes y publicación programada | Funcional. |
@@ -392,7 +406,7 @@ El mapa detallado está en [AGENTS.md §7](./AGENTS.md). El backlog de producto,
 ### Construido pero a medias
 
 - **Facturación con Stripe:** el flujo existe y tiene tests, pero está desactivado a propósito y hay arreglos pendientes (idempotencia, cancelación al cambiar de plan, descuento de créditos en servidor) que hay que cerrar **antes** de reactivarlo. Detalle en [BACKLOG.md](./BACKLOG.md).
-- **Datos de bandas concretas en el código** (textos de ejemplo y la regla «evento sin banda = banda por defecto»): limpiado; queda solo el caso especial de la cuenta de Brais Moure (ver BACKLOG.md).
+- **Datos de bandas concretas en el código:** limpiado. Ninguna banda ni cuenta tiene trato especial ([ADR 0027](./docs/adr/0027-ninguna-banda-privilegiada.md)).
 - **Diseño:** el sistema Espectro está aplicado en bloque; faltan primitivas (`Tabs`, `IconButton`) y envolver en portal unos 35 modales que se recortan en móvil.
 
 ### Solo especificado (aún no se ha escrito código)
@@ -401,7 +415,7 @@ El mapa detallado está en [AGENTS.md §7](./AGENTS.md). El backlog de producto,
 - **BandSplit / TourCount:** reparto de gastos de gira y de local, con OCR y voz ([`splitband`](./docs/planes/splitband.md)).
 - **Modelo económico de IA** con texto en uso razonable y cupos de estudio ([`plan_gestion_tokens_ia`](./docs/planes/plan_gestion_tokens_ia.md)).
 - **Crecimiento:** automatización de redes con ManyChat, directorio SEO de salas por ciudad y herramientas gancho públicas.
-- **Modo escenario sin conexión**, subida de vídeos de fans por QR y análisis de acordes a partir del audio real.
+- **Modo escenario sin conexión** y subida de vídeos de fans por QR.
 
 ### Riesgos antes de abrirlo a usuarios reales
 
@@ -428,7 +442,7 @@ La versión sigue [SemVer](https://semver.org/lang/es/) (`MAYOR.MENOR.PARCHE`) y
 
 Al llegar commits a `main`, release-please abre un PR «release X.Y.Z» con el `CHANGELOG.md` y la versión nuevas. Al fusionarlo se crean el tag y la Release de GitHub. Los commits sin prefijo se rechazan en local (Husky) y en los PR (CI), porque no podrían contar para la versión.
 
-La versión se muestra en `/api/health` y se envía a Sentry como `release`, así que cada error se asocia a la versión que lo produjo. La versión base es `2.0.0`. Detalle de las reglas: [AGENTS.md §7.6](./AGENTS.md) y [CHANGELOG.md](./CHANGELOG.md).
+La versión se muestra en `/api/health` y se envía a Sentry como `release`, así que cada error se asocia a la versión que lo produjo. Detalle de las reglas: [AGENTS.md §7](./AGENTS.md) y [CHANGELOG.md](./CHANGELOG.md).
 
 ## Licencia
 
