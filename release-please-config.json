@@ -22,12 +22,13 @@
         },
         {
           "type": "refactor",
-          "section": "Refactorización"
+          "section": "Refactorización",
+          "hidden": true
         },
         {
           "type": "docs",
           "section": "Documentación",
-          "hidden": false
+          "hidden": true
         },
         {
           "type": "test",
