@@ -21,11 +21,11 @@ Cuerpo del Atril: cifrado, estructura, diagramas y panel de ideas según la pest
 - [[src_components_atril_AtrilCompases|src/components/atril/AtrilCompases.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_atril_AtrilContext|src/components/atril/AtrilContext.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_atril_chordSheetRender|src/components/atril/chordSheetRender.tsx]] *(Layer: #frontend, Domain: #repertoire)*
-- [[src_components_atril_hooks_useVistaAtril|src/components/atril/hooks/useVistaAtril.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_DrawerDiagramas|src/components/chords/DrawerDiagramas.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_PanelArmonia|src/components/chords/PanelArmonia.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_ProfesorIA|src/components/chords/ProfesorIA.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_SelectorArmonia|src/components/chords/SelectorArmonia.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_chords_useVistaAcordes|src/components/chords/useVistaAcordes.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_utils_instrumentoProfesor|src/utils/instrumentoProfesor.ts]] *(Layer: #service, Domain: #system)*
 

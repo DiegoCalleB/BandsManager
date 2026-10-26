@@ -12,7 +12,7 @@ import { SelectorArmonia } from "../chords/SelectorArmonia";
 import { Button,Input,LinkButton,Textarea } from "../ui";
 import { AtrilCompases,SelectorVistaAtril } from "./AtrilCompases";
 import { useAtril } from "./AtrilContext";
-import { useVistaAtril } from "./hooks/useVistaAtril";
+import { useVistaAtril } from "../chords/useVistaAcordes";
 import { renderFormattedChordSheet } from "./chordSheetRender";
 
 /**

@@ -8,7 +8,7 @@ import { construirCuadricula } from "../../utils/cuadriculaCompases";
 import { letraPorCompas } from "../../utils/vistaCompases";
 import { VistaCompases } from "../chords/VistaCompases";
 import { useAtril } from "./AtrilContext";
-import type { VistaAtril } from "./hooks/useVistaAtril";
+import type { VistaAtril } from "../chords/useVistaAcordes";
 
 /**
  * Selector «Cifrado · Compases» de la pestaña de letra y acordes.
