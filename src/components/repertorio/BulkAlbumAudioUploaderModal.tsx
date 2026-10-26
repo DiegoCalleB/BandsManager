@@ -4,6 +4,7 @@ import { Song, ThemeColors } from "../../types";
 import { ModalPortal } from "../common/ModalPortal";
 import { uploadFileToServer } from "../../utils/audioStorage";
 import { formatSecondsToMmSs } from "../../utils/repertorioUtils";
+import { mejorCancionParaArchivo } from "../../utils/emparejarAudiosDisco";
 import { apiFetch } from "../../utils/api";
 import { analizarAcordesDelAudio } from "../../utils/analisisAcordesCliente";
 import { IconButton, Input, Select } from '../ui';
@@ -163,42 +164,6 @@ export function BulkAlbumAudioUploaderModal({
     };
   };
 
-  // Smart Matching algorithm: finds the best song for a given audio file when matching existing songs
-  const findBestMatchingSong = (
-    fileName: string,
-    songs: Song[],
-    alreadyAssignedSongIds: Set<string>,
-  ): string | null => {
-    const cleanName = fileName.toLowerCase().replace(/\.[^/.]+$/, "");
-
-    // 1. Try track number regex match: e.g."01 - Song","1. Song","track 02","01_Song"
-    const numMatch =
-      cleanName.match(/^(?:track\s*[-_]?)?0?(\d+)/i) ||
-      cleanName.match(/(?:[-_]|\s)0?(\d+)$/);
-    if (numMatch && numMatch[1]) {
-      const trackNum = parseInt(numMatch[1], 10);
-      const songByTrack = songs.find(
-        (s, idx) =>
-          !alreadyAssignedSongIds.has(s.id) &&
-          (s.ordenAlbum === trackNum || idx + 1 === trackNum),
-      );
-      if (songByTrack) return songByTrack.id;
-    }
-
-    // 2. Try exact/contains title match
-    for (const s of songs) {
-      if (alreadyAssignedSongIds.has(s.id)) continue;
-      const sTitle = s.titulo.toLowerCase().trim();
-      if (cleanName.includes(sTitle) || sTitle.includes(cleanName)) {
-        return s.id;
-      }
-    }
-
-    // 3. Default: first unassigned song in order
-    const nextUnassigned = songs.find((s) => !alreadyAssignedSongIds.has(s.id));
-    return nextUnassigned ? nextUnassigned.id : null;
-  };
-
   const handleCoverSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -265,7 +230,7 @@ export function BulkAlbumAudioUploaderModal({
 
       let matchedSongId: string | null = null;
       if (!isCreatingBrandNewAlbum) {
-        matchedSongId = findBestMatchingSong(
+        matchedSongId = mejorCancionParaArchivo(
           file.name,
           albumSongs,
           assignedSet,
@@ -343,17 +308,6 @@ export function BulkAlbumAudioUploaderModal({
       return;
     }
 
-    if (!isCreatingBrandNewAlbum) {
-      const validMatches = items.filter((it) => it.matchedSongId !== null);
-      if (validMatches.length === 0) {
-        setFeedbackMsg({
-          type: "error",
-          text: "Debes emparejar al menos un archivo de audio con una canción existente.",
-        });
-        return;
-      }
-    }
-
     setIsUploading(true);
     stopPreview();
     setFeedbackMsg(null);
@@ -376,6 +330,8 @@ export function BulkAlbumAudioUploaderModal({
     albumSongs.forEach((s) => updatedSongsMap.set(s.id, s));
 
     const newlyCreatedSongs: Song[] = [];
+    // Las canciones nuevas de un disco que ya existe van detrás de la última pista, sin repetir número.
+    const ultimaPista = Math.max(0, ...albumSongs.map((s) => s.ordenAlbum || 0));
     let successCount = 0;
 
     for (let i = 0; i < items.length; i++) {
@@ -415,7 +371,7 @@ export function BulkAlbumAudioUploaderModal({
             artista: bandName || "Tu Banda",
             album: finalAlbumTitle,
             albumDisco: finalAlbumTitle,
-            ordenAlbum: item.trackNumber || i + 1,
+            ordenAlbum: isCreatingBrandNewAlbum ? item.trackNumber || i + 1 : ultimaPista + newlyCreatedSongs.length + 1,
             duracion: newDurationFormatted,
             duracionSegundos: item.durationSeconds,
             duracionMinutos: newDurationMins,
@@ -850,10 +806,10 @@ export function BulkAlbumAudioUploaderModal({
                             }
                             wrapperClassName="w-full"
                           >
-                            <option value="">-- No asignar a ninguna --</option>
+                            <option value="">➕ Crear como canción nueva</option>
                             {albumSongs.map((s, sIdx) => (
                               <option key={s.id} value={s.id}>
-                                Pista {s.ordenAlbum || sIdx + 1}: {s.titulo} (
+                                Reemplaza el audio de la pista {s.ordenAlbum || sIdx + 1}: {s.titulo} (
                                 {s.duracion || "3:30"})
                               </option>
                             ))}

@@ -558,6 +558,7 @@ _Sin dependencias salientes directas._
 - [[src_utils_cuadriculaCompases|src/utils/cuadriculaCompases.ts]] *(from #service)*
 - [[src_utils_duplicateLeads|src/utils/duplicateLeads.ts]] *(from #service)*
 - [[src_utils_emailFormatter|src/utils/emailFormatter.ts]] *(from #service)*
+- [[src_utils_emparejarAudiosDisco|src/utils/emparejarAudiosDisco.ts]] *(from #service)*
 - [[src_utils_energyPacingUtils|src/utils/energyPacingUtils.ts]] *(from #service)*
 - [[src_utils_epkTraducciones|src/utils/epkTraducciones.ts]] *(from #service)*
 - [[src_utils_epkUtils|src/utils/epkUtils.ts]] *(from #service)*
@@ -650,6 +651,7 @@ _Sin dependencias salientes directas._
 - `src/utils/__tests__/calendarConflicts.test.ts`
 - `src/utils/__tests__/campaignMatch.test.ts`
 - `src/utils/__tests__/duplicateLeads.test.ts`
+- `src/utils/__tests__/emparejarAudiosDisco.test.ts`
 - `src/utils/__tests__/energyPacingUtils.test.ts`
 - `src/utils/__tests__/epkTraducciones.test.ts`
 - `src/utils/__tests__/epkUtils.test.ts`
