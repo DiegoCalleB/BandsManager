@@ -8,8 +8,7 @@
 El código de este repositorio se publica bajo **GNU AGPL-3.0-only**
 (ver [`LICENSE`](./LICENSE) y [`NOTICE`](./NOTICE)).
 
-- Puedes usar, estudiar, modificar y alojar el código, incluso con fines
-  comerciales, **si cumples la AGPL**: si ofreces el software como servicio en
+- Puedes usar, estudiar, modificar y alojar el código, **si cumples la AGPL**: si ofreces el software como servicio en
   red, debes publicar bajo AGPL todo el código fuente de tu versión modificada.
 - Quien no pueda o no quiera cumplir la AGPL puede solicitar una **licencia
   comercial** (ver [`COMMERCIAL-LICENSE.md`](./COMMERCIAL-LICENSE.md)).
