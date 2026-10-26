@@ -26,4 +26,24 @@ describe('regalo de pegatinas: una sola cifra por plan', () => {
     expect(planes).toContain(`"${PEGATINAS_POR_PLAN.de_gira.cantidad} pegatinas de tu banda gratis"`);
     expect(planes).toContain(`"${PEGATINAS_POR_PLAN.cabeza_de_cartel.cantidad} pegatinas + entrega prioritaria"`);
   });
+
+  it('todo lo que promete pegatinas dice que es con el plan anual', () => {
+    for (const plan of ['de_gira', 'cabeza_de_cartel'] as const) {
+      expect(PLANS[plan].stickerGift!.description).toMatch(/anual/);
+      expect(PLANS[plan].features.join(' ')).toMatch(/plan anual/);
+    }
+    expect(leer('components/band_switcher/PlanCardDeGira.tsx')).toMatch(/pegatinas gratis con el plan anual/);
+    expect(leer('components/band_switcher/PlanCardCabezaDeCartel.tsx')).toMatch(/Express con el plan anual/);
+    expect(leer('components/Planes.tsx')).toMatch(/gratis con tu suscripción anual/);
+  });
+});
+
+describe('créditos de IA: la pantalla Planes dice lo que da el servidor', () => {
+  it('cada plan enseña los mismos créditos que su definición (PLANS)', () => {
+    const planes = leer('components/Planes.tsx');
+    for (const plan of ['ensayo', 'local', 'de_gira', 'cabeza_de_cartel'] as const) {
+      const n = PLANS[plan].credits.match(/[\d.]+/)![0];
+      expect(planes, `créditos de ${plan}`).toContain(`${n} créditos IA / mes`);
+    }
+  });
 });

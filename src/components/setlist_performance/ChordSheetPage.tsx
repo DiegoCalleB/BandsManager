@@ -5,6 +5,7 @@ Play,
 RotateCcw
 } from "lucide-react";
 import React from "react";
+import { FitToScreenPre } from "./FitToScreenPre";
 import {
 ChordSection
 } from "../../utils/chordUtils";
@@ -35,7 +36,7 @@ export const ChordSheetPage: React.FC<{
   showDetails: boolean;
   onToggleDetails: () => void;
   glareMode: boolean;
-  teleprompterMode: "sections" | "scroll";
+  teleprompterMode: "full" | "sections" | "scroll";
   onToggleTeleprompterMode: () => void;
   isTeleprompterPlaying: boolean;
   onToggleTeleprompterPlay: () => void;
@@ -187,20 +188,24 @@ export const ChordSheetPage: React.FC<{
             type="button"
             onClick={onToggleTeleprompterMode}
             className={`px-2.5 py-1 text-xs font-sans font-bold rounded-[var(--r-pill)] transition flex items-center gap-1.5 cursor-pointer ${
-              teleprompterMode === "scroll"
+              teleprompterMode !== "full"
                 ? "bg-[var(--acc)]/20  text-[var(--ink)]"
                 : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]"
             }`}
             title={
-              teleprompterMode === "scroll"
-                ? "Cambiar a modo pedal por secciones"
-                : "Cambiar a modo teleprompter scroll continuo"
+              teleprompterMode === "full"
+                ? "Ahora: canción completa. Pulsa para ir por secciones con pedal"
+                : teleprompterMode === "sections"
+                  ? "Ahora: por secciones. Pulsa para teleprompter con scroll continuo"
+                  : "Ahora: teleprompter. Pulsa para ver la canción completa"
             }
           >
             <span>
-              {teleprompterMode === "scroll"
-                ? "Teleprompter Auto"
-                : "Modo Secciones"}
+              {teleprompterMode === "full"
+                ? "Canción completa"
+                : teleprompterMode === "sections"
+                  ? "Modo Secciones"
+                  : "Teleprompter Auto"}
             </span>
           </button>
         </div>
@@ -323,7 +328,7 @@ export const ChordSheetPage: React.FC<{
             </pre>
           </div>
         </div>
-      ) : hasMultipleSections ? (
+      ) : teleprompterMode === "sections" && hasMultipleSections ? (
         // NAVEGACIÓN POR SECCIONES (PEDAL / TAP)
         <div className="flex-1 flex flex-col overflow-hidden">
           <div
@@ -374,14 +379,11 @@ export const ChordSheetPage: React.FC<{
           </div>
         </div>
       ) : (
-        // Sin encabezados de sección detectados: se muestra todo el cifrado de una vez, con scroll manual
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
-          <pre
-            className={`max-w-4xl mx-auto font-sans whitespace-pre-wrap leading-relaxed break-words ${fontSizeClass} ${chordTextClass}`}
-          >
-            {chords}
-          </pre>
-        </div>
+        // Canción completa: todo el cifrado de una vez, encogido hasta que quepa en pantalla
+        <FitToScreenPre
+          text={chords}
+          className={`max-w-4xl mx-auto font-sans whitespace-pre-wrap leading-relaxed break-words ${fontSizeClass} ${chordTextClass}`}
+        />
       )}
     </div>
   );

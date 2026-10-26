@@ -35,6 +35,7 @@ Caché de separación de stems (`song_stems_cache`) en memoria y persistente, co
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/db/__tests__/stemsCacheDegradada.test.ts`
 - `server/routes/__tests__/roformerStems.test.ts`
 - `server/services/__tests__/stemWebhookAndLocks.test.ts`
 - `server/services/__tests__/stemsReintento.test.ts`

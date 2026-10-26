@@ -19,7 +19,7 @@
 
 import ffmpegStatic from "ffmpeg-static";
 import { ejecutar } from "./youtubeSource.js";
-import { type PuntoEnergia } from "./audioEnergy.js";
+import { DB_SILENCIO, type PuntoEnergia } from "./audioEnergy.js";
 import { interesMedio } from "./senalesPublico.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
@@ -118,6 +118,8 @@ export interface VentanaViral {
   dinamismo: number;
   /** 0-100: cuánto vuelve a ver la gente este tramo (heatmap/comentarios de YouTube). Ausente si no hay datos. */
   publico?: number;
+  /** 0-100: cuánto se parece el tramo a otros del vídeo (estribillo). Ausente si no se usa. */
+  repeticion?: number;
   /** 0-100: combinación pesada de las señales, según el tipo de contenido. */
   score: number;
   /** Por qué ha puntuado así, en texto, para el prompt y para la interfaz. */
@@ -161,6 +163,51 @@ export interface OpcionesViral {
   separacionMinima?: number;
   /** Interés del público por segundo (0-100) y cuánto debe pesar. Solo en vídeos de música. */
   interes?: { curva: number[]; peso: number };
+  /** Premia los tramos cuya forma de volumen se repite en el vídeo (el estribillo). Experimental: se activa tras medirlo en el banco. */
+  usarRepeticion?: boolean;
+}
+
+/** Peso de la repetición en la puntuación cuando está activada. */
+export const PESO_REPETICION = 0.15;
+/** Más largo que esto, comparar cada tramo con todos los demás sale caro: no se calcula. */
+const MAX_SEG_REPETICION = 1200;
+
+/**
+ * Por cada inicio, cuánto se parece su contorno de volumen al de otro tramo del mismo vídeo que
+ * no se solape (correlación de Pearson, 0-100). Un estribillo suena parecido cada vez que sale.
+ * Devuelve null si el vídeo es demasiado largo o no hay forma que comparar.
+ */
+export function repeticionPorInicio(curva: PuntoEnergia[], dur: number, inicios: number[]): Map<number, number> | null {
+  const ultimo = curva.length ? Math.max(...curva.map((p) => p.t)) : 0;
+  if (ultimo > MAX_SEG_REPETICION) return null;
+  const seg: number[] = [];
+  for (let t = 0; t <= ultimo; t++) seg.push(mediaEnRango(curva, t, t + 1) ?? DB_SILENCIO);
+  const vec = (s: number): number[] | null => {
+    const w = seg.slice(s, s + dur);
+    if (w.length < dur) return null;
+    const m = w.reduce((a, b) => a + b, 0) / dur;
+    const c = w.map((x) => x - m);
+    const sd = Math.sqrt(c.reduce((a, b) => a + b * b, 0) / dur);
+    return sd < 1 ? null : c.map((x) => x / sd);
+  };
+  const cache = new Map<number, number[] | null>();
+  const v = (s: number) => (cache.has(s) ? cache.get(s)! : (cache.set(s, vec(s)), cache.get(s)!));
+  const res = new Map<number, number>();
+  for (const s of inicios) {
+    const a = v(s);
+    if (!a) { res.set(s, 0); continue; }
+    let mejor = 0;
+    for (let o = 0; o + dur <= seg.length; o += 2) {
+      if (Math.abs(o - s) < dur) continue;
+      const b = v(o);
+      if (!b) continue;
+      let dot = 0;
+      for (let i = 0; i < dur; i++) dot += a[i] * b[i];
+      mejor = Math.max(mejor, dot / dur);
+    }
+    res.set(s, Math.round(Math.max(0, Math.min(1, mejor)) * 100));
+  }
+  return res;
 }
 
 /** Tope del peso del público: el audio y el arranque siguen mandando aunque llegue un valor absurdo. */
@@ -217,6 +264,7 @@ export function ventanasMasVirales(
     crudas.push({ start: inicio, end: inicio + dur, dbMedio, subida, cortesPorSeg: cortesDentro / dur });
   }
   if (!crudas.length) return [];
+  const repeticiones = opciones.usarRepeticion ? repeticionPorInicio(ordenada, dur, crudas.map((c) => c.start)) : null;
 
   // Normalizamos cada señal contra el propio vídeo: lo que importa es el contraste interno,
   // no los valores absolutos (una grabación de móvil y una de mesa no son comparables).
@@ -236,12 +284,15 @@ export function ventanasMasVirales(
     // para no penalizar a todos los tramos por igual, que sería ruido puro.
     const dinamismo = maxDens > 0 ? normalizar(c.cortesPorSeg, 0, maxDens) : 50;
 
+    const rep = repeticiones?.get(c.start);
     const base = energia * pesos.energia + arranque * pesos.arranque + dinamismo * pesos.dinamismo;
-    if (pesoPublico === 0) return { start: c.start, end: c.end, energia, arranque, dinamismo, score: Math.round(base), motivo: "" };
+    const conRep = rep === undefined ? base : base * (1 - PESO_REPETICION) + rep * PESO_REPETICION;
+    const extra = rep === undefined ? {} : { repeticion: rep };
+    if (pesoPublico === 0) return { start: c.start, end: c.end, energia, arranque, dinamismo, ...extra, score: Math.round(conRep), motivo: "" };
 
     const publico = interesMedio(opciones.interes!.curva, c.start, c.end);
-    const score = Math.round(base * (1 - pesoPublico) + publico * pesoPublico);
-    return { start: c.start, end: c.end, energia, arranque, dinamismo, publico, score, motivo: "" };
+    const score = Math.round(conRep * (1 - pesoPublico) + publico * pesoPublico);
+    return { start: c.start, end: c.end, energia, arranque, dinamismo, publico, ...extra, score, motivo: "" };
   });
 
   // Nos quedamos con las mejores sin solaparse.
@@ -253,7 +304,41 @@ export function ventanasMasVirales(
     elegidas.push({ ...v, motivo: describirVentana(v, cortes.length > 0) });
     if (elegidas.length >= maxVentanas) break;
   }
-  return elegidas.sort((a, b) => a.start - b.start);
+  return elegidas.map((v) => encajarEnElGolpe(v, ordenada, ultimo)).sort((a, b) => a.start - b.start);
+}
+
+/** Cuánto se puede mover el inicio de un corte para caer en el golpe, en segundos. */
+const RADIO_GOLPE = 3;
+/** Mejora mínima (dB) del salto de volumen para que merezca la pena mover el corte. */
+const MEJORA_MINIMA_DB = 4;
+
+/**
+ * Los 2 primeros segundos deciden si alguien se queda, así que el corte debe empezar EN el golpe
+ * (la entrada de la banda, el bombo) y no medio segundo antes, en el silencio o la cola anterior.
+ * Mira unos segundos a cada lado y mueve el inicio solo si el salto de volumen mejora de verdad.
+ */
+export function encajarEnElGolpe(v: VentanaViral, curva: PuntoEnergia[], ultimo: number): VentanaViral {
+  const dur = v.end - v.start;
+  const salto = (t: number) => {
+    const despues = mediaEnRango(curva, t, t + 1);
+    const antes = mediaEnRango(curva, Math.max(0, t - 1.5), t);
+    return despues !== null && antes !== null ? despues - antes : null;
+  };
+  const actual = salto(v.start) ?? 0;
+  let mejorT = v.start;
+  let mejorSalto = actual;
+  for (let d = -RADIO_GOLPE; d <= RADIO_GOLPE; d += 0.5) {
+    const t = v.start + d;
+    if (t < 0 || t + dur > ultimo + 1) continue;
+    const sl = salto(t);
+    if (sl !== null && sl > mejorSalto) {
+      mejorSalto = sl;
+      mejorT = t;
+    }
+  }
+  if (mejorT === v.start || mejorSalto - actual < MEJORA_MINIMA_DB) return v;
+  const mov = Number((mejorT - v.start).toFixed(1));
+  return { ...v, start: mejorT, end: mejorT + dur, motivo: `${v.motivo}; inicio ajustado ${Math.abs(mov)} s ${mov < 0 ? "antes" : "después"} para caer en el golpe` };
 }
 
 /** Explica en una frase por qué este tramo ha puntuado así. */
@@ -264,6 +349,8 @@ export function describirVentana(v: VentanaViral, haySenalVisual: boolean): stri
 
   if (v.energia >= 75) partes.push("de los tramos donde más suena la banda");
   else if (v.energia <= 30) partes.push("tramo sonoramente flojo");
+
+  if (v.repeticion !== undefined && v.repeticion >= 80) partes.push("suena parecido a otro tramo del vídeo (probable estribillo)");
 
   if (v.publico !== undefined && v.publico >= 70) partes.push("de los tramos que más vuelve a ver la gente");
 

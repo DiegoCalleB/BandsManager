@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { consultaOverpassSalas, REGIONES_OSM, salaDesdeOsm, salasDeOsm, type ElementoOsm } from '../osmSalas.js';
+import { consultaOverpassSalas, consultaOverpassSoloSalas, contarDescartes, REGIONES_OSM, salaDesdeOsm, salasDeOsm, type ElementoOsm } from '../osmSalas.js';
 import { regionDeCodigoPostal } from '../regionesEspana.js';
 
 const el = (tags: Record<string, string>, id = 1): ElementoOsm => ({ type: 'node', id, tags });
@@ -66,10 +66,19 @@ describe('salasDeOsm', () => {
 
 describe('consultaOverpassSalas', () => {
   const q = consultaOverpassSalas('ES-MD');
-  it('pide solo salas de música en directo y locales de conciertos, sin bares, cafés, restaurantes ni discotecas', () => {
+  it('pide salas de música en directo y locales de conciertos; discotecas, teatros, bares, pubs y cafés solo si declaran música en directo; nunca restaurantes', () => {
     expect(q).toContain('"amenity"="music_venue"');
     expect(q).toContain('"amenity"="concert_hall"');
-    expect(q).not.toMatch(/nightclub|live_music|bar|pub|cafe|restaurant/);
+    expect(q).toContain('"amenity"~"^(nightclub|theatre|arts_centre)$"]["live_music"="yes"');
+    expect(q).toContain('"amenity"~"^(bar|pub|cafe)$"]["live_music"="yes"');
+    expect(q).not.toMatch(/"amenity"="(bar|pub|cafe)"/);
+    expect(q).not.toContain('restaurant');
+  });
+
+  it('un bar, pub o café con música en directo entra como «bar»', () => {
+    for (const amenity of ['bar', 'pub', 'cafe']) {
+      expect(salaDesdeOsm({ type: 'node', id: 1, tags: { amenity, live_music: 'yes', name: 'El Sótano', 'addr:city': 'Madrid' } })?.tipo).toBe('bar');
+    }
   });
   it('limita la consulta a una comunidad por su código ISO y neutraliza cualquier otro texto', () => {
     expect(q).toContain('"ISO3166-2"="ES-MD"');
@@ -78,3 +87,85 @@ describe('consultaOverpassSalas', () => {
   });
 });
 
+describe('contarDescartes', () => {
+  it('cuenta los elementos sin nombre y los que tienen nombre pero no ciudad, y no los que entran', () => {
+    const r = contarDescartes([
+      el({ amenity: 'music_venue' }, 1),
+      el({ amenity: 'music_venue', name: 'Sala Sin Ciudad' }, 2),
+      el({ amenity: 'music_venue', name: 'Sala Con Ciudad', 'addr:city': 'Soria' }, 3),
+      el({ amenity: 'concert_hall', name: 'Otra Sin Ciudad' }, 4),
+    ]);
+    expect(r).toEqual({ sinNombre: 1, sinCiudad: 2 });
+  });
+});
+
+
+describe('conCiudadResuelta', () => {
+  const nucleo = (name: string, lat: number, lon: number, place = 'town'): ElementoOsm => ({ type: 'node', id: Math.round(lat * 1000), lat, lon, tags: { place, name } });
+  const sala = (name: string, lat: number, lon: number, extra: Record<string, string> = {}): ElementoOsm => ({ type: 'node', id: Math.round(lon * 1000), lat, lon, tags: { amenity: 'music_venue', name, ...extra } });
+
+  it('le pone a una sala sin ciudad el núcleo de población más cercano', async () => {
+    const { conCiudadResuelta, salasDeOsm } = await import('../osmSalas.js');
+    const { salas, porCercania } = conCiudadResuelta([nucleo('Lugo', 43.01, -7.55, 'city'), nucleo('Monforte', 42.52, -7.51), sala('Sala Vella', 43.0, -7.56)]);
+    expect(porCercania).toBe(1);
+    expect(salasDeOsm(salas)[0]).toMatchObject({ nombre: 'Sala Vella', ciudad: 'Lugo' });
+  });
+
+  it('los núcleos de población no se cuelan como salas', async () => {
+    const { conCiudadResuelta } = await import('../osmSalas.js');
+    const { salas } = conCiudadResuelta([nucleo('Lugo', 43.01, -7.55, 'city'), sala('Sala Vella', 43.0, -7.56)]);
+    expect(salas).toHaveLength(1);
+    expect(salas[0].tags?.name).toBe('Sala Vella');
+  });
+
+  it('respeta la ciudad que OSM ya trae', async () => {
+    const { conCiudadResuelta } = await import('../osmSalas.js');
+    const { salas, porCercania } = conCiudadResuelta([nucleo('Lugo', 43.01, -7.55, 'city'), sala('Sala Vella', 43.0, -7.56, { 'addr:city': 'Outeiro' })]);
+    expect(porCercania).toBe(0);
+    expect(salas[0].tags?.['addr:city']).toBe('Outeiro');
+  });
+
+  it('si el núcleo está a más de 12 km, no inventa la ciudad', async () => {
+    const { conCiudadResuelta } = await import('../osmSalas.js');
+    const { salas, porCercania } = conCiudadResuelta([nucleo('Lugo', 43.01, -7.55, 'city'), sala('Sala Lejana', 42.0, -7.0)]);
+    expect(porCercania).toBe(0);
+    expect(salas[0].tags?.['addr:city']).toBeUndefined();
+  });
+
+  it('usa el punto central de una vía o relación', async () => {
+    const { conCiudadResuelta } = await import('../osmSalas.js');
+    const via: ElementoOsm = { type: 'way', id: 9, center: { lat: 43.0, lon: -7.56 }, tags: { amenity: 'concert_hall', name: 'Auditorio' } };
+    expect(conCiudadResuelta([nucleo('Lugo', 43.01, -7.55, 'city'), via]).salas[0].tags?.['addr:city']).toBe('Lugo');
+  });
+
+  it('sin coordenadas no puede resolver nada y la deja como estaba', async () => {
+    const { conCiudadResuelta } = await import('../osmSalas.js');
+    const sinPunto: ElementoOsm = { type: 'node', id: 1, tags: { amenity: 'music_venue', name: 'Sin punto' } };
+    expect(conCiudadResuelta([nucleo('Lugo', 43.01, -7.55, 'city'), sinPunto]).porCercania).toBe(0);
+  });
+
+  it('la consulta pide también los núcleos de población', async () => {
+    const { consultaOverpassSalas } = await import('../osmSalas.js');
+    const q = consultaOverpassSalas('ES-GA');
+    expect(q).toContain('"place"~"^(city|town|village)$"');
+    expect(q.match(/out tags center;/g)).toHaveLength(2);
+  });
+});
+
+describe('consultaOverpassSoloSalas', () => {
+  it('pide las mismas salas sin los núcleos de población y con su región saneada', () => {
+    const q = consultaOverpassSoloSalas('ES-GA');
+    expect(q).toContain('"ISO3166-2"="ES-GA"');
+    expect(q).toContain('"amenity"="music_venue"');
+    expect(q).not.toContain('place');
+    expect(q.match(/out tags center;/g)).toHaveLength(1);
+    expect(consultaOverpassSoloSalas('ES-GA"; out;')).not.toContain('out;"');
+  });
+});
+
+describe('salaDesdeOsm: recintos masivos', () => {
+  it('no recoge un pabellón de estadio', () => {
+    expect(salaDesdeOsm({ type: 'node', id: 1, tags: { amenity: 'concert_hall', name: 'Movistar Arena', 'addr:city': 'Madrid', capacity: '17000' } })).toBeNull();
+    expect(salaDesdeOsm({ type: 'node', id: 2, tags: { amenity: 'concert_hall', name: 'Sala Pequeña', 'addr:city': 'Madrid', capacity: '300' } })).not.toBeNull();
+  });
+});

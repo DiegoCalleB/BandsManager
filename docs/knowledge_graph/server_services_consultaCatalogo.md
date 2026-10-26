@@ -20,6 +20,7 @@ Consulta, sugerencias y alta desde el catálogo compartido de salas (fases 2 y 3
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_services_catalogoSalas|server/services/catalogoSalas.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_consultaCatalogo|server/utils/consultaCatalogo.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_estadoNegocio|server/utils/estadoNegocio.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_salaCatalogo|server/utils/salaCatalogo.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_sugerenciasCatalogo|server/utils/sugerenciasCatalogo.ts]] *(Layer: #service, Domain: #system)*
 

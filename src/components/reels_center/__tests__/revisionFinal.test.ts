@@ -1,10 +1,12 @@
 import { describe, it, expect } from "vitest";
 import { prepararRevisionFinal, type EntradaRevision } from "../revisionFinal";
 
+// Siempre en el futuro: con una fecha fija el test se rompía solo al pasar esa hora (la validación rechaza horas pasadas).
+const MANANA = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 const CLIP = "https://x.supabase.co/storage/v1/object/public/clips/band/c.mp4";
 const base = (p: Partial<EntradaRevision> = {}): EntradaRevision => ({
   copy: "Nuevo directo 🎸 #rock",
-  fecha: "2026-10-20",
+  fecha: MANANA,
   hora: "20:30",
   plataforma: "Instagram",
   videoUrl: CLIP,

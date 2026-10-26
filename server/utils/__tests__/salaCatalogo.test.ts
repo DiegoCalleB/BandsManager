@@ -10,6 +10,7 @@ import {
   idDeSala,
   instagramDeLaSala,
   instagramPublico,
+  esRecintoMasivo,
   motivoExclusion,
   senalesDeLeads,
   siguienteVerificadaEn,
@@ -21,6 +22,8 @@ import {
 } from '../salaCatalogo.js';
 
 const AHORA = new Date('2026-10-18T12:00:00Z');
+/** Estos tests prueban el cálculo con interacciones de cualquier fecha; el corte de «interacciones reales» tiene sus propios tests. */
+const DESDE_SIEMPRE = new Date(0);
 const hace = (dias: number) => new Date(AHORA.getTime() - dias * 86_400_000).toISOString();
 const lead = (c: Partial<LeadParaCatalogo> = {}): LeadParaCatalogo => ({ id: 'l1', band_id: 'b1', nombre_sala: 'Sala Apolo', ciudad: 'Barcelona', ...c });
 const senales = (c: Partial<SenalesFiabilidad> = {}): SenalesFiabilidad => ({
@@ -224,28 +227,30 @@ describe('senalesDeLeads', () => {
 
   it('cuenta bandas, no leads, y una respuesta implica que el correo llegó', () => {
     const s = senalesDeLeads(
-      [lead({ id: '1', band_id: 'a', estado: 'negociando' }), lead({ id: '2', band_id: 'a', estado: 'interesado' }), lead({ id: '3', band_id: 'b', estado: 'enviado', fecha_envio: hace(10) })],
+      [lead({ id: '1', band_id: 'a', estado: 'negociando', fecha_envio: hace(12) }), lead({ id: '2', band_id: 'a', estado: 'interesado', fecha_envio: hace(12) }), lead({ id: '3', band_id: 'b', estado: 'enviado', fecha_envio: hace(10) })],
       AHORA,
       consolidada,
+      null,
+      DESDE_SIEMPRE,
     );
     expect(s).toMatchObject({ bandasConRespuesta: 1, bandasConEntrega: 2, rebotes: 0 });
   });
 
   it('un envío reciente (menos de 3 días) aún no cuenta como entregado: puede rebotar', () => {
-    expect(senalesDeLeads([lead({ fecha_envio: hace(1), estado: 'enviado' })], AHORA, consolidada).bandasConEntrega).toBe(0);
+    expect(senalesDeLeads([lead({ fecha_envio: hace(1), estado: 'enviado' })], AHORA, consolidada, null, DESDE_SIEMPRE).bandasConEntrega).toBe(0);
   });
 
   it('un rebote cuenta aparte y anula la entrega de ese lead', () => {
-    const s = senalesDeLeads([lead({ fecha_envio: hace(20), rebotado: true, estado: 'enviado' })], AHORA, consolidada);
+    const s = senalesDeLeads([lead({ fecha_envio: hace(20), rebotado: true, estado: 'enviado' })], AHORA, consolidada, null, DESDE_SIEMPRE);
     expect(s).toMatchObject({ rebotes: 1, bandasConEntrega: 0 });
   });
 
   it('un lead nuevo sin contactar no aporta nada', () => {
-    expect(senalesDeLeads([lead({ estado: 'nuevo' })], AHORA, consolidada)).toMatchObject({ bandasConEntrega: 0, bandasConRespuesta: 0, rebotes: 0 });
+    expect(senalesDeLeads([lead({ estado: 'nuevo' })], AHORA, consolidada, null, DESDE_SIEMPRE)).toMatchObject({ bandasConEntrega: 0, bandasConRespuesta: 0, rebotes: 0 });
   });
 
   it('fechas inválidas no rompen nada', () => {
-    expect(senalesDeLeads([lead({ fecha_envio: 'ayer', estado: 'enviado' })], AHORA, consolidada).bandasConEntrega).toBe(0);
+    expect(senalesDeLeads([lead({ fecha_envio: 'ayer', estado: 'enviado' })], AHORA, consolidada, null, DESDE_SIEMPRE).bandasConEntrega).toBe(0);
   });
 });
 
@@ -339,5 +344,64 @@ describe('motivoExclusion: las agencias no son salas', () => {
   it('un nombre que solo se parece no se excluye', () => {
     expect(motivoExclusion(lead({ nombre_sala: 'Sala Mánager' }))).toBeNull();
     expect(motivoExclusion(lead({ nombre_sala: 'Booking Club' }))).toBeNull();
+  });
+});
+
+describe('recintos masivos: no son para una banda que busca salas', () => {
+  it('el WiZink Center y similares quedan fuera aunque el lead traiga un aforo absurdo', () => {
+    for (const nombre of ['WiZink Center', 'WiZink Center (La Sala / Pista)', 'Movistar Arena', 'Palau Sant Jordi']) {
+      expect(motivoExclusion(lead({ nombre_sala: nombre, ciudad: 'Madrid', aforo: 11 })), nombre).toBe('tipo');
+    }
+  });
+  it('por encima de 5.000 de aforo, una sala o discoteca queda fuera; un festival no se mide por aforo', () => {
+    expect(esRecintoMasivo({ nombre: 'Gran Pabellón', aforo: 5001, tipo: 'sala' })).toBe(true);
+    expect(esRecintoMasivo({ nombre: 'Gran Pabellón', aforo: 5000, tipo: 'sala' })).toBe(false);
+    expect(esRecintoMasivo({ nombre: 'Viña Rock', aforo: 50000, tipo: 'festival' })).toBe(false);
+  });
+  it('no confunde salas con nombre parecido ni deja fuera las que no declaran aforo', () => {
+    expect(esRecintoMasivo({ nombre: 'Sala Movistar Arenal', aforo: 300 })).toBe(false);
+    expect(esRecintoMasivo({ nombre: 'Razzmatazz', aforo: null })).toBe(false);
+    expect(esRecintoMasivo({ nombre: 'Razzmatazz (Sala 2)', aforo: 2000 })).toBe(false);
+  });
+});
+
+describe('fusionarConExistente: la sincronización no borra lo que aportaron otras fuentes', () => {
+  const nuevo = (extra: Partial<CamposPublicosSala> = {}): CamposPublicosSala => ({
+    clave: 'nc:alfa|madrid', place_id: null, nombre: 'Alfa', ciudad: 'Madrid', region: null, direccion: null, tipo: 'sala', aforo: null, genero: null,
+    website: null, instagram: null, email_contacto: null, telefono: null, ...extra,
+  });
+
+  it('en una sala sin verificar, lo que traen los leads manda y lo que no traen se conserva', () => {
+    const r = fusionarConExistente({ nivel: 'sin_verificar', aforo: 300, website: 'https://osm.example/', genero: 'Rock' }, nuevo({ website: 'https://banda.example/' }));
+    expect(r).toMatchObject({ website: 'https://banda.example/', aforo: 300, genero: 'Rock' });
+  });
+
+  it('en una verificada, lo que ya tiene manda', () => {
+    const r = fusionarConExistente({ nivel: 'verificada', website: 'https://verificada.example/' }, nuevo({ website: 'https://banda.example/', aforo: 100 }));
+    expect(r).toMatchObject({ website: 'https://verificada.example/', aforo: 100 });
+  });
+
+  it('sin nada en ninguno, queda vacío', () => {
+    expect(fusionarConExistente({ nivel: 'probable' }, nuevo()).aforo).toBeNull();
+  });
+});
+
+describe('senalesDeLeads: solo cuentan las interacciones reales', () => {
+  const lead = (extra: Partial<LeadParaCatalogo>): LeadParaCatalogo => ({ id: 'l', band_id: 'a', nombre_sala: 'Sala', ...extra });
+  const consolidada = { clave: 'nc:sala|madrid', place_id: null, nombre: 'Sala', ciudad: 'Madrid', region: null, direccion: null, tipo: 'sala', aforo: null, genero: null, website: null, instagram: null, email_contacto: null, telefono: null } as CamposPublicosSala;
+  const AHORA_REAL = new Date('2026-11-05T12:00:00Z');
+
+  it('lo anterior a la fecha de corte (datos ficticios o de pruebas) no cuenta: ni respuesta, ni entrega, ni rebote', () => {
+    const s = senalesDeLeads([lead({ estado: 'interesado', fecha_envio: '2026-10-01T10:00:00Z' }), lead({ id: 'm', band_id: 'b', estado: 'enviado', fecha_envio: '2026-10-05T10:00:00Z', rebotado: true })], AHORA_REAL, consolidada);
+    expect(s).toMatchObject({ bandasConRespuesta: 0, bandasConEntrega: 0, rebotes: 0 });
+  });
+
+  it('una respuesta sin fecha de envío (un estado puesto a mano) tampoco cuenta', () => {
+    expect(senalesDeLeads([lead({ estado: 'interesado' })], AHORA_REAL, consolidada)).toMatchObject({ bandasConRespuesta: 0, bandasConEntrega: 0 });
+  });
+
+  it('lo posterior a la fecha de corte sí cuenta', () => {
+    const s = senalesDeLeads([lead({ estado: 'interesado', fecha_envio: '2026-10-25T10:00:00Z' }), lead({ id: 'm', band_id: 'b', estado: 'enviado', fecha_envio: '2026-10-25T10:00:00Z', rebotado: true })], AHORA_REAL, consolidada);
+    expect(s).toMatchObject({ bandasConRespuesta: 1, bandasConEntrega: 1, rebotes: 1 });
   });
 });

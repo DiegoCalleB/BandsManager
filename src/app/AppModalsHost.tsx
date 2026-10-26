@@ -88,7 +88,7 @@ export function AppModalsHost() {
           {/* Floating Chatbot Overlay */}
           {currentView !== "chat" && !isPromoPlan && (
             <div
-              className={`fixed bottom-36 lg:bottom-20 right-4 sm:right-6 w-[92vw] sm:w-[420px] max-w-[440px] h-[580px] max-h-[80vh] z-[9999] transition-ui duration-200 ${
+              className={`fixed inset-0 h-[100dvh] w-full bg-[var(--surface)] pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] sm:inset-auto sm:bottom-36 lg:bottom-20 sm:right-6 sm:h-[580px] sm:max-h-[80vh] sm:w-[420px] sm:max-w-[440px] sm:bg-transparent sm:p-0 z-[9999] transition-ui duration-200 ${
                 isFloatingChatOpen
                   ? "block animate-in slide-in-from-bottom-5"
                   : "hidden"
@@ -123,12 +123,12 @@ export function AppModalsHost() {
             <button
               id="floating-chat-trigger-btn"
               onClick={() => setIsFloatingChatOpen(!isFloatingChatOpen)}
-              className={`fixed bottom-20 lg:bottom-5 right-5 z-40 px-3.5 py-2.5 rounded-full flex items-center gap-2.5 transition-ui duration-300 cursor-pointer active:scale-[0.97] group shadow-lg ${
+              className={`fixed bottom-20 lg:bottom-5 right-5 z-40 px-3.5 py-2.5 rounded-full flex items-center gap-2.5 transition-ui duration-300 cursor-pointer active:scale-[0.97] group ${
                 isFloatingChatOpen
-                  ? "bg-[var(--alert-soft)] text-[var(--alert)] border border-[var(--alert)]/30 hover:bg-[var(--alert)]/20"
+                  ? "max-sm:hidden bg-[var(--alert-soft)] text-[var(--alert)] hover:bg-[var(--alert)]/20"
                   : isChatLoading
-                    ? "bg-[var(--surface)] text-[var(--acc-ink)] border border-[var(--acc)]/30 animate-pulse"
-                    : "bg-[var(--surface)] text-[var(--ink)] border border-[var(--hair)] hover:border-[var(--acc)]/40 hover:bg-[var(--sunken)]"
+                    ? "bg-[var(--acc-soft)] text-[var(--acc-ink)] animate-pulse" /* cargando */
+                    : "bg-[var(--acc-soft)] text-[var(--acc-ink)] hover:brightness-95"
               }`}
               title={
                 isChatLoading

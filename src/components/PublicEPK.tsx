@@ -436,7 +436,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div className="flex items-center gap-2">
                 <FileText className="w-4 h-4 text-[var(--acc)]" />
-                <p className="text-xs font-bold font-mono uppercase tracking-wider">
+                <p className="text-xs font-bold font-mono">
                   Rider Técnico y Dossier PDF
                 </p>
               </div>
@@ -459,7 +459,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
               )}
             </div>
             {config.riderTecnico && (
-              <p className="text-xs opacity-90 whitespace-pre-line font-mono bg-[var(--sunken)]/60 p-3 rounded-[var(--r-s)] border border-[var(--hair)]/40">
+              <p className="text-xs opacity-90 whitespace-pre-line font-mono bg-[var(--sunken)]/60 p-3 rounded-[var(--r-s)]">
                 {config.riderTecnico}
               </p>
             )}

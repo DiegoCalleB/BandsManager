@@ -30,6 +30,7 @@ Lista de novedades de la landing (doble confirmación). Todo aquí es puro, sin 
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/routes/__tests__/interesadosConfirmar.test.ts`
 - `server/utils/__tests__/interesados.test.ts`
 
 ---

@@ -1,4 +1,4 @@
-/** De las filas de Supabase (`festivales`, `festival_ediciones`, `festival_convocatorias`) a la ficha pública. Puro y probado. */
+/** De las filas de Supabase (`catalogo_festivales`, `catalogo_festival_ediciones`, `catalogo_festival_convocatorias`) a la ficha pública. Puro y probado. */
 import type { EstiloFestival, Festival, Tri } from './tipos.js';
 
 export interface FilaFestival {
@@ -40,7 +40,7 @@ export interface FilaConvocatoria {
   resumen_en: string | null;
 }
 
-const ESTILOS_VALIDOS = new Set<string>([
+export const ESTILOS_VALIDOS = new Set<string>([
   'rock', 'indie', 'pop', 'metal', 'punk', 'electronica', 'folk', 'jazz', 'blues', 'flamenco',
   'urbano', 'reggaeton', 'reggae', 'mundo', 'clasica', 'antigua', 'experimental', 'emergente',
 ]);

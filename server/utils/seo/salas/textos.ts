@@ -15,6 +15,7 @@ export const TEXTOS_SALAS = {
     sinSalas: 'Todavía no hay salas publicadas en esta zona.',
     metodo: 'Cómo se elabora',
     metodoTexto: 'Cada sala sale del catálogo de BandManager y solo se publica si está abierta, se puede situar en España y tiene web oficial. El aforo solo se muestra cuando la sala está contrastada. No publicamos contactos: las bandas con cuenta pueden añadir la sala a su agenda y trabajar con ella desde allí.',
+    actualizado: 'Datos actualizados el',
     osm: 'Parte de los datos procede de',
     osmNombre: '© colaboradores de OpenStreetMap',
     dondeEsta: 'Dónde', direccion: 'Dirección', aforo: 'Aforo', estilo: 'Estilo', web: 'Web oficial', instagram: 'Instagram', verWeb: 'Ver la web oficial',
@@ -37,6 +38,17 @@ export const TEXTOS_SALAS = {
     h1Ciudad: (ciudad: string) => `Salas de conciertos en ${ciudad}`,
     tituloSala: (n: string, ciudad: string) => `${n} (${ciudad}): sala de conciertos | BandManager`,
     descripcionSala: (n: string, ciudad: string) => `${n}, sala de conciertos en ${ciudad}. Web oficial y datos básicos para bandas.`,
+    faq: 'Preguntas frecuentes',
+    preguntasIndice: (n: number, nCom: number) => [
+      { q: '¿Cuántas salas de conciertos hay en este directorio?', a: `Ahora mismo ${n} salas de ${nCom} comunidades, todas abiertas y con web oficial. El directorio crece a medida que se comprueban más salas.` },
+      { q: '¿Cómo escribo a una sala para tocar?', a: 'Entra en su web oficial, mira qué programan y cómo piden material, y escribe un correo corto con tu EPK y un enlace a tu música. En la guía «Cómo escribir a una sala» está el paso a paso y una plantilla.' },
+      { q: '¿Por qué no aparece el contacto de la sala?', a: 'No publicamos contactos: se consultan en la web oficial de cada sala. Las bandas con cuenta pueden añadir la sala a su agenda y llevar el seguimiento desde allí.' },
+      { q: '¿Qué salas se publican?', a: 'Solo salas abiertas, que se pueden situar en España y que tienen web oficial. Una sala de estadio o pabellón para artistas muy grandes no entra.' },
+    ],
+    preguntasZona: (zona: string, n: number, ciudades: string[]) => [
+      { q: `¿Cuántas salas de conciertos hay en ${zona}?`, a: `El directorio recoge ${n} ${n === 1 ? 'sala' : 'salas'} en ${zona}${ciudades.length > 1 ? `, repartidas en ${ciudades.length} ciudades como ${ciudades.slice(0, 3).join(', ')}` : ''}. Son las que están abiertas y tienen web oficial.` },
+      { q: `¿Cómo consigo tocar en una sala de ${zona}?`, a: 'Revisa en la web de la sala qué estilos programa y cómo pide material, y escribe con un correo corto, tu EPK y un enlace a tu música. Prueba con varias salas a la vez y haz seguimiento a los pocos días.' },
+    ],
   },
   en: {
     directorios: 'Directories',
@@ -51,6 +63,7 @@ export const TEXTOS_SALAS = {
     sinSalas: 'There are no published venues in this area yet.',
     metodo: 'How it is put together',
     metodoTexto: 'Every venue comes from the BandManager catalog and is only published if it is open, can be placed in Spain and has an official website. Capacity is only shown once a venue has been cross-checked. We publish no contact details: bands with an account can add the venue to their agenda and work with it from there.',
+    actualizado: 'Data updated on',
     osm: 'Some of the data comes from',
     osmNombre: '© OpenStreetMap contributors',
     dondeEsta: 'Where', direccion: 'Address', aforo: 'Capacity', estilo: 'Style', web: 'Official website', instagram: 'Instagram', verWeb: 'Visit the official website',
@@ -73,5 +86,16 @@ export const TEXTOS_SALAS = {
     h1Ciudad: (ciudad: string) => `Live music venues in ${ciudad}`,
     tituloSala: (n: string, ciudad: string) => `${n} (${ciudad}): live music venue | BandManager`,
     descripcionSala: (n: string, ciudad: string) => `${n}, a live music venue in ${ciudad}, Spain. Official website and basic details for bands.`,
+    faq: 'Frequently asked questions',
+    preguntasIndice: (n: number, nCom: number) => [
+      { q: 'How many live music venues are in this directory?', a: `Right now ${n} venues across ${nCom} regions, all open and with an official website. The directory grows as more venues are checked.` },
+      { q: 'How do I write to a venue to play there?', a: 'Open its official website, see what it books and how it asks for material, then send a short email with your press kit and a link to your music. The guide “How to email a venue” has the step-by-step and a template.' },
+      { q: 'Why is the venue’s contact missing?', a: 'We publish no contact details: check each venue’s official website. Bands with an account can add the venue to their agenda and track outreach from there.' },
+      { q: 'Which venues are listed?', a: 'Only open venues that can be placed in Spain and have an official website. Stadium and arena venues for very large acts are not included.' },
+    ],
+    preguntasZona: (zona: string, n: number, ciudades: string[]) => [
+      { q: `How many live music venues are there in ${zona}?`, a: `The directory lists ${n} ${n === 1 ? 'venue' : 'venues'} in ${zona}${ciudades.length > 1 ? `, spread across ${ciudades.length} cities such as ${ciudades.slice(0, 3).join(', ')}` : ''}. These are the ones that are open and have an official website.` },
+      { q: `How do I get a gig at a venue in ${zona}?`, a: 'Check the venue’s website for the styles it books and how it asks for material, then write a short email with your press kit and a link to your music. Try several venues at once and follow up after a few days.' },
+    ],
   },
 } as const satisfies Record<IdiomaSeo, Record<string, unknown>>;

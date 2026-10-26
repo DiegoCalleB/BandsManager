@@ -42,7 +42,7 @@ export interface AtrilEditingParams {
  * @param params Estado y callbacks del contenedor ({@link AtrilEditingParams}).
  * @returns Estado derivado y handlers expuestos al contenedor.
  */
-export function useAtrilEditing({ song, analisisAcordes, onUpdateSong, setAiSuccessMsg, setIsGeneratingAi, setOidoOculto, setCifradoTexto, setShowAnalisisAcordes, cifradoTexto, guiaSustituto, setActiveTab }: AtrilEditingParams) {
+export function useAtrilEditing({ song, analisisAcordes, onUpdateSong, setAiSuccessMsg, setIsGeneratingAi, setOidoOculto, setCifradoTexto, cifradoTexto, guiaSustituto, setActiveTab }: AtrilEditingParams) {
   // Corrección manual de los acordes detectados: se refleja al instante y se revierte si el
   // servidor la rechaza, para que lo que se ve sea lo que hay guardado.
   // Pide la explicación del profesor al servidor (que valida y guarda) y la refleja en la canción.
@@ -108,7 +108,6 @@ export function useAtrilEditing({ song, analisisAcordes, onUpdateSong, setAiSucc
         guiaSustituto: data.song?.guiaSustituto ?? song.guiaSustituto,
         ...(data.analisis ? { analisisAcordes: data.analisis } : {}),
       });
-      if (data.analisis) setShowAnalisisAcordes(true);
 
       // El mensaje dice de dónde sale la letra y cuánto fiarse: nadie debe dar por buena una
       // transcripción automática sin revisarla de oído.

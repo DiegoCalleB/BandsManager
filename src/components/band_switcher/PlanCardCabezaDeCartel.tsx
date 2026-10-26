@@ -37,7 +37,7 @@ export function PlanCardCabezaDeCartel() {
                       </div>
 
                       <div className="mb-3 px-2.5 py-1 rounded-[var(--r-m)] bg-[var(--ok-soft)] flex items-center gap-1.5 text-micro font-sans text-[var(--ink-2)] font-bold">
-                        <span>300 pegatinas + Express</span>
+                        <span>300 pegatinas + Express con el plan anual</span>
                       </div>
 
                       <ul className="space-y-2 mb-5 flex-1 text-xs">

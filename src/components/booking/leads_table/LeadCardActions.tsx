@@ -64,7 +64,7 @@ export function LeadCardActions({ hasMovil, phoneForWhatsApp, rawMovil, lead, ph
       className="p-2 sm:px-2.5 sm:py-1.5 bg-pink-500/10 hover:bg-pink-500/20 text-pink-600 dark:text-pink-400 border border-pink-500/20 rounded-[var(--r-m)] font-bold text-xs flex items-center gap-1.5 transition-ui cursor-pointer shadow-xs min-h-[38px] group"
       title={`Abrir Instagram (${lead.instagram})`}
       >
-      <Instagram className="w-4 h-4 text-pink-500 group-hover:scale-110 transition-transform" />
+      <Instagram className="w-4 h-4 text-pink-500" />
       <span className="hidden xs:inline text-xs">
         Instagram
       </span>

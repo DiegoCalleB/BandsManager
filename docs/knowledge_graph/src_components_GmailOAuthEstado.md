@@ -18,6 +18,7 @@ Exporta: GmailOAuthEstado.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_ui_Button|src/components/ui/Button.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_services_tiposApi|src/services/tiposApi.ts]] *(Layer: #service, Domain: #system)*
 
 ---

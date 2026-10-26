@@ -3,7 +3,7 @@
   "private": true,
   "license": "AGPL-3.0-only",
   "author": "Diego de la Calle Berzal",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
@@ -21,6 +21,7 @@
     "spotify:bandas": "tsx scripts/arreglar-spotify-bandas.ts",
     "probar:senales": "tsx scripts/probar-senales.ts",
     "probar:publicacion": "tsx scripts/probar-publicacion.ts",
+    "banco:deteccion": "tsx scripts/banco-deteccion.ts",
     "test:coverage": "vitest run --coverage",
     "coverage:ratchet": "node scripts/subir-umbral-cobertura.mjs",
     "test:e2e": "playwright test",

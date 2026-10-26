@@ -37,3 +37,12 @@ describe('PentagramaFicha: colorines y escala', () => {
     expect(container.querySelector('.nota-paso')).toBeNull();
   });
 });
+
+describe('Tira del Atril: sin pentagrama (el sitio es para la letra)', () => {
+  it('conPentagrama=false no ofrece el botón ni pinta el pentagrama aunque «Siempre» esté activo', async () => {
+    const { CajaAcorde } = await import('../components/chords/AcordeEnInstrumento');
+    const { container, queryByText } = render(<CajaAcorde chord="C" vista="bajo" nivel="normal" conPentagrama={false} />);
+    expect(queryByText(/pentagrama/i)).toBeNull();
+    expect(container.querySelector('[aria-label^="Pentagrama"]')).toBeNull();
+  });
+});

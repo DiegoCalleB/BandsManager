@@ -57,7 +57,7 @@ export const PLANES_B2C: PlanLanding[] = [
   {
     id: 'de_gira',
     nombre: 'De Gira',
-    regalo: t('150 pegatinas de tu banda de regalo', '150 stickers of your band as a gift'),
+    regalo: t('150 pegatinas de tu banda con el plan anual', '150 stickers of your band with the annual plan'),
     precio: t('29 € / mes', '€29 / month'),
     sub: t('o 278 € al año', 'or €278 a year'),
     para: t('Para bandas de carretera y booking intensivo.', 'For touring bands and intensive booking.'),
@@ -72,7 +72,7 @@ export const PLANES_B2C: PlanLanding[] = [
   {
     id: 'cabeza_de_cartel',
     nombre: 'Cabeza de Cartel',
-    regalo: t('300 pegatinas de regalo y envío exprés', '300 stickers as a gift and express shipping'),
+    regalo: t('300 pegatinas y envío exprés con el plan anual', '300 stickers and express shipping with the annual plan'),
     precio: t('79 € / mes', '€79 / month'),
     sub: t('o 758 € al año', 'or €758 a year'),
     para: t('Para artistas consolidados y mánagers.', 'For established artists and managers.'),

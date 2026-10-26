@@ -7,6 +7,7 @@ import { AgentAutonomySettingsModal } from "../../dashboard/AgentAutonomySetting
 import { AddLeadModal } from "../AddLeadModal";
 import { AgentQueueMonitorModal } from "../AgentQueueMonitorModal";
 import { BulkProgressModal } from "../BulkProgressModal";
+import { CatalogoSalasHost } from "../catalogo/CatalogoSalasHost";
 import { CRMContactEnricherModal } from "../CRMContactEnricherModal";
 import { ExcelImportModal } from "../ExcelImportModal";
 import { ExportLeadsModal } from "../ExportLeadsModal";
@@ -15,6 +16,7 @@ import { LeadDuplicatesModal } from "../LeadDuplicatesModal";
 import { NegotiationSimulationModal } from "../NegotiationSimulationModal";
 import { RoadbookContractModal } from "../RoadbookContractModal";
 import { useBookingCrm } from "./BookingCrmContext";
+import { leadVacio } from "./leadVacio";
 import { isStitchLight } from "./crmTheme";
 
 /**
@@ -66,6 +68,13 @@ export function CrmModalsHost() {
       onSubmit={handleAddNewLeadSubmit}
       onModalScrape={handleModalScrape}
       onLeadLogoUpload={(file) => handleLeadLogoUpload(file, false)}
+      />
+
+      <CatalogoSalasHost
+      onFaltaSala={() => {
+        setNewLeadData(leadVacio('escenarios'));
+        setIsAddingLeadModalOpen(true);
+      }}
       />
 
       <GooglePlacesExplorerModal

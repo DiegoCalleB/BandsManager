@@ -1,3 +1,4 @@
+import { dibujarMarca, buildMarcaSvg, MARCA_ANCHO } from './qrMarca';
 import { buildQrSvg } from './qrSvg';
 
 /**
@@ -15,6 +16,8 @@ export interface QrExportOptions {
   url?: string;
   logoUrl?: string;
   ctaText?: string;
+  /** Firma «Hecho con bandmanager.io» bajo el QR (por defecto sí). */
+  marca?: boolean;
   resolution?: '4k' | '2k' | 'print300dpi' | 'standard';
   template?: 'qr-only' | 'poster-a4' | 'badge-card';
 }
@@ -48,7 +51,7 @@ export async function downloadQrAsSvg(options: QrExportOptions): Promise<void> {
   if (!options.url) throw new Error('Falta la URL del código QR');
 
   const logoDataUrl = options.logoUrl ? await urlToDataUrl(options.logoUrl) : '';
-  const svgString = buildQrSvg(options.url, 100, 'H', logoDataUrl || undefined);
+  const svgString = buildQrSvg(options.url, 100, 'H', logoDataUrl || undefined, options.marca !== false);
   const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
   const url = URL.createObjectURL(blob);
 
@@ -206,10 +209,8 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
       ctx.fillText(options.url, canvas.width / 2, curY);
     }
 
-    // Pie de marca
-    ctx.fillStyle = '#94a3b8';
-    ctx.font = '500 28px system-ui, -apple-system, sans-serif';
-    ctx.fillText('BandManager • Gestión y Captura de Fans para Músicos', canvas.width / 2, canvas.height - 100);
+    // Firma de BandManager bajo la URL, discreta
+    if (options.marca !== false) await dibujarMarca(ctx, canvas.width / 2, curY + 90, qrSize * MARCA_ANCHO);
   } else if (template === 'badge-card') {
     // Tarjeta Cuadrada para Merchandising / Pegatina 2400 x 2400 px
     canvas.width = 2400;
@@ -262,6 +263,7 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
     ctx.fillStyle = '#475569';
     ctx.font = 'bold 36px monospace';
     ctx.fillText(options.url || '', canvas.width / 2, curY);
+    if (options.marca !== false) await dibujarMarca(ctx, canvas.width / 2, curY + 70, qrSize * MARCA_ANCHO);
   } else {
     // QR-ONLY (3000 x 3000 px Ultra HD limpio para maquetadores)
     const dim = 3000;
@@ -293,6 +295,7 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
 
       ctx.drawImage(logoImg, cx, cy, centerLogoSize, centerLogoSize);
     }
+    if (options.marca !== false) await dibujarMarca(ctx, dim / 2, dim - pad + 20, qrSize * MARCA_ANCHO);
   }
 
   URL.revokeObjectURL(svgUrl);
@@ -329,6 +332,7 @@ export function printHighQualityFlyer(options: {
   logoUrl?: string;
   ctaText?: string;
   subtitle?: string;
+  marca?: boolean;
 }) {
   // El QR de pantalla puede ser claro sobre fondo oscuro (el fondo no se imprime): en papel, negro sobre blanco.
   const svgString = buildQrSvg(options.url || '', 74, 'H');
@@ -484,11 +488,11 @@ export function printHighQualityFlyer(options: {
  overflow-wrap: anywhere;
  word-break: break-all;
  }
- .footer-note {
- margin-top: 20px;
- font-size: 11px;
- color: #94a3b8;
- font-weight: 500;
+ .marca svg {
+ width: 160px;
+ height: auto;
+ display: block;
+ margin: 22px auto 0 auto;
  }
  @media print {
  body {
@@ -530,7 +534,7 @@ export function printHighQualityFlyer(options: {
           </div>
 
           <div class="url-box">${url}</div>
-          <div class="footer-note">BandManager • Diseñado para imprimir en A4 y colocar en barras, taquilla, roll-ups o escenario</div>
+          ${options.marca === false ? '' : `<div class="marca">${buildMarcaSvg()}</div>`}
         </div>
         <script>
           window.addEventListener('load', () => setTimeout(() => window.print(), 200));

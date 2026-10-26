@@ -16,7 +16,6 @@ export interface buildHeaderFooterParams {
   customLogoUrl: string;
   bandName: string;
   activeSetlist: Setlist;
-  showAppBranding: boolean;
 }
 
 /**
@@ -24,7 +23,7 @@ export interface buildHeaderFooterParams {
  * @param params Estado y callbacks del contenedor ({@link buildHeaderFooterParams}).
  * @returns Estado derivado y handlers expuestos al contenedor.
  */
-export function buildHeaderFooter({ isCentered, showBandLogo, customLogoUrl, bandName, activeSetlist, showAppBranding }: buildHeaderFooterParams) {
+export function buildHeaderFooter({ isCentered, showBandLogo, customLogoUrl, bandName, activeSetlist }: buildHeaderFooterParams) {
   // Header/footer de cada hoja: independientes de cuántas páginas necesite el repertorio en
   // sí (el footer sí necesita el número de página final, se rellena tras calcular el plan).
   const buildHeaderHtml = (
@@ -56,26 +55,14 @@ export function buildHeaderFooter({ isCentered, showBandLogo, customLogoUrl, ban
       </div>
     `;
 
-  // El mismo SVG en todas las hojas: se genera una vez por documento.
-  const footerQrSvg = showAppBranding ? buildQrSvg("https://bandmanager.io/?utm_source=setlist&utm_medium=qr", 11) : "";
+  // Pie obligatorio en todas las hojas (QR + marca): el QR a 8 mm mantiene el pie en una sola línea fina.
+  const footerQrSvg = buildQrSvg("https://bandmanager.io/?utm_source=setlist&utm_medium=qr", 8);
 
   const buildFooterHtml = (
     member: BandMemberOption,
     pageNum: number,
     totalPages: number,
-  ): string =>
-    showAppBranding && pageNum < totalPages
-      ? // Hojas intermedias: solo numeración, el QR y la marca van en la última hoja de cada copia.
-        `
-      <div class="page-footer ${isCentered ? "is-centered" : ""}">
-        <div class="footer-left"></div>
-        <div class="footer-right">
-          <span>Hoja ${pageNum} de ${totalPages} (${escapeHtml(member.name)})</span>
-        </div>
-      </div>
-    `
-      : showAppBranding
-      ? `
+  ): string => `
       <div class="page-footer ${isCentered ? "is-centered" : ""}">
         <div class="footer-left">
           <span class="footer-qr">${footerQrSvg}</span>
@@ -89,8 +76,7 @@ export function buildHeaderFooter({ isCentered, showBandLogo, customLogoUrl, ban
           <span>${new Date().toLocaleDateString("es-ES")}</span>
         </div>
       </div>
-    `
-      : "";
+    `;
 
   return { buildHeaderHtml, buildFooterHtml };
 }

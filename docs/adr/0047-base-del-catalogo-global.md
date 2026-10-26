@@ -1,5 +1,7 @@
 # ADR 0047: Preparar el catálogo de salas para ser global sin tocar lo que ya funciona
 
+> **Nota (ADR 0048):** la tabla `salas_catalogo` se llama ahora `catalogo_salas`; el renombrado que aquí se descartó se hizo después como refactor aparte.
+
 - **Estado:** Aceptada
 - **Fecha:** 2026-10-19
 - **Origen:** nueva
@@ -31,3 +33,12 @@ Una migración **solo aditiva** (`20261113_catalogo_global_base.sql`), sin cambi
 - Hoy no cambia nada visible: la web, los agentes y los leads funcionan igual. Lo comprueban `server/migrations/__tests__/catalogoGlobal.test.ts` y las auditorías de `server/audit`.
 - Los siguientes pasos van en PR aparte y con sus tests: rellenar `catalogo_sala_generos` desde el texto libre, una fuente de Wikidata que escriba solo en staging y promueva con la sincronización existente (`fuentes`), y que el envío consulte la supresión antes de mandar.
 - Para revertirlo basta con no usar las tablas: ningún código depende de ellas y `salas_catalogo` solo ha ganado columnas con valor por defecto o nulas.
+
+## Actualización: alineada con los estilos de festivales
+
+La primera versión llamaba `world` a lo que el directorio de festivales ya llamaba `mundo` y no tenía `antigua`,
+`experimental` ni `emergente`, que los 525 festivales cargados sí usan. `20261121_catalogo_generos_estilos_festival.sql`
+los añade y sustituye `world` por `mundo` (ninguna sala tenía géneros asignados, así que no se pierde nada).
+`emergente` no es un género sino el tipo de cartel, pero el directorio lo usa como estilo y la taxonomía lo acepta por
+compatibilidad. `server/migrations/__tests__/catalogoGenerosFestival.test.ts` falla si un estilo de `EstiloFestival`
+no existe en `catalogo_generos`.

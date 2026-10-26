@@ -2,7 +2,7 @@
  * Barra de controles: transposición, notación, audio, bucle, autoscroll y herramientas.
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
-import { Check,Copy,Edit3,FileText,GraduationCap,RotateCcw,UserCheck } from "lucide-react";
+import { Check,Copy,RotateCcw } from "lucide-react";
 import { ideasConFondo } from "../../utils/ideaDeAtril";
 import { cancionConIdeas,metaStemsDeCancion } from "../../utils/irisTracks";
 import { ControlAutoscroll } from "../chords/ControlAutoscroll";
@@ -24,43 +24,10 @@ import { useAtril } from "./AtrilContext";
  * @returns Sección de interfaz.
  */
 export function AtrilToolbar() {
-  const { activeTab, setActiveTab, audioUrl, handleRestartAudio, formatAudioTime, audioCurrentTime, audioDuration, handleSeekAudio, stems, song, iris, separarConIris, modoEscucha, setModoEscucha, miId, setMiPistaId, velocidad, setVelocidad, transpose, audioSigueTono, setAudioSigueTono, bucle, marcarBucle, limpiarBucle, tomas, tomaActivaId, setTomaActivaId, onUpdateSong, pistasSonando, ajustesPistas, setAjustesPistas, modo, grabacion, guardandoIdea, guardarIdea, setTranspose, autoScroll, metronomo, setMasControles, masControles, setNotation, notation, showChordDiagrams, setShowChordDiagrams, handleCopyChords, copiedText } = useAtril();
+  const { activeTab, audioUrl, handleRestartAudio, formatAudioTime, audioCurrentTime, audioDuration, handleSeekAudio, stems, song, iris, separarConIris, modoEscucha, setModoEscucha, miId, setMiPistaId, velocidad, setVelocidad, transpose, audioSigueTono, setAudioSigueTono, bucle, marcarBucle, limpiarBucle, tomas, tomaActivaId, setTomaActivaId, onUpdateSong, pistasSonando, ajustesPistas, setAjustesPistas, modo, grabacion, guardandoIdea, guardarIdea, setTranspose, autoScroll, metronomo, setMasControles, masControles, setNotation, notation, showChordDiagrams, setShowChordDiagrams, handleCopyChords, copiedText } = useAtril();
   return (
     <>
-      <div className="bg-[var(--surface)]/80 px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs font-sans shrink-0">
-        {/* TABS SELECTOR */}
-        <div className="flex items-center bg-[var(--sunken)] p-1 rounded-[var(--r-m)]">
-          <Button
-            variant={activeTab === "chords" ? "selected" : "ghost"}
-            size="xs"
-            type="button"
-            onClick={() => setActiveTab("chords")}
-            className="items-center gap-1.5"
-          >
-            <FileText className="w-3.5 h-3.5" />
-            <span>Letra y acordes</span>
-          </Button>
-
-          <Button
-            variant={activeTab === "armonia" ? "selected" : "ghost"}
-            size="xs"
-            type="button"
-            onClick={() => setActiveTab("armonia")}
-            className="items-center gap-1.5"
-            title="Tonalidad, modo, grados y qué tocar sobre cada acorde"
-          >
-            <GraduationCap className="w-3.5 h-3.5" />
-            <span>Armonía</span>
-          </Button>
-
-          {(activeTab === "substitute" || activeTab === "edit") && (
-            <Button variant="selected" size="xs" type="button" className="items-center gap-1.5">
-              {activeTab === "edit" ? <Edit3 className="w-3.5 h-3.5" /> : <UserCheck className="w-3.5 h-3.5" />}
-              <span>{activeTab === "edit" ? "Editar" : "Ficha sustituto urgente"}</span>
-            </Button>
-          )}
-        </div>
-
+      <div className="bg-[var(--surface)]/80 px-4 py-2.5 flex flex-wrap items-center justify-end gap-3 text-xs font-sans shrink-0">
         {/* INTERACTIVE CONTROLS (Only visible on chords tab) */}
         {activeTab === "chords" && (
           <div className="flex flex-wrap items-center gap-3">
@@ -117,8 +84,8 @@ export function AtrilToolbar() {
               />
             )}
 
-            {/* TRANSPOSITION CONTROL */}
-            <div className="flex items-center gap-1 bg-[var(--sunken)] px-2 py-1 rounded-[var(--r-m)]">
+            {/* TRANSPOSITION CONTROL (tras «Más»: el panel de arriba es sitio que le quitamos a la letra) */}
+            <div className={`${masControles ? 'flex' : 'hidden'} items-center gap-1 bg-[var(--sunken)] px-2 py-1 rounded-[var(--r-m)]`}>
               <span className="text-xs text-[var(--ink-2)] mr-1">
                 Tono:
               </span>
@@ -156,10 +123,13 @@ export function AtrilToolbar() {
               )}
             </div>
 
-            <div className={masControles ? 'contents' : 'hidden sm:contents'}>
+            <div className={masControles ? 'contents' : 'hidden'}>
               <ControlAutoscroll auto={autoScroll} />
               <ControlMetronomo metronomo={metronomo} />
             </div>
+
+            {/* La velocidad es lo que más se toca al practicar: siempre a la vista, no tras «Más». */}
+            {audioUrl && <ControlVelocidad velocidad={velocidad} onVelocidad={setVelocidad} />}
 
             <Button variant="neutral" size="xs" type="button" onClick={() => setMasControles((v) => !v)} aria-expanded={masControles}>
               {masControles ? 'Menos' : 'Más'}
@@ -178,7 +148,6 @@ export function AtrilToolbar() {
             )}
             {audioUrl && (
               <div className="flex flex-wrap items-center gap-2">
-                <ControlVelocidad velocidad={velocidad} onVelocidad={setVelocidad} />
                 <ControlTonoAudio transpose={transpose} sigue={audioSigueTono} onSigue={setAudioSigueTono} />
                 <ControlBucle bucle={bucle} onMarcar={marcarBucle} onLimpiar={limpiarBucle} />
               </div>

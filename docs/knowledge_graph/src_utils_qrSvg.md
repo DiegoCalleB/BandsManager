@@ -18,7 +18,7 @@ Exporta: buildQrSvg.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[src_utils_qrMarca|src/utils/qrMarca.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

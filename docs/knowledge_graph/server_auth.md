@@ -44,6 +44,7 @@ Exporta: EstadoDeSesion, ACTIVE_SESSIONS, hashPassword, verifyPassword, getSafeU
 ## 🧪 Tests que lo cubren
 - `server/__tests__/auth_bandas.test.ts`
 - `server/routes/__tests__/adminPassword.test.ts`
+- `server/routes/__tests__/loginBdCaida.test.ts`
 - `server/routes/__tests__/seguridadAutorizacion.test.ts`
 - `server/routes/__tests__/superficieUsersAiMusic.test.ts`
 - `server/routes/__tests__/usersCuentasSeguridad.test.ts`

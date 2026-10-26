@@ -8,13 +8,22 @@
  * Primera pasada unos minutos tras arrancar (los despliegues son frecuentes y un temporizador de 24 h nunca llegaría a
  * disparar) y después cada `CATALOGO_SYNC_MS` (24 h por defecto). `CATALOGO_SYNC=false` la apaga.
  */
-import { puertoCatalogoSupabase, puertoVerificacionSupabase } from "../db/salasCatalogo.js";
+import { puertoCatalogoSupabase, puertoEnriquecimientoWebSupabase, puertoGeolocalizacionSupabase, puertoVerificacionSupabase } from "../db/salasCatalogo.js";
 import { captureError } from "../utils/errorTracking.js";
 import { sincronizarCatalogo, type InformeCatalogo } from "./catalogoSalas.js";
 import { crearConsultaMaps } from "./consultaMapsSala.js";
+import { datosDeWebSala } from "../utils/datosDeWebSala.js";
+import { enriquecerSalasDesdeSuWeb } from "./enriquecerSalasDesdeSuWeb.js";
+import { buscarEnNominatim, geolocalizarSalas } from "./geolocalizarSalas.js";
+import { consultarWikidata, importarDeWikidata } from "./importarDeWikidata.js";
+import { descargarGencat, importarDeGencat } from "./importarDeGencat.js";
+import { importarSalasDeBandflow } from "./importarSalasBandflow.js";
+import { leerWebDeSala } from "./leerWebDeSala.js";
 import { descargarOsmSalas, importarSalasDeOsm } from "./importarSalasOsm.js";
 import { verificarSalasEnMaps } from "./verificarSalasEnMaps.js";
 
+/** Salas que se comprueban en Maps por pasada. Más que el mínimo del servicio mientras entran salas nuevas de otras fuentes; `CATALOGO_MAPS_POR_PASADA` lo ajusta. */
+const SALAS_MAPS_POR_PASADA = Number(process.env.CATALOGO_MAPS_POR_PASADA) || 100;
 const PERIODO_MS = Number(process.env.CATALOGO_SYNC_MS) || 24 * 60 * 60 * 1000;
 const RETRASO_INICIAL_MS = 5 * 60 * 1000;
 
@@ -22,6 +31,9 @@ let intervalo: ReturnType<typeof setInterval> | null = null;
 let primera: ReturnType<typeof setTimeout> | null = null;
 let enCurso = false;
 let importacion: ReturnType<typeof setTimeout> | null = null;
+let semilla: ReturnType<typeof setTimeout> | null = null;
+let wikidata: ReturnType<typeof setTimeout> | null = null;
+let gencat: ReturnType<typeof setTimeout> | null = null;
 
 /** Una pasada. Nunca lanza: un fallo se registra y la siguiente pasada lo reintenta. Devuelve null si falló o ya había una en curso. */
 export async function sincronizarCatalogoAhora(sincronizar: () => Promise<InformeCatalogo> = () => sincronizarCatalogo(puertoCatalogoSupabase)): Promise<InformeCatalogo | null> {
@@ -34,6 +46,8 @@ export async function sincronizarCatalogoAhora(sincronizar: () => Promise<Inform
         `${r.leadsEnlazados} leads enlazados. Verificadas ${r.porNivel.verificada}, probables ${r.porNivel.probable}.`,
     );
     await verificarEnMapsAhora();
+    await enriquecerDesdeLaWebAhora();
+    await geolocalizarAhora();
     return r;
   } catch (e) {
     console.warn("[Catálogo] La sincronización falló:", e instanceof Error ? e.message : e);
@@ -52,7 +66,7 @@ async function verificarEnMapsAhora(): Promise<void> {
   const clave = process.env.GOOGLE_PLACES_API_KEY;
   if (!clave || process.env.CATALOGO_VERIFICAR_MAPS === "false") return;
   try {
-    const r = await verificarSalasEnMaps({ puerto: puertoVerificacionSupabase, consultarMaps: crearConsultaMaps(clave) });
+    const r = await verificarSalasEnMaps({ puerto: puertoVerificacionSupabase, consultarMaps: crearConsultaMaps(clave), limite: SALAS_MAPS_POR_PASADA });
     if (r.revisadas + r.errores > 0) {
       console.log(
         `[Catálogo] Verificación en Maps: ${r.revisadas} revisadas (${r.operativas} abiertas, ${r.cerradasTemporal} cerradas temporalmente, ` +
@@ -72,12 +86,96 @@ async function verificarEnMapsAhora(): Promise<void> {
 export async function importarSalasOsmAhora(): Promise<boolean> {
   try {
     const r = await importarSalasDeOsm({ puerto: puertoCatalogoSupabase, descargar: descargarOsmSalas });
-    console.log(`[Catálogo] Importación OSM: ${r.salasEnOsm} salas en OSM, ${r.nuevas} nuevas, ${r.completadas} completadas, ${r.sinCambios} sin cambios.`);
+    console.log(`[Catálogo] Importación OSM: ${r.elementosLeidos} elementos leídos (${r.descartados.sinNombre} sin nombre, ${r.descartados.sinCiudad} sin ciudad), ${r.salasEnOsm} salas en OSM (${r.ciudadPorCercania} con la ciudad del núcleo más cercano), ${r.nuevas} nuevas, ${r.completadas} completadas, ${r.sinCambios} sin cambios, ${r.conCoordenadas} con su punto en el mapa.`);
     return true;
   } catch (e) {
     console.warn("[Catálogo] La importación de OSM falló:", e instanceof Error ? e.message : e);
     captureError(e, { fase: "importarSalasOsm" });
     return false;
+  }
+}
+
+/**
+ * Tras cada sincronización, completa unas pocas salas con lo que dice su propia web (Instagram, email de rol, teléfono fijo, género):
+ * las que más tiempo llevan sin revisarse. Solo rellena huecos. `CATALOGO_ENRIQUECER_WEB=false` la apaga. Nunca lanza.
+ */
+export async function enriquecerDesdeLaWebAhora(): Promise<void> {
+  if (process.env.CATALOGO_ENRIQUECER_WEB === "false") return;
+  try {
+    const r = await enriquecerSalasDesdeSuWeb({ puerto: puertoEnriquecimientoWebSupabase, leerWeb: leerWebDeSala, extraer: datosDeWebSala, pausaMs: 1000 });
+    if (r.revisadas > 0) {
+      const c = r.camposRellenados;
+      console.log(`[Catálogo] Enriquecimiento desde la web: ${r.revisadas} salas revisadas (${r.sinWeb} sin web legible), ${r.completadas} completadas (${c.instagram} Instagram, ${c.email_contacto} email, ${c.telefono} teléfono, ${c.genero} género, ${c.aforo} aforo).`);
+    }
+  } catch (e) {
+    console.warn("[Catálogo] El enriquecimiento desde la web falló:", e instanceof Error ? e.message : e);
+    captureError(e, { fase: "enriquecerSalasDesdeSuWeb" });
+  }
+}
+
+/**
+ * Tras cada sincronización, sitúa en el mapa unas pocas salas que no tienen coordenadas (con el geocodificador de OpenStreetMap,
+ * a una consulta por segundo). `CATALOGO_GEOLOCALIZAR=false` la apaga. Nunca lanza.
+ */
+export async function geolocalizarAhora(): Promise<void> {
+  if (process.env.CATALOGO_GEOLOCALIZAR === "false") return;
+  try {
+    const r = await geolocalizarSalas({ puerto: puertoGeolocalizacionSupabase, buscar: buscarEnNominatim });
+    if (r.revisadas + r.errores > 0) console.log(`[Catálogo] Geolocalización: ${r.revisadas} salas revisadas (${r.exactas} con su punto, ${r.deLaCiudad} con el de su ciudad, ${r.sinPunto} sin punto), ${r.errores} errores.`);
+  } catch (e) {
+    console.warn("[Catálogo] La geolocalización falló:", e instanceof Error ? e.message : e);
+    captureError(e, { fase: "geolocalizarSalas" });
+  }
+}
+
+/**
+ * Carga la semilla de Bandflow en el catálogo. Va con el código (no hay red) y solo añade lo que falta, así que repetirla en cada
+ * arranque es inofensiva. `CATALOGO_SEMILLA_BANDFLOW=false` la apaga.
+ */
+export async function importarSalasBandflowAhora(): Promise<void> {
+  try {
+    const r = await importarSalasDeBandflow({ puerto: puertoCatalogoSupabase });
+    if (r.nuevas + r.completadas > 0) console.log(`[Catálogo] Semilla Bandflow: ${r.salasEnSemilla} salas, ${r.nuevas} nuevas, ${r.completadas} completadas, ${r.sinCambios} sin cambios.`);
+  } catch (e) {
+    console.warn("[Catálogo] La semilla de Bandflow falló:", e instanceof Error ? e.message : e);
+    captureError(e, { fase: "importarSalasBandflow" });
+  }
+}
+
+/**
+ * Salas y festivales de Wikidata (CC0). `CATALOGO_IMPORTAR_WIKIDATA=true` escribe; `false` la apaga; sin definir solo SIMULA y
+ * dice en el log cuántas traería y algunos nombres, para comprobar la fuente antes de dejarla escribir. Nunca lanza.
+ */
+export async function importarDeWikidataAhora(): Promise<void> {
+  const modo = process.env.CATALOGO_IMPORTAR_WIKIDATA;
+  if (modo === "false") return;
+  const simulacion = modo !== "true";
+  try {
+    const r = await importarDeWikidata({ puerto: puertoCatalogoSupabase, consultar: consultarWikidata, simulacion });
+    console.log(
+      `[Catálogo] Wikidata${simulacion ? " (simulación, no escribe)" : ""}: ${r.porTipo.festival} festivales y ${r.porTipo.sala} salas, ` +
+        `${r.nuevas} nuevas, ${r.completadas} completadas, ${r.sinCambios} sin cambios, ${r.conCoordenadas} con su punto. Ejemplos: ${r.ejemplos.join("; ") || "ninguno"}.`,
+    );
+  } catch (e) {
+    console.warn("[Catálogo] La importación de Wikidata falló:", e instanceof Error ? e.message : e);
+    captureError(e, { fase: "importarDeWikidata" });
+  }
+}
+
+/**
+ * Salas de conciertos de Cataluña de los datos abiertos de la Generalitat (unas 50, con su punto exacto). Solo añade y rellena
+ * huecos, así que repetirla en cada arranque es inofensiva. `CATALOGO_IMPORTAR_GENCAT=false` la apaga. Nunca lanza.
+ */
+export async function importarDeGencatAhora(): Promise<void> {
+  if (process.env.CATALOGO_IMPORTAR_GENCAT === "false") return;
+  try {
+    const r = await importarDeGencat({ puerto: puertoCatalogoSupabase, descargar: descargarGencat });
+    if (r.nuevas + r.completadas + r.conCoordenadas > 0) {
+      console.log(`[Catálogo] Generalitat: ${r.fichas} salas, ${r.nuevas} nuevas, ${r.completadas} completadas, ${r.sinCambios} sin cambios, ${r.conCoordenadas} con su punto. Ejemplos: ${r.ejemplos.join("; ") || "ninguno"}.`);
+    }
+  } catch (e) {
+    console.warn("[Catálogo] La importación de la Generalitat falló:", e instanceof Error ? e.message : e);
+    captureError(e, { fase: "importarDeGencat" });
   }
 }
 
@@ -103,6 +201,19 @@ export function iniciarSincronizacionDelCatalogo(): void {
   intervalo = setInterval(() => void sincronizarCatalogoAhora(), PERIODO_MS);
   primera.unref?.();
   intervalo.unref?.();
+  if (process.env.CATALOGO_SEMILLA_BANDFLOW !== "false") {
+    semilla = setTimeout(() => void importarSalasBandflowAhora(), 8 * 60 * 1000);
+    semilla.unref?.();
+  }
+  if (process.env.CATALOGO_IMPORTAR_WIKIDATA !== "false") {
+    // Tras la semilla de Bandflow y antes de OSM: dos consultas ligeras.
+    wikidata = setTimeout(() => void importarDeWikidataAhora(), 11 * 60 * 1000);
+    wikidata.unref?.();
+  }
+  if (process.env.CATALOGO_IMPORTAR_GENCAT !== "false") {
+    gencat = setTimeout(() => void importarDeGencatAhora(), 12 * 60 * 1000);
+    gencat.unref?.();
+  }
   if (process.env.CATALOGO_IMPORTAR_OSM === "true") {
     // Después de la primera sincronización, para que las salas de las bandas ya estén y no se dupliquen.
     programarImportacion(15 * 60 * 1000);
@@ -113,7 +224,13 @@ export function detenerSincronizacionDelCatalogo(): void {
   if (primera) clearTimeout(primera);
   if (intervalo) clearInterval(intervalo);
   if (importacion) clearTimeout(importacion);
+  if (semilla) clearTimeout(semilla);
+  if (wikidata) clearTimeout(wikidata);
+  if (gencat) clearTimeout(gencat);
+  wikidata = null;
+  gencat = null;
   importacion = null;
+  semilla = null;
   primera = null;
   intervalo = null;
 }

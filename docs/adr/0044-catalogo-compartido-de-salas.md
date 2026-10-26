@@ -1,5 +1,7 @@
 # ADR 0044: Compartir entre bandas un catálogo de salas sin compartir nada privado
 
+> **Nota (ADR 0048):** la tabla `salas_catalogo` se llama ahora `catalogo_salas`. El texto conserva el nombre de su momento.
+
 - **Estado:** Aceptada
 - **Fecha:** 2026-10-18
 - **Origen:** nueva
@@ -63,3 +65,25 @@ servidores por consulta y, si alguna comunidad falla, importa el resto (es idemp
 reintenta cada hora hasta tres veces. Además se limita a lo que le sirve a una banda: **solo `music_venue` y
 `concert_hall`**. Se quitan las discotecas y los bares, pubs, cafés y restaurantes con `live_music=yes`, que metían mucho
 ruido. La marca `osm` en `salas_catalogo.fuentes` (ADR 0046) cita a OpenStreetMap donde corresponde.
+
+## Explorar el catálogo: ficha, mapa y festivales
+
+El catálogo se abre desde el botón «Catálogo» de Escenarios (Booking) y desde el menú de herramientas. Tiene dos pestañas, **Salas** y **Festivales**, y las salas se ven en **lista** o en **mapa**; pulsar una sala abre su **ficha** (fiabilidad, completitud de la ficha, dirección, web, redes, mapa pequeño y la fuente que hay que citar).
+
+- **Coordenadas.** `catalogo_salas.lat/lon` salen solo de OpenStreetMap (ODbL): el punto de la importación de OSM y, para el resto, el geocodificador Nominatim (`geolocalizarSalas`, 80 salas por pasada a 1 consulta/s, `CATALOGO_GEOLOCALIZAR=false` lo apaga). Nunca de Google (sus condiciones no dejan guardar coordenadas). Un resultado solo vale si es un local de la ciudad de la sala y cae en España; si no, se guarda el punto de la ciudad con `coordenadas_aprox` y el mapa lo pinta más tenue y la ficha avisa. Las coordenadas se escriben aparte (`guardarCoordenadas`) y la sincronización diaria nunca las toca, así que no se pisan.
+- **Dirección.** La ficha ya enseña la dirección del local: es información pública de un negocio, no un dato personal. El email y el teléfono siguen sin salir hasta añadir la sala.
+- **Completitud.** `completitudDeSala` cuenta 10 datos que importan a una banda (ciudad, dirección, web, Instagram, email de rol, teléfono fijo, aforo, género, punto exacto en el mapa, fiabilidad). No es la fiabilidad: una sala puede estar muy completa y no haber respondido nunca a nadie.
+- **Festivales.** Se leen del directorio público (`catalogo_festivales`), que no tiene contacto; al añadir uno se crea un lead de tipo `festival` con su web y el enlace de la convocatoria en las notas.
+- **Aforo.** Se busca en la web de la sala («aforo 300 personas», «capacidad para 250», «250 personas de aforo»), en la portada, la página de contacto y hasta dos de las páginas donde suelen ponerlo (`/la-sala`, `/ficha-tecnica`, `/rider`…). Solo se anota si todas las menciones coinciden: una web con dos salas distintas no dice cuál importa, y es mejor dejarlo vacío que apostar. Nunca pisa un aforo que ya tengamos (de OSM, de Bandflow o de una banda). El filtro «aforo orientativo» del catálogo enseña las salas de la mitad a una vez y media el valor y deja fuera las que aún no tienen dato.
+
+## Wikidata como fuente
+
+Salas de conciertos (clases Q8719053 y Q1060829) y festivales de música (Q868557) de España desde el servicio SPARQL de Wikidata, que es CC0: se puede guardar y mostrar sin condiciones. Se recogen nombre, ciudad, comunidad autónoma, web, aforo y punto en el mapa; nunca contactos. Los elementos con fecha de disolución, de cierre o de fin no entran, ni los recintos de estadio. La importación es común a cualquier fuente externa (`importarDeFuente`): solo añade, rellena huecos, no toca las verificadas, respeta los alias y anota `wikidata` en `fuentes`. Se lanza una vez por arranque. `CATALOGO_IMPORTAR_WIKIDATA` sin definir solo simula (el log dice cuántas traería y algunos nombres), `true` escribe y `false` la apaga.
+
+## Bares con música en directo y salas que faltan
+
+La importación de OSM incluye también `bar`, `pub` y `cafe` **solo si llevan `live_music=yes`** (los bares sin esa etiqueta y los restaurantes siguen fuera) y los guarda con tipo `bar`: donde tocan muchas bandas pequeñas. El filtro «Tipo» del catálogo los ofrece como «Bares con directo». En el catálogo, un botón «¿Falta una sala o un festival? Añádelo» abre «Añadir escenario»; lo que añade la banda entra al catálogo en la siguiente sincronización y se verifica y completa solo (Maps, su web, aforo).
+
+## Salas de Cataluña (datos abiertos de la Generalitat)
+
+Del conjunto «Equipaments culturals de Catalunya» (Departament de Cultura, API abierta de `analisi.transparenciacatalunya.cat`) entran solo las **50 «Sales de concerts»**, todas con su punto exacto (Razzmatazz, Apolo, Bikini, Luz de Gas, Jamboree…). Las ~310 salas polivalentes quedan fuera: son sobre todo centros sociales, ateneos y salas municipales con nombres genéricos. Se recogen nombre (pasado de mayúsculas a título), dirección, municipio, aforo, web, teléfono fijo y email de rol; la ficha cita la fuente. Se importa con `importarDeFuente` en cada arranque (solo añade y rellena huecos); `CATALOGO_IMPORTAR_GENCAT=false` la apaga. La licencia que declara el conjunto es «ver términos de uso» de la Generalitat: se cita la autoría, pero conviene que el dueño confirme los términos antes de dar el catálogo por redistribuible.

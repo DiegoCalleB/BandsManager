@@ -7,8 +7,10 @@ import { vozTeclado } from './inversiones';
 import { lineaDeBajo, notasParaDibujar, type VistaAcorde } from './vistaAcordes';
 import type { NivelAcorde } from './voicings';
 
-const BASE_TECLADO = 48; // Do3
+const BASE_TECLADO = 60; // Do4: la mano derecha del piano; en clave de Sol cae dentro del pentagrama, no bajo las líneas adicionales
+const BASE_GUITARRA = 48; // Do3: suena una octava por debajo de lo que se escribe (midiEscrito)
 const BASE_BAJO = 28; // Mi1: la cuerda al aire del bajo; la nota grave de cada acorde cae entre Mi1 y Re#2
+const MI3 = 52; // Mi3: la cuerda grave de la guitarra al aire; se escribe como Mi4, la primera línea
 export const DURACION_ACORDE_S = 1.4;
 
 /**
@@ -35,7 +37,11 @@ export function midiDeAcorde(acorde: string, vista: VistaAcorde, nivel: NivelAco
     return sube;
   }
   const notas = nivel !== 'basico' ? n.notas : n.notas.filter((pc) => pc === n.raiz || pc === n.quinta || (vista === 'teclado' && pc === n.tercera));
-  return vozTeclado(notas, Math.min(inv, notas.length - 1)).map((t) => BASE_TECLADO + t);
+  const voz = vozTeclado(notas, Math.min(inv, notas.length - 1));
+  if (vista !== 'guitarra') return voz.map((t) => BASE_TECLADO + t);
+  // Guitarra: la voz no baja de Mi3 (la cuerda al aire); si cae por debajo, sube una octava y se escribe dentro del pentagrama.
+  const sube = BASE_GUITARRA + Math.min(...voz) < MI3 ? 12 : 0;
+  return voz.map((t) => BASE_GUITARRA + sube + t);
 }
 
 const PASO_BAJO_S = 0.3;

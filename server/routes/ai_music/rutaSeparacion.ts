@@ -123,8 +123,8 @@ router.post('/ai-stem-separation', requireAuth, iaRateLimiter, async (req, res) 
   try {
     ctx = contextoDesdePeticion(req);
 
-    // 1. Caché persistente.
-    const persistentEntry = await getStemsFromPersistentCache(ctx.bandId, ctx.songHash, ctx.selectedEngine);
+    // 1. Caché persistente (salvo que el usuario pida separar de nuevo).
+    const persistentEntry = ctx.forzar ? null : await getStemsFromPersistentCache(ctx.bandId, ctx.songHash, ctx.selectedEngine);
     if (persistentEntry && persistentEntry.stemsMap && Object.keys(persistentEntry.stemsMap).length > 0) {
       console.log(
         "[Stem Separator] ⚡ Cache HIT persistente (L1/L2 Supabase) para %s. 0 llamadas GPU / Replicate. Coste: $0.00.", ctx.cacheKey,
@@ -139,7 +139,7 @@ router.post('/ai-stem-separation', requireAuth, iaRateLimiter, async (req, res) 
     }
 
     // 2. Reserva distribuida (multi-instancia).
-    const lockResult = await acquireStemsSeparationLock(ctx.bandId, ctx.songHash, ctx.selectedEngine);
+    const lockResult = await acquireStemsSeparationLock(ctx.bandId, ctx.songHash, ctx.selectedEngine, undefined, ctx.forzar);
     if (lockResult.acquired === false) {
       if (lockResult.reason === 'already_completed') {
         return res.json(

@@ -28,8 +28,10 @@ Modales del CRM: simulación, alta, explorador de lugares, importación, enrique
 - [[src_components_booking_LeadDuplicatesModal|src/components/booking/LeadDuplicatesModal.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_NegotiationSimulationModal|src/components/booking/NegotiationSimulationModal.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_RoadbookContractModal|src/components/booking/RoadbookContractModal.tsx]] *(Layer: #frontend, Domain: #booking)*
+- [[src_components_booking_catalogo_CatalogoSalasHost|src/components/booking/catalogo/CatalogoSalasHost.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_crm_BookingCrmContext|src/components/booking/crm/BookingCrmContext.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_crm_crmTheme|src/components/booking/crm/crmTheme.ts]] *(Layer: #frontend, Domain: #booking)*
+- [[src_components_booking_crm_leadVacio|src/components/booking/crm/leadVacio.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_common_ModuleTutorialModal|src/components/common/ModuleTutorialModal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_dashboard_AgentAutonomySettingsModal|src/components/dashboard/AgentAutonomySettingsModal.tsx]] *(Layer: #agent, Domain: #system)*
 

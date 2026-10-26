@@ -22,9 +22,9 @@ console.log(`  Fichas fijas (datos.ts):  ${fijas.length} (${resumen.ediciones} e
 console.log(`  Candidatas de la lista:   ${candidatas.length}`);
 
 if (aplicar) {
-  const f = await insertarSinPisar("festivales", [...fijas.map((x) => x.festival), ...candidatas]);
-  const e = await insertarSinPisar("festival_ediciones", fijas.flatMap((x) => (x.edicion ? [x.edicion] : [])));
-  const c = await insertarSinPisar("festival_convocatorias", fijas.flatMap((x) => (x.convocatoria ? [x.convocatoria] : [])));
+  const f = await insertarSinPisar("catalogo_festivales", [...fijas.map((x) => x.festival), ...candidatas]);
+  const e = await insertarSinPisar("catalogo_festival_ediciones", fijas.flatMap((x) => (x.edicion ? [x.edicion] : [])));
+  const c = await insertarSinPisar("catalogo_festival_convocatorias", fijas.flatMap((x) => (x.convocatoria ? [x.convocatoria] : [])));
   console.log(`  Filas nuevas:             ${f} festivales, ${e} ediciones, ${c} convocatorias (las que ya existían no se tocan)`);
 } else {
   console.log("\nPara escribir de verdad: npm run festivales:cargar -- --aplicar");

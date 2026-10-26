@@ -20,7 +20,7 @@ import { apiAutenticadaRateLimiter, ficherosRateLimiter, iaRateLimiter, imagenRa
 import { idSeguro } from '../utils/trackingSeguro.js';
 import { captureError } from '../utils/errorTracking.js';
 import { esConciertoPublicable } from '../utils/paginaConcierto.js';
-import { construirPromptFondo, esEstiloCartel } from '../utils/promptCartel.js';
+import { construirPromptFondo, esEstiloCartel, limpiarTextos } from '../utils/promptCartel.js';
 import { carpetaCartel, carpetaReferencias, esUrlDeCartel, nombreSeguro, referenciasHuerfanas, rutaDeUrlCartel, rutaIdea } from '../utils/cartelUrl.js';
 import { borrarDeAlmacenamiento, descargarDeAlmacenamiento, uploadBufferToSupabase } from '../utils/storage.js';
 import { validarMagicBytes } from './upload.js';
@@ -34,6 +34,7 @@ import { CONFIG_INICIAL, MAX_LOGOS, conFondoIa, sanearConfigCartel, type CartelC
 import { FORMATOS } from '../../src/utils/cartel/formatos.js';
 import { conReferencia, referenciasParaIa, sanearAdn, type AdnCartel } from '../../src/utils/cartel/adn.js';
 import { IDEA_VACIA, sanearIdea } from '../../src/utils/cartel/idea.js';
+import { fechaCartel } from '../../src/utils/cartel/texto.js';
 
 export const cartelriaRouter = express.Router();
 
@@ -106,7 +107,8 @@ async function cargarBoceto(bandId: string): Promise<ImagenReferencia | null> {
 cartelriaRouter.post('/cartel/fondo', requireAuth, imagenRateLimiter, async (req, res) => {
   try {
     const bandId = getTargetBandId(req);
-    const { concertId, estilo, instrucciones, idea: ideaRaw, conBoceto } = req.body || {};
+    const { concertId, estilo, instrucciones, idea: ideaRaw, conBoceto, encuadre: encuadreRaw, conTexto } = req.body || {};
+    const encuadre = encuadreRaw === 'sangre' ? 'sangre' : 'ventana';
 
     if (typeof concertId !== 'string' || !idSeguro(concertId)) return res.status(400).json({ error: 'Concierto no válido.' });
     if (!esEstiloCartel(estilo)) return res.status(400).json({ error: 'Estilo no válido.' });
@@ -139,6 +141,20 @@ cartelriaRouter.post('/cartel/fondo', requireAuth, imagenRateLimiter, async (req
     const boceto = conBoceto === true ? await cargarBoceto(bandId) : null;
     const resultado = await construirBrief(bandId, idea, boceto);
 
+    // Letras dibujadas por la IA dentro del arte: solo a sangre y con un solo nombre (con varias bandas el cartel
+    // lleva el lineup, que se pinta con letra propia). Los textos salen del bolo y de la banda del SERVIDOR,
+    // nunca del cuerpo de la petición.
+    const nombreBanda = perfil?.name && perfil.name !== 'la banda' ? perfil.name : '';
+    const compartido = Array.isArray(concierto.bandas_compartidas) && concierto.bandas_compartidas.length > 0;
+    const textos =
+      conTexto === true && encuadre === 'sangre' && nombreBanda && !compartido
+        ? limpiarTextos({
+            nombre: nombreBanda.toUpperCase(),
+            fecha: fechaCartel(String(concierto.fecha || '')),
+            lugar: [concierto.sala, concierto.ciudad].map((v) => String(v || '').trim().toUpperCase()).filter(Boolean).join(' · '),
+          })
+        : null;
+
     const prompt = construirPromptFondo({
       estilo,
       generoBanda: perfil?.genre || undefined,
@@ -149,16 +165,19 @@ cartelriaRouter.post('/cartel/fondo', requireAuth, imagenRateLimiter, async (req
       referencias: imagenes.length,
       brief: resultado?.brief,
       conBoceto: !!boceto,
+      encuadre,
+      textos: textos ?? undefined,
     });
 
-    const url = await generarFondoCartel(bandId, prompt, boceto ? [boceto, ...imagenes] : imagenes);
-    if (!url) return res.status(503).json({ error: 'No hemos podido generar el fondo. Prueba en un rato.' });
+    const generado = await generarFondoCartel(bandId, prompt, boceto ? [boceto, ...imagenes] : imagenes, encuadre, textos);
+    if (!generado) return res.status(503).json({ error: 'No hemos podido generar el fondo. Prueba en un rato.' });
 
     // Al historial del bolo, para no volver a pagar este fondo. Si falla, la persona tiene igual su fondo.
+    const { url, textoOk } = generado;
     await dbGuardarCartel(concertId, bandId, { cartel_config: conFondoIa(configDe(concierto, bandId), url) }).catch((e) =>
       console.warn('[cartel] No se pudo guardar el fondo en el historial:', (e as Error)?.message || e)
     );
-    res.json({ url, estilo, referencias: imagenes.length });
+    res.json({ url, estilo, referencias: imagenes.length, conTexto: !!textos, textoOk });
   } catch (e) {
     if (isSpendCapOrQuotaError(e)) {
       // Solo la causa corta al log: el cuerpo del error trae ids de proyecto del proveedor.

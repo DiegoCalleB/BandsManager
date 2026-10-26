@@ -13,12 +13,13 @@ tags: ["db", "system", "auto"]
 > **Capa:** `#layer/db` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: rolDeClaveSupabase, esSupabaseNoConfigurado, getSupabase, normalizePlan, cleanBandId.
+Exporta: rolDeClaveSupabase, describirClaveSupabase, esSupabaseNoConfigurado, getSupabase, normalizePlan, cleanBandId.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[ext_supabase|Supabase (Postgres)]] *(Layer: #external, Domain: #system)*
+- [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
 
 ---
 
@@ -97,9 +98,11 @@ Exporta: rolDeClaveSupabase, esSupabaseNoConfigurado, getSupabase, normalizePlan
 ## 🧪 Tests que lo cubren
 - `server/controllers/__tests__/tours.controller.test.ts`
 - `server/db/__tests__/core.test.ts`
+- `server/db/__tests__/describirClaveSupabase.test.ts`
 - `server/db/__tests__/esSupabaseNoConfigurado.test.ts`
 - `server/db/__tests__/rolClaveSupabase.test.ts`
 - `server/routes/__tests__/billing.test.ts`
+- `server/routes/__tests__/billingCicloFacturacion.test.ts`
 - `server/routes/__tests__/buildAvailableBandsForUser.test.ts`
 - `server/services/__tests__/emailAgentClient.test.ts`
 - `server/services/__tests__/stemWebhookAndLocks.test.ts`

@@ -6,9 +6,12 @@ import { prepararRevisionFinal, type EntradaRevision } from "../revisionFinal";
 
 afterEach(cleanup);
 
+// Siempre en el futuro: una fecha fija caduca y el test falla el día que se cumple.
+const MANANA = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+
 const CLIP = "https://x.supabase.co/storage/v1/object/public/clips/band/c.mp4";
 const entrada = (p: Partial<EntradaRevision> = {}): EntradaRevision => ({
-  copy: "Nuevo directo #rock", fecha: "2026-10-20", hora: "20:30", plataforma: "Instagram", videoUrl: CLIP,
+  copy: "Nuevo directo #rock", fecha: MANANA, hora: "20:30", plataforma: "Instagram", videoUrl: CLIP,
   calidad: { aprobado: true, bloqueantes: [], avisos: [] }, derechosDeclarados: true, autoPublish: true, cuentaConectada: true, avisosCadencia: [], ...p
 });
 const montar = (e: EntradaRevision, extra: Partial<React.ComponentProps<typeof RevisionFinalDialog>> = {}) => {

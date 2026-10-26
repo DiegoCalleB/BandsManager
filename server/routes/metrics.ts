@@ -374,7 +374,7 @@ router.get("/metrics/instagram/status", requireAuth, async (req, res) => {
         connected: false,
         method: "scraping_fallback",
         docsUrl: "https://developers.facebook.com/documentation/instagram-platform/insights",
-        requiredPermissions: ["instagram_basic", "instagram_manage_insights", "pages_show_list", "pages_read_engagement"],
+        requiredPermissions: ["instagram_basic", "instagram_manage_insights", "pages_show_list", "pages_read_engagement", "instagram_content_publish"],
         message: "Sin token oficial de Meta Graph API configurado. El radar opera en modo scraping de alta resiliencia."
       });
     }

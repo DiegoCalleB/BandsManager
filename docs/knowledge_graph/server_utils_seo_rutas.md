@@ -33,6 +33,7 @@ _Sin dependencias salientes directas._
 - [[server_utils_seo_figuras|server/utils/seo/figuras.ts]] *(from #service)*
 - [[server_utils_seo_indice|server/utils/seo/indice.ts]] *(from #service)*
 - [[server_utils_seo_listados|server/utils/seo/listados.ts]] *(from #service)*
+- [[server_utils_seo_rastreadores|server/utils/seo/rastreadores.ts]] *(from #service)*
 - [[server_utils_seo_render|server/utils/seo/render.ts]] *(from #service)*
 - [[server_utils_seo_salas_render|server/utils/seo/salas/render.ts]] *(from #service)*
 - [[server_utils_seo_salas_textos|server/utils/seo/salas/textos.ts]] *(from #service)*

@@ -150,6 +150,7 @@ _Sin dependencias salientes directas._
 - [[src_components_booking_crm_hooks_useLeadScraping|src/components/booking/crm/hooks/useLeadScraping.ts]] *(from #frontend)*
 - [[src_components_booking_crm_hooks_useLeadSelectionAndTemplates|src/components/booking/crm/hooks/useLeadSelectionAndTemplates.ts]] *(from #frontend)*
 - [[src_components_booking_crm_leadTypeMatchers|src/components/booking/crm/leadTypeMatchers.ts]] *(from #frontend)*
+- [[src_components_booking_crm_leadVacio|src/components/booking/crm/leadVacio.ts]] *(from #frontend)*
 - [[src_components_booking_CRMContactEnricherModal|src/components/booking/CRMContactEnricherModal.tsx]] *(from #frontend)*
 - [[src_components_booking_DealAndLogisticsCopilot|src/components/booking/DealAndLogisticsCopilot.tsx]] *(from #frontend)*
 - [[src_components_booking_EmailDeliveryTicks|src/components/booking/EmailDeliveryTicks.tsx]] *(from #frontend)*
@@ -577,6 +578,7 @@ _Sin dependencias salientes directas._
 - [[src_utils_mezclaStems|src/utils/mezclaStems.ts]] *(from #service)*
 - [[src_utils_midiExport|src/utils/midiExport.ts]] *(from #service)*
 - [[src_utils_offlineSync|src/utils/offlineSync.ts]] *(from #service)*
+- [[src_utils_pistasDeDisco|src/utils/pistasDeDisco.ts]] *(from #service)*
 - [[src_utils_repertorioPdf|src/utils/repertorioPdf.ts]] *(from #service)*
 - [[src_utils_roiBanda|src/utils/roiBanda.ts]] *(from #service)*
 - [[src_utils_separacionIris|src/utils/separacionIris.ts]] *(from #service)*
@@ -666,6 +668,7 @@ _Sin dependencias salientes directas._
 - `src/utils/__tests__/mezclaStems.test.ts`
 - `src/utils/__tests__/midiExport.test.ts`
 - `src/utils/__tests__/pistasDeCancion.test.ts`
+- `src/utils/__tests__/pistasDeDisco.test.ts`
 - `src/utils/__tests__/repertorioPdf.test.ts`
 - `src/utils/__tests__/separacionIris.test.ts`
 - `src/utils/__tests__/setlistCompatibility.test.ts`

@@ -167,12 +167,12 @@ export const PLANS: Record<'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gir
     ],
     stickerGift: {
       qty: '150 pegatinas gratis',
-      description: 'Pack de pegatinas de tu banda, gratis con tu primera suscripción',
+      description: 'Pack de pegatinas de tu banda, gratis con tu primera suscripción anual',
     },
     features: [
       'Salas y festivales ilimitados',
       'Medios y prensa ilimitados',
-      '🎁 Regalo: 150 pegatinas vinilo de tu banda',
+      '🎁 Regalo: 150 pegatinas vinilo de tu banda (plan anual)',
       'Agentes IA Scout, Redactor y Lector',
       'Rutas de Gira & Tour Logistics',
       'Calculadora de kilometraje y dietas',
@@ -211,12 +211,12 @@ export const PLANS: Record<'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gir
     ],
     stickerGift: {
       qty: '300 pegatinas + entrega prioritaria',
-      description: 'Pack de pegatinas de tu banda, gratis con tu primera suscripción',
+      description: 'Pack de pegatinas de tu banda, gratis con tu primera suscripción anual',
     },
     features: [
       'Hasta 5 bandas gestionadas en paralelo',
       'Todo ilimitado sin restricciones de volumen',
-      '🎁 Regalo: 300 pegatinas vinilo + Envío Express',
+      '🎁 Regalo: 300 pegatinas vinilo + Envío Express (plan anual)',
       'Taller Merchan & Inventario Completo',
       'Finanzas Avanzadas e Ingresos/Gastos',
       'IA Multi-Agente con Function Calling',

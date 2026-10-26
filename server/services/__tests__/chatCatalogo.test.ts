@@ -26,6 +26,7 @@ const ficha = (o: Partial<FichaCatalogo> = {}): FichaCatalogo => ({
   bandas_con_respuesta: 1,
   tiene_email: true,
   tiene_telefono: false,
+  posiblemente_cerrada: false,
   ya_en_agenda: false,
   ...o,
 });

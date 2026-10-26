@@ -131,9 +131,19 @@ export async function dbGetRegisteredBandById(bandId: string) {
 
 export async function dbUpsertRegisteredBand(band: EntradaBandaRegistrada) {
   const sb = getSupabase();
+  // Un id sin prefijo (`x`) creaba una fila gemela si ya existía la canónica (`band-x`): se reutiliza esa.
+  let pedido = bandaDe(band);
+  let idExistente: string | undefined;
+  if (pedido && !pedido.startsWith("band-")) {
+    const { data: canonica } = await sb.from("registered_bands").select("id, band_id").eq("band_id", `band-${pedido.replace(/^reg-/, "")}`).maybeSingle();
+    if (canonica?.band_id) {
+      pedido = canonica.band_id;
+      idExistente = canonica.id;
+    }
+  }
   const payload = {
-    id: band.id || `reg-${band.band_id || Date.now()}`,
-    band_id: bandaDe(band),
+    id: idExistente || band.id || `reg-${band.band_id || Date.now()}`,
+    band_id: pedido,
     user_id: band.user_id || band.userId || null,
     nombre_banda: band.nombre_banda || band.nombreBanda || band.bandName || "Banda",
     email: band.email || "",
@@ -146,7 +156,9 @@ export async function dbUpsertRegisteredBand(band: EntradaBandaRegistrada) {
     spotify_youtube: band.spotify_youtube || band.spotifyYoutube || "",
     aforo_promedio: Number(band.aforo_promedio || band.aforoPromedio || 0),
     estado_cuenta: band.estado_cuenta || "activo",
-    notas: band.notas || ""
+    notas: band.notas || "",
+    // Solo si viene: un guardado cualquiera no debe borrar el ciclo ya guardado.
+    ...(band.ciclo_facturacion ? { ciclo_facturacion: band.ciclo_facturacion } : {})
   };
 
   const { data, error } = await sb.from("registered_bands").upsert(payload).select().single();

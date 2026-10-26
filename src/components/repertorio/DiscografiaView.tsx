@@ -25,6 +25,7 @@ interface DiscografiaViewProps {
   albumsList: string[];
   colors: ThemeColors;
   bandName?: string;
+  bandId?: string;
   bandLogoUrl?: string;
   setSongs: React.Dispatch<React.SetStateAction<Song[]>>;
   setSetlists?: React.Dispatch<React.SetStateAction<Setlist[]>>;
@@ -77,6 +78,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
   albumsList = [],
   colors,
   bandName,
+  bandId,
   bandLogoUrl,
   setSongs,
   setSetlists,
@@ -94,12 +96,8 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
   onDeleteSong,
   onShareSong,
 }) => {
-  const [activeFilterTab, setActiveFilterTab] = useState<
-    "todos" | "albumes" | "singles"
-  >("todos");
-  const [expandedAlbums, setExpandedAlbums] = useState<Record<string, boolean>>(
-    {},
-  );
+  const [activeFilterTab, setActiveFilterTab] = useState<"todos" | "albumes" | "singles">("todos");
+  const [expandedAlbums, setExpandedAlbums] = useState<Record<string, boolean>>({});
   const [isLiveConcertModalOpen, setIsLiveConcertModalOpen] = useState(false);
   const [isSpotifyModalOpen, setIsSpotifyModalOpen] = useState(false);
   const [bulkUploadAlbum, setBulkUploadAlbum] = useState<{
@@ -1246,7 +1244,8 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
             albumName={bulkUploadAlbum.name}
             albumSongs={bulkUploadAlbum.songs}
             colors={colors}
-            bandId={bandName || "Tu Banda"}
+            bandId={bandId}
+            bandName={bandName}
             onSaveUpdatedSongs={(updatedAlbumSongs, newAlbumName) => {
               const existingIds = new Set(songs.map((s) => s.id));
               const updatedMap = new Map<string, Song>();

@@ -91,7 +91,22 @@ const DOMINIOS_PERSONALES = new Set([
 ]);
 
 /** Solo los recintos donde se puede tocar. Medios, agencias, productoras o bandas amigas no son salas, y las bandas son datos de otras bandas. */
-const TIPOS_CATALOGABLES = new Set(['sala', 'festival', 'ayuntamiento', 'discoteca']);
+const TIPOS_CATALOGABLES = new Set(['sala', 'festival', 'ayuntamiento', 'discoteca', 'bar']);
+
+/**
+ * Recintos para artistas de estadio y pabellón: no son un sitio donde pueda tocar una banda que busca salas, así que no
+ * entran al catálogo. El aforo solo no basta (los leads traen cifras equivocadas, como 11 para el WiZink Center), de ahí
+ * la lista por nombre; el tope de aforo recoge los que no estén en ella. Los festivales no se miden por aforo.
+ */
+export const AFORO_MAXIMO_SALA = 5000;
+const RECINTOS_MASIVOS = ['wizink center', 'movistar arena', 'palau sant jordi', 'estadio metropolitano', 'civitas metropolitano', 'santiago bernabeu', 'camp nou', 'spotify camp nou', 'palacio de vistalegre'];
+
+export function esRecintoMasivo(p: { nombre?: unknown; aforo?: unknown; tipo?: unknown }): boolean {
+  const nombre = normalizarTexto(p.nombre);
+  if (nombre && RECINTOS_MASIVOS.some((r) => nombre === r || nombre.startsWith(`${r} `))) return true;
+  const tipo = typeof p.tipo === 'string' ? p.tipo.trim().toLowerCase() : '';
+  return tipo !== 'festival' && typeof p.aforo === 'number' && p.aforo > AFORO_MAXIMO_SALA;
+}
 
 /** Leads de prueba que se cuelan en las bases reales («Test», «Test 178652...», «Prueba»). */
 const NOMBRE_DE_PRUEBA = /^(test|prueba)(\s|\d|$)/i;
@@ -195,6 +210,7 @@ export function motivoExclusion(lead: LeadParaCatalogo): MotivoExclusion | null 
   if (!TIPOS_CATALOGABLES.has((lead.tipo ?? '').trim().toLowerCase() || 'sala')) return 'tipo';
   if (NOMBRE_DE_PRUEBA.test((lead.nombre_sala ?? '').trim())) return 'prueba';
   if (NOMBRE_DE_AGENCIA.test(lead.nombre_sala ?? '')) return 'tipo';
+  if (esRecintoMasivo({ nombre: lead.nombre_sala, aforo: lead.aforo, tipo: lead.tipo })) return 'tipo';
   return claveSala({ placeId: lead.place_id, nombre: lead.nombre_sala, ciudad: lead.ciudad }) ? null : 'sin_clave';
 }
 
@@ -261,34 +277,56 @@ export function consolidarCampos(fichas: CamposPublicosSala[]): CamposPublicosSa
  * huecos. Una sala sin verificar sí se actualiza con el consenso nuevo.
  */
 export function fusionarConExistente(existente: Partial<CamposPublicosSala> & { nivel?: NivelSala }, nuevo: CamposPublicosSala): CamposPublicosSala {
-  if (existente.nivel !== 'verificada') return nuevo;
-  const mantener = <K extends keyof CamposPublicosSala>(k: K): CamposPublicosSala[K] =>
-    (existente[k] !== null && existente[k] !== undefined && existente[k] !== '' ? existente[k] : nuevo[k]) as CamposPublicosSala[K];
+  const vacio = (v: unknown) => v === null || v === undefined || v === '';
+  const verificada = existente.nivel === 'verificada';
+  // Una sala verificada conserva lo que ya tiene. En el resto manda lo que traen los leads, pero lo que los leads no traen no
+  // se borra: el catálogo también se alimenta de otras fuentes (OpenStreetMap, directorios, la web de la sala) y la sincronización
+  // diaria no debe deshacerlo.
+  const elegir = <K extends keyof CamposPublicosSala>(k: K): CamposPublicosSala[K] => {
+    const [primero, segundo] = verificada ? [existente[k], nuevo[k]] : [nuevo[k], existente[k]];
+    return (!vacio(primero) ? primero : !vacio(segundo) ? segundo : nuevo[k]) as CamposPublicosSala[K];
+  };
   return {
     clave: nuevo.clave,
-    place_id: mantener('place_id'),
-    nombre: mantener('nombre'),
-    ciudad: mantener('ciudad'),
-    region: mantener('region'),
-    direccion: mantener('direccion'),
-    tipo: mantener('tipo'),
-    aforo: mantener('aforo'),
-    genero: mantener('genero'),
-    website: mantener('website'),
-    instagram: mantener('instagram'),
-    email_contacto: mantener('email_contacto'),
-    telefono: mantener('telefono'),
+    place_id: elegir('place_id'),
+    nombre: elegir('nombre'),
+    ciudad: elegir('ciudad'),
+    region: elegir('region'),
+    direccion: elegir('direccion'),
+    tipo: elegir('tipo'),
+    aforo: elegir('aforo'),
+    genero: elegir('genero'),
+    website: elegir('website'),
+    instagram: elegir('instagram'),
+    email_contacto: elegir('email_contacto'),
+    telefono: elegir('telefono'),
   };
 }
 
 const diasEntre = (desde: Date, hasta: Date) => (hasta.getTime() - desde.getTime()) / MS_DIA;
 
 /** Señales de fiabilidad de una sala a partir de los leads de todas las bandas que la tienen. Cuenta bandas, no sus datos. */
-export function senalesDeLeads(leads: LeadParaCatalogo[], ahora: Date, consolidada: CamposPublicosSala, verificadaEn?: Date | null): SenalesFiabilidad {
+/**
+ * Las interacciones con salas (correos enviados, respuestas, rebotes) anteriores a esta fecha eran ficticias o de pruebas: el
+ * dueño del proyecto lo confirmó el 2026-10-20. No cuentan como señal de fiabilidad, para que ninguna sala salga «probable» o
+ * «verificada» por datos de test. Cuando haya historial real, esta fecha ya no tiene efecto (todo lo nuevo es posterior).
+ */
+export const INTERACCIONES_REALES_DESDE = new Date('2026-10-21T00:00:00Z');
+
+export function senalesDeLeads(
+  leads: LeadParaCatalogo[],
+  ahora: Date,
+  consolidada: CamposPublicosSala,
+  verificadaEn?: Date | null,
+  interaccionesDesde: Date = INTERACCIONES_REALES_DESDE,
+): SenalesFiabilidad {
   const conRespuesta = new Set<string>();
   const conEntrega = new Set<string>();
   let rebotes = 0;
   for (const lead of leads) {
+    // Sin un envío posterior a la fecha de corte no hay interacción real con la sala (ni respuesta, ni entrega, ni rebote).
+    const envioReal = lead.fecha_envio ? new Date(lead.fecha_envio) : null;
+    if (!envioReal || !Number.isFinite(envioReal.getTime()) || envioReal < interaccionesDesde) continue;
     if (lead.rebotado) {
       rebotes++;
       continue;

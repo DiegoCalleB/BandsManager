@@ -112,7 +112,7 @@ Si falla alguna, se queda en **cuando duela** (🔵, con un disparador concreto 
 | Módulo | Máster | Repo | Evidencia | Decisión | Apuntes |
 |---|---|:-:|---|---|---|
 | Desarrollo seguro: Security by Design, amenazas, OWASP | Completada | 🟡 | `AGENTS.md` §2 (multi-tenancy, trust boundary); skills de seguridad | 🔵 Una página de modelo de amenazas cuando se abra a más usuarios. | |
-| SSDLC, DevSecOps, Shift Left, Snyk | Completada | 🟡 | CodeQL ✅; sin `npm audit` ni escaneo de secretos | 🟢 `npm audit` y gitleaks en CI (Fase 0.7). ⚪ Snyk: con CodeQL, Dependabot y `npm audit` está cubierto. | |
+| SSDLC, DevSecOps, Shift Left, Snyk | Completada | 🟡 | CodeQL ✅, `npm audit` ✅, gitleaks ✅ y Dependabot ✅ en CI (Fase 0.7, hecha) | ⚪ Snyk: no se aplica. Con CodeQL, Dependabot, gitleaks y `npm audit` está cubierto, y su integración con GitHub agotó la cuota de la cuenta. | |
 | Codificación segura: validación, authN/authZ, APIs | Completada | 🟡 | `getTargetBandId` consistente (barrido sin huecos explotables). Sin validación de entradas: `bands.ts` guarda `{...req.body, id}` | 🟢 zod + `validar(schema)` empezando por `bands`, `agent` y `billing` (Fase 2.2). | |
 | Uso de la IA en el desarrollo seguro | Completada | ✅ | Skills de seguridad; PR #240 corrige inyección en el prompt del chat | 🟢 Limitador de IA en `/chat` (Fase 1.1). | |
 

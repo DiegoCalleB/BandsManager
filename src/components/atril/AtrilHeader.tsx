@@ -5,6 +5,7 @@
 import { Edit3,Guitar,MessageSquare,Music,Pause,Play,Printer,Theater,Timer,Upload,UserCheck,Wand2 } from "lucide-react";
 import { formatSongTitle } from "../../utils/formatSongTitle";
 import { ActionMenu,Button } from "../ui";
+import { AtrilTabs } from "./AtrilTabs";
 import { useAtril } from "./AtrilContext";
 
 /**
@@ -59,6 +60,8 @@ export function AtrilHeader() {
           </div>
         </div>
 
+        {!modoEscenario && <AtrilTabs />}
+
         <div className="flex items-center gap-1.5 absolute top-3 right-14 z-20 sm:static">
           {/* AI Generate — la acción principal en pantalla ancha; en móvil vive en ⋯ para dejar sitio al cifrado */}
           <Button
@@ -77,7 +80,7 @@ export function AtrilHeader() {
             <Wand2
               className={`w-4 h-4 text-[var(--acc-ink)] ${isGeneratingAi ? "animate-spin" : ""}`}
             />
-            <span>{isGeneratingAi ? "Escuchando…" : "Letra del audio"}</span>
+            <span>{isGeneratingAi ? "Escuchando…" : "Transcribir letra"}</span>
           </Button>
 
           {/* Detección propia de acordes con tiempos, sin IA generativa */}
@@ -104,7 +107,7 @@ export function AtrilHeader() {
           <ActionMenu
             label="Más acciones de la canción"
             items={[
-              { label: isGeneratingAi ? "Escuchando…" : "Letra del audio", icon: Wand2, onSelect: handleGenerateWithAi, hidden: !esMovil },
+              { label: isGeneratingAi ? "Escuchando…" : "Transcribir letra", icon: Wand2, onSelect: handleGenerateWithAi, hidden: !esMovil },
               { label: isAnalyzingChords ? "Analizando..." : "Acordes del audio", icon: Music, onSelect: analisisAcordes && !isAnalyzingChords ? () => setShowAnalisisAcordes((v) => !v) : () => handleAnalyzeChordsFromAudio(), hidden: !esMovil || !audioUrl },
               { label: "Subir PDF, imagen o Word con acordes", icon: Upload, onSelect: () => setShowStructureUploadModal(true) },
               { label: "Compartir por WhatsApp o app", icon: MessageSquare, onSelect: () => setShowShareModal(true) },

@@ -1,0 +1,176 @@
+import { lazy, Suspense, useState } from 'react';
+import { List, Map as MapaIcono, Search, SlidersHorizontal, X } from 'lucide-react';
+import { ModalPortal } from '../../common/ModalPortal';
+import { Button, EmptyState, IconButton, Input, Select, Skeleton, Tabs } from '../../ui';
+import { AforoRango } from './AforoRango';
+import { FichaSalaCatalogo } from './FichaSalaCatalogo';
+import { ListaFestivalesCatalogo } from './ListaFestivalesCatalogo';
+import { ListaSalasCatalogo } from './ListaSalasCatalogo';
+import { useCatalogoSalas, type VistaCatalogo } from './useCatalogoSalas';
+
+const MapaCatalogo = lazy(() => import('./MapaCatalogo'));
+
+interface CatalogoSalasModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  /** Abre «Añadir escenario» para la sala o el festival que no está en el catálogo. */
+  onFaltaSala?: () => void;
+}
+
+type Seccion = 'salas' | 'festivales';
+
+const TIPOS = [
+  { valor: '', texto: 'Todos los tipos' },
+  { valor: 'sala', texto: 'Salas' },
+  { valor: 'festival', texto: 'Festivales' },
+  { valor: 'discoteca', texto: 'Discotecas' },
+  { valor: 'bar', texto: 'Bares con directo' },
+  { valor: 'ayuntamiento', texto: 'Ayuntamientos' },
+];
+
+const SECCIONES = [
+  { id: 'salas' as const, label: 'Salas' },
+  { id: 'festivales' as const, label: 'Festivales' },
+];
+
+const VISTAS = [
+  { id: 'lista' as const, label: 'Lista', icon: List },
+  { id: 'mapa' as const, label: 'Mapa', icon: MapaIcono },
+];
+
+/** Explorar el catálogo compartido (salas y festivales) y añadir lo que encaje a la agenda de la banda, en lista, en mapa o ficha a ficha. */
+export function CatalogoSalasModal({ isOpen, onClose, onFaltaSala }: CatalogoSalasModalProps) {
+  const [seccion, setSeccion] = useState<Seccion>('salas');
+  const [vista, setVista] = useState<VistaCatalogo>('lista');
+  const [filtrosAbiertos, setFiltrosAbiertos] = useState(false);
+  const c = useCatalogoSalas(isOpen, vista);
+  if (!isOpen) return null;
+
+  const enFicha = seccion === 'salas' && c.ficha !== null;
+  const filtrosActivos = [c.filtros.lugar.trim(), c.filtros.tipo, (c.filtros.aforoMin + c.filtros.aforoMax).trim(), c.filtros.conContacto].filter(Boolean).length;
+
+  return (
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] flex items-start justify-center overflow-y-auto overscroll-contain bg-[var(--scrim)]/90 p-2 pb-24 pt-2 sm:items-center sm:p-6 animate-fadeIn">
+        <div role="dialog" aria-modal="true" aria-label="Catálogo de salas" className="my-auto flex h-[92dvh] w-full max-w-3xl flex-col overflow-hidden rounded-[var(--r-l)] bg-[var(--surface)] text-[var(--ink)] sm:h-[90vh]">
+          <div className="flex shrink-0 items-start justify-between gap-3 bg-[var(--bg)]/60 px-4 py-3 sm:p-5">
+            <div>
+              <h2 className="text-base font-bold text-[var(--acc-ink)]">Catálogo de salas y festivales</h2>
+              <p className="hidden text-xs text-[var(--ink-2)] text-pretty sm:block">Lo que han encontrado todas las bandas, lo más fiable primero. Al añadirlo, pasa a tu agenda con su contacto.</p>
+            </div>
+            <IconButton label="Cerrar catálogo" onClick={onClose}>
+              <X className="h-4 w-4" />
+            </IconButton>
+          </div>
+
+          {!enFicha && (
+            <div className="flex shrink-0 items-center justify-between gap-3 px-4 pt-2 sm:px-5 sm:pt-3">
+              <Tabs aria-label="Qué buscar" items={SECCIONES} value={seccion} onChange={(id) => setSeccion(id as Seccion)} layout="fill" className="w-52" />
+              {seccion === 'salas' && <Tabs aria-label="Cómo verlas" items={VISTAS} value={vista} onChange={(id) => setVista(id as VistaCatalogo)} layout="fill" className="w-44" />}
+            </div>
+          )}
+
+          {seccion === 'festivales' ? (
+            <ListaFestivalesCatalogo activo={isOpen} />
+          ) : enFicha && c.ficha ? (
+            <div className="flex-1 overflow-y-auto p-4 sm:p-5">
+              {c.errorAlta && <p role="alert" className="mb-3 rounded-[var(--r-m)] bg-[var(--alert-soft)] px-3.5 py-2.5 text-sm text-[var(--alert)]">{c.errorAlta}</p>}
+              <FichaSalaCatalogo sala={c.ficha} anadiendo={c.anadiendo.has(c.ficha.id)} onAnadir={() => void c.anadir(c.ficha!.id)} onVolver={c.cerrarFicha} />
+            </div>
+          ) : (
+            <>
+              <div className="grid shrink-0 grid-cols-1 gap-2 px-4 py-2 sm:grid-cols-[1fr_1fr_auto] sm:p-4 sm:px-5">
+                <div className="flex gap-2 sm:contents">
+                  <div className="relative min-w-0 flex-1">
+                    <Search aria-hidden className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--ink-3)]" />
+                    <Input aria-label="Buscar por nombre o género" className="pl-9" placeholder="Nombre o género" value={c.filtros.texto} onChange={(e) => c.cambiar({ texto: e.target.value })} />
+                  </div>
+                  <Button size="sm" variant="neutral" className="shrink-0 sm:hidden" aria-expanded={filtrosAbiertos} aria-controls="filtros-catalogo" onClick={() => setFiltrosAbiertos((a) => !a)}>
+                    <SlidersHorizontal className="h-4 w-4" aria-hidden />
+                    Filtros{filtrosActivos > 0 && <span className="tabular-nums"> · {filtrosActivos}</span>}
+                  </Button>
+                </div>
+                <AforoRango min={c.filtros.aforoMin} max={c.filtros.aforoMax} onChange={c.cambiar} />
+                <div id="filtros-catalogo" className={`${filtrosAbiertos ? 'grid' : 'hidden'} grid-cols-1 gap-2 sm:contents`}>
+                  <Input aria-label="Ciudad o región" placeholder="Ciudad o región" value={c.filtros.lugar} onChange={(e) => c.cambiar({ lugar: e.target.value })} />
+                  <Select aria-label="Tipo de espacio" value={c.filtros.tipo} onChange={(e) => c.cambiar({ tipo: e.target.value })}>
+                    {TIPOS.map((t) => (
+                      <option key={t.valor} value={t.valor}>{t.texto}</option>
+                    ))}
+                  </Select>
+                  <label className="flex items-center gap-2 text-xs text-[var(--ink-2)] sm:col-span-3">
+                    <input type="checkbox" checked={c.filtros.conContacto} onChange={(e) => c.cambiar({ conContacto: e.target.checked })} />
+                    Solo salas con contacto para escribirles
+                  </label>
+                </div>
+              </div>
+
+              {c.errorAlta && <p role="alert" className="mx-4 mb-2 rounded-[var(--r-m)] bg-[var(--alert-soft)] px-3.5 py-2.5 text-sm text-[var(--alert)] sm:mx-5">{c.errorAlta}</p>}
+
+              {vista === 'mapa' ? (
+                <VistaMapa c={c} />
+              ) : (
+                <div className="flex-1 overflow-y-auto px-4 pb-4 sm:px-5 sm:pb-5">
+                  {c.cargando && !c.resultado ? (
+                    <ul className="space-y-2" aria-busy="true" aria-label="Buscando salas">
+                      {[0, 1, 2, 3].map((i) => (
+                        <li key={i}><Skeleton className="h-16" /></li>
+                      ))}
+                    </ul>
+                  ) : c.fallo ? (
+                    <EmptyState compact title="No hemos podido abrir el catálogo." description="Prueba otra vez en un momento." action={<Button size="sm" variant="neutral" onClick={c.reintentar}>Reintentar</Button>} />
+                  ) : !c.resultado || c.resultado.salas.length === 0 ? (
+                    <EmptyState compact title="Ninguna sala encaja con eso." description="Prueba con otra ciudad o quita algún filtro. Si conoces una que falta, añádela: la completamos y queda para todas las bandas." action={onFaltaSala && <Button size="sm" variant="neutral" onClick={onFaltaSala}>Añadir una sala que falta</Button>} />
+                  ) : (
+                    <>
+                      <p className="pb-2 text-xs text-[var(--ink-2)] tabular-nums" aria-live="polite">
+                        {c.resultado.total > c.resultado.mostradas ? `Mostrando ${c.resultado.mostradas} de ${c.resultado.total}. Afina la búsqueda o mira el mapa para ver el resto.` : `${c.resultado.total} ${c.resultado.total === 1 ? 'sala' : 'salas'}`}
+                      </p>
+                      <ListaSalasCatalogo salas={c.resultado.salas} cargando={c.cargando} anadiendo={c.anadiendo} onAnadir={(id) => void c.anadir(id)} onAbrir={(s) => void c.abrirFicha(s)} />
+                      {onFaltaSala && <FaltaSala onClick={onFaltaSala} />}
+                    </>
+                  )}
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </div>
+    </ModalPortal>
+  );
+}
+
+/** Invitación a añadir lo que no está: entra a la agenda de la banda y, desde ahí, al catálogo, donde se verifica y completa solo. */
+function FaltaSala({ onClick }: { onClick: () => void }) {
+  return (
+    <p className="pt-3 text-center text-xs text-[var(--ink-2)]">
+      ¿Falta una sala o un festival?{' '}
+      <button type="button" onClick={onClick} className="font-medium text-[var(--acc-ink)] underline-offset-2 hover:underline">Añádelo</button>
+      {' '}y lo completamos para todas las bandas.
+    </p>
+  );
+}
+
+/** El mapa con sus filtros: cuenta cuántas salas faltan por situar para no dar la impresión de que no existen. */
+function VistaMapa({ c }: { c: ReturnType<typeof useCatalogoSalas> }) {
+  const sinSituar = c.mapa ? c.mapa.total - c.mapa.puntos.length : 0;
+  return (
+    <div className="flex min-h-0 flex-1 flex-col px-4 pb-4 sm:px-5 sm:pb-5">
+      <p className="pb-2 text-xs text-[var(--ink-2)] tabular-nums" aria-live="polite">
+        {c.falloMapa ? (
+          <>No hemos podido cargar el mapa. <button type="button" className="text-[var(--acc-ink)] underline" onClick={c.reintentar}>Reintentar</button></>
+        ) : c.mapa ? (
+          `${c.mapa.puntos.length} ${c.mapa.puntos.length === 1 ? 'sala situada' : 'salas situadas'} en el mapa${sinSituar > 0 ? `; otras ${sinSituar} aún sin situar (míralas en la lista)` : ''}. Los puntos tenues son aproximados.`
+        ) : (
+          'Cargando el mapa…'
+        )}
+      </p>
+      <div className={`relative min-h-64 flex-1 overflow-hidden rounded-[var(--r-m)] bg-[var(--sunken)] transition-opacity ${c.cargandoMapa ? 'opacity-60' : ''}`}>
+        <Suspense fallback={<Skeleton className="h-full w-full" />}>
+          <MapaCatalogo puntos={c.mapa?.puntos ?? []} onSeleccionar={(id) => void c.abrirFicha(id)} />
+        </Suspense>
+        {c.abriendoFicha && <p className="absolute bottom-3 left-3 rounded-[var(--r-pill)] bg-[var(--surface)] px-3 py-1.5 text-xs">Abriendo ficha…</p>}
+      </div>
+    </div>
+  );
+}

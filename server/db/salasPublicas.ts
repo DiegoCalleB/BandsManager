@@ -5,14 +5,14 @@ import { getSupabase } from './core.js';
 import { salasPublicas } from '../utils/seo/salas/publicas.js';
 import type { FilaSalaPublica, SalaPublica } from '../utils/seo/salas/tipos.js';
 
-const COLUMNAS = 'id,nombre,ciudad,region,direccion,tipo,aforo,genero,website,instagram,nivel,no_contactar,estado_negocio,fuentes';
+const COLUMNAS = 'id,nombre,ciudad,region,direccion,tipo,aforo,genero,website,instagram,nivel,no_contactar,estado_negocio,fuentes,updated_at';
 const PAGINA = 1000;
 
 export async function salasPublicasDeDb(): Promise<SalaPublica[]> {
   const filas: FilaSalaPublica[] = [];
   for (let desde = 0; ; desde += PAGINA) {
     const { data, error } = await getSupabase()
-      .from('salas_catalogo')
+      .from('catalogo_salas')
       .select(COLUMNAS)
       .eq('tipo', 'sala')
       .eq('no_contactar', false)

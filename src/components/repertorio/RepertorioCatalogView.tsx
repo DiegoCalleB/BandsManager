@@ -18,6 +18,7 @@ export interface RepertorioCatalogViewProps {
   albumsList: string[];
   colors: ThemeColors;
   bName: string;
+  bandId?: string;
   bandLogoUrl: string;
   setSongs: Dispatch<SetStateAction<Song[]>>;
   setSetlists: Dispatch<SetStateAction<Setlist[]>>;
@@ -64,7 +65,7 @@ export interface RepertorioCatalogViewProps {
  * @param props Estado y callbacks del contenedor ({@link RepertorioCatalogViewProps}).
  * @returns Sección de interfaz.
  */
-export function RepertorioCatalogView({ activeTab, catalogoViewMode, songs, albumsList, colors, bName, bandLogoUrl, setSongs, setSetlists, handleToggleFavorite, activePlayerSong, isPlayerPlaying, selectPlayerSongWithQueue, setDeleteAlbumData, setAssignSongsModalData, setActiveMemberNotesSong, setActiveChordsSong, handleOpenStudioModal, setEditingSong, setShowSongModal, handleDeleteSong, handleShareSong, filteredSongs, catalogAlbumFilter, setCatalogAlbumFilter, catalogStatusFilter, setCatalogStatusFilter, catalogSearch, groupByAlbum, setGroupByAlbum, showCatalogActionsMenu, setShowCatalogActionsMenu, handleNormalizeCatalogTitles, selectedCatalogIds, setSelectedCatalogIds, clearCatalogSelection, toggleCatalogSelect, handleBulkAddSelectedToSetlist, handleBulkDeleteSongs, handleUpdateSongFromStudio, draggedCatalogSongId, setDraggedCatalogSongId, dragOverCatalogSongId, setDragOverCatalogSongId, handleDropCatalogSong }: RepertorioCatalogViewProps) {
+export function RepertorioCatalogView({ activeTab, catalogoViewMode, songs, albumsList, colors, bName, bandId, bandLogoUrl, setSongs, setSetlists, handleToggleFavorite, activePlayerSong, isPlayerPlaying, selectPlayerSongWithQueue, setDeleteAlbumData, setAssignSongsModalData, setActiveMemberNotesSong, setActiveChordsSong, handleOpenStudioModal, setEditingSong, setShowSongModal, handleDeleteSong, handleShareSong, filteredSongs, catalogAlbumFilter, setCatalogAlbumFilter, catalogStatusFilter, setCatalogStatusFilter, catalogSearch, groupByAlbum, setGroupByAlbum, showCatalogActionsMenu, setShowCatalogActionsMenu, handleNormalizeCatalogTitles, selectedCatalogIds, setSelectedCatalogIds, clearCatalogSelection, toggleCatalogSelect, handleBulkAddSelectedToSetlist, handleBulkDeleteSongs, handleUpdateSongFromStudio, draggedCatalogSongId, setDraggedCatalogSongId, dragOverCatalogSongId, setDragOverCatalogSongId, handleDropCatalogSong }: RepertorioCatalogViewProps) {
   return (
     <>
 {/* VIEW 2: DISCOGRAFÍA & CATÁLOGO GENERAL DE TEMAS (UNIFICADO) */}
@@ -76,6 +77,7 @@ export function RepertorioCatalogView({ activeTab, catalogoViewMode, songs, albu
               albumsList={albumsList}
               colors={colors}
               bandName={bName}
+              bandId={bandId}
               bandLogoUrl={bandLogoUrl}
               setSongs={setSongs}
               setSetlists={setSetlists}

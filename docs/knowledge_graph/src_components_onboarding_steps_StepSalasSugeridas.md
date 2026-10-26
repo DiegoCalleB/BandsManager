@@ -18,6 +18,7 @@ Exporta: StepSalasSugeridas.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_booking_catalogo_LogoSala|src/components/booking/catalogo/LogoSala.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_onboarding_wizard_hooks_useSalasSugeridasStep|src/components/onboarding/wizard/hooks/useSalasSugeridasStep.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_services_apiCatalogo|src/services/apiCatalogo.ts]] *(Layer: #service, Domain: #system)*

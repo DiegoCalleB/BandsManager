@@ -24,6 +24,8 @@ Salas de España a partir de OpenStreetMap (datos abiertos, ODbL): reglas puras,
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server_services_importarDeFuente|server/services/importarDeFuente.ts]] *(from #service)*
+- [[server_services_importarSalasBandflow|server/services/importarSalasBandflow.ts]] *(from #service)*
 - [[server_services_importarSalasOsm|server/services/importarSalasOsm.ts]] *(from #service)*
 
 ---

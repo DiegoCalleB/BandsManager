@@ -24,6 +24,11 @@ Catálogo compartido de salas: alta en la agenda de la banda. El email y el tel�
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_booking_catalogo_FichaSalaCatalogo|src/components/booking/catalogo/FichaSalaCatalogo.tsx]] *(from #frontend)*
+- [[src_components_booking_catalogo_ListaFestivalesCatalogo|src/components/booking/catalogo/ListaFestivalesCatalogo.tsx]] *(from #frontend)*
+- [[src_components_booking_catalogo_ListaSalasCatalogo|src/components/booking/catalogo/ListaSalasCatalogo.tsx]] *(from #frontend)*
+- [[src_components_booking_catalogo_useCatalogoFestivales|src/components/booking/catalogo/useCatalogoFestivales.ts]] *(from #frontend)*
+- [[src_components_booking_catalogo_useCatalogoSalas|src/components/booking/catalogo/useCatalogoSalas.ts]] *(from #frontend)*
 - [[src_components_chatbot_hooks_useCatalogoActions|src/components/chatbot/hooks/useCatalogoActions.ts]] *(from #frontend)*
 - [[src_components_onboarding_steps_StepSalasSugeridas|src/components/onboarding/steps/StepSalasSugeridas.tsx]] *(from #frontend)*
 - [[src_components_onboarding_wizard_hooks_useSalasSugeridasStep|src/components/onboarding/wizard/hooks/useSalasSugeridasStep.ts]] *(from #frontend)*
@@ -31,6 +36,7 @@ Catálogo compartido de salas: alta en la agenda de la banda. El email y el tel�
 ---
 
 ## 🧪 Tests que lo cubren
+- `src/components/booking/catalogo/__tests__/CatalogoSalasModal.test.tsx`
 - `src/components/onboarding/__tests__/StepSalasSugeridas.behavior.test.tsx`
 - `src/services/__tests__/apiCatalogo.test.ts`
 

@@ -14,7 +14,7 @@ const { medirSenalesDelVideo } = await import("../senalesVideo.js");
 const curva = Array.from({ length: 120 }, (_, t) => ({ t, db: t >= 60 && t < 90 ? -10 : -30 }));
 const ficha = { esMusica: true as boolean | null, heatmap: [] as { start: number; end: number; valor: number }[], duration: 120 };
 const entrada = { videoId: "8Jdw41lYdak", objetivoClip: 30, tipoContenido: "concierto" as const, ficha };
-const vacias = { ventanasEnergia: [], ventanasVirales: [], cambiosDePlano: [], publico: { curva: null, nota: "" } };
+const vacias = { ventanasEnergia: [], ventanasVirales: [], cambiosDePlano: [], curva: [], publico: { curva: null, nota: "" } };
 
 beforeEach(() => {
   vi.resetAllMocks();
