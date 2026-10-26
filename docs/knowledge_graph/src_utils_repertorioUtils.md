@@ -48,6 +48,7 @@ Song & Setlist calculation utilities
 - [[src_components_repertorio_SongModal|src/components/repertorio/SongModal.tsx]] *(from #frontend)*
 - [[src_components_song_studio_SongStudioReadinessSelect|src/components/song_studio/SongStudioReadinessSelect.tsx]] *(from #frontend)*
 - [[src_components_song_studio_SongStudioToolsMenu|src/components/song_studio/SongStudioToolsMenu.tsx]] *(from #frontend)*
+- [[src_utils_audioDeCancion|src/utils/audioDeCancion.ts]] *(from #service)*
 - [[src_utils_repertorioPdf|src/utils/repertorioPdf.ts]] *(from #service)*
 
 ---

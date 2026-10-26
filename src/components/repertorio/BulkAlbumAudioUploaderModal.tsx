@@ -4,6 +4,8 @@ import { Song, ThemeColors } from "../../types";
 import { ModalPortal } from "../common/ModalPortal";
 import { uploadFileToServer } from "../../utils/audioStorage";
 import { formatSecondsToMmSs } from "../../utils/repertorioUtils";
+import { conAudioNuevo, esUrlSubida, idUnico, leerDuracionSegundos, siguientePista } from "../../utils/audioDeCancion";
+import { mejorCancionParaArchivo } from "../../utils/emparejarAudiosDisco";
 import { apiFetch } from "../../utils/api";
 import { analizarAcordesDelAudio } from "../../utils/analisisAcordesCliente";
 import { IconButton, Input, Select } from '../ui';
@@ -18,6 +20,8 @@ interface BulkAlbumAudioUploaderModalProps {
   colors: ThemeColors;
   bandId?: string;
   bandName?: string;
+  /** «anadir»: cada archivo es una canción nueva del disco. «emparejar»: cada archivo pone el audio de una canción que aún no lo tiene. */
+  modo?: "anadir" | "emparejar";
   isNewAlbumMode?: boolean;
   onSaveUpdatedSongs: (updatedSongs: Song[], newAlbumName?: string) => void;
 }
@@ -39,12 +43,6 @@ interface UploadMatchItem {
   esAproximado?: boolean;
 }
 
-/** Id único en el cliente: `prefijo_<ms>[_<indice>]_<4 caracteres aleatorios>`. Solo se llama desde handlers. */
-function idUnico(prefijo: string, indice?: number): string {
-  const sufijo = Math.random().toString(36).substring(2, 6);
-  return indice === undefined ? `${prefijo}_${Date.now()}_${sufijo}` : `${prefijo}_${Date.now()}_${indice}_${sufijo}`;
-}
-
 export function BulkAlbumAudioUploaderModal({
   isOpen,
   onClose,
@@ -52,6 +50,7 @@ export function BulkAlbumAudioUploaderModal({
   albumSongs = [],
   bandId,
   bandName,
+  modo,
   isNewAlbumMode = false,
   onSaveUpdatedSongs
 }: BulkAlbumAudioUploaderModalProps) {
@@ -79,7 +78,9 @@ export function BulkAlbumAudioUploaderModal({
   const coverInputRef = useRef<HTMLInputElement>(null);
 
   const isCreatingBrandNewAlbum =
-    isNewAlbumMode || !initialAlbumName || albumSongs.length === 0;
+    modo !== "anadir" && (isNewAlbumMode || !initialAlbumName || albumSongs.length === 0);
+  // Sin desplegable de asignación: cada archivo crea una canción (disco nuevo o canciones añadidas a uno existente).
+  const soloNuevas = isCreatingBrandNewAlbum || modo === "anadir";
 
   // Stop audio when unmounting or closing
   useEffect(() => {
@@ -163,42 +164,6 @@ export function BulkAlbumAudioUploaderModal({
     };
   };
 
-  // Smart Matching algorithm: finds the best song for a given audio file when matching existing songs
-  const findBestMatchingSong = (
-    fileName: string,
-    songs: Song[],
-    alreadyAssignedSongIds: Set<string>,
-  ): string | null => {
-    const cleanName = fileName.toLowerCase().replace(/\.[^/.]+$/, "");
-
-    // 1. Try track number regex match: e.g."01 - Song","1. Song","track 02","01_Song"
-    const numMatch =
-      cleanName.match(/^(?:track\s*[-_]?)?0?(\d+)/i) ||
-      cleanName.match(/(?:[-_]|\s)0?(\d+)$/);
-    if (numMatch && numMatch[1]) {
-      const trackNum = parseInt(numMatch[1], 10);
-      const songByTrack = songs.find(
-        (s, idx) =>
-          !alreadyAssignedSongIds.has(s.id) &&
-          (s.ordenAlbum === trackNum || idx + 1 === trackNum),
-      );
-      if (songByTrack) return songByTrack.id;
-    }
-
-    // 2. Try exact/contains title match
-    for (const s of songs) {
-      if (alreadyAssignedSongIds.has(s.id)) continue;
-      const sTitle = s.titulo.toLowerCase().trim();
-      if (cleanName.includes(sTitle) || sTitle.includes(cleanName)) {
-        return s.id;
-      }
-    }
-
-    // 3. Default: first unassigned song in order
-    const nextUnassigned = songs.find((s) => !alreadyAssignedSongIds.has(s.id));
-    return nextUnassigned ? nextUnassigned.id : null;
-  };
-
   const handleCoverSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -240,32 +205,11 @@ export function BulkAlbumAudioUploaderModal({
       const objectUrl = URL.createObjectURL(file);
       const { title, trackNumber } = cleanFileNameToTitle(file.name);
 
-      // Detect duration accurately
-      let durationSec: number;
-      try {
-        durationSec = await new Promise<number>((resolve) => {
-          const tempA = new Audio(objectUrl);
-          tempA.onloadedmetadata = () => {
-            if (
-              tempA.duration &&
-              !isNaN(tempA.duration) &&
-              tempA.duration > 0
-            ) {
-              resolve(Math.round(tempA.duration));
-            } else {
-              resolve(210);
-            }
-          };
-          tempA.onerror = () => resolve(210);
-          setTimeout(() => resolve(210), 2000);
-        });
-      } catch {
-        durationSec = 210;
-      }
+      const durationSec = await leerDuracionSegundos(objectUrl);
 
       let matchedSongId: string | null = null;
-      if (!isCreatingBrandNewAlbum) {
-        matchedSongId = findBestMatchingSong(
+      if (!soloNuevas) {
+        matchedSongId = mejorCancionParaArchivo(
           file.name,
           albumSongs,
           assignedSet,
@@ -343,7 +287,7 @@ export function BulkAlbumAudioUploaderModal({
       return;
     }
 
-    if (!isCreatingBrandNewAlbum) {
+    if (!soloNuevas) {
       const validMatches = items.filter((it) => it.matchedSongId !== null);
       if (validMatches.length === 0) {
         setFeedbackMsg({
@@ -377,9 +321,12 @@ export function BulkAlbumAudioUploaderModal({
 
     const newlyCreatedSongs: Song[] = [];
     let successCount = 0;
+    let fallidas = 0;
 
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
+      // En «emparejar», un archivo sin canción asignada se ignora: nunca crea ni pisa nada.
+      if (!soloNuevas && !item.matchedSongId) continue;
 
       setUploadProgress({
         current: i + 1,
@@ -400,6 +347,8 @@ export function BulkAlbumAudioUploaderModal({
           category: "audio",
           folder: `discografia/${finalAlbumTitle.replace(/[^a-zA-Z0-9_-]/g, "_")}`,
         });
+        // Si la subida falla, uploadFileToServer devuelve una referencia local: guardarla dejaría la canción sin audio.
+        if (!esUrlSubida(uploadedUrl)) throw new Error("No se pudo subir el audio al servidor.");
 
         const newDurationFormatted = formatSecondsToMmSs(item.durationSeconds);
         const newDurationMins = Math.max(
@@ -407,7 +356,7 @@ export function BulkAlbumAudioUploaderModal({
           Math.round(item.durationSeconds / 60),
         );
 
-        if (isCreatingBrandNewAlbum || !item.matchedSongId) {
+        if (soloNuevas) {
           // CREATE NEW SONG IN DATABASE
           const newSong: Song = {
             id: idUnico("song_bulk", i),
@@ -415,7 +364,7 @@ export function BulkAlbumAudioUploaderModal({
             artista: bandName || "Tu Banda",
             album: finalAlbumTitle,
             albumDisco: finalAlbumTitle,
-            ordenAlbum: item.trackNumber || i + 1,
+            ordenAlbum: isCreatingBrandNewAlbum ? item.trackNumber || i + 1 : siguientePista(albumSongs) + newlyCreatedSongs.length,
             duracion: newDurationFormatted,
             duracionSegundos: item.durationSeconds,
             duracionMinutos: newDurationMins,
@@ -480,27 +429,7 @@ export function BulkAlbumAudioUploaderModal({
           // UPDATE EXISTING SONG
           const targetSong = updatedSongsMap.get(item.matchedSongId);
           if (targetSong) {
-            const updatedSong: Song = {
-              ...targetSong,
-              duracion: newDurationFormatted,
-              duracionSegundos: item.durationSeconds,
-              duracionMinutos: newDurationMins,
-              audioPrincipalUrl: uploadedUrl,
-              portadaUrl: uploadedCoverUrl || targetSong.portadaUrl,
-              audioIdeas: [
-                {
-                  id: idUnico("idea_master"),
-                  titulo: "Audio Máster Completo (Estudio)",
-                  seccion: "general",
-                  audioUrl: uploadedUrl,
-                  subidoPor: "Subida Disco",
-                  fecha: new Date().toISOString(),
-                },
-                ...(targetSong.audioIdeas || []).filter(
-                  (a) => !a.titulo.toLowerCase().includes("preview oficial"),
-                ),
-              ],
-            };
+            const updatedSong = conAudioNuevo(targetSong, uploadedUrl, item.durationSeconds, uploadedCoverUrl || undefined);
 
             const savedData = await apiFetch<{ song?: Song }>(
               `/api/songs/${encodeURIComponent(updatedSong.id)}`,
@@ -552,6 +481,7 @@ export function BulkAlbumAudioUploaderModal({
       } catch (errCapturado) {
         const err = comoErrorCapturado(errCapturado);
         console.error(`Error uploading track ${item.fileName}:`, err);
+        fallidas++;
         setItems((prev) =>
           prev.map((it, idx) =>
             idx === i
@@ -568,17 +498,18 @@ export function BulkAlbumAudioUploaderModal({
 
     setIsUploading(false);
 
-    if (isCreatingBrandNewAlbum) {
+    if (soloNuevas) {
       onSaveUpdatedSongs(newlyCreatedSongs, finalAlbumTitle);
     } else {
       const finalUpdatedList = Array.from(updatedSongsMap.values());
       onSaveUpdatedSongs(finalUpdatedList, finalAlbumTitle);
     }
 
-    setFeedbackMsg({
-      type: "success",
-      text: `¡${successCount} pistas completas guardadas con éxito en el álbum "${finalAlbumTitle}"!`,
-    });
+    setFeedbackMsg(
+      fallidas > 0
+        ? { type: "error", text: `${fallidas} de ${successCount + fallidas} audios no se pudieron guardar: mira el error en cada fila. Guardados: ${successCount}.` }
+        : { type: "success", text: `¡${successCount} ${successCount === 1 ? "pista guardada" : "pistas guardadas"} con éxito en el álbum "${finalAlbumTitle}"!` },
+    );
   };
 
   return (
@@ -598,7 +529,9 @@ export function BulkAlbumAudioUploaderModal({
                 <span>
                   {isCreatingBrandNewAlbum
                     ? "Crear Álbum desde Carpeta / MP3s"
-                    : "Subir Canciones Completas del Disco"}
+                    : soloNuevas
+                      ? "Añadir canciones al disco"
+                      : "Emparejar audios con canciones"}
                 </span>
               </h3>
               <p className="text-xs font-sans opacity-60 mt-0.5 flex items-center gap-1.5">
@@ -610,7 +543,9 @@ export function BulkAlbumAudioUploaderModal({
                   •{" "}
                   {isCreatingBrandNewAlbum
                     ? `${items.length} pistas seleccionadas`
-                    : `${albumSongs.length} temas en catálogo`}
+                    : soloNuevas
+                      ? `${albumSongs.length} temas en el disco`
+                      : `${albumSongs.length} temas sin audio`}
                 </span>
               </p>
             </div>
@@ -709,7 +644,7 @@ export function BulkAlbumAudioUploaderModal({
               <p className="text-base font-bold">
                 {items.length > 0
                   ? `${items.length} archivos de audio cargados`
-                  : "Arrastra aquí todos los archivos de audio del disco"}
+                  : soloNuevas ? "Arrastra aquí el audio de las canciones nuevas" : "Arrastra aquí los audios que quieres emparejar"}
               </p>
               <p className="text-xs font-sans opacity-60 mt-1">
                 o haz clic para explorar tu carpeta de música (MP3, WAV, FLAC,
@@ -767,7 +702,9 @@ export function BulkAlbumAudioUploaderModal({
                 <span>
                   {isCreatingBrandNewAlbum
                     ? "Pistas del Nuevo Álbum"
-                    : "Archivos de Audio y Asignación"}
+                    : soloNuevas
+                      ? "Canciones nuevas"
+                      : "Archivos de Audio y Asignación"}
                 </span>
                 <span>
                   {items.length} {items.length === 1 ? "pista" : "pistas"}
@@ -809,10 +746,10 @@ export function BulkAlbumAudioUploaderModal({
                         </button>
 
                         <div className="min-w-0 flex-1">
-                          {isCreatingBrandNewAlbum ? (
+                          {soloNuevas ? (
                             <div className="flex items-center gap-2">
                               <span className="text-xs font-sans text-[var(--ink-2)] w-5">
-                                #{item.trackNumber || idx + 1}
+                                #{isCreatingBrandNewAlbum ? item.trackNumber || idx + 1 : siguientePista(albumSongs) + idx}
                               </span>
                               <Input
                                 size="sm"
@@ -839,7 +776,7 @@ export function BulkAlbumAudioUploaderModal({
                       </div>
 
                       {/* Right: Assigned song dropdown for existing album */}
-                      {!isCreatingBrandNewAlbum && (
+                      {!soloNuevas && (
                         <div className="flex items-center gap-2 min-w-0 md:w-[320px]">
                           <Select
                             size="sm"
@@ -850,7 +787,7 @@ export function BulkAlbumAudioUploaderModal({
                             }
                             wrapperClassName="w-full"
                           >
-                            <option value="">-- No asignar a ninguna --</option>
+                            <option value="">— No usar este archivo —</option>
                             {albumSongs.map((s, sIdx) => (
                               <option key={s.id} value={s.id}>
                                 Pista {s.ordenAlbum || sIdx + 1}: {s.titulo} (
@@ -896,7 +833,7 @@ export function BulkAlbumAudioUploaderModal({
                       )}
 
                       {/* Status Icon for New Album */}
-                      {isCreatingBrandNewAlbum && (
+                      {soloNuevas && (
                         <div className="flex items-center justify-end">
                           {item.status === "success" && (
                             <span
@@ -972,7 +909,9 @@ export function BulkAlbumAudioUploaderModal({
                 <span>
                   {isCreatingBrandNewAlbum
                     ? `Crear Disco con ${items.length} Pistas`
-                    : `Guardar Pistas Completas`}
+                    : soloNuevas
+                      ? `Añadir ${items.length} ${items.length === 1 ? "canción" : "canciones"}`
+                      : "Guardar audios"}
                 </span>
               </>
             )}

@@ -1,7 +1,7 @@
 import { PopoverAncla } from '../ui/PopoverAncla';
 import React, { useState } from "react";
 import { Song, ThemeColors, Setlist } from "../../types";
-import { Disc, Disc3, Play, Pause, Trash2, Edit3, Plus, Clock, ChevronDown, ChevronUp, Layers, Scissors, FolderUp, FileText, Headphones, Loader2, Search, X, Download } from "lucide-react";
+import { Disc, Disc3, Play, Pause, Plus, Clock, ChevronDown, ChevronUp, Layers, Scissors, FolderUp, FileText, Headphones, Loader2, Search, X, Download } from "lucide-react";
 import { AlbumCover } from "../AlbumCover";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import { saveSongsToLocalStorageSafely } from "../../utils/audioStorage";
@@ -16,6 +16,8 @@ import { ExportAlbumSongsModal } from "./ExportAlbumSongsModal";
 import { SongCardRow } from "./SongCardRow";
 import { ShowIcon } from "../ui/ShowIcon";
 import { ActionMenu, Button, IconButton, Input } from "../ui";
+import { accionesDeDisco } from "./accionesDisco";
+import { useSubirAudioCancion } from "../../hooks/useSubirAudioCancion";
 import { resumirTranscripcion } from "../../utils/transcripcionMasiva";
 import { colaActiva, useColaLetras } from "../../hooks/useColaLetras";
 import { useReajusteAlCambiar } from "../../hooks/useReajusteAlCambiar";
@@ -103,7 +105,12 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
   const [bulkUploadAlbum, setBulkUploadAlbum] = useState<{
     name: string;
     songs: Song[];
+    modo?: "anadir" | "emparejar";
   } | null>(null);
+  const subirAudio = useSubirAudioCancion({
+    bandId,
+    alActualizar: (nueva) => setSongs((prev) => prev.map((x) => (x.id === nueva.id ? nueva : x))),
+  });
   const [dynamicsAnalysis, setDynamicsAnalysis] = useState<{
     running: boolean;
     done: number;
@@ -976,47 +983,15 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
 
                     <ActionMenu
                       label={`Más acciones de ${album}`}
-                      items={[
-                        {
-                          label: "Editar disco y portada",
-                          icon: Edit3,
-                          hidden: !onEditAlbum,
-                          onSelect: () => onEditAlbum?.(album),
-                        },
-                        {
-                          label: "Exportar disco",
-                          icon: Download,
-                          hidden: sortedAlbumSongs.length === 0,
-                          onSelect: () =>
-                            setExportModalData({
-                              isOpen: true,
-                              albumName: album,
-                            }),
-                        },
-                        {
-                          label: "Subir audios",
-                          icon: FolderUp,
-                          hidden: sortedAlbumSongs.length === 0,
-                          onSelect: () =>
-                            setBulkUploadAlbum({
-                              name: album,
-                              songs: sortedAlbumSongs,
-                            }),
-                        },
-                        {
-                          label: "Eliminar álbum",
-                          icon: Trash2,
-                          tone: "danger",
-                          hidden:
-                            !onRequestDeleteAlbum ||
-                            album === "Singles / Sin Disco",
-                          onSelect: () =>
-                            onRequestDeleteAlbum?.(
-                              album,
-                              sortedAlbumSongs.length,
-                            ),
-                        },
-                      ]}
+                      items={accionesDeDisco({
+                        album,
+                        canciones: sortedAlbumSongs,
+                        onEditar: onEditAlbum && (() => onEditAlbum(album)),
+                        onExportar: () => setExportModalData({ isOpen: true, albumName: album }),
+                        onAnadirCancion: () => setBulkUploadAlbum({ name: album, songs: sortedAlbumSongs, modo: "anadir" }),
+                        onEmparejarAudios: (sinAudio) => setBulkUploadAlbum({ name: album, songs: sinAudio, modo: "emparejar" }),
+                        onEliminar: onRequestDeleteAlbum && (() => onRequestDeleteAlbum(album, sortedAlbumSongs.length)),
+                      })}
                     />
 
                     {/* Expand / Collapse Toggle Button */}
@@ -1072,6 +1047,8 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                             onSelectSong?.(s, false, sortedAlbumSongs)
                           }
                           onToggleFavorite={() => toggleFavoriteSong(s.id)}
+                          onUploadAudio={() => subirAudio.abrir(s)}
+                          subiendoAudio={subirAudio.subiendoId === s.id}
                           onOpenChords={
                             onOpenChords ? () => onOpenChords(s) : undefined
                           }
@@ -1236,6 +1213,8 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
           }}
         />
 
+        <input {...subirAudio.inputProps} />
+
         {/* Bulk Album Audio Master Uploader Modal */}
         {bulkUploadAlbum && (
           <BulkAlbumAudioUploaderModal
@@ -1243,6 +1222,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
             onClose={() => setBulkUploadAlbum(null)}
             albumName={bulkUploadAlbum.name}
             albumSongs={bulkUploadAlbum.songs}
+            modo={bulkUploadAlbum.modo}
             colors={colors}
             bandId={bandId}
             bandName={bandName}

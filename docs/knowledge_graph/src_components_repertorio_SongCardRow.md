@@ -20,6 +20,7 @@ Exporta: SongCardRowProps, SongCardRow.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_audioDeCancion|src/utils/audioDeCancion.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_formatSongTitle|src/utils/formatSongTitle.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_irisTracks|src/utils/irisTracks.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_posicionMenu|src/utils/posicionMenu.ts]] *(Layer: #service, Domain: #system)*

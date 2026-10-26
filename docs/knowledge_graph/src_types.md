@@ -386,6 +386,7 @@ _Sin dependencias salientes directas._
 - [[src_components_reels_SocialGrowthPlanView|src/components/reels/SocialGrowthPlanView.tsx]] *(from #frontend)*
 - [[src_components_reels_ViralGrowthStudio|src/components/reels/ViralGrowthStudio.tsx]] *(from #frontend)*
 - [[src_components_ReelsCenter|src/components/ReelsCenter.tsx]] *(from #frontend)*
+- [[src_components_repertorio_accionesDisco|src/components/repertorio/accionesDisco.ts]] *(from #frontend)*
 - [[src_components_repertorio_ActiveSetlistHeader|src/components/repertorio/ActiveSetlistHeader.tsx]] *(from #frontend)*
 - [[src_components_repertorio_AddSongsToSetlistModal|src/components/repertorio/AddSongsToSetlistModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_AssignSetlistModal|src/components/repertorio/AssignSetlistModal.tsx]] *(from #frontend)*
@@ -535,6 +536,7 @@ _Sin dependencias salientes directas._
 - [[src_hooks_useShareModal|src/hooks/useShareModal.ts]] *(from #hook)*
 - [[src_hooks_useStagePlayer|src/hooks/useStagePlayer.ts]] *(from #hook)*
 - [[src_hooks_useStudioShareModal|src/hooks/useStudioShareModal.ts]] *(from #hook)*
+- [[src_hooks_useSubirAudioCancion|src/hooks/useSubirAudioCancion.ts]] *(from #hook)*
 - [[src_services_api|src/services/api.ts]] *(from #service)*
 - [[src_services_sesionLocal|src/services/sesionLocal.ts]] *(from #service)*
 - [[src_services_tiposApi|src/services/tiposApi.ts]] *(from #service)*
@@ -546,6 +548,7 @@ _Sin dependencias salientes directas._
 - [[src_utils_analisisAcordesCliente|src/utils/analisisAcordesCliente.ts]] *(from #service)*
 - [[src_utils_appDataNormalize|src/utils/appDataNormalize.ts]] *(from #service)*
 - [[src_utils_audioCueDetector|src/utils/audioCueDetector.ts]] *(from #service)*
+- [[src_utils_audioDeCancion|src/utils/audioDeCancion.ts]] *(from #service)*
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(from #service)*
 - [[src_utils_bandGrowthTiers|src/utils/bandGrowthTiers.ts]] *(from #service)*
 - [[src_utils_bookingFollowup|src/utils/bookingFollowup.ts]] *(from #service)*
@@ -558,6 +561,7 @@ _Sin dependencias salientes directas._
 - [[src_utils_cuadriculaCompases|src/utils/cuadriculaCompases.ts]] *(from #service)*
 - [[src_utils_duplicateLeads|src/utils/duplicateLeads.ts]] *(from #service)*
 - [[src_utils_emailFormatter|src/utils/emailFormatter.ts]] *(from #service)*
+- [[src_utils_emparejarAudiosDisco|src/utils/emparejarAudiosDisco.ts]] *(from #service)*
 - [[src_utils_energyPacingUtils|src/utils/energyPacingUtils.ts]] *(from #service)*
 - [[src_utils_epkTraducciones|src/utils/epkTraducciones.ts]] *(from #service)*
 - [[src_utils_epkUtils|src/utils/epkUtils.ts]] *(from #service)*
@@ -634,6 +638,7 @@ _Sin dependencias salientes directas._
 - `src/components/repertorio/__tests__/SetlistModal.behavior.test.tsx`
 - `src/components/repertorio/__tests__/SetlistShowItemRowContracts.test.ts`
 - `src/components/repertorio/__tests__/SpotifyDiscographyModal.behavior.test.tsx`
+- `src/components/repertorio/__tests__/accionesDisco.test.ts`
 - `src/components/repertorio/__tests__/showItemForm.test.ts`
 - `src/components/repertorio/live_concert_album/__tests__/liveConcertAlbumContracts.test.ts`
 - `src/components/repertorio/song_transition/__tests__/songTransitionContracts.test.ts`
@@ -646,10 +651,12 @@ _Sin dependencias salientes directas._
 - `src/hooks/__tests__/useStagePlayer.behavior.test.ts`
 - `src/utils/__tests__/agendaASetlist.test.ts`
 - `src/utils/__tests__/audioCueDetector.test.ts`
+- `src/utils/__tests__/audioDeCancion.test.ts`
 - `src/utils/__tests__/bookingUtils.test.ts`
 - `src/utils/__tests__/calendarConflicts.test.ts`
 - `src/utils/__tests__/campaignMatch.test.ts`
 - `src/utils/__tests__/duplicateLeads.test.ts`
+- `src/utils/__tests__/emparejarAudiosDisco.test.ts`
 - `src/utils/__tests__/energyPacingUtils.test.ts`
 - `src/utils/__tests__/epkTraducciones.test.ts`
 - `src/utils/__tests__/epkUtils.test.ts`

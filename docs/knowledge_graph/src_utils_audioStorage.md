@@ -72,6 +72,7 @@ Audio Storage & Utility Helpers for BandManager
 - [[src_hooks_useMezclaStems|src/hooks/useMezclaStems.ts]] *(from #hook)*
 - [[src_hooks_useSeparacionIris|src/hooks/useSeparacionIris.ts]] *(from #hook)*
 - [[src_hooks_useStagePlayer|src/hooks/useStagePlayer.ts]] *(from #hook)*
+- [[src_hooks_useSubirAudioCancion|src/hooks/useSubirAudioCancion.ts]] *(from #hook)*
 - [[src_utils_audioCueDetector|src/utils/audioCueDetector.ts]] *(from #service)*
 - [[src_utils_audioParaSubida|src/utils/audioParaSubida.ts]] *(from #service)*
 - [[src_utils_stemSeparator|src/utils/stemSeparator.ts]] *(from #service)*

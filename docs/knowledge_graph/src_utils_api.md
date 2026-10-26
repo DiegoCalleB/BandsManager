@@ -114,6 +114,7 @@ Exporta: ApiRequestError, getActiveBandId, apiFetchRaw, apiFetch, safeJsonFetch.
 - [[src_hooks_useEmailValidation|src/hooks/useEmailValidation.ts]] *(from #hook)*
 - [[src_hooks_useNegotiationSimulation|src/hooks/useNegotiationSimulation.ts]] *(from #hook)*
 - [[src_hooks_useSeparacionIris|src/hooks/useSeparacionIris.ts]] *(from #hook)*
+- [[src_hooks_useSubirAudioCancion|src/hooks/useSubirAudioCancion.ts]] *(from #hook)*
 - [[src_utils_analisisAcordesCliente|src/utils/analisisAcordesCliente.ts]] *(from #service)*
 - [[src_utils_promocionApi|src/utils/promocionApi.ts]] *(from #service)*
 - [[ui_calendar_conflicts|Avisos de choque en el calendario]] *(from #frontend)*

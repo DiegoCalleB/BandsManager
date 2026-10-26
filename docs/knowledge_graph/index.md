@@ -81,22 +81,22 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 
 ## 🤖 Mapa automático (generado desde los imports reales)
 
-1844 nodos: 53 agent · 55 db · 12 external · 14 feature · 977 frontend · 43 hook · 95 route · 78 schema · 12 security · 505 service.
+1848 nodos: 53 agent · 55 db · 12 external · 14 feature · 978 frontend · 44 hook · 95 route · 78 schema · 12 security · 507 service.
 No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el test `grafoConocimiento` falla si queda desfasado.
 
 ### 🔥 Los 20 ficheros más importados
-- [[src_types|src/types.ts]] — 576 ficheros dependen de él
+- [[src_types|src/types.ts]] — 580 ficheros dependen de él
 - [[src_components_ui_index|src/components/ui/index.ts]] — 370 ficheros dependen de él
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] — 180 ficheros dependen de él
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] — 173 ficheros dependen de él
-- [[src_utils_api|src/utils/api.ts]] — 95 ficheros dependen de él
+- [[src_utils_api|src/utils/api.ts]] — 96 ficheros dependen de él
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] — 80 ficheros dependen de él
 - [[tabla_registered_bands|tabla registered_bands]] — 73 ficheros dependen de él
 - [[db_state_sync|In-Memory State & Supabase Sync]] — 71 ficheros dependen de él
 - [[server_db_core|server/db/core.ts]] — 68 ficheros dependen de él
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] — 63 ficheros dependen de él
 - [[server_db|server/db.ts]] — 53 ficheros dependen de él
-- [[src_utils_audioStorage|src/utils/audioStorage.ts]] — 49 ficheros dependen de él
+- [[src_utils_audioStorage|src/utils/audioStorage.ts]] — 50 ficheros dependen de él
 - [[server_ai|server/ai.ts]] — 48 ficheros dependen de él
 - [[src_services_api|src/services/api.ts]] — 45 ficheros dependen de él
 - [[server_utils_errorHttp|server/utils/errorHttp.ts]] — 39 ficheros dependen de él

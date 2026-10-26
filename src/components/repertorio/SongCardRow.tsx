@@ -3,8 +3,9 @@ import { posicionMenu } from '../../utils/posicionMenu';
 import { createPortal } from 'react-dom';
 import { Song, ThemeColors } from '../../types';
 import { formatSongTitle } from '../../utils/formatSongTitle';
-import { Play, Star, FileText, Users, Headphones, Edit3, Trash2, Share2, ExternalLink, MoreVertical, ArrowUp, ArrowDown, Volume2, Music, GripVertical, Sparkles } from 'lucide-react';
+import { Play, Star, FileText, Users, Headphones, Edit3, Trash2, Share2, ExternalLink, MoreVertical, ArrowUp, ArrowDown, Volume2, Music, GripVertical, Sparkles, Upload } from 'lucide-react';
 import { hasIrisStems } from '../../utils/irisTracks';
+import { tieneAudioReal } from '../../utils/audioDeCancion';
 import { Button, IconButton, MenuItem } from '../ui';
 
 export interface SongCardRowProps {
@@ -22,6 +23,9 @@ export interface SongCardRowProps {
   onEditSong?: () => void;
   onDeleteSong?: () => void;
   onShareSong?: () => void;
+  /** Poner o reemplazar el audio de esta canción. */
+  onUploadAudio?: () => void;
+  subiendoAudio?: boolean;
   externalLink?: string;
   showAlbumBadge?: boolean;
   showCheckbox?: boolean;
@@ -58,6 +62,8 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
   onEditSong,
   onDeleteSong,
   onShareSong,
+  onUploadAudio,
+  subiendoAudio = false,
   externalLink,
   showAlbumBadge = false,
   showCheckbox = false,
@@ -443,6 +449,13 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                     >
                       <Edit3 className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                       <span>Editar canción</span>
+                    </MenuItem>
+                  )}
+
+                  {onUploadAudio && (
+                    <MenuItem dense type="button" disabled={subiendoAudio} onClick={() => { setShowMenu(false); onUploadAudio(); }}>
+                      <Upload className="w-3.5 h-3.5 text-[var(--ink-2)]" />
+                      <span>{subiendoAudio ? 'Subiendo audio…' : tieneAudioReal(song) ? 'Reemplazar audio' : 'Subir audio'}</span>
                     </MenuItem>
                   )}
 
