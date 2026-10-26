@@ -1,4 +1,5 @@
 import { uploadFileToServer, resolveAudioUrl, getAudioBlobFromUrl } from './audioStorage';
+import { extensionDeAudio } from './extensionDeAudio';
 
 /**
  * Resuelve la URL de audio de una idea a una URL real y permanente en el servidor, subiéndola
@@ -21,7 +22,7 @@ export async function resolverAudioUrlParaSubida(rawUrl: string): Promise<string
 
     if (resultado.startsWith('indexeddb:') || resultado.startsWith('blob:') || resultado.startsWith('data:')) {
       const blob = await getAudioBlobFromUrl(rawUrl);
-      const ext = blob.type.includes('wav') ? 'wav' : blob.type.includes('flac') ? 'flac' : 'mp3';
+      const ext = extensionDeAudio(blob.type);
       const file = new File([blob], `input-audio-idea-${Date.now()}.${ext}`, {
         type: blob.type || 'audio/mpeg',
       });

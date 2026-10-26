@@ -24,6 +24,7 @@ Subida de archivos (simple y por chunks) a Supabase Storage, estadísticas de al
 - [[ext_supabase_storage|Supabase Storage]] *(Layer: #external, Domain: #system)*
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_erroresSubida|server/utils/erroresSubida.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
@@ -36,6 +37,7 @@ Subida de archivos (simple y por chunks) a Supabase Storage, estadísticas de al
 - [[server_routes_cartelria|server/routes/cartelria.ts]] *(from #route)*
 - [[server_routes_songs_structureUpload|server/routes/songs/structureUpload.ts]] *(from #route)*
 - [[server_utils_cartelUrl|server/utils/cartelUrl.ts]] *(from #service)*
+- [[server_utils_erroresSubida|server/utils/erroresSubida.ts]] *(from #service)*
 - [[server_utils_storage|server/utils/storage.ts]] *(from #service)*
 - [[src_components_repertorio_live_concert_album_hooks_useConcertSourceMedia|src/components/repertorio/live_concert_album/hooks/useConcertSourceMedia.ts]] *(from #frontend)*
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(from #service)*
