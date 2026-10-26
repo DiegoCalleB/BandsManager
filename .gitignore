@@ -40,9 +40,7 @@ __pycache__/
 !presentacion/tools/*.py
 !presentacion/tools/**/*.py
 
-# música opcional con derechos (la pone cada uno en local)
-presentacion/audio/musica/dramatica.*
-presentacion/audio/musica/giro.*
+# música opcional con derechos (la pone cada uno en local); las grabaciones propias de la película sí van al repo
 
 # planos de sincronía de labios generados (tools/lipsync_preparar.py)
 presentacion/lipsync/
