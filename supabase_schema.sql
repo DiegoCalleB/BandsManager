@@ -1,6 +1,11 @@
 -- ====================================================================
 -- BAND MANAGER - SUPABASE POSTGRESQL DATABASE SCHEMA
 -- ====================================================================
+-- Esquema BASE. No incluye lo que añaden las migraciones de supabase/migrations/
+-- (tablas y columnas posteriores): el esquema real es este fichero más todas
+-- ellas, en orden. Así lo monta server/audit/pgliteSchema.ts para los tests.
+-- Ver docs/adr/0008-migraciones-sql-versionadas.md.
+-- ====================================================================
 
 -- 0. Habilitar extensiones necesarias
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";

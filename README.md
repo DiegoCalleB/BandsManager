@@ -361,7 +361,7 @@ Sin `.env` la app también arranca, con los usuarios semilla de `src/db_seed.ts`
 ```
 server/        Express: routes/ (HTTP) · services/ (agentes, scheduler, emails) · db/ (Supabase) · utils/ · middleware/
 src/           React: components/ · hooks/ · utils/ · services/api.ts (cliente HTTP único) · context/
-supabase/      migrations/ (las aplica el runner al arrancar) y .sql sueltos anteriores; el esquema completo está en supabase_schema.sql
+supabase/      migrations/ (las aplica el runner al arrancar) y .sql sueltos anteriores. El esquema real es supabase_schema.sql (base) más esas migraciones
 e2e/           Playwright: smoke, journeys y superficies públicas
 scripts/       Runner de migraciones, auditorías de diseño, verificación de la documentación y utilidades
 skills/        Skills para agentes de código (espejadas en .claude/, .gemini/, .opencode/ y .cursor/)
