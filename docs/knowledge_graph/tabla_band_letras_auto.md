@@ -3,13 +3,13 @@ id: tabla_band_letras_auto
 title: "tabla band_letras_auto"
 layer: schema
 domain: repertoire
-file: "supabase/migrations/20261014_letras_automaticas.sql"
+file: "supabase_schema.sql"
 tags: ["schema", "tabla", "auto"]
 ---
 
 # 📌 tabla band_letras_auto
 
-> **Ubicación:** `supabase/migrations/20261014_letras_automaticas.sql`  
+> **Ubicación:** `supabase_schema.sql`  
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/repertoire`
 
 ## 📖 Descripción
@@ -34,7 +34,7 @@ _Sin dependencias salientes directas._
 - `activado`
 - `updated_at`
 
-**Definida en:** `supabase/migrations/20261014_letras_automaticas.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migrations/20261014_letras_automaticas.sql`
 
 ---
 

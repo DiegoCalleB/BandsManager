@@ -3,13 +3,13 @@ id: tabla_catalogo_sala_alias
 title: "tabla catalogo_sala_alias"
 layer: schema
 domain: system
-file: "supabase/migrations/20261115_catalogo_sala_alias.sql"
+file: "supabase_schema.sql"
 tags: ["schema", "tabla", "auto"]
 ---
 
 # 📌 tabla catalogo_sala_alias
 
-> **Ubicación:** `supabase/migrations/20261115_catalogo_sala_alias.sql`  
+> **Ubicación:** `supabase_schema.sql`  
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
@@ -34,7 +34,7 @@ _Sin dependencias salientes directas._
 - `nombre`
 - `created_at`
 
-**Definida en:** `supabase/migrations/20261115_catalogo_sala_alias.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migrations/20261115_catalogo_sala_alias.sql`
 
 ---
 

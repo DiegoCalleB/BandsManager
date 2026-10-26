@@ -3,13 +3,13 @@ id: tabla_band_social_accounts
 title: "tabla band_social_accounts"
 layer: schema
 domain: social
-file: "supabase/migrations/20261009_sincronizar_esquema_auditoria.sql"
+file: "supabase_schema.sql"
 tags: ["schema", "tabla", "auto"]
 ---
 
 # 📌 tabla band_social_accounts
 
-> **Ubicación:** `supabase/migrations/20261009_sincronizar_esquema_auditoria.sql`  
+> **Ubicación:** `supabase_schema.sql`  
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/social`
 
 ## 📖 Descripción
@@ -43,7 +43,7 @@ _Sin dependencias salientes directas._
 - `total_views`
 - `account_id`
 
-**Definida en:** `supabase/migrations/20261009_sincronizar_esquema_auditoria.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migrations/20261009_sincronizar_esquema_auditoria.sql`
 
 ---
 

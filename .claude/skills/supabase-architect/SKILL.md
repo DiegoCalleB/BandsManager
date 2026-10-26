@@ -62,7 +62,7 @@ export async function dbUpsertConcert(concertData: Partial<Concert>, bandId: str
 
 ## 🔐 4. Row Level Security (RLS) en Supabase — estado real, no aspiracional
 
-**Cómo está hoy, de verdad:** las 40 políticas RLS de `supabase_schema.sql` son `USING (true)` ("Permitir acceso total al backend") en todas las tablas — RLS está *activado* pero *no restringe nada*. El aislamiento por `band_id` es 100% responsabilidad de la capa de aplicación (`getTargetBandId(req)`, ver skill `security-multitenancy`) — no hay red de seguridad de base de datos por debajo si esa capa falla. No generes código asumiendo que una política `USING (band_id = ...)` ya existe: no es así, y una tabla nueva sigue el mismo patrón (`USING (true)`) salvo que se decida explícitamente reforzarla.
+**Cómo está hoy, de verdad:** de las 60 políticas RLS de `supabase_schema.sql`, la mitad son `USING (true)` ("Permitir acceso total al backend") y la otra mitad filtran por banda, pero el servidor entra con la service role, que se salta RLS — para el backend, RLS *no restringe nada*. El aislamiento por `band_id` es 100% responsabilidad de la capa de aplicación (`getTargetBandId(req)`, ver skill `security-multitenancy`) — no hay red de seguridad de base de datos por debajo si esa capa falla. No generes código asumiendo que una política de banda te protege: el servidor no pasa por ella, y una tabla nueva sigue el patrón `USING (true)` salvo que se decida explícitamente reforzarla.
 
 ---
 

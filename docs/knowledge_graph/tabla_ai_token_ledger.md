@@ -3,17 +3,17 @@ id: tabla_ai_token_ledger
 title: "tabla ai_token_ledger"
 layer: schema
 domain: system
-file: "supabase/migrations/20260914_ai_token_ledger.sql"
+file: "supabase_schema.sql"
 tags: ["schema", "tabla", "auto"]
 ---
 
 # 📌 tabla ai_token_ledger
 
-> **Ubicación:** `supabase/migrations/20260914_ai_token_ledger.sql`  
+> **Ubicación:** `supabase_schema.sql`  
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Tabla de Supabase `ai_token_ledger` (8 columnas).
+Tabla de Supabase `ai_token_ledger` (10 columnas).
 
 ---
 
@@ -31,15 +31,17 @@ Tabla de Supabase `ai_token_ledger` (8 columnas).
 
 ## 🗄️ Columnas
 - `id`
-- `user_id`
+- `band_id`
 - `prompt_tokens`
 - `completion_tokens`
 - `model_name`
 - `estimated_cost_eur`
+- `settled_at`
 - `settled_by_event`
 - `created_at`
+- `user_id`
 
-**Definida en:** `supabase/migrations/20260914_ai_token_ledger.sql`, `supabase/migrations/20260915_ai_token_ledger_band_scope.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migrations/20260914_ai_token_ledger.sql`, `supabase/migrations/20260915_ai_token_ledger_band_scope.sql`
 
 ---
 

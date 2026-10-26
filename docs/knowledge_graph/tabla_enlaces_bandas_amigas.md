@@ -3,13 +3,13 @@ id: tabla_enlaces_bandas_amigas
 title: "tabla enlaces_bandas_amigas"
 layer: schema
 domain: system
-file: "supabase/migrations/20261023_enlaces_bandas_amigas.sql"
+file: "supabase_schema.sql"
 tags: ["schema", "tabla", "auto"]
 ---
 
 # 📌 tabla enlaces_bandas_amigas
 
-> **Ubicación:** `supabase/migrations/20261023_enlaces_bandas_amigas.sql`  
+> **Ubicación:** `supabase_schema.sql`  
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
@@ -37,7 +37,7 @@ Tabla de Supabase `enlaces_bandas_amigas` (7 columnas).
 - `verificado`
 - `actualizado_at`
 
-**Definida en:** `supabase/migrations/20261023_enlaces_bandas_amigas.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migrations/20261023_enlaces_bandas_amigas.sql`
 
 ---
 

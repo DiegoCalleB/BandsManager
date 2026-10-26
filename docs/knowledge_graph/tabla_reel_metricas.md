@@ -3,13 +3,13 @@ id: tabla_reel_metricas
 title: "tabla reel_metricas"
 layer: schema
 domain: social
-file: "supabase/migrations/20261106_reel_metricas.sql"
+file: "supabase_schema.sql"
 tags: ["schema", "tabla", "auto"]
 ---
 
 # 📌 tabla reel_metricas
 
-> **Ubicación:** `supabase/migrations/20261106_reel_metricas.sql`  
+> **Ubicación:** `supabase_schema.sql`  
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/social`
 
 ## 📖 Descripción
@@ -46,7 +46,7 @@ Tabla de Supabase `reel_metricas` (15 columnas).
 - `total_watch_ms`
 - `medido_en`
 
-**Definida en:** `supabase/migrations/20261106_reel_metricas.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migrations/20261106_reel_metricas.sql`
 
 ---
 
