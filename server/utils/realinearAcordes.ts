@@ -12,11 +12,11 @@
  */
 
 import { fft, ventanaHann } from "./audioKey.js";
-import { PLANTILLAS, type SegmentoAcorde } from "./chordDetection.js";
+import type { SegmentoAcorde } from "./chordDetection.js";
 import { refinarFronterasConAtaques } from "./refinarFronteras.js";
 
-// Perezoso: chordDetection importa este módulo, así que PLANTILLAS aún no existe al cargarlo.
-const vectorDeAcorde = (nombre: string) => PLANTILLAS.find((p) => p.nombre === nombre)?.vector;
+/** Croma de referencia de un acorde por su nombre (lo inyecta chordDetection: importarlo aquí crearía un ciclo). */
+export type VectorDeAcorde = (nombre: string) => ArrayLike<number> | undefined;
 
 const VENTANA = 2048; // ~186 ms a 11025 Hz
 const HOP = 512; // ~46 ms
@@ -63,6 +63,7 @@ export function realinearFronteras(
   segmentos: SegmentoAcorde[],
   pcm: Float32Array,
   sampleRate: number,
+  vectorDeAcorde: VectorDeAcorde,
   afinacion = 0
 ): { segmentos: SegmentoAcorde[]; confirmadas: Set<number> } {
   const confirmadas = new Set<number>();
@@ -171,7 +172,7 @@ export function realinearFronteras(
  * Instante de cada cambio de acorde: primero el ajuste armónico (no lo engaña la batería); el flujo
  * espectral solo afina las fronteras que la armonía no ha podido confirmar.
  */
-export function afinarFronteras(segmentos: SegmentoAcorde[], pcm: Float32Array, sampleRate: number, afinacion = 0): SegmentoAcorde[] {
-  const { segmentos: alineados, confirmadas } = realinearFronteras(segmentos, pcm, sampleRate, afinacion);
+export function afinarFronteras(segmentos: SegmentoAcorde[], pcm: Float32Array, sampleRate: number, vectorDeAcorde: VectorDeAcorde, afinacion = 0): SegmentoAcorde[] {
+  const { segmentos: alineados, confirmadas } = realinearFronteras(segmentos, pcm, sampleRate, vectorDeAcorde, afinacion);
   return refinarFronterasConAtaques(alineados, pcm, sampleRate, confirmadas);
 }

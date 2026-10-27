@@ -1,8 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { realinearFronteras } from '../realinearAcordes';
+import { PLANTILLAS } from '../chordDetection';
 import { refinarFronterasConAtaques } from '../refinarFronteras';
 
 const SR = 11025;
+const vector = (n: string) => PLANTILLAS.find((p) => p.nombre === n)?.vector;
 const midi = (m: number) => 440 * Math.pow(2, (m - 69) / 12);
 
 /** Acordes sostenidos con ataque suave, más una «caja» de ruido fuerte cada 0,5 s desfasada de los cambios. */
@@ -40,14 +42,14 @@ describe('realinearFronteras', () => {
   const error = (segs: { t0: number }[]) => reales.slice(1).map((r, k) => Math.abs(segs[k + 1].t0 - r));
 
   it('corrige fronteras adelantadas o retrasadas aunque haya batería fuerte', () => {
-    const { segmentos, confirmadas } = realinearFronteras(gruesas([0, -0.17, 0.17, -0.12]), pcm, SR);
+    const { segmentos, confirmadas } = realinearFronteras(gruesas([0, -0.17, 0.17, -0.12]), pcm, SR, vector);
     for (const e of error(segmentos)) expect(e).toBeLessThan(0.1);
     expect(confirmadas.size).toBe(3);
   });
 
   it('el flujo de la mezcla solo, con esa batería, se equivoca más', () => {
     const flujo = refinarFronterasConAtaques(gruesas([0, -0.17, 0.17, -0.12]), pcm, SR);
-    const arm = realinearFronteras(gruesas([0, -0.17, 0.17, -0.12]), pcm, SR).segmentos;
+    const arm = realinearFronteras(gruesas([0, -0.17, 0.17, -0.12]), pcm, SR, vector).segmentos;
     const media = (a: number[]) => a.reduce((x, y) => x + y, 0) / a.length;
     expect(media(error(arm))).toBeLessThan(media(error(flujo)));
   });
@@ -55,7 +57,7 @@ describe('realinearFronteras', () => {
   it('deja los segmentos contiguos y no toca los silencios', () => {
     const base = gruesas([0, 0.1, 0.1, 0.1]);
     base[1].acorde = 'N';
-    const { segmentos } = realinearFronteras(base, pcm, SR);
+    const { segmentos } = realinearFronteras(base, pcm, SR, vector);
     segmentos.slice(1).forEach((s, k) => expect(s.t0).toBe(segmentos[k].t1));
     expect(segmentos[1].t0).toBe(base[1].t0);
   });

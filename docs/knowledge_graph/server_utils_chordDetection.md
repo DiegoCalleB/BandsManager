@@ -34,6 +34,7 @@ Detección de acordes con tiempos a partir de audio (el motor de un «Chordify p
 - `server/utils/__tests__/analisisAcordes.test.ts`
 - `server/utils/__tests__/chordDetection.realista.test.ts`
 - `server/utils/__tests__/chordDetection.test.ts`
+- `server/utils/__tests__/realinearAcordes.test.ts`
 - `server/utils/__tests__/refinarFronteras.test.ts`
 
 ---

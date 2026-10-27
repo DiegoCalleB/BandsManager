@@ -481,7 +481,7 @@ export function detectarAcordesConDiagnostico(
   const vacio: DiagnosticoAcordes = { afinacionCents: Math.round(afinacion * 100), contraste, tonalidadUsada: null, frames: frames.length, cuotaAcordeDominante: 0, acordesDistintos: 0, tonalidades: [] };
   if (frames.length < 4) return { segmentos: [], diagnostico: vacio };
   const detectados = detectarSegmentos(pcm, sampleRate, opciones, frames, afinacion);
-  const segmentos = afinarFronteras(detectados.segmentos, pcm, sampleRate, afinacion);
+  const segmentos = afinarFronteras(detectados.segmentos, pcm, sampleRate, (n) => PLANTILLAS.find((p) => p.nombre === n)?.vector, afinacion);
   const tonalidadUsada = detectados.tonalidadUsada;
   const duracion = segmentos.reduce((a, s) => a + (s.t1 - s.t0), 0) || 1;
   const porAcorde = new Map<string, number>();
