@@ -4,6 +4,7 @@
  */
 import { useState } from "react";
 import type { RefObject } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { AjusteCompases as Ajuste, Cuadricula } from "../../utils/cuadriculaCompases";
 import { bpmDeToques, desplazar, escalarTempo, sumarToque } from "../../utils/ajusteCompases";
 
@@ -42,8 +43,8 @@ export function AjusteCompases({ cuadricula, ajuste, onAjuste, audioRef }: Props
       <button type="button" className={PILDORA} onClick={aqui}>Compás 1 aquí</button>
       {cuadricula && (
         <>
-          <button type="button" className={PILDORA} onClick={() => mover(-1)} aria-label="Adelantar la rejilla un pulso">◀ 1 pulso</button>
-          <button type="button" className={PILDORA} onClick={() => mover(1)} aria-label="Retrasar la rejilla un pulso">1 pulso ▶</button>
+          <button type="button" className={PILDORA} onClick={() => mover(-1)} aria-label="Adelantar la rejilla un pulso"><ChevronLeft aria-hidden="true" className="inline w-4 h-4 -ml-1" />1 pulso</button>
+          <button type="button" className={PILDORA} onClick={() => mover(1)} aria-label="Retrasar la rejilla un pulso">1 pulso<ChevronRight aria-hidden="true" className="inline w-4 h-4 -mr-1" /></button>
           <button type="button" className={PILDORA} onClick={() => escalar(0.5)}>½×</button>
           <button type="button" className={PILDORA} onClick={() => escalar(2)}>2×</button>
         </>

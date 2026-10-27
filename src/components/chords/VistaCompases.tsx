@@ -70,7 +70,7 @@ export const VistaCompases: React.FC<Props> = ({ cuadricula, letras, nombre, aud
   return (
     <div ref={contenedor} translate="no" className="notranslate space-y-3 font-sans" aria-label="Compases">
       {/* Secciones: salto directo, como las píldoras de Moises */}
-      <div className="sticky top-0 z-10 -mx-1 px-1 py-1.5 bg-[var(--bg)] flex gap-1.5 overflow-x-auto" aria-label="Secciones">
+      <div className="sticky top-0 z-10 -mx-1 px-1 py-1.5 bg-[var(--bg)] flex gap-1.5 overflow-x-auto shrink-0" aria-label="Secciones">
         {cuadricula.bloques.map((b) => {
           const activo = posicion?.bloque === b.indice;
           return (
