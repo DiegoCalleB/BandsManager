@@ -24,6 +24,7 @@ Pulso (tempo y posición de los tiempos) deducido del propio audio, sin modelos 
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_services_acordesCancion|server/services/acordesCancion.ts]] *(from #service)*
+- [[server_utils_beatThis_compases|server/utils/beatThis/compases.ts]] *(from #service)*
 
 ---
 

@@ -20,15 +20,23 @@ export function bpmDeToques(toques: number[]): number | null {
   return bpm >= 40 && bpm <= 240 ? Math.round(bpm * 10) / 10 : null;
 }
 
+/** Primer «1» de verdad: en una rejilla del audio el compás 1 puede ser una anacrusa completada hacia atrás. */
+const primerUno = (c: Cuadricula) => (c.inicioRejilla < 0 && c.compases.length > 1 ? c.compases[1].t0 : c.compases[0]?.t0 ?? c.inicioRejilla);
+
 /** Ajuste que desplaza la rejilla `pulsos` tiempos (negativo = antes): el compás 1 se mueve sin tocar el tempo. */
 export function desplazar(c: Cuadricula, previo: AjusteCompases, pulsos: number): AjusteCompases {
-  return { ...previo, inicio: c.inicioRejilla + pulsos * c.duracionPulso };
+  if (!c.delAudio) return { ...previo, inicio: c.inicioRejilla + pulsos * c.duracionPulso };
+  // Con pulsos reales se salta al pulso vecino de verdad, no a un múltiplo del pulso medio.
+  const todos = c.compases.flatMap((k) => k.pulsos ?? []);
+  const uno = primerUno(c);
+  const i = todos.reduce((mejor, t, j) => (Math.abs(t - uno) < Math.abs(todos[mejor] - uno) ? j : mejor), 0);
+  return { ...previo, inicio: todos[Math.min(todos.length - 1, Math.max(0, i + pulsos))] ?? uno };
 }
 
 /** Ajuste que dobla o parte el tempo (el error más común: el detector coge la mitad o el doble). */
 export function escalarTempo(c: Cuadricula, previo: AjusteCompases, factor: 0.5 | 2): AjusteCompases | null {
   const bpm = c.bpm * factor;
-  return bpm >= 40 && bpm <= 240 ? { ...previo, bpm: Math.round(bpm * 10) / 10, inicio: c.inicioRejilla } : null;
+  return bpm >= 40 && bpm <= 240 ? { ...previo, bpm: Math.round(bpm * 10) / 10, inicio: c.delAudio ? primerUno(c) : c.inicioRejilla } : null;
 }
 
 const MOTIVOS: Record<MotivoSinCuadricula, string> = {

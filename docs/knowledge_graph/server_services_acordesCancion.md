@@ -20,6 +20,8 @@ Exporta: ResultadoAnalisis, analizarAcordesDeCancion.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_utils_analisisAcordes|server/utils/analisisAcordes.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_audioKey|server/utils/audioKey.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[server_utils_beatThis_beatThis|server/utils/beatThis/beatThis.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_beatThis_compases|server/utils/beatThis/compases.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_chordDetection|server/utils/chordDetection.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_utils_pulso|server/utils/pulso.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*

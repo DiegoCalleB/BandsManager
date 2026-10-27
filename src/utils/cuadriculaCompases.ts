@@ -17,6 +17,8 @@ export interface Compas {
   bloque: number;
   /** Acorde que suena en cada tiempo del compás (para mostrar cambios dentro del compás). */
   acordes: string[];
+  /** Instante (s) de cada tiempo, cuando la rejilla sale de los pulsos reales del audio (tempo variable). */
+  pulsos?: number[];
 }
 
 export interface Bloque {
@@ -44,6 +46,19 @@ export interface Cuadricula {
   aproximada: boolean;
   /** Por qué es aproximada. */
   causa?: 'pocos-acordes' | 'no-encaja';
+  /** Los compases salen de los pulsos y los «1» que la red marcó en el audio: siguen al tempo real. */
+  delAudio?: boolean;
+}
+
+/** Pulso medido en el audio (lo que guarda el análisis de acordes). */
+export interface PulsoMedido {
+  bpm: number;
+  fase: number;
+  confianza: number;
+  pulsos?: number[];
+  /** Inicios de compás marcados por la red (subconjunto de `pulsos`). */
+  compases?: number[];
+  tiempos?: 3 | 4;
 }
 
 /** Por qué no hay rejilla ni siquiera aproximada. */
@@ -121,7 +136,7 @@ export function construirCuadricula(
   segmentos: SegmentoAcordeAnalizado[],
   bpm: number | undefined,
   duracion: number,
-  pulso?: { bpm: number; fase: number; confianza: number } | null
+  pulso?: PulsoMedido | null
 ): Cuadricula | null {
   const { cuadricula } = analizarCuadricula(segmentos, bpm, duracion, pulso);
   return cuadricula && !cuadricula.aproximada ? cuadricula : null;
@@ -137,9 +152,15 @@ export function analizarCuadricula(
   segmentos: SegmentoAcordeAnalizado[],
   bpm: number | undefined,
   duracion: number,
-  pulso?: { bpm: number; fase: number; confianza: number } | null,
+  pulso?: PulsoMedido | null,
   ajuste?: AjusteCompases
 ): ResultadoCuadricula {
+  // Con pulsos y compases reales del audio (Beat This!) la rejilla sigue al tempo de verdad.
+  if (pulso?.compases && pulso.compases.length >= 4 && pulso.pulsos && pulso.confianza >= 0.35 && duracion >= 8) {
+    const real = cuadriculaDesdePulsos(segmentos, pulso as Required<PulsoMedido>, duracion, ajuste);
+    if (real) return { cuadricula: real };
+  }
+
   // Con el pulso medido en el audio se usa su tempo y su fase tal cual; el BPM de la ficha solo es el plan B.
   // Si el músico fija el BPM a mano, manda su BPM y la fase se busca de nuevo.
   const manual = bpmValido(ajuste?.bpm);
@@ -227,7 +248,137 @@ export function analizarCuadricula(
   }
   if (compases.length < 4) return { cuadricula: null, motivo: 'pocos-compases' };
 
-  // 4) Bloques: longitud (4 u 8 compases) con la que los bloques consecutivos más se repiten.
+  const bloques = agruparEnBloques(compases);
+
+  return {
+    cuadricula: { bpm: mejor.bpm, tiemposPorCompas: tiempos, duracionPulso: T, inicioRejilla: inicio, compases, bloques, calidad: mejor.calidadPulso, aproximada: !!causa, ...(causa ? { causa } : {}) },
+  };
+}
+
+/** Índice del pulso más cercano a t (búsqueda binaria; `pulsos` va en orden). */
+function pulsoMasCercano(pulsos: number[], t: number): number {
+  let lo = 0, hi = pulsos.length - 1;
+  while (hi - lo > 1) {
+    const m = (lo + hi) >> 1;
+    if (pulsos[m] <= t) lo = m; else hi = m;
+  }
+  return Math.abs(pulsos[lo] - t) <= Math.abs(pulsos[hi] - t) ? lo : hi;
+}
+
+/**
+ * Rejilla sobre los pulsos y los «1» reales del audio: cada compás dura lo que dura de verdad, así
+ * que la rejilla no se desfasa aunque la banda acelere o frene. Las correcciones del músico se
+ * aplican sobre esos mismos pulsos: «compás 1 aquí» y ◀ ▶ recolocan el 1 en el pulso más cercano,
+ * 3/4 ↔ 4/4 reagrupa, y ½× / 2× se queda con uno de cada dos pulsos o intercala los que faltan.
+ * Un BPM manual que no sea mitad ni doble del medido devuelve null: entonces manda el del músico.
+ */
+export function cuadriculaDesdePulsos(
+  segmentos: SegmentoAcordeAnalizado[],
+  pulso: Required<Pick<PulsoMedido, 'bpm' | 'pulsos' | 'compases'>> & PulsoMedido,
+  duracion: number,
+  ajuste?: AjusteCompases
+): Cuadricula | null {
+  let pulsos = pulso.pulsos.filter((t) => t >= 0 && t < duracion);
+  if (pulsos.length < 8) return null;
+  let bpm = pulso.bpm;
+  let reagrupar = ajuste?.inicio !== undefined || (!!ajuste?.tiempos && ajuste.tiempos !== pulso.tiempos);
+  if (bpmValido(ajuste?.bpm) && Math.abs(ajuste.bpm / bpm - 1) > 0.08) {
+    const r = ajuste.bpm / bpm;
+    if (Math.abs(r - 0.5) < 0.06) {
+      // Mitad: la paridad que lleva más «1» de la red.
+      const unos = pulso.compases.map((t) => pulsoMasCercano(pulsos, t));
+      const par = unos.filter((i) => i % 2 === 0).length >= unos.length / 2 ? 0 : 1;
+      pulsos = pulsos.filter((_, i) => i % 2 === par);
+    } else if (Math.abs(r - 2) < 0.16) {
+      pulsos = pulsos.flatMap((t, i) => (i + 1 < pulsos.length ? [t, (t + pulsos[i + 1]) / 2] : [t]));
+    } else return null;
+    bpm = Math.round(bpm * r * 10) / 10;
+    reagrupar = true;
+  }
+  const tiempos: 3 | 4 = ajuste?.tiempos ?? pulso.tiempos ?? 4;
+
+  // Índices de los pulsos que son «1».
+  let unos: number[];
+  if (reagrupar) {
+    const ancla = pulsoMasCercano(pulsos, ajuste?.inicio ?? pulso.compases[0]);
+    unos = pulsos.map((_, i) => i).filter((i) => (((i - ancla) % tiempos) + tiempos) % tiempos === 0);
+  } else {
+    unos = [...new Set(pulso.compases.map((t) => pulsoMasCercano(pulsos, t)))].sort((a, b) => a - b);
+  }
+  if (unos.length < 2) return null;
+  // Donde la red no marcó «1» (principio, final o un tramo largo) se sigue contando de `tiempos` en `tiempos`.
+  const completos: number[] = [];
+  unos.forEach((u, k) => {
+    completos.push(u);
+    for (let i = u + tiempos; k + 1 < unos.length && unos[k + 1] - i >= tiempos; i += tiempos) completos.push(i);
+  });
+  while (completos[0] >= tiempos) completos.unshift(completos[0] - tiempos);
+  while (completos[completos.length - 1] + tiempos < pulsos.length) completos.push(completos[completos.length - 1] + tiempos);
+  unos = completos;
+
+  // Periodo local para completar el primer y el último compás con pulsos fuera del audio.
+  const periodo = (i: number) => {
+    const a = Math.min(Math.max(i, 1), pulsos.length - 1);
+    return pulsos[a] - pulsos[a - 1];
+  };
+  const tramos: number[][] = [];
+  if (unos[0] > 0) {
+    // Anacrusa: el compás se completa hacia atrás para que el 1 caiga donde toca.
+    const antes = pulsos.slice(0, unos[0]);
+    while (antes.length < tiempos) antes.unshift(antes[0] - periodo(1));
+    tramos.push(antes.slice(-tiempos));
+  }
+  for (let k = 0; k < unos.length; k++) {
+    const tramo = pulsos.slice(unos[k], k + 1 < unos.length ? unos[k + 1] : unos[k] + tiempos);
+    if (k === unos.length - 1) {
+      while (tramo.length < tiempos) tramo.push(tramo[tramo.length - 1] + periodo(pulsos.length - 1));
+    }
+    tramos.push(tramo);
+  }
+
+  const compases: Compas[] = [];
+  for (const [k, tramo] of tramos.entries()) {
+    const t0 = tramo[0];
+    const t1 = k + 1 < tramos.length ? tramos[k + 1][0] : tramo[tramo.length - 1] + periodo(pulsos.length - 1);
+    // El último compás solo cuenta si queda al menos el 40 % de él dentro de la canción.
+    if (k === tramos.length - 1 && duracion - t0 < 0.4 * (t1 - t0)) break;
+    const fines = [...tramo.slice(1), t1];
+    compases.push({
+      n: compases.length + 1,
+      t0: Math.max(0, t0),
+      t1: Math.min(duracion, t1),
+      bloque: 0,
+      // Los pulsos reconstruidos antes de que empiece el audio no suenan.
+      acordes: tramo.map((t, i) => (t < 0 ? 'N' : acordeEn(segmentos, (t + fines[i]) / 2))),
+      pulsos: tramo.map((t) => Math.max(0, t)),
+    });
+  }
+  if (compases.length < 4) return null;
+
+  // Calidad: cuántos cambios de acorde caen en un pulso (con la red suele ser casi 1).
+  const cambios = cambiosDeAcorde(segmentos);
+  const T = 60 / bpm;
+  const calidad = cambios.length
+    ? cambios.reduce((a, t) => a + Math.max(0, 1 - Math.abs(pulsos[pulsoMasCercano(pulsos, t)] - t) / (0.15 * T)), 0) / cambios.length
+    : 1;
+  return {
+    bpm,
+    tiemposPorCompas: tiempos,
+    duracionPulso: T,
+    inicioRejilla: tramos[0][0],
+    compases,
+    bloques: agruparEnBloques(compases),
+    calidad,
+    aproximada: false,
+    delAudio: true,
+  };
+}
+
+/**
+ * Bloques: longitud (4 u 8 compases) con la que los bloques consecutivos más se repiten; los que
+ * repiten progresión comparten letra. Asigna `bloque` a cada compás.
+ */
+function agruparEnBloques(compases: Compas[]): Bloque[] {
   const claves = compases.map((c) => c.acordes.filter((a, i, v) => i === 0 || a !== v[i - 1]).join('·'));
   const trocear = (largo: number) => {
     const trozos: string[][] = [];
@@ -271,14 +422,13 @@ export function analizarCuadricula(
     };
   });
 
-  return {
-    cuadricula: { bpm: mejor.bpm, tiemposPorCompas: tiempos, duracionPulso: T, inicioRejilla: inicio, compases, bloques, calidad: mejor.calidadPulso, aproximada: !!causa, ...(causa ? { causa } : {}) },
-  };
+  return bloques;
 }
 
 /** Dónde cae el instante t: compás, tiempo dentro del compás, fracción del pulso y bloque. */
 export function posicionEnCuadricula(c: Cuadricula, t: number): PosicionEnCuadricula | null {
   if (t < 0) return null;
+  if (c.delAudio) return posicionEnCompasesReales(c, t);
   const T = c.duracionPulso;
   const barra = c.tiemposPorCompas * T;
   const relativo = t - c.inicioRejilla;
@@ -298,4 +448,21 @@ export function posicionEnCuadricula(c: Cuadricula, t: number): PosicionEnCuadri
 export function progresoDeTramo(t0: number, t1: number, t: number): { progreso: number; restante: number } {
   const dur = Math.max(t1 - t0, 0.001);
   return { progreso: Math.min(1, Math.max(0, (t - t0) / dur)), restante: Math.max(0, t1 - t) };
+}
+
+/** Posición con compases de duración real: búsqueda binaria del compás y del pulso dentro de él. */
+function posicionEnCompasesReales(c: Cuadricula, t: number): PosicionEnCuadricula | null {
+  const { compases } = c;
+  if (!compases.length || t < compases[0].t0) return null;
+  let lo = 0, hi = compases.length - 1;
+  while (lo < hi) {
+    const m = (lo + hi + 1) >> 1;
+    if (compases[m].t0 <= t) lo = m; else hi = m - 1;
+  }
+  const k = compases[lo];
+  const pulsos = k.pulsos ?? [k.t0];
+  let p = 0;
+  while (p + 1 < pulsos.length && pulsos[p + 1] <= t) p++;
+  const fin = p + 1 < pulsos.length ? pulsos[p + 1] : k.t1;
+  return { compas: k.n, tiempo: p + 1, fraccionPulso: Math.min(1, Math.max(0, (t - pulsos[p]) / Math.max(fin - pulsos[p], 0.001))), bloque: k.bloque };
 }

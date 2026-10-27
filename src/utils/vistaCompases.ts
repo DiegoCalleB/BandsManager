@@ -67,8 +67,15 @@ export function casillasDeCompas(acordes: string[], t0: number, duracionPulso: n
 export function letraPorCompas(c: Cuadricula, lineas: Array<{ t0: number; t1: number; texto: string }> | undefined): string[] {
   const porCompas: string[][] = c.compases.map(() => []);
   if (!lineas?.length) return porCompas.map(() => '');
-  const barra = c.tiemposPorCompas * c.duracionPulso;
-  const indiceEn = (t: number) => Math.min(c.compases.length - 1, Math.max(0, Math.floor((t - c.inicioRejilla) / barra)));
+  // Último compás que empieza antes de t (vale igual para compases regulares y de duración real).
+  const indiceEn = (t: number) => {
+    let lo = 0, hi = c.compases.length - 1;
+    while (lo < hi) {
+      const m = (lo + hi + 1) >> 1;
+      if (c.compases[m].t0 <= t) lo = m; else hi = m - 1;
+    }
+    return lo;
+  };
   for (const l of lineas) {
     const palabras = l.texto.trim().split(/\s+/).filter(Boolean);
     if (!palabras.length) continue;
@@ -94,6 +101,8 @@ export function filasDeCompases(c: Cuadricula, porFila: number, letras: string[]
     for (let i = 0; i < delBloque.length; i += porFila) {
       const compases = delBloque.slice(i, i + porFila).map((k) => {
         const casillas = casillasDeCompas(k.acordes, c.inicioRejilla + (k.n - 1) * barra, c.duracionPulso, previo);
+        // Con pulsos reales cada casilla empieza en su pulso, no en un múltiplo del pulso medio.
+        if (k.pulsos) casillas.forEach((x, j) => (x.t0 = k.pulsos![j] ?? x.t0));
         previo = k.acordes[k.acordes.length - 1] ?? previo;
         return { n: k.n, t0: k.t0, bloque: b.indice, casillas, letra: letras[k.n - 1] ?? '' };
       });

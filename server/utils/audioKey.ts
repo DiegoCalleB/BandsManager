@@ -91,7 +91,7 @@ function ejecutarBinario(binario: string, args: string[], opciones: { timeoutMs?
  */
 export async function extraerPcmMono(
   fuente: string,
-  opciones: { timeoutMs?: number; maxDuracionSeg?: number } = {}
+  opciones: { timeoutMs?: number; maxDuracionSeg?: number; sampleRate?: number } = {}
 ): Promise<Float32Array | null> {
   const binario = ffmpegStatic as unknown as string;
   if (!binario || !fuente) return null;
@@ -101,7 +101,7 @@ export async function extraerPcmMono(
   const { ruta: rutaLocal, limpiar } = resuelto;
 
   const args: string[] = ["-hide_banner", "-nostdin", "-t", String(Math.floor(opciones.maxDuracionSeg ?? 360))];
-  args.push("-i", rutaLocal, "-vn", "-ac", "1", "-ar", String(SAMPLE_RATE), "-f", "f32le", "pipe:1");
+  args.push("-i", rutaLocal, "-vn", "-ac", "1", "-ar", String(opciones.sampleRate ?? SAMPLE_RATE), "-f", "f32le", "pipe:1");
 
   try {
     const buffer = await ejecutarBinario(binario, args, { timeoutMs: opciones.timeoutMs ?? 120_000 });

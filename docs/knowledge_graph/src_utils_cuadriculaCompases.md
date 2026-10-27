@@ -13,7 +13,7 @@ tags: ["service", "system", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: Compas, Bloque, Cuadricula, MotivoSinCuadricula, AjusteCompases, ResultadoCuadricula, PosicionEnCuadricula, construirCuadricula.
+Exporta: Compas, Bloque, Cuadricula, PulsoMedido, MotivoSinCuadricula, AjusteCompases, ResultadoCuadricula, PosicionEnCuadricula.
 
 ---
 

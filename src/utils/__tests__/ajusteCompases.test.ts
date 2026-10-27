@@ -40,3 +40,20 @@ describe('mensajeCompases', () => {
     expect(mensajeCompases(undefined, { ...base, aproximada: false })).toBeNull();
   });
 });
+
+describe('correcciones sobre una rejilla del audio', () => {
+  const pulsos = [0.5, 1.1, 1.6, 2.2, 2.7, 3.3, 3.8, 4.4, 4.9];
+  const real = {
+    bpm: 110, tiemposPorCompas: 4, duracionPulso: 0.55, inicioRejilla: 0.5, calidad: 1, aproximada: false, delAudio: true, bloques: [],
+    compases: [{ n: 1, t0: 0.5, t1: 2.7, bloque: 0, acordes: [], pulsos: pulsos.slice(0, 4) }, { n: 2, t0: 2.7, t1: 4.9, bloque: 0, acordes: [], pulsos: pulsos.slice(4, 8) }],
+  } as Cuadricula;
+
+  it('◀ ▶ saltan al pulso vecino de verdad', () => {
+    expect(desplazar(real, {}, 1).inicio).toBe(1.1);
+    expect(desplazar(real, {}, -1).inicio).toBe(0.5);
+  });
+
+  it('½× conserva el «1» que había', () => {
+    expect(escalarTempo(real, {}, 0.5)).toEqual({ bpm: 55, inicio: 0.5 });
+  });
+});
