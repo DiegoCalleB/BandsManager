@@ -18,7 +18,6 @@ Instrumento con el que se dibujan los acordes (guitarra / piano / bajo) y sus et
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[src_utils_cuadriculaCompases|src/utils/cuadriculaCompases.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_instrumentoProfesor|src/utils/instrumentoProfesor.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_vistaAcordes|src/utils/vistaAcordes.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_voicings|src/utils/voicings.ts]] *(Layer: #service, Domain: #system)*

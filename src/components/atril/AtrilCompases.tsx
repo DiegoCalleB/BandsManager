@@ -2,15 +2,16 @@
  * Pestaña de letra y acordes en modo «Compases»: la rejilla de compases del audio con la letra
  * transcrita debajo. Separado de AtrilBody para mantenerlo bajo el límite de AGENTS.md §5.6.
  */
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { processChordText } from "../../utils/chordUtils";
 import { analizarCuadricula } from "../../utils/cuadriculaCompases";
 import { mensajeCompases } from "../../utils/ajusteCompases";
-import { letraPorCompas } from "../../utils/vistaCompases";
+import { moverCambio } from "../../utils/lineaTiempoAcordes";
+import { filasDeCompases, letraPorCompas } from "../../utils/vistaCompases";
 import { VistaCompases } from "../chords/VistaCompases";
 import { useAtril } from "./AtrilContext";
 import { AjusteCompases } from "./AjusteCompases";
-import { useAjusteCompases } from "../chords/useVistaAcordes";
+import { AjusteCambioAcorde } from "./AjusteCambioAcorde";
 import type { VistaAtril } from "../chords/useVistaAcordes";
 
 /**
@@ -41,8 +42,10 @@ export function SelectorVistaAtril({ vista, onVista }: { vista: VistaAtril; onVi
  * @returns Sección de interfaz.
  */
 export function AtrilCompases() {
-  const { analisisAcordes, song, audioRef, isPlayingAudio, audioCurrentTime, transpose, notation, buscarEnAudio } = useAtril();
-  const [ajuste, setAjuste] = useAjusteCompases(String(song.id));
+  const { analisisAcordes, guardarAjusteCompases, handleCorregirAcordes, song, audioRef, isPlayingAudio, audioCurrentTime, transpose, notation, buscarEnAudio } = useAtril();
+  const ajuste = useMemo(() => analisisAcordes?.ajusteCompases ?? {}, [analisisAcordes?.ajusteCompases]);
+  const [elegida, setElegida] = useState<{ cancion: string; t0: number } | null>(null);
+  const seleccion = elegida?.cancion === String(song.id) ? elegida.t0 : null;
   const { cuadricula, motivo } = useMemo(
     () => (analisisAcordes ? analizarCuadricula(analisisAcordes.segmentos, song.bpm, analisisAcordes.duracionSegundos, analisisAcordes.pulso, ajuste) : { cuadricula: null, motivo: undefined }),
     [analisisAcordes, song.bpm, ajuste],
@@ -51,7 +54,19 @@ export function AtrilCompases() {
   const letras = useMemo(() => (cuadricula ? letraPorCompas(cuadricula, analisisAcordes?.letra?.lineas) : undefined), [cuadricula, analisisAcordes?.letra?.lineas]);
   const nombre = (acorde: string) => processChordText(`[${acorde}]`, transpose, notation).replace(/[[\]]/g, "");
 
-  const ajustes = analisisAcordes && <AjusteCompases cuadricula={cuadricula} ajuste={ajuste} onAjuste={setAjuste} audioRef={audioRef} />;
+  const casillas = useMemo(() => (cuadricula ? filasDeCompases(cuadricula, cuadricula.compases.length).flatMap((f) => f.compases.flatMap((c) => c.casillas)) : []), [cuadricula]);
+  const acordeElegido = seleccion === null ? undefined : casillas.find((k) => k.t0 === seleccion);
+  const moverElegido = (direccion: -1 | 1) => {
+    if (!analisisAcordes || seleccion === null) return;
+    const tiempos = casillas.map((k) => k.t0);
+    const segmentos = moverCambio(analisisAcordes.segmentos, tiempos, seleccion, direccion);
+    if (!segmentos) return;
+    handleCorregirAcordes(segmentos);
+    const actual = casillas.findIndex((k) => k.t0 === seleccion);
+    setElegida({ cancion: String(song.id), t0: tiempos[actual + direccion] });
+  };
+
+  const ajustes = analisisAcordes && <AjusteCompases cuadricula={cuadricula} ajuste={ajuste} onAjuste={guardarAjusteCompases} audioRef={audioRef} />;
   if (!cuadricula) {
     return (
       <div className="space-y-3">
@@ -67,6 +82,7 @@ export function AtrilCompases() {
     <div className="space-y-3">
       {ajustes}
       {aviso && <p className="text-sm text-[var(--ink-2)] bg-[var(--acc-soft)] rounded-[var(--r-m)] px-3 py-2">{aviso}</p>}
+      {acordeElegido && <AjusteCambioAcorde acorde={nombre(acordeElegido.acorde)} onMover={moverElegido} onCerrar={() => setElegida(null)} />}
       <VistaCompases
         cuadricula={cuadricula}
         letras={letras}
@@ -75,6 +91,8 @@ export function AtrilCompases() {
         isPlaying={isPlayingAudio}
         tiempo={audioCurrentTime}
         onIr={buscarEnAudio}
+        seleccion={seleccion}
+        onSeleccion={(t0) => setElegida(t0 === null ? null : { cancion: String(song.id), t0 })}
       />
     </div>
   );

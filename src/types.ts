@@ -1269,6 +1269,8 @@ export interface AnalisisAcordes {
   tonalidades?: Array<{ t0: number; t1: number; tonalidad: string }>;
   /** Pulso detectado en el audio (tempo real y fase de los tiempos); si falta, la rejilla de compases usa el BPM de la ficha. */
   pulso?: { bpm: number; fase: number; confianza: number; pulsos: number[]; compases?: number[]; tiempos?: 3 | 4; fuente?: "red" | "clasico" };
+  /** Correcciones de la banda a la rejilla de compases (tempo, dónde cae el «1», 3 o 4 tiempos). Se comparten y sobreviven a recargar; un reanálisis las descarta. */
+  ajusteCompases?: { bpm?: number; inicio?: number; tiempos?: 3 | 4 };
   /** Letra transcrita del audio con tiempos (Whisper sobre la voz), si se ha pedido. */
   letra?: {
     fuente: 'voz' | 'mezcla'; // sobre qué audio se transcribió

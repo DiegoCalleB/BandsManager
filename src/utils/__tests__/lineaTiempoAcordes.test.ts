@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { indiceSegmentoEn, siguienteAcordeReal, rangoBucle, saltoDeBucle, corregirAcorde, partirTramo, moverFrontera, unirConAnterior, desplazarSegmentos, validarSegmentos } from '../lineaTiempoAcordes';
+import { indiceSegmentoEn, siguienteAcordeReal, rangoBucle, saltoDeBucle, corregirAcorde, partirTramo, moverFrontera, unirConAnterior, desplazarSegmentos, validarSegmentos, moverCambio } from '../lineaTiempoAcordes';
 import type { SegmentoAcordeAnalizado } from '../../types';
 
 const segs = [
@@ -163,5 +163,28 @@ describe('edición de fronteras y desfase', () => {
   it('validarSegmentos conserva el acorde detectado', () => {
     const r = validarSegmentos([{ t0: 0, t1: 2, acorde: 'Am', confianza: 1, editado: true, detectado: 'C' }]);
     expect(r.ok && r.segmentos[0].detectado).toBe('C');
+  });
+});
+
+describe('moverCambio', () => {
+  const tiempos = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5];
+  const seg = (t0: number, t1: number, acorde: string): SegmentoAcordeAnalizado => ({ t0, t1, acorde, confianza: 0.9 });
+  const base = [seg(0, 1.5, 'C'), seg(1.5, 4, 'G')];
+
+  it('lleva el cambio al inicio del tiempo vecino: una casilla antes o después', () => {
+    expect(moverCambio(base, tiempos, 1.5, -1)![1]).toMatchObject({ t0: 1, acorde: 'G', editado: true });
+    expect(moverCambio(base, tiempos, 1.5, 1)![0]).toMatchObject({ t1: 2, acorde: 'C', editado: true });
+  });
+  it('un cambio desplazado respecto al tiempo (1,7) también se recoloca en su casilla', () => {
+    const tarde = [seg(0, 1.7, 'C'), seg(1.7, 4, 'G')];
+    expect(moverCambio(tarde, tiempos, 2, -1)![1].t0).toBe(1.5);
+  });
+  it('no hay cambio que mover en el primer tramo ni más allá de la rejilla', () => {
+    expect(moverCambio(base, tiempos, 0, 1)).toBeNull();
+    expect(moverCambio(base, tiempos, 3.5, 1)).toBeNull();
+  });
+  it('respeta el tramo mínimo del acorde anterior', () => {
+    const corto = [seg(0, 0.6, 'C'), seg(0.6, 4, 'G')];
+    expect(moverCambio(corto, tiempos, 1, -1)![1].t0).toBeGreaterThanOrEqual(0.2);
   });
 });

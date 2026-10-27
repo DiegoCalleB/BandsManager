@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { bpmDeToques, desplazar, escalarTempo, mensajeCompases, sumarToque } from '../ajusteCompases';
+import { bpmDeToques, desplazar, escalarTempo, mensajeCompases, sumarToque, validarAjusteCompases } from '../ajusteCompases';
 import type { Cuadricula } from '../cuadriculaCompases';
 
 const c = { bpm: 120, duracionPulso: 0.5, inicioRejilla: -0.25 } as Cuadricula;
@@ -55,5 +55,17 @@ describe('correcciones sobre una rejilla del audio', () => {
 
   it('½× conserva el «1» que había', () => {
     expect(escalarTempo(real, {}, 0.5)).toEqual({ bpm: 55, inicio: 0.5 });
+  });
+});
+
+describe('validarAjusteCompases', () => {
+  it('deja pasar un ajuste válido, redondeado, y descarta claves desconocidas', () => {
+    expect(validarAjusteCompases({ bpm: 120.04, inicio: 1.23456, tiempos: 3, otra: 1 })).toEqual({ ajuste: { bpm: 120, inicio: 1.235, tiempos: 3 } });
+    expect(validarAjusteCompases({})).toEqual({ ajuste: {} });
+  });
+  it('rechaza lo que no es creíble', () => {
+    for (const malo of [null, [], 'x', { bpm: 20 }, { bpm: '120' }, { inicio: -1 }, { inicio: NaN }, { tiempos: 5 }]) {
+      expect(validarAjusteCompases(malo)).toHaveProperty('error');
+    }
   });
 });

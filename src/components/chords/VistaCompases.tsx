@@ -13,6 +13,10 @@ interface Props {
   /** Instante del audio cuando no suena (tras un salto o en pausa). */
   tiempo: number;
   onIr: (segundos: number) => void;
+  /** Casilla (por su instante) elegida para mover su cambio de acorde. */
+  seleccion?: number | null;
+  /** Si se pasa, tocar una casilla donde cambia el acorde la elige además de saltar ahí. */
+  onSeleccion?: (t0: number | null) => void;
 }
 
 /**
@@ -20,7 +24,7 @@ interface Props {
  * escrito donde cambia, el tiempo que suena iluminado y la letra debajo de su compás. Caben más
  * compases por fila cuanto más ancho es el hueco, y cada sección empieza fila.
  */
-export const VistaCompases: React.FC<Props> = ({ cuadricula, letras, nombre, audioRef, isPlaying, tiempo, onIr }) => {
+export const VistaCompases: React.FC<Props> = ({ cuadricula, letras, nombre, audioRef, isPlaying, tiempo, onIr, seleccion, onSeleccion }) => {
   const contenedor = useRef<HTMLDivElement>(null);
   const filasRef = useRef<(HTMLDivElement | null)[]>([]);
   const [ancho, setAncho] = useState(360);
@@ -114,11 +118,12 @@ export const VistaCompases: React.FC<Props> = ({ cuadricula, letras, nombre, aud
                         <button
                           key={j}
                           type="button"
-                          onClick={() => onIr(k.t0)}
+                          onClick={() => { onIr(k.t0); onSeleccion?.(k.cambia ? (seleccion === k.t0 ? null : k.t0) : null); }}
+                          aria-pressed={onSeleccion && k.cambia ? seleccion === k.t0 : undefined}
                           aria-label={`Compás ${c.n}, tiempo ${j + 1}${k.acorde === 'N' ? '' : `: ${nombre(k.acorde)}`}`}
                           style={{ gridColumn: j + 1, gridRow: 1 }}
                           className={`h-12 group-data-[escenario=true]/esc:h-16 cursor-pointer transition-ui ${
-                            suena ? 'bg-[var(--acc)]/45' : activo ? 'bg-[var(--acc-soft)]' : 'bg-[var(--surface)] hover:bg-[var(--sunken)]'
+                            seleccion === k.t0 ? 'bg-[var(--acc)]/70' : suena ? 'bg-[var(--acc)]/45' : activo ? 'bg-[var(--acc-soft)]' : 'bg-[var(--surface)] hover:bg-[var(--sunken)]'
                           }`}
                         />
                       );

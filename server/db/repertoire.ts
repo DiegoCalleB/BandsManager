@@ -1293,6 +1293,7 @@ export function fusionarAnalisisGuardado(
   if (!entrante || typeof entrante !== "object" || !guardado || typeof guardado !== "object") return entrante;
   const salida: AnalisisAcordes = { ...entrante };
   if (!salida.referenciaManual && guardado.referenciaManual) salida.referenciaManual = guardado.referenciaManual;
+  if (!salida.ajusteCompases && guardado.ajusteCompases && salida.analizadoEn === guardado.analizadoEn) salida.ajusteCompases = guardado.ajusteCompases;
   if (!salida.profesor && guardado.profesor && salida.analizadoEn === guardado.analizadoEn) salida.profesor = guardado.profesor;
   if (!salida.segmentosOriginales && guardado.segmentosOriginales && salida.analizadoEn === guardado.analizadoEn) {
     salida.segmentosOriginales = guardado.segmentosOriginales;

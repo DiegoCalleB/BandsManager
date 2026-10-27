@@ -13,7 +13,7 @@ tags: ["service", "system", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: sumarToque, bpmDeToques, desplazar, escalarTempo, mensajeCompases.
+Exporta: sumarToque, bpmDeToques, desplazar, escalarTempo, mensajeCompases, validarAjusteCompases.
 
 ---
 
@@ -23,6 +23,7 @@ Exporta: sumarToque, bpmDeToques, desplazar, escalarTempo, mensajeCompases.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[route_repertoire|Repertoire & Setlists Route]] *(from #route)*
 - [[src_components_atril_AjusteCompases|src/components/atril/AjusteCompases.tsx]] *(from #frontend)*
 - [[src_components_atril_AtrilCompases|src/components/atril/AtrilCompases.tsx]] *(from #frontend)*
 

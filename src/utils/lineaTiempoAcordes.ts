@@ -189,3 +189,19 @@ export function validarSegmentos(entrada: unknown): ResultadoValidacion {
   }
   return { ok: true, segmentos: limpios };
 }
+
+/**
+ * Mueve un pulso el cambio de acorde que se ve en la casilla que empieza en `t0`. `tiempos` son los
+ * inicios de todos los tiempos de la rejilla, en orden. El cambio se lleva al inicio del tiempo
+ * vecino, así que en la rejilla salta exactamente una casilla.
+ * @returns Los tramos corregidos o null si ahí no hay un cambio que mover.
+ */
+export function moverCambio(segmentos: SegmentoAcordeAnalizado[], tiempos: number[], t0: number, direccion: -1 | 1): SegmentoAcordeAnalizado[] | null {
+  const k = tiempos.reduce((mejor, t, j) => (Math.abs(t - t0) < Math.abs(tiempos[mejor] - t0) ? j : mejor), 0);
+  const destino = tiempos[k + direccion];
+  if (destino === undefined) return null;
+  const fin = tiempos[k + 1] ?? tiempos[k] + (tiempos[k] - (tiempos[k - 1] ?? tiempos[k] - 0.5));
+  const i = indiceSegmentoEn(segmentos, (tiempos[k] + fin) / 2);
+  const movidos = i > 0 ? moverFrontera(segmentos, i, destino) : segmentos;
+  return movidos === segmentos ? null : movidos;
+}

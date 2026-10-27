@@ -24,6 +24,7 @@ Exporta: indiceSegmentoEn, siguienteAcordeReal, RangoBucle, rangoBucle, saltoDeB
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[route_repertoire|Repertoire & Setlists Route]] *(from #route)*
+- [[src_components_atril_AtrilCompases|src/components/atril/AtrilCompases.tsx]] *(from #frontend)*
 - [[src_components_atril_hooks_useAtrilHarmony|src/components/atril/hooks/useAtrilHarmony.ts]] *(from #frontend)*
 - [[src_components_chords_LineaTiempoAcordes|src/components/chords/LineaTiempoAcordes.tsx]] *(from #frontend)*
 - [[src_utils_alineacionAcordes|src/utils/alineacionAcordes.ts]] *(from #service)*

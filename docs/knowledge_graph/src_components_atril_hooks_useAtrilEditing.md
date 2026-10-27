@@ -13,7 +13,7 @@ tags: ["frontend", "repertoire", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/repertoire`
 
 ## 📖 Descripción
-Edición del cifrado: corrección de acordes, generación con IA y guardado.
+Cabeceras de un PATCH autenticado con la sesión local.
 
 ---
 
