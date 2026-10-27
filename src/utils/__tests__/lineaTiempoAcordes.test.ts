@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { indiceSegmentoEn, siguienteAcordeReal, rangoBucle, saltoDeBucle, corregirAcorde, partirTramo, moverFrontera, unirConAnterior, desplazarSegmentos, validarSegmentos, moverCambio } from '../lineaTiempoAcordes';
+import { indiceSegmentoEn, siguienteAcordeReal, rangoBucle, saltoDeBucle, corregirAcorde, partirTramo, moverFrontera, unirConAnterior, desplazarSegmentos, validarSegmentos, moverCambio, moverCambioA } from '../lineaTiempoAcordes';
 import type { SegmentoAcordeAnalizado } from '../../types';
 
 const segs = [
@@ -186,5 +186,26 @@ describe('moverCambio', () => {
   it('respeta el tramo mínimo del acorde anterior', () => {
     const corto = [seg(0, 0.6, 'C'), seg(0.6, 4, 'G')];
     expect(moverCambio(corto, tiempos, 1, -1)![1].t0).toBeGreaterThanOrEqual(0.2);
+  });
+});
+
+describe('moverCambioA', () => {
+  const tiempos = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5];
+  const seg = (t0: number, t1: number, acorde: string): SegmentoAcordeAnalizado => ({ t0, t1, acorde, confianza: 0.9 });
+  const base = [seg(0, 1.5, 'C'), seg(1.5, 4, 'G')];
+
+  it('arrastra el cambio varias casillas de golpe', () => {
+    expect(moverCambioA(base, tiempos, 1.5, 3)![1]).toMatchObject({ t0: 3, acorde: 'G', editado: true });
+    expect(moverCambioA(base, tiempos, 1.5, 0.5)![0].t1).toBe(0.5);
+  });
+  it('no pasa de largo al cambio vecino', () => {
+    const tres = [seg(0, 1, 'C'), seg(1, 2, 'G'), seg(2, 4, 'Am')];
+    const r = moverCambioA(tres, tiempos, 1, 3.5)!;
+    expect(r[1]).toMatchObject({ t0: 1.8, t1: 2, acorde: 'G' });
+    expect(r[2].t0).toBe(2);
+  });
+  it('soltar en la misma casilla o en un tramo sin cambio no hace nada', () => {
+    expect(moverCambioA(base, tiempos, 1.5, 1.5)).toBeNull();
+    expect(moverCambioA(base, tiempos, 0, 2)).toBeNull();
   });
 });

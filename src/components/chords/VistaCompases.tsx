@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { posicionEnCuadricula, type Cuadricula } from '../../utils/cuadriculaCompases';
+import { useArrastreCambio } from './useArrastreCambio';
 import { compasesPorFila, etiquetasDeCompas, filasDeCompases, nombresDeBloques } from '../../utils/vistaCompases';
 
 interface Props {
@@ -17,6 +18,8 @@ interface Props {
   seleccion?: number | null;
   /** Si se pasa, tocar una casilla donde cambia el acorde la elige además de saltar ahí. */
   onSeleccion?: (t0: number | null) => void;
+  /** Si se pasa, un cambio de acorde se puede arrastrar (pulsación larga) a otra casilla. */
+  onMover?: (origen: number, destino: number) => void;
 }
 
 /**
@@ -24,7 +27,8 @@ interface Props {
  * escrito donde cambia, el tiempo que suena iluminado y la letra debajo de su compás. Caben más
  * compases por fila cuanto más ancho es el hueco, y cada sección empieza fila.
  */
-export const VistaCompases: React.FC<Props> = ({ cuadricula, letras, nombre, audioRef, isPlaying, tiempo, onIr, seleccion, onSeleccion }) => {
+export const VistaCompases: React.FC<Props> = ({ cuadricula, letras, nombre, audioRef, isPlaying, tiempo, onIr, seleccion, onSeleccion, onMover }) => {
+  const { arrastre, manejadores, esClicDeArrastre } = useArrastreCambio(onMover);
   const contenedor = useRef<HTMLDivElement>(null);
   const filasRef = useRef<(HTMLDivElement | null)[]>([]);
   const [ancho, setAncho] = useState(360);
@@ -118,12 +122,14 @@ export const VistaCompases: React.FC<Props> = ({ cuadricula, letras, nombre, aud
                         <button
                           key={j}
                           type="button"
-                          onClick={() => { onIr(k.t0); onSeleccion?.(k.cambia ? (seleccion === k.t0 ? null : k.t0) : null); }}
+                          data-t0={k.t0}
+                          {...manejadores(k.t0, k.cambia)}
+                          onClick={() => { if (esClicDeArrastre()) return; onIr(k.t0); onSeleccion?.(k.cambia ? (seleccion === k.t0 ? null : k.t0) : null); }}
                           aria-pressed={onSeleccion && k.cambia ? seleccion === k.t0 : undefined}
                           aria-label={`Compás ${c.n}, tiempo ${j + 1}${k.acorde === 'N' ? '' : `: ${nombre(k.acorde)}`}`}
                           style={{ gridColumn: j + 1, gridRow: 1 }}
-                          className={`h-12 group-data-[escenario=true]/esc:h-16 cursor-pointer transition-ui ${
-                            seleccion === k.t0 ? 'bg-[var(--acc)]/70' : suena ? 'bg-[var(--acc)]/45' : activo ? 'bg-[var(--acc-soft)]' : 'bg-[var(--surface)] hover:bg-[var(--sunken)]'
+                          className={`h-12 group-data-[escenario=true]/esc:h-16 cursor-pointer transition-ui select-none [-webkit-touch-callout:none] ${
+                            arrastre?.sobre === k.t0 ? 'bg-[var(--acc)]/70' : arrastre?.origen === k.t0 ? 'bg-[var(--acc)]/30' : seleccion === k.t0 ? 'bg-[var(--acc)]/70' : suena ? 'bg-[var(--acc)]/45' : activo ? 'bg-[var(--acc-soft)]' : 'bg-[var(--surface)] hover:bg-[var(--sunken)]'
                           }`}
                         />
                       );

@@ -18,6 +18,7 @@ Exporta: VistaCompases.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_chords_useArrastreCambio|src/components/chords/useArrastreCambio.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_utils_cuadriculaCompases|src/utils/cuadriculaCompases.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_vistaCompases|src/utils/vistaCompases.ts]] *(Layer: #service, Domain: #system)*
 

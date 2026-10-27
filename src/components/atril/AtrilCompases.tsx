@@ -6,7 +6,7 @@ import { useMemo, useState } from "react";
 import { processChordText } from "../../utils/chordUtils";
 import { analizarCuadricula } from "../../utils/cuadriculaCompases";
 import { mensajeCompases } from "../../utils/ajusteCompases";
-import { moverCambio } from "../../utils/lineaTiempoAcordes";
+import { moverCambio, moverCambioA } from "../../utils/lineaTiempoAcordes";
 import { filasDeCompases, letraPorCompas } from "../../utils/vistaCompases";
 import { VistaCompases } from "../chords/VistaCompases";
 import { useAtril } from "./AtrilContext";
@@ -66,6 +66,14 @@ export function AtrilCompases() {
     setElegida({ cancion: String(song.id), t0: tiempos[actual + direccion] });
   };
 
+  const arrastrarA = (origen: number, destino: number) => {
+    if (!analisisAcordes) return;
+    const segmentos = moverCambioA(analisisAcordes.segmentos, casillas.map((k) => k.t0), origen, destino);
+    if (!segmentos) return;
+    handleCorregirAcordes(segmentos);
+    setElegida({ cancion: String(song.id), t0: destino });
+  };
+
   const ajustes = analisisAcordes && <AjusteCompases cuadricula={cuadricula} ajuste={ajuste} onAjuste={guardarAjusteCompases} audioRef={audioRef} />;
   if (!cuadricula) {
     return (
@@ -92,6 +100,7 @@ export function AtrilCompases() {
         tiempo={audioCurrentTime}
         onIr={buscarEnAudio}
         seleccion={seleccion}
+        onMover={arrastrarA}
         onSeleccion={(t0) => setElegida(t0 === null ? null : { cancion: String(song.id), t0 })}
       />
     </div>
