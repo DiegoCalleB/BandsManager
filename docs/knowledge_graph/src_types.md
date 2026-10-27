@@ -104,6 +104,7 @@ _Sin dependencias salientes directas._
 - [[src_app_hooks_useNavState|src/app/hooks/useNavState.ts]] *(from #service)*
 - [[src_app_hooks_usePlanLimitGuards|src/app/hooks/usePlanLimitGuards.ts]] *(from #service)*
 - [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_atril_AtrilCompases|src/components/atril/AtrilCompases.tsx]] *(from #frontend)*
 - [[src_components_atril_hooks_useAtrilAudio|src/components/atril/hooks/useAtrilAudio.ts]] *(from #frontend)*
 - [[src_components_atril_hooks_useAtrilEditing|src/components/atril/hooks/useAtrilEditing.ts]] *(from #frontend)*
 - [[src_components_atril_hooks_useAtrilHarmony|src/components/atril/hooks/useAtrilHarmony.ts]] *(from #frontend)*
@@ -543,6 +544,7 @@ _Sin dependencias salientes directas._
 - [[src_utils_accompanimentSynth|src/utils/accompanimentSynth.ts]] *(from #service)*
 - [[src_utils_agendaASetlist|src/utils/agendaASetlist.ts]] *(from #service)*
 - [[src_utils_agendaEnsayo|src/utils/agendaEnsayo.ts]] *(from #service)*
+- [[src_utils_ajusteEnBloque|src/utils/ajusteEnBloque.ts]] *(from #service)*
 - [[src_utils_alineacionAcordes|src/utils/alineacionAcordes.ts]] *(from #service)*
 - [[src_utils_analisisAcordesCliente|src/utils/analisisAcordesCliente.ts]] *(from #service)*
 - [[src_utils_appDataNormalize|src/utils/appDataNormalize.ts]] *(from #service)*

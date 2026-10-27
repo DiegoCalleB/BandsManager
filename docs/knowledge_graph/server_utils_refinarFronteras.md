@@ -30,6 +30,7 @@ Afina los cambios de acorde con los ataques del audio.
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/utils/__tests__/realinearAcordes.test.ts`
 - `server/utils/__tests__/refinarFronteras.test.ts`
 
 ---

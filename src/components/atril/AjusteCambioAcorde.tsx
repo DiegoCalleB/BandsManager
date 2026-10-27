@@ -10,6 +10,9 @@ interface Props {
   /** Acorde ya formateado de la casilla elegida. */
   acorde: string;
   onMover: (direccion: -1 | 1) => void;
+  /** Cambios iguales del bloque que se pueden mover igual que el último; con 0 no se ofrece. */
+  hermanos?: number;
+  onHermanos?: () => void;
   onCerrar: () => void;
 }
 
@@ -17,12 +20,17 @@ interface Props {
  * Barra con el acorde elegido y los botones para adelantarlo o retrasarlo un tiempo.
  * @returns Sección de interfaz.
  */
-export function AjusteCambioAcorde({ acorde, onMover, onCerrar }: Props) {
+export function AjusteCambioAcorde({ acorde, onMover, hermanos = 0, onHermanos, onCerrar }: Props) {
   return (
     <div role="group" aria-label={`Mover el cambio a ${acorde}`} className="flex flex-wrap items-center gap-1.5 rounded-[var(--r-m)] bg-[var(--acc-soft)] px-3 py-2">
       <span className="text-sm font-bold text-[var(--acc-ink)] mr-1">{acorde} entra mal</span>
       <button type="button" className={PILDORA} onClick={() => onMover(-1)} aria-label="Adelantar el cambio un tiempo"><ChevronLeft aria-hidden="true" className="inline w-4 h-4 -ml-1" />1 tiempo</button>
       <button type="button" className={PILDORA} onClick={() => onMover(1)} aria-label="Retrasar el cambio un tiempo">1 tiempo<ChevronRight aria-hidden="true" className="inline w-4 h-4 -mr-1" /></button>
+      {hermanos > 0 && onHermanos && (
+        <button type="button" className={`${PILDORA} text-[var(--acc-ink)]`} onClick={onHermanos}>
+          Igual en {hermanos} {hermanos === 1 ? "cambio más" : "cambios más"} del bloque
+        </button>
+      )}
       <button type="button" className={`${PILDORA} text-[var(--ink-2)]`} onClick={onCerrar}>Listo</button>
     </div>
   );

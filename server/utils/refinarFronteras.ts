@@ -65,7 +65,9 @@ const tiempoDeFrame = (f: number, sampleRate: number) => (f * HOP + VENTANA / 2)
 export function refinarFronterasConAtaques(
   segmentos: SegmentoAcorde[],
   pcm: Float32Array,
-  sampleRate: number
+  sampleRate: number,
+  /** Fronteras (índice del segmento que empieza en ellas) ya fijadas por otro método: no se tocan. */
+  omitir: ReadonlySet<number> = new Set()
 ): SegmentoAcorde[] {
   if (segmentos.length < 2) return segmentos;
   const flujo = flujoDe(pcm, sampleRate);
@@ -74,6 +76,7 @@ export function refinarFronterasConAtaques(
   const resultado = segmentos.map((s) => ({ ...s }));
 
   for (let i = 1; i < resultado.length; i++) {
+    if (omitir.has(i)) continue;
     const frontera = resultado[i].t0;
     const anterior = resultado[i - 1];
     const actual = resultado[i];

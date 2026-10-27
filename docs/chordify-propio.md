@@ -66,6 +66,13 @@ Fallo visto en producción: un solo acorde en toda la canción. Causa reproducid
 
 Sigue sin medirse sobre grabaciones reales con verdad escrita a mano.
 
+## Instante exacto del cambio y corrección en bloque — 2026-10
+- **Realineado armónico** (`server/utils/realinearAcordes.ts`): el croma grueso (ventana 4096) sitúa cada frontera con ±0,2 s. Se afina con croma fino (ventana 2048, salto 512), mediana temporal por nota (quita la percusión) y un ajuste por mínimos cuadrados de escalón en d(f) = corr(c, acorde previo) − corr(c, acorde siguiente). Se usa el escalón y no la suma de correlaciones porque con acordes que comparten notas (Am/F) la suma sesga. Las fronteras confirmadas así no pasan por el flujo espectral.
+- **Flujo espectral** (`refinarFronteras.ts`): solo refina las fronteras que el realineado no confirma (p. ej. con «N»). Va de banda completa, así que la batería lo sesga.
+- **Cuadre al compás** (`ajustarACompases`): sin cambios; una anticipación se sigue escribiendo en el «1». Es lo que hace que un bloque entero parezca adelantado o retrasado respecto al pulso.
+- **Corrección en bloque** (`src/utils/ajusteEnBloque.ts`): al mover un cambio, el atril ofrece «Igual en N cambios más del bloque» (mismo acorde entrando tras el mismo previo, dentro del mismo bloque). Se guarda para toda la banda como cualquier corrección.
+- Validado solo con audio sintético; falta medir con canciones reales (Come Together) frente a Moises.
+
 ## Aro de cuenta atrás, compases y bloques
 - **Aro por acorde** (`AroAcorde`): como los loops de GarageBand, el aro del acorde actual se llena mientras suena y el número del centro cuenta los segundos que faltan; en el último 0,8 s cambia de color para anticipar el cambio. El acorde siguiente es un aro tenue con su cuenta atrás.
 - **Compases y bloques** (`cuadriculaCompases.ts`, `RegletaCompases`): no se detecta el pulso del audio; con el BPM de la ficha se busca el desfase de pulso y el compás (4/4 o 3/4, y en qué tiempo empieza) con los que más cambios de acorde caen sobre un pulso. Se prueban también la mitad del tempo (a 60 solo la mitad de los cambios cae en inicio de compás). Si no encaja (<55 %), no se dibujan compases en vez de inventarlos. Bloques de 4 u 8 compases con letra por progresión (A A B A).

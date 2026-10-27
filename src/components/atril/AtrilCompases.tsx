@@ -7,6 +7,8 @@ import { processChordText } from "../../utils/chordUtils";
 import { analizarCuadricula } from "../../utils/cuadriculaCompases";
 import { mensajeCompases } from "../../utils/ajusteCompases";
 import { moverCambio, moverCambioA } from "../../utils/lineaTiempoAcordes";
+import { cambiosHermanos, moverHermanos, movimientoHecho, type Movimiento } from "../../utils/ajusteEnBloque";
+import type { SegmentoAcordeAnalizado } from "../../types";
 import { filasDeCompases, letraPorCompas } from "../../utils/vistaCompases";
 import { VistaCompases } from "../chords/VistaCompases";
 import { useAtril } from "./AtrilContext";
@@ -56,12 +58,30 @@ export function AtrilCompases() {
 
   const casillas = useMemo(() => (cuadricula ? filasDeCompases(cuadricula, cuadricula.compases.length).flatMap((f) => f.compases.flatMap((c) => c.casillas)) : []), [cuadricula]);
   const acordeElegido = seleccion === null ? undefined : casillas.find((k) => k.t0 === seleccion);
+  // Último cambio movido y el bloque donde cayó: permite ofrecer el mismo ajuste a sus iguales.
+  const [ultimo, setUltimo] = useState<{ cancion: string; mov: Movimiento } | null>(null);
+  const bloque = ultimo ? cuadricula?.bloques.find((b) => ultimo.mov.t0 >= b.t0 && ultimo.mov.t0 < b.t1) : undefined;
+  const hermanos = useMemo(
+    () => (analisisAcordes && ultimo?.cancion === String(song.id) && bloque ? cambiosHermanos(analisisAcordes.segmentos, ultimo.mov, { desde: bloque.t0, hasta: bloque.t1 }, ultimo.mov.t0) : []),
+    [analisisAcordes, ultimo, bloque, song.id],
+  );
+  const aplicarCorreccion = (antes: SegmentoAcordeAnalizado[], despues: SegmentoAcordeAnalizado[]) => {
+    handleCorregirAcordes(despues);
+    const mov = movimientoHecho(antes, despues);
+    setUltimo(mov ? { cancion: String(song.id), mov } : null);
+  };
+  const moverComoElUltimo = () => {
+    if (!analisisAcordes || !ultimo || !bloque) return;
+    const { segmentos, movidos } = moverHermanos(analisisAcordes.segmentos, ultimo.mov, { desde: bloque.t0, hasta: bloque.t1 }, ultimo.mov.t0);
+    if (movidos > 0) handleCorregirAcordes(segmentos);
+    setUltimo(null);
+  };
   const moverElegido = (direccion: -1 | 1) => {
     if (!analisisAcordes || seleccion === null) return;
     const tiempos = casillas.map((k) => k.t0);
     const segmentos = moverCambio(analisisAcordes.segmentos, tiempos, seleccion, direccion);
     if (!segmentos) return;
-    handleCorregirAcordes(segmentos);
+    aplicarCorreccion(analisisAcordes.segmentos, segmentos);
     const actual = casillas.findIndex((k) => k.t0 === seleccion);
     setElegida({ cancion: String(song.id), t0: tiempos[actual + direccion] });
   };
@@ -70,7 +90,7 @@ export function AtrilCompases() {
     if (!analisisAcordes) return;
     const segmentos = moverCambioA(analisisAcordes.segmentos, casillas.map((k) => k.t0), origen, destino);
     if (!segmentos) return;
-    handleCorregirAcordes(segmentos);
+    aplicarCorreccion(analisisAcordes.segmentos, segmentos);
     setElegida({ cancion: String(song.id), t0: destino });
   };
 
@@ -90,7 +110,7 @@ export function AtrilCompases() {
     <div className="space-y-3">
       {ajustes}
       {aviso && <p className="text-sm text-[var(--ink-2)] bg-[var(--acc-soft)] rounded-[var(--r-m)] px-3 py-2">{aviso}</p>}
-      {acordeElegido && <AjusteCambioAcorde acorde={nombre(acordeElegido.acorde)} onMover={moverElegido} onCerrar={() => setElegida(null)} />}
+      {acordeElegido && <AjusteCambioAcorde acorde={nombre(acordeElegido.acorde)} onMover={moverElegido} hermanos={hermanos.length} onHermanos={moverComoElUltimo} onCerrar={() => { setElegida(null); setUltimo(null); }} />}
       <VistaCompases
         cuadricula={cuadricula}
         letras={letras}
