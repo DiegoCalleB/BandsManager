@@ -19,6 +19,7 @@ Cabeceras de un PATCH autenticado con la sesión local.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[route_repertoire|Repertoire & Setlists Route]] *(Layer: #route, Domain: #repertoire)*
+- [[server_routes_songs_ajusteCompases|server/routes/songs/ajusteCompases.ts]] *(Layer: #route, Domain: #repertoire)*
 - [[src_services_sesionLocal|src/services/sesionLocal.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*

@@ -81,6 +81,7 @@ Copia en memoria de alta velocidad sincronizada con Supabase al arranque.
 - [[server_routes_reelsProgramacion|server/routes/reelsProgramacion.ts]] *(from #route)*
 - [[server_routes_reelsTexto|server/routes/reelsTexto.ts]] *(from #route)*
 - [[server_routes_referidos|server/routes/referidos.ts]] *(from #route)*
+- [[server_routes_songs_ajusteCompases|server/routes/songs/ajusteCompases.ts]] *(from #route)*
 - [[server_routes_songs_structureUpload|server/routes/songs/structureUpload.ts]] *(from #route)*
 - [[server_routes_spotify|server/routes/spotify.ts]] *(from #route)*
 - [[server_routes_tours|server/routes/tours.ts]] *(from #route)*

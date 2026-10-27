@@ -23,7 +23,7 @@ Exporta: sumarToque, bpmDeToques, desplazar, escalarTempo, mensajeCompases, vali
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[route_repertoire|Repertoire & Setlists Route]] *(from #route)*
+- [[server_routes_songs_ajusteCompases|server/routes/songs/ajusteCompases.ts]] *(from #route)*
 - [[src_components_atril_AjusteCompases|src/components/atril/AjusteCompases.tsx]] *(from #frontend)*
 - [[src_components_atril_AtrilCompases|src/components/atril/AtrilCompases.tsx]] *(from #frontend)*
 

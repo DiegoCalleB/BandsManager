@@ -13,11 +13,12 @@ tags: ["route", "repertoire", "auto"]
 > **Capa:** `#layer/route` | **Dominio:** `#domain/repertoire`
 
 ## 📖 Descripción
-Router de `/songs`: monta los sub-routers de subida de estructura.
+Router de `/songs`: monta los sub-routers de subida de estructura y de ajuste de compases.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[server_routes_songs_ajusteCompases|server/routes/songs/ajusteCompases.ts]] *(Layer: #route, Domain: #repertoire)*
 - [[server_routes_songs_structureUpload|server/routes/songs/structureUpload.ts]] *(Layer: #route, Domain: #repertoire)*
 
 ---

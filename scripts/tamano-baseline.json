@@ -9,7 +9,7 @@
   "src/components/PublicEPK.tsx": 1340,
   "src/components/bandCRM/BandToneModal.tsx": 1319,
   "server/routes/reels.ts": 851,
-  "server/db/repertoire.ts": 1302,
+  "server/db/repertoire.ts": 1301,
   "src/components/repertorio/DiscografiaView.tsx": 1294,
   "src/components/ensayos/OrdenDelDiaTab.tsx": 1239,
   "server/routes/epk_fans.ts": 1166,
