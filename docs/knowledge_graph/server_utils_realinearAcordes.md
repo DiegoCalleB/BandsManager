@@ -20,6 +20,7 @@ Coloca cada cambio de acorde donde la armonía cambia de verdad.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_utils_audioKey|server/utils/audioKey.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_utils_chordDetection|server/utils/chordDetection.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[server_utils_refinarFronteras|server/utils/refinarFronteras.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

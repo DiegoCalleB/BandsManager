@@ -12,7 +12,11 @@
  */
 
 import { fft, ventanaHann } from "./audioKey.js";
-import { vectorDeAcorde, type SegmentoAcorde } from "./chordDetection.js";
+import { PLANTILLAS, type SegmentoAcorde } from "./chordDetection.js";
+import { refinarFronterasConAtaques } from "./refinarFronteras.js";
+
+// Perezoso: chordDetection importa este módulo, así que PLANTILLAS aún no existe al cargarlo.
+const vectorDeAcorde = (nombre: string) => PLANTILLAS.find((p) => p.nombre === nombre)?.vector;
 
 const VENTANA = 2048; // ~186 ms a 11025 Hz
 const HOP = 512; // ~46 ms
@@ -160,4 +164,13 @@ export function realinearFronteras(
     confirmadas.add(i);
   }
   return { segmentos: resultado, confirmadas };
+}
+
+/**
+ * Instante de cada cambio de acorde: primero el ajuste armónico (no lo engaña la batería); el flujo
+ * espectral solo afina las fronteras que la armonía no ha podido confirmar.
+ */
+export function afinarFronteras(segmentos: SegmentoAcorde[], pcm: Float32Array, sampleRate: number, afinacion = 0): SegmentoAcorde[] {
+  const { segmentos: alineados, confirmadas } = realinearFronteras(segmentos, pcm, sampleRate, afinacion);
+  return refinarFronterasConAtaques(alineados, pcm, sampleRate, confirmadas);
 }
