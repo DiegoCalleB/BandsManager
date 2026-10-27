@@ -65,6 +65,7 @@ _Sin dependencias salientes directas._
 - [[server_routes_leads_tiposScout|server/routes/leads/tiposScout.ts]] *(from #route)*
 - [[server_routes_metrics|server/routes/metrics.ts]] *(from #route)*
 - [[server_routes_posts|server/routes/posts.ts]] *(from #route)*
+- [[server_routes_songs_ajusteCompases|server/routes/songs/ajusteCompases.ts]] *(from #route)*
 - [[server_routes_tiposCalendarioIcs|server/routes/tiposCalendarioIcs.ts]] *(from #route)*
 - [[server_routes_tracking|server/routes/tracking.ts]] *(from #route)*
 - [[server_services_acordesCancion|server/services/acordesCancion.ts]] *(from #service)*

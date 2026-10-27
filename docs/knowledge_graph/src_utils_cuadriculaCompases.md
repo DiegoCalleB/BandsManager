@@ -28,7 +28,6 @@ Exporta: Compas, Bloque, Cuadricula, PulsoMedido, MotivoSinCuadricula, AjusteCom
 - [[src_components_chords_LineaTiempoAcordes|src/components/chords/LineaTiempoAcordes.tsx]] *(from #frontend)*
 - [[src_components_chords_PanelArmonia|src/components/chords/PanelArmonia.tsx]] *(from #frontend)*
 - [[src_components_chords_RegletaCompases|src/components/chords/RegletaCompases.tsx]] *(from #frontend)*
-- [[src_components_chords_useVistaAcordes|src/components/chords/useVistaAcordes.ts]] *(from #frontend)*
 - [[src_components_chords_VistaCompases|src/components/chords/VistaCompases.tsx]] *(from #frontend)*
 - [[src_utils_ajusteCompases|src/utils/ajusteCompases.ts]] *(from #service)*
 - [[src_utils_vistaCompases|src/utils/vistaCompases.ts]] *(from #service)*

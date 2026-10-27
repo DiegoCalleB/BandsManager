@@ -57,3 +57,26 @@ export function mensajeCompases(motivo: MotivoSinCuadricula | undefined, cuadric
   if (!cuadricula) return motivo ? MOTIVOS[motivo] : null;
   return cuadricula.aproximada && cuadricula.causa ? `${CAUSAS[cuadricula.causa]} Corrígelos con los botones.` : null;
 }
+
+/**
+ * Valida el ajuste que llega del cliente y lo deja limpio (solo claves conocidas y en rango).
+ * @returns El ajuste saneado (vacío = sin ajuste) o el error a mostrar.
+ */
+export function validarAjusteCompases(crudo: unknown): { ajuste: AjusteCompases } | { error: string } {
+  if (!crudo || typeof crudo !== 'object' || Array.isArray(crudo)) return { error: 'El ajuste de compases no es válido.' };
+  const { bpm, inicio, tiempos } = crudo as Record<string, unknown>;
+  const ajuste: AjusteCompases = {};
+  if (bpm !== undefined) {
+    if (typeof bpm !== 'number' || !Number.isFinite(bpm) || bpm < 40 || bpm > 240) return { error: 'El BPM debe estar entre 40 y 240.' };
+    ajuste.bpm = Math.round(bpm * 10) / 10;
+  }
+  if (inicio !== undefined) {
+    if (typeof inicio !== 'number' || !Number.isFinite(inicio) || inicio < 0 || inicio > 36000) return { error: 'El inicio del compás 1 no es válido.' };
+    ajuste.inicio = Math.round(inicio * 1000) / 1000;
+  }
+  if (tiempos !== undefined) {
+    if (tiempos !== 3 && tiempos !== 4) return { error: 'Los tiempos por compás deben ser 3 o 4.' };
+    ajuste.tiempos = tiempos;
+  }
+  return { ajuste };
+}

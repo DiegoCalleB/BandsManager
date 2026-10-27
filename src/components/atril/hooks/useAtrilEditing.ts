@@ -1,8 +1,19 @@
+/** Cabeceras de un PATCH autenticado con la sesión local. */
+function cabecerasAuth(): Record<string, string> {
+  const token = leerTokenDeSesion();
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+    headers["x-auth-token"] = token;
+  }
+  return headers;
+}
+
 /**
  * Edición del cifrado: corrección de acordes, generación con IA y guardado.
  * Extraído de Atril.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-import { Dispatch,SetStateAction } from "react";
+import { Dispatch, SetStateAction, useRef } from "react";
 import { AnalisisAcordes,Song,SongSubstituteGuide } from "../../../types";
 import { apiFetch } from "../../../utils/api";
 import { mensajeDeError } from "../../../utils/mensajeDeError";
@@ -60,20 +71,37 @@ export function useAtrilEditing({ song, analisisAcordes, onUpdateSong, setAiSucc
     if (!analisisAcordes) return;
     const anterior = song;
     onUpdateSong({ ...song, analisisAcordes: { ...analisisAcordes, segmentos } });
-    const token = leerTokenDeSesion();
-    const headers: Record<string, string> = { "Content-Type": "application/json" };
-    if (token) {
-      headers["Authorization"] = `Bearer ${token}`;
-      headers["x-auth-token"] = token;
-    }
     guardarOReverter(
-      fetch(`/api/songs/${encodeURIComponent(song.id)}/acordes`, { method: "PATCH", headers, body: JSON.stringify({ segmentos }) }),
+      fetch(`/api/songs/${encodeURIComponent(song.id)}/acordes`, { method: "PATCH", headers: cabecerasAuth(), body: JSON.stringify({ segmentos }) }),
       () => {
         onUpdateSong(anterior);
         setAiSuccessMsg("⚠️ No se pudo guardar la corrección del acorde. Se ha restaurado el anterior.");
         setTimeout(() => setAiSuccessMsg(null), 6000);
       },
     );
+  };
+
+  // Ajuste de la rejilla de compases (tempo, «1», 3/4): se ve al instante y se guarda en la canción,
+  // así lo ve toda la banda. El tap tempo dispara varios cambios seguidos: un solo PATCH al final.
+  const pendienteAjuste = useRef<{ timer: ReturnType<typeof setTimeout>; anterior: Song } | null>(null);
+  const guardarAjusteCompases = (ajuste: NonNullable<AnalisisAcordes["ajusteCompases"]>) => {
+    if (!analisisAcordes) return;
+    const { ajusteCompases: _viejo, ...resto } = analisisAcordes;
+    const anterior = pendienteAjuste.current?.anterior ?? song;
+    if (pendienteAjuste.current) clearTimeout(pendienteAjuste.current.timer);
+    onUpdateSong({ ...song, analisisAcordes: Object.keys(ajuste).length ? { ...resto, ajusteCompases: ajuste } : resto });
+    const timer = setTimeout(() => {
+      pendienteAjuste.current = null;
+      guardarOReverter(
+        fetch(`/api/songs/${encodeURIComponent(song.id)}/ajuste-compases`, { method: "PATCH", headers: cabecerasAuth(), body: JSON.stringify({ ajuste }) }),
+        () => {
+          onUpdateSong(anterior);
+          setAiSuccessMsg("⚠️ No se pudo guardar el ajuste de los compases. Se ha restaurado el anterior.");
+          setTimeout(() => setAiSuccessMsg(null), 6000);
+        },
+      );
+    }, 600);
+    pendienteAjuste.current = { timer, anterior };
   };
 
   // Handle AI chord generation
@@ -170,5 +198,5 @@ export function useAtrilEditing({ song, analisisAcordes, onUpdateSong, setAiSucc
     });
   };
 
-  return { handleGenerateWithAi, handleCorregirAcordes, pedirProfesor, handleSaveEdits };
+  return { handleGenerateWithAi, handleCorregirAcordes, guardarAjusteCompases, pedirProfesor, handleSaveEdits };
 }

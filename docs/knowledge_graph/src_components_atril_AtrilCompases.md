@@ -18,6 +18,7 @@ Pestaña de letra y acordes en modo «Compases»: la rejilla de compases del aud
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_atril_AjusteCambioAcorde|src/components/atril/AjusteCambioAcorde.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_atril_AjusteCompases|src/components/atril/AjusteCompases.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_atril_AtrilContext|src/components/atril/AtrilContext.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_VistaCompases|src/components/chords/VistaCompases.tsx]] *(Layer: #frontend, Domain: #repertoire)*
@@ -25,6 +26,7 @@ Pestaña de letra y acordes en modo «Compases»: la rejilla de compases del aud
 - [[src_utils_ajusteCompases|src/utils/ajusteCompases.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_chordUtils|src/utils/chordUtils.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_cuadriculaCompases|src/utils/cuadriculaCompases.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_lineaTiempoAcordes|src/utils/lineaTiempoAcordes.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_vistaCompases|src/utils/vistaCompases.ts]] *(Layer: #service, Domain: #system)*
 
 ---

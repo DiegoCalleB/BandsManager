@@ -83,6 +83,7 @@ Módulo sin exportaciones con nombre.
 - [[server_routes_metrics|server/routes/metrics.ts]] *(from #route)*
 - [[server_routes_posts|server/routes/posts.ts]] *(from #route)*
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
+- [[server_routes_songs_ajusteCompases|server/routes/songs/ajusteCompases.ts]] *(from #route)*
 - [[server_routes_users|server/routes/users.ts]] *(from #route)*
 - [[server_routes_users_adminInicial|server/routes/users/adminInicial.ts]] *(from #route)*
 - [[server_routes_users_bandasDisponibles|server/routes/users/bandasDisponibles.ts]] *(from #route)*

@@ -183,6 +183,12 @@ describe('la verdad de las correcciones manuales no se pierde', () => {
     expect(fusionarAnalisisGuardado(null, guardado)).toBeNull();
   });
 
+  it('un guardado con copia vieja conserva el ajuste de compases del mismo análisis, y un reanálisis lo suelta', () => {
+    const guardado = { ...base, ajusteCompases: { bpm: 90, tiempos: 3 as const } };
+    expect(fusionarAnalisisGuardado({ ...base }, guardado)!.ajusteCompases).toEqual({ bpm: 90, tiempos: 3 });
+    expect(fusionarAnalisisGuardado({ ...base, analizadoEn: '2026-10-07T00:00:00Z' }, guardado)!.ajusteCompases).toBeUndefined();
+  });
+
   it('reanalizar conserva la referencia manual de la banda', () => {
     const rutas = fs.readFileSync(path.join(__dirname, '..', '..', 'routes', 'repertorio.ts'), 'utf-8');
     const cuerpo = rutas.slice(rutas.indexOf('async function ejecutarAnalisisAcordes'), rutas.indexOf('router.post("/songs/:id/analizar-acordes"'));
