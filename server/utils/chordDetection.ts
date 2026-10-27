@@ -29,10 +29,8 @@ const NOTAS = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 export type CalidadAcorde = "maj" | "min" | "7";
 
 export interface SegmentoAcorde {
-  /** Inicio en segundos. */
-  t0: number;
-  /** Fin en segundos. */
-  t1: number;
+  t0: number; // inicio en segundos
+  t1: number; // fin en segundos
   /** Nombre internacional («C», «Am», «G7») o «N» si no hay acorde claro. */
   acorde: string;
   /** 0-1: cuánto se parece el croma al acorde elegido frente al siguiente mejor. */
