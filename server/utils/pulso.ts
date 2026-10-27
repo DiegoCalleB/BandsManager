@@ -22,6 +22,12 @@ export interface Pulso {
   fase: number;
   /** 0-1: cuánto destacan los ataques en los pulsos frente al resto. */
   confianza: number;
+  /** Instantes (s) de cada inicio de compás, si se conocen (Beat This!); son un subconjunto de `pulsos`. */
+  compases?: number[];
+  /** Tiempos por compás deducidos junto con `compases`. */
+  tiempos?: 3 | 4;
+  /** Quién lo midió: la red neuronal o el detector clásico de este fichero. */
+  fuente?: "red" | "clasico";
 }
 
 /** Envolvente de ataques: sin la media local, sin negativos y escalada. */

@@ -70,7 +70,7 @@ export const VistaCompases: React.FC<Props> = ({ cuadricula, letras, nombre, aud
   return (
     <div ref={contenedor} translate="no" className="notranslate space-y-3 font-sans" aria-label="Compases">
       {/* Secciones: salto directo, como las píldoras de Moises */}
-      <div className="sticky top-0 z-10 -mx-1 px-1 py-1.5 bg-[var(--bg)] flex gap-1.5 overflow-x-auto" aria-label="Secciones">
+      <div className="sticky top-0 z-10 -mx-1 px-1 py-1.5 bg-[var(--bg)] flex gap-1.5 overflow-x-auto shrink-0" aria-label="Secciones">
         {cuadricula.bloques.map((b) => {
           const activo = posicion?.bloque === b.indice;
           return (
@@ -90,7 +90,7 @@ export const VistaCompases: React.FC<Props> = ({ cuadricula, letras, nombre, aud
 
       <p className="text-micro text-[var(--ink-3)] tabular-nums">
         {posicion ? `Compás ${posicion.compas} de ${cuadricula.compases.length} · ` : ''}
-        {Math.round(cuadricula.bpm)} BPM · {cuadricula.tiemposPorCompas}/4 · compases deducidos de los acordes del audio
+        {Math.round(cuadricula.bpm)} BPM · {cuadricula.tiemposPorCompas}/4 · {cuadricula.delAudio ? 'pulso y compases escuchados en el audio' : 'compases deducidos de los acordes del audio'}
       </p>
 
       {filas.map((fila, i) => (

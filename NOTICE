@@ -9,3 +9,12 @@ to comply with the AGPL. See COMMERCIAL-LICENSE.md.
 
 The names and logos "BandManager", "BandManager.io" and "BandsManager" are
 trademarks of the copyright holder and are NOT licensed under the AGPL.
+
+Third-party components
+----------------------
+server/utils/beatThis/ adapts the preprocessing, windowing and postprocessing of
+Beat This! (Foscarin, Schlüter and Widmer, ISMIR 2024; Copyright (c) 2024
+Institute of Computational Perception, JKU Linz) through its TypeScript port
+@jgorset/beat-this, and downloads at runtime the ONNX export of its published
+"final0" weights. Both are MIT-licensed; their licenses are reproduced in
+server/utils/beatThis/LICENCIAS-TERCEROS.txt.

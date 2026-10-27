@@ -2,11 +2,12 @@ import { describe, it, expect } from 'vitest';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { VistaCompases } from '../components/chords/VistaCompases';
+import { AjusteCompases } from '../components/atril/AjusteCompases';
 import type { Cuadricula } from '../utils/cuadriculaCompases';
 
 const compas = (n: number, acordes: string[], bloque: number) => ({ n, t0: (n - 1) * 2, t1: n * 2, bloque, acordes });
 const cuadricula: Cuadricula = {
-  bpm: 120, tiemposPorCompas: 4, duracionPulso: 0.5, inicioRejilla: 0, calidad: 0.9,
+  bpm: 120, tiemposPorCompas: 4, duracionPulso: 0.5, inicioRejilla: 0, calidad: 0.9, aproximada: false,
   compases: [compas(1, ['E', 'E', 'A', 'A'], 0), compas(2, ['D', 'D', 'D', 'D'], 0), compas(3, ['E', 'E', 'E', 'E'], 1), compas(4, ['E', 'B7', 'B7', 'B7'], 1)],
   bloques: [{ indice: 0, letra: 'A', desde: 1, hasta: 2, t0: 0, t1: 4 }, { indice: 1, letra: 'B', desde: 3, hasta: 4, t0: 4, t1: 8 }],
 };
@@ -39,6 +40,21 @@ describe('VistaCompases', () => {
   });
 
   it('sin bordes y solo tokens de color', () => {
+    expect(html).not.toMatch(/\bborder/);
+    expect(html).not.toMatch(/#[0-9a-fA-F]{3,6}\b/);
+  });
+});
+
+describe('AjusteCompases', () => {
+  const html = renderToStaticMarkup(
+    <AjusteCompases cuadricula={cuadricula} ajuste={{ bpm: 100 }} onAjuste={() => {}} audioRef={{ current: null }} />,
+  );
+
+  it('ofrece las correcciones rápidas y restablecer cuando hay ajuste', () => {
+    for (const t of ['Tap', 'Compás 1 aquí', '½×', '2×', '4/4 → 3/4', 'Restablecer']) expect(html).toContain(t);
+  });
+
+  it('sin bordes ni hexadecimales', () => {
     expect(html).not.toMatch(/\bborder/);
     expect(html).not.toMatch(/#[0-9a-fA-F]{3,6}\b/);
   });

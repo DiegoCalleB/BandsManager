@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { construirCuadricula, posicionEnCuadricula, progresoDeTramo } from '../cuadriculaCompases';
+import { analizarCuadricula, construirCuadricula, posicionEnCuadricula, progresoDeTramo } from '../cuadriculaCompases';
 
 /** Progresión que cambia cada compás de 4 tiempos, empezando en `inicio` s. */
 function cancion(bpm: number, compases: string[], inicio = 0, tiempos = 4) {
@@ -117,5 +117,102 @@ describe('construirCuadricula con el pulso medido en el audio', () => {
   it('con poca confianza en el pulso se vuelve al BPM de la ficha', () => {
     const c = construirCuadricula(segs, 120, 33, { bpm: 97, fase: 0, confianza: 0.2 })!;
     expect(c.bpm).toBe(120);
+  });
+});
+
+describe('analizarCuadricula', () => {
+  const irregular = Array.from({ length: 12 }, (_, i) => ({ t0: i * 1.37, t1: (i + 1) * 1.37, acorde: i % 2 ? 'C' : 'G', confianza: 0.9 }));
+
+  it('si los acordes no encajan pero hay BPM, dibuja una rejilla aproximada y dice por qué', () => {
+    const { cuadricula } = analizarCuadricula(irregular, 120, 16.4);
+    expect(cuadricula).toMatchObject({ aproximada: true, causa: 'no-encaja', bpm: 120 });
+  });
+
+  it('con muy pocos acordes también aproxima, en 4/4 desde el principio', () => {
+    const { cuadricula } = analizarCuadricula(cancion(120, ['Am', 'F']), 120, 20);
+    expect(cuadricula).toMatchObject({ aproximada: true, causa: 'pocos-acordes', tiemposPorCompas: 4 });
+  });
+
+  it('una rejilla firme no es aproximada', () => {
+    const { cuadricula } = analizarCuadricula(cancion(120, ciclo(['Am', 'F', 'C', 'G'], 4)), 120, 33);
+    expect(cuadricula?.aproximada).toBe(false);
+  });
+
+  it('sin rejilla, devuelve el motivo exacto', () => {
+    const segs = cancion(120, ciclo(['Am', 'F', 'C', 'G'], 4));
+    expect(analizarCuadricula(segs, undefined, 33).motivo).toBe('sin-bpm');
+    expect(analizarCuadricula(segs, 5, 33).motivo).toBe('sin-bpm');
+    expect(analizarCuadricula(segs, 120, 4).motivo).toBe('pista-corta');
+    expect(analizarCuadricula(segs, 40, 9).motivo).toBe('pocos-compases');
+  });
+
+  it('el músico manda: BPM, inicio de compás y compás fijados a mano quitan el aviso', () => {
+    const { cuadricula } = analizarCuadricula(irregular, 120, 16.4, null, { bpm: 90, inicio: 1.3, tiempos: 3 });
+    expect(cuadricula).toMatchObject({ aproximada: false, bpm: 90, tiemposPorCompas: 3 });
+    const barra = (60 / 90) * 3;
+    expect(((cuadricula!.inicioRejilla - 1.3) / barra) % 1).toBeCloseTo(0, 5); // 1,3 s es un inicio de compás
+  });
+
+  it('un BPM manual vale aunque el audio traiga otro pulso medido', () => {
+    const segs = cancion(120, ciclo(['Am', 'F', 'C', 'G'], 4));
+    const { cuadricula } = analizarCuadricula(segs, 120, 33, { bpm: 97, fase: 0, confianza: 0.9 }, { bpm: 120 });
+    expect(cuadricula!.bpm).toBe(120);
+  });
+});
+
+describe('rejilla con pulsos y compases reales del audio', () => {
+  // Directo que acelera de 100 a ~112 BPM: los compases tienen que acortarse con la banda.
+  const pulsos: number[] = [];
+  for (let t = 0.6, k = 0; t < 40; k++) {
+    pulsos.push(Math.round(t * 1000) / 1000);
+    t += 60 / (100 + k * 0.2);
+  }
+  const unos = pulsos.filter((_, i) => i % 4 === 0);
+  const segs = unos.map((t, i) => ({ t0: t, t1: unos[i + 1] ?? 40, acorde: ['Am', 'F', 'C', 'G'][i % 4], confianza: 0.9 }));
+  const pulso = { bpm: 105, fase: 0.6, confianza: 0.9, pulsos, compases: unos, tiempos: 4 as const };
+
+  it('cada compás empieza en un «1» real y sus tiempos son los pulsos de verdad', () => {
+    const c = analizarCuadricula(segs, 105, 40, pulso).cuadricula!;
+    expect(c.delAudio).toBe(true);
+    expect(c.compases[0].t0).toBe(unos[0]);
+    expect(c.compases[0].pulsos).toEqual(pulsos.slice(0, 4));
+    expect(c.compases[1].acordes).toEqual(['F', 'F', 'F', 'F']);
+    const dur = (k: (typeof c.compases)[number]) => k.t1 - k.t0;
+    expect(dur(c.compases[c.compases.length - 2])).toBeLessThan(dur(c.compases[2]));
+  });
+
+  it('el compás 1 es una anacrusa completada hacia atrás si el audio empieza a mitad de compás', () => {
+    // El audio arranca en el tiempo 3: dos pulsos antes del primer «1».
+    const c = analizarCuadricula(segs, 105, 40, { ...pulso, pulsos: pulsos.slice(2), compases: unos.slice(1) }).cuadricula!;
+    expect(c.inicioRejilla).toBeCloseTo(pulsos[0], 1); // los dos pulsos que faltan, reconstruidos
+    expect(c.compases[0].pulsos).toHaveLength(4);
+    expect(c.compases[0].pulsos!.slice(2)).toEqual(pulsos.slice(2, 4));
+    expect(c.compases[1].t0).toBe(unos[1]);
+  });
+
+  it('la posición sigue a los pulsos reales', () => {
+    const c = analizarCuadricula(segs, 105, 40, pulso).cuadricula!;
+    const k = c.compases[5];
+    const p = posicionEnCuadricula(c, (k.pulsos![2] + k.pulsos![3]) / 2)!;
+    expect(p).toMatchObject({ compas: k.n, tiempo: 3 });
+    expect(p.fraccionPulso).toBeCloseTo(0.5, 1);
+  });
+
+  it('correcciones sobre los mismos pulsos: «compás 1 aquí», 3/4 y ½×', () => {
+    const aqui = analizarCuadricula(segs, 105, 40, pulso, { inicio: pulsos[9] + 0.05 }).cuadricula!;
+    expect(aqui.compases.some((k) => k.t0 === pulsos[9])).toBe(true);
+    const vals = analizarCuadricula(segs, 105, 40, pulso, { tiempos: 3 }).cuadricula!;
+    expect(vals.tiemposPorCompas).toBe(3);
+    expect(vals.compases[2].pulsos).toHaveLength(3);
+    const mitad = analizarCuadricula(segs, 105, 40, pulso, { bpm: 52.5 }).cuadricula!;
+    expect(mitad.delAudio).toBe(true);
+    expect(mitad.bpm).toBeCloseTo(52.5, 1);
+    expect(mitad.compases[2].pulsos![1] - mitad.compases[2].pulsos![0]).toBeGreaterThan(1);
+  });
+
+  it('un BPM manual que no es mitad ni doble manda sobre la red (rejilla regular)', () => {
+    const c = analizarCuadricula(segs, 105, 40, pulso, { bpm: 90 }).cuadricula!;
+    expect(c.delAudio).toBeUndefined();
+    expect(c.bpm).toBe(90);
   });
 });

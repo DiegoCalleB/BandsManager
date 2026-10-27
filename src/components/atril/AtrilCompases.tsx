@@ -4,10 +4,13 @@
  */
 import { useMemo } from "react";
 import { processChordText } from "../../utils/chordUtils";
-import { construirCuadricula } from "../../utils/cuadriculaCompases";
+import { analizarCuadricula } from "../../utils/cuadriculaCompases";
+import { mensajeCompases } from "../../utils/ajusteCompases";
 import { letraPorCompas } from "../../utils/vistaCompases";
 import { VistaCompases } from "../chords/VistaCompases";
 import { useAtril } from "./AtrilContext";
+import { AjusteCompases } from "./AjusteCompases";
+import { useAjusteCompases } from "../chords/useVistaAcordes";
 import type { VistaAtril } from "../chords/useVistaAcordes";
 
 /**
@@ -39,36 +42,40 @@ export function SelectorVistaAtril({ vista, onVista }: { vista: VistaAtril; onVi
  */
 export function AtrilCompases() {
   const { analisisAcordes, song, audioRef, isPlayingAudio, audioCurrentTime, transpose, notation, buscarEnAudio } = useAtril();
-  const cuadricula = useMemo(
-    () => (analisisAcordes ? construirCuadricula(analisisAcordes.segmentos, song.bpm, analisisAcordes.duracionSegundos, analisisAcordes.pulso) : null),
-    [analisisAcordes, song.bpm],
+  const [ajuste, setAjuste] = useAjusteCompases(String(song.id));
+  const { cuadricula, motivo } = useMemo(
+    () => (analisisAcordes ? analizarCuadricula(analisisAcordes.segmentos, song.bpm, analisisAcordes.duracionSegundos, analisisAcordes.pulso, ajuste) : { cuadricula: null, motivo: undefined }),
+    [analisisAcordes, song.bpm, ajuste],
   );
+  const aviso = mensajeCompases(motivo, cuadricula);
   const letras = useMemo(() => (cuadricula ? letraPorCompas(cuadricula, analisisAcordes?.letra?.lineas) : undefined), [cuadricula, analisisAcordes?.letra?.lineas]);
   const nombre = (acorde: string) => processChordText(`[${acorde}]`, transpose, notation).replace(/[[\]]/g, "");
 
+  const ajustes = analisisAcordes && <AjusteCompases cuadricula={cuadricula} ajuste={ajuste} onAjuste={setAjuste} audioRef={audioRef} />;
   if (!cuadricula) {
     return (
-      <div className="bg-[var(--sunken)] rounded-[var(--r-l)] p-6 text-center space-y-1.5">
-        <p className="font-bold text-[var(--ink)]">Aquí no hay compás que marcar todavía.</p>
-        <p className="text-sm text-[var(--ink-2)]">
-          {!analisisAcordes
-            ? "Pulsa «Acordes del audio» y la canción aparecerá compás a compás."
-            : !song.bpm && !analisisAcordes.pulso
-              ? "Pon el BPM en la ficha de la canción para poder contar los compases."
-              : "Los cambios de acorde no caen en un compás regular, así que no se dibujan compases inventados. Corrige los acordes o revisa el BPM."}
-        </p>
+      <div className="space-y-3">
+        <div className="bg-[var(--sunken)] rounded-[var(--r-l)] p-6 text-center space-y-1.5">
+          <p className="font-bold text-[var(--ink)]">Aquí no hay compás que marcar todavía.</p>
+          <p className="text-sm text-[var(--ink-2)]">{analisisAcordes ? aviso : "Pulsa «Acordes del audio» y la canción aparecerá compás a compás."}</p>
+        </div>
+        {ajustes}
       </div>
     );
   }
   return (
-    <VistaCompases
-      cuadricula={cuadricula}
-      letras={letras}
-      nombre={nombre}
-      audioRef={audioRef}
-      isPlaying={isPlayingAudio}
-      tiempo={audioCurrentTime}
-      onIr={buscarEnAudio}
-    />
+    <div className="space-y-3">
+      {ajustes}
+      {aviso && <p className="text-sm text-[var(--ink-2)] bg-[var(--acc-soft)] rounded-[var(--r-m)] px-3 py-2">{aviso}</p>}
+      <VistaCompases
+        cuadricula={cuadricula}
+        letras={letras}
+        nombre={nombre}
+        audioRef={audioRef}
+        isPlaying={isPlayingAudio}
+        tiempo={audioCurrentTime}
+        onIr={buscarEnAudio}
+      />
+    </div>
   );
 }

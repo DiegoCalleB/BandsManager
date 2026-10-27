@@ -78,6 +78,27 @@ Sigue sin medirse sobre grabaciones reales con verdad escrita a mano.
 - Medido en sintético (batería, rock denso): error de tempo <2 %, fase <0,08 s. Sin ficha puede confundir el tempo con un múltiplo (138 → 92); con ficha no. Rubato fuerte → confianza baja → no se usa.
 - Log de Railway: `pulso=…bpm/conf… ficha=…`.
 
+## Pulso y compases con Beat This! (`server/utils/beatThis/`)
+- **Qué es:** red neuronal de Foscarin, Schlüter y Widmer (ISMIR 2024). Código **y pesos MIT**. Marca cada tiempo y cada «1», siguiendo al tempo cuando la banda acelera o frena. Corre en el servidor con `onnxruntime-node` en CPU (unos 3 s por canción de 1 min y ~17 s por una de 5 min). El modelo es la exportación ONNX de `final0` de `@jgorset/beat-this` (83 MB, sha256 verificado). Se descarga la primera vez a `os.tmpdir()` o se toma de `BEAT_THIS_MODELO`. `BEAT_THIS=off` lo apaga. Si falla, se usa el detector clásico (`pulso.ts`).
+- **Memoria:** la sesión va sin arena de memoria (`enableCpuMemArena: false`). Con arena, el proceso se quedaba con 1,7 GB después de una canción de 5 min; sin ella vuelve a ~360 MB, con un pico de ~950 MB durante la inferencia, y tarda ~17 s en vez de ~11 s. **El servidor necesita ≥1,5 GB de RAM**; si no los tiene, `BEAT_THIS=off`.
+- **Sin CUDA:** `.npmrc` lleva `onnxruntime-node-install=skip`; sin esa línea, el postinstall baja 368 MB de binarios de GPU que no se usan.
+- **Lo que se le añade a la red** (`compases.ts`, puro y con tests):
+  1. **Nivel métrico:** manda el que más canción cubre. La ficha solo decide mitad o doble si está claramente a otra octava, y los tramos contados a corcheas se quedan con la paridad que empalma.
+  2. **Huecos** rellenados al tempo local.
+  3. **Viterbi** sobre los pulsos (posición en el compás), que acaba con los «1» que parpadean. La evidencia es la probabilidad de «1» de la red más los **cambios de acorde** ya detectados, y el mismo decodificador elige entre 3/4 y 4/4.
+  4. **Cuadre de acordes** (`ajustarACompases`): un cambio a ≤0,6 pulsos de un «1» va al 1 y el resto, a su pulso. El detector de acordes se adelanta unos 0,1 pulsos de forma sistemática, y en arpegios que cruzan la barra, ±0,5.
+- **Rejilla del visor:** si `analisis.pulso.compases` existe, `cuadriculaDesdePulsos` construye cada compás con sus pulsos reales (`Compas.pulsos`, `Cuadricula.delAudio`). Las correcciones del músico (Tap, «Compás 1 aquí», ◀ ▶, ½×/2×, 3/4) actúan sobre esos mismos pulsos. Un BPM manual que no sea mitad ni doble del medido vuelve a la rejilla regular.
+- **Medido** (`npx tsx scripts/benchmark-pulso.ts`, F-measure MIREX ±70 ms). Son 8 canciones sintéticas con la verdad conocida y las 5 muestras del repo con su BPM de origen:
+
+  | | Pulsos | Compases |
+  |---|---|---|
+  | Clásico (`pulso.ts` + compases desde acordes perfectos) | 89 % | 83 %* |
+  | Red tal cual | 97 % | 89 % |
+  | **Red + nivel, huecos y Viterbi** | **98 %** | **91 %** |
+
+  \* Solo sintéticas: es el mejor caso posible para el clásico. La diferencia está en los temas que aceleran o frenan, donde los compases pasan del 30 % al 100 %, y en la balada sin batería, que pasa del 0 % al 95 % (el clásico ponía el pulso a contratiempo).
+- **Pendiente:** en la muestra de rock (bombo en todos los tiempos y caja en 2 y 4), el 1 y el 3 suenan igual y sin cambios de acorde no hay forma de desempatar. En temas reales hace falta oído: el banco genera, con `pulsos.json`, mezclas con click para escucharlas.
+
 ## Medir antes de cambiar (`scripts/evaluar-acordes.ts`)
 - **Verdad = correcciones de la banda.** Al corregir en el visor se guardan `segmentosOriginales` (lo que dijo el detector antes de la primera corrección) y `referenciaManual` (los acordes corregidos hasta el último tramo tocado). La referencia **sobrevive a los reanálisis** y a los guardados de la canción con una copia vieja del análisis.
 - `npm run eval:acordes` (o `--archivo volcado.json`) da por canción: acierto mayor/menor y de raíz por tiempo (métricas MIREX), cambios encontrados a ≤0,3 s y ≤1 s, error medio y cambios que sobran.
@@ -89,7 +110,7 @@ BTC (ISMIR 2019, MIT) en Google Colab: sube los audios con el título de la canc
 ## Plan por coste
 1. **Gratis, ya hecho:** detector propio + afinado de fronteras por ataques + pulso propio + edición manual + evaluación.
 2. **Gratis, siguiente:** con 20-30 tramos corregidos por canción, medir; comparar con BTC en Colab. Mejora propia pendiente: acordes por pulso (decodificar por tiempo de compás en vez de ventanas fijas). Hecho: tonalidad por tramos (ver abajo).
-3. **Barato, solo si gana por números:** worker GPU bajo demanda (Modal/RunPod) con el modelo ganador + Beat This! (MIT) para directos sin claqueta. Coste realista 0,01-0,05 $ por canción contando arranques en frío.
+3. **Barato, solo si gana por números:** worker GPU bajo demanda (Modal/RunPod) con el modelo de acordes ganador. Coste realista 0,01-0,05 $ por canción contando arranques en frío. (Beat This! ya no está aquí: corre en CPU en el propio servidor, ver arriba.)
 4. **Evitar:** madmom (modelos con licencia no comercial), Essentia (AGPL), APIs de pago por minuto.
 
 ## Cambios de tono (`estimarTonalidadesPorTramos`)
