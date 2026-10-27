@@ -73,6 +73,12 @@ Sigue sin medirse sobre grabaciones reales con verdad escrita a mano.
 - **Corrección en bloque** (`src/utils/ajusteEnBloque.ts`): al mover un cambio, el atril ofrece «Igual en N cambios más del bloque» (mismo acorde entrando tras el mismo previo, dentro del mismo bloque). Se guarda para toda la banda como cualquier corrección.
 - Validado solo con audio sintético; falta medir con canciones reales (Come Together) frente a Moises.
 
+### Directo sin claqueta: la rejilla no manda sobre la armonía
+
+En una grabación en directo la rejilla de la red se desliza respecto a lo que toca la guitarra. Un cambio que la armonía ya confirmó (`anclado` en `SegmentoAcorde`, lo marca `realinearFronteras`) solo lo cuadra `ajustarACompases` si está a ≤0,15 pulsos del destino; si no, se respeta. Los no confirmados siguen yendo al «1» o al pulso. El campo es transitorio: no se guarda en `analisis`.
+
+Para medirlo: `scripts/evaluar-acordes.ts` imprime ahora `sesgo` (mediana con signo del error de los cambios; positivo = se detecta tarde). Un bloque que sale siempre antes/después se ve ahí. Sigue validado solo con audio sintético: falta pasarlo por las canciones corregidas a mano.
+
 ## Aro de cuenta atrás, compases y bloques
 - **Aro por acorde** (`AroAcorde`): como los loops de GarageBand, el aro del acorde actual se llena mientras suena y el número del centro cuenta los segundos que faltan; en el último 0,8 s cambia de color para anticipar el cambio. El acorde siguiente es un aro tenue con su cuenta atrás.
 - **Compases y bloques** (`cuadriculaCompases.ts`, `RegletaCompases`): no se detecta el pulso del audio; con el BPM de la ficha se busca el desfase de pulso y el compás (4/4 o 3/4, y en qué tiempo empieza) con los que más cambios de acorde caen sobre un pulso. Se prueban también la mitad del tempo (a 60 solo la mitad de los cambios cae en inicio de compás). Si no encaja (<55 %), no se dibujan compases en vez de inventarlos. Bloques de 4 u 8 compases con letra por progresión (A A B A).

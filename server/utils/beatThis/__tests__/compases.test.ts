@@ -122,6 +122,18 @@ describe("ajustarACompases", () => {
     expect(s[1].t1).toBe(3);
   });
 
+  it("un cambio confirmado por la armonía no se arrastra al 1 si está lejos (directo sin claqueta)", () => {
+    const base = [tramo(0, 1.76, "Em"), { ...tramo(1.76, 3.04, "C"), anclado: true }, tramo(3.04, 6, "G")];
+    const s = ajustarACompases(base, { pulsos, compases: unos });
+    expect(s[1].t0).toBe(1.76); // a 0,24 s del 1 (0,48 pulsos): se respeta
+    expect(s[2].t0).toBe(3); // el no confirmado sigue yendo a su pulso
+  });
+
+  it("un cambio confirmado casi encima del pulso sí se cuadra", () => {
+    const s = ajustarACompases([tramo(0, 1.94, "Em"), { ...tramo(1.94, 4, "C"), anclado: true }], { pulsos, compases: unos });
+    expect(s[1].t0).toBe(2);
+  });
+
   it("no se come un acorde entero", () => {
     const s = ajustarACompases([tramo(0, 1.8, "Em"), tramo(1.8, 1.95, "B7"), tramo(1.95, 4, "C")], { pulsos, compases: unos });
     expect(s.every((x) => x.t1 - x.t0 > 0.1)).toBe(true);

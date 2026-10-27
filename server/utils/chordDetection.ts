@@ -37,6 +37,7 @@ export interface SegmentoAcorde {
   acorde: string;
   /** 0-1: cuánto se parece el croma al acorde elegido frente al siguiente mejor. */
   confianza: number;
+  anclado?: boolean; // inicio confirmado por la armonía: la rejilla solo lo mueve si está casi encima
 }
 
 export interface OpcionesAcordes {

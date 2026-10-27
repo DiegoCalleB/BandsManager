@@ -67,7 +67,7 @@ function prediccionesExternas(): Map<string, TramoEval[]> {
 const pct = (x: number | undefined) => (x === undefined ? "  —  " : `${(x * 100).toFixed(1).padStart(5)}%`);
 const linea = (nombre: string, r: ResultadoEvaluacion | null) =>
   r
-    ? `  ${nombre.padEnd(12)} may/men ${pct(r.mayorMenor)}  raíz ${pct(r.raiz)}  cambios≤0,3s ${pct(r.cambios.encontrados03)}  ≤1s ${pct(r.cambios.encontrados1)}  error ${r.cambios.errorMedio.toFixed(2)}s  sobran ${r.cambios.sobrantes}`
+    ? `  ${nombre.padEnd(12)} may/men ${pct(r.mayorMenor)}  raíz ${pct(r.raiz)}  cambios≤0,3s ${pct(r.cambios.encontrados03)}  ≤1s ${pct(r.cambios.encontrados1)}  error ${r.cambios.errorMedio.toFixed(2)}s  sesgo ${r.cambios.sesgo >= 0 ? "+" : ""}${r.cambios.sesgo.toFixed(2)}s  sobran ${r.cambios.sobrantes}`
     : `  ${nombre.padEnd(12)} (sin datos comparables)`;
 
 const canciones = await cargarCanciones();

@@ -161,6 +161,7 @@ export function realinearFronteras(
     if (t <= anterior.t0 + SEPARACION_MIN || t >= actual.t1 - SEPARACION_MIN) continue;
     anterior.t1 = t;
     actual.t0 = t;
+    actual.anclado = true;
     confirmadas.add(i);
   }
   return { segmentos: resultado, confirmadas };
