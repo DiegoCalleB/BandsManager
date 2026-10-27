@@ -91,6 +91,7 @@ export interface ResultadoEvaluacion {
     encontrados03: number; // fracción con un cambio detectado a ≤0,3 s
     encontrados1: number; // fracción a ≤1 s
     errorMedio: number; // s, de los encontrados a ≤1 s
+    sesgo: number; // s, mediana CON signo de los encontrados a ≤1 s: positivo = se detecta tarde, negativo = pronto
     sobrantes: number; // cambios detectados sin ninguno de referencia a ≤1 s
   };
 }
@@ -128,6 +129,11 @@ export function evaluarAcordes(
   const masCercano = (t: number, lista: number[]) => lista.reduce((m, x) => Math.min(m, Math.abs(x - t)), Infinity);
   const distancias = cRef.map((t) => masCercano(t, cPred));
   const cerca1 = distancias.filter((d) => d <= 1);
+  const firmados = cRef
+    .map((t) => cPred.reduce((m, x) => (Math.abs(x - t) < Math.abs(m) ? x - t : m), Infinity))
+    .filter((d) => Math.abs(d) <= 1)
+    .sort((a, b) => a - b);
+  const sesgo = firmados.length ? (firmados[(firmados.length - 1) >> 1] + firmados[firmados.length >> 1]) / 2 : 0;
   const r = (x: number) => Math.round(x * 1000) / 1000;
   return {
     segundosEvaluados: r(total * paso),
@@ -140,6 +146,7 @@ export function evaluarAcordes(
       encontrados03: r(cRef.length ? distancias.filter((d) => d <= 0.3).length / cRef.length : 1),
       encontrados1: r(cRef.length ? cerca1.length / cRef.length : 1),
       errorMedio: r(cerca1.length ? cerca1.reduce((a, d) => a + d, 0) / cerca1.length : 0),
+      sesgo: r(sesgo),
       sobrantes: cPred.filter((t) => masCercano(t, cRef) > 1).length,
     },
   };

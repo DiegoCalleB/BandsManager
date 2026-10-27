@@ -16,7 +16,7 @@
  * acordes con extensiones (9, 13, sus) y pasajes con mucha distorsión o sin armonía.
  */
 
-import { refinarFronterasConAtaques } from "./refinarFronteras.js";
+import { afinarFronteras } from "./realinearAcordes.js";
 import { fft, ventanaHann, SAMPLE_RATE, extraerPcmMono, calcularCromaDesdePcm, detectarTonalidadDesdeCroma } from "./audioKey.js";
 
 const VENTANA = 4096; // ~372 ms a 11025 Hz
@@ -29,14 +29,13 @@ const NOTAS = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 export type CalidadAcorde = "maj" | "min" | "7";
 
 export interface SegmentoAcorde {
-  /** Inicio en segundos. */
-  t0: number;
-  /** Fin en segundos. */
-  t1: number;
+  t0: number; // inicio en segundos
+  t1: number; // fin en segundos
   /** Nombre internacional («C», «Am», «G7») o «N» si no hay acorde claro. */
   acorde: string;
   /** 0-1: cuánto se parece el croma al acorde elegido frente al siguiente mejor. */
   confianza: number;
+  anclado?: boolean; // inicio confirmado por la armonía: la rejilla solo lo mueve si está casi encima
 }
 
 export interface OpcionesAcordes {
@@ -90,7 +89,7 @@ function construirPlantillas(): Plantilla[] {
   return salida;
 }
 
-const PLANTILLAS = construirPlantillas();
+export const PLANTILLAS = construirPlantillas();
 
 /** Mediana de los primeros n valores de v SIN reservar memoria (n pequeño: inserción en tmp). */
 function medianaPequena(v: Float32Array, n: number, tmp: Float32Array): number {
@@ -482,7 +481,7 @@ export function detectarAcordesConDiagnostico(
   const vacio: DiagnosticoAcordes = { afinacionCents: Math.round(afinacion * 100), contraste, tonalidadUsada: null, frames: frames.length, cuotaAcordeDominante: 0, acordesDistintos: 0, tonalidades: [] };
   if (frames.length < 4) return { segmentos: [], diagnostico: vacio };
   const detectados = detectarSegmentos(pcm, sampleRate, opciones, frames, afinacion);
-  const segmentos = refinarFronterasConAtaques(detectados.segmentos, pcm, sampleRate);
+  const segmentos = afinarFronteras(detectados.segmentos, pcm, sampleRate, (n) => PLANTILLAS.find((p) => p.nombre === n)?.vector, afinacion);
   const tonalidadUsada = detectados.tonalidadUsada;
   const duracion = segmentos.reduce((a, s) => a + (s.t1 - s.t0), 0) || 1;
   const porAcorde = new Map<string, number>();

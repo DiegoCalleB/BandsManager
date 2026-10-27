@@ -46,6 +46,13 @@ describe('evaluarAcordes', () => {
     expect(r.cambios.encontrados1).toBe(1);
   });
 
+  it('el sesgo lleva signo: positivo si se detecta tarde, negativo si pronto', () => {
+    const desplazada = (d: number) => ref.map((s) => ({ ...s, t0: s.t0 === 0 ? 0 : s.t0 + d, t1: s.t1 === 16 ? 16 : s.t1 + d }));
+    expect(evaluarAcordes(ref, desplazada(0.2))!.cambios.sesgo).toBeCloseTo(0.2, 2);
+    expect(evaluarAcordes(ref, desplazada(-0.2))!.cambios.sesgo).toBeCloseTo(-0.2, 2);
+    expect(evaluarAcordes(ref, ref)!.cambios.sesgo).toBe(0);
+  });
+
   it('solo evalúa el rango pedido (lo que la banda ha revisado)', () => {
     const pred = [{ t0: 0, t1: 16, acorde: 'Am' }];
     expect(evaluarAcordes(ref, pred, { hasta: 4 })!.mayorMenor).toBe(1);

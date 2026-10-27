@@ -66,7 +66,7 @@
   "server/db/pitchLearning.ts": 708,
   "src/config/moduleTutorials.ts": 704,
   "src/components/SimplePromoLoginModal.tsx": 699,
-  "server/utils/chordDetection.ts": 695,
+  "server/utils/chordDetection.ts": 694,
   "src/components/common/ModuleTutorialModal.tsx": 691,
   "src/components/TunerModal.tsx": 690,
   "src/components/repertorio/SetlistSongRow.tsx": 681,

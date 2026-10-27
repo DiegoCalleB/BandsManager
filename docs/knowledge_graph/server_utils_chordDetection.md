@@ -19,12 +19,13 @@ Detección de acordes con tiempos a partir de audio (el motor de un «Chordify p
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_utils_audioKey|server/utils/audioKey.ts]] *(Layer: #service, Domain: #repertoire)*
-- [[server_utils_refinarFronteras|server/utils/refinarFronteras.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_realinearAcordes|server/utils/realinearAcordes.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_services_acordesCancion|server/services/acordesCancion.ts]] *(from #service)*
+- [[server_utils_realinearAcordes|server/utils/realinearAcordes.ts]] *(from #service)*
 - [[server_utils_refinarFronteras|server/utils/refinarFronteras.ts]] *(from #service)*
 
 ---
@@ -33,6 +34,7 @@ Detección de acordes con tiempos a partir de audio (el motor de un «Chordify p
 - `server/utils/__tests__/analisisAcordes.test.ts`
 - `server/utils/__tests__/chordDetection.realista.test.ts`
 - `server/utils/__tests__/chordDetection.test.ts`
+- `server/utils/__tests__/realinearAcordes.test.ts`
 - `server/utils/__tests__/refinarFronteras.test.ts`
 
 ---

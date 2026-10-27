@@ -24,12 +24,13 @@ Afina los cambios de acorde con los ataques del audio.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[server_utils_chordDetection|server/utils/chordDetection.ts]] *(from #service)*
 - [[server_utils_pulso|server/utils/pulso.ts]] *(from #service)*
+- [[server_utils_realinearAcordes|server/utils/realinearAcordes.ts]] *(from #service)*
 
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/utils/__tests__/realinearAcordes.test.ts`
 - `server/utils/__tests__/refinarFronteras.test.ts`
 
 ---

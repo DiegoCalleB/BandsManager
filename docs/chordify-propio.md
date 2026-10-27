@@ -66,6 +66,19 @@ Fallo visto en producción: un solo acorde en toda la canción. Causa reproducid
 
 Sigue sin medirse sobre grabaciones reales con verdad escrita a mano.
 
+## Instante exacto del cambio y corrección en bloque — 2026-10
+- **Realineado armónico** (`server/utils/realinearAcordes.ts`): el croma grueso (ventana 4096) sitúa cada frontera con ±0,2 s. Se afina con croma fino (ventana 2048, salto 512), mediana temporal por nota (quita la percusión) y un ajuste por mínimos cuadrados de escalón en d(f) = corr(c, acorde previo) − corr(c, acorde siguiente). Se usa el escalón y no la suma de correlaciones porque con acordes que comparten notas (Am/F) la suma sesga. Las fronteras confirmadas así no pasan por el flujo espectral.
+- **Flujo espectral** (`refinarFronteras.ts`): solo refina las fronteras que el realineado no confirma (p. ej. con «N»). Va de banda completa, así que la batería lo sesga.
+- **Cuadre al compás** (`ajustarACompases`): sin cambios; una anticipación se sigue escribiendo en el «1». Es lo que hace que un bloque entero parezca adelantado o retrasado respecto al pulso.
+- **Corrección en bloque** (`src/utils/ajusteEnBloque.ts`): al mover un cambio, el atril ofrece «Igual en N cambios más del bloque» (mismo acorde entrando tras el mismo previo, dentro del mismo bloque). Se guarda para toda la banda como cualquier corrección.
+- Validado solo con audio sintético; falta medir con canciones reales (Come Together) frente a Moises.
+
+### Directo sin claqueta: la rejilla no manda sobre la armonía
+
+En una grabación en directo la rejilla de la red se desliza respecto a lo que toca la guitarra. Un cambio que la armonía ya confirmó (`anclado` en `SegmentoAcorde`, lo marca `realinearFronteras`) solo lo cuadra `ajustarACompases` si está a ≤0,15 pulsos del destino; si no, se respeta. Los no confirmados siguen yendo al «1» o al pulso. El campo es transitorio: no se guarda en `analisis`.
+
+Para medirlo: `scripts/evaluar-acordes.ts` imprime ahora `sesgo` (mediana con signo del error de los cambios; positivo = se detecta tarde). Un bloque que sale siempre antes/después se ve ahí. Sigue validado solo con audio sintético: falta pasarlo por las canciones corregidas a mano.
+
 ## Aro de cuenta atrás, compases y bloques
 - **Aro por acorde** (`AroAcorde`): como los loops de GarageBand, el aro del acorde actual se llena mientras suena y el número del centro cuenta los segundos que faltan; en el último 0,8 s cambia de color para anticipar el cambio. El acorde siguiente es un aro tenue con su cuenta atrás.
 - **Compases y bloques** (`cuadriculaCompases.ts`, `RegletaCompases`): no se detecta el pulso del audio; con el BPM de la ficha se busca el desfase de pulso y el compás (4/4 o 3/4, y en qué tiempo empieza) con los que más cambios de acorde caen sobre un pulso. Se prueban también la mitad del tempo (a 60 solo la mitad de los cambios cae en inicio de compás). Si no encaja (<55 %), no se dibujan compases en vez de inventarlos. Bloques de 4 u 8 compases con letra por progresión (A A B A).
@@ -88,7 +101,7 @@ Sigue sin medirse sobre grabaciones reales con verdad escrita a mano.
   3. **Viterbi** sobre los pulsos (posición en el compás), que acaba con los «1» que parpadean. La evidencia es la probabilidad de «1» de la red más los **cambios de acorde** ya detectados, y el mismo decodificador elige entre 3/4 y 4/4.
   4. **Cuadre de acordes** (`ajustarACompases`): un cambio a ≤0,6 pulsos de un «1» va al 1 y el resto, a su pulso. El detector de acordes se adelanta unos 0,1 pulsos de forma sistemática, y en arpegios que cruzan la barra, ±0,5.
 - **Rejilla del visor:** si `analisis.pulso.compases` existe, `cuadriculaDesdePulsos` construye cada compás con sus pulsos reales (`Compas.pulsos`, `Cuadricula.delAudio`). Las correcciones del músico (Tap, «Compás 1 aquí», ◀ ▶, ½×/2×, 3/4) actúan sobre esos mismos pulsos. Un BPM manual que no sea mitad ni doble del medido vuelve a la rejilla regular.
-- **Corregir una vez, para todos:** los ajustes de la rejilla (Tap, «Compás 1 aquí», pulso ±1, ½×/2×, 3/4) se guardan en `analisis.ajusteCompases` (`PATCH /api/songs/:id/ajuste-compases`, validado por `validarAjusteCompases`): los ve toda la banda y sobreviven a recargar. Un reanálisis los descarta (la rejilla nueva ya es otra). Para un cambio de acorde que cae una casilla fuera de sitio, se toca la casilla donde entra y se mueve un tiempo con ‹ › (`moverCambio` → `PATCH /acordes`, queda como corrección manual y alimenta `referenciaManual`).
+- **Corregir una vez, para todos:** los ajustes de la rejilla (Tap, «Compás 1 aquí», pulso ±1, ½×/2×, 3/4) se guardan en `analisis.ajusteCompases` (`PATCH /api/songs/:id/ajuste-compases`, validado por `validarAjusteCompases`): los ve toda la banda y sobreviven a recargar. Un reanálisis los descarta (la rejilla nueva ya es otra). Para un cambio de acorde que cae una casilla fuera de sitio, se toca la casilla donde entra y se mueve un tiempo con ‹ ›, o se mantiene pulsada (250 ms) y se arrastra a otra casilla (`useArrastreCambio`; no pasa de largo al cambio vecino). Ambos usan `moverCambio`/`moverCambioA` → `PATCH /acordes`, queda como corrección manual y alimenta `referenciaManual`).
 - **Medido** (`npx tsx scripts/benchmark-pulso.ts`, F-measure MIREX ±70 ms). Son 8 canciones sintéticas con la verdad conocida y las 5 muestras del repo con su BPM de origen:
 
   | | Pulsos | Compases |

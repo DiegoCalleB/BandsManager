@@ -190,18 +190,24 @@ export function validarSegmentos(entrada: unknown): ResultadoValidacion {
   return { ok: true, segmentos: limpios };
 }
 
+const casillaMasCercana = (tiempos: number[], t: number) => tiempos.reduce((mejor, x, j) => (Math.abs(x - t) < Math.abs(tiempos[mejor] - t) ? j : mejor), 0);
+
 /**
- * Mueve un pulso el cambio de acorde que se ve en la casilla que empieza en `t0`. `tiempos` son los
- * inicios de todos los tiempos de la rejilla, en orden. El cambio se lleva al inicio del tiempo
- * vecino, así que en la rejilla salta exactamente una casilla.
+ * Lleva el cambio de acorde que se ve en la casilla que empieza en `t0` al instante `destino` (el
+ * inicio de otra casilla). `tiempos` son los inicios de todos los tiempos de la rejilla, en orden. Un
+ * cambio no pasa de largo a sus vecinos: se queda a TRAMO_MINIMO de ellos.
  * @returns Los tramos corregidos o null si ahí no hay un cambio que mover.
  */
-export function moverCambio(segmentos: SegmentoAcordeAnalizado[], tiempos: number[], t0: number, direccion: -1 | 1): SegmentoAcordeAnalizado[] | null {
-  const k = tiempos.reduce((mejor, t, j) => (Math.abs(t - t0) < Math.abs(tiempos[mejor] - t0) ? j : mejor), 0);
-  const destino = tiempos[k + direccion];
-  if (destino === undefined) return null;
+export function moverCambioA(segmentos: SegmentoAcordeAnalizado[], tiempos: number[], t0: number, destino: number): SegmentoAcordeAnalizado[] | null {
+  const k = casillaMasCercana(tiempos, t0);
   const fin = tiempos[k + 1] ?? tiempos[k] + (tiempos[k] - (tiempos[k - 1] ?? tiempos[k] - 0.5));
   const i = indiceSegmentoEn(segmentos, (tiempos[k] + fin) / 2);
   const movidos = i > 0 ? moverFrontera(segmentos, i, destino) : segmentos;
   return movidos === segmentos ? null : movidos;
+}
+
+/** Como `moverCambioA`, pero exactamente una casilla antes (-1) o después (1). */
+export function moverCambio(segmentos: SegmentoAcordeAnalizado[], tiempos: number[], t0: number, direccion: -1 | 1): SegmentoAcordeAnalizado[] | null {
+  const destino = tiempos[casillaMasCercana(tiempos, t0) + direccion];
+  return destino === undefined ? null : moverCambioA(segmentos, tiempos, t0, destino);
 }

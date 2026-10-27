@@ -216,12 +216,15 @@ export function pulsoDesdeRed(red: PulsoNeuronal, opciones: { duracion: number; 
   };
 }
 
+/** Distancia máxima (en fracción de pulso) a la que la rejilla mueve un cambio confirmado por la armonía. */
+const ANCLADO_MAX = 0.15;
+
 /**
  * Cuadra los cambios de acorde con la rejilla de la red: un cambio a menos de 0,6 pulsos de un «1»
  * se lleva al 1 (las bandas cambian ahí, y una anticipación de corchea se escribe en el 1), y
  * cualquier otro, a su pulso más cercano. Los cambios en el 3 o en el 4 se respetan.
  */
-export function ajustarACompases<T extends { t0: number; t1: number }>(segmentos: T[], pulso: Pick<Pulso, "pulsos" | "compases">): T[] {
+export function ajustarACompases<T extends { t0: number; t1: number; anclado?: boolean }>(segmentos: T[], pulso: Pick<Pulso, "pulsos" | "compases">): T[] {
   const { pulsos } = pulso;
   const unos = pulso.compases ?? [];
   if (segmentos.length < 2 || pulsos.length < 2) return segmentos;
@@ -237,6 +240,8 @@ export function ajustarACompases<T extends { t0: number; t1: number }>(segmentos
     const periodo = pulsos[Math.min(p + 1, pulsos.length - 1)] - pulsos[Math.max(p - 1, 0)];
     const uno = unos.length ? unos[cercano(unos, t)] : NaN;
     const destino = Math.abs(uno - t) <= 0.6 * (periodo / 2) ? uno : pulsos[p];
+    // En directo la rejilla se desliza: un cambio que la armonía ya confirmó solo se mueve si está casi encima.
+    if (salida[i].anclado && Math.abs(destino - t) > ANCLADO_MAX * periodo) continue;
     // No se come un acorde entero: cada tramo conserva al menos 0,2 s.
     if (destino <= salida[i - 1].t0 + 0.2 || destino >= salida[i].t1 - 0.2) continue;
     salida[i - 1].t1 = destino;
