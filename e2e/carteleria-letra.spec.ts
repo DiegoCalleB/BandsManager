@@ -74,3 +74,16 @@ test('el QR también se puede poner en Feed: repinta el cartel y se guarda en el
   await expect.poll(() => cartel(page), { timeout: 10_000 }).not.toBe(antes);
   await expect.poll(() => peticiones.some((p) => p.ruta.endsWith('/config') && JSON.parse(p.cuerpo.toString()).qrDigital === true), { timeout: 8_000 }).toBe(true);
 });
+
+test('una plantilla de autor se elige como fondo, repinta el cartel y se guarda en el bolo', async ({ page }) => {
+  const { peticiones } = await abrirCarteleria(page);
+  const antes = await cartel(page);
+  const muestra = page.getByRole('button', { name: 'Plantilla Vinilo' });
+  await expect(muestra).toHaveAttribute('aria-pressed', 'false');
+  await muestra.click();
+  await expect(muestra).toHaveAttribute('aria-pressed', 'true');
+  await expect.poll(() => cartel(page), { timeout: 10_000 }).not.toBe(antes);
+  await expect.poll(() => peticiones.some((p) => p.ruta.endsWith('/config') && JSON.parse(p.cuerpo.toString()).fondo?.id === 'vinilo'), { timeout: 8_000 }).toBe(true);
+  // Una plantilla no es una imagen de IA: no se ofrece retocarla.
+  await expect(page.getByLabel('Retocar el fondo')).toHaveCount(0);
+});

@@ -6,7 +6,7 @@
 // No sustituye a las reglas del prompt (server/utils/promptCartel.ts): las completa. No oculta ni
 // elimina nada de la imagen original, solo le añade textura encima.
 
-function mulberry32(semilla: number) {
+export function mulberry32(semilla: number) {
   let a = semilla >>> 0;
   return () => {
     a = (a + 0x6d2b79f5) >>> 0;

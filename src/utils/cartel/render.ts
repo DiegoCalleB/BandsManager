@@ -6,7 +6,7 @@
 import QRCode from 'qrcode';
 import { calcularLayout, type Adorno, type DatosCartel, type LayoutCartel, type Linea, type OpcionesLayout, type Rect } from './layout';
 import { decidirTinta, medirLuz, tintaSinVelo, unirPixeles, type Tinta } from './contraste';
-import type { DefFormato } from './formatos';
+import { dimensiones, type DefFormato } from './formatos';
 import type { FondoGuardado, PaletaId } from './config';
 import { aplicarGrano, semillaDeTexto } from './grano';
 import { dibujarPlacas, luzDeImagen, planPlacas } from './placas';
@@ -15,6 +15,7 @@ import { encajarImagen, type Encaje } from './ventana';
 import { VOCES, type Composicion, type VozCartel } from './voces';
 import { tintarLogo } from './logos';
 import { fondoConTexto } from './fondoIa';
+import { TINTA_PLANTILLA, dibujarPlantilla, type PlantillaId } from './plantillas';
 import { dibujarArteEntero, dibujarFondoImagen } from './arteCanvas';
 import { sombraDe, velar } from './velo';
 
@@ -325,6 +326,17 @@ function dibujarLogos(ctx: CanvasRenderingContext2D, rects: Rect[], logos: LogoC
  * Pinta el cartel completo en `canvas` a `ancho` píxeles (el alto sale del formato).
  * Devuelve el layout usado, por si quien llama quiere saber dónde quedó cada cosa.
  */
+/** La plantilla dibujada a las medidas de este formato (mismo dibujo en vista previa y exportación, por la semilla). */
+function lienzoDePlantilla(id: PlantillaId, def: DefFormato, ancho: number, semilla: string): HTMLCanvasElement {
+  const { alto } = dimensiones(def, ancho);
+  const lienzo = document.createElement('canvas');
+  lienzo.width = ancho;
+  lienzo.height = alto;
+  const c = lienzo.getContext('2d');
+  if (c) dibujarPlantilla(id, c, ancho, alto, semillaDeTexto(semilla));
+  return lienzo;
+}
+
 export async function renderCartel(
   canvas: HTMLCanvasElement,
   def: DefFormato,
@@ -332,8 +344,10 @@ export async function renderCartel(
   fondo: FondoCartel,
   piezas: PiezasCartel
 ): Promise<LayoutCartel> {
-  const imagen = fondo.tipo === 'imagen' ? await cargarImagen(fondo.url) : null;
-  const esIa = fondo.tipo === 'imagen' && fondo.origen === 'ia';
+  const imagen: HTMLImageElement | HTMLCanvasElement | null =
+    fondo.tipo === 'imagen' ? await cargarImagen(fondo.url) : fondo.tipo === 'plantilla' ? lienzoDePlantilla(fondo.id, def, ancho, piezas.semilla) : null;
+  // Una plantilla de autor se trata como una ilustración vertical a sangre: mismo texto encima, misma fibra de papel.
+  const esIa = (fondo.tipo === 'imagen' && fondo.origen === 'ia') || fondo.tipo === 'plantilla';
   // Una ilustración de IA vertical (3:4) es el cartel entero: el texto va encima, en sus zonas calmadas.
   // Una apaisada es una ventana dentro de un papel: el layout se compacta para dejarle sitio.
   const aSangre = esIa && !!imagen && imagen.height / imagen.width >= 1.1;
@@ -385,15 +399,17 @@ export async function renderCartel(
       // las placas del texto y nada la corta. Si está dibujada sobre un papel liso, el cartel es de ESE papel
       // y la ilustración se funde con él (sin caja ni filetes); si no, se enmarca. La fibra se pone al final,
       // por encima del texto: así las letras también parecen impresas.
-      arte = leerArte(imagen);
-      const plan = planPlacas(L, luzDeImagen(imagen), arte);
+      // Aquí siempre es una imagen cargada: una plantilla nunca es una ventana (`conIlustracion` es falso).
+      const img = imagen as HTMLImageElement;
+      arte = leerArte(img);
+      const plan = planPlacas(L, luzDeImagen(img), arte);
       ctx.fillStyle = plan.color;
       ctx.fillRect(0, 0, L.ancho, L.alto);
-      const e = encajarImagen(imagen.width, imagen.height, plan.ventana);
+      const e = encajarImagen(img.width, img.height, plan.ventana);
       if (plan.modo === 'fundido') {
-        pintarArte = () => dibujarIlustracion(ctx, imagen, e, Math.round(Math.min(e.dw, e.dh) * 0.07), 'darken');
+        pintarArte = () => dibujarIlustracion(ctx, img, e, Math.round(Math.min(e.dw, e.dh) * 0.07), 'darken');
       } else {
-        dibujarIlustracion(ctx, imagen, e, 0);
+        dibujarIlustracion(ctx, img, e, 0);
         dibujarPlacas(ctx, plan);
       }
     } else {
@@ -410,7 +426,8 @@ export async function renderCartel(
   const lineasAbajo = L.lineas.filter(enAbajo);
   // Con una ilustración de IA la tinta es una de las suyas (la oscura y saturada dominante), no un negro de
   // ordenador; solo si no hace falta velo: con velo se mantiene la tinta que garantiza el contraste.
-  const tintaDe = (t: Tinta) => (t.tinta === 'oscura' && t.velo === 0 && arte?.tinta ? arte.tinta : TINTAS[t.tinta]);
+  const tintaOscura = fondo.tipo === 'plantilla' ? TINTA_PLANTILLA[fondo.id] : arte?.tinta;
+  const tintaDe = (t: Tinta) => (t.tinta === 'oscura' && t.velo === 0 && tintaOscura ? tintaOscura : TINTAS[t.tinta]);
   ctx.textBaseline = 'top';
   const pintar = (lineas: Linea[], t: Tinta) => {
     for (const l of lineas) {
@@ -445,7 +462,8 @@ export async function renderCartel(
     // Con las letras ya dibujadas en el arte no hay velo (apagaría el texto de la IA): solo se elige tinta clara u oscura.
     tArriba = tintaDeLineas(ctx, lineasArriba, L.zonas.arriba, u, voz, [], textoIa);
     tAbajo = tintaDeLineas(ctx, lineasAbajo, L.zonas.abajo, u, voz, L.logos, textoIa);
-    if (aSangre && !textoIa) {
+    // Una plantilla tiene su papel y sus tintas: el texto se elige por contraste y no se oscurece con velo.
+    if (aSangre && !textoIa && fondo.tipo === 'imagen') {
       // Sobre una ilustración que ocupa todo el cartel, el texto es siempre claro sobre una sombra de la propia
       // imagen: un velo claro de papel con letra oscura se lee como una mancha gris pegada encima del arte.
       const sobreArte = (t: Tinta): Tinta => (t.tinta === 'oscura' ? { tinta: 'clara', velo: 0.6 } : t);
@@ -454,8 +472,10 @@ export async function renderCartel(
     }
     // A sangre el velo es largo y del color de la propia imagen; con foto o paleta, el de siempre.
     const caida = aSangre ? 260 * u : fundido;
-    velar(ctx, L.zonas.arriba, tArriba, true, caida, aSangre ? sombraDe(ctx, L.zonas.arriba) : null);
-    velar(ctx, L.zonas.abajo, tAbajo, false, caida, aSangre ? sombraDe(ctx, { ...L.zonas.abajo, y: L.zonas.abajo.y - caida, h: L.zonas.abajo.h + caida }) : null);
+    // La sombra del color de la imagen solo para texto CLARO: con letra oscura el velo es de papel, nunca una losa gris.
+    const sombra = (t: Tinta, zona: Rect) => (aSangre && t.tinta === 'clara' ? sombraDe(ctx, zona) : null);
+    velar(ctx, L.zonas.arriba, tArriba, true, caida, sombra(tArriba, L.zonas.arriba));
+    velar(ctx, L.zonas.abajo, tAbajo, false, caida, sombra(tAbajo, { ...L.zonas.abajo, y: L.zonas.abajo.y - caida, h: L.zonas.abajo.h + caida }));
     pintar(lineasArriba, tArriba);
     pintar(lineasAbajo, tAbajo);
   }

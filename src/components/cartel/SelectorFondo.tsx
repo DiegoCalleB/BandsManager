@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ImagePlus, Sparkles, Wand2 } from 'lucide-react';
 import { Button, Textarea } from '../ui';
 import { BotonVoz } from './BotonVoz';
@@ -6,6 +6,7 @@ import { cn } from '../../utils/cn';
 import { PALETAS, type FondoCartel } from '../../utils/cartel/render';
 import { ESTILOS_CARTEL, ETIQUETA_ESTILO, type EstiloCartel } from '../../utils/cartel/estilos';
 import type { PaletaBanda } from '../../utils/cartel/paleta';
+import { ETIQUETA_PLANTILLA, PLANTILLAS, dibujarPlantilla, type PlantillaId } from '../../utils/cartel/plantillas';
 
 const MAX_RETOQUE = 300;
 const EJEMPLOS_RETOQUE = ['Más oscuro', 'Más grano de papel', 'Colores más cálidos', 'Más contraste'];
@@ -49,6 +50,16 @@ function MuestraPaleta({ fondo, acento }: { fondo: string; acento: string }) {
   );
 }
 
+/** Miniatura de una plantilla: el mismo dibujo que el cartel, a tamaño de muestra. */
+function MuestraPlantilla({ id }: { id: PlantillaId }) {
+  const ref = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const c = ref.current?.getContext('2d');
+    if (c) dibujarPlantilla(id, c, 96, 120, 1);
+  }, [id]);
+  return <canvas ref={ref} width={96} height={120} aria-hidden className="size-full object-cover" />;
+}
+
 /** Miniatura elegible. La elegida se marca con una píldora debajo (sin bordes, Ley 1). */
 function Muestra({ activa, etiqueta, onClick, children }: { activa: boolean; etiqueta: string; onClick: () => void; children: React.ReactNode }) {
   return (
@@ -84,6 +95,12 @@ export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenera
             <MuestraPaleta fondo={paletaBanda.fondo} acento={paletaBanda.acento} />
           </Muestra>
         )}
+
+        {PLANTILLAS.map((id) => (
+          <Muestra key={id} etiqueta={`Plantilla ${ETIQUETA_PLANTILLA[id]}`} activa={fondo.tipo === 'plantilla' && fondo.id === id} onClick={() => onFondo({ tipo: 'plantilla', id })}>
+            <MuestraPlantilla id={id} />
+          </Muestra>
+        ))}
 
         {foto && (
           <Muestra etiqueta="Tu foto" activa={esImagen(foto)} onClick={() => onFondo({ tipo: 'imagen', url: foto, origen: 'foto' })}>

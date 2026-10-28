@@ -121,6 +121,7 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
   const fondoElegido = fondoPorBolo[id] ?? guardada.fondo;
   const fondoValido =
     fondoElegido.tipo === 'paleta' ||
+    fondoElegido.tipo === 'plantilla' ||
     (!rotas[fondoElegido.url] && (fondoElegido.origen === 'ia' ? fondosIa.includes(fondoElegido.url) : fondoElegido.url === foto));
   const fondo: FondoCartel = fondoValido ? fondoElegido : CONFIG_INICIAL.fondo;
 
