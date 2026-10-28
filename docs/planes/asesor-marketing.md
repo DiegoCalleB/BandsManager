@@ -108,7 +108,7 @@ UI siguiendo la skill `visual-identity` (Espectro) y con color de módulo propio
 - [ ] Hoy reutiliza `campanaConcierto` en modo Concierto.
 
 ### Fase 2 · Las piezas
-- [ ] `format-rules.json` a partir de los apuntes del máster.
+- [x] Reglas de formato con la fuente de cada una (`src/utils/asesor/reglasFormato.ts`) y diagnóstico de métricas (`src/utils/asesor/diagnosticoMetricas.ts`), a partir de los apuntes del máster.
 - [ ] Generación de carrusel, stories, guion de reel y evento de FB con el contexto ADN.
 - [ ] Render PNG de stories y carruseles con el ADN visual.
 - [ ] `Hecho` / `Saltar` y aprendizaje de pesos.
@@ -122,5 +122,5 @@ UI siguiendo la skill `visual-identity` (Espectro) y con color de módulo propio
 ---
 
 ## 5. Pendiente de Diego
-- Apuntes: IG (creación de contenido y algoritmo) y TikTok (algoritmo y SEO, y estrategia), para `format-rules.json`.
+- ~~Apuntes del máster~~ ✅ integrados.
 - Validar las 6 preguntas de estrategia, que son el corazón de la personalización.
