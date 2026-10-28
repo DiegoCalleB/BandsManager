@@ -44,7 +44,8 @@ export interface CartelConfig {
   foto: string | null;
 }
 
-export const MAX_FONDOS_IA = 3;
+/** Versiones de fondo de IA que se recuerdan por bolo (cada retoque es una más). */
+export const MAX_FONDOS_IA = 8;
 export const MAX_LOGOS = 4;
 const MAX_EXTRA = 40;
 const MAX_CABEZA = 120;
@@ -123,7 +124,7 @@ export function sanearConfigCartel(raw: unknown, esUrlPermitida: (url: string) =
   };
 }
 
-/** Añade un fondo de IA al historial (el más nuevo primero, sin repetidos, como mucho 3). */
+/** Añade un fondo de IA al historial (el más nuevo primero, sin repetidos, como mucho `MAX_FONDOS_IA`). */
 export function conFondoIa(config: CartelConfig, url: string): CartelConfig {
   return { ...config, fondosIa: [url, ...config.fondosIa.filter((u) => u !== url)].slice(0, MAX_FONDOS_IA) };
 }

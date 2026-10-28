@@ -14,7 +14,7 @@
   "info": {
     "title": "BandManager.io API",
     "version": "3.1.0",
-    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (426) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
+    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (427) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
     "license": {
       "name": "AGPL-3.0-only",
       "identifier": "AGPL-3.0-only"
@@ -3385,7 +3385,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:350",
+        "x-source": "server/routes/cartelria.ts:413",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -3423,7 +3423,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:361",
+        "x-source": "server/routes/cartelria.ts:424",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -3464,7 +3464,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:331",
+        "x-source": "server/routes/cartelria.ts:394",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"
@@ -3504,7 +3504,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:107",
+        "x-source": "server/routes/cartelria.ts:121",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "imagenRateLimiter"
@@ -3544,7 +3544,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:306",
+        "x-source": "server/routes/cartelria.ts:369",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "ficherosRateLimiter"
@@ -3582,7 +3582,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:321",
+        "x-source": "server/routes/cartelria.ts:384",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -3622,10 +3622,51 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:377",
+        "x-source": "server/routes/cartelria.ts:440",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "ficherosRateLimiter"
+        ]
+      }
+    },
+    "/api/cartel/retocar": {
+      "post": {
+        "tags": [
+          "campanaConcierto"
+        ],
+        "operationId": "postApiCartelRetocar",
+        "description": "Comentario en el código: Retoca un fondo de IA ya hecho: la imagen sale SIEMPRE del historial de fondos de este bolo (nunca una URL cualquiera del cuerpo) y la instrucción de la persona se trata como dato. Una imagen nueva, sin variantes.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BandIdActiva"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "cookieAuth": []
+          },
+          {
+            "authTokenHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "401": {
+            "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/cartelria.ts:202",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "imagenRateLimiter"
         ]
       }
     },
@@ -3670,7 +3711,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:192",
+        "x-source": "server/routes/cartelria.ts:255",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -3718,7 +3759,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:227",
+        "x-source": "server/routes/cartelria.ts:290",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "ficherosRateLimiter"
@@ -3766,7 +3807,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:205",
+        "x-source": "server/routes/cartelria.ts:268",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "ficherosRateLimiter"
@@ -3814,7 +3855,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:250",
+        "x-source": "server/routes/cartelria.ts:313",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "ficherosRateLimiter"
@@ -3861,7 +3902,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:284",
+        "x-source": "server/routes/cartelria.ts:347",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"

@@ -102,6 +102,9 @@ export async function abrirCarteleria(page: Page, { compartido = false, estadoEs
     if (ruta.endsWith('/cartel/fondo')) {
       return route.fulfill({ json: { url: `${CDN}/ia-1.png?v=1`, estilo: JSON.parse(cuerpo.toString()).estilo, referencias: servidor.adn.referencias.length } });
     }
+    if (ruta.endsWith('/cartel/retocar')) {
+      return route.fulfill({ json: { url: `${CDN}/ia-2.png?v=1`, conTexto: false, textoOk: true } });
+    }
     if (ruta.endsWith('/config')) {
       servidor.config = JSON.parse(cuerpo.toString());
       return route.fulfill({ json: { config: servidor.config } });

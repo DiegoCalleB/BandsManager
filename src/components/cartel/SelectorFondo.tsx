@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import { ImagePlus, Sparkles } from 'lucide-react';
-import { Button } from '../ui';
+import { ImagePlus, Sparkles, Wand2 } from 'lucide-react';
+import { Button, Textarea } from '../ui';
+import { BotonVoz } from './BotonVoz';
 import { cn } from '../../utils/cn';
 import { PALETAS, type FondoCartel } from '../../utils/cartel/render';
 import { ESTILOS_CARTEL, ETIQUETA_ESTILO, type EstiloCartel } from '../../utils/cartel/estilos';
 import type { PaletaBanda } from '../../utils/cartel/paleta';
+
+const MAX_RETOQUE = 300;
+const EJEMPLOS_RETOQUE = ['Más oscuro', 'Más grano de papel', 'Colores más cálidos', 'Más contraste'];
 
 interface Props {
   fondo: FondoCartel;
@@ -14,6 +18,9 @@ interface Props {
   fondosIa: string[];
   onGenerarIa: (estilo: EstiloCartel) => Promise<boolean>;
   generando: boolean;
+  /** Retoca el fondo de IA que se ve con una instrucción (una versión nueva). */
+  onRetocar: (instruccion: string) => Promise<boolean>;
+  retocando: boolean;
   /** La IA dibuja el título y la fecha dentro del arte (en vez de pintarlos la app encima). */
   letrasIa: boolean;
   onLetrasIa: (v: boolean) => void;
@@ -52,11 +59,13 @@ function Muestra({ activa, etiqueta, onClick, children }: { activa: boolean; eti
   );
 }
 
-export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenerarIa, generando, letrasIa, onLetrasIa, puedeLetrasIa, estiloInicial, paletaBanda, panelBanda, panelIdea }: Props) {
+export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenerarIa, generando, onRetocar, retocando, letrasIa, onLetrasIa, puedeLetrasIa, estiloInicial, paletaBanda, panelBanda, panelIdea }: Props) {
   const [iaAbierta, setIaAbierta] = useState(false);
   // Hasta que la persona toca un estilo, manda el de su banda (que puede llegar tarde, al cargar su ADN).
   const [estiloElegido, setEstiloElegido] = useState<EstiloCartel | null>(null);
   const estilo = estiloElegido ?? estiloInicial;
+  const [retoque, setRetoque] = useState('');
+  const conFondoIa = fondo.tipo === 'imagen' && fondo.origen === 'ia';
   const esImagen = (url: string) => fondo.tipo === 'imagen' && fondo.url === url;
 
   return (
@@ -103,6 +112,31 @@ export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenera
           <span className="text-[11px] leading-none text-[var(--ink-2)]">IA</span>
         </button>
       </div>
+
+      {conFondoIa && (
+        <div className="grid gap-2 rounded-[var(--r-m)] bg-[var(--sunken)] p-3" aria-label="Retocar el fondo">
+          <p className="text-xs font-medium text-[var(--ink-2)]">Retocar este fondo</p>
+          <p className="text-xs text-[var(--ink-2)] text-pretty">
+            Dile qué cambiar y se queda lo demás. Cada retoque es una versión nueva (1 imagen): las anteriores siguen en las miniaturas para volver.
+          </p>
+          <div className="flex flex-wrap gap-1.5" role="group" aria-label="Ejemplos de retoque">
+            {EJEMPLOS_RETOQUE.map((e) => (
+              <Button key={e} size="xs" variant="raised" onClick={() => setRetoque(e)}>
+                {e}
+              </Button>
+            ))}
+          </div>
+          <div className="relative">
+            <Textarea rows={2} maxLength={MAX_RETOQUE} value={retoque} placeholder="Ej.: El cielo más oscuro y menos nubes" className="pr-10" aria-label="Qué quieres cambiar del fondo"
+              onChange={(e) => setRetoque(e.target.value)} />
+            <BotonVoz valor={retoque} maximo={MAX_RETOQUE} etiqueta="Dictar el retoque" onTexto={setRetoque} />
+          </div>
+          <Button variant="soft" disabled={retocando || !retoque.trim()} onClick={async () => { if (await onRetocar(retoque.trim())) setRetoque(''); }}>
+            <Wand2 className="size-4" aria-hidden />
+            {retocando ? 'Retocando…' : 'Retocar'}
+          </Button>
+        </div>
+      )}
 
       {iaAbierta && (
         <div className="grid gap-3 rounded-[var(--r-m)] bg-[var(--sunken)] p-3">

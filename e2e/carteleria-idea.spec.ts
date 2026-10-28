@@ -85,3 +85,25 @@ test('con varias bandas en el bolo no se ofrece que la IA dibuje las letras', as
   await abrirIa(page);
   await expect(page.getByLabel(/La IA dibuja el título y la fecha/)).toHaveCount(0);
 });
+
+test('retocar el fondo de IA manda la instrucción y deja la versión nueva al lado de la anterior', async ({ page }) => {
+  const { peticiones } = await abrirCarteleria(page);
+  // Sin fondo de IA elegido, no se ofrece retocar.
+  await expect(page.getByLabel('Retocar el fondo')).toHaveCount(0);
+  await abrirIa(page);
+  await page.getByRole('button', { name: 'Pintar fondo' }).click();
+  await expect(page.getByRole('button', { name: /Fondo con IA 1/ })).toHaveAttribute('aria-pressed', 'true', { timeout: 15_000 });
+
+  const retocar = page.getByRole('button', { name: 'Retocar', exact: true });
+  await expect(retocar).toBeDisabled();
+  await page.getByRole('button', { name: 'Más oscuro' }).click();
+  await expect(page.getByLabel('Qué quieres cambiar del fondo')).toHaveValue('Más oscuro');
+  await retocar.click();
+
+  await expect(page.getByRole('button', { name: /Fondo con IA 2/ })).toBeVisible({ timeout: 15_000 });
+  const pedido = JSON.parse(peticiones.find((p) => p.ruta.endsWith('/cartel/retocar'))!.cuerpo.toString());
+  expect(pedido.instruccion).toBe('Más oscuro');
+  expect(pedido.url).toMatch(/ia-1\.png/);
+  // La versión nueva pasa a ser el fondo; la anterior sigue ahí para volver.
+  await expect(page.getByRole('button', { name: /Fondo con IA 1/ })).toBeVisible();
+});

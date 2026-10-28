@@ -22,6 +22,7 @@ import {
 import {
   crearEnlace,
   generarFondoCartel,
+  retocarFondoCartel,
   guardarConfigCartel,
   subirFotoCartel,
   quitarLogoCartel,
@@ -347,6 +348,35 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     }
   };
 
+  const [retocando, setRetocando] = useState(false);
+
+  /** Retoca el fondo de IA que se ve: una versión nueva (el original sigue en el historial para volver). */
+  const retocarIa = async (instruccion: string): Promise<boolean> => {
+    if (!id || fondo.tipo !== 'imagen' || fondo.origen !== 'ia') return false;
+    const bolo = id;
+    const origen = fondo.url;
+    setRetocando(true);
+    setError(null);
+    try {
+      const r = await retocarFondoCartel({ concertId: bolo, url: origen, instruccion });
+      setFondosIaPorBolo((p) => ({ ...p, [bolo]: conFondoIa({ ...CONFIG_INICIAL, fondosIa: p[bolo] ?? fondosIa }, r.url).fondosIa }));
+      setFondoPorBolo((p) => ({ ...p, [bolo]: { tipo: 'imagen', origen: 'ia', url: r.url } }));
+      // Mismo estilo y ambiente que el original, para guardarlo como favorito si les gusta.
+      setMetaIa((p) => (p[origen] ? { ...p, [r.url]: p[origen] } : p));
+      marcar();
+      if (r.conTexto && r.textoOk === false) {
+        setError('El retoque ha estropeado alguna letra. Vuelve a la versión anterior (miniatura de la izquierda) o prueba con otra instrucción.');
+      }
+      return true;
+    } catch (e) {
+      console.warn('[Cartelería] Falló el retoque del fondo:', e);
+      setError(mensajeDe(e, 'No pudimos retocar el fondo. Prueba en un rato.'));
+      return false;
+    } finally {
+      setRetocando(false);
+    }
+  };
+
   /** Un fondo de IA de otro bolo (favorito): gratis, y el cartel de esta banda mantiene su sello. */
   const usarFavorito = (url: string) => {
     if (!id) return;
@@ -464,6 +494,8 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     fondosIa,
     generarIa,
     generando,
+    retocarIa,
+    retocando,
     letrasIa,
     setLetrasIa,
     puedeLetrasIa,
