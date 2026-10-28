@@ -50,3 +50,46 @@ test('la composición se elige en Ajustes, repinta el cartel y se guarda en el b
   await selector.selectOption('base');
   await expect.poll(() => cartel(page), { timeout: 10_000 }).not.toBe(centrada);
 });
+
+test('la dirección se activa en Ajustes, repinta el cartel y se guarda en el bolo', async ({ page }) => {
+  const { peticiones } = await abrirCarteleria(page);
+  const antes = await cartel(page);
+  await abrirAjustes(page);
+  const interruptor = page.getByRole('switch', { name: 'Dirección' });
+  await expect(interruptor).not.toBeChecked();
+  await interruptor.click();
+  await expect(interruptor).toBeChecked();
+  await expect.poll(() => cartel(page), { timeout: 10_000 }).not.toBe(antes);
+  await expect.poll(() => peticiones.some((p) => p.ruta.endsWith('/config') && JSON.parse(p.cuerpo.toString()).direccion === true), { timeout: 8_000 }).toBe(true);
+});
+
+test('el QR también se puede poner en Feed: repinta el cartel y se guarda en el bolo', async ({ page }) => {
+  const { peticiones } = await abrirCarteleria(page);
+  const antes = await cartel(page);
+  await abrirAjustes(page);
+  const interruptor = page.getByRole('switch', { name: 'QR también en Feed e Historia' });
+  await expect(interruptor).not.toBeChecked();
+  await interruptor.click();
+  await expect(interruptor).toBeChecked();
+  await expect.poll(() => cartel(page), { timeout: 10_000 }).not.toBe(antes);
+  await expect.poll(() => peticiones.some((p) => p.ruta.endsWith('/config') && JSON.parse(p.cuerpo.toString()).qrDigital === true), { timeout: 8_000 }).toBe(true);
+});
+
+test('las plantillas de autor son un respaldo: no están por defecto y salen si la IA falla', async ({ page }) => {
+  const { peticiones } = await abrirCarteleria(page);
+  await expect(page.getByRole('button', { name: /^Plantilla / })).toHaveCount(0);
+  await page.route('**/api/cartel/fondo', (r) => r.fulfill({ status: 503, json: { error: 'La IA de imágenes no está disponible ahora mismo.' } }));
+  await page.locator('button[title="Fondo con IA"]').click();
+  await page.getByRole('button', { name: 'Pintar fondo' }).click();
+  await expect(page.getByLabel('Carteles de autor')).toBeVisible({ timeout: 15_000 });
+
+  const antes = await cartel(page);
+  const muestra = page.getByRole('button', { name: 'Plantilla Vinilo' });
+  await muestra.click();
+  await expect(muestra).toHaveAttribute('aria-pressed', 'true');
+  await expect.poll(() => cartel(page), { timeout: 10_000 }).not.toBe(antes);
+  await expect.poll(() => peticiones.some((p) => p.ruta.endsWith('/config') && JSON.parse(p.cuerpo.toString()).fondo?.id === 'vinilo'), { timeout: 8_000 }).toBe(true);
+  // Con una plantilla elegida el panel sigue ahí para poder cambiarla, y no se ofrece retocarla como una imagen de IA.
+  await expect(page.getByLabel('Carteles de autor')).toBeVisible();
+  await expect(page.getByLabel('Retocar el fondo')).toHaveCount(0);
+});

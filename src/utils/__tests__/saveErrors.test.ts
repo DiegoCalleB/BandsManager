@@ -16,6 +16,16 @@ function crearVentana(respuesta: () => Promise<Response>) {
 }
 const json = (status: number, cuerpo: any) => Promise.resolve(new Response(JSON.stringify(cuerpo), { status, headers: { 'content-type': 'application/json' } }));
 
+describe('autoguardado de la cartelería', () => {
+  it('no avisa por cada fallo del PUT de la configuración: el editor reintenta solo y avisa si no pudo', () => {
+    expect(debeAvisar('PUT', '/api/cartel/c1/config', 0)).toBe(false);
+    expect(debeAvisar('PUT', '/api/cartel/c1/config', 503)).toBe(false);
+    // Lo demás del cartel sigue avisando.
+    expect(debeAvisar('PUT', '/api/cartel/c1/imagen', 500)).toBe(true);
+    expect(debeAvisar('POST', '/api/cartel/fondo', 500)).toBe(true);
+  });
+});
+
 describe('aviso de guardados fallidos', () => {
   it('avisa cuando una escritura recibe un error del servidor, con su mensaje', async () => {
     const { ventana, eventos } = crearVentana(() => json(500, { error: 'column "x" does not exist' }));

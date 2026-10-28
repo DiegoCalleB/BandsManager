@@ -16,6 +16,7 @@ export interface AjustesTexto {
   cabeza: string | null;
   extra: string;
   horario: boolean;
+  direccion?: boolean;
 }
 
 const clave = (s: string) => s.trim().toLocaleLowerCase('es');
@@ -53,6 +54,7 @@ export function datosDesdeConcierto(c: Concert, banda: string, ajustes: AjustesT
     horario: ajustes.horario ? lineaHorario(lt?.horaAperturaPuertas, lt?.horaShow) : '',
     sala: (c.sala || '').trim(),
     ciudad: (c.ciudad || '').trim(),
+    direccion: ajustes.direccion ? (c.direccion || '').trim().slice(0, 70) : '',
     extra: ajustes.extra.trim().slice(0, 40),
   };
 }

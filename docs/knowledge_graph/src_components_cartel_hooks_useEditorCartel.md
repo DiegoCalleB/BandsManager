@@ -27,9 +27,11 @@ Exporta: EnlaceCartel, useEditorCartel, EditorCartel.
 - [[src_utils_cartel_formatos|src/utils/cartel/formatos.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_logos|src/utils/cartel/logos.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_render|src/utils/cartel/render.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_cartel_sangrado|src/utils/cartel/sangrado.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_texto|src/utils/cartel/texto.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_voces|src/utils/cartel/voces.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_promocionApi|src/utils/promocionApi.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_reintentar|src/utils/reintentar.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

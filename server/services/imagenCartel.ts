@@ -75,23 +75,49 @@ async function variantes(bandId: string, modelo: string, prompt: string, referen
   return ok;
 }
 
-export async function generarFondoCartel(bandId: string, prompt: string, referencias: ImagenReferencia[] = [], encuadre: EncuadreFondo = 'ventana', textos: TextosCartel | null = null): Promise<{ url: string; textoOk: boolean } | null> {
-  const relacion = encuadre === 'sangre' ? RELACION_FONDO_SANGRE : RELACION_FONDO;
-  if (!getAiClient()) return null;
-
-  let candidatas: VarianteFondo[];
+/** Pide imágenes con el modelo principal y, si no está disponible (no por cupo), con el básico. */
+async function pedirImagenes(bandId: string, prompt: string, referencias: ImagenReferencia[], n: number, relacion: string): Promise<VarianteFondo[]> {
   try {
-    candidatas = await variantes(bandId, MODELO_IMAGEN, prompt, referencias, VARIANTES_FONDO, relacion);
+    return await variantes(bandId, MODELO_IMAGEN, prompt, referencias, n, relacion);
   } catch (e) {
     // Sin cupo se avisa tal cual; si es el modelo caro el que no está disponible, se cae al barato.
     if (isSpendCapOrQuotaError(e) || MODELO_IMAGEN === MODELO_IMAGEN_BASE) throw e;
     console.warn('[Cartel] Modelo de imagen principal no disponible, se usa el básico:', (e as Error)?.message || e);
-    candidatas = await variantes(bandId, MODELO_IMAGEN_BASE, prompt, referencias, VARIANTES_FONDO, relacion);
+    return variantes(bandId, MODELO_IMAGEN_BASE, prompt, referencias, n, relacion);
   }
+}
+
+export async function generarFondoCartel(bandId: string, prompt: string, referencias: ImagenReferencia[] = [], encuadre: EncuadreFondo = 'ventana', textos: TextosCartel | null = null): Promise<{ url: string; textoOk: boolean } | null> {
+  const relacion = encuadre === 'sangre' ? RELACION_FONDO_SANGRE : RELACION_FONDO;
+  if (!getAiClient()) return null;
+
+  const candidatas = await pedirImagenes(bandId, prompt, referencias, VARIANTES_FONDO, relacion);
   if (candidatas.length === 0) return null;
 
   const veredicto = await elegirMejorVariante(bandId, candidatas, textos);
   const mejor = candidatas[veredicto.indice];
   const url = await uploadBufferToSupabase(Buffer.from(mejor.data, 'base64'), rutaFondoIa(bandId, !!textos), 'image/png');
   return url ? { url, textoOk: textos ? veredicto.textoOk : true } : null;
+}
+
+/** Proporción más cercana de las que el modelo acepta para un fondo (vertical a sangre o apaisado en ventana). */
+export const relacionDe = (ancho: number, alto: number) => (alto > ancho * 1.1 ? RELACION_FONDO_SANGRE : RELACION_FONDO);
+
+/**
+ * Retoca un fondo ya hecho: UNA imagen nueva (sin variantes, la persona decide) a partir de la actual. Si lleva
+ * las letras dibujadas, el juez las lee otra vez para avisar si el retoque las ha estropeado.
+ */
+export async function retocarFondoCartel(
+  bandId: string,
+  prompt: string,
+  original: ImagenReferencia,
+  relacion: string,
+  textos: TextosCartel | null
+): Promise<{ url: string; textoOk: boolean } | null> {
+  if (!getAiClient()) return null;
+  const [retocada] = await pedirImagenes(bandId, prompt, [original], 1, relacion);
+  if (!retocada) return null;
+  const veredicto = textos ? await elegirMejorVariante(bandId, [retocada], textos) : null;
+  const url = await uploadBufferToSupabase(Buffer.from(retocada.data, 'base64'), rutaFondoIa(bandId, !!textos), 'image/png');
+  return url ? { url, textoOk: veredicto ? veredicto.textoOk : true } : null;
 }

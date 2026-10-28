@@ -29,6 +29,8 @@ const casos: Array<[string, DatosCartel, Partial<OpcionesLayout>]> = [
   ['bolo compartido', datos({ lineup: [{ nombre: 'Cabeza', cabeza: true }, { nombre: 'Invitada Sorpresa', cabeza: false }] }), {}],
   ['con ilustración', datos(), { compacto: true, logos: [1] }],
   ['sin extras', datos({ horario: '', extra: '', ciudad: '' }), {}],
+  ['con dirección', datos({ direccion: 'C/ de los Jardines de la Villa 14' }), { qr: true }],
+  ['con dirección y varias líneas extra (letras de IA)', datos({ lineup: [], fecha: '', sala: '', ciudad: '', horario: '', extra: 'PUERTAS 20:30 · SHOW 21:30\nC/ de los Jardines de la Villa 14, Madrid' }), { qr: true, logos: [1] }],
 ];
 
 describe.each(COMPOSICIONES_CARTEL)('composición %s', (comp) => {

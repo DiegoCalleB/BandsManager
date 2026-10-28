@@ -85,3 +85,45 @@ test('con varias bandas en el bolo no se ofrece que la IA dibuje las letras', as
   await abrirIa(page);
   await expect(page.getByLabel(/La IA dibuja el título y la fecha/)).toHaveCount(0);
 });
+
+test('retocar el fondo de IA manda la instrucción y deja la versión nueva al lado de la anterior', async ({ page }) => {
+  const { peticiones } = await abrirCarteleria(page);
+  // Sin fondo de IA elegido, no se ofrece retocar.
+  await expect(page.getByLabel('Retocar el fondo')).toHaveCount(0);
+  await abrirIa(page);
+  await page.getByRole('button', { name: 'Pintar fondo' }).click();
+  await expect(page.getByRole('button', { name: /Fondo con IA 1/ })).toHaveAttribute('aria-pressed', 'true', { timeout: 15_000 });
+
+  const retocar = page.getByRole('button', { name: 'Retocar', exact: true });
+  await expect(retocar).toBeDisabled();
+  await page.getByRole('button', { name: 'Más oscuro' }).click();
+  await expect(page.getByLabel('Qué quieres cambiar del fondo')).toHaveValue('Más oscuro');
+  await retocar.click();
+
+  await expect(page.getByRole('button', { name: /Fondo con IA 2/ })).toBeVisible({ timeout: 15_000 });
+  const pedido = JSON.parse(peticiones.find((p) => p.ruta.endsWith('/cartel/retocar'))!.cuerpo.toString());
+  expect(pedido.instruccion).toBe('Más oscuro');
+  expect(pedido.url).toMatch(/ia-1\.png/);
+  // La versión nueva pasa a ser el fondo; la anterior sigue ahí para volver.
+  await expect(page.getByRole('button', { name: /Fondo con IA 1/ })).toBeVisible();
+});
+
+test('si la IA falla una letra se ofrece repetir con el texto exacto, sin letras de IA', async ({ page }) => {
+  const { peticiones } = await abrirCarteleria(page);
+  let primera = true;
+  await page.route('**/api/cartel/fondo', async (route) => {
+    const cuerpo = JSON.parse(route.request().postData() || '{}');
+    peticiones.push({ metodo: 'POST', ruta: '/api/cartel/fondo', cuerpo: Buffer.from(JSON.stringify(cuerpo)) });
+    const conTexto = cuerpo.conTexto === true;
+    await route.fulfill({ json: { url: `https://x.supabase.co/storage/v1/object/public/band-media/carteles/band-demo/ia-${primera ? 't-' : ''}9.png?v=1`, estilo: cuerpo.estilo, referencias: 0, conTexto, textoOk: !(primera && conTexto) } });
+    primera = false;
+  });
+  await abrirIa(page);
+  await page.getByRole('button', { name: 'Pintar fondo' }).click();
+  await expect(page.getByRole('status').filter({ hasText: /ha fallado alguna letra/ })).toBeVisible({ timeout: 15_000 });
+  await page.getByRole('button', { name: 'Repetir con el texto exacto' }).click();
+  await expect(page.getByRole('status').filter({ hasText: /ha fallado alguna letra/ })).toHaveCount(0, { timeout: 15_000 });
+  const pedidos = peticiones.filter((p) => p.ruta.endsWith('/cartel/fondo')).map((p) => JSON.parse(p.cuerpo.toString()));
+  expect(pedidos[0].conTexto).toBe(true);
+  expect(pedidos[1].conTexto).toBe(false);
+});

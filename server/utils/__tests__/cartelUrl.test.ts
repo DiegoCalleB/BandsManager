@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { esUrlDeCartel, carpetaCartel } from '../cartelUrl';
-import { sanearConfigCartel, conFondoIa, CONFIG_INICIAL } from '../../../src/utils/cartel/config';
+import { sanearConfigCartel, conFondoIa, CONFIG_INICIAL, MAX_FONDOS_IA } from '../../../src/utils/cartel/config';
 
 const SB = 'https://abc.supabase.co';
 const ok = (bandId: string, f = 'x.png') => `${SB}/storage/v1/object/public/band-media/${carpetaCartel(bandId)}${f}`;
@@ -74,10 +74,13 @@ describe('sanearConfigCartel', () => {
     expect(c.cabeza).toBe('Banda');
   });
 
-  it('el historial de IA guarda 3 como mucho, el más nuevo primero y sin repetir', () => {
+  it('el historial de IA guarda MAX_FONDOS_IA como mucho, el más nuevo primero y sin repetir', () => {
     let c = CONFIG_INICIAL;
     for (const u of ['1', '2', '3', '2', '4']) c = conFondoIa(c, u);
-    expect(c.fondosIa).toEqual(['4', '2', '3']);
+    expect(c.fondosIa).toEqual(['4', '2', '3', '1']);
+    for (let i = 0; i < MAX_FONDOS_IA + 3; i++) c = conFondoIa(c, `n${i}`);
+    expect(c.fondosIa).toHaveLength(MAX_FONDOS_IA);
+    expect(c.fondosIa[0]).toBe(`n${MAX_FONDOS_IA + 2}`);
   });
 });
 

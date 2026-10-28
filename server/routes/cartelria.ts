@@ -1,5 +1,6 @@
 // Cartelería: el cartel de un bolo.
 //   POST /api/cartel/fondo                 fondo con IA (limitador de imagen); entra en el historial del bolo.
+//   POST /api/cartel/retocar               retoca un fondo de IA del historial del bolo con una instrucción; es otra versión del historial.
 //   PUT  /api/cartel/:concertId/config     lo que la banda eligió (fondo, cabeza de cartel, QR…), saneado.
 //   PUT  /api/cartel/:concertId/imagen     el cartel final (PNG) → `cartel_url`: lo enseña la página del bolo.
 //   POST /api/cartel/:concertId/foto       foto propia de la banda (JPEG) para usarla de fondo.
@@ -20,11 +21,12 @@ import { apiAutenticadaRateLimiter, ficherosRateLimiter, iaRateLimiter, imagenRa
 import { idSeguro } from '../utils/trackingSeguro.js';
 import { captureError } from '../utils/errorTracking.js';
 import { esConciertoPublicable } from '../utils/paginaConcierto.js';
-import { construirPromptFondo, esEstiloCartel, limpiarTextos } from '../utils/promptCartel.js';
+import { construirPromptFondo, construirPromptRetoque, esEstiloCartel, limpiarTextos, type TextosCartel } from '../utils/promptCartel.js';
 import { carpetaCartel, carpetaReferencias, esUrlDeCartel, nombreSeguro, referenciasHuerfanas, rutaDeUrlCartel, rutaIdea } from '../utils/cartelUrl.js';
 import { borrarDeAlmacenamiento, descargarDeAlmacenamiento, uploadBufferToSupabase } from '../utils/storage.js';
 import { validarMagicBytes } from './upload.js';
-import { generarFondoCartel } from '../services/imagenCartel.js';
+import { generarFondoCartel, retocarFondoCartel, relacionDe, RELACION_FONDO_SANGRE } from '../services/imagenCartel.js';
+import { fondoConTexto } from '../../src/utils/cartel/fondoIa.js';
 import { cargarReferencias, tipoDeImagen, type ImagenReferencia } from '../services/referenciasCartel.js';
 import { construirBrief } from '../services/briefCartel.js';
 import { dbGetAdnCartel, dbGuardarAdnCartel } from '../db/cartelEstilo.js';
@@ -104,6 +106,18 @@ async function cargarBoceto(bandId: string): Promise<ImagenReferencia | null> {
   return buf && mimeType ? { mimeType, data: buf.toString('base64') } : null;
 }
 
+/** Los textos que la IA dibuja dentro del arte, del bolo y la banda del servidor; null si no hay un nombre fiable o hay varias bandas. */
+function textosDelBolo(concierto: FilaConcierto, nombre: string | undefined): TextosCartel | null {
+  const nombreBanda = nombre && nombre !== 'la banda' ? nombre : '';
+  const compartido = Array.isArray(concierto.bandas_compartidas) && concierto.bandas_compartidas.length > 0;
+  if (!nombreBanda || compartido) return null;
+  return limpiarTextos({
+    nombre: nombreBanda.toUpperCase(),
+    fecha: fechaCartel(String(concierto.fecha || '')),
+    lugar: [concierto.sala, concierto.ciudad].map((v) => String(v || '').trim().toUpperCase()).filter(Boolean).join(' · '),
+  });
+}
+
 cartelriaRouter.post('/cartel/fondo', requireAuth, imagenRateLimiter, async (req, res) => {
   try {
     const bandId = getTargetBandId(req);
@@ -144,16 +158,7 @@ cartelriaRouter.post('/cartel/fondo', requireAuth, imagenRateLimiter, async (req
     // Letras dibujadas por la IA dentro del arte: solo a sangre y con un solo nombre (con varias bandas el cartel
     // lleva el lineup, que se pinta con letra propia). Los textos salen del bolo y de la banda del SERVIDOR,
     // nunca del cuerpo de la petición.
-    const nombreBanda = perfil?.name && perfil.name !== 'la banda' ? perfil.name : '';
-    const compartido = Array.isArray(concierto.bandas_compartidas) && concierto.bandas_compartidas.length > 0;
-    const textos =
-      conTexto === true && encuadre === 'sangre' && nombreBanda && !compartido
-        ? limpiarTextos({
-            nombre: nombreBanda.toUpperCase(),
-            fecha: fechaCartel(String(concierto.fecha || '')),
-            lugar: [concierto.sala, concierto.ciudad].map((v) => String(v || '').trim().toUpperCase()).filter(Boolean).join(' · '),
-          })
-        : null;
+    const textos = conTexto === true && encuadre === 'sangre' ? textosDelBolo(concierto, perfil?.name) : null;
 
     const prompt = construirPromptFondo({
       estilo,
@@ -186,6 +191,64 @@ cartelriaRouter.post('/cartel/fondo', requireAuth, imagenRateLimiter, async (req
       return res.status(503).json({ error: IA_SIN_CUPO });
     }
     fallo(res, 'POST /cartel/fondo', e, 'No se pudo generar el fondo.');
+  }
+});
+
+/** Máximo que se descarga para retocar (un PNG de Gemini 3 Pro puede pasar de los 5 MB de las referencias). */
+const MAX_BYTES_RETOQUE = 12 * 1024 * 1024;
+
+// Retoca un fondo de IA ya hecho: la imagen sale SIEMPRE del historial de fondos de este bolo (nunca una URL
+// cualquiera del cuerpo) y la instrucción de la persona se trata como dato. Una imagen nueva, sin variantes.
+cartelriaRouter.post('/cartel/retocar', requireAuth, imagenRateLimiter, async (req, res) => {
+  try {
+    const bandId = getTargetBandId(req);
+    const { concertId, url, instruccion } = req.body || {};
+    if (typeof concertId !== 'string' || !idSeguro(concertId)) return res.status(400).json({ error: 'Concierto no válido.' });
+    if (typeof url !== 'string' || typeof instruccion !== 'string') return res.status(400).json({ error: 'Petición no válida.' });
+
+    const concierto = await dbGetConcertDeBanda(concertId, bandId);
+    if (!concierto) return res.status(404).json({ error: 'No encontramos ese concierto en tu banda.' });
+    if (!esConciertoPublicable(concierto)) return res.status(409).json({ error: NO_PUBLICO });
+
+    if (!configDe(concierto, bandId).fondosIa.includes(url)) return res.status(400).json({ error: 'Ese fondo no es de este bolo.' });
+    const ruta = rutaDeUrlCartel(url, bandId);
+    if (!ruta) return res.status(400).json({ error: 'Ese fondo no es de este bolo.' });
+
+    const conTexto = fondoConTexto(url);
+    let textos: TextosCartel | null = null;
+    if (conTexto) {
+      const perfil = await loadBandProfile(bandId, {
+        getBand: (id) => dbGetRegisteredBandById(id),
+        getEpk: (id) => dbGetEpkConfig(id),
+        getState: () => loadState(),
+      }).catch(() => null);
+      textos = textosDelBolo(concierto, perfil?.name);
+      if (!textos) return res.status(409).json({ error: 'No podemos retocar un fondo con letras ahora mismo. Genera uno nuevo.' });
+    }
+
+    const prompt = construirPromptRetoque({ instruccion, textos });
+    if (!prompt) return res.status(400).json({ error: 'Cuéntanos qué quieres cambiar.' });
+
+    const buf = await descargarDeAlmacenamiento(ruta, MAX_BYTES_RETOQUE);
+    const mimeType = buf && tipoDeImagen(buf);
+    if (!buf || !mimeType) return res.status(404).json({ error: 'No encontramos ese fondo. Prueba con otro.' });
+    const medidas = mimeType === 'image/png' ? medidasPng(buf) : null;
+    const relacion = medidas ? relacionDe(medidas.ancho, medidas.alto) : RELACION_FONDO_SANGRE;
+
+    const retocado = await retocarFondoCartel(bandId, prompt, { mimeType, data: buf.toString('base64') }, relacion, textos);
+    if (!retocado) return res.status(503).json({ error: 'No hemos podido retocar el fondo. Prueba en un rato.' });
+
+    await dbGuardarCartel(concertId, bandId, { cartel_config: conFondoIa(configDe(concierto, bandId), retocado.url) }).catch((e) =>
+      console.warn('[cartel] No se pudo guardar el retoque en el historial:', (e as Error)?.message || e)
+    );
+    res.json({ url: retocado.url, conTexto, textoOk: retocado.textoOk });
+  } catch (e) {
+    if (isSpendCapOrQuotaError(e)) {
+      console.warn('[cartel] Gemini sin cupo o con tope de gasto: no se retoca el fondo.');
+      captureError(new Error('Gemini sin cupo o con tope de gasto (cartel/retocar)'), { ruta: 'POST /cartel/retocar' });
+      return res.status(503).json({ error: IA_SIN_CUPO });
+    }
+    fallo(res, 'POST /cartel/retocar', e, 'No se pudo retocar el fondo.');
   }
 });
 

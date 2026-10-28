@@ -24,7 +24,7 @@ export interface SaveErrorDetail {
 }
 
 const METODOS_LECTURA = new Set(['GET', 'HEAD', 'OPTIONS']);
-const RUTAS_IGNORADAS = [/^\/api\/public\//, /^\/api\/tracking\//, /^\/api\/auth\//, /^\/api\/telemetry/, /^\/api\/health/];
+const RUTAS_IGNORADAS = [/^\/api\/public\//, /^\/api\/tracking\//, /^\/api\/auth\//, /^\/api\/telemetry/, /^\/api\/health/, /^\/api\/cartel\/[^/]+\/config$/];
 
 function rutaDe(url: string): string | null {
   try {

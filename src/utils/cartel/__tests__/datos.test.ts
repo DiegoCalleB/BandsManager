@@ -97,4 +97,15 @@ describe('conCartelGuardado', () => {
     const r = conCartelGuardado([{ ...a, cartel_config: { v: 1 } }], 'a', { cartel_url: 'https://x' });
     expect(r[0]).toMatchObject({ cartel_config: { v: 1 }, cartel_url: 'https://x' });
   });
+
+  describe('dirección', () => {
+    const c = bolo({ direccion: '  C/ Jardines 3  ' });
+    it('solo entra si la persona la pide, recortada', () => {
+      expect(datosDesdeConcierto(c, 'Banda', { cabeza: null, extra: '', horario: true, direccion: true }).direccion).toBe('C/ Jardines 3');
+      expect(datosDesdeConcierto(c, 'Banda', { cabeza: null, extra: '', horario: true, direccion: false }).direccion).toBe('');
+    });
+    it('un bolo sin dirección no inventa nada', () => {
+      expect(datosDesdeConcierto(bolo(), 'Banda', { cabeza: null, extra: '', horario: true, direccion: true }).direccion).toBe('');
+    });
+  });
 });

@@ -46,7 +46,7 @@ export function composicionVentana(c: CtxLayout): LayoutCartel {
 
   const pie = colocarPie(c, alto - m - def.seguroAbajo * alto);
   const fondo = pie.fondo;
-  const ladoQr = opciones.qr ? Math.round(230 * u) : 0;
+  const ladoQr = opciones.qr ? Math.round((def.digital ? 170 : 230) * u) : 0;
   const anchoDatos = opciones.qr ? util - ladoQr - 40 * u : util;
   const datos = apilarDatos(c, { alinear: 'left', x: m, ancho: anchoDatos, fondo });
 
@@ -79,7 +79,7 @@ export function composicionCentrada(c: CtxLayout): LayoutCartel {
 
   const pie = colocarPie(c, alto - m - def.seguroAbajo * alto);
   const fondo = pie.fondo;
-  const ladoQr = opciones.qr ? Math.round(230 * u) : 0;
+  const ladoQr = opciones.qr ? Math.round((def.digital ? 170 : 230) * u) : 0;
   const anchoDatos = opciones.qr ? util - ladoQr - 40 * u : util;
   // Los datos van centrados en el espacio que deja el QR (si lo hay), no en el cartel entero.
   const cxDatos = m + anchoDatos / 2;
@@ -128,6 +128,14 @@ export function composicionBase(c: CtxLayout): LayoutCartel {
       yDer += px * 1.1;
     }
   }
+  if ((d.direccion ?? '').trim()) {
+    const { px, lineas: ls } = encajar([(d.direccion ?? '').trim().toUpperCase()], ' · ', anchoDer, 2, Math.round(26 * u), Math.round(18 * u), 600, medir, '', false, 0.05);
+    yDer += 4 * u;
+    for (const t of ls) {
+      lineas.push({ texto: t, x: ancho - m, y: yDer, px, peso: 600, alinear: 'right', tracking: 0.05 });
+      yDer += px * 1.1;
+    }
+  }
   if (d.horario.trim()) {
     const { px, lineas: ls } = encajar(d.horario.split(' · '), ' · ', anchoDer, 2, Math.round(30 * u), Math.round(22 * u), 600, medir, '', false, 0.06);
     yDer += 6 * u;
@@ -141,18 +149,24 @@ export function composicionBase(c: CtxLayout): LayoutCartel {
   // ---------- abajo: el nombre enorme (todo el ancho), y bajo él la fila del QR con la línea extra ----------
   const pie = colocarPie(c, alto - m - def.seguroAbajo * alto);
   let fondo = pie.fondo;
-  const ladoQr = opciones.qr ? Math.round(230 * u) : 0;
+  const ladoQr = opciones.qr ? Math.round((def.digital ? 170 : 230) * u) : 0;
   const qr: Rect | null = opciones.qr ? { x: ancho - m - ladoQr, y: fondo - ladoQr, w: ladoQr, h: ladoQr } : null;
 
-  const extra = d.extra.trim().toUpperCase();
+  // La línea extra puede traer varias líneas (hora y dirección con letras de IA): se apilan de abajo arriba
+  // en el hueco que deja el QR, encogiendo la letra si alguna no cabe.
+  const extras = d.extra.split('\n').map((t) => t.trim().toUpperCase()).filter(Boolean);
   const lineasAbajo: Linea[] = [];
-  if (extra) {
-    const px = Math.round(34 * u);
-    lineasAbajo.push({ texto: extra, x: m, y: fondo - px * 1.08, px, peso: 600, alinear: 'left', tracking: 0.06 });
+  const anchoExtra = util - (qr ? ladoQr + 24 * u : 0);
+  let pxExtra = Math.round(34 * u);
+  while (pxExtra > Math.round(20 * u) && extras.some((t) => medir(t, pxExtra, 600, false, 0.06) > anchoExtra)) pxExtra -= 1;
+  let altoExtra = 0;
+  for (const t of [...extras].reverse()) {
+    altoExtra += pxExtra * 1.08;
+    lineasAbajo.unshift({ texto: t, x: m, y: fondo - altoExtra, px: pxExtra, peso: 600, alinear: 'left', tracking: 0.06 });
   }
-  // La fila (QR y/o extra) ocupa lo que mida el QR o la línea extra.
-  fondo -= Math.max(ladoQr, extra ? Math.round(34 * u) * 1.08 : 0);
-  if (qr || extra) fondo -= 26 * u;
+  // La fila (QR y/o extra) ocupa lo que mida el QR o las líneas extra.
+  fondo -= Math.max(ladoQr, altoExtra);
+  if (qr || extras.length) fondo -= 26 * u;
   // El nombre se construye desde 0 para saber lo que mide y se baja hasta apoyarlo en `fondo`.
   const prueba = construirNombre(c, m, 0, util, 'left', true, true);
   const dy = fondo - prueba.yFin;
