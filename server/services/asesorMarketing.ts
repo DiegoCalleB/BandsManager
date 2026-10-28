@@ -11,13 +11,14 @@ import { dbGetConcerts } from '../db/concerts.js';
 import { dbAccionesDesde, dbGetEstrategiaMarketing, dbGuardarAccion, dbUltimaPublicacion } from '../db/asesorMarketing.js';
 import { esConciertoPublicable, hoyIso } from '../utils/paginaConcierto.js';
 import { sanitizeExternalText } from '../utils/promptSafety.js';
-import { buildBandContextBlock, emptyBandProfile, loadBandProfile } from '../utils/bandProfile.js';
+import { buildBandContextBlock, emptyBandProfile, loadBandProfile, type BandProfile } from '../utils/bandProfile.js';
 import { fechaCorta, sumarDias } from '../../src/utils/campanaConcierto.js';
 import { diagnosticar, type ConciertoParaAsesor, type Diagnostico } from '../../src/utils/asesor/diagnostico.js';
 import {
   DIAS_APRENDIZAJE, buscarTarjeta, opcionesDeHoy, semana, type Accion, type OpcionesDeHoy,
 } from '../../src/utils/asesor/opciones.js';
 import { promptPieza, sanearPieza, type Pieza } from '../../src/utils/asesor/pieza.js';
+import { bloqueVozAprendida, terminosProhibidosEn, vozAprendidaDe } from '../../src/utils/asesor/vozAprendida.js';
 import {
   CAMARAS, ESTRATEGIA_INICIAL, ETAPAS, HORAS, OBJETIVOS, sanearEstrategia, type EstrategiaMarketing,
 } from '../../src/utils/asesor/estrategia.js';
@@ -87,18 +88,26 @@ export async function registrarAccion(bandId: string, tarjetaId: unknown, accion
 
 /* ----------------------------------------------------------------- la pieza */
 
-async function contextoBanda(bandId: string): Promise<string> {
+/** El perfil de la banda y su ficha para los prompts. Un fallo de contexto nunca tumba la generación. */
+async function contextoBanda(bandId: string): Promise<{ bloque: string; perfil: BandProfile }> {
   try {
     const perfil = await loadBandProfile(bandId, {
       getBand: (id) => dbGetRegisteredBandById(id),
       getEpk: (id) => dbGetEpkConfig(id),
       getState: () => loadState(),
     });
-    return buildBandContextBlock(perfil);
+    return { bloque: buildBandContextBlock(perfil), perfil };
   } catch (e) {
     console.warn('[Asesor] Sin perfil de banda:', (e as Error)?.message || e);
-    return buildBandContextBlock(emptyBandProfile(bandId));
+    const perfil = emptyBandProfile(bandId);
+    return { bloque: buildBandContextBlock(perfil), perfil };
   }
+}
+
+/** Lo que el sistema ya aprendió de cómo quiere sonar la banda (términos a evitar y reglas suyas). */
+async function vozAprendida(bandId: string) {
+  const registrada = await dbGetRegisteredBandById(bandId).catch(() => null);
+  return vozAprendidaDe(registrada?.dna_expresion);
 }
 
 /** El bolo o el estreno de hoy, en una línea. Lo escribe la banda: se sanea. */
@@ -122,20 +131,33 @@ export async function generarPieza(bandId: string, tarjetaId: unknown, ahora = n
   const client = getAiClient();
   if (!client) return { error: 'sin_ia' };
 
-  const prompt = promptPieza({
-    contextoBanda: await contextoBanda(bandId),
+  const [{ bloque, perfil }, aprendida] = await Promise.all([contextoBanda(bandId), vozAprendida(bandId)]);
+  const datos = {
+    contextoBanda: bloque,
+    vozAprendida: bloqueVozAprendida(aprendida),
+    matices: { instagram: perfil.toneByPlatform.instagram || undefined, tiktok: perfil.toneByPlatform.tiktok || undefined },
     estrategia: ctx.estrategia,
     tarjeta,
     momento: momentoDe(ctx.diagnostico, ctx.estrategia),
-  });
-  try {
+  };
+
+  const intentar = async (prohibidos: string[]): Promise<Pieza | null> => {
     const respuesta = await generateContentWithFallback(client, {
-      contents: prompt,
+      contents: promptPieza({ ...datos, prohibidos }),
       config: { responseMimeType: 'application/json', temperature: 0.8 },
       bandId,
     });
-    const pieza = sanearPieza(safeParseJson(respuesta.text || ''), tarjeta.formato, tarjeta.redes);
-    return pieza ? { pieza } : { error: 'sin_ia' };
+    return sanearPieza(safeParseJson(respuesta.text || ''), tarjeta.formato, tarjeta.redes);
+  };
+
+  try {
+    const primera = await intentar([]);
+    if (!primera) return { error: 'sin_ia' };
+    // Lo que la banda no quiere oír no se confía solo al prompt: se comprueba y, si se ha colado, se reintenta una vez.
+    const colados = terminosProhibidosEn(primera, aprendida.evitar);
+    if (!colados.length) return { pieza: primera };
+    const segunda = await intentar(colados).catch(() => null);
+    return { pieza: segunda && terminosProhibidosEn(segunda, aprendida.evitar).length < colados.length ? segunda : primera };
   } catch (e) {
     console.warn('[Asesor] La IA no pudo preparar la pieza:', (e as Error)?.message || e);
     return { error: 'sin_ia' };
@@ -155,7 +177,7 @@ export async function sugerirEstrategia(bandId: string): Promise<EstrategiaMarke
 
   const prompt = `Eres asesor de marketing digital de bandas de música. A partir de lo que sabemos de esta banda, propón un borrador de su estrategia en redes. La banda lo revisará: si un dato no se deduce, deja el valor más prudente y no inventes.
 
-${await contextoBanda(bandId)}
+${(await contextoBanda(bandId)).bloque}
 
 Devuelve SOLO un JSON con esta forma:
 {

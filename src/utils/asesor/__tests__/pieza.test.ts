@@ -54,4 +54,22 @@ describe('promptPieza', () => {
     expect(prompt).toContain('Formato: reel en instagram');
     expect(prompt).toContain('Bolo: 31 oct en Leganés');
   });
+
+  it('lleva la voz aprendida, el tono de cada red y avisa de los campos de otra herramienta', () => {
+    const prompt = promptPieza({
+      contextoBanda: 'BANDA: Ruta 66', estrategia: ESTRATEGIA_INICIAL, tarjeta, momento: '',
+      vozAprendida: 'LO QUE YA SABEMOS\n<voz>\n- NO quieren oír: épico\n</voz>',
+      matices: { instagram: 'cercano y con humor', tiktok: 'directo y sin filtro' },
+    });
+    expect(prompt).toContain('NO quieren oír: épico');
+    expect(prompt).toContain('- instagram: cercano y con humor');
+    expect(prompt).toContain('- tiktok: directo y sin filtro');
+    expect(prompt).toContain('"recommendedCopy"');
+  });
+
+  it('en el reintento nombra lo que no puede repetirse', () => {
+    const prompt = promptPieza({ contextoBanda: '', estrategia: ESTRATEGIA_INICIAL, tarjeta, momento: '', prohibidos: ['épico', 'increíble'] });
+    expect(prompt).toContain('No uses ninguna de estas, ni variantes: épico; increíble');
+    expect(promptPieza({ contextoBanda: '', estrategia: ESTRATEGIA_INICIAL, tarjeta, momento: '' })).not.toContain('intento anterior');
+  });
 });

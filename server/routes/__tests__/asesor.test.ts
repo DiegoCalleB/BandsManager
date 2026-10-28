@@ -13,12 +13,16 @@ import { crearFakeSupabaseTablas } from '../../db/__tests__/helpers/fakeSupabase
 const fake = crearFakeSupabaseTablas({ band_estrategia_marketing: [['band_id']], asesor_acciones: [['band_id', 'fecha', 'tarjeta_id']] });
 vi.mock('../../db/core.js', async (orig) => ({ ...(await orig<any>()), getSupabase: () => fake.client }));
 vi.mock('../../state.js', async (orig) => ({ ...(await orig<any>()), loadState: () => ({}), saveState: () => {} }));
-vi.mock('../../db.js', () => ({ dbGetEpkConfig: async () => null, dbGetRegisteredBandById: async () => ({ band_id: 'band-a', nombre_banda: 'Los Gatos', estilo_musical: 'rock' }) }));
+const dna = { valor: null as unknown };
+vi.mock('../../db.js', () => ({ dbGetEpkConfig: async () => null, dbGetRegisteredBandById: async () => ({ band_id: 'band-a', nombre_banda: 'Los Gatos', estilo_musical: 'rock', dna_expresion: dna.valor }) }));
 
-const ia = { cliente: null as unknown, texto: '' };
+const ia = { cliente: null as unknown, texto: '', respuestas: [] as string[], prompts: [] as string[] };
 vi.mock('../../ai.js', () => ({
   getAiClient: () => ia.cliente,
-  generateContentWithFallback: async () => ({ text: ia.texto }),
+  generateContentWithFallback: async (_c: unknown, p: { contents: string }) => {
+    ia.prompts.push(p.contents);
+    return { text: ia.respuestas.shift() ?? ia.texto };
+  },
 }));
 
 import { asesorRouter } from '../asesor';
@@ -44,6 +48,9 @@ beforeEach(() => {
   for (const t of Object.keys(fake.tablas)) fake.tablas[t].length = 0;
   ia.cliente = null;
   ia.texto = '';
+  ia.respuestas = [];
+  ia.prompts = [];
+  dna.valor = null;
 });
 afterEach(() => vi.useRealTimers());
 
@@ -174,5 +181,49 @@ describe('pieza', () => {
     ia.cliente = {};
     ia.texto = 'lo siento';
     expect((await llamar('post', '/asesor/pieza', { body: { tarjetaId: 'fondo-pilar' } })).code).toBe(503);
+  });
+});
+
+describe('pieza con la voz aprendida de la banda', () => {
+  const pieza = (gancho: string) => JSON.stringify({
+    gancho, pasos: [], textos: [{ red: 'instagram', texto: 'Nos vemos el sábado', hashtags: [] }, { red: 'tiktok', texto: 'Rock en Leganés', hashtags: [] }], cta: 'Guárdalo', portada: 'La furgo',
+  });
+
+  it('lee los términos a evitar del ADN y se los pasa a la IA', async () => {
+    ia.cliente = {};
+    dna.valor = { terminos_a_evitar: ['épico'], reglas_manuales: ['Nunca hablamos de usted'] };
+    ia.texto = pieza('Un bolo normal');
+    const res = await llamar('post', '/asesor/pieza', { body: { tarjetaId: 'fondo-pilar' } });
+    expect(res.body.pieza.gancho).toBe('Un bolo normal');
+    expect(ia.prompts).toHaveLength(1);
+    expect(ia.prompts[0]).toContain('NO quieren oír (no las uses nunca): épico');
+    expect(ia.prompts[0]).toContain('Nunca hablamos de usted');
+  });
+
+  it('si se cuela un término prohibido, reintenta una vez y se queda con la pieza limpia', async () => {
+    ia.cliente = {};
+    dna.valor = { terminos_a_evitar: ['épico'] };
+    ia.respuestas = [pieza('Una noche épico'), pieza('Una noche de las nuestras')];
+    const res = await llamar('post', '/asesor/pieza', { body: { tarjetaId: 'fondo-pilar' } });
+    expect(res.body.pieza.gancho).toBe('Una noche de las nuestras');
+    expect(ia.prompts).toHaveLength(2);
+    expect(ia.prompts[1]).toContain('No uses ninguna de estas, ni variantes: épico');
+  });
+
+  it('si el reintento no mejora o falla, no deja a la banda sin pieza', async () => {
+    ia.cliente = {};
+    dna.valor = { terminos_a_evitar: ['épico'] };
+    ia.respuestas = [pieza('Una noche épico'), pieza('Otra vez épico')];
+    expect((await llamar('post', '/asesor/pieza', { body: { tarjetaId: 'fondo-pilar' } })).body.pieza.gancho).toBe('Una noche épico');
+    ia.respuestas = [pieza('Una noche épico'), 'lo siento'];
+    expect((await llamar('post', '/asesor/pieza', { body: { tarjetaId: 'fondo-pilar' } })).body.pieza.gancho).toBe('Una noche épico');
+  });
+
+  it('sin nada aprendido no gasta un segundo intento', async () => {
+    ia.cliente = {};
+    ia.texto = pieza('Una noche épico');
+    await llamar('post', '/asesor/pieza', { body: { tarjetaId: 'fondo-pilar' } });
+    expect(ia.prompts).toHaveLength(1);
+    expect(ia.prompts[0]).not.toContain('<voz>');
   });
 });

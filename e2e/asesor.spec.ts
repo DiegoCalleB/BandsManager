@@ -39,7 +39,11 @@ const STORIES = {
   textos: [{ red: 'instagram', texto: 'Votad', hashtags: [] }], cta: '',
 };
 
-async function abrirAsesor(page: Page, { conLogo = false }: { conLogo?: boolean } = {}) {
+/**
+ * `conAdn`: la banda tiene logo, dossier de estilo «stage» (serigrafía, letra de cartel) y dos fotos en
+ * su galería. `sinFotos` la deja sin galería: «Poner foto» sube directamente desde el dispositivo.
+ */
+async function abrirAsesor(page: Page, { conAdn = false, sinFotos = false }: { conAdn?: boolean; sinFotos?: boolean } = {}) {
   const peticiones: Array<{ ruta: string; cuerpo: Record<string, unknown> | null }> = [];
   const servidor = { hechas: new Set<string>(), saltadas: new Set<string>() };
   const ideas = [
@@ -48,15 +52,21 @@ async function abrirAsesor(page: Page, { conLogo = false }: { conLogo?: boolean 
     IDEA('bolo-encuesta', 'stories', 'Stories con cuenta atrás'),
     IDEA('bolo-setlist', 'carrusel', 'Lo que vais a escuchar'),
   ];
-  if (conLogo) {
-    // El logo de la banda: sale de su dossier (epkConfig) y se sirve con CORS como el bucket real.
+  if (conAdn) {
+    // El ADN de la banda: logo, estilo y fotos del dossier, servidos con CORS como el bucket real.
     await page.route('**/api/state', async (route) => {
       const j = await (await route.fetch()).json().catch(() => ({}));
       delete j.error;
-      j.epkConfig = { ...(j.epkConfig || {}), logoUrl: 'https://logo.test/logo.png' };
+      j.epkConfig = {
+        ...(j.epkConfig || {}), logoUrl: 'https://logo.test/logo.png', plantilla: 'stage', genero: 'Rock',
+        bandPhotos: sinFotos ? [] : ['https://fotos.test/1.jpg', { url: 'https://fotos.test/2.jpg' }],
+      };
       await route.fulfill({ status: 200, json: j });
     });
-    await page.route('https://logo.test/**', (r) => r.fulfill({ body: fs.readFileSync(path.join(FIXTURES, 'logo.png')), contentType: 'image/png', headers: { 'access-control-allow-origin': '*' } }));
+    const cors = { 'access-control-allow-origin': '*' };
+    await page.route('https://logo.test/**', (r) => r.fulfill({ body: fs.readFileSync(path.join(FIXTURES, 'logo.png')), contentType: 'image/png', headers: cors }));
+    await page.route('https://fotos.test/**', (r) => r.fulfill({ body: fs.readFileSync(path.join(FIXTURES, 'ref.jpg')), contentType: 'image/jpeg', headers: cors }));
+    await page.route('**/api/cartel/adn', (r) => r.fulfill({ json: { adn: { v: 1, referencias: [], favoritos: [], aprender: true } } }));
   }
   await page.route('**/api/asesor/**', async (route) => {
     const req = route.request();
@@ -137,13 +147,18 @@ test('«hoy no, otra idea» salta la idea y sube la siguiente', async ({ page })
   await expect(recomendadas.getByText('Stories con cuenta atrás')).toBeVisible();
 });
 
-test('un carrusel sale ya hecho imagen: 4 láminas con logo, foto de fondo y colores a elegir, y se guardan en un ZIP', async ({ page }) => {
-  await abrirAsesor(page, { conLogo: true });
+test('un carrusel arranca con el ADN de la banda: su letra, su logo y su foto, y todo se puede cambiar', async ({ page }) => {
+  await abrirAsesor(page, { conAdn: true });
   await page.getByRole('button', { name: 'Elegir esta' }).last().click();
   const hoja = page.getByRole('dialog', { name: /Lo que vais a escuchar/ });
   const imagenes = hoja.getByRole('region', { name: 'Imágenes listas para subir' }).getByRole('img');
   await expect(imagenes).toHaveCount(4, { timeout: 15_000 }); // portada + 2 slides + cierre
   await expect(imagenes.first()).toHaveAttribute('alt', /Lo que vais a escuchar el sábado/);
+
+  // Sin tocar nada: la letra sale de su estilo (dossier «stage» → de cartel) y la portada ya lleva una foto suya.
+  await expect(hoja.getByRole('radio', { name: 'Cartel' })).toHaveAttribute('aria-checked', 'true');
+  await expect(hoja.getByRole('button', { name: 'Cambiar foto' })).toHaveCount(1, { timeout: 15_000 });
+  await expect(hoja.getByRole('button', { name: 'Poner foto' })).toHaveCount(3);
 
   // Las imágenes a tamaño real (1080×1350), para revisarlas a ojo.
   const guardar = async (etiqueta: string) => {
@@ -159,16 +174,19 @@ test('un carrusel sale ya hecho imagen: 4 láminas con logo, foto de fondo y col
       fs.writeFileSync(`test-results/laminas/${etiqueta}-${i + 1}.png`, Buffer.from(b64, 'base64'));
     }
   };
-  await guardar('plano');
+  await page.waitForTimeout(1200);
+  await guardar('adn');
 
-  // Una foto de la banda detrás de la portada: el texto tiene que seguir leyéndose.
+  // Elegir otra foto de la banda: se abre el selector con las suyas.
   const antes = await imagenes.first().getAttribute('src');
-  await hoja.getByLabel('Foto de fondo').setInputFiles(path.join(FIXTURES, 'ref.jpg'));
+  await hoja.getByRole('button', { name: 'Cambiar foto' }).click();
+  const selector = hoja.getByRole('group', { name: 'Foto para la imagen 1' });
+  await expect(selector.getByRole('button', { name: /Usar la foto \d de la banda/ })).toHaveCount(2);
+  await selector.getByRole('button', { name: 'Usar la foto 2 de la banda' }).click();
+  await expect(selector).toBeHidden();
   await expect(imagenes.first()).not.toHaveAttribute('src', antes!, { timeout: 15_000 });
-  await expect(hoja.getByRole('button', { name: 'Cambiar foto' })).toBeVisible();
-  await guardar('foto');
 
-  // El peor caso: un escenario oscuro con focos blancos justo detrás del texto. Se genera aquí mismo.
+  // Y subir una nueva desde el dispositivo: el peor caso, un escenario oscuro con focos blancos.
   const escenario = await page.evaluate(() => {
     const c = document.createElement('canvas');
     c.width = 1200;
@@ -188,15 +206,18 @@ test('un carrusel sale ya hecho imagen: 4 láminas con logo, foto de fondo y col
     }
     return c.toDataURL('image/jpeg', 0.9).split(',')[1];
   });
+  await hoja.getByRole('button', { name: 'Cambiar foto' }).click();
+  await hoja.getByRole('group', { name: 'Foto para la imagen 1' }).getByRole('button', { name: 'Subir otra foto' }).click();
   await hoja.getByLabel('Foto de fondo').setInputFiles({ name: 'escenario.jpg', mimeType: 'image/jpeg', buffer: Buffer.from(escenario, 'base64') });
   await page.waitForTimeout(1500);
   await guardar('escenario');
 
+  // Los colores y la letra se pueden cambiar.
   await hoja.getByRole('radio', { name: 'Amarillo' }).click();
-  await hoja.getByRole('radio', { name: 'Cartel' }).click();
+  await hoja.getByRole('radio', { name: 'Clásica' }).click();
   await expect(imagenes).toHaveCount(4, { timeout: 10_000 });
   await page.waitForTimeout(1500);
-  await guardar('amarillo-cartel');
+  await guardar('amarillo-clasica');
   await page.screenshot({ path: 'test-results/asesor-carrusel.png' });
 
   const descarga = page.waitForEvent('download');
@@ -204,13 +225,25 @@ test('un carrusel sale ya hecho imagen: 4 láminas con logo, foto de fondo y col
   expect((await descarga).suggestedFilename()).toMatch(/carrusel\.zip$/);
 });
 
+test('una banda sin fotos en su galería sube la suya directamente y el resto sale en color', async ({ page }) => {
+  await abrirAsesor(page, { conAdn: true, sinFotos: true });
+  await page.getByRole('button', { name: 'Elegir esta' }).last().click();
+  const hoja = page.getByRole('dialog', { name: /Lo que vais a escuchar/ });
+  await expect(hoja.getByRole('region', { name: 'Imágenes listas para subir' }).getByRole('img')).toHaveCount(4, { timeout: 15_000 });
+  await expect(hoja.getByRole('button', { name: 'Cambiar foto' })).toHaveCount(0);
+  const selector = page.waitForEvent('filechooser');
+  await hoja.getByRole('button', { name: 'Poner foto' }).first().click();
+  await (await selector).setFiles(path.join(FIXTURES, 'ref.jpg'));
+  await expect(hoja.getByRole('button', { name: 'Cambiar foto' })).toHaveCount(1, { timeout: 15_000 });
+});
+
 test('unas stories salen en 1080×1920 con la zona segura de Instagram libre', async ({ page }) => {
-  await abrirAsesor(page, { conLogo: true });
+  await abrirAsesor(page, { conAdn: true });
   await page.getByRole('button', { name: 'Elegir esta' }).first().click();
   const hoja = page.getByRole('dialog', { name: /Stories con cuenta atrás/ });
   const imagenes = hoja.getByRole('region', { name: 'Imágenes listas para subir' }).getByRole('img');
   await expect(imagenes).toHaveCount(3, { timeout: 15_000 });
-  await hoja.getByRole('radio', { name: 'Cartel' }).click();
+  await expect(hoja.getByRole('button', { name: 'Cambiar foto' })).toHaveCount(3, { timeout: 15_000 }); // cada pantalla con una foto suya
   await page.waitForTimeout(1500);
   const srcs = await imagenes.evaluateAll((els) => els.map((e) => (e as HTMLImageElement).src));
   fs.mkdirSync('test-results/laminas', { recursive: true });

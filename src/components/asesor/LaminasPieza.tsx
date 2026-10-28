@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react';
 import '@fontsource/anton/latin-400.css';
 import '@fontsource/dm-serif-display/latin-400.css';
 import { Download, ImagePlus, X } from 'lucide-react';
-import { Button, Skeleton } from '../ui';
+import { Button, IconButton, Skeleton } from '../ui';
 import { VOCES, VOCES_CARTEL } from '../../utils/cartel/voces';
 import { MEDIDAS, type FormatoLamina } from '../../utils/asesor/laminas';
 import type { Pieza } from '../../utils/asesor/pieza';
@@ -16,26 +16,36 @@ interface Props {
 }
 
 /**
- * Las stories o el carrusel ya hechos imagen: cada una puede llevar una foto de la banda detrás, se
- * eligen colores y letra y se guardan o comparten. El color de cada muestra sale de la paleta (es
- * obra, no interfaz), por eso va en `style`.
+ * Las stories o el carrusel ya hechos imagen, con el estilo de la banda: sus colores, su letra y sus
+ * fotos. Cada imagen puede cambiar de foto (las de la banda o una nueva), y se eligen colores y letra.
+ * El color de cada muestra sale de la paleta (es obra, no interfaz), por eso va en `style`.
  */
 export function LaminasPieza({ pieza, formato, banda }: Props) {
   const l = useLaminas(pieza, formato, banda);
   const { ancho, alto } = MEDIDAS[formato];
   const entrada = useRef<HTMLInputElement>(null);
   const destino = useRef(0);
+  const [eligiendo, setEligiendo] = useState<number | null>(null);
   const [aviso, setAviso] = useState<string | null>(null);
   if (!l.laminas.length) return null;
 
-  const elegirFoto = (i: number) => {
+  // Con fotos de la banda se elige entre ellas; sin ninguna, se sube directamente.
+  const abrirFoto = (i: number) => {
     destino.current = i;
-    entrada.current?.click();
+    setAviso(null);
+    if (l.fotosBanda.length) setEligiendo((actual) => (actual === i ? null : i));
+    else entrada.current?.click();
   };
-  const alElegir = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const alElegirArchivo = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const archivo = e.target.files?.[0];
     e.target.value = '';
-    if (archivo) setAviso(await l.ponerFoto(destino.current, archivo));
+    if (!archivo) return;
+    setAviso(await l.ponerFoto(destino.current, archivo));
+    setEligiendo(null);
+  };
+  const usarDeBanda = async (url: string) => {
+    setAviso(await l.ponerFotoDeBanda(destino.current, url));
+    setEligiendo(null);
   };
   const proporcion = { aspectRatio: `${ancho} / ${alto}` };
 
@@ -45,8 +55,9 @@ export function LaminasPieza({ pieza, formato, banda }: Props) {
         <h3 className="text-xs font-medium text-[var(--ink-2)]">Imágenes listas para subir</h3>
         <span className="text-xs text-[var(--ink-2)] tabular-nums">{l.laminas.length} · {ancho}×{alto}</span>
       </div>
+      <p className="text-xs text-[var(--ink-2)]">Con vuestro logo, vuestra letra y vuestras fotos. Cambiad lo que queráis.</p>
 
-      <input ref={entrada} type="file" accept="image/*" className="sr-only" aria-label="Foto de fondo" onChange={alElegir} />
+      <input ref={entrada} type="file" accept="image/*" className="sr-only" aria-label="Foto de fondo" onChange={alElegirArchivo} />
       <div className="flex shrink-0 gap-3 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
         {l.laminas.map((lam, i) => (
           <figure key={lam.numero} className="grid shrink-0 gap-1.5">
@@ -54,7 +65,7 @@ export function LaminasPieza({ pieza, formato, banda }: Props) {
               ? <img src={l.urls[i]} alt={`Imagen ${i + 1} de ${l.laminas.length}: ${lam.texto}`} className="h-56 w-auto rounded-[var(--r-s)]" style={proporcion} />
               : <Skeleton radius="s" className="h-56" style={proporcion} />}
             <div className="flex items-center justify-center gap-1">
-              <Button size="xs" variant="ghost" onClick={() => elegirFoto(i)}>
+              <Button size="xs" variant={eligiendo === i ? 'selected' : 'ghost'} aria-expanded={l.fotosBanda.length ? eligiendo === i : undefined} onClick={() => abrirFoto(i)}>
                 <ImagePlus className="size-3.5" aria-hidden />
                 {l.tieneFoto(i) ? 'Cambiar foto' : 'Poner foto'}
               </Button>
@@ -67,6 +78,26 @@ export function LaminasPieza({ pieza, formato, banda }: Props) {
           </figure>
         ))}
       </div>
+
+      {eligiendo !== null && (
+        <div role="group" aria-label={`Foto para la imagen ${eligiendo + 1}`} className="grid gap-2 rounded-[var(--r-m)] bg-[var(--sunken)] p-3">
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-xs font-medium text-[var(--ink-2)]">Foto para la imagen {eligiendo + 1}</p>
+            <IconButton label="Cerrar" size="icon-xs" variant="ghost" onClick={() => setEligiendo(null)}><X className="size-3.5" aria-hidden /></IconButton>
+          </div>
+          <div className="flex shrink-0 gap-2 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
+            <button type="button" aria-label="Subir otra foto" onClick={() => entrada.current?.click()}
+              className="grid size-16 shrink-0 place-items-center rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink-2)]">
+              <ImagePlus className="size-5" aria-hidden />
+            </button>
+            {l.fotosBanda.map((f, k) => (
+              <button key={f.url} type="button" aria-label={`Usar la foto ${k + 1} de la banda`} onClick={() => void usarDeBanda(f.url)} className="shrink-0 rounded-[var(--r-s)]">
+                <img src={f.url} alt="" loading="lazy" className="size-16 rounded-[var(--r-s)] object-cover" />
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
       {(aviso || l.error) && <p role="alert" className="text-sm text-[var(--alert)]">{aviso ?? l.error}</p>}
 
       <div className="flex flex-wrap items-center gap-2" role="radiogroup" aria-label="Colores">

@@ -29,6 +29,7 @@ Láminas de una pieza: las imágenes listas para subir de unas stories o un carr
 - [[src_components_asesor_hooks_useLaminas|src/components/asesor/hooks/useLaminas.ts]] *(from #frontend)*
 - [[src_components_asesor_LaminasPieza|src/components/asesor/LaminasPieza.tsx]] *(from #frontend)*
 - [[src_components_asesor_PiezaSheet|src/components/asesor/PiezaSheet.tsx]] *(from #frontend)*
+- [[src_utils_asesor_adnVisual|src/utils/asesor/adnVisual.ts]] *(from #service)*
 - [[src_utils_asesor_renderLaminas|src/utils/asesor/renderLaminas.ts]] *(from #service)*
 
 ---

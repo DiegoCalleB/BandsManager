@@ -219,7 +219,7 @@ export function ActiveViewRouter() {
                 {currentView === "asesor" && (
                   <ErrorBoundary fallbackTitle="Asesor de marketing">
                     <AsesorView key={currentActiveBandId} onNavigate={handleNavigate}
-                      banda={{ nombre: currentActiveBandName, logoUrl: currentActiveBandLogo || epkConfig?.logoUrl || null }} />
+                      banda={{ nombre: currentActiveBandName, logoUrl: currentActiveBandLogo || epkConfig?.logoUrl || null, plantilla: epkConfig?.plantilla, genero: epkConfig?.genero, galeria: epkConfig?.bandPhotos }} />
                   </ErrorBoundary>
                 )}
                 {currentView === "merchan" && (
