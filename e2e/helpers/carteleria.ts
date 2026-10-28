@@ -47,7 +47,7 @@ export async function abrirCarteleria(page: Page, { compartido = false, estadoEs
     const base = { cache: 300, aforo_vendido: 0, aforo_total: 200, contrato_firmado: true, estado_pago: 'pendiente', notas: '', tipo: 'sala', band_id: banda };
     j.concerts = [
       {
-        ...base, id: 'e2e-c1', fecha: '2099-11-14', sala: 'Sala El Sol', ciudad: 'Madrid',
+        ...base, id: 'e2e-c1', fecha: '2099-11-14', sala: 'Sala El Sol', ciudad: 'Madrid', direccion: 'C/ de los Jardines 3',
         logisticaTecnica: { horaAperturaPuertas: '20:30', horaShow: '21:30' },
         ...(compartido ? { bandas_compartidas: ['Otra Banda'] } : {}),
         // Estático: el «servidor» sigue devolviendo el bolo sin cartel, así que solo la copia en memoria de la app puede recordarlo.

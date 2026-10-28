@@ -472,6 +472,7 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     compartido,
     bandas: concierto ? bandasDelBolo(concierto, bandName) : [],
     faltaCabeza,
+    tieneDireccion: !!concierto?.direccion?.trim(),
     tieneHorario: !!concierto && !!lineaHorario(concierto.logisticaTecnica?.horaAperturaPuertas, concierto.logisticaTecnica?.horaShow),
     tieneEnlace: !!enlace,
     puedeQuitarMarca,

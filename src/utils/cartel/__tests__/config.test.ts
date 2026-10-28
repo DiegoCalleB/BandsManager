@@ -64,4 +64,10 @@ describe('la composición del cartel en la configuración', () => {
   it('es un ajuste del bolo y se guarda con él', () => {
     expect(ajustesDe({ ...CONFIG_INICIAL, composicion: 'centrada' }).composicion).toBe('centrada');
   });
+
+  it('la dirección viene apagada y solo se enciende con un booleano de verdad', () => {
+    expect(CONFIG_INICIAL.direccion).toBe(false);
+    expect(sanearConfigCartel({ v: 1, direccion: true }, () => true)?.direccion).toBe(true);
+    expect(sanearConfigCartel({ v: 1, direccion: 'sí' }, () => true)?.direccion).toBe(false);
+  });
 });
