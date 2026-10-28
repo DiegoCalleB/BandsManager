@@ -2,10 +2,10 @@ import React, { useRef, useState } from 'react';
 // Las letras de cartel (nombre y día de la fecha): solo se cargan con esta vista.
 import '@fontsource/anton/latin-400.css';
 import '@fontsource/dm-serif-display/latin-400.css';
-import { Download, FileArchive, Scissors, Settings2, Share2 } from 'lucide-react';
+import { Download, FileArchive, Move, Scissors, Settings2, Share2 } from 'lucide-react';
 import type { Concert } from '../../types';
 import { ActionMenu, Button, EmptyState, Select, Tabs } from '../ui';
-import { FORMATOS, ORDEN_FORMATOS, type FormatoCartel } from '../../utils/cartel/formatos';
+import { FORMATOS, ORDEN_FORMATOS, dimensiones, type FormatoCartel } from '../../utils/cartel/formatos';
 import { fechaCartel } from '../../utils/cartel/texto';
 import { useEditorCartel } from './hooks/useEditorCartel';
 import { SelectorFondo } from './SelectorFondo';
@@ -13,6 +13,8 @@ import { PreguntaCabeza } from './PreguntaCabeza';
 import { EstiloBanda } from './EstiloBanda';
 import { IdeaCartel } from './IdeaCartel';
 import { AjustesCartel } from './AjustesCartel';
+import { BarraAjusteTexto, CapaAjusteTexto } from './AjusteTexto';
+import type { BloqueAjustable } from '../../utils/cartel/ajustesFinos';
 import { puedeQuitarMarcaCartel } from '../../utils/planPermissions';
 
 interface Props {
@@ -36,6 +38,8 @@ const PESTANAS = ORDEN_FORMATOS.map((id) => ({ id, label: FORMATOS[id].etiqueta 
  */
 const CarteleriaView: React.FC<Props> = ({ concerts, bandName, plan, banda, onCartelGuardado, initialConcertId }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [ajustandoTexto, setAjustandoTexto] = useState(false);
+  const [bloqueElegido, setBloqueElegido] = useState<BloqueAjustable | null>(null);
   const ed = useEditorCartel({ canvasRef, concerts, bandName, initialConcertId, puedeQuitarMarca: puedeQuitarMarcaCartel(plan), banda, onCartelGuardado });
   const [ajustesAbiertos, setAjustesAbiertos] = useState(false);
 
@@ -65,8 +69,23 @@ const CarteleriaView: React.FC<Props> = ({ concerts, bandName, plan, banda, onCa
       <div className="grid gap-3 md:col-start-1 md:row-span-3 md:row-start-1">
         <Tabs aria-label="Formato" layout="fill" items={PESTANAS} value={ed.formato} onChange={(f: FormatoCartel) => ed.elegirFormato(f)} />
         <div className="grid place-items-center rounded-[var(--r-l)] bg-[var(--sunken)] p-3 md:p-6">
-          <canvas ref={canvasRef} aria-label={`Vista previa del cartel, formato ${FORMATOS[ed.formato].etiqueta}`}
-            className="block h-auto max-h-[52vh] w-auto max-w-full rounded-[var(--r-s)] md:max-h-[72vh]" />
+          <div className="relative max-w-full">
+            <canvas ref={canvasRef} aria-label={`Vista previa del cartel, formato ${FORMATOS[ed.formato].etiqueta}`}
+              className="block h-auto max-h-[52vh] w-auto max-w-full rounded-[var(--r-s)] md:max-h-[72vh]" />
+            {ajustandoTexto && (
+              <CapaAjusteTexto cajas={ed.cajas} ancho={1080} alto={dimensiones(FORMATOS[ed.formato], 1080).alto} ajustes={ed.ajustes.ajustesFinos[ed.formato] ?? {}}
+                elegido={bloqueElegido} onElegir={setBloqueElegido} onAjustar={ed.ajustarBloque} />
+            )}
+          </div>
+          {ajustandoTexto && (
+            <div className="mt-3">
+              <BarraAjusteTexto elegido={bloqueElegido} ajustes={ed.ajustes.ajustesFinos[ed.formato] ?? {}} onAjustar={ed.ajustarBloque} onReiniciar={ed.reiniciarAjustesFinos} hayAjustes={ed.hayAjustesFinos} />
+            </div>
+          )}
+          <Button size="xs" variant={ajustandoTexto ? 'inverse' : 'raised'} aria-pressed={ajustandoTexto} className="mt-3" onClick={() => setAjustandoTexto((v) => !v)}>
+            <Move className="size-3.5" aria-hidden />
+            {ajustandoTexto ? 'Listo' : 'Ajustar el texto'}
+          </Button>
         </div>
       </div>
 
@@ -138,6 +157,8 @@ const CarteleriaView: React.FC<Props> = ({ concerts, bandName, plan, banda, onCa
           onCambiar={ed.cambiarAjustes}
           bandas={ed.bandas}
           tieneHorario={ed.tieneHorario}
+          nombreBanda={bandName}
+          lugarBolo={[ed.concierto?.sala, ed.concierto?.ciudad].filter(Boolean).join(', ')}
           tieneDireccion={ed.tieneDireccion}
           tieneEnlace={ed.tieneEnlace}
           tieneLogo={ed.tieneLogo}

@@ -18,6 +18,7 @@ Módulo sin exportaciones con nombre.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_cartel_AjusteTexto|src/components/cartel/AjusteTexto.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_cartel_AjustesCartel|src/components/cartel/AjustesCartel.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_cartel_EstiloBanda|src/components/cartel/EstiloBanda.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_cartel_IdeaCartel|src/components/cartel/IdeaCartel.tsx]] *(Layer: #frontend, Domain: #system)*
@@ -26,6 +27,7 @@ Módulo sin exportaciones con nombre.
 - [[src_components_cartel_hooks_useEditorCartel|src/components/cartel/hooks/useEditorCartel.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_cartel_ajustesFinos|src/utils/cartel/ajustesFinos.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_formatos|src/utils/cartel/formatos.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_texto|src/utils/cartel/texto.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_planPermissions|src/utils/planPermissions.ts]] *(Layer: #service, Domain: #system)*

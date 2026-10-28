@@ -107,14 +107,15 @@ async function cargarBoceto(bandId: string): Promise<ImagenReferencia | null> {
 }
 
 /** Los textos que la IA dibuja dentro del arte, del bolo y la banda del servidor; null si no hay un nombre fiable o hay varias bandas. */
-function textosDelBolo(concierto: FilaConcierto, nombre: string | undefined): TextosCartel | null {
-  const nombreBanda = nombre && nombre !== 'la banda' ? nombre : '';
+function textosDelBolo(concierto: FilaConcierto, nombre: string | undefined, escritos: { nombre: string; lugar: string }): TextosCartel | null {
+  // Lo que la persona escribió a mano en el cartel manda sobre los datos del bolo (ya viene saneado de la config).
+  const nombreBanda = escritos.nombre || (nombre && nombre !== 'la banda' ? nombre : '');
   const compartido = Array.isArray(concierto.bandas_compartidas) && concierto.bandas_compartidas.length > 0;
   if (!nombreBanda || compartido) return null;
   return limpiarTextos({
     nombre: nombreBanda.toUpperCase(),
     fecha: fechaCartel(String(concierto.fecha || '')),
-    lugar: [concierto.sala, concierto.ciudad].map((v) => String(v || '').trim().toUpperCase()).filter(Boolean).join(' · '),
+    lugar: escritos.lugar.toUpperCase() || [concierto.sala, concierto.ciudad].map((v) => String(v || '').trim().toUpperCase()).filter(Boolean).join(' · '),
   });
 }
 
@@ -158,7 +159,7 @@ cartelriaRouter.post('/cartel/fondo', requireAuth, imagenRateLimiter, async (req
     // Letras dibujadas por la IA dentro del arte: solo a sangre y con un solo nombre (con varias bandas el cartel
     // lleva el lineup, que se pinta con letra propia). Los textos salen del bolo y de la banda del SERVIDOR,
     // nunca del cuerpo de la petición.
-    const textos = conTexto === true && encuadre === 'sangre' ? textosDelBolo(concierto, perfil?.name) : null;
+    const textos = conTexto === true && encuadre === 'sangre' ? textosDelBolo(concierto, perfil?.name, configDe(concierto, bandId).textos) : null;
 
     const prompt = construirPromptFondo({
       estilo,
@@ -222,7 +223,7 @@ cartelriaRouter.post('/cartel/retocar', requireAuth, imagenRateLimiter, async (r
         getEpk: (id) => dbGetEpkConfig(id),
         getState: () => loadState(),
       }).catch(() => null);
-      textos = textosDelBolo(concierto, perfil?.name);
+      textos = textosDelBolo(concierto, perfil?.name, configDe(concierto, bandId).textos);
       if (!textos) return res.status(409).json({ error: 'No podemos retocar un fondo con letras ahora mismo. Genera uno nuevo.' });
     }
 

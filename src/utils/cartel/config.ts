@@ -6,6 +6,7 @@
 // almacenamiento y de la carpeta de ESA banda (`esUrlDeCartel` en server/utils/cartelUrl.ts).
 
 import { esPlantilla, type PlantillaId } from './plantillas';
+import { sanearAjustesFinos, type AjustesFinosPorFormato } from './ajustesFinos';
 import { ORDEN_FORMATOS, type FormatoCartel } from './formatos';
 import { ELECCIONES_COMPOSICION, LETRAS_CARTEL, type ComposicionElegida, type LetraCartel } from './voces';
 
@@ -31,6 +32,10 @@ export interface CartelConfig {
   qr: boolean;
   /** El QR también en Feed e Historia (por defecto solo en el impreso, donde no hay un enlace que tocar). */
   qrDigital: boolean;
+  /** Textos que la persona escribe en el cartel SIN tocar los datos del bolo: el nombre y el lugar que se muestran. Vacío = el del bolo. */
+  textos: TextosEditados;
+  /** Lo que la persona movió o escaló a mano, por formato, sobre el reparto automático. */
+  ajustesFinos: AjustesFinosPorFormato;
   marca: boolean;
   /** Logo de la banda en la fila de logos del cartel. */
   logo: boolean;
@@ -49,9 +54,16 @@ export interface CartelConfig {
 }
 
 /** Versiones de fondo de IA que se recuerdan por bolo (cada retoque es una más). */
+/** Lo que la persona puede escribir a mano en el cartel; vacío = lo que dice el bolo. */
+export interface TextosEditados {
+  nombre: string;
+  lugar: string;
+}
+export const MAX_TEXTO_EDITADO = 60;
+
 export const MAX_FONDOS_IA = 8;
 export const MAX_LOGOS = 4;
-const MAX_EXTRA = 40;
+export const MAX_EXTRA = 60;
 const MAX_CABEZA = 120;
 
 export const CONFIG_INICIAL: CartelConfig = {
@@ -64,6 +76,8 @@ export const CONFIG_INICIAL: CartelConfig = {
   direccion: false,
   qr: true,
   qrDigital: false,
+  textos: { nombre: '', lugar: '' },
+  ajustesFinos: {},
   marca: true,
   logo: true,
   letra: 'auto',
@@ -78,6 +92,11 @@ export const CONFIG_INICIAL: CartelConfig = {
 const sinControl = (s: string) => Array.from(s).filter((ch) => { const c = ch.charCodeAt(0); return c >= 32 && c !== 127; }).join('');
 const texto = (v: unknown, max: number) => (typeof v === 'string' ? sinControl(v).trim().slice(0, max) : '');
 const booleano = (v: unknown, defecto: boolean) => (typeof v === 'boolean' ? v : defecto);
+
+function textosEditados(raw: unknown): TextosEditados {
+  const r = raw && typeof raw === 'object' && !Array.isArray(raw) ? (raw as Record<string, unknown>) : {};
+  return { nombre: texto(r.nombre, MAX_TEXTO_EDITADO), lugar: texto(r.lugar, MAX_TEXTO_EDITADO) };
+}
 
 /** Devuelve una configuración válida a partir de cualquier cosa (o null si no es un objeto). */
 export function sanearConfigCartel(raw: unknown, esUrlPermitida: (url: string) => boolean): CartelConfig | null {
@@ -121,6 +140,8 @@ export function sanearConfigCartel(raw: unknown, esUrlPermitida: (url: string) =
     direccion: booleano(r.direccion, false),
     qr: booleano(r.qr, true),
     qrDigital: booleano(r.qrDigital, false),
+    textos: textosEditados(r.textos),
+    ajustesFinos: sanearAjustesFinos(r.ajustesFinos),
     marca: booleano(r.marca, true),
     logo: booleano(r.logo, true),
     letra: (LETRAS_CARTEL as readonly string[]).includes(r.letra as string) ? (r.letra as LetraCartel) : 'auto',
@@ -138,10 +159,10 @@ export function conFondoIa(config: CartelConfig, url: string): CartelConfig {
 }
 
 /** Lo que se decide por bolo y no es el fondo. */
-export type AjustesBolo = Pick<CartelConfig, 'cabeza' | 'extra' | 'horario' | 'direccion' | 'qr' | 'qrDigital' | 'marca' | 'logo' | 'logosTinta' | 'letra' | 'composicion'>;
+export type AjustesBolo = Pick<CartelConfig, 'cabeza' | 'extra' | 'horario' | 'direccion' | 'qr' | 'qrDigital' | 'ajustesFinos' | 'textos' | 'marca' | 'logo' | 'logosTinta' | 'letra' | 'composicion'>;
 
 export function ajustesDe(c: CartelConfig): AjustesBolo {
-  return { cabeza: c.cabeza, extra: c.extra, horario: c.horario, direccion: c.direccion, qr: c.qr, qrDigital: c.qrDigital, marca: c.marca, logo: c.logo, logosTinta: c.logosTinta, letra: c.letra, composicion: c.composicion };
+  return { cabeza: c.cabeza, extra: c.extra, horario: c.horario, direccion: c.direccion, qr: c.qr, qrDigital: c.qrDigital, ajustesFinos: c.ajustesFinos, textos: c.textos, marca: c.marca, logo: c.logo, logosTinta: c.logosTinta, letra: c.letra, composicion: c.composicion };
 }
 
 /**
