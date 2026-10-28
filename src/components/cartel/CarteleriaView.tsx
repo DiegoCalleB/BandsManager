@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 // Las letras de cartel (nombre y día de la fecha): solo se cargan con esta vista.
 import '@fontsource/anton/latin-400.css';
 import '@fontsource/dm-serif-display/latin-400.css';
-import { Download, FileArchive, Settings2, Share2 } from 'lucide-react';
+import { Download, FileArchive, Scissors, Settings2, Share2 } from 'lucide-react';
 import type { Concert } from '../../types';
 import { ActionMenu, Button, EmptyState, Select, Tabs } from '../ui';
 import { FORMATOS, ORDEN_FORMATOS, type FormatoCartel } from '../../utils/cartel/formatos';
@@ -82,6 +82,10 @@ const CarteleriaView: React.FC<Props> = ({ concerts, bandName, plan, banda, onCa
           fondosIa={ed.fondosIa}
           onGenerarIa={ed.generarIa}
           generando={ed.generando}
+          onRetocar={ed.retocarIa}
+          letrasFallidas={ed.letrasFallidas !== null}
+          onRepetirSinLetras={ed.repetirSinLetras}
+          retocando={ed.retocando}
           letrasIa={ed.letrasIa}
           onLetrasIa={ed.setLetrasIa}
           puedeLetrasIa={ed.puedeLetrasIa}
@@ -115,6 +119,7 @@ const CarteleriaView: React.FC<Props> = ({ concerts, bandName, plan, banda, onCa
             items={[
               { label: 'Descargar', icon: Download, onSelect: ed.descargar },
               { label: 'Descargar los 3 formatos', icon: FileArchive, onSelect: ed.descargarTodos },
+              ...(ed.formato === 'imprimir' ? [{ label: 'Descargar para imprenta (sangrado y marcas)', icon: Scissors, onSelect: ed.descargarImprenta }] : []),
               { label: 'Ajustes del cartel', icon: Settings2, onSelect: () => setAjustesAbiertos(true) },
             ]}
           />
@@ -132,6 +137,7 @@ const CarteleriaView: React.FC<Props> = ({ concerts, bandName, plan, banda, onCa
           onCambiar={ed.cambiarAjustes}
           bandas={ed.bandas}
           tieneHorario={ed.tieneHorario}
+          tieneDireccion={ed.tieneDireccion}
           tieneEnlace={ed.tieneEnlace}
           tieneLogo={ed.tieneLogo}
           puedeQuitarMarca={ed.puedeQuitarMarca}

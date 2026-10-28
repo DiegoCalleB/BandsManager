@@ -161,7 +161,8 @@ function tintaDeLineas(ctx: CanvasRenderingContext2D, lineas: Linea[], zona: Rec
     });
     const todos = [...trozos, ...deRects];
     const decidir = sinVelo ? tintaSinVelo : decidirTinta;
-    return todos.length ? decidir(medirLuz(unirPixeles(todos), 2, 0.03)) : tintaDeZona(ctx, zona);
+    // Sin velo se decide por la MEDIANA del fondo (cola 0,5): las letras claras que dibuja la IA cerca del texto no deben engañar.
+    return todos.length ? decidir(medirLuz(unirPixeles(todos), 2, sinVelo ? 0.5 : 0.03)) : tintaDeZona(ctx, zona);
   } catch (e) {
     console.warn('[Cartel] No se pudo medir el fondo bajo el texto:', e);
     return { tinta: 'clara', velo: 0.45 };
@@ -353,7 +354,10 @@ export async function renderCartel(
   const logos = await cargarLogos(piezas.logos ?? []);
   // La ilustración ya trae el título y la fecha dibujados: el layout solo coloca lo que la IA no dibuja (QR, pie, logos).
   const textoIa = aSangre && fondo.tipo === 'imagen' && fondoConTexto(fondo.url);
-  const datosLayout: DatosCartel = textoIa ? { lineup: [], fecha: '', horario: '', sala: '', ciudad: '', extra: '' } : piezas.datos;
+  // Lo que la IA no dibuja (hora y dirección) va en la franja inferior libre, sobre el pie, como líneas extra.
+  const datosLayout: DatosCartel = textoIa
+    ? { lineup: [], fecha: '', horario: '', sala: '', ciudad: '', direccion: '', extra: [piezas.datos.horario, piezas.datos.direccion ?? ''].filter(Boolean).join('\n') }
+    : piezas.datos;
   const conIlustracion = esIa && !aSangre;
   const L = calcularLayout(def, ancho, datosLayout, { ...piezas.opciones, compacto: conIlustracion, voz, composicion, logos: logos.map((l) => l.img.width / l.img.height) }, medir);
   canvas.width = L.ancho;

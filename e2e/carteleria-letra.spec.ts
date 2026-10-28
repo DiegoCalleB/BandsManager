@@ -50,3 +50,15 @@ test('la composición se elige en Ajustes, repinta el cartel y se guarda en el b
   await selector.selectOption('base');
   await expect.poll(() => cartel(page), { timeout: 10_000 }).not.toBe(centrada);
 });
+
+test('la dirección se activa en Ajustes, repinta el cartel y se guarda en el bolo', async ({ page }) => {
+  const { peticiones } = await abrirCarteleria(page);
+  const antes = await cartel(page);
+  await abrirAjustes(page);
+  const interruptor = page.getByRole('switch', { name: 'Dirección' });
+  await expect(interruptor).not.toBeChecked();
+  await interruptor.click();
+  await expect(interruptor).toBeChecked();
+  await expect.poll(() => cartel(page), { timeout: 10_000 }).not.toBe(antes);
+  await expect.poll(() => peticiones.some((p) => p.ruta.endsWith('/config') && JSON.parse(p.cuerpo.toString()).direccion === true), { timeout: 8_000 }).toBe(true);
+});

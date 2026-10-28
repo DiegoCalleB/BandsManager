@@ -3,6 +3,8 @@ import type { Concert } from '../../../types';
 import { FORMATOS, ORDEN_FORMATOS, type FormatoCartel } from '../../../utils/cartel/formatos';
 import { bandasDelBolo, conciertosParaCartel, datosDesdeConcierto, esCompartido } from '../../../utils/cartel/datos';
 import { ajustesDe, configDesdeEstado, CONFIG_INICIAL, conFondoIa, MAX_LOGOS, sanearConfigCartel, type AjustesBolo } from '../../../utils/cartel/config';
+import { conSangradoYMarcas } from '../../../utils/cartel/sangrado';
+import { conReintentos } from '../../../utils/reintentar';
 import { prepararLogo } from '../../../utils/cartel/logos';
 import { resolverComposicion, resolverVoz } from '../../../utils/cartel/voces';
 import { lineaHorario } from '../../../utils/cartel/texto';
@@ -22,6 +24,7 @@ import {
 import {
   crearEnlace,
   generarFondoCartel,
+  retocarFondoCartel,
   guardarConfigCartel,
   subirFotoCartel,
   quitarLogoCartel,
@@ -209,12 +212,21 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
   const sucio = !!sucios[id];
   useEffect(() => {
     if (!id || !sucio) return;
+    // Un fallo de red al guardar se reintenta solo (2 s, 5 s, 10 s): el aviso global ignora esta ruta y solo se avisa
+    // si tampoco así se pudo. Si la persona cambia algo mientras tanto, este guardado se abandona y manda el nuevo.
+    let cancelado = false;
     const t = setTimeout(() => {
-      guardarConfigCartel(id, configActual)
+      conReintentos(() => guardarConfigCartel(id, configActual), [2000, 5000, 10000], () => cancelado)
         .then((r) => onCartelGuardado?.(id, { cartel_config: r.config }))
-        .catch((e) => console.warn('[Cartelería] No se pudo guardar el cartel en el bolo:', e));
+        .catch((e) => {
+          console.warn('[Cartelería] No se pudo guardar el cartel en el bolo:', e);
+          if (!cancelado) setError('No hemos podido guardar los últimos cambios del cartel. Comprueba la conexión: se volverá a intentar al tocar algo.');
+        });
     }, ESPERA_GUARDADO_MS);
-    return () => clearTimeout(t);
+    return () => {
+      cancelado = true;
+      clearTimeout(t);
+    };
   }, [id, sucio, configActual, onCartelGuardado]);
 
   // Las fotos locales viven en memoria del navegador: se liberan al salir.
@@ -316,17 +328,19 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
 
   // Que la IA dibuje el título y la fecha dentro del arte: más de cartel, pero solo con una banda (con varias va el lineup).
   const [letrasIa, setLetrasIa] = useState(true);
+  /** El estilo del último fondo cuyas letras salieron mal (para repetirlo sin letras de IA), o null. */
+  const [letrasFallidas, setLetrasFallidas] = useState<EstiloCartel | null>(null);
   const puedeLetrasIa = !compartido;
 
   /** Devuelve si salió bien (la vista cierra el panel de IA para que Compartir vuelva a verse). */
-  const generarIa = async (estilo: EstiloCartel): Promise<boolean> => {
+  const generarIa = async (estilo: EstiloCartel, conLetras: boolean = letrasIa && puedeLetrasIa): Promise<boolean> => {
     if (!id) return false;
     const bolo = id;
     setGenerando(true);
     setError(null);
     try {
       const { idea: contada, conBoceto } = idea.paraGenerar;
-      const r = await generarFondoCartel({ concertId: bolo, estilo, idea: contada, conBoceto, encuadre: 'sangre', conTexto: letrasIa && puedeLetrasIa });
+      const r = await generarFondoCartel({ concertId: bolo, estilo, idea: contada, conBoceto, encuadre: 'sangre', conTexto: conLetras });
       // El servidor ya lo añadió al historial guardado; aquí se refleja sin recargar.
       setFondosIaPorBolo((p) => ({ ...p, [bolo]: conFondoIa({ ...CONFIG_INICIAL, fondosIa: p[bolo] ?? fondosIa }, r.url).fondosIa }));
       setFondoPorBolo((p) => ({ ...p, [bolo]: { tipo: 'imagen', origen: 'ia', url: r.url } }));
@@ -334,9 +348,8 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
       const ambiente = [contada?.escena, contada?.ambiente].filter(Boolean).join(' · ').slice(0, 300);
       setMetaIa((p) => ({ ...p, [r.url]: { estilo, ambiente } }));
       marcar();
-      if (r.conTexto && r.textoOk === false) {
-        setError('La IA ha fallado alguna letra del título o la fecha. Desmarca «La IA dibuja el título y la fecha» y vuelve a pintar para usar el texto exacto.');
-      }
+      // Si la IA se ha equivocado en alguna letra, se ofrece repetir con el texto exacto de la app (un clic).
+      setLetrasFallidas(r.conTexto === true && r.textoOk === false ? estilo : null);
       return true;
     } catch (e) {
       console.warn('[Cartelería] Falló la generación del fondo:', e);
@@ -344,6 +357,35 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
       return false;
     } finally {
       setGenerando(false);
+    }
+  };
+
+  const [retocando, setRetocando] = useState(false);
+
+  /** Retoca el fondo de IA que se ve: una versión nueva (el original sigue en el historial para volver). */
+  const retocarIa = async (instruccion: string): Promise<boolean> => {
+    if (!id || fondo.tipo !== 'imagen' || fondo.origen !== 'ia') return false;
+    const bolo = id;
+    const origen = fondo.url;
+    setRetocando(true);
+    setError(null);
+    try {
+      const r = await retocarFondoCartel({ concertId: bolo, url: origen, instruccion });
+      setFondosIaPorBolo((p) => ({ ...p, [bolo]: conFondoIa({ ...CONFIG_INICIAL, fondosIa: p[bolo] ?? fondosIa }, r.url).fondosIa }));
+      setFondoPorBolo((p) => ({ ...p, [bolo]: { tipo: 'imagen', origen: 'ia', url: r.url } }));
+      // Mismo estilo y ambiente que el original, para guardarlo como favorito si les gusta.
+      setMetaIa((p) => (p[origen] ? { ...p, [r.url]: p[origen] } : p));
+      marcar();
+      if (r.conTexto && r.textoOk === false) {
+        setError('El retoque ha estropeado alguna letra. Vuelve a la versión anterior (miniatura de la izquierda) o prueba con otra instrucción.');
+      }
+      return true;
+    } catch (e) {
+      console.warn('[Cartelería] Falló el retoque del fondo:', e);
+      setError(mensajeDe(e, 'No pudimos retocar el fondo. Prueba en un rato.'));
+      return false;
+    } finally {
+      setRetocando(false);
     }
   };
 
@@ -372,12 +414,12 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
   }, [concerts, id, adn.adn.referencias]);
 
   const exportar = useCallback(
-    async (f: FormatoCartel): Promise<Blob> => {
+    async (f: FormatoCartel, paraImprenta = false): Promise<Blob> => {
       const piezas = piezasPara(f);
       if (!piezas) throw new Error('Elige un bolo.');
       const lienzo = document.createElement('canvas');
       await renderCartel(lienzo, FORMATOS[f], FORMATOS[f].ancho, fondo, piezas);
-      return canvasABlob(lienzo);
+      return canvasABlob(paraImprenta ? conSangradoYMarcas(lienzo) : lienzo);
     },
     [piezasPara, fondo]
   );
@@ -437,6 +479,13 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
       return feedDe(formato, blob);
     });
 
+  /** El A4 para imprenta: 3 mm de sangrado y marcas de corte. Solo tiene sentido en el formato de impresión. */
+  const descargarImprenta = () =>
+    conExportacion(async () => {
+      descargarBlob(await exportar('imprimir', true), nombre('imprenta'));
+      return 'pintar-feed' as const;
+    });
+
   const descargarTodos = () =>
     conExportacion(async () => {
       const { default: JSZip } = await import('jszip');
@@ -464,6 +513,14 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     fondosIa,
     generarIa,
     generando,
+    retocarIa,
+    retocando,
+    letrasFallidas,
+    repetirSinLetras: async () => {
+      if (!letrasFallidas) return false;
+      setLetrasIa(false);
+      return generarIa(letrasFallidas, false);
+    },
     letrasIa,
     setLetrasIa,
     puedeLetrasIa,
@@ -472,6 +529,7 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     compartido,
     bandas: concierto ? bandasDelBolo(concierto, bandName) : [],
     faltaCabeza,
+    tieneDireccion: !!concierto?.direccion?.trim(),
     tieneHorario: !!concierto && !!lineaHorario(concierto.logisticaTecnica?.horaAperturaPuertas, concierto.logisticaTecnica?.horaShow),
     tieneEnlace: !!enlace,
     puedeQuitarMarca,
@@ -488,6 +546,7 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     publicado: !!publicados[id] || !!concierto?.cartel_url || !!concierto?.cartelUrl,
     compartir,
     descargar,
+    descargarImprenta,
     descargarTodos,
     exportando,
     error,

@@ -24,6 +24,8 @@ export interface CartelConfig {
   cabeza: string | null;
   extra: string;
   horario: boolean;
+  /** La dirección de la sala (calle y número), del bolo. */
+  direccion: boolean;
   qr: boolean;
   marca: boolean;
   /** Logo de la banda en la fila de logos del cartel. */
@@ -42,7 +44,8 @@ export interface CartelConfig {
   foto: string | null;
 }
 
-export const MAX_FONDOS_IA = 3;
+/** Versiones de fondo de IA que se recuerdan por bolo (cada retoque es una más). */
+export const MAX_FONDOS_IA = 8;
 export const MAX_LOGOS = 4;
 const MAX_EXTRA = 40;
 const MAX_CABEZA = 120;
@@ -54,6 +57,7 @@ export const CONFIG_INICIAL: CartelConfig = {
   cabeza: null,
   extra: '',
   horario: true,
+  direccion: false,
   qr: true,
   marca: true,
   logo: true,
@@ -107,6 +111,7 @@ export function sanearConfigCartel(raw: unknown, esUrlPermitida: (url: string) =
     cabeza,
     extra: texto(r.extra, MAX_EXTRA),
     horario: booleano(r.horario, true),
+    direccion: booleano(r.direccion, false),
     qr: booleano(r.qr, true),
     marca: booleano(r.marca, true),
     logo: booleano(r.logo, true),
@@ -119,16 +124,16 @@ export function sanearConfigCartel(raw: unknown, esUrlPermitida: (url: string) =
   };
 }
 
-/** Añade un fondo de IA al historial (el más nuevo primero, sin repetidos, como mucho 3). */
+/** Añade un fondo de IA al historial (el más nuevo primero, sin repetidos, como mucho `MAX_FONDOS_IA`). */
 export function conFondoIa(config: CartelConfig, url: string): CartelConfig {
   return { ...config, fondosIa: [url, ...config.fondosIa.filter((u) => u !== url)].slice(0, MAX_FONDOS_IA) };
 }
 
 /** Lo que se decide por bolo y no es el fondo. */
-export type AjustesBolo = Pick<CartelConfig, 'cabeza' | 'extra' | 'horario' | 'qr' | 'marca' | 'logo' | 'logosTinta' | 'letra' | 'composicion'>;
+export type AjustesBolo = Pick<CartelConfig, 'cabeza' | 'extra' | 'horario' | 'direccion' | 'qr' | 'marca' | 'logo' | 'logosTinta' | 'letra' | 'composicion'>;
 
 export function ajustesDe(c: CartelConfig): AjustesBolo {
-  return { cabeza: c.cabeza, extra: c.extra, horario: c.horario, qr: c.qr, marca: c.marca, logo: c.logo, logosTinta: c.logosTinta, letra: c.letra, composicion: c.composicion };
+  return { cabeza: c.cabeza, extra: c.extra, horario: c.horario, direccion: c.direccion, qr: c.qr, marca: c.marca, logo: c.logo, logosTinta: c.logosTinta, letra: c.letra, composicion: c.composicion };
 }
 
 /**

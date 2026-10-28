@@ -23,7 +23,9 @@ export interface DatosCartel {
   horario: string;
   sala: string;
   ciudad: string;
-  /** Línea libre: «Anticipada 10 €». */
+  /** Calle y número de la sala, o vacío. */
+  direccion?: string;
+  /** Línea libre: «Anticipada 10 €». Puede traer varias líneas separadas por \n (las usa el modo con letras de IA). */
   extra: string;
 }
 
@@ -285,7 +287,7 @@ export function colocarFecha(f: FechaCompuesta, voz: DefVoz, x: number, yTop: nu
   ];
 }
 
-export type IdBloque = 'fecha' | 'horario' | 'lugar' | 'extra';
+export type IdBloque = 'fecha' | 'horario' | 'lugar' | 'direccion' | 'extra';
 export interface Bloque {
   id: IdBloque;
   piezas: string[];
@@ -304,6 +306,7 @@ export function bloquesDatos(c: CtxLayout): Bloque[] {
     { id: 'fecha', piezas: [datos.fecha], px: Math.round(78 * u), peso: 800, maxLineas: 1, min: Math.round(40 * u), espacio: 14 * u },
     { id: 'horario', piezas: datos.horario.split(' · '), px: Math.round(38 * u), peso: 600, maxLineas: 1, min: Math.round(24 * u), espacio: 18 * u, tracking: 0.06 },
     { id: 'lugar', piezas: lugar, px: Math.round(46 * u), peso: 700, maxLineas: 2, min: Math.round(28 * u), espacio: 14 * u, tracking: 0.05 },
+    { id: 'direccion', piezas: [(datos.direccion ?? '').trim().toUpperCase()], px: Math.round(30 * u), peso: 600, maxLineas: 2, min: Math.round(20 * u), espacio: 12 * u, tracking: 0.05 },
     { id: 'extra', piezas: [datos.extra.trim().toUpperCase()], px: Math.round(34 * u), peso: 600, maxLineas: 1, min: Math.round(22 * u), espacio: 0, tracking: 0.06 },
   ];
   return todos.filter((b) => b.piezas.some((p) => p.trim()));

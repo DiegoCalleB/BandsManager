@@ -67,3 +67,19 @@ test('lo elegido sobrevive a salir de la vista y volver sin recargar', async ({ 
   await expect(page.getByText('¿Quién encabeza?')).toBeHidden();
   await expect(page.getByRole('button', { name: 'Fondo Bosque' })).toHaveAttribute('aria-pressed', 'true');
 });
+
+test('el A4 para imprenta solo se ofrece en Imprimir y baja con sangrado y marcas de corte', async ({ page }) => {
+  await abrirCarteleria(page);
+  await page.getByRole('button', { name: 'Más opciones del cartel' }).click();
+  await expect(page.getByRole('menuitem', { name: /para imprenta/ })).toHaveCount(0);
+  await page.keyboard.press('Escape');
+  await page.getByRole('tab', { name: 'Imprimir A4' }).click();
+  await page.getByRole('button', { name: 'Más opciones del cartel' }).click();
+  const [descarga] = await Promise.all([page.waitForEvent('download'), page.getByRole('menuitem', { name: /para imprenta/ }).click()]);
+  expect(descarga.suggestedFilename()).toMatch(/imprenta\.png$/);
+  const ruta = await descarga.path();
+  const fs = await import('fs');
+  const buf = fs.readFileSync(ruta!);
+  // A4 a 300 ppp (2480×3508) + 3 mm (35 px) de sangre y 7 mm (83 px) de margen por cada lado: +236 px.
+  expect(medidasPng(buf)).toBe('2716x3744');
+});
