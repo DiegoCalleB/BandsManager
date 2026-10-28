@@ -121,6 +121,7 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
   const fondoElegido = fondoPorBolo[id] ?? guardada.fondo;
   const fondoValido =
     fondoElegido.tipo === 'paleta' ||
+    fondoElegido.tipo === 'plantilla' ||
     (!rotas[fondoElegido.url] && (fondoElegido.origen === 'ia' ? fondosIa.includes(fondoElegido.url) : fondoElegido.url === foto));
   const fondo: FondoCartel = fondoValido ? fondoElegido : CONFIG_INICIAL.fondo;
 
@@ -328,6 +329,8 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
 
   // Que la IA dibuje el título y la fecha dentro del arte: más de cartel, pero solo con una banda (con varias va el lineup).
   const [letrasIa, setLetrasIa] = useState(true);
+  /** La IA no pudo pintar el último fondo (sin cupo, caída…): se ofrecen las plantillas de autor como respaldo. */
+  const [iaFalla, setIaFalla] = useState(false);
   /** El estilo del último fondo cuyas letras salieron mal (para repetirlo sin letras de IA), o null. */
   const [letrasFallidas, setLetrasFallidas] = useState<EstiloCartel | null>(null);
   const puedeLetrasIa = !compartido;
@@ -348,11 +351,13 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
       const ambiente = [contada?.escena, contada?.ambiente].filter(Boolean).join(' · ').slice(0, 300);
       setMetaIa((p) => ({ ...p, [r.url]: { estilo, ambiente } }));
       marcar();
+      setIaFalla(false);
       // Si la IA se ha equivocado en alguna letra, se ofrece repetir con el texto exacto de la app (un clic).
       setLetrasFallidas(r.conTexto === true && r.textoOk === false ? estilo : null);
       return true;
     } catch (e) {
       console.warn('[Cartelería] Falló la generación del fondo:', e);
+      setIaFalla(true);
       setError(mensajeDe(e, 'No pudimos generar el fondo. Prueba en un rato.'));
       return false;
     } finally {
@@ -513,6 +518,7 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     fondosIa,
     generarIa,
     generando,
+    iaFalla,
     retocarIa,
     retocando,
     letrasFallidas,

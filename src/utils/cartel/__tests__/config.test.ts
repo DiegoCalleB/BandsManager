@@ -76,4 +76,9 @@ describe('la composición del cartel en la configuración', () => {
     expect(sanearConfigCartel({ v: 1, qrDigital: true }, () => true)?.qrDigital).toBe(true);
     expect(sanearConfigCartel({ v: 1, qrDigital: 1 }, () => true)?.qrDigital).toBe(false);
   });
+
+  it('una plantilla de autor es un fondo válido y un id desconocido cae al fondo inicial', () => {
+    expect(sanearConfigCartel({ v: 1, fondo: { tipo: 'plantilla', id: 'vinilo' } }, () => true)?.fondo).toEqual({ tipo: 'plantilla', id: 'vinilo' });
+    expect(sanearConfigCartel({ v: 1, fondo: { tipo: 'plantilla', id: '../../x' } }, () => true)?.fondo).toEqual(CONFIG_INICIAL.fondo);
+  });
 });

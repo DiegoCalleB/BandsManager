@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ImagePlus, Sparkles, Wand2 } from 'lucide-react';
 import { Button, Textarea } from '../ui';
 import { BotonVoz } from './BotonVoz';
@@ -6,6 +6,7 @@ import { cn } from '../../utils/cn';
 import { PALETAS, type FondoCartel } from '../../utils/cartel/render';
 import { ESTILOS_CARTEL, ETIQUETA_ESTILO, type EstiloCartel } from '../../utils/cartel/estilos';
 import type { PaletaBanda } from '../../utils/cartel/paleta';
+import { ETIQUETA_PLANTILLA, PLANTILLAS, dibujarPlantilla, type PlantillaId } from '../../utils/cartel/plantillas';
 
 const MAX_RETOQUE = 300;
 const EJEMPLOS_RETOQUE = ['Más oscuro', 'Más grano de papel', 'Colores más cálidos', 'Más contraste'];
@@ -21,6 +22,8 @@ interface Props {
   /** Retoca el fondo de IA que se ve con una instrucción (una versión nueva). */
   onRetocar: (instruccion: string) => Promise<boolean>;
   retocando: boolean;
+  /** La IA no pudo pintar el último fondo (sin cupo, caída…): se ofrecen los carteles de autor como respaldo. */
+  iaFalla: boolean;
   /** La IA se equivocó en alguna letra del último fondo: se ofrece repetirlo con el texto exacto de la app. */
   letrasFallidas: boolean;
   onRepetirSinLetras: () => Promise<boolean>;
@@ -49,6 +52,16 @@ function MuestraPaleta({ fondo, acento }: { fondo: string; acento: string }) {
   );
 }
 
+/** Miniatura de una plantilla: el mismo dibujo que el cartel, a tamaño de muestra. */
+function MuestraPlantilla({ id }: { id: PlantillaId }) {
+  const ref = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const c = ref.current?.getContext('2d');
+    if (c) dibujarPlantilla(id, c, 96, 120, 1);
+  }, [id]);
+  return <canvas ref={ref} width={96} height={120} aria-hidden className="size-full object-cover" />;
+}
+
 /** Miniatura elegible. La elegida se marca con una píldora debajo (sin bordes, Ley 1). */
 function Muestra({ activa, etiqueta, onClick, children }: { activa: boolean; etiqueta: string; onClick: () => void; children: React.ReactNode }) {
   return (
@@ -62,7 +75,7 @@ function Muestra({ activa, etiqueta, onClick, children }: { activa: boolean; eti
   );
 }
 
-export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenerarIa, generando, onRetocar, retocando, letrasFallidas, onRepetirSinLetras, letrasIa, onLetrasIa, puedeLetrasIa, estiloInicial, paletaBanda, panelBanda, panelIdea }: Props) {
+export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenerarIa, generando, onRetocar, retocando, iaFalla, letrasFallidas, onRepetirSinLetras, letrasIa, onLetrasIa, puedeLetrasIa, estiloInicial, paletaBanda, panelBanda, panelIdea }: Props) {
   const [iaAbierta, setIaAbierta] = useState(false);
   // Hasta que la persona toca un estilo, manda el de su banda (que puede llegar tarde, al cargar su ADN).
   const [estiloElegido, setEstiloElegido] = useState<EstiloCartel | null>(null);
@@ -115,6 +128,22 @@ export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenera
           <span className="text-[11px] leading-none text-[var(--ink-2)]">IA</span>
         </button>
       </div>
+
+      {/* Respaldo, no camino principal: solo si la IA ha fallado (o ya se eligió una plantilla, para poder cambiarla). */}
+      {(iaFalla || fondo.tipo === 'plantilla') && (
+        <div className="grid gap-2 rounded-[var(--r-m)] bg-[var(--sunken)] p-3" aria-label="Carteles de autor">
+          <p className="text-xs text-[var(--ink-2)] text-pretty">
+            {iaFalla ? 'La IA no ha podido pintar el fondo. Mientras tanto, elige un cartel de autor: sin IA y sin coste, con tu texto, QR y logo.' : 'Cartel de autor (sin IA).'}
+          </p>
+          <div className="no-scrollbar -mx-1 flex gap-2.5 overflow-x-auto px-1" role="group" aria-label="Plantillas">
+            {PLANTILLAS.map((id) => (
+              <Muestra key={id} etiqueta={`Plantilla ${ETIQUETA_PLANTILLA[id]}`} activa={fondo.tipo === 'plantilla' && fondo.id === id} onClick={() => onFondo({ tipo: 'plantilla', id })}>
+                <MuestraPlantilla id={id} />
+              </Muestra>
+            ))}
+          </div>
+        </div>
+      )}
 
       {letrasFallidas && (
         <div role="status" className="grid gap-2 rounded-[var(--r-m)] bg-[var(--acc-soft)] p-3 text-[var(--acc-ink)]">

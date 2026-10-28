@@ -1,6 +1,6 @@
 // Dibujo de la ilustración de fondo en el lienzo. Solo canvas, sin decisiones de diseño.
 
-export function dibujarFondoImagen(ctx: CanvasRenderingContext2D, img: HTMLImageElement, ancho: number, alto: number) {
+export function dibujarFondoImagen(ctx: CanvasRenderingContext2D, img: HTMLImageElement | HTMLCanvasElement, ancho: number, alto: number) {
   const escala = Math.max(ancho / img.width, alto / img.height);
   const w = img.width * escala;
   const h = img.height * escala;
@@ -12,7 +12,7 @@ export function dibujarFondoImagen(ctx: CanvasRenderingContext2D, img: HTMLImage
  * mayor escala que cabe, y lo que sobra por un lado se rellena con la propia imagen desenfocada. El borde de la
  * ilustración se funde con esa base para que no se vea la costura.
  */
-export function dibujarArteEntero(ctx: CanvasRenderingContext2D, img: HTMLImageElement, ancho: number, alto: number) {
+export function dibujarArteEntero(ctx: CanvasRenderingContext2D, img: HTMLImageElement | HTMLCanvasElement, ancho: number, alto: number) {
   const escala = Math.min(ancho / img.width, alto / img.height);
   const w = Math.round(img.width * escala);
   const h = Math.round(img.height * escala);

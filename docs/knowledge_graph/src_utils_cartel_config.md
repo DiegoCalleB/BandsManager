@@ -19,6 +19,7 @@ Lo que se guarda de un cartel en `concerts.cartel_config` (jsonb). Lo usan el cl
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_utils_cartel_formatos|src/utils/cartel/formatos.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_cartel_plantillas|src/utils/cartel/plantillas.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_voces|src/utils/cartel/voces.ts]] *(Layer: #service, Domain: #system)*
 
 ---

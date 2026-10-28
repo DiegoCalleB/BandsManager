@@ -86,6 +86,7 @@ const CarteleriaView: React.FC<Props> = ({ concerts, bandName, plan, banda, onCa
           letrasFallidas={ed.letrasFallidas !== null}
           onRepetirSinLetras={ed.repetirSinLetras}
           retocando={ed.retocando}
+          iaFalla={ed.iaFalla}
           letrasIa={ed.letrasIa}
           onLetrasIa={ed.setLetrasIa}
           puedeLetrasIa={ed.puedeLetrasIa}

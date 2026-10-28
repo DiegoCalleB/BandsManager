@@ -5,6 +5,7 @@
 // Las URLs se validan con una función que pone quien llama: el servidor exige que sean de SU
 // almacenamiento y de la carpeta de ESA banda (`esUrlDeCartel` en server/utils/cartelUrl.ts).
 
+import { esPlantilla, type PlantillaId } from './plantillas';
 import { ORDEN_FORMATOS, type FormatoCartel } from './formatos';
 import { ELECCIONES_COMPOSICION, LETRAS_CARTEL, type ComposicionElegida, type LetraCartel } from './voces';
 
@@ -14,6 +15,7 @@ export type PaletaId = (typeof PALETA_IDS)[number];
 
 export type FondoGuardado =
   | { tipo: 'paleta'; id: PaletaId }
+  | { tipo: 'plantilla'; id: PlantillaId }
   | { tipo: 'imagen'; origen: 'foto' | 'ia'; url: string };
 
 export interface CartelConfig {
@@ -99,6 +101,8 @@ export function sanearConfigCartel(raw: unknown, esUrlPermitida: (url: string) =
   const f = r.fondo as Record<string, unknown> | undefined;
   if (f?.tipo === 'paleta' && (PALETA_IDS as readonly string[]).includes(f.id as string)) {
     fondo = { tipo: 'paleta', id: f.id as PaletaId };
+  } else if (f?.tipo === 'plantilla' && esPlantilla(f.id)) {
+    fondo = { tipo: 'plantilla', id: f.id };
   } else if (f?.tipo === 'imagen' && (f.origen === 'ia' || f.origen === 'foto')) {
     const u = url(f.url);
     // Una imagen que no está en el historial (o en la foto) del bolo no se acepta como fondo.
