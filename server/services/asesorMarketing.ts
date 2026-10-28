@@ -1,16 +1,23 @@
-// Asesor de Marketing: lo que la banda ve al abrir la pantalla (modo de hoy y qué publicar) y la
-// propuesta de estrategia prerrellenada con IA. El plan lo decide `diagnosticar` sin IA; aquí solo
-// se reúnen los datos de la banda y, para la propuesta, se pide un borrador que la banda revisa.
+// Asesor de Marketing: lo que la banda ve al abrir la pantalla (modo de hoy, opciones y semana),
+// la pieza lista para publicar que prepara la IA, lo que la banda hace con cada idea y la
+// propuesta de estrategia. El plan lo deciden `diagnosticar` y `opcionesDeHoy` sin IA; la IA solo
+// redacta, y lo que devuelve siempre pasa por un saneador antes de llegar a la banda.
 
 import { loadState } from '../state.js';
 import { getAiClient, generateContentWithFallback } from '../ai.js';
 import { safeParseJson } from '../utils.js';
 import { dbGetEpkConfig, dbGetRegisteredBandById } from '../db.js';
 import { dbGetConcerts } from '../db/concerts.js';
-import { dbGetEstrategiaMarketing, dbUltimaPublicacion } from '../db/asesorMarketing.js';
+import { dbAccionesDesde, dbGetEstrategiaMarketing, dbGuardarAccion, dbUltimaPublicacion } from '../db/asesorMarketing.js';
 import { esConciertoPublicable, hoyIso } from '../utils/paginaConcierto.js';
+import { sanitizeExternalText } from '../utils/promptSafety.js';
 import { buildBandContextBlock, emptyBandProfile, loadBandProfile } from '../utils/bandProfile.js';
-import { diagnosticar, tarjetasDeHoy, type ConciertoParaAsesor, type Diagnostico, type Tarjeta } from '../../src/utils/asesor/diagnostico.js';
+import { fechaCorta, sumarDias } from '../../src/utils/campanaConcierto.js';
+import { diagnosticar, type ConciertoParaAsesor, type Diagnostico } from '../../src/utils/asesor/diagnostico.js';
+import {
+  DIAS_APRENDIZAJE, buscarTarjeta, opcionesDeHoy, semana, type Accion, type OpcionesDeHoy,
+} from '../../src/utils/asesor/opciones.js';
+import { promptPieza, sanearPieza, type Pieza } from '../../src/utils/asesor/pieza.js';
 import {
   CAMARAS, ESTRATEGIA_INICIAL, ETAPAS, HORAS, OBJETIVOS, sanearEstrategia, type EstrategiaMarketing,
 } from '../../src/utils/asesor/estrategia.js';
@@ -18,14 +25,23 @@ import {
 export interface EstadoAsesor {
   hoy: string;
   diagnostico: Diagnostico;
-  tarjetas: Tarjeta[];
+  opciones: OpcionesDeHoy;
+  /** Piezas hechas cada uno de los últimos 7 días. */
+  semana: Array<{ fecha: string; hechas: number }>;
   estrategia: EstrategiaMarketing;
   /** false si la banda aún no ha guardado ninguna estrategia: la pantalla le propone empezar por ahí. */
   tieneEstrategia: boolean;
 }
 
-/** null si la BD no responde: mejor un error claro que un plan hecho con datos a medias. */
-export async function estadoDeHoy(bandId: string, ahora = new Date()): Promise<EstadoAsesor | null> {
+interface Contexto {
+  hoy: string;
+  diagnostico: Diagnostico;
+  estrategia: EstrategiaMarketing;
+  tieneEstrategia: boolean;
+}
+
+/** Los datos de los que sale el plan de hoy. null si la BD no responde: mejor un error claro que un plan a medias. */
+async function contextoDeHoy(bandId: string, ahora: Date): Promise<Contexto | null> {
   const [guardada, conciertos, ultimaPublicacion] = await Promise.all([
     dbGetEstrategiaMarketing(bandId),
     dbGetConcerts(bandId).catch((e) => {
@@ -41,10 +57,92 @@ export async function estadoDeHoy(bandId: string, ahora = new Date()): Promise<E
   const publicables: ConciertoParaAsesor[] = conciertos
     .filter(esConciertoPublicable)
     .map((c) => ({ id: String(c.id), fecha: String(c.fecha).slice(0, 10), sala: String(c.sala || ''), ciudad: String(c.ciudad || '') }));
-
   const diagnostico = diagnosticar({ hoy, conciertos: publicables, lanzamiento: estrategia.lanzamiento, ultimaPublicacion });
-  return { hoy, diagnostico, tarjetas: tarjetasDeHoy(diagnostico, estrategia, hoy), estrategia, tieneEstrategia: guardada !== null };
+  return { hoy, diagnostico, estrategia, tieneEstrategia: guardada !== null };
 }
+
+export async function estadoDeHoy(bandId: string, ahora = new Date()): Promise<EstadoAsesor | null> {
+  const ctx = await contextoDeHoy(bandId, ahora);
+  if (!ctx) return null;
+  const historial = await dbAccionesDesde(bandId, sumarDias(ctx.hoy, -DIAS_APRENDIZAJE));
+  return {
+    ...ctx,
+    opciones: opcionesDeHoy(ctx.diagnostico, ctx.estrategia, ctx.hoy, historial),
+    semana: semana(historial, ctx.hoy),
+  };
+}
+
+/* ----------------------------------------------------------------- hecho / saltado */
+
+export type ResultadoAccion = 'ok' | 'no_existe' | 'sin_bd';
+
+/** Marca una idea de hoy como hecha o saltada (o la deja pendiente con `null`). El formato lo pone el servidor. */
+export async function registrarAccion(bandId: string, tarjetaId: unknown, accion: Accion | null, ahora = new Date()): Promise<ResultadoAccion> {
+  const ctx = await contextoDeHoy(bandId, ahora);
+  if (!ctx) return 'sin_bd';
+  const tarjeta = buscarTarjeta(ctx.diagnostico, ctx.estrategia, ctx.hoy, tarjetaId);
+  if (!tarjeta) return 'no_existe';
+  return (await dbGuardarAccion(bandId, ctx.hoy, tarjeta.id, tarjeta.formato, accion)) ? 'ok' : 'sin_bd';
+}
+
+/* ----------------------------------------------------------------- la pieza */
+
+async function contextoBanda(bandId: string): Promise<string> {
+  try {
+    const perfil = await loadBandProfile(bandId, {
+      getBand: (id) => dbGetRegisteredBandById(id),
+      getEpk: (id) => dbGetEpkConfig(id),
+      getState: () => loadState(),
+    });
+    return buildBandContextBlock(perfil);
+  } catch (e) {
+    console.warn('[Asesor] Sin perfil de banda:', (e as Error)?.message || e);
+    return buildBandContextBlock(emptyBandProfile(bandId));
+  }
+}
+
+/** El bolo o el estreno de hoy, en una línea. Lo escribe la banda: se sanea. */
+function momentoDe(d: Diagnostico, e: EstrategiaMarketing): string {
+  if (d.modo === 'concierto' && d.concierto) {
+    const c = d.concierto;
+    return `Bolo: ${fechaCorta(c.fecha)} en ${sanitizeExternalText(c.sala, 80)}${c.ciudad ? `, ${sanitizeExternalText(c.ciudad, 60)}` : ''}.`;
+  }
+  if (d.modo === 'lanzamiento' && e.lanzamiento) return `Estreno: «${sanitizeExternalText(e.lanzamiento.titulo, 80)}», ${fechaCorta(e.lanzamiento.fecha)}.`;
+  return '';
+}
+
+export type ResultadoPieza = { pieza: Pieza } | { error: 'no_existe' | 'sin_bd' | 'sin_ia' };
+
+/** Prepara con IA la pieza de una idea de hoy. El cliente solo manda el id: la idea la recalcula el servidor. */
+export async function generarPieza(bandId: string, tarjetaId: unknown, ahora = new Date()): Promise<ResultadoPieza> {
+  const ctx = await contextoDeHoy(bandId, ahora);
+  if (!ctx) return { error: 'sin_bd' };
+  const tarjeta = buscarTarjeta(ctx.diagnostico, ctx.estrategia, ctx.hoy, tarjetaId);
+  if (!tarjeta) return { error: 'no_existe' };
+  const client = getAiClient();
+  if (!client) return { error: 'sin_ia' };
+
+  const prompt = promptPieza({
+    contextoBanda: await contextoBanda(bandId),
+    estrategia: ctx.estrategia,
+    tarjeta,
+    momento: momentoDe(ctx.diagnostico, ctx.estrategia),
+  });
+  try {
+    const respuesta = await generateContentWithFallback(client, {
+      contents: prompt,
+      config: { responseMimeType: 'application/json', temperature: 0.8 },
+      bandId,
+    });
+    const pieza = sanearPieza(safeParseJson(respuesta.text || ''), tarjeta.formato, tarjeta.redes);
+    return pieza ? { pieza } : { error: 'sin_ia' };
+  } catch (e) {
+    console.warn('[Asesor] La IA no pudo preparar la pieza:', (e as Error)?.message || e);
+    return { error: 'sin_ia' };
+  }
+}
+
+/* ----------------------------------------------------------------- estrategia */
 
 /**
  * Borrador de estrategia a partir de lo que ya sabemos de la banda (bio, género, ciudad, tono).
@@ -55,22 +153,9 @@ export async function sugerirEstrategia(bandId: string): Promise<EstrategiaMarke
   const client = getAiClient();
   if (!client) return null;
 
-  let contextoBanda: string;
-  try {
-    const perfil = await loadBandProfile(bandId, {
-      getBand: (id) => dbGetRegisteredBandById(id),
-      getEpk: (id) => dbGetEpkConfig(id),
-      getState: () => loadState(),
-    });
-    contextoBanda = buildBandContextBlock(perfil);
-  } catch (e) {
-    console.warn('[Asesor] Sin perfil de banda:', (e as Error)?.message || e);
-    contextoBanda = buildBandContextBlock(emptyBandProfile(bandId));
-  }
-
   const prompt = `Eres asesor de marketing digital de bandas de música. A partir de lo que sabemos de esta banda, propón un borrador de su estrategia en redes. La banda lo revisará: si un dato no se deduce, deja el valor más prudente y no inventes.
 
-${contextoBanda}
+${await contextoBanda(bandId)}
 
 Devuelve SOLO un JSON con esta forma:
 {

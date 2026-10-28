@@ -13,13 +13,15 @@ tags: ["db", "system", "auto"]
 > **Capa:** `#layer/db` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Datos del Asesor de Marketing: la estrategia de la banda (`band_estrategia_marketing`) y la fecha
+Datos del Asesor de Marketing: la estrategia de la banda (`band_estrategia_marketing`), la fecha
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
 - [[src_utils_asesor_estrategia|src/utils/asesor/estrategia.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_asesor_opciones|src/utils/asesor/opciones.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_asesor_reglasFormato|src/utils/asesor/reglasFormato.ts]] *(Layer: #service, Domain: #system)*
 - [[tabla_band_estrategia_marketing|tabla band_estrategia_marketing]] *(Layer: #schema, Domain: #system)*
 - [[tabla_social_posts|tabla social_posts]] *(Layer: #schema, Domain: #social)*
 

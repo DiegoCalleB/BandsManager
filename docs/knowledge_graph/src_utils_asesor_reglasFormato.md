@@ -23,8 +23,11 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_asesor_TarjetaHoy|src/components/asesor/TarjetaHoy.tsx]] *(from #frontend)*
-- [[src_utils_asesor_diagnostico|src/utils/asesor/diagnostico.ts]] *(from #service)*
+- [[server_db_asesorMarketing|server/db/asesorMarketing.ts]] *(from #db)*
+- [[src_components_asesor_nombres|src/components/asesor/nombres.ts]] *(from #frontend)*
+- [[src_components_asesor_PiezaSheet|src/components/asesor/PiezaSheet.tsx]] *(from #frontend)*
+- [[src_utils_asesor_opciones|src/utils/asesor/opciones.ts]] *(from #service)*
+- [[src_utils_asesor_pieza|src/utils/asesor/pieza.ts]] *(from #service)*
 
 ---
 

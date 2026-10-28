@@ -110,9 +110,12 @@ UI siguiendo la skill `visual-identity` (Espectro) y con color de módulo propio
 
 ### Fase 2 · Las piezas
 - [x] Reglas de formato con la fuente de cada una (`src/utils/asesor/reglasFormato.ts`) y diagnóstico de métricas (`src/utils/asesor/diagnosticoMetricas.ts`), a partir de los apuntes del máster.
-- [ ] Generación de carrusel, stories, guion de reel y evento de FB con el contexto ADN.
-- [ ] Render PNG de stories y carruseles con el ADN visual.
-- [ ] `Hecho` / `Saltar` y aprendizaje de pesos.
+- [x] Varias ideas por día para elegir (`src/utils/asesor/opciones.ts`): las recomendadas según el tiempo de la banda y hasta 3 «otras ideas».
+- [x] «Preparar pieza»: la IA escribe reel, carrusel, stories o post con el ADN (identidad, voz, estrategia y reglas del formato), saneada en `src/utils/asesor/pieza.ts`. El cliente solo manda el id de la idea.
+- [x] `Hecho` / `Saltar` (tabla `asesor_acciones`) y aprendizaje: el formato que una banda salta más de lo que hace baja puestos (sin tocar los hitos del bolo).
+- [x] La semana en la Onda y e2e a 390 px en los tres temas (`e2e/asesor.spec.ts`).
+- [ ] Evento de Facebook como formato propio (hoy el post de Instagram cubre el anuncio).
+- [ ] Render PNG de stories y carruseles con el ADN visual (fase 2b).
 
 ### Fase 3 · El bucle
 - [ ] Métricas para todos los formatos y resumen semanal unificado.

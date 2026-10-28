@@ -22,6 +22,7 @@ Esquema relacional de tablas, índices pgvector, funciones y políticas RLS.
 - [[tabla_agent_jobs_queue|tabla agent_jobs_queue]] *(Layer: #schema, Domain: #system)*
 - [[tabla_agent_schedule_state|tabla agent_schedule_state]] *(Layer: #schema, Domain: #system)*
 - [[tabla_ai_token_ledger|tabla ai_token_ledger]] *(Layer: #schema, Domain: #system)*
+- [[tabla_asesor_acciones|tabla asesor_acciones]] *(Layer: #schema, Domain: #system)*
 - [[tabla_autonomy_configs|tabla autonomy_configs]] *(Layer: #schema, Domain: #system)*
 - [[tabla_band_alert_settings|tabla band_alert_settings]] *(Layer: #schema, Domain: #system)*
 - [[tabla_band_cartel_estilo|tabla band_cartel_estilo]] *(Layer: #schema, Domain: #system)*
