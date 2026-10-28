@@ -21,6 +21,9 @@ interface Props {
   /** Retoca el fondo de IA que se ve con una instrucción (una versión nueva). */
   onRetocar: (instruccion: string) => Promise<boolean>;
   retocando: boolean;
+  /** La IA se equivocó en alguna letra del último fondo: se ofrece repetirlo con el texto exacto de la app. */
+  letrasFallidas: boolean;
+  onRepetirSinLetras: () => Promise<boolean>;
   /** La IA dibuja el título y la fecha dentro del arte (en vez de pintarlos la app encima). */
   letrasIa: boolean;
   onLetrasIa: (v: boolean) => void;
@@ -59,7 +62,7 @@ function Muestra({ activa, etiqueta, onClick, children }: { activa: boolean; eti
   );
 }
 
-export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenerarIa, generando, onRetocar, retocando, letrasIa, onLetrasIa, puedeLetrasIa, estiloInicial, paletaBanda, panelBanda, panelIdea }: Props) {
+export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenerarIa, generando, onRetocar, retocando, letrasFallidas, onRepetirSinLetras, letrasIa, onLetrasIa, puedeLetrasIa, estiloInicial, paletaBanda, panelBanda, panelIdea }: Props) {
   const [iaAbierta, setIaAbierta] = useState(false);
   // Hasta que la persona toca un estilo, manda el de su banda (que puede llegar tarde, al cargar su ADN).
   const [estiloElegido, setEstiloElegido] = useState<EstiloCartel | null>(null);
@@ -112,6 +115,15 @@ export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenera
           <span className="text-[11px] leading-none text-[var(--ink-2)]">IA</span>
         </button>
       </div>
+
+      {letrasFallidas && (
+        <div role="status" className="grid gap-2 rounded-[var(--r-m)] bg-[var(--acc-soft)] p-3 text-[var(--acc-ink)]">
+          <p className="text-xs text-pretty">La IA ha fallado alguna letra del título o la fecha. Puedes repetir el fondo con el texto exacto de la app (3 imágenes más) o seguir retocando este.</p>
+          <Button size="xs" variant="raised" className="w-fit" disabled={generando} onClick={() => void onRepetirSinLetras()}>
+            {generando ? 'Pintando…' : 'Repetir con el texto exacto'}
+          </Button>
+        </div>
+      )}
 
       {conFondoIa && (
         <div className="grid gap-2 rounded-[var(--r-m)] bg-[var(--sunken)] p-3" aria-label="Retocar el fondo">
