@@ -30,6 +30,8 @@ export interface DatosCartel {
 }
 
 export interface OpcionesLayout {
+  /** Ajustes a mano de este formato: mover y escalar bloques sobre el reparto automático. */
+  ajustes?: import('./ajustesFinos').AjustesFinos;
   /** Reserva hueco para el QR (solo impresión). */
   qr: boolean;
   /** Texto de la URL corta, sin protocolo: `bandmanager.io/r/ab3k9x2`. */
@@ -66,6 +68,8 @@ export interface Linea {
   titulo?: boolean;
   /** Espaciado entre letras, en em: las versalitas pequeñas respiran (0 = el de la fuente). */
   tracking?: number;
+  /** A qué bloque ajustable pertenece (para moverlo y escalarlo a mano). */
+  bloque?: import('./ajustesFinos').BloqueAjustable;
 }
 
 export interface Rect {
@@ -88,6 +92,8 @@ export interface LayoutCartel {
   adornos: Adorno[];
   /** Zona superior (nombres) e inferior (datos): ahí se mide el fondo y, si hace falta, se vela. */
   zonas: { arriba: Rect; abajo: Rect };
+  /** La caja de cada bloque que se puede mover a mano, en su posición final. */
+  cajas?: Partial<Record<import('./ajustesFinos').BloqueAjustable, Rect>>;
 }
 
 /** Un filete horizontal; con `rombo`, partido en el centro por un rombo pequeño. */
@@ -221,7 +227,7 @@ export function construirNombre(c: CtxLayout, x: number, y: number, ancho: numbe
       }
     }
     for (const t of ls) {
-      lineas.push({ texto: t, x, y, px, peso: voz.peso, alinear, titulo: true });
+      lineas.push({ texto: t, x, y, px, peso: voz.peso, alinear, titulo: true, bloque: 'nombre' });
       y += px * voz.interlinea;
     }
   }
@@ -233,7 +239,7 @@ export function construirNombre(c: CtxLayout, x: number, y: number, ancho: numbe
     nombres[0] = `CON ${nombres[0]}`;
     const { px, lineas: ls } = encajar(nombres, ' · ', ancho, 2, Math.round(50 * u), Math.round(30 * u), 700, medir);
     for (const t of ls) {
-      lineas.push({ texto: t, x, y, px, peso: 700, alinear });
+      lineas.push({ texto: t, x, y, px, peso: 700, alinear, bloque: 'nombre' });
       y += px * 1.1;
     }
   }
@@ -281,9 +287,9 @@ export function fechaCompuesta(c: CtxLayout, anchoDisp: number): FechaCompuesta 
 export function colocarFecha(f: FechaCompuesta, voz: DefVoz, x: number, yTop: number): Linea[] {
   const xl = x + f.ancNum + f.hueco;
   return [
-    { texto: f.num, x, y: yTop - f.numPx * 0.12, px: f.numPx, peso: voz.peso, alinear: 'left', titulo: true },
-    { texto: f.lado, x: xl, y: yTop + f.alto * 0.12, px: f.pxMes, peso: 800, alinear: 'left', tracking: 0.03 },
-    { texto: f.dia, x: xl, y: yTop + f.alto * 0.12 + f.pxMes * 1.12, px: f.pxDia, peso: 600, alinear: 'left', tracking: 0.18 },
+    { texto: f.num, x, y: yTop - f.numPx * 0.12, px: f.numPx, peso: voz.peso, alinear: 'left', titulo: true, bloque: 'fecha' },
+    { texto: f.lado, x: xl, y: yTop + f.alto * 0.12, px: f.pxMes, peso: 800, alinear: 'left', tracking: 0.03, bloque: 'fecha' },
+    { texto: f.dia, x: xl, y: yTop + f.alto * 0.12 + f.pxMes * 1.12, px: f.pxDia, peso: 600, alinear: 'left', tracking: 0.18, bloque: 'fecha' },
   ];
 }
 
@@ -333,7 +339,7 @@ export function apilarDatos(c: CtxLayout, o: { alinear: 'left' | 'center'; x: nu
     yb -= b.espacio;
     for (const t of [...ls].reverse()) {
       yb -= px * 1.08;
-      colocadas.unshift({ texto: t, x: o.x, y: yb, px, peso: b.peso, alinear: o.alinear, tracking: b.tracking });
+      colocadas.unshift({ texto: t, x: o.x, y: yb, px, peso: b.peso, alinear: o.alinear, tracking: b.tracking, bloque: 'datos' });
     }
   }
   return { lineas: colocadas, yTop: yb };
@@ -346,8 +352,8 @@ export function colocarPie(c: CtxLayout, fondo: number): { lineas: Linea[]; fond
   const pie = Math.round(26 * u);
   if (opciones.marca || opciones.urlCorta) {
     const yPie = fondo - pie;
-    if (opciones.marca) lineas.push({ texto: TEXTO_MARCA, x: m, y: yPie, px: pie, peso: 600, alinear: 'left', tracking: 0.03 });
-    if (opciones.urlCorta) lineas.push({ texto: opciones.urlCorta, x: ancho - m, y: yPie, px: pie, peso: 600, alinear: 'right', tracking: 0.03 });
+    if (opciones.marca) lineas.push({ texto: TEXTO_MARCA, x: m, y: yPie, px: pie, peso: 600, alinear: 'left', tracking: 0.03, bloque: 'pie' });
+    if (opciones.urlCorta) lineas.push({ texto: opciones.urlCorta, x: ancho - m, y: yPie, px: pie, peso: 600, alinear: 'right', tracking: 0.03, bloque: 'pie' });
     fondo = yPie - 28 * u;
   }
   return { lineas, fondo };

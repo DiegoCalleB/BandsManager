@@ -3,7 +3,7 @@ import { ImagePlus, X } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
 import { Field, IconButton, Input, Select, Switch } from '../ui';
 import { TODAS } from '../../utils/cartel/datos';
-import { MAX_LOGOS } from '../../utils/cartel/config';
+import { MAX_EXTRA, MAX_LOGOS, MAX_TEXTO_EDITADO } from '../../utils/cartel/config';
 import { ELECCIONES_COMPOSICION, ETIQUETA_COMPOSICION, ETIQUETA_LETRA, LETRAS_CARTEL, type ComposicionElegida, type LetraCartel } from '../../utils/cartel/voces';
 import type { AjustesBolo } from './hooks/useEditorCartel';
 
@@ -14,6 +14,9 @@ interface Props {
   onCambiar: (cambio: Partial<AjustesBolo>) => void;
   bandas: string[];
   tieneHorario: boolean;
+  /** Lo que sale por defecto, para el texto de ejemplo de los campos. */
+  nombreBanda: string;
+  lugarBolo: string;
   tieneDireccion: boolean;
   tieneEnlace: boolean;
   tieneLogo: boolean;
@@ -38,7 +41,7 @@ function Fila({ titulo, detalle, children }: { titulo: string; detalle: string; 
 }
 
 /** Lo que casi nadie toca, fuera de la pantalla principal (AGENTS.md §6). Se guarda por bolo. */
-export function AjustesCartel({ abierto, onCerrar, ajustes, onCambiar, bandas, tieneHorario, tieneDireccion, tieneEnlace, tieneLogo, puedeQuitarMarca, logos, subiendoLogo, onSubirLogo, onQuitarLogo }: Props) {
+export function AjustesCartel({ abierto, onCerrar, ajustes, onCambiar, bandas, tieneHorario, nombreBanda, lugarBolo, tieneDireccion, tieneEnlace, tieneLogo, puedeQuitarMarca, logos, subiendoLogo, onSubirLogo, onQuitarLogo }: Props) {
   if (!abierto) return null;
   return (
     <ModalPortal isOpen onClose={onCerrar}>
@@ -79,8 +82,16 @@ export function AjustesCartel({ abierto, onCerrar, ajustes, onCambiar, bandas, t
             </Select>
           </Field>
 
-          <Field label="Línea extra" optional hint="Precio, invitada, «Entrada libre»… Máximo 40 caracteres.">
-            <Input maxLength={40} value={ajustes.extra} placeholder="Anticipada 10 € · Taquilla 12 €" onChange={(e) => onCambiar({ extra: e.target.value })} />
+          <Field label="Nombre en el cartel" optional hint="Si lo dejas vacío sale el de la banda. No cambia tus datos.">
+            <Input maxLength={MAX_TEXTO_EDITADO} value={ajustes.textos.nombre} placeholder={nombreBanda} onChange={(e) => onCambiar({ textos: { ...ajustes.textos, nombre: e.target.value } })} />
+          </Field>
+
+          <Field label="Lugar en el cartel" optional hint="Vacío = sala y ciudad del bolo. No cambia el bolo.">
+            <Input maxLength={MAX_TEXTO_EDITADO} value={ajustes.textos.lugar} placeholder={lugarBolo} onChange={(e) => onCambiar({ textos: { ...ajustes.textos, lugar: e.target.value } })} />
+          </Field>
+
+          <Field label="Línea extra" optional hint="Precio, invitada, «Entrada libre»… Máximo 60 caracteres.">
+            <Input maxLength={MAX_EXTRA} value={ajustes.extra} placeholder="Anticipada 10 € · Taquilla 12 €" onChange={(e) => onCambiar({ extra: e.target.value })} />
           </Field>
 
           <div className="grid gap-2">

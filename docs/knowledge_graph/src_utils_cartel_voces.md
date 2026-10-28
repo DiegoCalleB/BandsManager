@@ -36,6 +36,7 @@ La «letra» del cartel: la tipografía de exhibición del nombre y del día. Un
 ---
 
 ## 🧪 Tests que lo cubren
+- `src/utils/cartel/__tests__/ajustesFinos.test.ts`
 - `src/utils/cartel/__tests__/composiciones.test.ts`
 - `src/utils/cartel/__tests__/voces.test.ts`
 

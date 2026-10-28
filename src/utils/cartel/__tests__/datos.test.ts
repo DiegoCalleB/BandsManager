@@ -40,7 +40,7 @@ describe('datos del cartel', () => {
   });
 
   it('recorta el texto libre', () => {
-    expect(datosDesdeConcierto(bolo(), 'X', { cabeza: null, extra: 'x'.repeat(100), horario: true }).extra).toHaveLength(40);
+    expect(datosDesdeConcierto(bolo(), 'X', { cabeza: null, extra: 'x'.repeat(100), horario: true }).extra).toHaveLength(60);
   });
 
   it('solo bolos públicos, confirmados y futuros, por fecha', () => {
@@ -106,6 +106,30 @@ describe('conCartelGuardado', () => {
     });
     it('un bolo sin dirección no inventa nada', () => {
       expect(datosDesdeConcierto(bolo(), 'Banda', { cabeza: null, extra: '', horario: true, direccion: true }).direccion).toBe('');
+    });
+  });
+
+  describe('textos escritos a mano', () => {
+    const aj = (textos: { nombre: string; lugar: string }) => ({ cabeza: null, extra: '', horario: true, textos });
+    it('sustituyen al nombre de nuestra banda y al lugar, sin tocar el bolo', () => {
+      const c = bolo({ sala: 'Sala El Sol', ciudad: 'Madrid' });
+      const d = datosDesdeConcierto(c, 'Banda', aj({ nombre: '  Los Toros  ', lugar: 'Teatro Lara' }));
+      expect(d.lineup[0].nombre).toBe('Los Toros');
+      expect(d.sala).toBe('Teatro Lara');
+      expect(d.ciudad).toBe('');
+      expect(c.sala).toBe('Sala El Sol');
+    });
+    it('vacíos, no cambian nada', () => {
+      const d = datosDesdeConcierto(bolo({ sala: 'Sala El Sol', ciudad: 'Madrid' }), 'Banda', aj({ nombre: '  ', lugar: '' }));
+      expect(d.lineup[0].nombre).toBe('Banda');
+      expect(d.sala).toBe('Sala El Sol');
+      expect(d.ciudad).toBe('Madrid');
+    });
+    it('en un bolo compartido solo se renombra la nuestra y sigue siendo la cabeza si lo era', () => {
+      const c = bolo({ bandas_compartidas: ['Otra'] });
+      const d = datosDesdeConcierto(c, 'Banda', { cabeza: 'Banda', extra: '', horario: true, textos: { nombre: 'Los Toros', lugar: '' } });
+      expect(d.lineup.map((b) => b.nombre)).toEqual(['Los Toros', 'Otra']);
+      expect(d.lineup[0].cabeza).toBe(true);
     });
   });
 });

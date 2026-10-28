@@ -115,7 +115,7 @@ export function composicionBase(c: CtxLayout): LayoutCartel {
     altoIzq = comp.alto;
   } else if (d.fecha.trim()) {
     const px = Math.round(64 * u);
-    lineas.push({ texto: d.fecha, x: m, y: y0, px, peso: 800, alinear: 'left' });
+    lineas.push({ texto: d.fecha, x: m, y: y0, px, peso: 800, alinear: 'left', bloque: 'fecha' });
     altoIzq = px * 1.08;
   }
   const lugar = [d.sala, d.ciudad].map((s) => s.trim().toUpperCase()).filter(Boolean);
@@ -124,7 +124,7 @@ export function composicionBase(c: CtxLayout): LayoutCartel {
   if (lugar.length) {
     const { px, lineas: ls } = encajar(lugar, ' · ', anchoDer, 2, Math.round(42 * u), Math.round(26 * u), 700, medir, '', false, 0.05);
     for (const t of ls) {
-      lineas.push({ texto: t, x: ancho - m, y: yDer, px, peso: 700, alinear: 'right', tracking: 0.05 });
+      lineas.push({ texto: t, x: ancho - m, y: yDer, px, peso: 700, alinear: 'right', tracking: 0.05, bloque: 'datos' });
       yDer += px * 1.1;
     }
   }
@@ -132,7 +132,7 @@ export function composicionBase(c: CtxLayout): LayoutCartel {
     const { px, lineas: ls } = encajar([(d.direccion ?? '').trim().toUpperCase()], ' · ', anchoDer, 2, Math.round(26 * u), Math.round(18 * u), 600, medir, '', false, 0.05);
     yDer += 4 * u;
     for (const t of ls) {
-      lineas.push({ texto: t, x: ancho - m, y: yDer, px, peso: 600, alinear: 'right', tracking: 0.05 });
+      lineas.push({ texto: t, x: ancho - m, y: yDer, px, peso: 600, alinear: 'right', tracking: 0.05, bloque: 'datos' });
       yDer += px * 1.1;
     }
   }
@@ -140,7 +140,7 @@ export function composicionBase(c: CtxLayout): LayoutCartel {
     const { px, lineas: ls } = encajar(d.horario.split(' · '), ' · ', anchoDer, 2, Math.round(30 * u), Math.round(22 * u), 600, medir, '', false, 0.06);
     yDer += 6 * u;
     for (const t of ls) {
-      lineas.push({ texto: t, x: ancho - m, y: yDer, px, peso: 600, alinear: 'right', tracking: 0.06 });
+      lineas.push({ texto: t, x: ancho - m, y: yDer, px, peso: 600, alinear: 'right', tracking: 0.06, bloque: 'datos' });
       yDer += px * 1.1;
     }
   }
@@ -162,7 +162,7 @@ export function composicionBase(c: CtxLayout): LayoutCartel {
   let altoExtra = 0;
   for (const t of [...extras].reverse()) {
     altoExtra += pxExtra * 1.08;
-    lineasAbajo.unshift({ texto: t, x: m, y: fondo - altoExtra, px: pxExtra, peso: 600, alinear: 'left', tracking: 0.06 });
+    lineasAbajo.unshift({ texto: t, x: m, y: fondo - altoExtra, px: pxExtra, peso: 600, alinear: 'left', tracking: 0.06, bloque: 'datos' });
   }
   // La fila (QR y/o extra) ocupa lo que mida el QR o las líneas extra.
   fondo -= Math.max(ladoQr, altoExtra);

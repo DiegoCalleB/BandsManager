@@ -245,19 +245,19 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `POST` | `/api/asesor/pieza` | Sesión | iaRateLimiter |  | [`server/routes/asesor.ts:37`](../../server/routes/asesor.ts#L37) |
 | `POST` | `/api/asesor/resultado` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/asesor.ts:63`](../../server/routes/asesor.ts#L63) |
 | `POST` | `/api/campana-concierto/redactar` | Sesión | iaRateLimiter |  | [`server/routes/campanaConcierto.ts:108`](../../server/routes/campanaConcierto.ts#L108) |
-| `GET` | `/api/cartel/adn` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:413`](../../server/routes/cartelria.ts#L413) |
-| `PUT` | `/api/cartel/adn` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:424`](../../server/routes/cartelria.ts#L424) |
-| `POST` | `/api/cartel/brief` | Sesión | iaRateLimiter |  | [`server/routes/cartelria.ts:394`](../../server/routes/cartelria.ts#L394) |
-| `POST` | `/api/cartel/fondo` | Sesión | imagenRateLimiter |  | [`server/routes/cartelria.ts:121`](../../server/routes/cartelria.ts#L121) |
-| `POST` | `/api/cartel/idea` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:369`](../../server/routes/cartelria.ts#L369) |
-| `DELETE` | `/api/cartel/idea` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:384`](../../server/routes/cartelria.ts#L384) |
-| `POST` | `/api/cartel/referencias` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:440`](../../server/routes/cartelria.ts#L440) |
-| `POST` | `/api/cartel/retocar` | Sesión | imagenRateLimiter |  | [`server/routes/cartelria.ts:202`](../../server/routes/cartelria.ts#L202) |
-| `PUT` | `/api/cartel/{concertId}/config` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:255`](../../server/routes/cartelria.ts#L255) |
-| `POST` | `/api/cartel/{concertId}/foto` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:290`](../../server/routes/cartelria.ts#L290) |
-| `PUT` | `/api/cartel/{concertId}/imagen` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:268`](../../server/routes/cartelria.ts#L268) |
-| `POST` | `/api/cartel/{concertId}/logo` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:313`](../../server/routes/cartelria.ts#L313) |
-| `DELETE` | `/api/cartel/{concertId}/logo` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:347`](../../server/routes/cartelria.ts#L347) |
+| `GET` | `/api/cartel/adn` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:414`](../../server/routes/cartelria.ts#L414) |
+| `PUT` | `/api/cartel/adn` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:425`](../../server/routes/cartelria.ts#L425) |
+| `POST` | `/api/cartel/brief` | Sesión | iaRateLimiter |  | [`server/routes/cartelria.ts:395`](../../server/routes/cartelria.ts#L395) |
+| `POST` | `/api/cartel/fondo` | Sesión | imagenRateLimiter |  | [`server/routes/cartelria.ts:122`](../../server/routes/cartelria.ts#L122) |
+| `POST` | `/api/cartel/idea` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:370`](../../server/routes/cartelria.ts#L370) |
+| `DELETE` | `/api/cartel/idea` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:385`](../../server/routes/cartelria.ts#L385) |
+| `POST` | `/api/cartel/referencias` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:441`](../../server/routes/cartelria.ts#L441) |
+| `POST` | `/api/cartel/retocar` | Sesión | imagenRateLimiter |  | [`server/routes/cartelria.ts:203`](../../server/routes/cartelria.ts#L203) |
+| `PUT` | `/api/cartel/{concertId}/config` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:256`](../../server/routes/cartelria.ts#L256) |
+| `POST` | `/api/cartel/{concertId}/foto` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:291`](../../server/routes/cartelria.ts#L291) |
+| `PUT` | `/api/cartel/{concertId}/imagen` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:269`](../../server/routes/cartelria.ts#L269) |
+| `POST` | `/api/cartel/{concertId}/logo` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:314`](../../server/routes/cartelria.ts#L314) |
+| `DELETE` | `/api/cartel/{concertId}/logo` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:348`](../../server/routes/cartelria.ts#L348) |
 
 ### chat
 

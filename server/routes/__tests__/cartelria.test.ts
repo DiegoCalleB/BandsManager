@@ -118,6 +118,13 @@ describe('POST /cartel/fondo', () => {
       expect(servicio.llamadas[0][1]).not.toContain('HACKEADO');
     });
 
+    it('lo que la persona escribió a mano en el cartel manda sobre los datos del bolo', async () => {
+      banda.nombre = 'Los Toros';
+      fila('c1').cartel_config = { v: 1, textos: { nombre: 'Los Hijos del Toro', lugar: 'Teatro Lara' } };
+      await fondo({ concertId: 'c1', estilo: 'neon', encuadre: 'sangre', conTexto: true });
+      expect(servicio.textos[0]).toEqual({ nombre: 'LOS HIJOS DEL TORO', fecha: 'VIE 16 OCT 2099', lugar: 'TEATRO LARA' });
+    });
+
     it('si la IA falla alguna letra se avisa a la persona', async () => {
       banda.nombre = 'Los Toros';
       servicio.textoOk = false;
@@ -385,11 +392,7 @@ describe('POST /cartel/retocar', () => {
     expect(servicio.retoques[0].textos).toEqual({ nombre: 'LOS TOROS', fecha: 'VIE 16 OCT 2099', lugar: 'CAPITOL · SANTIAGO' });
     expect(servicio.retoques[0].prompt).toContain('<band_name>LOS TOROS</band_name>');
     expect(servicio.retoques[0].prompt).not.toContain('HACKEADO');
-  });
-
-  it('si el retoque estropea una letra, se avisa', async () => {
-    conHistorial(URL_CON_TEXTO);
-    banda.nombre = 'Los Toros';
+    // Y si el retoque estropea una letra, se avisa.
     servicio.textoOk = false;
     expect((await retocar({ concertId: 'c1', url: URL_CON_TEXTO, instruccion: 'Más grano' })).body.textoOk).toBe(false);
   });
