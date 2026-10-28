@@ -70,4 +70,10 @@ describe('la composición del cartel en la configuración', () => {
     expect(sanearConfigCartel({ v: 1, direccion: true }, () => true)?.direccion).toBe(true);
     expect(sanearConfigCartel({ v: 1, direccion: 'sí' }, () => true)?.direccion).toBe(false);
   });
+
+  it('el QR en Feed e Historia viene apagado y solo se enciende con un booleano de verdad', () => {
+    expect(CONFIG_INICIAL.qrDigital).toBe(false);
+    expect(sanearConfigCartel({ v: 1, qrDigital: true }, () => true)?.qrDigital).toBe(true);
+    expect(sanearConfigCartel({ v: 1, qrDigital: 1 }, () => true)?.qrDigital).toBe(false);
+  });
 });

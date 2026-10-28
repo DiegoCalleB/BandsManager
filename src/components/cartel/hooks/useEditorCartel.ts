@@ -152,7 +152,7 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
   const piezasPara = useCallback(
     (f: FormatoCartel): PiezasCartel | null => {
       if (!concierto) return null;
-      const conQr = !FORMATOS[f].digital && ajustes.qr && !!enlace;
+      const conQr = (!FORMATOS[f].digital || ajustes.qrDigital) && ajustes.qr && !!enlace;
       const voz = resolverVoz(ajustes.letra, estiloArranque);
       return {
         datos: datosDesdeConcierto(concierto, bandName, ajustes),

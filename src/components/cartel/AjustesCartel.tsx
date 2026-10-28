@@ -101,6 +101,9 @@ export function AjustesCartel({ abierto, onCerrar, ajustes, onCambiar, bandas, t
             <Fila titulo="QR en el impreso" detalle={tieneEnlace ? 'Lleva a la página del bolo y cuenta cada escaneo.' : 'No hay enlace disponible ahora mismo.'}>
               <Switch aria-label="QR en el impreso" checked={tieneEnlace && ajustes.qr} disabled={!tieneEnlace} onCheckedChange={(v) => onCambiar({ qr: v })} />
             </Fila>
+            <Fila titulo="QR también en Feed e Historia" detalle={tieneEnlace ? 'Para quien lo vea en otra pantalla o lo imprima de la captura.' : 'No hay enlace disponible ahora mismo.'}>
+              <Switch aria-label="QR también en Feed e Historia" checked={tieneEnlace && ajustes.qr && ajustes.qrDigital} disabled={!tieneEnlace || !ajustes.qr} onCheckedChange={(v) => onCambiar({ qrDigital: v })} />
+            </Fila>
             <Fila titulo="Hecho con BandManager.io" detalle={puedeQuitarMarca ? 'Gracias por dejarla: así nos conocen otras bandas.' : 'Va incluida en los planes gratuitos.'}>
               <Switch aria-label="Marca BandManager" checked={puedeQuitarMarca ? ajustes.marca : true} disabled={!puedeQuitarMarca} onCheckedChange={(v) => onCambiar({ marca: v })} />
             </Fila>
