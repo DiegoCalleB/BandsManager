@@ -1,4 +1,8 @@
+import fs from 'fs';
+import path from 'path';
 import { test, expect, type Page } from '@playwright/test';
+
+const FIXTURES = path.join(process.cwd(), 'e2e', 'fixtures', 'cartel');
 
 // Asesor de marketing a ~390 px: opciones de hoy, preparar una pieza con IA, marcarla como hecha y
 // saltar una idea. El servidor del asesor se simula (el plan real lo cubren los tests de Vitest):
@@ -29,8 +33,14 @@ const CARRUSEL = {
   cta: 'Entradas en la bio',
 };
 
-async function abrirAsesor(page: Page) {
-  const peticiones: Array<{ ruta: string; cuerpo: any }> = [];
+const STORIES = {
+  formato: 'stories', gancho: '¿Cuál abre el sábado?', portada: '',
+  pasos: [{ titulo: '¿Cuál abre el sábado?', detalle: 'foto del ensayo' }, { titulo: 'Votad en la encuesta', detalle: 'sticker de encuesta' }, { titulo: 'Sábado, Oktoberfest, Leganés', detalle: 'sticker de cuenta atrás' }],
+  textos: [{ red: 'instagram', texto: 'Votad', hashtags: [] }], cta: '',
+};
+
+async function abrirAsesor(page: Page, { conLogo = false }: { conLogo?: boolean } = {}) {
+  const peticiones: Array<{ ruta: string; cuerpo: Record<string, unknown> | null }> = [];
   const servidor = { hechas: new Set<string>(), saltadas: new Set<string>() };
   const ideas = [
     IDEA('hito-anuncio', 'post', 'Anuncio del bolo', { atajo: { vista: 'carteleria', concertId: 'c1' }, tipo: 'promocional' }),
@@ -38,6 +48,16 @@ async function abrirAsesor(page: Page) {
     IDEA('bolo-encuesta', 'stories', 'Stories con cuenta atrás'),
     IDEA('bolo-setlist', 'carrusel', 'Lo que vais a escuchar'),
   ];
+  if (conLogo) {
+    // El logo de la banda: sale de su dossier (epkConfig) y se sirve con CORS como el bucket real.
+    await page.route('**/api/state', async (route) => {
+      const j = await (await route.fetch()).json().catch(() => ({}));
+      delete j.error;
+      j.epkConfig = { ...(j.epkConfig || {}), logoUrl: 'https://logo.test/logo.png' };
+      await route.fulfill({ status: 200, json: j });
+    });
+    await page.route('https://logo.test/**', (r) => r.fulfill({ body: fs.readFileSync(path.join(FIXTURES, 'logo.png')), contentType: 'image/png', headers: { 'access-control-allow-origin': '*' } }));
+  }
   await page.route('**/api/asesor/**', async (route) => {
     const req = route.request();
     const ruta = new URL(req.url()).pathname;
@@ -54,7 +74,7 @@ async function abrirAsesor(page: Page) {
         tieneEstrategia: true,
       } });
     }
-    if (ruta.endsWith('/asesor/pieza')) return route.fulfill({ json: { pieza: cuerpo.tarjetaId === 'bolo-setlist' ? CARRUSEL : PIEZA } });
+    if (ruta.endsWith('/asesor/pieza')) return route.fulfill({ json: { pieza: cuerpo.tarjetaId === 'bolo-setlist' ? CARRUSEL : cuerpo.tarjetaId === 'bolo-encuesta' ? STORIES : PIEZA } });
     if (ruta.endsWith('/asesor/accion')) {
       if (cuerpo.accion === 'hecho') servidor.hechas.add(cuerpo.tarjetaId);
       if (cuerpo.accion === 'saltado') servidor.saltadas.add(cuerpo.tarjetaId);
@@ -117,23 +137,93 @@ test('«hoy no, otra idea» salta la idea y sube la siguiente', async ({ page })
   await expect(recomendadas.getByText('Stories con cuenta atrás')).toBeVisible();
 });
 
-test('un carrusel sale ya hecho imagen: 4 láminas, colores a elegir y se guardan en un ZIP', async ({ page }) => {
-  await abrirAsesor(page);
+test('un carrusel sale ya hecho imagen: 4 láminas con logo, foto de fondo y colores a elegir, y se guardan en un ZIP', async ({ page }) => {
+  await abrirAsesor(page, { conLogo: true });
   await page.getByRole('button', { name: 'Elegir esta' }).last().click();
   const hoja = page.getByRole('dialog', { name: /Lo que vais a escuchar/ });
   const imagenes = hoja.getByRole('region', { name: 'Imágenes listas para subir' }).getByRole('img');
   await expect(imagenes).toHaveCount(4, { timeout: 15_000 }); // portada + 2 slides + cierre
   await expect(imagenes.first()).toHaveAttribute('alt', /Lo que vais a escuchar el sábado/);
-  await page.screenshot({ path: 'test-results/asesor-carrusel.png' });
 
+  // Las imágenes a tamaño real (1080×1350), para revisarlas a ojo.
+  const guardar = async (etiqueta: string) => {
+    const srcs = await imagenes.evaluateAll((els) => els.map((e) => (e as HTMLImageElement).src));
+    for (const [i, src] of srcs.entries()) {
+      const b64 = await page.evaluate(async (u) => {
+        const buf = new Uint8Array(await (await fetch(u)).arrayBuffer());
+        let s = '';
+        buf.forEach((b) => (s += String.fromCharCode(b)));
+        return btoa(s);
+      }, src);
+      fs.mkdirSync('test-results/laminas', { recursive: true });
+      fs.writeFileSync(`test-results/laminas/${etiqueta}-${i + 1}.png`, Buffer.from(b64, 'base64'));
+    }
+  };
+  await guardar('plano');
+
+  // Una foto de la banda detrás de la portada: el texto tiene que seguir leyéndose.
   const antes = await imagenes.first().getAttribute('src');
+  await hoja.getByLabel('Foto de fondo').setInputFiles(path.join(FIXTURES, 'ref.jpg'));
+  await expect(imagenes.first()).not.toHaveAttribute('src', antes!, { timeout: 15_000 });
+  await expect(hoja.getByRole('button', { name: 'Cambiar foto' })).toBeVisible();
+  await guardar('foto');
+
+  // El peor caso: un escenario oscuro con focos blancos justo detrás del texto. Se genera aquí mismo.
+  const escenario = await page.evaluate(() => {
+    const c = document.createElement('canvas');
+    c.width = 1200;
+    c.height = 1500;
+    const x = c.getContext('2d')!;
+    const g = x.createLinearGradient(0, 0, 0, 1500);
+    g.addColorStop(0, '#0b0b14');
+    g.addColorStop(1, '#2a1030');
+    x.fillStyle = g;
+    x.fillRect(0, 0, 1200, 1500);
+    for (const [cx, cy, r] of [[300, 800, 260], [820, 980, 300], [560, 1150, 220], [900, 600, 180]]) {
+      const f = x.createRadialGradient(cx, cy, 10, cx, cy, r);
+      f.addColorStop(0, 'rgba(255,255,255,1)');
+      f.addColorStop(1, 'rgba(255,255,255,0)');
+      x.fillStyle = f;
+      x.fillRect(0, 0, 1200, 1500);
+    }
+    return c.toDataURL('image/jpeg', 0.9).split(',')[1];
+  });
+  await hoja.getByLabel('Foto de fondo').setInputFiles({ name: 'escenario.jpg', mimeType: 'image/jpeg', buffer: Buffer.from(escenario, 'base64') });
+  await page.waitForTimeout(1500);
+  await guardar('escenario');
+
   await hoja.getByRole('radio', { name: 'Amarillo' }).click();
-  await expect(imagenes.first()).not.toHaveAttribute('src', antes!, { timeout: 10_000 });
   await hoja.getByRole('radio', { name: 'Cartel' }).click();
   await expect(imagenes).toHaveCount(4, { timeout: 10_000 });
-  await imagenes.first().screenshot({ path: 'test-results/asesor-lamina-portada.png' });
+  await page.waitForTimeout(1500);
+  await guardar('amarillo-cartel');
+  await page.screenshot({ path: 'test-results/asesor-carrusel.png' });
 
   const descarga = page.waitForEvent('download');
   await hoja.getByRole('button', { name: 'Guardar las 4 imágenes' }).click();
   expect((await descarga).suggestedFilename()).toMatch(/carrusel\.zip$/);
+});
+
+test('unas stories salen en 1080×1920 con la zona segura de Instagram libre', async ({ page }) => {
+  await abrirAsesor(page, { conLogo: true });
+  await page.getByRole('button', { name: 'Elegir esta' }).first().click();
+  const hoja = page.getByRole('dialog', { name: /Stories con cuenta atrás/ });
+  const imagenes = hoja.getByRole('region', { name: 'Imágenes listas para subir' }).getByRole('img');
+  await expect(imagenes).toHaveCount(3, { timeout: 15_000 });
+  await hoja.getByRole('radio', { name: 'Cartel' }).click();
+  await page.waitForTimeout(1500);
+  const srcs = await imagenes.evaluateAll((els) => els.map((e) => (e as HTMLImageElement).src));
+  fs.mkdirSync('test-results/laminas', { recursive: true });
+  for (const [i, src] of srcs.entries()) {
+    const { b64, w, h } = await page.evaluate(async (u) => {
+      const blob = await (await fetch(u)).blob();
+      const bmp = await createImageBitmap(blob);
+      const buf = new Uint8Array(await blob.arrayBuffer());
+      let s = '';
+      buf.forEach((b) => (s += String.fromCharCode(b)));
+      return { b64: btoa(s), w: bmp.width, h: bmp.height };
+    }, src);
+    expect([w, h]).toEqual([1080, 1920]);
+    fs.writeFileSync(`test-results/laminas/stories-${i + 1}.png`, Buffer.from(b64, 'base64'));
+  }
 });

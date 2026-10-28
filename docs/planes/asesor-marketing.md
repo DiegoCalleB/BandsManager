@@ -115,7 +115,7 @@ UI siguiendo la skill `visual-identity` (Espectro) y con color de módulo propio
 - [x] `Hecho` / `Saltar` (tabla `asesor_acciones`) y aprendizaje: el formato que una banda salta más de lo que hace baja puestos (sin tocar los hitos del bolo).
 - [x] La semana en la Onda y e2e a 390 px en los tres temas (`e2e/asesor.spec.ts`).
 - [ ] Evento de Facebook como formato propio (hoy el post de Instagram cubre el anuncio).
-- [ ] Render PNG de stories y carruseles con el ADN visual (fase 2b).
+- [x] Las stories y los carruseles salen ya como imágenes (1080×1350 y 1080×1920) con el ADN visual: colores y logo de la banda, letra a elegir, foto de fondo opcional por imagen con la legibilidad garantizada, y un ritmo distinto para portada, pasos y cierre (`src/utils/asesor/laminas.ts`, `renderLaminas.ts`). Se pintan en el navegador: no cuestan IA y las fotos no salen del dispositivo.
 
 ### Fase 3 · El bucle
 - [ ] Métricas para todos los formatos y resumen semanal unificado.

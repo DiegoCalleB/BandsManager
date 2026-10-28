@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 // Las letras de cartel (Anton y DM Serif): solo se cargan con esta parte del asesor.
 import '@fontsource/anton/latin-400.css';
 import '@fontsource/dm-serif-display/latin-400.css';
-import { Download } from 'lucide-react';
+import { Download, ImagePlus, X } from 'lucide-react';
 import { Button, Skeleton } from '../ui';
 import { VOCES, VOCES_CARTEL } from '../../utils/cartel/voces';
 import { MEDIDAS, type FormatoLamina } from '../../utils/asesor/laminas';
@@ -16,13 +16,28 @@ interface Props {
 }
 
 /**
- * Las stories o el carrusel ya hechos imagen: se eligen colores y letra y se guardan o comparten.
- * El color de cada muestra sale de la paleta (es obra, no interfaz), por eso va en `style`.
+ * Las stories o el carrusel ya hechos imagen: cada una puede llevar una foto de la banda detrás, se
+ * eligen colores y letra y se guardan o comparten. El color de cada muestra sale de la paleta (es
+ * obra, no interfaz), por eso va en `style`.
  */
 export function LaminasPieza({ pieza, formato, banda }: Props) {
   const l = useLaminas(pieza, formato, banda);
   const { ancho, alto } = MEDIDAS[formato];
+  const entrada = useRef<HTMLInputElement>(null);
+  const destino = useRef(0);
+  const [aviso, setAviso] = useState<string | null>(null);
   if (!l.laminas.length) return null;
+
+  const elegirFoto = (i: number) => {
+    destino.current = i;
+    entrada.current?.click();
+  };
+  const alElegir = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const archivo = e.target.files?.[0];
+    e.target.value = '';
+    if (archivo) setAviso(await l.ponerFoto(destino.current, archivo));
+  };
+  const proporcion = { aspectRatio: `${ancho} / ${alto}` };
 
   return (
     <section className="grid gap-3" aria-label="Imágenes listas para subir">
@@ -31,15 +46,28 @@ export function LaminasPieza({ pieza, formato, banda }: Props) {
         <span className="text-xs text-[var(--ink-2)] tabular-nums">{l.laminas.length} · {ancho}×{alto}</span>
       </div>
 
-      <div className="flex gap-3 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
-        {l.urls.length
-          ? l.urls.map((u, i) => (
-              <img key={u} src={u} alt={`Imagen ${i + 1} de ${l.urls.length}: ${l.laminas[i]?.texto ?? ''}`}
-                className="h-56 w-auto shrink-0 rounded-[var(--r-s)]" style={{ aspectRatio: `${ancho} / ${alto}` }} />
-            ))
-          : l.laminas.map((x) => <Skeleton key={x.numero} radius="s" className="h-56 shrink-0" style={{ aspectRatio: `${ancho} / ${alto}` }} />)}
+      <input ref={entrada} type="file" accept="image/*" className="sr-only" aria-label="Foto de fondo" onChange={alElegir} />
+      <div className="flex shrink-0 gap-3 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
+        {l.laminas.map((lam, i) => (
+          <figure key={lam.numero} className="grid shrink-0 gap-1.5">
+            {l.urls[i]
+              ? <img src={l.urls[i]} alt={`Imagen ${i + 1} de ${l.laminas.length}: ${lam.texto}`} className="h-56 w-auto rounded-[var(--r-s)]" style={proporcion} />
+              : <Skeleton radius="s" className="h-56" style={proporcion} />}
+            <div className="flex items-center justify-center gap-1">
+              <Button size="xs" variant="ghost" onClick={() => elegirFoto(i)}>
+                <ImagePlus className="size-3.5" aria-hidden />
+                {l.tieneFoto(i) ? 'Cambiar foto' : 'Poner foto'}
+              </Button>
+              {l.tieneFoto(i) && (
+                <Button size="xs" variant="ghost" aria-label={`Quitar la foto de la imagen ${i + 1}`} onClick={() => l.quitarFoto(i)}>
+                  <X className="size-3.5" aria-hidden />
+                </Button>
+              )}
+            </div>
+          </figure>
+        ))}
       </div>
-      {l.error && <p role="alert" className="text-sm text-[var(--alert)]">{l.error}</p>}
+      {(aviso || l.error) && <p role="alert" className="text-sm text-[var(--alert)]">{aviso ?? l.error}</p>}
 
       <div className="flex flex-wrap items-center gap-2" role="radiogroup" aria-label="Colores">
         {l.paletas.map((p) => (

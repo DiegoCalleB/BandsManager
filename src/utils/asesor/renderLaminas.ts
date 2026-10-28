@@ -11,7 +11,6 @@
 import { medirLuz, decidirTinta, type Tinta } from '../cartel/contraste';
 import { dibujarFondoImagen } from '../cartel/arteCanvas';
 import { aplicarGrano, semillaDeTexto } from '../cartel/grano';
-import { tintarLogo } from '../cartel/logos';
 import { canvasABlob, prepararFuentes, TINTAS } from '../cartel/render';
 import { ajustarLineas } from '../cartel/texto';
 import { velar } from '../cartel/velo';
@@ -20,6 +19,8 @@ import { MEDIDAS, alturasOnda, disenoDe, type DisenoLaminas, type FormatoLamina,
 
 const ONEST = '"Onest Variable", Onest, system-ui, sans-serif';
 const MAX_LINEAS = 7;
+/** Avance entre líneas por letra. La de cartel va en mayúsculas con tildes: necesita aire para que no choquen. */
+const INTERLINEA: Record<VozCartel, number> = { moderna: 1.06, cartel: 1.18, clasica: 1.1 };
 const BARRAS = 25;
 
 const fuenteVoz = (voz: VozCartel, px: number) => `${VOCES[voz].peso} ${Math.round(px)}px ${VOCES[voz].familia}, ${ONEST}`;
@@ -53,14 +54,38 @@ function flecha(ctx: CanvasRenderingContext2D, x: number, y: number, largo: numb
   ctx.restore();
 }
 
+/**
+ * Reparte el texto en las mismas líneas pero más parejas: «Entradas en la / bio» pasa a «Entradas /
+ * en la bio». Busca el ancho más estrecho que no añade ninguna línea.
+ */
+function equilibrar(ctx: CanvasRenderingContext2D, texto: string, ancho: number): string[] {
+  const medir = (t: string) => ctx.measureText(t).width;
+  const lineas = ajustarLineas(texto, ancho, medir);
+  if (lineas.length < 2) return lineas;
+  let lo = ancho * 0.45;
+  let hi = ancho;
+  let mejor = lineas;
+  for (let i = 0; i < 14; i++) {
+    const medio = (lo + hi) / 2;
+    const prueba = ajustarLineas(texto, medio, medir);
+    if (prueba.length <= lineas.length && prueba.every((l) => medir(l) <= ancho)) {
+      mejor = prueba;
+      hi = medio;
+    } else {
+      lo = medio;
+    }
+  }
+  return mejor;
+}
+
 /** El texto grande más grande que quepa: baja el cuerpo hasta que las líneas caben en ancho y alto. */
 function encajarTexto(ctx: CanvasRenderingContext2D, texto: string, voz: VozCartel, ancho: number, alto: number, maxPx: number) {
   for (let px = maxPx; px >= 40; px -= 4) {
     ctx.font = fuenteVoz(voz, px);
     const lineas = ajustarLineas(texto, ancho, (t) => ctx.measureText(t).width);
-    const interlinea = px * Math.max(1.02, VOCES[voz].interlinea + 0.08);
+    const interlinea = px * INTERLINEA[voz];
     if (lineas.length <= MAX_LINEAS && lineas.length * interlinea <= alto && lineas.every((l) => ctx.measureText(l).width <= ancho)) {
-      return { px, lineas, interlinea };
+      return { px, lineas: equilibrar(ctx, texto, ancho), interlinea };
     }
   }
   ctx.font = fuenteVoz(voz, 40);
@@ -114,7 +139,11 @@ export function pintarLamina(canvas: HTMLCanvasElement, lamina: Lamina, opc: Opc
   const numeral = numeroPaso ? 300 * u : 0;
   const { px, lineas, interlinea } = encajarTexto(ctx, mayus(lamina.texto), voz, m.ancho - 2 * margen, suelo - techo - numeral, maxPx);
   const altoBloque = lineas.length * interlinea;
-  const yTexto = suelo - altoBloque;
+  // El cierre lleva la flecha debajo y las stories dejan sitio a los stickers: van centrados.
+  // Portada y pasos de un carrusel se apoyan abajo, como un cartel.
+  const altoAccion = cierre ? 138 * u : 0;
+  const centrar = cierre || formato === 'stories';
+  const yTexto = centrar ? techo + (suelo - techo - altoBloque - altoAccion) / 2 : suelo - altoBloque;
 
   // 3 · Con foto: la tinta y el velo justos para que el texto se lea (4,5:1), como en Cartelería.
   let tinta = d.tinta;
@@ -130,6 +159,9 @@ export function pintarLamina(canvas: HTMLCanvasElement, lamina: Lamina, opc: Opc
     tinta = t.tinta === 'clara' ? TINTAS.clara : TINTAS.oscura;
   }
 
+  // Lo pequeño (contador, «deslizar») va en el acento sobre color y en la tinta legible sobre foto.
+  const detalle = foto ? tinta : d.acento;
+
   // 4 · La firma: la Onda de la banda a sangre por abajo.
   const alturas = alturasOnda(`${banda}|${lamina.texto}`, BARRAS);
   const paso = m.ancho / BARRAS;
@@ -144,9 +176,9 @@ export function pintarLamina(canvas: HTMLCanvasElement, lamina: Lamina, opc: Opc
   // 5 · Cabecera: la banda en una píldora (portada y cierre) o el contador, y el logo a la derecha.
   ctx.textBaseline = 'middle';
   const yCab = arriba + 32 * u;
-  if (lamina.papel === 'paso' || (formato === 'stories' && lamina.papel !== 'cierre')) {
+  if (numeroPaso === null && (lamina.papel === 'paso' || (formato === 'stories' && lamina.papel !== 'cierre'))) {
     ctx.font = fuenteOnest(700, 38 * u);
-    ctx.fillStyle = d.acento;
+    ctx.fillStyle = detalle;
     ctx.fillText(`${lamina.numero}/${lamina.total}`, margen, yCab);
   } else {
     ctx.font = fuenteOnest(700, 30 * u);
@@ -162,21 +194,29 @@ export function pintarLamina(canvas: HTMLCanvasElement, lamina: Lamina, opc: Opc
     ctx.restore();
   }
   if (logo) {
-    try {
-      const sil = tintarLogo(logo.img, logo.url, tinta);
-      const k = Math.min((130 * u) / sil.height, (260 * u) / sil.width);
-      ctx.drawImage(sil, m.ancho - margen - sil.width * k, yCab - (sil.height * k) / 2, sil.width * k, sil.height * k);
-    } catch (e) {
-      console.warn('[Asesor] No se pudo pintar el logo; la lámina sale sin él:', e);
-    }
+    // En color y sobre una placa clara: un logo con detalle convertido en silueta sería un borrón.
+    const alto = 120 * u;
+    const k = Math.min((alto - 28 * u) / logo.img.height, (260 * u) / logo.img.width);
+    const w = logo.img.width * k;
+    const h = logo.img.height * k;
+    const placa = w + 28 * u;
+    ctx.fillStyle = TINTAS.clara;
+    rectRedondeado(ctx, m.ancho - margen - placa, yCab - alto / 2, placa, alto, 26 * u);
+    ctx.fill();
+    ctx.drawImage(logo.img, m.ancho - margen - placa + 14 * u, yCab - h / 2, w, h);
   }
 
   // 6 · El número de la slide, gigante, en el acento.
   ctx.textBaseline = 'top';
   if (numeroPaso) {
     ctx.font = fuenteVoz(voz, 430 * u);
-    ctx.fillStyle = foto ? tinta : d.acento;
-    ctx.fillText(String(numeroPaso), margen - 14 * u, techo - 26 * u);
+    ctx.fillStyle = detalle;
+    // Se apoya por la línea base: cada letra de cartel tiene otra altura y así nunca pisa la cabecera.
+    // La altura se mide con la misma línea base con la que se pinta.
+    ctx.textBaseline = 'alphabetic';
+    const cima = ctx.measureText(String(numeroPaso)).actualBoundingBoxAscent;
+    ctx.fillText(String(numeroPaso), margen - 10 * u, techo + 8 * u + cima);
+    ctx.textBaseline = 'top';
   }
 
   // 7 · El texto.
@@ -191,20 +231,20 @@ export function pintarLamina(canvas: HTMLCanvasElement, lamina: Lamina, opc: Opc
   // 8 · La acción del cierre y la invitación a deslizar.
   if (cierre) {
     const alto = 108 * u;
-    ctx.fillStyle = foto ? tinta : d.acento === d.fondo ? tinta : tinta;
+    ctx.fillStyle = tinta;
     rectRedondeado(ctx, margen, y + 30 * u, 230 * u, alto, alto / 2);
     ctx.fill();
     flecha(ctx, margen + 62 * u, y + 30 * u + alto / 2, 106 * u, 10 * u, foto ? (tinta === TINTAS.clara ? TINTAS.oscura : TINTAS.clara) : d.fondo);
   } else if (invita) {
     ctx.font = fuenteOnest(700, 34 * u);
-    ctx.fillStyle = d.acento;
+    ctx.fillStyle = detalle;
     ctx.textBaseline = 'middle';
     const t = 'DESLIZA';
     (ctx as CanvasRenderingContext2D & { letterSpacing?: string }).letterSpacing = `${(3 * u).toFixed(1)}px`;
     const w = ctx.measureText(t).width;
     ctx.fillText(t, m.ancho - margen - w - 90 * u, suelo + 40 * u);
     (ctx as CanvasRenderingContext2D & { letterSpacing?: string }).letterSpacing = '0px';
-    flecha(ctx, m.ancho - margen - 70 * u, suelo + 40 * u, 70 * u, 7 * u, d.acento);
+    flecha(ctx, m.ancho - margen - 70 * u, suelo + 40 * u, 70 * u, 7 * u, detalle);
   }
 
   // 9 · Un poco de grano: que parezca impreso, no un rectángulo de color.

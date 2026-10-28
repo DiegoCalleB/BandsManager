@@ -22,7 +22,6 @@ Pinta las láminas de una pieza en canvas. Es la única pieza con DOM de las lá
 - [[src_utils_cartel_arteCanvas|src/utils/cartel/arteCanvas.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_contraste|src/utils/cartel/contraste.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_grano|src/utils/cartel/grano.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_cartel_logos|src/utils/cartel/logos.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_render|src/utils/cartel/render.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_texto|src/utils/cartel/texto.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_velo|src/utils/cartel/velo.ts]] *(Layer: #service, Domain: #system)*
