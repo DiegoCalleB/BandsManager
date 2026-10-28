@@ -93,3 +93,40 @@ test('las plantillas de autor son un respaldo: no están por defecto y salen si 
   await expect(page.getByLabel('Carteles de autor')).toBeVisible();
   await expect(page.getByLabel('Retocar el fondo')).toHaveCount(0);
 });
+
+test('ajustar el texto a mano: arrastrar un bloque, escalarlo y volver al automático', async ({ page }) => {
+  const { peticiones } = await abrirCarteleria(page);
+  const antes = await cartel(page);
+  await page.getByRole('button', { name: 'Ajustar el texto' }).click();
+  const nombre = page.getByRole('button', { name: 'Mover Nombre' });
+  await expect(nombre).toBeVisible();
+  const caja = (await nombre.boundingBox())!;
+  await page.mouse.move(caja.x + caja.width / 2, caja.y + caja.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(caja.x + caja.width / 2 + 40, caja.y + caja.height / 2 - 60, { steps: 6 });
+  await page.mouse.up();
+  await expect.poll(() => cartel(page), { timeout: 10_000 }).not.toBe(antes);
+  await expect.poll(() => peticiones.some((p) => p.ruta.endsWith('/config') && JSON.parse(p.cuerpo.toString()).ajustesFinos?.feed?.nombre), { timeout: 8_000 }).toBe(true);
+
+  const movido = await cartel(page);
+  await page.getByRole('button', { name: 'Más grande' }).click();
+  await expect.poll(() => cartel(page), { timeout: 10_000 }).not.toBe(movido);
+
+  await page.getByRole('button', { name: 'Volver al automático' }).click();
+  await expect.poll(() => cartel(page), { timeout: 10_000 }).toBe(antes);
+  await expect.poll(() => peticiones.filter((p) => p.ruta.endsWith('/config')).some((p) => !JSON.parse(p.cuerpo.toString()).ajustesFinos?.feed), { timeout: 8_000 }).toBe(true);
+});
+
+test('editar el nombre y el lugar del cartel repinta y se guarda sin tocar el bolo', async ({ page }) => {
+  const { peticiones } = await abrirCarteleria(page);
+  const antes = await cartel(page);
+  await abrirAjustes(page);
+  await page.getByLabel('Nombre en el cartel').fill('Los Hijos del Toro');
+  await page.getByLabel('Lugar en el cartel').fill('Teatro Lara');
+  await expect.poll(() => cartel(page), { timeout: 10_000 }).not.toBe(antes);
+  await expect
+    .poll(() => peticiones.some((p) => p.ruta.endsWith('/config') && JSON.parse(p.cuerpo.toString()).textos?.nombre === 'Los Hijos del Toro' && JSON.parse(p.cuerpo.toString()).textos?.lugar === 'Teatro Lara'), { timeout: 8_000 })
+    .toBe(true);
+  // El bolo no se ha tocado: solo el PUT de la configuración del cartel.
+  expect(peticiones.some((p) => /\/api\/concerts?\//.test(p.ruta) && p.metodo !== 'GET')).toBe(false);
+});

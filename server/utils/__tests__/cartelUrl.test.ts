@@ -69,7 +69,7 @@ describe('sanearConfigCartel', () => {
 
   it('recorta textos y quita caracteres de control', () => {
     const c = sanearConfigCartel({ extra: 'a\u0000b'.repeat(50), cabeza: '  Banda\n ' }, valida('band-a'))!;
-    expect(c.extra.length).toBeLessThanOrEqual(40);
+    expect(c.extra.length).toBeLessThanOrEqual(60);
     expect(c.extra.includes(String.fromCharCode(0))).toBe(false);
     expect(c.cabeza).toBe('Banda');
   });

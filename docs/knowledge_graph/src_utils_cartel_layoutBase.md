@@ -18,6 +18,7 @@ Piezas comunes del layout del cartel: tipos, el reparto del nombre en líneas, l
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_utils_cartel_ajustesFinos|src/utils/cartel/ajustesFinos.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_formatos|src/utils/cartel/formatos.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_texto|src/utils/cartel/texto.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_voces|src/utils/cartel/voces.ts]] *(Layer: #service, Domain: #system)*
@@ -25,6 +26,7 @@ Piezas comunes del layout del cartel: tipos, el reparto del nombre en líneas, l
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_utils_cartel_ajustesFinos|src/utils/cartel/ajustesFinos.ts]] *(from #service)*
 - [[src_utils_cartel_composiciones|src/utils/cartel/composiciones.ts]] *(from #service)*
 - [[src_utils_cartel_layout|src/utils/cartel/layout.ts]] *(from #service)*
 

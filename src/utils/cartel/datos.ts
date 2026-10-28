@@ -9,6 +9,7 @@
 import type { Concert } from '../../types';
 import type { BandaCartel, DatosCartel } from './layout';
 import { fechaCartel, lineaHorario } from './texto';
+import { MAX_EXTRA } from './config';
 
 export const TODAS = '@todas';
 
@@ -17,6 +18,8 @@ export interface AjustesTexto {
   extra: string;
   horario: boolean;
   direccion?: boolean;
+  /** El nombre y el lugar que la persona escribió a mano (vacío = los del bolo). */
+  textos?: { nombre: string; lugar: string };
 }
 
 const clave = (s: string) => s.trim().toLocaleLowerCase('es');
@@ -48,14 +51,19 @@ export function construirLineup(nombres: string[], cabeza: string | null): Banda
 
 export function datosDesdeConcierto(c: Concert, banda: string, ajustes: AjustesTexto): DatosCartel {
   const lt = c.logisticaTecnica;
+  const nombreEscrito = ajustes.textos?.nombre.trim() ?? '';
+  const lugarEscrito = ajustes.textos?.lugar.trim() ?? '';
+  // Lo escrito a mano sustituye al nombre de NUESTRA banda en el lineup (las demás se quedan) y al lugar del bolo.
+  const nombres = bandasDelBolo(c, banda).map((n, i) => (i === 0 && nombreEscrito ? nombreEscrito : n));
+  const cabeza = ajustes.cabeza && nombreEscrito && ajustes.cabeza.trim().toLocaleLowerCase('es') === banda.trim().toLocaleLowerCase('es') ? nombreEscrito : ajustes.cabeza;
   return {
-    lineup: construirLineup(bandasDelBolo(c, banda), ajustes.cabeza),
+    lineup: construirLineup(nombres, cabeza),
     fecha: fechaCartel(c.fecha),
     horario: ajustes.horario ? lineaHorario(lt?.horaAperturaPuertas, lt?.horaShow) : '',
-    sala: (c.sala || '').trim(),
-    ciudad: (c.ciudad || '').trim(),
+    sala: lugarEscrito || (c.sala || '').trim(),
+    ciudad: lugarEscrito ? '' : (c.ciudad || '').trim(),
     direccion: ajustes.direccion ? (c.direccion || '').trim().slice(0, 70) : '',
-    extra: ajustes.extra.trim().slice(0, 40),
+    extra: ajustes.extra.trim().slice(0, MAX_EXTRA),
   };
 }
 

@@ -3374,7 +3374,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:413",
+        "x-source": "server/routes/cartelria.ts:414",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -3412,7 +3412,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:424",
+        "x-source": "server/routes/cartelria.ts:425",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -3453,7 +3453,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:394",
+        "x-source": "server/routes/cartelria.ts:395",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"
@@ -3493,7 +3493,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:121",
+        "x-source": "server/routes/cartelria.ts:122",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "imagenRateLimiter"
@@ -3533,7 +3533,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:369",
+        "x-source": "server/routes/cartelria.ts:370",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "ficherosRateLimiter"
@@ -3571,7 +3571,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:384",
+        "x-source": "server/routes/cartelria.ts:385",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -3611,7 +3611,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:440",
+        "x-source": "server/routes/cartelria.ts:441",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "ficherosRateLimiter"
@@ -3652,7 +3652,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:202",
+        "x-source": "server/routes/cartelria.ts:203",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "imagenRateLimiter"
@@ -3700,7 +3700,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:255",
+        "x-source": "server/routes/cartelria.ts:256",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -3748,7 +3748,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:290",
+        "x-source": "server/routes/cartelria.ts:291",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "ficherosRateLimiter"
@@ -3796,7 +3796,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:268",
+        "x-source": "server/routes/cartelria.ts:269",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "ficherosRateLimiter"
@@ -3844,7 +3844,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:313",
+        "x-source": "server/routes/cartelria.ts:314",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "ficherosRateLimiter"
@@ -3891,7 +3891,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:347",
+        "x-source": "server/routes/cartelria.ts:348",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"

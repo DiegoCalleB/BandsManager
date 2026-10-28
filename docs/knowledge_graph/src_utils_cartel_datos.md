@@ -19,6 +19,7 @@ Del bolo a los datos del cartel. Puro.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_cartel_config|src/utils/cartel/config.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_layout|src/utils/cartel/layout.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_texto|src/utils/cartel/texto.ts]] *(Layer: #service, Domain: #system)*
 
