@@ -23,7 +23,7 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-_Sin llamadas entrantes indexadas._
+- [[src_utils_asesor_resumen|src/utils/asesor/resumen.ts]] *(from #service)*
 
 ---
 

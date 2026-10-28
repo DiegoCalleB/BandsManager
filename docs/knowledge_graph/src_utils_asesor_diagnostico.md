@@ -34,6 +34,7 @@ El diagnóstico diario del asesor: en qué momento está la banda (modo). Qué p
 ## 🧪 Tests que lo cubren
 - `src/utils/asesor/__tests__/diagnostico.test.ts`
 - `src/utils/asesor/__tests__/opciones.test.ts`
+- `src/utils/asesor/__tests__/resumen.test.ts`
 
 ---
 

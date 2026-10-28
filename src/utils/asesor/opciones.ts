@@ -10,16 +10,10 @@ import { diasEntre, planificarCampana } from '../campanaConcierto';
 import type { Diagnostico } from './diagnostico';
 import type { EstrategiaMarketing, HorasSemana } from './estrategia';
 import type { Formato, Red, TipoContenido } from './reglasFormato';
+import { impulsoPorFormato, type ResultadoPieza } from './resumen';
+import type { AccionRegistrada } from './tipos';
 
-export type Accion = 'hecho' | 'saltado';
-
-export interface AccionRegistrada {
-  /** AAAA-MM-DD. */
-  fecha: string;
-  tarjetaId: string;
-  formato: Formato;
-  accion: Accion;
-}
+export type { Accion, AccionRegistrada } from './tipos';
 
 export interface Tarjeta {
   id: string;
@@ -168,15 +162,17 @@ export function penalizacionPorFormato(historial: AccionRegistrada[], hoy: strin
   return pen;
 }
 
-export function opcionesDeHoy(d: Diagnostico, e: EstrategiaMarketing, hoy: string, historial: AccionRegistrada[] = []): OpcionesDeHoy {
+export function opcionesDeHoy(d: Diagnostico, e: EstrategiaMarketing, hoy: string, historial: AccionRegistrada[] = [], resultados: ResultadoPieza[] = []): OpcionesDeHoy {
   const deHoy = historial.filter((a) => a.fecha === hoy);
   const saltadas = new Set(deHoy.filter((a) => a.accion === 'saltado').map((a) => a.tarjetaId));
   const hechas = new Set(deHoy.filter((a) => a.accion === 'hecho').map((a) => a.tarjetaId));
   const pen = penalizacionPorFormato(historial, hoy);
+  // Lo que ha dado cada formato de verdad (guardados y alcance) pesa tanto como lo que la banda salta.
+  const impulso = impulsoPorFormato(resultados, hoy);
 
   const ordenadas = ideasDeHoy(d, e, hoy)
     .filter((i) => !saltadas.has(i.id))
-    .map((i, orden) => ({ i, orden, puntos: i.base - (pen[i.formato] ?? 0) }))
+    .map((i, orden) => ({ i, orden, puntos: i.base - (pen[i.formato] ?? 0) + (impulso[i.formato] ?? 0) }))
     .sort((a, b) => b.puntos - a.puntos || a.orden - b.orden)
     .map(({ i: { base: _base, atajo, ...resto } }): Tarjeta => ({ ...resto, atajo: atajo ?? null, esfuerzoMin: ESFUERZO_MIN[resto.formato], hecha: hechas.has(resto.id) }));
 

@@ -39,6 +39,7 @@ _Sin dependencias salientes directas._
 - `src/utils/asesor/__tests__/estrategia.test.ts`
 - `src/utils/asesor/__tests__/opciones.test.ts`
 - `src/utils/asesor/__tests__/pieza.test.ts`
+- `src/utils/asesor/__tests__/resumen.test.ts`
 
 ---
 

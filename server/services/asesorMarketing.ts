@@ -8,7 +8,7 @@ import { getAiClient, generateContentWithFallback } from '../ai.js';
 import { safeParseJson } from '../utils.js';
 import { dbGetEpkConfig, dbGetRegisteredBandById } from '../db.js';
 import { dbGetConcerts } from '../db/concerts.js';
-import { dbAccionesDesde, dbGetEstrategiaMarketing, dbGuardarAccion, dbUltimaPublicacion } from '../db/asesorMarketing.js';
+import { dbAccionesDesde, dbGetEstrategiaMarketing, dbGuardarAccion, dbGuardarResultado, dbResultadosDesde, dbUltimaPublicacion } from '../db/asesorMarketing.js';
 import { esConciertoPublicable, hoyIso } from '../utils/paginaConcierto.js';
 import { sanitizeExternalText } from '../utils/promptSafety.js';
 import { buildBandContextBlock, emptyBandProfile, loadBandProfile, type BandProfile } from '../utils/bandProfile.js';
@@ -18,6 +18,9 @@ import {
   DIAS_APRENDIZAJE, buscarTarjeta, opcionesDeHoy, semana, type Accion, type OpcionesDeHoy,
 } from '../../src/utils/asesor/opciones.js';
 import { promptPieza, sanearPieza, type Pieza } from '../../src/utils/asesor/pieza.js';
+import {
+  porMedir, resumenDe, sanearMedidas, tituloDe, lecturaDe, type PorMedir, type Resumen,
+} from '../../src/utils/asesor/resumen.js';
 import { bloqueVozAprendida, terminosProhibidosEn, vozAprendidaDe } from '../../src/utils/asesor/vozAprendida.js';
 import {
   CAMARAS, ESTRATEGIA_INICIAL, ETAPAS, HORAS, OBJETIVOS, sanearEstrategia, type EstrategiaMarketing,
@@ -29,6 +32,10 @@ export interface EstadoAsesor {
   opciones: OpcionesDeHoy;
   /** Piezas hechas cada uno de los últimos 7 días. */
   semana: Array<{ fecha: string; hechas: number }>;
+  /** Publicadas hace 2 días o más que esperan sus números. */
+  porMedir: PorMedir[];
+  /** Lo que se ha aprendido de lo medido; null mientras no haya con qué concluir. */
+  resumen: Resumen | null;
   estrategia: EstrategiaMarketing;
   /** false si la banda aún no ha guardado ninguna estrategia: la pantalla le propone empezar por ahí. */
   tieneEstrategia: boolean;
@@ -65,11 +72,14 @@ async function contextoDeHoy(bandId: string, ahora: Date): Promise<Contexto | nu
 export async function estadoDeHoy(bandId: string, ahora = new Date()): Promise<EstadoAsesor | null> {
   const ctx = await contextoDeHoy(bandId, ahora);
   if (!ctx) return null;
-  const historial = await dbAccionesDesde(bandId, sumarDias(ctx.hoy, -DIAS_APRENDIZAJE));
+  const desde = sumarDias(ctx.hoy, -DIAS_APRENDIZAJE);
+  const [historial, resultados] = await Promise.all([dbAccionesDesde(bandId, desde), dbResultadosDesde(bandId, desde)]);
   return {
     ...ctx,
-    opciones: opcionesDeHoy(ctx.diagnostico, ctx.estrategia, ctx.hoy, historial),
+    opciones: opcionesDeHoy(ctx.diagnostico, ctx.estrategia, ctx.hoy, historial, resultados),
     semana: semana(historial, ctx.hoy),
+    porMedir: porMedir(historial, resultados, ctx.hoy),
+    resumen: resumenDe(resultados, ctx.hoy),
   };
 }
 
@@ -83,7 +93,37 @@ export async function registrarAccion(bandId: string, tarjetaId: unknown, accion
   if (!ctx) return 'sin_bd';
   const tarjeta = buscarTarjeta(ctx.diagnostico, ctx.estrategia, ctx.hoy, tarjetaId);
   if (!tarjeta) return 'no_existe';
-  return (await dbGuardarAccion(bandId, ctx.hoy, tarjeta.id, tarjeta.formato, accion)) ? 'ok' : 'sin_bd';
+  return (await dbGuardarAccion(bandId, ctx.hoy, tarjeta.id, tarjeta.formato, accion, tarjeta.titulo)) ? 'ok' : 'sin_bd';
+}
+
+/* ----------------------------------------------------------------- cómo le fue a cada pieza */
+
+export type ResultadoMedida = { estado: 'ok'; titulo: string; veredicto: string; mensaje: string } | { estado: 'no_existe' } | { estado: 'sin_bd' } | { estado: 'invalido'; motivo: string };
+
+const FECHA_ISO = /^\d{4}-\d{2}-\d{2}$/;
+
+/**
+ * Anota los números de una pieza ya publicada. El cliente solo dice cuál (día e id) y los números:
+ * el formato y el título salen de la acción «hecho» guardada, y sin esa acción no se anota nada.
+ */
+export async function registrarResultado(
+  bandId: string,
+  datos: { fecha?: unknown; tarjetaId?: unknown; alcance?: unknown; guardados?: unknown; alcanceNoSeguidores?: unknown },
+  ahora = new Date()
+): Promise<ResultadoMedida> {
+  const medidas = sanearMedidas(datos);
+  if (typeof medidas === 'string') return { estado: 'invalido', motivo: medidas };
+  if (typeof datos.fecha !== 'string' || !FECHA_ISO.test(datos.fecha) || typeof datos.tarjetaId !== 'string') return { estado: 'no_existe' };
+
+  const hoy = hoyIso(ahora);
+  const acciones = await dbAccionesDesde(bandId, sumarDias(hoy, -DIAS_APRENDIZAJE));
+  const hecha = acciones.find((a) => a.accion === 'hecho' && a.fecha === datos.fecha && a.tarjetaId === datos.tarjetaId);
+  if (!hecha) return { estado: 'no_existe' };
+
+  const titulo = tituloDe(hecha);
+  if (!(await dbGuardarResultado(bandId, { fecha: hecha.fecha, tarjetaId: hecha.tarjetaId, formato: hecha.formato, titulo, ...medidas }))) return { estado: 'sin_bd' };
+  const lectura = lecturaDe(medidas);
+  return { estado: 'ok', titulo, veredicto: lectura.veredicto, mensaje: lectura.mensaje };
 }
 
 /* ----------------------------------------------------------------- la pieza */

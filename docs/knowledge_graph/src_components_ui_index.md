@@ -50,6 +50,8 @@ BandManager UI Component Library
 - [[src_components_asesor_FormEstrategia|src/components/asesor/FormEstrategia.tsx]] *(from #frontend)*
 - [[src_components_asesor_LaminasPieza|src/components/asesor/LaminasPieza.tsx]] *(from #frontend)*
 - [[src_components_asesor_PiezaSheet|src/components/asesor/PiezaSheet.tsx]] *(from #frontend)*
+- [[src_components_asesor_PorMedirCard|src/components/asesor/PorMedirCard.tsx]] *(from #frontend)*
+- [[src_components_asesor_ResumenCard|src/components/asesor/ResumenCard.tsx]] *(from #frontend)*
 - [[src_components_asesor_TarjetaHoy|src/components/asesor/TarjetaHoy.tsx]] *(from #frontend)*
 - [[src_components_atril_AtrilBody|src/components/atril/AtrilBody.tsx]] *(from #frontend)*
 - [[src_components_atril_AtrilHeader|src/components/atril/AtrilHeader.tsx]] *(from #frontend)*

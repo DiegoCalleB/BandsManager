@@ -13,7 +13,7 @@ tags: ["schema", "tabla", "auto"]
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Tabla de Supabase `asesor_acciones` (7 columnas).
+Tabla de Supabase `asesor_acciones` (8 columnas).
 
 ---
 
@@ -35,8 +35,9 @@ _Sin dependencias salientes directas._
 - `como`
 - `accion`
 - `created_at`
+- `titulo`
 
-**Definida en:** `supabase/migrations/20261123_asesor_acciones.sql`
+**Definida en:** `supabase/migrations/20261123_asesor_acciones.sql`, `supabase/migrations/20261124_asesor_resultados.sql`
 
 ---
 

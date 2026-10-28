@@ -5,12 +5,14 @@
  *  · el plan de hoy ignora bolos privados o sin confirmar y respeta la estrategia guardada;
  *  · la propuesta de la IA nunca se guarda sola, nunca trae líneas rojas ni fechas, y sin IA es un 503 claro;
  *  · pieza y acción solo aceptan ideas de hoy (el cliente manda el id, el formato lo pone el servidor);
- *  · la pieza que devuelve la IA llega saneada.
+ *  · la pieza que devuelve la IA llega saneada;
+ *  · los resultados solo se anotan de una pieza que la banda marcó como hecha: el formato y el título los
+ *    pone el servidor, los números se validan y lo de una banda no se ve ni se pisa desde otra.
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { crearFakeSupabaseTablas } from '../../db/__tests__/helpers/fakeSupabaseTablas';
 
-const fake = crearFakeSupabaseTablas({ band_estrategia_marketing: [['band_id']], asesor_acciones: [['band_id', 'fecha', 'tarjeta_id']] });
+const fake = crearFakeSupabaseTablas({ band_estrategia_marketing: [['band_id']], asesor_acciones: [['band_id', 'fecha', 'tarjeta_id']], asesor_resultados: [['band_id', 'fecha', 'tarjeta_id']] });
 vi.mock('../../db/core.js', async (orig) => ({ ...(await orig<any>()), getSupabase: () => fake.client }));
 vi.mock('../../state.js', async (orig) => ({ ...(await orig<any>()), loadState: () => ({}), saveState: () => {} }));
 const dna = { valor: null as unknown };
@@ -225,5 +227,95 @@ describe('pieza con la voz aprendida de la banda', () => {
     await llamar('post', '/asesor/pieza', { body: { tarjetaId: 'fondo-pilar' } });
     expect(ia.prompts).toHaveLength(1);
     expect(ia.prompts[0]).not.toContain('<voz>');
+  });
+});
+
+describe('resultados de las piezas', () => {
+  const HOY = '2026-10-28T10:00:00Z';
+  const hecha = (extra: Record<string, unknown> = {}) => ({ band_id: 'band-a', fecha: '2026-10-24', tarjeta_id: 'fondo-pilar', formato: 'reel', accion: 'hecho', titulo: 'Tema de la semana: La furgo', ...extra });
+  const anotar = (body: unknown, bandId?: string) => llamar('post', '/asesor/resultado', { body, bandId });
+  const base = { fecha: '2026-10-24', tarjetaId: 'fondo-pilar', alcance: 1000, guardados: 40, alcanceNoSeguidores: 500 };
+
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date(HOY));
+  });
+
+  it('pide los números de lo publicado hace 2 días o más, y deja de pedirlos cuando se anotan', async () => {
+    fake.tablas.asesor_acciones = [hecha(), hecha({ fecha: '2026-10-28', tarjeta_id: 'hoy-mismo' })];
+    const antes = (await llamar('get', '/asesor/hoy')).body;
+    expect(antes.porMedir).toEqual([{ fecha: '2026-10-24', tarjetaId: 'fondo-pilar', formato: 'reel', titulo: 'Tema de la semana: La furgo' }]);
+    expect(antes.resumen).toBeNull();
+
+    const res = await anotar(base);
+    expect(res.body).toMatchObject({ ok: true, titulo: 'Tema de la semana: La furgo', veredicto: 'funciona' });
+    expect((await llamar('get', '/asesor/hoy')).body.porMedir).toEqual([]);
+  });
+
+  it('guarda con el formato y el título del servidor, no con lo que diga el cliente', async () => {
+    fake.tablas.asesor_acciones = [hecha()];
+    await anotar({ ...base, formato: 'post', titulo: 'inventado', band_id: 'band-b' });
+    expect(fake.tablas.asesor_resultados).toHaveLength(1);
+    expect(fake.tablas.asesor_resultados[0]).toMatchObject({ band_id: 'band-a', fecha: '2026-10-24', tarjeta_id: 'fondo-pilar', formato: 'reel', titulo: 'Tema de la semana: La furgo', alcance: 1000, guardados: 40, alcance_no_seguidores: 500 });
+  });
+
+  it('corregir los números sustituye lo anotado, no lo duplica', async () => {
+    fake.tablas.asesor_acciones = [hecha()];
+    await anotar(base);
+    await anotar({ ...base, guardados: 5 });
+    expect(fake.tablas.asesor_resultados).toHaveLength(1);
+    expect(fake.tablas.asesor_resultados[0].guardados).toBe(5);
+  });
+
+  it('rechaza números imposibles con una frase clara y no escribe nada', async () => {
+    fake.tablas.asesor_acciones = [hecha()];
+    for (const malo of [{ ...base, alcance: 0 }, { ...base, guardados: 2000 }, { ...base, alcance: 'mucho' }, { ...base, alcanceNoSeguidores: 5000 }]) {
+      const res = await anotar(malo);
+      expect(res.code).toBe(400);
+      expect(typeof res.body.error).toBe('string');
+    }
+    expect(fake.tablas.asesor_resultados ?? []).toHaveLength(0);
+  });
+
+  it('no anota nada de una pieza que la banda no marcó como hecha, ni de otro día ni de otra banda', async () => {
+    fake.tablas.asesor_acciones = [hecha({ accion: 'saltado' }), hecha({ band_id: 'band-b', tarjeta_id: 'solo-b' })];
+    expect((await anotar(base)).code).toBe(404); // saltada, no hecha
+    fake.tablas.asesor_acciones = [hecha()];
+    expect((await anotar({ ...base, fecha: '2026-10-23' })).code).toBe(404); // otro día
+    expect((await anotar({ ...base, tarjetaId: 'inventada' })).code).toBe(404);
+    expect((await anotar({ ...base, fecha: 'ayer' })).code).toBe(404);
+    expect((await anotar(base, 'band-b')).code).toBe(404); // la acción es de band-a
+    expect(fake.tablas.asesor_resultados ?? []).toHaveLength(0);
+  });
+
+  it('lo anotado por una banda no aparece en el plan de otra', async () => {
+    fake.tablas.asesor_acciones = [hecha(), hecha({ band_id: 'band-b' })];
+    await anotar(base);
+    expect((await llamar('get', '/asesor/hoy', { bandId: 'band-b' })).body.porMedir).toHaveLength(1);
+    expect((await llamar('get', '/asesor/hoy')).body.porMedir).toHaveLength(0);
+  });
+
+  it('con dos formatos medidos el resumen dice cuál funciona, y el plan lo sube', async () => {
+    const dia = (n: number) => `2026-10-${20 + n}`;
+    fake.tablas.asesor_acciones = [
+      hecha({ fecha: dia(0), tarjeta_id: 'a', formato: 'reel', titulo: 'Reel A' }), hecha({ fecha: dia(1), tarjeta_id: 'b', formato: 'reel', titulo: 'Reel B' }),
+      hecha({ fecha: dia(2), tarjeta_id: 'c', formato: 'carrusel', titulo: 'Carrusel C' }), hecha({ fecha: dia(3), tarjeta_id: 'd', formato: 'carrusel', titulo: 'Carrusel D' }),
+    ];
+    const guardados = { a: 5, b: 8, c: 60, d: 70 } as const;
+    for (const id of ['a', 'b', 'c', 'd'] as const) {
+      const f = fake.tablas.asesor_acciones.find((x) => x.tarjeta_id === id)!.fecha;
+      await anotar({ fecha: f, tarjetaId: id, alcance: 1000, guardados: guardados[id], alcanceNoSeguidores: 400 });
+    }
+    await llamar('put', '/asesor/estrategia', { body: { horasSemana: 1 } });
+    const { resumen, opciones } = (await llamar('get', '/asesor/hoy')).body;
+    expect(resumen.formatoGanador.formato).toBe('carrusel');
+    expect(resumen.mensaje).toBe('Los carruseles son lo que más os guardan: 6,5 % de quienes los ven.');
+    expect(opciones.recomendadas[0].formato).toBe('carrusel'); // sin los resultados saldría un reel
+  });
+
+  it('una acción de antes de guardar el título sigue funcionando y se nombra por su formato', async () => {
+    fake.tablas.asesor_acciones = [hecha({ titulo: '' })];
+    const res = await anotar(base);
+    expect(res.body.titulo).toBe('Reel del sábado, 24 de octubre');
   });
 });

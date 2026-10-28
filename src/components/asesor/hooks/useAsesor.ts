@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import { sanearEstrategia, type EstrategiaMarketing } from '../../../utils/asesor/estrategia';
 import type { Pieza } from '../../../utils/asesor/pieza';
+import type { Medidas, PorMedir } from '../../../utils/asesor/resumen';
 import {
-  guardarEstrategia, marcarAccion, obtenerHoyAsesor, prepararPieza, sugerirEstrategia, type AccionAsesor, type EstadoAsesor,
+  guardarEstrategia, guardarResultado, marcarAccion, obtenerHoyAsesor, prepararPieza, sugerirEstrategia, type AccionAsesor, type EstadoAsesor,
 } from '../../../utils/asesorApi';
 
 const mensajeDe = (e: unknown, defecto: string) => (e instanceof Error && e.message ? e.message : defecto);
@@ -21,6 +22,8 @@ export function useAsesor() {
   const [error, setError] = useState<string | null>(null);
   const [guardando, setGuardando] = useState(false);
   const [sugiriendo, setSugiriendo] = useState(false);
+  /** Lo último que se anotó: la lectura de esa pieza, para enseñarla hasta que la banda la cierre. */
+  const [anotado, setAnotado] = useState<{ titulo: string; mensaje: string } | null>(null);
   /** Ideas con una acción en vuelo: sus botones se desactivan para no mandarla dos veces. */
   const [ocupadas, setOcupadas] = useState<ReadonlySet<string>>(new Set());
   // Las piezas se guardan por idea durante la sesión: volver a abrir una no vuelve a pagar la IA.
@@ -77,6 +80,18 @@ export function useAsesor() {
     }
   }, [recargar]);
 
+  /** Anota los números de una pieza. Devuelve el motivo si no se pudo, para enseñarlo junto a los campos. */
+  const medir = useCallback(async (pieza: PorMedir, medidas: Medidas): Promise<string | null> => {
+    try {
+      const r = await guardarResultado(pieza, medidas);
+      setAnotado({ titulo: r.titulo, mensaje: r.mensaje });
+      await recargar();
+      return null;
+    } catch (e) {
+      return mensajeDe(e, 'No se pudo guardar.');
+    }
+  }, [recargar]);
+
   const guardar = useCallback(async (estrategia: EstrategiaMarketing): Promise<boolean> => {
     setGuardando(true);
     setError(null);
@@ -106,5 +121,5 @@ export function useAsesor() {
     }
   }, []);
 
-  return { estado, cargando, error, guardando, sugiriendo, ocupadas, piezas, recargar, preparar, accion, guardar, proponer };
+  return { estado, cargando, error, guardando, sugiriendo, ocupadas, piezas, anotado, cerrarAnotado: () => setAnotado(null), recargar, preparar, accion, medir, guardar, proponer };
 }

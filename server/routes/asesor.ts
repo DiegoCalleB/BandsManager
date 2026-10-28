@@ -2,6 +2,7 @@
 //   GET  /api/asesor/hoy                    modo de hoy, opciones y semana (sin IA).
 //   POST /api/asesor/pieza                  prepara con IA la pieza de una idea de hoy (solo el id).
 //   POST /api/asesor/accion                 hecho / saltado / pendiente de una idea de hoy.
+//   POST /api/asesor/resultado              los números (alcance, guardados) de una pieza ya publicada.
 //   GET  /api/asesor/estrategia             estrategia guardada de la banda.
 //   PUT  /api/asesor/estrategia             la guarda, saneada por lista blanca.
 //   POST /api/asesor/estrategia/sugerir     borrador con IA a partir del perfil; NO se guarda.
@@ -13,7 +14,7 @@ import { getTargetBandId } from '../utils/bandAccess.js';
 import { apiAutenticadaRateLimiter, iaRateLimiter } from '../middleware/rateLimiter.js';
 import { captureError } from '../utils/errorTracking.js';
 import { dbGetEstrategiaMarketing, dbGuardarEstrategiaMarketing } from '../db/asesorMarketing.js';
-import { estadoDeHoy, generarPieza, registrarAccion, sugerirEstrategia } from '../services/asesorMarketing.js';
+import { estadoDeHoy, generarPieza, registrarAccion, registrarResultado, sugerirEstrategia } from '../services/asesorMarketing.js';
 import { ESTRATEGIA_INICIAL, sanearEstrategia } from '../../src/utils/asesor/estrategia.js';
 
 export const asesorRouter = express.Router();
@@ -56,6 +57,18 @@ asesorRouter.post('/asesor/accion', requireAuth, apiAutenticadaRateLimiter, asyn
     res.json({ ok: true });
   } catch (e) {
     fallo(res, 'POST /asesor/accion', e, 'No se pudo guardar.');
+  }
+});
+
+asesorRouter.post('/asesor/resultado', requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
+  try {
+    const r = await registrarResultado(getTargetBandId(req), req.body ?? {});
+    if (r.estado === 'invalido') return res.status(400).json({ error: r.motivo });
+    if (r.estado === 'no_existe') return res.status(404).json({ error: 'No encontramos esa publicación entre las que habéis marcado como hechas.' });
+    if (r.estado === 'sin_bd') return res.status(503).json({ error: 'No se pudo guardar ahora mismo.' });
+    res.json({ ok: true, titulo: r.titulo, veredicto: r.veredicto, mensaje: r.mensaje });
+  } catch (e) {
+    fallo(res, 'POST /asesor/resultado', e, 'No se pudo guardar.');
   }
 });
 

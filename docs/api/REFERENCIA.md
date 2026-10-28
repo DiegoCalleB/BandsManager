@@ -2,7 +2,7 @@
 
 > Generado automáticamente por `scripts/generate-openapi.mjs` a partir del código. No se edita a mano: ejecuta `npm run docs:api`.
 
-**432 rutas HTTP** (381 declaraciones de handler; el resto son alias) en 31 dominios. Contrato máquina-legible: [`openapi.json`](./openapi.json) (OpenAPI 3.1). Visor interactivo: [`index.html`](./index.html) (hay que abrirlo en un navegador; GitHub no lo renderiza). Decisión de diseño: [ADR 0012](../adr/0012-contrato-api-openapi-por-ast.md).
+**433 rutas HTTP** (382 declaraciones de handler; el resto son alias) en 31 dominios. Contrato máquina-legible: [`openapi.json`](./openapi.json) (OpenAPI 3.1). Visor interactivo: [`index.html`](./index.html) (hay que abrirlo en un navegador; GitHub no lo renderiza). Decisión de diseño: [ADR 0012](../adr/0012-contrato-api-openapi-por-ast.md).
 
 ## Cómo leerla
 
@@ -12,7 +12,7 @@
 
 | Acceso | Rutas |
 |---|---|
-| Sesión | 345 |
+| Sesión | 346 |
 | Sesión (comprobada en el handler) | 6 |
 | Sesión opcional | 3 |
 | Firma o secreto | 7 |
@@ -237,12 +237,13 @@ Son las que un revisor de seguridad querrá mirar primero.
 
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
-| `POST` | `/api/asesor/accion` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/asesor.ts:49`](../../server/routes/asesor.ts#L49) |
-| `GET` | `/api/asesor/estrategia` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/asesor.ts:62`](../../server/routes/asesor.ts#L62) |
-| `PUT` | `/api/asesor/estrategia` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/asesor.ts:72`](../../server/routes/asesor.ts#L72) |
-| `POST` | `/api/asesor/estrategia/sugerir` | Sesión | iaRateLimiter |  | [`server/routes/asesor.ts:85`](../../server/routes/asesor.ts#L85) |
-| `GET` | `/api/asesor/hoy` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/asesor.ts:26`](../../server/routes/asesor.ts#L26) |
-| `POST` | `/api/asesor/pieza` | Sesión | iaRateLimiter |  | [`server/routes/asesor.ts:36`](../../server/routes/asesor.ts#L36) |
+| `POST` | `/api/asesor/accion` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/asesor.ts:50`](../../server/routes/asesor.ts#L50) |
+| `GET` | `/api/asesor/estrategia` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/asesor.ts:75`](../../server/routes/asesor.ts#L75) |
+| `PUT` | `/api/asesor/estrategia` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/asesor.ts:85`](../../server/routes/asesor.ts#L85) |
+| `POST` | `/api/asesor/estrategia/sugerir` | Sesión | iaRateLimiter |  | [`server/routes/asesor.ts:98`](../../server/routes/asesor.ts#L98) |
+| `GET` | `/api/asesor/hoy` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/asesor.ts:27`](../../server/routes/asesor.ts#L27) |
+| `POST` | `/api/asesor/pieza` | Sesión | iaRateLimiter |  | [`server/routes/asesor.ts:37`](../../server/routes/asesor.ts#L37) |
+| `POST` | `/api/asesor/resultado` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/asesor.ts:63`](../../server/routes/asesor.ts#L63) |
 | `POST` | `/api/campana-concierto/redactar` | Sesión | iaRateLimiter |  | [`server/routes/campanaConcierto.ts:108`](../../server/routes/campanaConcierto.ts#L108) |
 | `GET` | `/api/cartel/adn` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:350`](../../server/routes/cartelria.ts#L350) |
 | `PUT` | `/api/cartel/adn` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:361`](../../server/routes/cartelria.ts#L361) |

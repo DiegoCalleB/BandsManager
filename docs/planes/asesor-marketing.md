@@ -59,7 +59,7 @@ La función pura `diagnosticar(banda, hoy)` devuelve **un modo** y su porqué:
 | Hay un bolo en ≤ 21 días | 🎫 Concierto | Campaña de hitos y QR de entradas |
 | Hay un lanzamiento en ≤ 30 días o han pasado ≤ 14 días | 💿 Lanzamiento | Teasers, presave y "la historia de la canción" |
 | Llevan más de 10 días sin publicar | 🔁 Reactivar | 1 pieza fácil y de bajo esfuerzo |
-| Las métricas caen 3 semanas seguidas | 🚑 Rescate | Cambiar de formato y probar lo opuesto *(aplazado: falta la serie semanal de métricas de todos los formatos, fase 3)* |
+| Las métricas caen 3 semanas seguidas | 🚑 Rescate | Cambiar de formato y probar lo opuesto *(aplazado: ya se miden las piezas, pero hace falta una serie semanal de varias semanas para detectar una caída)* |
 | Nada de lo anterior | 🌱 Fondo | Rotar pilares y construir comunidad |
 
 **Por qué determinista:** es explicable ("te propongo esto porque tocas en 9 días"), testeable con Vitest y no cuesta tokens.
@@ -119,7 +119,8 @@ UI siguiendo la skill `visual-identity` (Espectro) y con color de módulo propio
 - [x] Las stories y los carruseles salen ya como imágenes (1080×1350 y 1080×1920) con el ADN visual: colores y logo de la banda, letra a elegir, foto de fondo opcional por imagen con la legibilidad garantizada, y un ritmo distinto para portada, pasos y cierre (`src/utils/asesor/laminas.ts`, `renderLaminas.ts`). Se pintan en el navegador: no cuestan IA y las fotos no salen del dispositivo.
 
 ### Fase 3 · El bucle
-- [ ] Métricas para todos los formatos y resumen semanal unificado.
+- [x] **El bucle de aprendizaje (versión manual).** Dos días después de marcar una pieza como publicada, la pestaña Resultados pide tres números de las estadísticas de Instagram (alcance, guardados y, opcional, cuentas que no seguían) y da la lectura de esa pieza: si falla el valor o el descubrimiento (`diagnosticoMetricas.ts`, lección de métricas clave). Con dos piezas medidas sale un resumen (las que mejor y peor fueron y qué formato os guarda más) y el plan de hoy sube los formatos que funcionan y baja los que no (`resumen.ts`). Los hitos de un bolo no se mueven. Migración `20261124_asesor_resultados.sql`.
+- [ ] Métricas automáticas por la API de Instagram (hoy se anotan a mano, 20 segundos por pieza).
 - [ ] Chat del asesor.
 - [ ] Eval del intercambio.
 - [ ] Publicación con `socialPublisher`.

@@ -39,13 +39,27 @@ const STORIES = {
   textos: [{ red: 'instagram', texto: 'Votad', hashtags: [] }], cta: '',
 };
 
+const ITEM = (id: string, formato: string, titulo: string, alcance: number, guardados: number, mensaje: string) => ({
+  fecha: `2026-10-2${id === 'a' ? 0 : id === 'b' ? 1 : id === 'c' ? 2 : 3}`, tarjetaId: id, formato, titulo, alcance, guardados, alcanceNoSeguidores: 400,
+  tasaGuardar: guardados / alcance, veredicto: guardados / alcance >= 0.03 ? 'funciona' : 'falla_valor', mensaje,
+});
+const POCO_VALOR = 'Llega lejos pero casi nadie la guarda: el gancho atrae y el contenido no aporta. Dale más chicha o historia.';
+const RESUMEN = {
+  piezas: 4,
+  mejores: [ITEM('d', 'carrusel', 'Lo que vais a escuchar', 1000, 70, 'Funciona: llega a gente nueva y la guardan. Repite esta estructura.'), ITEM('c', 'carrusel', 'La historia del setlist', 1000, 60, 'Funciona')],
+  peores: [ITEM('a', 'reel', 'Tema de la semana: La furgo', 1000, 5, POCO_VALOR), ITEM('b', 'reel', 'Un adelanto del directo', 1000, 8, POCO_VALOR)],
+  formatoGanador: { formato: 'carrusel', tasa: 0.065, piezas: 2 },
+  mensaje: 'Los carruseles son lo que más os guardan: 6,5 % de quienes los ven.',
+};
+
 /**
  * `conAdn`: la banda tiene logo, dossier de estilo «stage» (serigrafía, letra de cartel) y dos fotos en
  * su galería. `sinFotos` la deja sin galería: «Poner foto» sube directamente desde el dispositivo.
+ * `conPendientes`: una publicación espera sus números y ya hay con qué hacer un resumen.
  */
-async function abrirAsesor(page: Page, { conAdn = false, sinFotos = false }: { conAdn?: boolean; sinFotos?: boolean } = {}) {
+async function abrirAsesor(page: Page, { conAdn = false, sinFotos = false, conPendientes = false }: { conAdn?: boolean; sinFotos?: boolean; conPendientes?: boolean } = {}) {
   const peticiones: Array<{ ruta: string; cuerpo: Record<string, unknown> | null }> = [];
-  const servidor = { hechas: new Set<string>(), saltadas: new Set<string>() };
+  const servidor = { hechas: new Set<string>(), saltadas: new Set<string>(), medido: false };
   const ideas = [
     IDEA('hito-anuncio', 'post', 'Anuncio del bolo', { atajo: { vista: 'carteleria', concertId: 'c1' }, tipo: 'promocional' }),
     IDEA('bolo-teaser', 'reel', 'Un adelanto del directo'),
@@ -79,12 +93,18 @@ async function abrirAsesor(page: Page, { conAdn = false, sinFotos = false }: { c
         hoy: '2026-10-28',
         diagnostico: { modo: 'concierto', porque: 'Tocáis en 3 días en Oktoberfest, Leganés: toca llenar la sala.', concierto: null, dias: 3 },
         opciones: { recomendadas: vivas.slice(0, 2), alternativas: vivas.slice(2) },
+        porMedir: conPendientes && !servidor.medido ? [{ fecha: '2026-10-24', tarjetaId: 'fondo-pilar', formato: 'reel', titulo: 'Tema de la semana: La furgo' }] : [],
+        resumen: conPendientes ? RESUMEN : null,
         semana: ['22', '23', '24', '25', '26', '27', '28'].map((d, k) => ({ fecha: `2026-10-${d}`, hechas: [0, 1, 0, 2, 0, 0, servidor.hechas.size][k] })),
         estrategia: { v: 1, objetivo: 'llenar_salas', etapa: 'local', publico: '', horasSemana: 3, camara: 'algunos', pilares: [], lineasRojas: [], referentes: [], lanzamiento: null, revisada: true },
         tieneEstrategia: true,
       } });
     }
     if (ruta.endsWith('/asesor/pieza')) return route.fulfill({ json: { pieza: cuerpo.tarjetaId === 'bolo-setlist' ? CARRUSEL : cuerpo.tarjetaId === 'bolo-encuesta' ? STORIES : PIEZA } });
+    if (ruta.endsWith('/asesor/resultado')) {
+      servidor.medido = true;
+      return route.fulfill({ json: { ok: true, titulo: 'Tema de la semana: La furgo', veredicto: 'falla_valor', mensaje: POCO_VALOR } });
+    }
     if (ruta.endsWith('/asesor/accion')) {
       if (cuerpo.accion === 'hecho') servidor.hechas.add(cuerpo.tarjetaId);
       if (cuerpo.accion === 'saltado') servidor.saltadas.add(cuerpo.tarjetaId);
@@ -259,4 +279,44 @@ test('unas stories salen en 1080×1920 con la zona segura de Instagram libre', a
     expect([w, h]).toEqual([1080, 1920]);
     fs.writeFileSync(`test-results/laminas/stories-${i + 1}.png`, Buffer.from(b64, 'base64'));
   }
+});
+
+test('anotar los números: el aviso de Hoy lleva a Resultados, se valida, se guarda y se ve lo aprendido', async ({ page }) => {
+  const { peticiones } = await abrirAsesor(page, { conPendientes: true });
+  await expect(page.getByText('Una publicación espera sus números')).toBeVisible();
+  await page.getByRole('button', { name: 'Anotarlos' }).click();
+  await expect(page.getByRole('tab', { name: 'Resultados (1)' })).toHaveAttribute('aria-selected', 'true');
+
+  const tarjeta = page.getByRole('form', { name: /Resultados de Tema de la semana/ });
+  await expect(tarjeta.getByText(/Publicada el sábado, 24 de octubre/)).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Lo que os ha funcionado' }).getByText('Los carruseles son lo que más os guardan: 6,5 % de quienes los ven.')).toBeVisible();
+
+  // Más guardados que alcance no es posible: se avisa sin llamar al servidor.
+  await tarjeta.getByLabel('Cuentas alcanzadas').fill('100');
+  await tarjeta.getByLabel('Guardados').fill('500');
+  await tarjeta.getByRole('button', { name: 'Guardar los números' }).click();
+  await expect(tarjeta.getByRole('alert')).toContainText('No pueden haberla guardado más personas');
+  expect(peticiones.some((p) => p.ruta.endsWith('/resultado'))).toBe(false);
+
+  await tarjeta.getByLabel('Cuentas alcanzadas').fill('1000');
+  await tarjeta.getByLabel('Guardados').fill('5');
+  await tarjeta.getByLabel(/no os seguían/).fill('100');
+  await tarjeta.getByRole('button', { name: 'Guardar los números' }).click();
+
+  const aviso = page.getByRole('status');
+  await expect(aviso).toContainText('Anotado: Tema de la semana: La furgo');
+  await expect(aviso).toContainText('casi nadie la guarda');
+  await expect(page.getByRole('form', { name: /Resultados de/ })).toBeHidden();
+  const enviado = peticiones.find((p) => p.ruta.endsWith('/resultado'))!.cuerpo;
+  expect(enviado).toEqual({ fecha: '2026-10-24', tarjetaId: 'fondo-pilar', alcance: 1000, guardados: 5, alcanceNoSeguidores: 100 });
+  await expect(page.getByRole('tab', { name: 'Resultados', exact: true })).toBeVisible();
+  await page.getByRole('region', { name: 'Lo que os ha funcionado' }).screenshot({ path: 'test-results/asesor-resumen.png' });
+  await page.screenshot({ path: 'test-results/asesor-resultados.png' });
+});
+
+test('sin nada que medir, Resultados explica qué hacer en vez de quedarse vacío', async ({ page }) => {
+  await abrirAsesor(page);
+  await page.getByRole('tab', { name: 'Resultados' }).click();
+  await expect(page.getByText('Aún no hay números que mirar.')).toBeVisible();
+  await expect(page.getByText(/dos días después, apunta aquí/)).toBeVisible();
 });

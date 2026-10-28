@@ -6,13 +6,11 @@ import { useAsesor } from './hooks/useAsesor';
 import { TarjetaHoy } from './TarjetaHoy';
 import { PiezaSheet } from './PiezaSheet';
 import { FormEstrategia } from './FormEstrategia';
+import { PorMedirCard } from './PorMedirCard';
+import { ResumenCard } from './ResumenCard';
 import type { BandaLaminas } from './hooks/useLaminas';
 
-type Pestana = 'hoy' | 'estrategia';
-const PESTANAS: TabItem<Pestana>[] = [
-  { id: 'hoy', label: 'Hoy' },
-  { id: 'estrategia', label: 'Estrategia' },
-];
+type Pestana = 'hoy' | 'resultados' | 'estrategia';
 
 const MODO: Record<Modo, string> = {
   concierto: 'Modo concierto',
@@ -53,7 +51,12 @@ const AsesorView: React.FC<Props> = ({ onNavigate, banda }) => {
     );
   }
 
-  const { diagnostico, opciones, semana, estrategia, tieneEstrategia } = a.estado;
+  const { diagnostico, opciones, semana, porMedir, resumen, estrategia, tieneEstrategia } = a.estado;
+  const pestanas: TabItem<Pestana>[] = [
+    { id: 'hoy', label: 'Hoy' },
+    { id: 'resultados', label: porMedir.length ? `Resultados (${porMedir.length})` : 'Resultados' },
+    { id: 'estrategia', label: 'Estrategia' },
+  ];
   const hechasSemana = semana.reduce((n, d) => n + d.hechas, 0);
   const preparar = (t: Tarjeta) => {
     setAbierta(t);
@@ -79,16 +82,23 @@ const AsesorView: React.FC<Props> = ({ onNavigate, banda }) => {
         </div>
       </header>
 
-      <Tabs<Pestana> aria-label="Asesor" layout="fill" items={PESTANAS} value={pestana} onChange={setPestana} />
+      <Tabs<Pestana> aria-label="Asesor" layout="fill" items={pestanas} value={pestana} onChange={setPestana} />
 
       {a.error && <p role="alert" className="text-sm text-[var(--alert)]">{a.error}</p>}
 
-      {pestana === 'hoy' ? (
+      {pestana === 'hoy' && (
         <>
           {!tieneEstrategia && (
             <div className="flex flex-wrap items-center gap-3 rounded-[var(--r-m)] bg-[var(--acc-soft)] p-4 text-sm text-[var(--acc-ink)]">
               <p className="min-w-0 flex-1">Esto es un plan de serie. Contadnos qué queréis y cuánto tiempo tenéis y será vuestro.</p>
               <Button size="sm" variant="raised" onClick={() => setPestana('estrategia')}>Hacer la estrategia</Button>
+            </div>
+          )}
+
+          {porMedir.length > 0 && (
+            <div className="flex flex-wrap items-center gap-3 rounded-[var(--r-m)] bg-[var(--acc-soft)] p-4 text-sm text-[var(--acc-ink)]">
+              <p className="min-w-0 flex-1">{porMedir.length === 1 ? 'Una publicación espera sus números' : `${porMedir.length} publicaciones esperan sus números`}: así sabremos qué os funciona.</p>
+              <Button size="sm" variant="raised" onClick={() => setPestana('resultados')}>Anotarlos</Button>
             </div>
           )}
 
@@ -111,7 +121,32 @@ const AsesorView: React.FC<Props> = ({ onNavigate, banda }) => {
             </section>
           )}
         </>
-      ) : (
+      )}
+
+      {pestana === 'resultados' && (
+        <section className="grid gap-4" aria-label="Resultados">
+          {a.anotado && (
+            <div role="status" className="grid gap-2 rounded-[var(--r-m)] bg-[var(--acc-soft)] p-4 text-[var(--acc-ink)]">
+              <p className="text-sm font-medium">Anotado: {a.anotado.titulo}</p>
+              <p className="text-sm">{a.anotado.mensaje}</p>
+              <div><Button size="sm" variant="raised" onClick={a.cerrarAnotado}>Vale</Button></div>
+            </div>
+          )}
+          {porMedir.length > 0 && (
+            <div className="grid gap-3">
+              <h2 className="text-sm font-medium text-[var(--ink-2)]">Esperan sus números</h2>
+              {porMedir.map((p) => <PorMedirCard key={`${p.fecha}-${p.tarjetaId}`} pieza={p} onGuardar={(m) => a.medir(p, m)} />)}
+            </div>
+          )}
+          {resumen && <ResumenCard resumen={resumen} />}
+          {!porMedir.length && !resumen && !a.anotado && (
+            <EmptyState title="Aún no hay números que mirar."
+              description="Marca una pieza como publicada y, dos días después, apunta aquí cuántas personas la vieron y la guardaron. Con eso sabremos qué os funciona." />
+          )}
+        </section>
+      )}
+
+      {pestana === 'estrategia' && (
         <FormEstrategia inicial={estrategia} guardando={a.guardando} sugiriendo={a.sugiriendo} onGuardar={a.guardar} onProponer={a.proponer} />
       )}
 

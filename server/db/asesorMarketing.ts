@@ -3,9 +3,11 @@
 // resuelto por la ruta (getTargetBandId) y es el único origen de confianza (AGENTS.md §2.1).
 
 import { getSupabase, cleanBandId } from './core.js';
+import { escrituraTolerante } from './tolerantWrite.js';
 import { sanearEstrategia, type EstrategiaMarketing } from '../../src/utils/asesor/estrategia.js';
-import type { Accion, AccionRegistrada } from '../../src/utils/asesor/opciones.js';
+import type { Accion, AccionRegistrada } from '../../src/utils/asesor/tipos.js';
 import type { Formato } from '../../src/utils/asesor/reglasFormato.js';
+import type { ResultadoPieza } from '../../src/utils/asesor/resumen.js';
 
 const FORMATOS: unknown[] = ['reel', 'carrusel', 'stories', 'post'];
 
@@ -64,24 +66,23 @@ const ACCIONES = 'asesor_acciones';
 
 /** Acciones de la banda desde `desde` (AAAA-MM-DD). [] si falla: aprender es un extra, no bloquea el plan. */
 export async function dbAccionesDesde(bandId: string, desde: string): Promise<AccionRegistrada[]> {
-  const { data, error } = await getSupabase()
-    .from(ACCIONES)
-    .select('fecha, tarjeta_id, formato, accion')
-    .eq('band_id', cleanBandId(bandId))
-    .gte('fecha', desde);
+  const leer = (columnas: string) => getSupabase().from(ACCIONES).select(columnas).eq('band_id', cleanBandId(bandId)).gte('fecha', desde);
+  let { data, error } = await leer('fecha, tarjeta_id, formato, accion, titulo');
+  // Sin la migración del título (20261124) se lee igual, solo sin título: aprender no se rompe por eso.
+  if (error && /titulo/.test(error.message)) ({ data, error } = await leer('fecha, tarjeta_id, formato, accion'));
   if (error) {
     console.warn('[Asesor DB] Sin historial de %s:', bandId, error.message);
     return [];
   }
-  return (data || []).flatMap((f) =>
+  return ((data || []) as unknown as Array<Record<string, unknown>>).flatMap((f) =>
     FORMATOS.includes(f.formato) && (f.accion === 'hecho' || f.accion === 'saltado')
-      ? [{ fecha: String(f.fecha).slice(0, 10), tarjetaId: String(f.tarjeta_id), formato: f.formato as Formato, accion: f.accion as Accion }]
+      ? [{ fecha: String(f.fecha).slice(0, 10), tarjetaId: String(f.tarjeta_id), formato: f.formato as Formato, accion: f.accion as Accion, titulo: typeof f.titulo === 'string' ? f.titulo : '' }]
       : []
   );
 }
 
 /** Guarda (o cambia) lo que la banda hizo hoy con una idea. `null` la deja pendiente otra vez. */
-export async function dbGuardarAccion(bandId: string, fecha: string, tarjetaId: string, formato: Formato, accion: Accion | null): Promise<boolean> {
+export async function dbGuardarAccion(bandId: string, fecha: string, tarjetaId: string, formato: Formato, accion: Accion | null, titulo = ''): Promise<boolean> {
   const sb = getSupabase();
   const banda = cleanBandId(bandId);
   const borrado = await sb.from(ACCIONES).delete().eq('band_id', banda).eq('fecha', fecha).eq('tarjeta_id', tarjetaId);
@@ -90,9 +91,56 @@ export async function dbGuardarAccion(bandId: string, fecha: string, tarjetaId: 
     return false;
   }
   if (!accion) return true;
-  const { error } = await sb.from(ACCIONES).insert({ band_id: banda, fecha, tarjeta_id: tarjetaId, formato, accion });
+  // `titulo` es una columna nueva: sin su migración se guarda igual, sin título (y queda en el log).
+  const { error } = await escrituraTolerante(ACCIONES, { band_id: banda, fecha, tarjeta_id: tarjetaId, formato, accion, titulo }, (p) => sb.from(ACCIONES).insert(p));
   if (error) {
     console.error('[Asesor DB] Error guardando la acción de %s:', banda, error.message);
+    return false;
+  }
+  return true;
+}
+
+/* ----------------------------------------------------------------- cómo le fue a cada pieza */
+
+const RESULTADOS = 'asesor_resultados';
+
+/** Resultados anotados desde `desde`. [] si falla (o aún no existe la tabla): el plan sigue sin ellos. */
+export async function dbResultadosDesde(bandId: string, desde: string): Promise<ResultadoPieza[]> {
+  const { data, error } = await getSupabase()
+    .from(RESULTADOS)
+    .select('fecha, tarjeta_id, formato, titulo, alcance, guardados, alcance_no_seguidores')
+    .eq('band_id', cleanBandId(bandId))
+    .gte('fecha', desde);
+  if (error) {
+    console.warn('[Asesor DB] Sin resultados de %s:', bandId, error.message);
+    return [];
+  }
+  return ((data || []) as unknown as Array<Record<string, unknown>>).flatMap((f) =>
+    FORMATOS.includes(f.formato) && Number.isFinite(Number(f.alcance)) && Number.isFinite(Number(f.guardados))
+      ? [{
+          fecha: String(f.fecha).slice(0, 10), tarjetaId: String(f.tarjeta_id), formato: f.formato as Formato, titulo: String(f.titulo ?? ''),
+          alcance: Number(f.alcance), guardados: Number(f.guardados),
+          alcanceNoSeguidores: f.alcance_no_seguidores === null || f.alcance_no_seguidores === undefined ? null : Number(f.alcance_no_seguidores),
+        }]
+      : []
+  );
+}
+
+/** Guarda (o corrige) los números de una pieza. */
+export async function dbGuardarResultado(bandId: string, r: ResultadoPieza): Promise<boolean> {
+  const sb = getSupabase();
+  const banda = cleanBandId(bandId);
+  const borrado = await sb.from(RESULTADOS).delete().eq('band_id', banda).eq('fecha', r.fecha).eq('tarjeta_id', r.tarjetaId);
+  if (borrado.error) {
+    console.error('[Asesor DB] Error limpiando el resultado de %s:', banda, borrado.error.message);
+    return false;
+  }
+  const { error } = await sb.from(RESULTADOS).insert({
+    band_id: banda, fecha: r.fecha, tarjeta_id: r.tarjetaId, formato: r.formato, titulo: r.titulo,
+    alcance: r.alcance, guardados: r.guardados, alcance_no_seguidores: r.alcanceNoSeguidores,
+  });
+  if (error) {
+    console.error('[Asesor DB] Error guardando el resultado de %s:', banda, error.message);
     return false;
   }
   return true;

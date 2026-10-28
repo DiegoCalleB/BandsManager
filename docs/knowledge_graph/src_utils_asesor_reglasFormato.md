@@ -28,6 +28,8 @@ _Sin dependencias salientes directas._
 - [[src_components_asesor_PiezaSheet|src/components/asesor/PiezaSheet.tsx]] *(from #frontend)*
 - [[src_utils_asesor_opciones|src/utils/asesor/opciones.ts]] *(from #service)*
 - [[src_utils_asesor_pieza|src/utils/asesor/pieza.ts]] *(from #service)*
+- [[src_utils_asesor_resumen|src/utils/asesor/resumen.ts]] *(from #service)*
+- [[src_utils_asesor_tipos|src/utils/asesor/tipos.ts]] *(from #service)*
 
 ---
 
