@@ -19,6 +19,7 @@ Exporta: ControlVelocidad.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_utils_mezclaGuardada|src/utils/mezclaGuardada.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_tonoDestino|src/utils/tonoDestino.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
