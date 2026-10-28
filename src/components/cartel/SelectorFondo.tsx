@@ -22,6 +22,8 @@ interface Props {
   /** Retoca el fondo de IA que se ve con una instrucción (una versión nueva). */
   onRetocar: (instruccion: string) => Promise<boolean>;
   retocando: boolean;
+  /** La IA no pudo pintar el último fondo (sin cupo, caída…): se ofrecen los carteles de autor como respaldo. */
+  iaFalla: boolean;
   /** La IA se equivocó en alguna letra del último fondo: se ofrece repetirlo con el texto exacto de la app. */
   letrasFallidas: boolean;
   onRepetirSinLetras: () => Promise<boolean>;
@@ -73,7 +75,7 @@ function Muestra({ activa, etiqueta, onClick, children }: { activa: boolean; eti
   );
 }
 
-export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenerarIa, generando, onRetocar, retocando, letrasFallidas, onRepetirSinLetras, letrasIa, onLetrasIa, puedeLetrasIa, estiloInicial, paletaBanda, panelBanda, panelIdea }: Props) {
+export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenerarIa, generando, onRetocar, retocando, iaFalla, letrasFallidas, onRepetirSinLetras, letrasIa, onLetrasIa, puedeLetrasIa, estiloInicial, paletaBanda, panelBanda, panelIdea }: Props) {
   const [iaAbierta, setIaAbierta] = useState(false);
   // Hasta que la persona toca un estilo, manda el de su banda (que puede llegar tarde, al cargar su ADN).
   const [estiloElegido, setEstiloElegido] = useState<EstiloCartel | null>(null);
@@ -95,12 +97,6 @@ export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenera
             <MuestraPaleta fondo={paletaBanda.fondo} acento={paletaBanda.acento} />
           </Muestra>
         )}
-
-        {PLANTILLAS.map((id) => (
-          <Muestra key={id} etiqueta={`Plantilla ${ETIQUETA_PLANTILLA[id]}`} activa={fondo.tipo === 'plantilla' && fondo.id === id} onClick={() => onFondo({ tipo: 'plantilla', id })}>
-            <MuestraPlantilla id={id} />
-          </Muestra>
-        ))}
 
         {foto && (
           <Muestra etiqueta="Tu foto" activa={esImagen(foto)} onClick={() => onFondo({ tipo: 'imagen', url: foto, origen: 'foto' })}>
@@ -132,6 +128,22 @@ export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenera
           <span className="text-[11px] leading-none text-[var(--ink-2)]">IA</span>
         </button>
       </div>
+
+      {/* Respaldo, no camino principal: solo si la IA ha fallado (o ya se eligió una plantilla, para poder cambiarla). */}
+      {(iaFalla || fondo.tipo === 'plantilla') && (
+        <div className="grid gap-2 rounded-[var(--r-m)] bg-[var(--sunken)] p-3" aria-label="Carteles de autor">
+          <p className="text-xs text-[var(--ink-2)] text-pretty">
+            {iaFalla ? 'La IA no ha podido pintar el fondo. Mientras tanto, elige un cartel de autor: sin IA y sin coste, con tu texto, QR y logo.' : 'Cartel de autor (sin IA).'}
+          </p>
+          <div className="no-scrollbar -mx-1 flex gap-2.5 overflow-x-auto px-1" role="group" aria-label="Plantillas">
+            {PLANTILLAS.map((id) => (
+              <Muestra key={id} etiqueta={`Plantilla ${ETIQUETA_PLANTILLA[id]}`} activa={fondo.tipo === 'plantilla' && fondo.id === id} onClick={() => onFondo({ tipo: 'plantilla', id })}>
+                <MuestraPlantilla id={id} />
+              </Muestra>
+            ))}
+          </div>
+        </div>
+      )}
 
       {letrasFallidas && (
         <div role="status" className="grid gap-2 rounded-[var(--r-m)] bg-[var(--acc-soft)] p-3 text-[var(--acc-ink)]">
