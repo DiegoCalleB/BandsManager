@@ -46,3 +46,4 @@ presentacion/audio/musica/giro.*
 
 # planos de sincronía de labios generados (tools/lipsync_preparar.py)
 presentacion/lipsync/
+tmp/

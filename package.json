@@ -20,6 +20,7 @@
     "graph:sync": "tsx scripts/generate_obsidian_graph.ts",
     "spotify:bandas": "tsx scripts/arreglar-spotify-bandas.ts",
     "probar:senales": "tsx scripts/probar-senales.ts",
+    "cartel:muestras": "tsx scripts/muestras-cartel.ts",
     "probar:publicacion": "tsx scripts/probar-publicacion.ts",
     "banco:deteccion": "tsx scripts/banco-deteccion.ts",
     "test:coverage": "vitest run --coverage",
