@@ -18,6 +18,7 @@ import {
   Briefcase,
   Mic2,
   ImagePlus,
+  Compass,
 } from 'lucide-react';
 
 export type NavItemId =
@@ -32,6 +33,7 @@ export type NavItemId =
   | 'fans'
   | 'reels'
   | 'carteleria'
+  | 'asesor'
   | 'repertorio'
   | 'ensayos'
   | 'catalogo'
@@ -63,6 +65,7 @@ export const NAV_ITEMS: Record<NavItemId, NavItemDef> = {
   fans: { id: 'fans', icon: QrCode, labelKey: 'nav.fans', labelDefault: 'Captura QR y fans' },
   reels: { id: 'reels', icon: Video, labelKey: 'nav.reels', labelDefault: 'Reels Center' },
   carteleria: { id: 'carteleria', icon: ImagePlus, labelKey: 'nav.carteleria', labelDefault: 'Cartelería' },
+  asesor: { id: 'asesor', icon: Compass, labelKey: 'nav.asesor', labelDefault: 'Asesor de marketing' },
   repertorio: { id: 'repertorio', icon: Disc3, labelKey: 'nav.repertorio', labelDefault: 'Repertorios' },
   ensayos: { id: 'ensayos', icon: Mic2, labelKey: 'nav.ensayos', labelDefault: 'Ensayos' },
   catalogo: { id: 'catalogo', icon: Music, labelKey: 'nav.discografia', labelDefault: 'Discografía' },
@@ -115,7 +118,7 @@ export const NAV_GROUPS_DESKTOP: NavGroupDef[] = [
     id: 'promocion',
     titleKey: 'navGroup.promocion',
     titleDefault: 'Promoción',
-    itemIds: ['epk', 'fans', 'reels', 'carteleria'],
+    itemIds: ['asesor', 'epk', 'fans', 'reels', 'carteleria'],
   },
   {
     id: 'negocio',
@@ -148,6 +151,7 @@ export const FLAT_NAV_ORDER_IDS: NavItemId[] = [
   'fans',
   'reels',
   'carteleria',
+  'asesor',
   'repertorio',
   'ensayos',
   'discografia',
@@ -174,6 +178,7 @@ export const TOP_TABS_ORDER_IDS: NavItemId[] = [
   'fans',
   'reels',
   'carteleria',
+  'asesor',
   'repertorio',
   'ensayos',
   'discografia',

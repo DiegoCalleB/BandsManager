@@ -12,7 +12,7 @@ import type { Rehearsal } from "../types";
 import { LeadStatus } from "../types";
 import { useApp } from "./AppContext";
 import { RegaloPegatinas } from "../components/RegaloPegatinas";
-import { BandCRM,BookingCRM,CalendarView,CarteleriaView,Chatbot,EnsayosManager,EPKManager,FansPanel,Finanzas,Merchan,Planes,ReelsCenter,RepertorioSetlists,TourManager } from "./lazyViews";
+import { AsesorView,BandCRM,BookingCRM,CalendarView,CarteleriaView,Chatbot,EnsayosManager,EPKManager,FansPanel,Finanzas,Merchan,Planes,ReelsCenter,RepertorioSetlists,TourManager } from "./lazyViews";
 
 /**
  * Vista activa de la aplicación interna (resumen, CRM, calendario, repertorio…).
@@ -214,6 +214,11 @@ export function ActiveViewRouter() {
                       onCartelGuardado={handleCartelGuardado}
                       initialConcertId={bookingOptions.concertId}
                     />
+                  </ErrorBoundary>
+                )}
+                {currentView === "asesor" && (
+                  <ErrorBoundary fallbackTitle="Asesor de marketing">
+                    <AsesorView key={currentActiveBandId} onNavigate={handleNavigate} />
                   </ErrorBoundary>
                 )}
                 {currentView === "merchan" && (

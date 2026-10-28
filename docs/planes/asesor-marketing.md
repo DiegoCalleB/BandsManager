@@ -28,7 +28,7 @@
 | 1. Identidad | ¿Quiénes somos? | ✅ Existe | `BandProfile` |
 | 2. Voz | ¿Cómo hablamos? | ✅ Existe | `dna_expresion` |
 | 3. Estética | ¿Cómo nos vemos? | ✅ Existe | `AdnCartel` |
-| 4. **Estrategia** | ¿Qué queremos y qué podemos? | 🆕 **Falta** | Nueva columna `estrategia_marketing` |
+| 4. **Estrategia** | ¿Qué queremos y qué podemos? | ✅ Fase 1 | Tabla `band_estrategia_marketing` |
 | 5. Rendimiento | ¿Qué nos funciona? | 🟡 Solo para reels | Generalizar `metricasReels` a todos los formatos |
 
 Y encima, una **capa de situación** que no se guarda: se **calcula cada día** a partir de los datos.
@@ -49,7 +49,7 @@ interface EstrategiaMarketing {
   referentes: string[];            // 2-3 artistas cuyo perfil les gusta
 }
 ```
-Va en `registered_bands.estrategia_marketing` (JSONB), con saneador propio como `sanearAdn`, compartido por cliente y servidor.
+Va en su propia tabla `band_estrategia_marketing` (JSONB, una fila por banda, mismo patrón que `band_cartel_estilo`), con saneador compartido por cliente y servidor (`src/utils/asesor/estrategia.ts`). Incluye además el **próximo lanzamiento** (título y fecha), porque el repo no guarda fechas de lanzamiento en ningún otro sitio.
 
 ### 2.2 Capa de situación: diagnóstico automático (determinista, sin IA, gratis)
 La función pura `diagnosticar(banda, hoy)` devuelve **un modo** y su porqué:
@@ -59,7 +59,7 @@ La función pura `diagnosticar(banda, hoy)` devuelve **un modo** y su porqué:
 | Hay un bolo en ≤ 21 días | 🎫 Concierto | Campaña de hitos y QR de entradas |
 | Hay un lanzamiento en ≤ 30 días o han pasado ≤ 14 días | 💿 Lanzamiento | Teasers, presave y "la historia de la canción" |
 | Llevan más de 10 días sin publicar | 🔁 Reactivar | 1 pieza fácil y de bajo esfuerzo |
-| Las métricas caen 3 semanas seguidas | 🚑 Rescate | Cambiar de formato y probar lo opuesto |
+| Las métricas caen 3 semanas seguidas | 🚑 Rescate | Cambiar de formato y probar lo opuesto *(aplazado: falta la serie semanal de métricas de todos los formatos, fase 3)* |
 | Nada de lo anterior | 🌱 Fondo | Rotar pilares y construir comunidad |
 
 **Por qué determinista:** es explicable ("te propongo esto porque tocas en 9 días"), testeable con Vitest y no cuesta tokens.
@@ -102,10 +102,11 @@ UI siguiendo la skill `visual-identity` (Espectro) y con color de módulo propio
 ## 4. Fases
 
 ### Fase 1 · El cerebro (sin IA nueva, todo testeable)
-- [ ] `EstrategiaMarketing`: tipo, saneador, migración y su test.
-- [ ] `diagnosticar()`: función pura y tests de cada modo.
-- [ ] Pantalla con las pestañas Hoy y ADN, y onboarding de estrategia prerrellenado con IA.
-- [ ] Hoy reutiliza `campanaConcierto` en modo Concierto.
+- [x] `EstrategiaMarketing`: tipo, saneador, migración y su test.
+- [x] `diagnosticar()` y `tarjetasDeHoy()`: funciones puras y tests de cada modo.
+- [x] Rutas `/api/asesor/*` (hoy, estrategia, propuesta con IA) con tests de aislamiento por banda.
+- [x] Pantalla «Asesor de marketing» (menú Promoción) con las pestañas Hoy y Estrategia, y borrador prerrellenado con IA.
+- [x] Hoy reutiliza los hitos de `campanaConcierto` en modo Concierto y lleva a la Cartelería del bolo.
 
 ### Fase 2 · Las piezas
 - [x] Reglas de formato con la fuente de cada una (`src/utils/asesor/reglasFormato.ts`) y diagnóstico de métricas (`src/utils/asesor/diagnosticoMetricas.ts`), a partir de los apuntes del máster.

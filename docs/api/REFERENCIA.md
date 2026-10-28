@@ -2,7 +2,7 @@
 
 > Generado automáticamente por `scripts/generate-openapi.mjs` a partir del código. No se edita a mano: ejecuta `npm run docs:api`.
 
-**426 rutas HTTP** (375 declaraciones de handler; el resto son alias) en 31 dominios. Contrato máquina-legible: [`openapi.json`](./openapi.json) (OpenAPI 3.1). Visor interactivo: [`index.html`](./index.html) (hay que abrirlo en un navegador; GitHub no lo renderiza). Decisión de diseño: [ADR 0012](../adr/0012-contrato-api-openapi-por-ast.md).
+**430 rutas HTTP** (379 declaraciones de handler; el resto son alias) en 31 dominios. Contrato máquina-legible: [`openapi.json`](./openapi.json) (OpenAPI 3.1). Visor interactivo: [`index.html`](./index.html) (hay que abrirlo en un navegador; GitHub no lo renderiza). Decisión de diseño: [ADR 0012](../adr/0012-contrato-api-openapi-por-ast.md).
 
 ## Cómo leerla
 
@@ -12,7 +12,7 @@
 
 | Acceso | Rutas |
 |---|---|
-| Sesión | 339 |
+| Sesión | 343 |
 | Sesión (comprobada en el handler) | 6 |
 | Sesión opcional | 3 |
 | Firma o secreto | 7 |
@@ -237,7 +237,11 @@ Son las que un revisor de seguridad querrá mirar primero.
 
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
-| `POST` | `/api/campana-concierto/redactar` | Sesión | iaRateLimiter |  | [`server/routes/campanaConcierto.ts:105`](../../server/routes/campanaConcierto.ts#L105) |
+| `GET` | `/api/asesor/estrategia` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/asesor.ts:34`](../../server/routes/asesor.ts#L34) |
+| `PUT` | `/api/asesor/estrategia` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/asesor.ts:44`](../../server/routes/asesor.ts#L44) |
+| `POST` | `/api/asesor/estrategia/sugerir` | Sesión | iaRateLimiter |  | [`server/routes/asesor.ts:57`](../../server/routes/asesor.ts#L57) |
+| `GET` | `/api/asesor/hoy` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/asesor.ts:24`](../../server/routes/asesor.ts#L24) |
+| `POST` | `/api/campana-concierto/redactar` | Sesión | iaRateLimiter |  | [`server/routes/campanaConcierto.ts:108`](../../server/routes/campanaConcierto.ts#L108) |
 | `GET` | `/api/cartel/adn` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:350`](../../server/routes/cartelria.ts#L350) |
 | `PUT` | `/api/cartel/adn` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:361`](../../server/routes/cartelria.ts#L361) |
 | `POST` | `/api/cartel/brief` | Sesión | iaRateLimiter |  | [`server/routes/cartelria.ts:331`](../../server/routes/cartelria.ts#L331) |

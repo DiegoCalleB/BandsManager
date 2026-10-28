@@ -41,6 +41,7 @@ Vistas y modales cargados bajo demanda, con reintento si falla la carga del mód
 - [[src_components_TourManager|src/components/TourManager.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_UserManagementModal|src/components/UserManagementModal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_UserProfileModal|src/components/UserProfileModal.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_asesor_AsesorView|src/components/asesor/AsesorView.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_campaign_CampaignManagerModal|src/components/campaign/CampaignManagerModal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_cartel_CarteleriaView|src/components/cartel/CarteleriaView.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ensayos_EnsayosManager|src/components/ensayos/EnsayosManager.tsx]] *(Layer: #frontend, Domain: #system)*

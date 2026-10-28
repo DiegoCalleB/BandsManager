@@ -12,6 +12,7 @@ export const gl: Record<string, string> = {
   'nav.fans': 'Captura QR e Fans',
   'nav.reels': 'Reels Center',
   'nav.carteleria': 'Cartelería',
+  'nav.asesor': 'Asesor de márketing',
   'nav.repertorio': 'Repertorios',
   'nav.ensayos': 'Ensaios',
   'nav.discografia': 'Discografía',

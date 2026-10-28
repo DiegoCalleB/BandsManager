@@ -26,6 +26,7 @@ Red de errores del servidor: hasta ahora, un fallo no anticipado (uno que ningú
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[agent_scheduler|Agent Scheduler In-Process]] *(from #agent)*
 - [[server|server.ts]] *(from #route)*
+- [[server_routes_asesor|server/routes/asesor.ts]] *(from #route)*
 - [[server_routes_campanaConcierto|server/routes/campanaConcierto.ts]] *(from #route)*
 - [[server_routes_cartelria|server/routes/cartelria.ts]] *(from #route)*
 - [[server_routes_contactoEmpresas|server/routes/contactoEmpresas.ts]] *(from #route)*
