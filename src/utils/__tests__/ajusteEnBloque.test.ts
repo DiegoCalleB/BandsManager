@@ -27,4 +27,10 @@ describe('ajuste en bloque', () => {
     expect(segmentos[3].editado).toBe(true);
     expect(segmentos[2].t1).toBe(5.5);
   });
+
+  it('respeta los cambios que ya corregiste a mano', () => {
+    const manual = base.map((s, i) => (i === 3 ? { ...s, editado: true } : s));
+    const mov = { acorde: 'G', previo: 'C', delta: 0.5, t0: 2.5 };
+    expect(cambiosHermanos(manual, mov, { desde: 0, hasta: 10 }, 2)).toEqual([]);
+  });
 });
