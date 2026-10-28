@@ -62,3 +62,15 @@ test('la dirección se activa en Ajustes, repinta el cartel y se guarda en el bo
   await expect.poll(() => cartel(page), { timeout: 10_000 }).not.toBe(antes);
   await expect.poll(() => peticiones.some((p) => p.ruta.endsWith('/config') && JSON.parse(p.cuerpo.toString()).direccion === true), { timeout: 8_000 }).toBe(true);
 });
+
+test('el QR también se puede poner en Feed: repinta el cartel y se guarda en el bolo', async ({ page }) => {
+  const { peticiones } = await abrirCarteleria(page);
+  const antes = await cartel(page);
+  await abrirAjustes(page);
+  const interruptor = page.getByRole('switch', { name: 'QR también en Feed e Historia' });
+  await expect(interruptor).not.toBeChecked();
+  await interruptor.click();
+  await expect(interruptor).toBeChecked();
+  await expect.poll(() => cartel(page), { timeout: 10_000 }).not.toBe(antes);
+  await expect.poll(() => peticiones.some((p) => p.ruta.endsWith('/config') && JSON.parse(p.cuerpo.toString()).qrDigital === true), { timeout: 8_000 }).toBe(true);
+});

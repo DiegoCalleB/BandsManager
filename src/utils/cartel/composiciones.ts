@@ -46,7 +46,7 @@ export function composicionVentana(c: CtxLayout): LayoutCartel {
 
   const pie = colocarPie(c, alto - m - def.seguroAbajo * alto);
   const fondo = pie.fondo;
-  const ladoQr = opciones.qr ? Math.round(230 * u) : 0;
+  const ladoQr = opciones.qr ? Math.round((def.digital ? 170 : 230) * u) : 0;
   const anchoDatos = opciones.qr ? util - ladoQr - 40 * u : util;
   const datos = apilarDatos(c, { alinear: 'left', x: m, ancho: anchoDatos, fondo });
 
@@ -79,7 +79,7 @@ export function composicionCentrada(c: CtxLayout): LayoutCartel {
 
   const pie = colocarPie(c, alto - m - def.seguroAbajo * alto);
   const fondo = pie.fondo;
-  const ladoQr = opciones.qr ? Math.round(230 * u) : 0;
+  const ladoQr = opciones.qr ? Math.round((def.digital ? 170 : 230) * u) : 0;
   const anchoDatos = opciones.qr ? util - ladoQr - 40 * u : util;
   // Los datos van centrados en el espacio que deja el QR (si lo hay), no en el cartel entero.
   const cxDatos = m + anchoDatos / 2;
@@ -149,7 +149,7 @@ export function composicionBase(c: CtxLayout): LayoutCartel {
   // ---------- abajo: el nombre enorme (todo el ancho), y bajo él la fila del QR con la línea extra ----------
   const pie = colocarPie(c, alto - m - def.seguroAbajo * alto);
   let fondo = pie.fondo;
-  const ladoQr = opciones.qr ? Math.round(230 * u) : 0;
+  const ladoQr = opciones.qr ? Math.round((def.digital ? 170 : 230) * u) : 0;
   const qr: Rect | null = opciones.qr ? { x: ancho - m - ladoQr, y: fondo - ladoQr, w: ladoQr, h: ladoQr } : null;
 
   // La línea extra puede traer varias líneas (hora y dirección con letras de IA): se apilan de abajo arriba

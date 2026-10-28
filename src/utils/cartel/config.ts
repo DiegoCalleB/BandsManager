@@ -27,6 +27,8 @@ export interface CartelConfig {
   /** La dirección de la sala (calle y número), del bolo. */
   direccion: boolean;
   qr: boolean;
+  /** El QR también en Feed e Historia (por defecto solo en el impreso, donde no hay un enlace que tocar). */
+  qrDigital: boolean;
   marca: boolean;
   /** Logo de la banda en la fila de logos del cartel. */
   logo: boolean;
@@ -59,6 +61,7 @@ export const CONFIG_INICIAL: CartelConfig = {
   horario: true,
   direccion: false,
   qr: true,
+  qrDigital: false,
   marca: true,
   logo: true,
   letra: 'auto',
@@ -113,6 +116,7 @@ export function sanearConfigCartel(raw: unknown, esUrlPermitida: (url: string) =
     horario: booleano(r.horario, true),
     direccion: booleano(r.direccion, false),
     qr: booleano(r.qr, true),
+    qrDigital: booleano(r.qrDigital, false),
     marca: booleano(r.marca, true),
     logo: booleano(r.logo, true),
     letra: (LETRAS_CARTEL as readonly string[]).includes(r.letra as string) ? (r.letra as LetraCartel) : 'auto',
@@ -130,10 +134,10 @@ export function conFondoIa(config: CartelConfig, url: string): CartelConfig {
 }
 
 /** Lo que se decide por bolo y no es el fondo. */
-export type AjustesBolo = Pick<CartelConfig, 'cabeza' | 'extra' | 'horario' | 'direccion' | 'qr' | 'marca' | 'logo' | 'logosTinta' | 'letra' | 'composicion'>;
+export type AjustesBolo = Pick<CartelConfig, 'cabeza' | 'extra' | 'horario' | 'direccion' | 'qr' | 'qrDigital' | 'marca' | 'logo' | 'logosTinta' | 'letra' | 'composicion'>;
 
 export function ajustesDe(c: CartelConfig): AjustesBolo {
-  return { cabeza: c.cabeza, extra: c.extra, horario: c.horario, direccion: c.direccion, qr: c.qr, marca: c.marca, logo: c.logo, logosTinta: c.logosTinta, letra: c.letra, composicion: c.composicion };
+  return { cabeza: c.cabeza, extra: c.extra, horario: c.horario, direccion: c.direccion, qr: c.qr, qrDigital: c.qrDigital, marca: c.marca, logo: c.logo, logosTinta: c.logosTinta, letra: c.letra, composicion: c.composicion };
 }
 
 /**
