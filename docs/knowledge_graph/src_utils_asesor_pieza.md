@@ -27,12 +27,16 @@ La pieza lista para publicar que prepara el asesor con IA: una sola forma para l
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_services_asesorMarketing|server/services/asesorMarketing.ts]] *(from #service)*
 - [[src_components_asesor_hooks_useAsesor|src/components/asesor/hooks/useAsesor.ts]] *(from #frontend)*
+- [[src_components_asesor_hooks_useLaminas|src/components/asesor/hooks/useLaminas.ts]] *(from #frontend)*
+- [[src_components_asesor_LaminasPieza|src/components/asesor/LaminasPieza.tsx]] *(from #frontend)*
 - [[src_components_asesor_PiezaSheet|src/components/asesor/PiezaSheet.tsx]] *(from #frontend)*
+- [[src_utils_asesor_laminas|src/utils/asesor/laminas.ts]] *(from #service)*
 - [[src_utils_asesorApi|src/utils/asesorApi.ts]] *(from #service)*
 
 ---
 
 ## 🧪 Tests que lo cubren
+- `src/utils/asesor/__tests__/laminas.test.ts`
 - `src/utils/asesor/__tests__/pieza.test.ts`
 
 ---

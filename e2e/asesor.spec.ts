@@ -22,6 +22,13 @@ const PIEZA = {
   cta: 'Guárdalo para el sábado', portada: 'Abrimos con…',
 };
 
+const CARRUSEL = {
+  formato: 'carrusel', gancho: 'Lo que vais a escuchar el sábado en Leganés', portada: '',
+  pasos: [{ titulo: 'Abrimos con la que nunca tocamos en directo', detalle: 'foto del local' }, { titulo: 'En medio, la versión que pedisteis', detalle: '' }],
+  textos: [{ red: 'instagram', texto: 'Guárdalo y nos vemos el sábado', hashtags: ['#rockleganes'] }],
+  cta: 'Entradas en la bio',
+};
+
 async function abrirAsesor(page: Page) {
   const peticiones: Array<{ ruta: string; cuerpo: any }> = [];
   const servidor = { hechas: new Set<string>(), saltadas: new Set<string>() };
@@ -47,7 +54,7 @@ async function abrirAsesor(page: Page) {
         tieneEstrategia: true,
       } });
     }
-    if (ruta.endsWith('/asesor/pieza')) return route.fulfill({ json: { pieza: PIEZA } });
+    if (ruta.endsWith('/asesor/pieza')) return route.fulfill({ json: { pieza: cuerpo.tarjetaId === 'bolo-setlist' ? CARRUSEL : PIEZA } });
     if (ruta.endsWith('/asesor/accion')) {
       if (cuerpo.accion === 'hecho') servidor.hechas.add(cuerpo.tarjetaId);
       if (cuerpo.accion === 'saltado') servidor.saltadas.add(cuerpo.tarjetaId);
@@ -108,4 +115,25 @@ test('«hoy no, otra idea» salta la idea y sube la siguiente', async ({ page })
   await page.getByRole('menuitem', { name: 'Hoy no, otra idea' }).click();
   await expect(recomendadas.getByText('Anuncio del bolo')).toBeHidden();
   await expect(recomendadas.getByText('Stories con cuenta atrás')).toBeVisible();
+});
+
+test('un carrusel sale ya hecho imagen: 4 láminas, colores a elegir y se guardan en un ZIP', async ({ page }) => {
+  await abrirAsesor(page);
+  await page.getByRole('button', { name: 'Elegir esta' }).last().click();
+  const hoja = page.getByRole('dialog', { name: /Lo que vais a escuchar/ });
+  const imagenes = hoja.getByRole('region', { name: 'Imágenes listas para subir' }).getByRole('img');
+  await expect(imagenes).toHaveCount(4, { timeout: 15_000 }); // portada + 2 slides + cierre
+  await expect(imagenes.first()).toHaveAttribute('alt', /Lo que vais a escuchar el sábado/);
+  await page.screenshot({ path: 'test-results/asesor-carrusel.png' });
+
+  const antes = await imagenes.first().getAttribute('src');
+  await hoja.getByRole('radio', { name: 'Amarillo' }).click();
+  await expect(imagenes.first()).not.toHaveAttribute('src', antes!, { timeout: 10_000 });
+  await hoja.getByRole('radio', { name: 'Cartel' }).click();
+  await expect(imagenes).toHaveCount(4, { timeout: 10_000 });
+  await imagenes.first().screenshot({ path: 'test-results/asesor-lamina-portada.png' });
+
+  const descarga = page.waitForEvent('download');
+  await hoja.getByRole('button', { name: 'Guardar las 4 imágenes' }).click();
+  expect((await descarga).suggestedFilename()).toMatch(/carrusel\.zip$/);
 });

@@ -18,10 +18,13 @@ Exporta: PiezaSheet.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_asesor_LaminasPieza|src/components/asesor/LaminasPieza.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_asesor_hooks_useAsesor|src/components/asesor/hooks/useAsesor.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_asesor_hooks_useLaminas|src/components/asesor/hooks/useLaminas.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_asesor_nombres|src/components/asesor/nombres.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_utils_asesor_laminas|src/utils/asesor/laminas.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_opciones|src/utils/asesor/opciones.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_pieza|src/utils/asesor/pieza.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_reglasFormato|src/utils/asesor/reglasFormato.ts]] *(Layer: #service, Domain: #system)*

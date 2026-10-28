@@ -8,9 +8,13 @@ import { ETIQUETA_PASO, type Pieza } from '../../utils/asesor/pieza';
 import type { Red } from '../../utils/asesor/reglasFormato';
 import type { EstadoPieza } from './hooks/useAsesor';
 import { NOMBRE_FORMATO, NOMBRE_RED } from './nombres';
+import { LaminasPieza } from './LaminasPieza';
+import { esFormatoLamina } from '../../utils/asesor/laminas';
+import type { BandaLaminas } from './hooks/useLaminas';
 
 interface Props {
   tarjeta: Tarjeta;
+  banda: BandaLaminas;
   estado: EstadoPieza | undefined;
   ocupada: boolean;
   onCerrar: () => void;
@@ -52,7 +56,7 @@ const textoParaPegar = (p: Pieza, red: Red) => {
   return t ? [t.texto, t.hashtags.join(' ')].filter(Boolean).join('\n\n') : '';
 };
 
-function ContenidoPieza({ pieza: p }: { pieza: Pieza }) {
+function ContenidoPieza({ pieza: p, banda }: { pieza: Pieza; banda: BandaLaminas }) {
   const [red, setRed] = useState<Red>(p.textos[0].red);
   const redes: TabItem<Red>[] = p.textos.map((t) => ({ id: t.red, label: NOMBRE_RED[t.red] }));
   const actual = p.textos.find((t) => t.red === red) ?? p.textos[0];
@@ -79,6 +83,8 @@ function ContenidoPieza({ pieza: p }: { pieza: Pieza }) {
         </Bloque>
       )}
 
+      {esFormatoLamina(p.formato) && <LaminasPieza pieza={p} formato={p.formato} banda={banda} />}
+
       {p.portada && (
         <Bloque titulo="Texto de la portada" copiar={p.portada}>
           <p className="text-base font-semibold text-[var(--ink)]">{p.portada}</p>
@@ -101,7 +107,7 @@ function ContenidoPieza({ pieza: p }: { pieza: Pieza }) {
 }
 
 /** La pieza lista para publicar: se lee de arriba abajo en el orden en que se graba y se publica. */
-export function PiezaSheet({ tarjeta: t, estado, ocupada, onCerrar, onOtraVersion, onHecha }: Props) {
+export function PiezaSheet({ tarjeta: t, banda, estado, ocupada, onCerrar, onOtraVersion, onHecha }: Props) {
   return (
     <ModalPortal isOpen onClose={onCerrar}>
       <div className="fixed inset-0 z-[9999] flex items-end justify-center bg-[var(--scrim)]/75 sm:items-center sm:p-4" onClick={onCerrar}>
@@ -137,7 +143,7 @@ export function PiezaSheet({ tarjeta: t, estado, ocupada, onCerrar, onOtraVersio
                 <Button size="sm" onClick={onOtraVersion}>Reintentar</Button>
               </div>
             )}
-            {estado?.estado === 'lista' && <ContenidoPieza key={estado.pieza.gancho} pieza={estado.pieza} />}
+            {estado?.estado === 'lista' && <ContenidoPieza key={estado.pieza.gancho} pieza={estado.pieza} banda={banda} />}
           </div>
 
           <footer className="flex items-center gap-2 px-5 pb-5 pt-3">

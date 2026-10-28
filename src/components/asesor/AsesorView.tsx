@@ -6,6 +6,7 @@ import { useAsesor } from './hooks/useAsesor';
 import { TarjetaHoy } from './TarjetaHoy';
 import { PiezaSheet } from './PiezaSheet';
 import { FormEstrategia } from './FormEstrategia';
+import type { BandaLaminas } from './hooks/useLaminas';
 
 type Pestana = 'hoy' | 'estrategia';
 const PESTANAS: TabItem<Pestana>[] = [
@@ -25,6 +26,8 @@ const inicialDia = (fecha: string) => INICIAL_DIA[new Date(`${fecha}T12:00:00Z`)
 
 interface Props {
   onNavigate: (vista: 'carteleria', opciones: { concertId: string }) => void;
+  /** Nombre y logo de la banda activa: firman las imágenes de stories y carruseles. */
+  banda: BandaLaminas;
 }
 
 /**
@@ -32,7 +35,7 @@ interface Props {
  * elegir. El plan lo decide el servidor sin IA; la IA solo escribe la pieza cuando la banda la pide.
  * En móvil caben tres bloques antes del scroll: el momento (con la semana), la idea principal y la siguiente.
  */
-const AsesorView: React.FC<Props> = ({ onNavigate }) => {
+const AsesorView: React.FC<Props> = ({ onNavigate, banda }) => {
   const a = useAsesor();
   const [pestana, setPestana] = useState<Pestana>('hoy');
   const [abierta, setAbierta] = useState<Tarjeta | null>(null);
@@ -115,6 +118,7 @@ const AsesorView: React.FC<Props> = ({ onNavigate }) => {
       {tarjetaAbierta && (
         <PiezaSheet
           tarjeta={tarjetaAbierta}
+          banda={banda}
           estado={a.piezas[tarjetaAbierta.id]}
           ocupada={a.ocupadas.has(tarjetaAbierta.id)}
           onCerrar={() => setAbierta(null)}
