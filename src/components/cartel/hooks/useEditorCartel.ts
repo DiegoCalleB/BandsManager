@@ -4,7 +4,7 @@ import { FORMATOS, ORDEN_FORMATOS, type FormatoCartel } from '../../../utils/car
 import { bandasDelBolo, conciertosParaCartel, datosDesdeConcierto, esCompartido } from '../../../utils/cartel/datos';
 import { ajustesDe, configDesdeEstado, CONFIG_INICIAL, conFondoIa, MAX_LOGOS, sanearConfigCartel, type AjustesBolo } from '../../../utils/cartel/config';
 import { conSangradoYMarcas } from '../../../utils/cartel/sangrado';
-import { conAjusteDeBloque, sanearAjustesFinos, sinAjustesDeFormato, type AjusteBloque, type BloqueAjustable } from '../../../utils/cartel/ajustesFinos';
+import type { BloqueAjustable } from '../../../utils/cartel/ajustesFinos';
 import type { Rect } from '../../../utils/cartel/layout';
 import { conReintentos } from '../../../utils/reintentar';
 import { prepararLogo } from '../../../utils/cartel/logos';
@@ -13,6 +13,8 @@ import { lineaHorario } from '../../../utils/cartel/texto';
 import { sinVersion } from '../../../utils/cartel/adn';
 import { useAdnCartel, type DatosBandaCartel } from './useAdnCartel';
 import { useIdeaCartel } from './useIdeaCartel';
+import { useAjusteFino } from './useAjusteFino';
+import { useHistorialCartel, type FotoDiseno } from './useHistorialCartel';
 import {
   canvasABlob,
   compartirODescargar,
@@ -71,6 +73,7 @@ type ConciertoConCartel = Concert & { cartel_config?: unknown };
 
 /** Lo que la persona ha tocado en esta sesión, por bolo. Lo que no ha tocado sale de lo guardado. */
 type PorBolo<T> = Record<string, T>;
+
 
 /** Qué hacer con el cartel del bolo tras exportar: ya tengo el PNG de feed, hay que pintarlo, o nada (cancelado). */
 type TrasExportar = Blob | 'pintar-feed' | null;
@@ -246,13 +249,32 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     if (id) setSucios((p) => (p[id] ? p : { ...p, [id]: true }));
   }, [id]);
 
+  const aplicarFoto = useCallback(
+    (f: FotoDiseno) => {
+      setAjustesPorBolo((p) => ({ ...p, [id]: f.ajustes }));
+      setFondoPorBolo((p) => ({ ...p, [id]: f.fondo }));
+      marcar();
+    },
+    [id, marcar]
+  );
+  const historial = useHistorialCartel(id, useMemo(() => ({ ajustes, fondo: fondoElegido }), [ajustes, fondoElegido]), aplicarFoto);
+  const { anotarPaso } = historial;
   const cambiarAjustes = useCallback(
     (cambio: Partial<AjustesBolo>) => {
       if (!id) return;
+      anotarPaso(Object.keys(cambio).sort().join());
       setAjustesPorBolo((p) => ({ ...p, [id]: { ...(p[id] ?? ajustesGuardados), ...cambio } }));
       marcar();
     },
-    [id, ajustesGuardados, marcar]
+    [id, ajustesGuardados, marcar, anotarPaso]
+  );
+  /** Pone el fondo de este bolo anotando antes el paso, para poder deshacerlo. */
+  const ponerFondo = useCallback(
+    (bolo: string, f: FondoCartel) => {
+      if (bolo === id) anotarPaso('fondo');
+      setFondoPorBolo((p) => ({ ...p, [bolo]: f }));
+    },
+    [id, anotarPaso]
   );
 
   const elegirConcierto = (nuevo: string) => {
@@ -267,7 +289,7 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
 
   const elegirFondo = (f: FondoCartel) => {
     if (!id) return;
-    setFondoPorBolo((p) => ({ ...p, [id]: f }));
+    ponerFondo(id, f);
     setError(null);
     marcar();
   };
@@ -282,7 +304,7 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
       const local = URL.createObjectURL(jpeg);
       fotosLocales.current.push(local);
       setFotoLocalPorBolo((p) => ({ ...p, [bolo]: local }));
-      setFondoPorBolo((p) => ({ ...p, [bolo]: { tipo: 'imagen', origen: 'foto', url: local } }));
+      ponerFondo(bolo, { tipo: 'imagen', origen: 'foto', url: local });
       setError(null);
       // Se sube en segundo plano: la persona sigue trabajando con la copia local.
       subirFotoCartel(bolo, jpeg)
@@ -351,7 +373,7 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
       const r = await generarFondoCartel({ concertId: bolo, estilo, idea: contada, conBoceto, encuadre: 'sangre', conTexto: conLetras });
       // El servidor ya lo añadió al historial guardado; aquí se refleja sin recargar.
       setFondosIaPorBolo((p) => ({ ...p, [bolo]: conFondoIa({ ...CONFIG_INICIAL, fondosIa: p[bolo] ?? fondosIa }, r.url).fondosIa }));
-      setFondoPorBolo((p) => ({ ...p, [bolo]: { tipo: 'imagen', origen: 'ia', url: r.url } }));
+      ponerFondo(bolo, { tipo: 'imagen', origen: 'ia', url: r.url });
       // Lo que pidió, para repetirlo desde favoritos: la escena y el ambiente en una línea.
       const ambiente = [contada?.escena, contada?.ambiente].filter(Boolean).join(' · ').slice(0, 300);
       setMetaIa((p) => ({ ...p, [r.url]: { estilo, ambiente } }));
@@ -382,7 +404,7 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     try {
       const r = await retocarFondoCartel({ concertId: bolo, url: origen, instruccion });
       setFondosIaPorBolo((p) => ({ ...p, [bolo]: conFondoIa({ ...CONFIG_INICIAL, fondosIa: p[bolo] ?? fondosIa }, r.url).fondosIa }));
-      setFondoPorBolo((p) => ({ ...p, [bolo]: { tipo: 'imagen', origen: 'ia', url: r.url } }));
+      ponerFondo(bolo, { tipo: 'imagen', origen: 'ia', url: r.url });
       // Mismo estilo y ambiente que el original, para guardarlo como favorito si les gusta.
       setMetaIa((p) => (p[origen] ? { ...p, [r.url]: p[origen] } : p));
       marcar();
@@ -403,7 +425,7 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
   const usarFavorito = (url: string) => {
     if (!id) return;
     setFondosIaPorBolo((p) => ({ ...p, [id]: conFondoIa({ ...CONFIG_INICIAL, fondosIa: p[id] ?? fondosIa }, url).fondosIa }));
-    setFondoPorBolo((p) => ({ ...p, [id]: { tipo: 'imagen', origen: 'ia', url } }));
+    ponerFondo(id, { tipo: 'imagen', origen: 'ia', url });
     setError(null);
     marcar();
   };
@@ -423,17 +445,7 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     return lista.slice(0, 6);
   }, [concerts, id, adn.adn.referencias]);
 
-  /** Mueve o escala un bloque del formato actual (los desplazamientos van en fracción del ancho). */
-  const ajustarBloque = useCallback(
-    (bloque: BloqueAjustable, cambio: Partial<AjusteBloque>) => {
-      const actual = ajustes.ajustesFinos[formato]?.[bloque] ?? { dx: 0, dy: 0, escala: 1 };
-      const siguiente = sanearAjustesFinos({ [formato]: { [bloque]: { ...actual, ...cambio } } })[formato]?.[bloque] ?? { dx: 0, dy: 0, escala: 1 };
-      cambiarAjustes({ ajustesFinos: conAjusteDeBloque(ajustes.ajustesFinos, formato, bloque, siguiente) });
-    },
-    [ajustes.ajustesFinos, formato, cambiarAjustes]
-  );
-  /** Vuelve al reparto automático en el formato actual. */
-  const reiniciarAjustesFinos = useCallback(() => cambiarAjustes({ ajustesFinos: sinAjustesDeFormato(ajustes.ajustesFinos, formato) }), [ajustes.ajustesFinos, formato, cambiarAjustes]);
+  const { ajustarBloque, reiniciarAjustesFinos } = useAjusteFino(ajustes.ajustesFinos, formato, cambiarAjustes);
 
   const exportar = useCallback(
     async (f: FormatoCartel, paraImprenta = false): Promise<Blob> => {
@@ -549,6 +561,10 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     puedeLetrasIa,
     ajustes,
     cambiarAjustes,
+    deshacer: historial.deshacer,
+    rehacer: historial.rehacer,
+    puedeDeshacer: historial.puedeDeshacer,
+    puedeRehacer: historial.puedeRehacer,
     cajas,
     ajustarBloque,
     reiniciarAjustesFinos,
