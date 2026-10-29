@@ -41,6 +41,7 @@ Lo que se guarda de un cartel en `concerts.cartel_config` (jsonb). Lo usan el cl
 - `server/utils/__tests__/cartelUrl.test.ts`
 - `src/utils/cartel/__tests__/config.test.ts`
 - `src/utils/cartel/__tests__/datos.test.ts`
+- `src/utils/cartel/__tests__/estilosBloques.test.ts`
 
 ---
 

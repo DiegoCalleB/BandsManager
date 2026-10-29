@@ -32,6 +32,8 @@ export interface DatosCartel {
 export interface OpcionesLayout {
   /** Ajustes a mano de este formato: mover y escalar bloques sobre el reparto automático. */
   ajustes?: import('./ajustesFinos').AjustesFinos;
+  /** Letra, color y ocultar de cada bloque (los mismos en todos los formatos). */
+  estilos?: import('./ajustesFinos').EstilosBloques;
   /** Reserva hueco para el QR (solo impresión). */
   qr: boolean;
   /** Texto de la URL corta, sin protocolo: `bandmanager.io/r/ab3k9x2`. */
@@ -54,7 +56,8 @@ export interface OpcionesLayout {
 }
 
 
-export type Medidor = (texto: string, px: number, peso: number, titulo?: boolean, tracking?: number) => number;
+/** `titulo`: `true` = la letra de exhibición del cartel; una voz = esa letra concreta (estilo de bloque). */
+export type Medidor = (texto: string, px: number, peso: number, titulo?: boolean | VozCartel, tracking?: number) => number;
 
 export interface Linea {
   texto: string;
@@ -70,6 +73,10 @@ export interface Linea {
   tracking?: number;
   /** A qué bloque ajustable pertenece (para moverlo y escalarlo a mano). */
   bloque?: import('./ajustesFinos').BloqueAjustable;
+  /** Letra elegida a mano para este bloque (pisa la de la voz del cartel). */
+  voz?: VozCartel;
+  /** Color elegido a mano para este bloque (pisa la tinta automática). */
+  color?: string;
 }
 
 export interface Rect {

@@ -39,6 +39,7 @@ Dónde va cada cosa en el cartel. Puro: recibe un medidor de texto (en el navega
 ## 🧪 Tests que lo cubren
 - `src/utils/cartel/__tests__/ajustesFinos.test.ts`
 - `src/utils/cartel/__tests__/composiciones.test.ts`
+- `src/utils/cartel/__tests__/estilosBloques.test.ts`
 - `src/utils/cartel/__tests__/layout.test.ts`
 - `src/utils/cartel/__tests__/placas.test.ts`
 

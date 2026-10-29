@@ -94,7 +94,8 @@ const CarteleriaView: React.FC<Props> = ({ concerts, bandName, plan, banda, onCa
           </div>
           {ajustandoTexto && (
             <div className="mt-3">
-              <BarraAjusteTexto elegido={bloqueElegido} ajustes={ed.ajustes.ajustesFinos[ed.formato] ?? {}} onAjustar={ed.ajustarBloque} onReiniciar={ed.reiniciarAjustesFinos} hayAjustes={ed.hayAjustesFinos} />
+              <BarraAjusteTexto elegido={bloqueElegido} ajustes={ed.ajustes.ajustesFinos[ed.formato] ?? {}} onAjustar={ed.ajustarBloque} onReiniciar={ed.reiniciarAjustesFinos} hayAjustes={ed.hayAjustesFinos}
+                estilos={ed.ajustes.estilos} paleta={ed.adn.paletaBanda ? [ed.adn.paletaBanda.fondo, ed.adn.paletaBanda.acento] : []} onEstilar={ed.estilarBloque} />
             </div>
           )}
           <div className="mt-3 flex items-center gap-2">

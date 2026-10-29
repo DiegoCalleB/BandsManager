@@ -21,6 +21,7 @@ Exporta: CapaAjusteTexto, BarraAjusteTexto.
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_utils_cartel_ajustesFinos|src/utils/cartel/ajustesFinos.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_layout|src/utils/cartel/layout.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_cartel_voces|src/utils/cartel/voces.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cn|src/utils/cn.ts]] *(Layer: #service, Domain: #system)*
 
 ---

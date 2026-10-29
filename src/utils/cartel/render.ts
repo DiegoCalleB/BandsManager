@@ -149,7 +149,7 @@ function tintaDeLineas(ctx: CanvasRenderingContext2D, lineas: Linea[], zona: Rec
       return ctx.getImageData(x, y, Math.max(1, Math.min(Math.round(r.w), ctx.canvas.width - x)), Math.max(1, Math.min(Math.round(r.h), ctx.canvas.height - y))).data;
     });
     const trozos = lineas.map((l) => {
-      ctx.font = fuente(l.peso, l.px, l.titulo ? voz : null);
+      ctx.font = fuente(l.peso, l.px, l.voz ?? (l.titulo ? voz : null));
       conTracking(ctx, l.px, l.tracking);
       const ancho = ctx.measureText(l.texto).width;
       const pad = 6 * u;
@@ -356,12 +356,14 @@ export async function renderCartel(
   const voz = aSangre && piezas.vozAuto ? 'cartel' : (piezas.voz ?? 'moderna');
   const composicion = aSangre && piezas.composicionAuto ? 'base' : piezas.composicion;
   await prepararFuentes(voz);
+  // Las letras elegidas a mano para algún bloque también tienen que estar cargadas.
+  for (const e of Object.values(piezas.opciones.estilos ?? {})) if (e?.fuente && e.fuente !== voz) await prepararFuentes(e.fuente);
 
   const ctx = canvas.getContext('2d', { willReadFrequently: true });
   if (!ctx) throw new Error('Tu navegador no puede dibujar el cartel.');
 
-  const medir = (t: string, px: number, peso: number, titulo?: boolean, tracking?: number) => {
-    ctx.font = fuente(peso, px, titulo ? voz : null);
+  const medir = (t: string, px: number, peso: number, titulo?: boolean | VozCartel, tracking?: number) => {
+    ctx.font = fuente(peso, px, titulo === true ? voz : titulo || null);
     conTracking(ctx, px, tracking);
     return ctx.measureText(t).width;
   };
@@ -431,7 +433,7 @@ export async function renderCartel(
   ctx.textBaseline = 'top';
   const pintar = (lineas: Linea[], t: Tinta) => {
     for (const l of lineas) {
-      ctx.font = fuente(l.peso, l.px, l.titulo ? voz : null);
+      ctx.font = fuente(l.peso, l.px, l.voz ?? (l.titulo ? voz : null));
       conTracking(ctx, l.px, l.tracking);
       ctx.textAlign = l.alinear;
       // Desregistro de serigrafía: el nombre y el día se imprimen antes con la segunda tinta, apenas desplazada.
@@ -442,7 +444,7 @@ export async function renderCartel(
         ctx.fillText(l.texto, l.x + l.px * 0.035, l.y + l.px * 0.03);
         ctx.restore();
       }
-      ctx.fillStyle = tintaDe(t);
+      ctx.fillStyle = l.color ?? tintaDe(t);
       ctx.fillText(l.texto, l.x, l.y);
     }
     conTracking(ctx, 1, 0);
@@ -487,7 +489,7 @@ export async function renderCartel(
   if (L.qr && piezas.qrUrl) dibujarQr(ctx, L.qr, piezas.qrUrl);
 
   // 5. Logos de las bandas, en la tinta de abajo (donde están). Son opcionales.
-  dibujarLogos(ctx, L.logos, logos, tintaDe(tAbajo), piezas.logosTinta !== false, u);
+  dibujarLogos(ctx, L.logos, logos, piezas.opciones.estilos?.logos?.color ?? tintaDe(tAbajo), piezas.logosTinta !== false, u);
 
   return L;
 }

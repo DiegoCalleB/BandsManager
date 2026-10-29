@@ -117,6 +117,29 @@ test('ajustar el texto a mano: arrastrar un bloque, escalarlo y volver al automÃ
   await expect.poll(() => peticiones.filter((p) => p.ruta.endsWith('/config')).some((p) => !JSON.parse(p.cuerpo.toString()).ajustesFinos?.feed), { timeout: 8_000 }).toBe(true);
 });
 
+test('estilo de un bloque: cambiar su letra y su color, ocultarlo y volver a mostrarlo', async ({ page }) => {
+  const { peticiones } = await abrirCarteleria(page);
+  const antes = await cartel(page);
+  await page.getByRole('button', { name: 'Ajustar el texto' }).click();
+  await page.getByRole('button', { name: 'Mover Fecha' }).click();
+
+  await page.getByLabel('Letra de Fecha').selectOption('clasica');
+  await expect.poll(() => cartel(page), { timeout: 10_000 }).not.toBe(antes);
+  const conLetra = await cartel(page);
+  await page.getByRole('button', { name: 'Color #e63946' }).click();
+  await expect.poll(() => cartel(page), { timeout: 10_000 }).not.toBe(conLetra);
+  await page.screenshot({ path: 'test-results/estilo-bloque.png', fullPage: true });
+  await expect.poll(() => peticiones.some((p) => p.ruta.endsWith('/config') && JSON.parse(p.cuerpo.toString()).estilos?.fecha?.fuente === 'clasica'), { timeout: 8_000 }).toBe(true);
+
+  const conColor = await cartel(page);
+  await page.getByRole('button', { name: 'Ocultar' }).click();
+  await expect.poll(() => cartel(page), { timeout: 10_000 }).not.toBe(conColor);
+  await expect(page.getByRole('button', { name: 'Mover Fecha' })).toHaveCount(0);
+  await page.getByRole('button', { name: 'Mostrar fecha' }).click();
+  await expect(page.getByRole('button', { name: 'Mover Fecha' })).toBeVisible();
+  await expect.poll(() => cartel(page), { timeout: 10_000 }).toBe(conColor);
+});
+
 test('editar el nombre y el lugar del cartel repinta y se guarda sin tocar el bolo', async ({ page }) => {
   const { peticiones } = await abrirCarteleria(page);
   const antes = await cartel(page);
