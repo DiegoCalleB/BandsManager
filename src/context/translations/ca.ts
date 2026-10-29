@@ -12,6 +12,7 @@ export const ca: Record<string, string> = {
   'nav.fans': 'Captura QR i Fans',
   'nav.reels': 'Reels Center',
   'nav.carteleria': 'Cartelleria',
+  'nav.asesor': 'Assessor de màrqueting',
   'nav.repertorio': 'Repertoris',
   'nav.ensayos': 'Assajos',
   'nav.discografia': 'Discografia',

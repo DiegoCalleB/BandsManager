@@ -12,6 +12,7 @@ export const en: Record<string, string> = {
   'nav.fans': 'QR Capture & Fans',
   'nav.reels': 'Reels Center',
   'nav.carteleria': 'Posters',
+  'nav.asesor': 'Marketing advisor',
   'nav.repertorio': 'Setlists',
   'nav.ensayos': 'Rehearsals',
   'nav.discografia': 'Discography',

@@ -12,6 +12,7 @@ export const eu: Record<string, string> = {
   'nav.fans': 'QR Harrapaketa eta Zaleak',
   'nav.reels': 'Reels Center',
   'nav.carteleria': 'Kartelak',
+  'nav.asesor': 'Marketin aholkularia',
   'nav.repertorio': 'Errepertorioak',
   'nav.ensayos': 'Entseguak',
   'nav.discografia': 'Diskografia',
