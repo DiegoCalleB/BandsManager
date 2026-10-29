@@ -192,6 +192,7 @@ const CarteleriaView: React.FC<Props> = ({ concerts, bandName, plan, banda, onCa
           lugarBolo={[ed.concierto?.sala, ed.concierto?.ciudad].filter(Boolean).join(', ')}
           tieneDireccion={ed.tieneDireccion}
           tieneEnlace={ed.tieneEnlace}
+          tieneEntradas={ed.tieneEntradas}
           tieneLogo={ed.tieneLogo}
           puedeQuitarMarca={ed.puedeQuitarMarca}
           logos={ed.logos}

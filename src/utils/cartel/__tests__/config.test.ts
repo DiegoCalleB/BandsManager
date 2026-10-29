@@ -71,10 +71,13 @@ describe('la composición del cartel en la configuración', () => {
     expect(sanearConfigCartel({ v: 1, direccion: 'sí' }, () => true)?.direccion).toBe(false);
   });
 
-  it('el QR en Feed e Historia viene apagado y solo se enciende con un booleano de verdad', () => {
-    expect(CONFIG_INICIAL.qrDigital).toBe(false);
-    expect(sanearConfigCartel({ v: 1, qrDigital: true }, () => true)?.qrDigital).toBe(true);
-    expect(sanearConfigCartel({ v: 1, qrDigital: 1 }, () => true)?.qrDigital).toBe(false);
+  it('el QR en Feed e Historia viene encendido y solo se apaga con un false de verdad; el destino es uno conocido', () => {
+    expect(CONFIG_INICIAL.qrDigital).toBe(true);
+    expect(sanearConfigCartel({ v: 1, qrDigital: false }, () => true)?.qrDigital).toBe(false);
+    expect(sanearConfigCartel({ v: 1, qrDigital: 1 }, () => true)?.qrDigital).toBe(true);
+    expect(CONFIG_INICIAL.qrDestino).toBe('concierto');
+    expect(sanearConfigCartel({ v: 1, qrDestino: 'fans' }, () => true)?.qrDestino).toBe('fans');
+    expect(sanearConfigCartel({ v: 1, qrDestino: 'http://evil' }, () => true)?.qrDestino).toBe('concierto');
   });
 
   it('una plantilla de autor es un fondo válido y un id desconocido cae al fondo inicial', () => {

@@ -65,16 +65,29 @@ test('la dirección se activa en Ajustes, repinta el cartel y se guarda en el bo
   await expect.poll(() => peticiones.some((p) => p.ruta.endsWith('/config') && JSON.parse(p.cuerpo.toString()).direccion === true), { timeout: 8_000 }).toBe(true);
 });
 
-test('el QR también se puede poner en Feed: repinta el cartel y se guarda en el bolo', async ({ page }) => {
+test('el QR sale también en Feed por defecto y se puede quitar: repinta el cartel y se guarda en el bolo', async ({ page }) => {
   const { peticiones } = await abrirCarteleria(page);
   const antes = await cartel(page);
   await abrirAjustes(page);
   const interruptor = page.getByRole('switch', { name: 'QR también en Feed e Historia' });
-  await expect(interruptor).not.toBeChecked();
-  await interruptor.click();
   await expect(interruptor).toBeChecked();
+  await interruptor.click();
+  await expect(interruptor).not.toBeChecked();
   await expect.poll(() => cartel(page), { timeout: 10_000 }).not.toBe(antes);
-  await expect.poll(() => peticiones.some((p) => p.ruta.endsWith('/config') && JSON.parse(p.cuerpo.toString()).qrDigital === true), { timeout: 8_000 }).toBe(true);
+  await expect.poll(() => peticiones.some((p) => p.ruta.endsWith('/config') && JSON.parse(p.cuerpo.toString()).qrDigital === false), { timeout: 8_000 }).toBe(true);
+});
+
+test('el QR puede llevar a la página de fans: pide su enlace, repinta el cartel y se guarda en el bolo', async ({ page }) => {
+  const { peticiones } = await abrirCarteleria(page);
+  await abrirAjustes(page);
+  const selector = page.getByLabel('El QR lleva a');
+  await expect(selector).toHaveValue('concierto');
+  // Sin enlace de entradas en el bolo, esa opción no se puede elegir.
+  await expect(selector.locator('option[value="entradas"]')).toBeDisabled();
+  const enlace = page.waitForRequest((r) => r.url().endsWith('/api/short-links') && JSON.parse(r.postData() || '{}').destino === 'fans');
+  await selector.selectOption('fans');
+  expect(JSON.parse((await enlace).postData()!)).toMatchObject({ concertId: expect.any(String), destino: 'fans', canal: 'cartel' });
+  await expect.poll(() => peticiones.some((p) => p.ruta.endsWith('/config') && JSON.parse(p.cuerpo.toString()).qrDestino === 'fans'), { timeout: 8_000 }).toBe(true);
 });
 
 test('las plantillas de autor son un respaldo: no están por defecto y salen si la IA falla', async ({ page }) => {
