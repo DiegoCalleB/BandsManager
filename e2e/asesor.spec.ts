@@ -57,7 +57,7 @@ const RESUMEN = {
  * su galería. `sinFotos` la deja sin galería: «Poner foto» sube directamente desde el dispositivo.
  * `conPendientes`: una publicación espera sus números y ya hay con qué hacer un resumen.
  */
-async function abrirAsesor(page: Page, { conAdn = false, sinFotos = false, conPendientes = false }: { conAdn?: boolean; sinFotos?: boolean; conPendientes?: boolean } = {}) {
+async function abrirAsesor(page: Page, { conAdn = false, sinFotos = false, conPendientes = false, rescate = false }: { conAdn?: boolean; sinFotos?: boolean; conPendientes?: boolean; rescate?: boolean } = {}) {
   const peticiones: Array<{ ruta: string; cuerpo: Record<string, unknown> | null }> = [];
   const servidor = { hechas: new Set<string>(), saltadas: new Set<string>(), medido: false };
   const ideas = [
@@ -91,8 +91,12 @@ async function abrirAsesor(page: Page, { conAdn = false, sinFotos = false, conPe
       const vivas = ideas.filter((i) => !servidor.saltadas.has(i.id)).map((i) => ({ ...i, hecha: servidor.hechas.has(i.id) }));
       return route.fulfill({ json: {
         hoy: '2026-10-28',
-        diagnostico: { modo: 'concierto', porque: 'Tocáis en 3 días en Oktoberfest, Leganés: toca llenar la sala.', concierto: null, dias: 3 },
-        opciones: { recomendadas: vivas.slice(0, 2), alternativas: vivas.slice(2) },
+        diagnostico: rescate
+          ? { modo: 'rescate', porque: 'Vuestro alcance lleva tres semanas bajando: toca probar algo distinto, no insistir.', concierto: null, dias: null }
+          : { modo: 'concierto', porque: 'Tocáis en 3 días en Oktoberfest, Leganés: toca llenar la sala.', concierto: null, dias: 3 },
+        opciones: rescate
+          ? { recomendadas: [IDEA('rescate-opuesto', 'carrusel', 'Probad un carrusel', { porque: 'Con los reels no está arrancando: cambiar de formato enseña más que insistir.' })], alternativas: [IDEA('rescate-pregunta', 'stories', 'Preguntad qué quieren ver')] }
+          : { recomendadas: vivas.slice(0, 2), alternativas: vivas.slice(2) },
         porMedir: conPendientes && !servidor.medido ? [{ fecha: '2026-10-24', tarjetaId: 'fondo-pilar', formato: 'reel', titulo: 'Tema de la semana: La furgo' }] : [],
         resumen: conPendientes ? RESUMEN : null,
         agenda: [
@@ -129,7 +133,7 @@ async function abrirAsesor(page: Page, { conAdn = false, sinFotos = false, conPe
   await page.getByText('Explorar por mi cuenta').click({ timeout: 3_000 }).catch(() => {});
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/?view=asesor');
-  await page.getByText('Modo concierto').waitFor({ timeout: 20_000 });
+  await page.getByText(rescate ? 'Cambiar de rumbo' : 'Modo concierto').waitFor({ timeout: 20_000 });
   return { peticiones };
 }
 
@@ -339,4 +343,15 @@ test('el calendario sitúa hoy y enseña lo publicado, el bolo y los hitos', asy
   await page.screenshot({ path: 'test-results/asesor-calendario.png' });
   await cal.getByRole('button', { name: 'Ver qué toca' }).click();
   await expect(page.getByRole('region', { name: 'Recomendado para hoy' })).toBeVisible();
+});
+
+test('en modo rescate la cabecera lo dice sin dramatismo y la idea propone cambiar de formato', async ({ page }) => {
+  await abrirAsesor(page, { rescate: true });
+  await expect(page.getByText('Cambiar de rumbo')).toBeVisible();
+  await expect(page.getByRole('heading', { name: /tres semanas bajando/ })).toBeVisible();
+  const recomendado = page.getByRole('region', { name: 'Recomendado para hoy' });
+  await expect(recomendado.getByText('Probad un carrusel')).toBeVisible();
+  await expect(recomendado.getByText(/cambiar de formato enseña más que insistir/)).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await page.screenshot({ path: 'test-results/asesor-rescate.png' });
 });

@@ -16,6 +16,7 @@ type Pestana = 'hoy' | 'calendario' | 'resultados' | 'estrategia';
 const MODO: Record<Modo, string> = {
   concierto: 'Modo concierto',
   lanzamiento: 'Modo estreno',
+  rescate: 'Cambiar de rumbo',
   reactivar: 'Volver a publicar',
   fondo: 'Hacer comunidad',
 };
