@@ -94,6 +94,25 @@ test('las plantillas de autor son un respaldo: no están por defecto y salen si 
   await expect(page.getByLabel('Retocar el fondo')).toHaveCount(0);
 });
 
+test('en el ordenador «Foto» e «IA» están siempre a la vista a la derecha y los fondos hechos no se esconden', async ({ page }) => {
+  await abrirCarteleria(page);
+  // El ayudante abre en móvil: se pasa a escritorio una vez dentro.
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.locator('button[title="Fondo con IA"]').click();
+  await page.getByRole('button', { name: 'Pintar fondo' }).click();
+  await expect(page.getByRole('button', { name: /Fondo con IA 1/ })).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByLabel('Fondos con IA de este bolo')).toBeVisible();
+
+  const ia = (await page.locator('button[title="Fondo con IA"]').boundingBox())!;
+  const foto = (await page.locator('label[title="Usar una foto vuestra"]').boundingBox())!;
+  const columna = (await page.getByRole('group', { name: 'Fondo del cartel' }).boundingBox())!;
+  // Dentro de la pantalla y a la derecha de los fondos fijos, sin tener que desplazar nada.
+  expect(ia.x + ia.width).toBeLessThanOrEqual(1280);
+  expect(foto.x).toBeGreaterThanOrEqual(columna.x + columna.width - 1);
+  expect(ia.x).toBeGreaterThan(foto.x);
+  await page.screenshot({ path: 'test-results/selector-fondo-escritorio.png' });
+});
+
 test('ajustar el texto a mano: arrastrar un bloque, escalarlo y volver al automático', async ({ page }) => {
   const { peticiones } = await abrirCarteleria(page);
   const antes = await cartel(page);

@@ -86,48 +86,60 @@ export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenera
 
   return (
     <div className="grid gap-3">
-      <div className="no-scrollbar -mx-4 flex shrink-0 gap-2.5 overflow-x-auto px-4" role="group" aria-label="Fondo del cartel">
-        {PALETAS.map((p) => (
-          <Muestra key={p.id} etiqueta={`Fondo ${p.nombre}`} activa={fondo.tipo === 'paleta' && fondo.id === p.id} onClick={() => onFondo({ tipo: 'paleta', id: p.id })}>
-            <MuestraPaleta fondo={p.fondo} acento={p.acento} />
-          </Muestra>
-        ))}
-        {paletaBanda && (
-          <Muestra etiqueta="Fondo Tus colores" activa={fondo.tipo === 'paleta' && fondo.id === 'banda'} onClick={() => onFondo({ tipo: 'paleta', id: 'banda' })}>
-            <MuestraPaleta fondo={paletaBanda.fondo} acento={paletaBanda.acento} />
-          </Muestra>
-        )}
-
-        {foto && (
-          <Muestra etiqueta="Tu foto" activa={esImagen(foto)} onClick={() => onFondo({ tipo: 'imagen', url: foto, origen: 'foto' })}>
-            <img src={foto} alt="" className="size-full object-cover" />
-          </Muestra>
-        )}
-        <label className="group grid shrink-0 cursor-pointer justify-items-center gap-1.5" title="Usar una foto vuestra">
-          <span className="grid size-12 place-items-center rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink-2)] transition-ui group-hover:text-[var(--ink)]">
-            <ImagePlus className="size-5" aria-hidden />
-          </span>
-          <span className="h-1" />
-          <input type="file" accept="image/*" className="sr-only" aria-label="Usar una foto vuestra"
-            onChange={(e) => {
-              onFoto(e.target.files?.[0]);
-              e.target.value = '';
-            }} />
-        </label>
-
-        {fondosIa.map((url, i) => (
-          <Muestra key={url} etiqueta={`Fondo con IA ${i + 1}`} activa={esImagen(url)} onClick={() => onFondo({ tipo: 'imagen', url, origen: 'ia' })}>
-            <img src={url} alt="" crossOrigin="anonymous" className="size-full object-cover" />
-          </Muestra>
-        ))}
-        <button type="button" onClick={() => setIaAbierta((v) => !v)} aria-expanded={iaAbierta}
-          className="group grid shrink-0 cursor-pointer justify-items-center gap-1.5" title="Fondo con IA">
-          <span className={cn('grid size-12 place-items-center rounded-[var(--r-s)] transition-ui', iaAbierta ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]' : 'bg-[var(--sunken)] text-[var(--ink-2)] group-hover:text-[var(--ink)]')}>
-            <Sparkles className="size-5" aria-hidden />
-          </span>
-          <span className="text-[11px] leading-none text-[var(--ink-2)]">IA</span>
-        </button>
+      {/* Los fondos fijos se desplazan; «subir foto» y «IA» van siempre a la derecha, a la vista (en el ordenador la fila se pasaba de ancho). */}
+      <div className="flex items-start gap-2.5">
+        <div className="no-scrollbar flex min-w-0 flex-1 gap-2.5 overflow-x-auto" role="group" aria-label="Fondo del cartel">
+          {PALETAS.map((p) => (
+            <Muestra key={p.id} etiqueta={`Fondo ${p.nombre}`} activa={fondo.tipo === 'paleta' && fondo.id === p.id} onClick={() => onFondo({ tipo: 'paleta', id: p.id })}>
+              <MuestraPaleta fondo={p.fondo} acento={p.acento} />
+            </Muestra>
+          ))}
+          {paletaBanda && (
+            <Muestra etiqueta="Fondo Tus colores" activa={fondo.tipo === 'paleta' && fondo.id === 'banda'} onClick={() => onFondo({ tipo: 'paleta', id: 'banda' })}>
+              <MuestraPaleta fondo={paletaBanda.fondo} acento={paletaBanda.acento} />
+            </Muestra>
+          )}
+          {foto && (
+            <Muestra etiqueta="Tu foto" activa={esImagen(foto)} onClick={() => onFondo({ tipo: 'imagen', url: foto, origen: 'foto' })}>
+              <img src={foto} alt="" className="size-full object-cover" />
+            </Muestra>
+          )}
+        </div>
+        <div className="flex shrink-0 gap-2.5">
+          <label className="group grid shrink-0 cursor-pointer justify-items-center gap-1.5" title="Usar una foto vuestra">
+            <span className="grid size-12 place-items-center rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink-2)] transition-ui group-hover:text-[var(--ink)]">
+              <ImagePlus className="size-5" aria-hidden />
+            </span>
+            <span className="text-[11px] leading-none text-[var(--ink-2)]">Foto</span>
+            <input type="file" accept="image/*" className="sr-only" aria-label="Usar una foto vuestra"
+              onChange={(e) => {
+                onFoto(e.target.files?.[0]);
+                e.target.value = '';
+              }} />
+          </label>
+          <button type="button" onClick={() => setIaAbierta((v) => !v)} aria-expanded={iaAbierta}
+            className="group grid shrink-0 cursor-pointer justify-items-center gap-1.5" title="Fondo con IA">
+            <span className={cn('grid size-12 place-items-center rounded-[var(--r-s)] transition-ui', iaAbierta ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]' : 'bg-[var(--sunken)] text-[var(--ink-2)] group-hover:text-[var(--ink)]')}>
+              <Sparkles className="size-5" aria-hidden />
+            </span>
+            <span className="text-[11px] leading-none text-[var(--ink-2)]">IA</span>
+          </button>
+        </div>
       </div>
+
+      {/* Los fondos que ya se hicieron para este bolo (hasta 8): siempre visibles, no escondidos al final de una fila que se desplaza. */}
+      {fondosIa.length > 0 && (
+        <div className="grid gap-1.5" role="group" aria-label="Fondos con IA de este bolo">
+          <p className="text-xs text-[var(--ink-2)]">Fondos con IA de este bolo · {fondosIa.length}</p>
+          <div className="flex flex-wrap gap-2.5">
+            {fondosIa.map((url, i) => (
+              <Muestra key={url} etiqueta={`Fondo con IA ${i + 1}`} activa={esImagen(url)} onClick={() => onFondo({ tipo: 'imagen', url, origen: 'ia' })}>
+                <img src={url} alt="" crossOrigin="anonymous" className="size-full object-cover" />
+              </Muestra>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Respaldo, no camino principal: solo si la IA ha fallado (o ya se eligió una plantilla, para poder cambiarla). */}
       {(iaFalla || fondo.tipo === 'plantilla') && (
