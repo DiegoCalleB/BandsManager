@@ -23,7 +23,7 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-_Sin llamadas entrantes indexadas._
+- [[src_utils_benchmarkAcordes|src/utils/benchmarkAcordes.ts]] *(from #service)*
 
 ---
 

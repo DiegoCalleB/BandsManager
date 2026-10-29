@@ -132,3 +132,7 @@ BTC (ISMIR 2019, MIT) en Google Colab: sube los audios con el título de la canc
 - Cada tramo usa su tonalidad como pista diatónica: en sintético con mucho ruido, el tramo modulado pasa de 75 % a 100 % (La ya no se lee como Lam). Un acorde prestado no crea una modulación.
 - Se guarda en `analisis.tonalidades` (solo si hay más de un tramo); el visor muestra «tono D → E en 2:31». Log: `tonos=C@0s>D@40s`.
 - Coste: una pasada más del detector (~1 s por canción).
+
+## Benchmark contra verdad manual
+
+`npm run benchmark:acordes` compara el detector con referencias `.lab` anotadas a mano (`benchmarks/acordes/`), con línea base y `--comprobar` para CI. Pendiente: sustituir el fixture sintético por 10–15 canciones reales. Ver `benchmarks/acordes/README.md`.
