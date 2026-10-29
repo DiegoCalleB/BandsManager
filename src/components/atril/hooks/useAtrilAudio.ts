@@ -82,7 +82,14 @@ export function useAtrilAudio({ song, onUpdateSong, ajustes, transpose, setAiSuc
     else if (el.hasAttribute("src")) { el.removeAttribute("src"); el.load(); }
   }, [audioUrl]);
   const { ajustes: ajustesPistas, setAjustes: setAjustesPistas, velocidad, setVelocidad } = useMezclaGuardada(song.id);
-  useEffect(() => { if (audioRef.current) audioRef.current.playbackRate = velocidad; }, [velocidad, audioUrl]);
+  useEffect(() => {
+    const el = audioRef.current;
+    if (!el) return;
+    el.playbackRate = velocidad;
+    // Ir más lento no debe cambiar el tono (Safari antiguo aún usa el prefijo)
+    el.preservesPitch = true;
+    (el as HTMLAudioElement & { webkitPreservesPitch?: boolean }).webkitPreservesPitch = true;
+  }, [velocidad, audioUrl]);
   const [audioSigueTono, setAudioSigueTono] = useState<boolean>(true);
   const semitonosAudio = audioSigueTono ? transpose : 0;
   useMezclaStems(audioRef, pistasSonando, audioUrl, ajustesPistas, semitonosAudio);

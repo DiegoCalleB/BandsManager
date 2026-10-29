@@ -1,5 +1,6 @@
 import React from 'react';
 import { VELOCIDADES_ATRIL } from '../../utils/mezclaGuardada';
+import { VELOCIDAD_MAX, VELOCIDAD_MIN } from '../../utils/tonoDestino';
 
 /** Velocidad de práctica del Atril (el tono se mantiene): más lento para practicar (50–90 %) o más rápido para perfeccionar (110–125 %). */
 export const ControlVelocidad: React.FC<{ velocidad: number; onVelocidad: (v: number) => void }> = ({ velocidad, onVelocidad }) => (
@@ -15,5 +16,15 @@ export const ControlVelocidad: React.FC<{ velocidad: number; onVelocidad: (v: nu
         {Math.round(v * 100)}%
       </button>
     ))}
+    <input
+      type="range"
+      aria-label="Velocidad fina"
+      min={VELOCIDAD_MIN * 100}
+      max={VELOCIDAD_MAX * 100}
+      step={5}
+      value={Math.round(velocidad * 100)}
+      onChange={(e) => onVelocidad(Number(e.target.value) / 100)}
+      className="w-20 accent-[var(--acc)] cursor-pointer"
+    />
   </span>
 );
