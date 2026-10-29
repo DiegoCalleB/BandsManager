@@ -6,7 +6,10 @@ import type { FormatoCartel } from './formatos';
 import type { LayoutCartel, Linea, Medidor, Rect } from './layoutBase';
 import { VOCES, VOCES_CARTEL, type VozCartel } from './voces';
 
-export const BLOQUES = ['nombre', 'fecha', 'datos', 'qr', 'logos', 'pie'] as const;
+/** Los textos sueltos que la persona añade (hasta 3): bloques como los demás, para moverlos, escalarlos y darles letra y color. */
+export const LIBRES = ['libre1', 'libre2', 'libre3'] as const;
+export const esLibre = (b: BloqueAjustable) => (LIBRES as readonly string[]).includes(b);
+export const BLOQUES = ['nombre', 'fecha', 'datos', 'qr', 'logos', 'pie', ...LIBRES] as const;
 export type BloqueAjustable = (typeof BLOQUES)[number];
 
 export const ETIQUETA_BLOQUE: Record<BloqueAjustable, string> = {
@@ -16,6 +19,9 @@ export const ETIQUETA_BLOQUE: Record<BloqueAjustable, string> = {
   qr: 'QR',
   logos: 'Logos',
   pie: 'Pie',
+  libre1: 'Texto 1',
+  libre2: 'Texto 2',
+  libre3: 'Texto 3',
 };
 
 /** Desplazamiento en fracción del ANCHO del cartel (así vale igual en la vista previa y en el A4) y escala del bloque. */
@@ -37,8 +43,8 @@ export interface EstiloBloque {
   oculto?: boolean;
 }
 export type EstilosBloques = Partial<Record<BloqueAjustable, EstiloBloque>>;
-export const BLOQUES_CON_FUENTE: readonly BloqueAjustable[] = ['nombre', 'fecha', 'datos', 'pie'];
-export const BLOQUES_CON_COLOR: readonly BloqueAjustable[] = ['nombre', 'fecha', 'datos', 'pie', 'logos'];
+export const BLOQUES_CON_FUENTE: readonly BloqueAjustable[] = ['nombre', 'fecha', 'datos', 'pie', ...LIBRES];
+export const BLOQUES_CON_COLOR: readonly BloqueAjustable[] = [...BLOQUES_CON_FUENTE, 'logos'];
 const COLOR_HEX = /^#[0-9a-f]{6}$/i;
 
 export function sanearEstilosBloques(raw: unknown): EstilosBloques {
@@ -225,7 +231,7 @@ export function aplicarAjustesFinos(L: LayoutCartel, ajustes: AjustesFinos | und
   let arribaH = L.zonas.arriba.h;
   let abajoY = L.zonas.abajo.y;
   lineas.forEach((l, i) => {
-    if (ocultas.has(i)) return;
+    if (ocultas.has(i) || l.libre) return;
     if (abajoOriginal.has(L.lineas[i])) abajoY = Math.min(abajoY, l.y - l.px * 0.2);
     else arribaH = Math.max(arribaH, l.y + l.px * 1.1);
   });

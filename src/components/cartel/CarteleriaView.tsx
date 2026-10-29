@@ -14,7 +14,7 @@ import { EstiloBanda } from './EstiloBanda';
 import { IdeaCartel } from './IdeaCartel';
 import { AjustesCartel } from './AjustesCartel';
 import { BarraAjusteTexto, CapaAjusteTexto } from './AjusteTexto';
-import type { BloqueAjustable } from '../../utils/cartel/ajustesFinos';
+import { LIBRES, type BloqueAjustable } from '../../utils/cartel/ajustesFinos';
 import { puedeQuitarMarcaCartel } from '../../utils/planPermissions';
 
 interface Props {
@@ -43,6 +43,12 @@ const CarteleriaView: React.FC<Props> = ({ concerts, bandName, plan, banda, onCa
   const ed = useEditorCartel({ canvasRef, concerts, bandName, initialConcertId, puedeQuitarMarca: puedeQuitarMarcaCartel(plan), banda, onCartelGuardado });
   const [ajustesAbiertos, setAjustesAbiertos] = useState(false);
   const { deshacer, rehacer } = ed;
+  const anadirTexto = () => {
+    const hueco = LIBRES.findIndex((_, i) => !ed.ajustes.libres[i]?.trim());
+    if (hueco < 0) return;
+    ed.editarLibre(hueco, 'Texto nuevo');
+    setBloqueElegido(LIBRES[hueco]);
+  };
 
   // Ctrl/⌘+Z deshace y Ctrl/⌘+Mayús+Z (o Ctrl+Y) rehace, salvo mientras se escribe en un campo.
   useEffect(() => {
@@ -95,7 +101,8 @@ const CarteleriaView: React.FC<Props> = ({ concerts, bandName, plan, banda, onCa
           {ajustandoTexto && (
             <div className="mt-3">
               <BarraAjusteTexto elegido={bloqueElegido} ajustes={ed.ajustes.ajustesFinos[ed.formato] ?? {}} onAjustar={ed.ajustarBloque} onReiniciar={ed.reiniciarAjustesFinos} hayAjustes={ed.hayAjustesFinos}
-                estilos={ed.ajustes.estilos} paleta={ed.adn.paletaBanda ? [ed.adn.paletaBanda.fondo, ed.adn.paletaBanda.acento] : []} onEstilar={ed.estilarBloque} />
+                estilos={ed.ajustes.estilos} paleta={ed.adn.paletaBanda ? [ed.adn.paletaBanda.fondo, ed.adn.paletaBanda.acento] : []} onEstilar={ed.estilarBloque}
+                libres={ed.ajustes.libres} onLibre={ed.editarLibre} onAnadirLibre={anadirTexto} />
             </div>
           )}
           <div className="mt-3 flex items-center gap-2">

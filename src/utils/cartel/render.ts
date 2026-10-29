@@ -372,7 +372,7 @@ export async function renderCartel(
   const textoIa = aSangre && fondo.tipo === 'imagen' && fondoConTexto(fondo.url);
   // Lo que la IA no dibuja (hora y dirección) va en la franja inferior libre, sobre el pie, como líneas extra.
   const datosLayout: DatosCartel = textoIa
-    ? { lineup: [], fecha: '', horario: '', sala: '', ciudad: '', direccion: '', extra: [piezas.datos.horario, piezas.datos.direccion ?? ''].filter(Boolean).join('\n') }
+    ? { lineup: [], fecha: '', horario: '', sala: '', ciudad: '', direccion: '', libres: piezas.datos.libres, extra: [piezas.datos.horario, piezas.datos.direccion ?? ''].filter(Boolean).join('\n') }
     : piezas.datos;
   const conIlustracion = esIa && !aSangre;
   const L = calcularLayout(def, ancho, datosLayout, { ...piezas.opciones, compacto: conIlustracion, voz, composicion, logos: logos.map((l) => l.img.width / l.img.height) }, medir);
@@ -424,8 +424,9 @@ export async function renderCartel(
   // 2. Tinta y velo, medidos sobre el fondo real de cada zona.
   const fundido = 120 * u;
   const enAbajo = (l: Linea) => l.y >= L.zonas.abajo.y;
-  const lineasArriba = L.lineas.filter((l) => !enAbajo(l));
-  const lineasAbajo = L.lineas.filter(enAbajo);
+  const sueltas = L.lineas.filter((l) => l.libre);
+  const lineasArriba = L.lineas.filter((l) => !l.libre && !enAbajo(l));
+  const lineasAbajo = L.lineas.filter((l) => !l.libre && enAbajo(l));
   // Con una ilustración de IA la tinta es una de las suyas (la oscura y saturada dominante), no un negro de
   // ordenador; solo si no hace falta velo: con velo se mantiene la tinta que garantiza el contraste.
   const tintaOscura = fondo.tipo === 'plantilla' ? TINTA_PLANTILLA[fondo.id] : arte?.tinta;
@@ -481,6 +482,8 @@ export async function renderCartel(
     pintar(lineasArriba, tArriba);
     pintar(lineasAbajo, tAbajo);
   }
+  // Los textos sueltos van encima de todo con su propia tinta, medida justo bajo cada uno (sin velo).
+  for (const l of sueltas) pintar([l], tintaDeLineas(ctx, [l], L.zonas.arriba, u, voz, [], true));
   dibujarAdornos(ctx, L.adornos, (a) => tintaDe(a.y >= L.zonas.abajo.y ? tAbajo : tArriba));
   // 3. La fibra de papel, por encima de todo menos el QR (que tiene que escanear): fondo y letras impresos juntos.
   if (esIa) aplicarGrano(ctx, L.ancho, L.alto, semillaDeTexto(piezas.semilla));

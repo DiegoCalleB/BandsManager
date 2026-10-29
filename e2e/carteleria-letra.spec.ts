@@ -140,6 +140,30 @@ test('estilo de un bloque: cambiar su letra y su color, ocultarlo y volver a mos
   await expect.poll(() => cartel(page), { timeout: 10_000 }).toBe(conColor);
 });
 
+test('texto suelto: añadirlo, escribirlo, moverlo y quitarlo', async ({ page }) => {
+  const { peticiones } = await abrirCarteleria(page);
+  const antes = await cartel(page);
+  await page.getByRole('button', { name: 'Ajustar el texto' }).click();
+  await page.getByRole('button', { name: 'Añadir texto' }).click();
+  await expect.poll(() => cartel(page), { timeout: 10_000 }).not.toBe(antes);
+  await page.getByLabel('Texto', { exact: true }).fill('Entrada 8 €');
+  await expect(page.getByRole('button', { name: 'Mover Texto 1' })).toBeVisible();
+  const escrito = await cartel(page);
+  await page.getByLabel('Letra de Texto 1').selectOption('cartel');
+  await expect.poll(() => cartel(page), { timeout: 10_000 }).not.toBe(escrito);
+  const caja = (await page.getByRole('button', { name: 'Mover Texto 1' }).boundingBox())!;
+  await page.mouse.move(caja.x + caja.width / 2, caja.y + caja.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(caja.x + caja.width / 2 + 30, caja.y + caja.height / 2 + 40, { steps: 5 });
+  await page.mouse.up();
+  await page.screenshot({ path: 'test-results/texto-suelto.png', fullPage: true });
+  await expect.poll(() => peticiones.some((p) => p.ruta.endsWith('/config') && JSON.parse(p.cuerpo.toString()).libres?.[0] === 'Entrada 8 €' && JSON.parse(p.cuerpo.toString()).ajustesFinos?.feed?.libre1), { timeout: 8_000 }).toBe(true);
+
+  await page.getByRole('button', { name: 'Quitar' }).click();
+  await expect(page.getByRole('button', { name: 'Mover Texto 1' })).toHaveCount(0);
+  await expect.poll(() => cartel(page), { timeout: 10_000 }).toBe(antes);
+});
+
 test('editar el nombre y el lugar del cartel repinta y se guarda sin tocar el bolo', async ({ page }) => {
   const { peticiones } = await abrirCarteleria(page);
   const antes = await cartel(page);

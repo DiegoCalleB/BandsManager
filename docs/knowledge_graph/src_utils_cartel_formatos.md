@@ -41,6 +41,7 @@ _Sin dependencias salientes directas._
 - `src/utils/cartel/__tests__/estilosBloques.test.ts`
 - `src/utils/cartel/__tests__/layout.test.ts`
 - `src/utils/cartel/__tests__/placas.test.ts`
+- `src/utils/cartel/__tests__/textosLibres.test.ts`
 
 ---
 

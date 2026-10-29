@@ -27,6 +27,8 @@ export interface DatosCartel {
   direccion?: string;
   /** Línea libre: «Anticipada 10 €». Puede traer varias líneas separadas por \n (las usa el modo con letras de IA). */
   extra: string;
+  /** Textos sueltos (hasta 3; los vacíos reservan su hueco). Se colocan en el centro y se mueven a mano. */
+  libres?: string[];
 }
 
 export interface OpcionesLayout {
@@ -77,6 +79,8 @@ export interface Linea {
   voz?: VozCartel;
   /** Color elegido a mano para este bloque (pisa la tinta automática). */
   color?: string;
+  /** Texto suelto de la persona: no entra en las zonas de velo y se pinta con su propia tinta, medida bajo él. */
+  libre?: boolean;
 }
 
 export interface Rect {
