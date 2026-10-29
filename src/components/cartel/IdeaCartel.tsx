@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ChevronDown, Eye, ImagePlus, X } from 'lucide-react';
 import { Button, Field, IconButton, Input, Textarea } from '../ui';
 import { cn } from '../../utils/cn';
-import { CAMPOS_IDEA, EJEMPLOS_IDEA, MAX_CAMPO_IDEA, camposRellenos } from '../../utils/cartel/idea';
+import { CAMPOS_IDEA, EJEMPLOS_IDEA, MAX_IDEA, camposRellenos } from '../../utils/cartel/idea';
 import { BotonVoz } from './BotonVoz';
 import type { IdeaCartelApi } from './hooks/useIdeaCartel';
 
@@ -56,9 +56,9 @@ export function IdeaCartel({ idea: i }: { idea: IdeaCartelApi }) {
       {/* El micro va FUERA de la etiqueta: dentro, su nombre pasaría a formar parte del nombre del campo. */}
       <div className="relative">
         <Field label={escena.etiqueta}>
-          <Textarea rows={2} maxLength={MAX_CAMPO_IDEA} value={i.idea.escena} placeholder={`Ej.: ${escena.ejemplo}`} className="pr-10" onChange={(e) => i.cambiar('escena', e.target.value)} />
+          <Textarea rows={3} maxLength={MAX_IDEA.escena} value={i.idea.escena} placeholder={`Ej.: ${escena.ejemplo}`} className="pr-10" onChange={(e) => i.cambiar('escena', e.target.value)} />
         </Field>
-        <BotonVoz valor={i.idea.escena} maximo={MAX_CAMPO_IDEA} etiqueta="Dictar la escena" onTexto={(t) => i.cambiar('escena', t)} />
+        <BotonVoz valor={i.idea.escena} maximo={MAX_IDEA.escena} etiqueta="Dictar la escena" onTexto={(t) => i.cambiar('escena', t)} />
       </div>
 
       <button type="button" onClick={() => setMasAbierto((v) => !v)} aria-expanded={verMas}
@@ -71,9 +71,9 @@ export function IdeaCartel({ idea: i }: { idea: IdeaCartelApi }) {
           {detalles.map((c) => (
             <div key={c.id} className="relative">
               <Field label={c.etiqueta}>
-                <Input maxLength={MAX_CAMPO_IDEA} value={i.idea[c.id]} placeholder={`Ej.: ${c.ejemplo}`} className="pr-10" onChange={(e) => i.cambiar(c.id, e.target.value)} />
+                <Input maxLength={MAX_IDEA[c.id]} value={i.idea[c.id]} placeholder={`Ej.: ${c.ejemplo}`} className="pr-10" onChange={(e) => i.cambiar(c.id, e.target.value)} />
               </Field>
-              <BotonVoz valor={i.idea[c.id]} maximo={MAX_CAMPO_IDEA} etiqueta={`Dictar: ${c.etiqueta}`} onTexto={(t) => i.cambiar(c.id, t)} />
+              <BotonVoz valor={i.idea[c.id]} maximo={MAX_IDEA[c.id]} etiqueta={`Dictar: ${c.etiqueta}`} onTexto={(t) => i.cambiar(c.id, t)} />
             </div>
           ))}
         </div>

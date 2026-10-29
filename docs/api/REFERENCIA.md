@@ -247,19 +247,19 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `POST` | `/api/asesor/pieza` | Sesión | iaRateLimiter |  | [`server/routes/asesor.ts:40`](../../server/routes/asesor.ts#L40) |
 | `POST` | `/api/asesor/resultado` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/asesor.ts:66`](../../server/routes/asesor.ts#L66) |
 | `POST` | `/api/campana-concierto/redactar` | Sesión | iaRateLimiter |  | [`server/routes/campanaConcierto.ts:108`](../../server/routes/campanaConcierto.ts#L108) |
-| `GET` | `/api/cartel/adn` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:414`](../../server/routes/cartelria.ts#L414) |
-| `PUT` | `/api/cartel/adn` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:425`](../../server/routes/cartelria.ts#L425) |
-| `POST` | `/api/cartel/brief` | Sesión | iaRateLimiter |  | [`server/routes/cartelria.ts:395`](../../server/routes/cartelria.ts#L395) |
+| `GET` | `/api/cartel/adn` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:423`](../../server/routes/cartelria.ts#L423) |
+| `PUT` | `/api/cartel/adn` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:434`](../../server/routes/cartelria.ts#L434) |
+| `POST` | `/api/cartel/brief` | Sesión | iaRateLimiter |  | [`server/routes/cartelria.ts:404`](../../server/routes/cartelria.ts#L404) |
 | `POST` | `/api/cartel/fondo` | Sesión | imagenRateLimiter |  | [`server/routes/cartelria.ts:122`](../../server/routes/cartelria.ts#L122) |
-| `POST` | `/api/cartel/idea` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:370`](../../server/routes/cartelria.ts#L370) |
-| `DELETE` | `/api/cartel/idea` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:385`](../../server/routes/cartelria.ts#L385) |
-| `POST` | `/api/cartel/referencias` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:441`](../../server/routes/cartelria.ts#L441) |
+| `POST` | `/api/cartel/idea` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:379`](../../server/routes/cartelria.ts#L379) |
+| `DELETE` | `/api/cartel/idea` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:394`](../../server/routes/cartelria.ts#L394) |
+| `POST` | `/api/cartel/referencias` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:450`](../../server/routes/cartelria.ts#L450) |
 | `POST` | `/api/cartel/retocar` | Sesión | imagenRateLimiter |  | [`server/routes/cartelria.ts:203`](../../server/routes/cartelria.ts#L203) |
-| `PUT` | `/api/cartel/{concertId}/config` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:256`](../../server/routes/cartelria.ts#L256) |
-| `POST` | `/api/cartel/{concertId}/foto` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:291`](../../server/routes/cartelria.ts#L291) |
-| `PUT` | `/api/cartel/{concertId}/imagen` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:269`](../../server/routes/cartelria.ts#L269) |
-| `POST` | `/api/cartel/{concertId}/logo` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:314`](../../server/routes/cartelria.ts#L314) |
-| `DELETE` | `/api/cartel/{concertId}/logo` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:348`](../../server/routes/cartelria.ts#L348) |
+| `PUT` | `/api/cartel/{concertId}/config` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:263`](../../server/routes/cartelria.ts#L263) |
+| `POST` | `/api/cartel/{concertId}/foto` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:300`](../../server/routes/cartelria.ts#L300) |
+| `PUT` | `/api/cartel/{concertId}/imagen` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:278`](../../server/routes/cartelria.ts#L278) |
+| `POST` | `/api/cartel/{concertId}/logo` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:323`](../../server/routes/cartelria.ts#L323) |
+| `DELETE` | `/api/cartel/{concertId}/logo` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:357`](../../server/routes/cartelria.ts#L357) |
 
 ### chat
 

@@ -1,5 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
-import { abrirCarteleria } from './helpers/carteleria';
+import fs from 'fs';
+import path from 'path';
+import { abrirCarteleria, FIXTURES } from './helpers/carteleria';
 
 // La letra del nombre y de la fecha: automática según el estilo de la banda y cambiable en Ajustes. Cambiarla
 // repinta el cartel y se guarda en la configuración del bolo. El servidor se simula.
@@ -111,6 +113,22 @@ test('en el ordenador «Foto» e «IA» están siempre a la vista a la derecha y
   expect(foto.x).toBeGreaterThanOrEqual(columna.x + columna.width - 1);
   expect(ia.x).toBeGreaterThan(foto.x);
   await page.screenshot({ path: 'test-results/selector-fondo-escritorio.png' });
+});
+
+test('un fondo de IA dibujado con su propio marco de papel se recorta: el cartel es el arte, hasta el borde', async ({ page }) => {
+  await abrirCarteleria(page);
+  await page.route('**/ia-1.png*', (r) => r.fulfill({ body: fs.readFileSync(path.join(FIXTURES, 'fondo-ia-marco.png')), contentType: 'image/png', headers: { 'access-control-allow-origin': '*' } }));
+  await page.locator('button[title="Fondo con IA"]').click();
+  await page.getByRole('button', { name: 'Pintar fondo' }).click();
+  await expect(page.getByRole('button', { name: /Fondo con IA 1/ })).toHaveAttribute('aria-pressed', 'true', { timeout: 15_000 });
+  // El borde del cartel es del arte (oscuro), no del papel crema del marco.
+  await expect
+    .poll(() => page.getByLabel(/Vista previa del cartel/).evaluate((c: HTMLCanvasElement) => {
+      // A media altura del borde izquierdo no hay velo ni texto: solo el papel del marco o el arte.
+      const px = c.getContext('2d')!.getImageData(6, Math.round(c.height / 2), 1, 1).data;
+      return 0.299 * px[0] + 0.587 * px[1] + 0.114 * px[2];
+    }), { timeout: 10_000 })
+    .toBeLessThan(120);
 });
 
 test('ajustar el texto a mano: arrastrar un bloque, escalarlo y volver al automático', async ({ page }) => {

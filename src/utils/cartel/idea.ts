@@ -5,7 +5,7 @@
 // Es texto libre de una persona, es decir, DATO: el servidor lo marca como tal y nunca lo trata como
 // una orden para la IA (AGENTS.md §2.2.6).
 
-export const MAX_CAMPO_IDEA = 200;
+
 
 /** Lo que se le pide a la IA, en inglés y por partes (lo calcula el servidor a partir de la idea). */
 export interface BriefIdea {
@@ -30,6 +30,9 @@ export interface IdeaCartel {
 }
 
 export type CampoIdea = keyof IdeaCartel;
+
+/** Cuánto cabe en cada campo: la escena es lo que más se cuenta; el resto, notas más cortas. */
+export const MAX_IDEA: Record<CampoIdea, number> = { escena: 800, ambiente: 400, colores: 300, evitar: 400, parecido: 400 };
 
 export const IDEA_VACIA: IdeaCartel = { escena: '', ambiente: '', colores: '', evitar: '', parecido: '' };
 
@@ -82,13 +85,13 @@ const sinControl = (s: string) =>
       return c >= 32 && c !== 127;
     })
     .join('');
-const campo = (v: unknown) => (typeof v === 'string' ? sinControl(v).trim().slice(0, MAX_CAMPO_IDEA) : '');
+const campo = (v: unknown, max: number) => (typeof v === 'string' ? sinControl(v).trim().slice(0, max) : '');
 
 /** Una idea válida a partir de cualquier cosa (o null si no es un objeto). */
 export function sanearIdea(raw: unknown): IdeaCartel | null {
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
   const r = raw as Record<string, unknown>;
-  return { escena: campo(r.escena), ambiente: campo(r.ambiente), colores: campo(r.colores), evitar: campo(r.evitar), parecido: campo(r.parecido) };
+  return { escena: campo(r.escena, MAX_IDEA.escena), ambiente: campo(r.ambiente, MAX_IDEA.ambiente), colores: campo(r.colores, MAX_IDEA.colores), evitar: campo(r.evitar, MAX_IDEA.evitar), parecido: campo(r.parecido, MAX_IDEA.parecido) };
 }
 
 export const ideaVacia = (i: IdeaCartel) => Object.values(i).every((v) => !v);
