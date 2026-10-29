@@ -32,12 +32,14 @@ El bucle de aprendizaje del asesor: qué piezas esperan sus números, qué cuent
 - [[src_components_asesor_hooks_useAsesor|src/components/asesor/hooks/useAsesor.ts]] *(from #frontend)*
 - [[src_components_asesor_PorMedirCard|src/components/asesor/PorMedirCard.tsx]] *(from #frontend)*
 - [[src_components_asesor_ResumenCard|src/components/asesor/ResumenCard.tsx]] *(from #frontend)*
+- [[src_utils_asesor_agenda|src/utils/asesor/agenda.ts]] *(from #service)*
 - [[src_utils_asesor_opciones|src/utils/asesor/opciones.ts]] *(from #service)*
 - [[src_utils_asesorApi|src/utils/asesorApi.ts]] *(from #service)*
 
 ---
 
 ## 🧪 Tests que lo cubren
+- `src/utils/asesor/__tests__/agenda.test.ts`
 - `src/utils/asesor/__tests__/resumen.test.ts`
 
 ---

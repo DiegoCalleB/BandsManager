@@ -26,6 +26,7 @@ _Sin dependencias salientes directas._
 - [[server_db_asesorMarketing|server/db/asesorMarketing.ts]] *(from #db)*
 - [[src_components_asesor_nombres|src/components/asesor/nombres.ts]] *(from #frontend)*
 - [[src_components_asesor_PiezaSheet|src/components/asesor/PiezaSheet.tsx]] *(from #frontend)*
+- [[src_utils_asesor_agenda|src/utils/asesor/agenda.ts]] *(from #service)*
 - [[src_utils_asesor_instagramMedios|src/utils/asesor/instagramMedios.ts]] *(from #service)*
 - [[src_utils_asesor_opciones|src/utils/asesor/opciones.ts]] *(from #service)*
 - [[src_utils_asesor_pieza|src/utils/asesor/pieza.ts]] *(from #service)*

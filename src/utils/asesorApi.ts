@@ -3,6 +3,7 @@
  * como pide AGENTS.md §5.2.
  */
 import { apiFetch } from './api';
+import type { DiaAgenda } from './asesor/agenda';
 import type { Diagnostico } from './asesor/diagnostico';
 import type { EstrategiaMarketing } from './asesor/estrategia';
 import type { OpcionesDeHoy } from './asesor/opciones';
@@ -17,6 +18,7 @@ export interface EstadoAsesor {
   semana: Array<{ fecha: string; hechas: number }>;
   porMedir: PorMedir[];
   resumen: Resumen | null;
+  agenda: DiaAgenda[];
   estrategia: EstrategiaMarketing;
   tieneEstrategia: boolean;
 }
@@ -24,7 +26,7 @@ export interface EstadoAsesor {
 export type AccionAsesor = 'hecho' | 'saltado' | 'pendiente';
 
 /** Un servidor que aún no conoce los resultados (despliegue a medias) no tumba la pantalla: llegan vacíos. */
-export const obtenerHoyAsesor = async (): Promise<EstadoAsesor> => ({ porMedir: [], resumen: null, ...(await apiFetch<EstadoAsesor>('/api/asesor/hoy')) });
+export const obtenerHoyAsesor = async (): Promise<EstadoAsesor> => ({ porMedir: [], resumen: null, agenda: [], ...(await apiFetch<EstadoAsesor>('/api/asesor/hoy')) });
 
 export const prepararPieza = (tarjetaId: string) =>
   apiFetch<{ pieza: Pieza }>('/api/asesor/pieza', { method: 'POST', body: JSON.stringify({ tarjetaId }) });
