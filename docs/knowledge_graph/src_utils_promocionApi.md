@@ -32,6 +32,7 @@ Cliente de las rutas de promoción: enlaces cortos, redacción de la campaña y 
 - [[src_components_calendar_PromocionConciertoModal|src/components/calendar/PromocionConciertoModal.tsx]] *(from #frontend)*
 - [[src_components_cartel_hooks_useAdnCartel|src/components/cartel/hooks/useAdnCartel.ts]] *(from #frontend)*
 - [[src_components_cartel_hooks_useEditorCartel|src/components/cartel/hooks/useEditorCartel.ts]] *(from #frontend)*
+- [[src_components_cartel_hooks_useEnlaceCartel|src/components/cartel/hooks/useEnlaceCartel.ts]] *(from #frontend)*
 - [[src_components_cartel_hooks_useIdeaCartel|src/components/cartel/hooks/useIdeaCartel.ts]] *(from #frontend)*
 - [[src_components_dashboard_widgets_MarketingWidget|src/components/dashboard/widgets/MarketingWidget.tsx]] *(from #frontend)*
 - [[src_components_dashboard_widgets_RoiBandaWidget|src/components/dashboard/widgets/RoiBandaWidget.tsx]] *(from #frontend)*

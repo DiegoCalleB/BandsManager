@@ -13,13 +13,14 @@ tags: ["frontend", "system", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: EnlaceCartel, useEditorCartel, EditorCartel.
+Exporta: useEditorCartel, EditorCartel.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_cartel_hooks_useAdnCartel|src/components/cartel/hooks/useAdnCartel.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_cartel_hooks_useAjusteFino|src/components/cartel/hooks/useAjusteFino.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_cartel_hooks_useEnlaceCartel|src/components/cartel/hooks/useEnlaceCartel.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_cartel_hooks_useHistorialCartel|src/components/cartel/hooks/useHistorialCartel.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_cartel_hooks_useIdeaCartel|src/components/cartel/hooks/useIdeaCartel.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
