@@ -31,8 +31,10 @@ export interface CartelConfig {
   /** La dirección de la sala (calle y número), del bolo. */
   direccion: boolean;
   qr: boolean;
-  /** El QR también en Feed e Historia (por defecto solo en el impreso, donde no hay un enlace que tocar). */
+  /** El QR también en Feed e Historia (encendido por defecto: quien ve el cartel en otra pantalla o impreso lo escanea). */
   qrDigital: boolean;
+  /** A dónde lleva el QR (los escaneos se cuentan en la campaña del bolo). */
+  qrDestino: DestinoQr;
   /** Textos que la persona escribe en el cartel SIN tocar los datos del bolo: el nombre y el lugar que se muestran. Vacío = el del bolo. */
   textos: TextosEditados;
   /** Lo que la persona movió o escaló a mano, por formato, sobre el reparto automático. */
@@ -72,6 +74,10 @@ export interface TextosEditados {
 }
 export const MAX_TEXTO_EDITADO = 60;
 
+/** A dónde lleva el QR del cartel: la página del bolo, su venta de entradas o la página de fans de la banda. */
+export const DESTINOS_QR = ['concierto', 'entradas', 'fans'] as const;
+export type DestinoQr = (typeof DESTINOS_QR)[number];
+
 export const MAX_FONDOS_IA = 8;
 /** Retoques que se encadenan sobre el MISMO original antes de partir de la imagen ya retocada. */
 export const MAX_PASOS_RETOQUE = 5;
@@ -94,7 +100,8 @@ export const CONFIG_INICIAL: CartelConfig = {
   horario: true,
   direccion: false,
   qr: true,
-  qrDigital: false,
+  qrDigital: true,
+  qrDestino: 'concierto',
   textos: { nombre: '', lugar: '' },
   ajustesFinos: {},
   estilos: {},
@@ -168,7 +175,8 @@ export function sanearConfigCartel(raw: unknown, esUrlPermitida: (url: string) =
     horario: booleano(r.horario, true),
     direccion: booleano(r.direccion, false),
     qr: booleano(r.qr, true),
-    qrDigital: booleano(r.qrDigital, false),
+    qrDigital: booleano(r.qrDigital, true),
+    qrDestino: (DESTINOS_QR as readonly string[]).includes(r.qrDestino as string) ? (r.qrDestino as DestinoQr) : 'concierto',
     textos: textosEditados(r.textos),
     ajustesFinos: sanearAjustesFinos(r.ajustesFinos),
     estilos: sanearEstilosBloques(r.estilos),
@@ -218,10 +226,10 @@ export function conLinaje(config: CartelConfig, url: string, linaje: LinajeRetoq
 }
 
 /** Lo que se decide por bolo y no es el fondo. */
-export type AjustesBolo = Pick<CartelConfig, 'cabeza' | 'extra' | 'horario' | 'direccion' | 'qr' | 'qrDigital' | 'ajustesFinos' | 'estilos' | 'libres' | 'textos' | 'marca' | 'logo' | 'logosTinta' | 'letra' | 'composicion'>;
+export type AjustesBolo = Pick<CartelConfig, 'cabeza' | 'extra' | 'horario' | 'direccion' | 'qr' | 'qrDigital' | 'qrDestino' | 'ajustesFinos' | 'estilos' | 'libres' | 'textos' | 'marca' | 'logo' | 'logosTinta' | 'letra' | 'composicion'>;
 
 export function ajustesDe(c: CartelConfig): AjustesBolo {
-  return { cabeza: c.cabeza, extra: c.extra, horario: c.horario, direccion: c.direccion, qr: c.qr, qrDigital: c.qrDigital, ajustesFinos: c.ajustesFinos, estilos: c.estilos, libres: c.libres, textos: c.textos, marca: c.marca, logo: c.logo, logosTinta: c.logosTinta, letra: c.letra, composicion: c.composicion };
+  return { cabeza: c.cabeza, extra: c.extra, horario: c.horario, direccion: c.direccion, qr: c.qr, qrDigital: c.qrDigital, qrDestino: c.qrDestino, ajustesFinos: c.ajustesFinos, estilos: c.estilos, libres: c.libres, textos: c.textos, marca: c.marca, logo: c.logo, logosTinta: c.logosTinta, letra: c.letra, composicion: c.composicion };
 }
 
 /**
