@@ -10,7 +10,7 @@ import { conReintentos } from '../../../utils/reintentar';
 import { prepararLogo } from '../../../utils/cartel/logos';
 import { resolverComposicion, resolverVoz } from '../../../utils/cartel/voces';
 import { lineaHorario } from '../../../utils/cartel/texto';
-import { sinVersion } from '../../../utils/cartel/adn';
+import { cartelesAnteriores } from '../../../utils/cartel/adn';
 import { useAdnCartel, type DatosBandaCartel } from './useAdnCartel';
 import { useIdeaCartel } from './useIdeaCartel';
 import { useAjusteFino } from './useAjusteFino';
@@ -164,7 +164,7 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
       const voz = resolverVoz(ajustes.letra, estiloArranque);
       return {
         datos: datosDesdeConcierto(concierto, bandName, ajustes),
-        opciones: { qr: conQr, urlCorta: enlace?.corta ?? null, marca, ajustes: ajustes.ajustesFinos[f] },
+        opciones: { qr: conQr, urlCorta: enlace?.corta ?? null, marca, ajustes: ajustes.ajustesFinos[f], estilos: ajustes.estilos },
         qrUrl: conQr ? enlace!.url : null,
         semilla: `${concierto.id}|${bandName}`,
         paletaBanda,
@@ -276,7 +276,6 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     },
     [id, anotarPaso]
   );
-
   const elegirConcierto = (nuevo: string) => {
     setConcertId(nuevo);
     setError(null);
@@ -431,21 +430,9 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
   };
 
   /** Carteles de OTROS bolos de la banda que se pueden ofrecer como referencia (ya viven en su carpeta). */
-  const anteriores = useMemo(() => {
-    const yaSon = new Set(adn.adn.referencias.map(sinVersion));
-    const vistos = new Set<string>();
-    const lista: string[] = [];
-    for (const c of concerts) {
-      const u = c.id !== id ? c.cartel_url || c.cartelUrl : undefined;
-      if (!u || !u.startsWith('https://') || !u.includes('/storage/v1/object/public/') || !u.includes('/carteles/')) continue;
-      if (yaSon.has(sinVersion(u)) || vistos.has(sinVersion(u))) continue;
-      vistos.add(sinVersion(u));
-      lista.push(u);
-    }
-    return lista.slice(0, 6);
-  }, [concerts, id, adn.adn.referencias]);
+  const anteriores = useMemo(() => cartelesAnteriores(concerts, id, adn.adn.referencias), [concerts, id, adn.adn.referencias]);
 
-  const { ajustarBloque, reiniciarAjustesFinos } = useAjusteFino(ajustes.ajustesFinos, formato, cambiarAjustes);
+  const { ajustarBloque, reiniciarAjustesFinos, estilarBloque, editarLibre } = useAjusteFino(ajustes, formato, cambiarAjustes);
 
   const exportar = useCallback(
     async (f: FormatoCartel, paraImprenta = false): Promise<Blob> => {
@@ -567,6 +554,8 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     puedeRehacer: historial.puedeRehacer,
     cajas,
     ajustarBloque,
+    estilarBloque,
+    editarLibre,
     reiniciarAjustesFinos,
     hayAjustesFinos: !!ajustes.ajustesFinos[formato],
     compartido,

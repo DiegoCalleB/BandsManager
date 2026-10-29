@@ -21,6 +21,7 @@ Exporta: useAjusteFino.
 - [[src_utils_cartel_ajustesFinos|src/utils/cartel/ajustesFinos.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_config|src/utils/cartel/config.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_formatos|src/utils/cartel/formatos.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_cartel_textosLibres|src/utils/cartel/textosLibres.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

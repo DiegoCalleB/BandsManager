@@ -149,7 +149,7 @@ function tintaDeLineas(ctx: CanvasRenderingContext2D, lineas: Linea[], zona: Rec
       return ctx.getImageData(x, y, Math.max(1, Math.min(Math.round(r.w), ctx.canvas.width - x)), Math.max(1, Math.min(Math.round(r.h), ctx.canvas.height - y))).data;
     });
     const trozos = lineas.map((l) => {
-      ctx.font = fuente(l.peso, l.px, l.titulo ? voz : null);
+      ctx.font = fuente(l.peso, l.px, l.voz ?? (l.titulo ? voz : null));
       conTracking(ctx, l.px, l.tracking);
       const ancho = ctx.measureText(l.texto).width;
       const pad = 6 * u;
@@ -356,12 +356,14 @@ export async function renderCartel(
   const voz = aSangre && piezas.vozAuto ? 'cartel' : (piezas.voz ?? 'moderna');
   const composicion = aSangre && piezas.composicionAuto ? 'base' : piezas.composicion;
   await prepararFuentes(voz);
+  // Las letras elegidas a mano para algún bloque también tienen que estar cargadas.
+  for (const e of Object.values(piezas.opciones.estilos ?? {})) if (e?.fuente && e.fuente !== voz) await prepararFuentes(e.fuente);
 
   const ctx = canvas.getContext('2d', { willReadFrequently: true });
   if (!ctx) throw new Error('Tu navegador no puede dibujar el cartel.');
 
-  const medir = (t: string, px: number, peso: number, titulo?: boolean, tracking?: number) => {
-    ctx.font = fuente(peso, px, titulo ? voz : null);
+  const medir = (t: string, px: number, peso: number, titulo?: boolean | VozCartel, tracking?: number) => {
+    ctx.font = fuente(peso, px, titulo === true ? voz : titulo || null);
     conTracking(ctx, px, tracking);
     return ctx.measureText(t).width;
   };
@@ -370,7 +372,7 @@ export async function renderCartel(
   const textoIa = aSangre && fondo.tipo === 'imagen' && fondoConTexto(fondo.url);
   // Lo que la IA no dibuja (hora y dirección) va en la franja inferior libre, sobre el pie, como líneas extra.
   const datosLayout: DatosCartel = textoIa
-    ? { lineup: [], fecha: '', horario: '', sala: '', ciudad: '', direccion: '', extra: [piezas.datos.horario, piezas.datos.direccion ?? ''].filter(Boolean).join('\n') }
+    ? { lineup: [], fecha: '', horario: '', sala: '', ciudad: '', direccion: '', libres: piezas.datos.libres, extra: [piezas.datos.horario, piezas.datos.direccion ?? ''].filter(Boolean).join('\n') }
     : piezas.datos;
   const conIlustracion = esIa && !aSangre;
   const L = calcularLayout(def, ancho, datosLayout, { ...piezas.opciones, compacto: conIlustracion, voz, composicion, logos: logos.map((l) => l.img.width / l.img.height) }, medir);
@@ -422,8 +424,9 @@ export async function renderCartel(
   // 2. Tinta y velo, medidos sobre el fondo real de cada zona.
   const fundido = 120 * u;
   const enAbajo = (l: Linea) => l.y >= L.zonas.abajo.y;
-  const lineasArriba = L.lineas.filter((l) => !enAbajo(l));
-  const lineasAbajo = L.lineas.filter(enAbajo);
+  const sueltas = L.lineas.filter((l) => l.libre);
+  const lineasArriba = L.lineas.filter((l) => !l.libre && !enAbajo(l));
+  const lineasAbajo = L.lineas.filter((l) => !l.libre && enAbajo(l));
   // Con una ilustración de IA la tinta es una de las suyas (la oscura y saturada dominante), no un negro de
   // ordenador; solo si no hace falta velo: con velo se mantiene la tinta que garantiza el contraste.
   const tintaOscura = fondo.tipo === 'plantilla' ? TINTA_PLANTILLA[fondo.id] : arte?.tinta;
@@ -431,7 +434,7 @@ export async function renderCartel(
   ctx.textBaseline = 'top';
   const pintar = (lineas: Linea[], t: Tinta) => {
     for (const l of lineas) {
-      ctx.font = fuente(l.peso, l.px, l.titulo ? voz : null);
+      ctx.font = fuente(l.peso, l.px, l.voz ?? (l.titulo ? voz : null));
       conTracking(ctx, l.px, l.tracking);
       ctx.textAlign = l.alinear;
       // Desregistro de serigrafía: el nombre y el día se imprimen antes con la segunda tinta, apenas desplazada.
@@ -442,7 +445,7 @@ export async function renderCartel(
         ctx.fillText(l.texto, l.x + l.px * 0.035, l.y + l.px * 0.03);
         ctx.restore();
       }
-      ctx.fillStyle = tintaDe(t);
+      ctx.fillStyle = l.color ?? tintaDe(t);
       ctx.fillText(l.texto, l.x, l.y);
     }
     conTracking(ctx, 1, 0);
@@ -479,6 +482,8 @@ export async function renderCartel(
     pintar(lineasArriba, tArriba);
     pintar(lineasAbajo, tAbajo);
   }
+  // Los textos sueltos van encima de todo con su propia tinta, medida justo bajo cada uno (sin velo).
+  for (const l of sueltas) pintar([l], tintaDeLineas(ctx, [l], L.zonas.arriba, u, voz, [], true));
   dibujarAdornos(ctx, L.adornos, (a) => tintaDe(a.y >= L.zonas.abajo.y ? tAbajo : tArriba));
   // 3. La fibra de papel, por encima de todo menos el QR (que tiene que escanear): fondo y letras impresos juntos.
   if (esIa) aplicarGrano(ctx, L.ancho, L.alto, semillaDeTexto(piezas.semilla));
@@ -487,7 +492,7 @@ export async function renderCartel(
   if (L.qr && piezas.qrUrl) dibujarQr(ctx, L.qr, piezas.qrUrl);
 
   // 5. Logos de las bandas, en la tinta de abajo (donde están). Son opcionales.
-  dibujarLogos(ctx, L.logos, logos, tintaDe(tAbajo), piezas.logosTinta !== false, u);
+  dibujarLogos(ctx, L.logos, logos, piezas.opciones.estilos?.logos?.color ?? tintaDe(tAbajo), piezas.logosTinta !== false, u);
 
   return L;
 }

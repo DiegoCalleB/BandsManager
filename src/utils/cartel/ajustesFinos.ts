@@ -4,8 +4,12 @@
 
 import type { FormatoCartel } from './formatos';
 import type { LayoutCartel, Linea, Medidor, Rect } from './layoutBase';
+import { VOCES, VOCES_CARTEL, type VozCartel } from './voces';
 
-export const BLOQUES = ['nombre', 'fecha', 'datos', 'qr', 'logos', 'pie'] as const;
+/** Los textos sueltos que la persona añade (hasta 3): bloques como los demás, para moverlos, escalarlos y darles letra y color. */
+export const LIBRES = ['libre1', 'libre2', 'libre3'] as const;
+export const esLibre = (b: BloqueAjustable) => (LIBRES as readonly string[]).includes(b);
+export const BLOQUES = ['nombre', 'fecha', 'datos', 'qr', 'logos', 'pie', ...LIBRES] as const;
 export type BloqueAjustable = (typeof BLOQUES)[number];
 
 export const ETIQUETA_BLOQUE: Record<BloqueAjustable, string> = {
@@ -15,6 +19,9 @@ export const ETIQUETA_BLOQUE: Record<BloqueAjustable, string> = {
   qr: 'QR',
   logos: 'Logos',
   pie: 'Pie',
+  libre1: 'Texto 1',
+  libre2: 'Texto 2',
+  libre3: 'Texto 3',
 };
 
 /** Desplazamiento en fracción del ANCHO del cartel (así vale igual en la vista previa y en el A4) y escala del bloque. */
@@ -25,6 +32,42 @@ export interface AjusteBloque {
 }
 export type AjustesFinos = Partial<Record<BloqueAjustable, AjusteBloque>>;
 export type AjustesFinosPorFormato = Partial<Record<FormatoCartel, AjustesFinos>>;
+
+/**
+ * Estilo de un bloque, igual en todos los formatos (la posición sí va por formato): su letra, su color y si se oculta.
+ * Sin estilo = el automático. La letra solo vale en los bloques de texto; el color también en los logos.
+ */
+export interface EstiloBloque {
+  fuente?: VozCartel;
+  color?: string;
+  oculto?: boolean;
+}
+export type EstilosBloques = Partial<Record<BloqueAjustable, EstiloBloque>>;
+export const BLOQUES_CON_FUENTE: readonly BloqueAjustable[] = ['nombre', 'fecha', 'datos', 'pie', ...LIBRES];
+export const BLOQUES_CON_COLOR: readonly BloqueAjustable[] = [...BLOQUES_CON_FUENTE, 'logos'];
+const COLOR_HEX = /^#[0-9a-f]{6}$/i;
+
+export function sanearEstilosBloques(raw: unknown): EstilosBloques {
+  const salida: EstilosBloques = {};
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return salida;
+  for (const b of BLOQUES) {
+    const e = (raw as Record<string, unknown>)[b];
+    if (!e || typeof e !== 'object') continue;
+    const { fuente, color, oculto } = e as Record<string, unknown>;
+    const limpio: EstiloBloque = {};
+    if (BLOQUES_CON_FUENTE.includes(b) && VOCES_CARTEL.includes(fuente as VozCartel)) limpio.fuente = fuente as VozCartel;
+    if (BLOQUES_CON_COLOR.includes(b) && typeof color === 'string' && COLOR_HEX.test(color)) limpio.color = color.toLowerCase();
+    if (oculto === true) limpio.oculto = true;
+    if (Object.keys(limpio).length) salida[b] = limpio;
+  }
+  return salida;
+}
+
+/** Con el estilo de un bloque cambiado; un campo en `undefined` lo quita y un estilo vacío desaparece. */
+export function conEstiloDeBloque(todos: EstilosBloques, bloque: BloqueAjustable, cambio: Partial<Record<keyof EstiloBloque, EstiloBloque[keyof EstiloBloque] | undefined>>): EstilosBloques {
+  const siguiente = sanearEstilosBloques({ ...todos, [bloque]: { ...todos[bloque], ...cambio } });
+  return siguiente;
+}
 
 export const LIMITES = { desplazamiento: 1.5, escalaMin: 0.5, escalaMax: 2.5 } as const;
 const FORMATOS_VALIDOS: readonly FormatoCartel[] = ['feed', 'historia', 'imprimir'];
@@ -83,7 +126,7 @@ const union = (a: Rect | undefined, b: Rect): Rect => {
 };
 
 function cajaDeLinea(l: Linea, medir: Medidor): Rect {
-  const w = medir(l.texto, l.px, l.peso, l.titulo, l.tracking);
+  const w = medir(l.texto, l.px, l.peso, l.voz ?? l.titulo, l.tracking);
   const x = l.alinear === 'left' ? l.x : l.alinear === 'right' ? l.x - w : l.x - w / 2;
   return { x, y: l.y, w, h: l.px * 0.95 };
 }
@@ -112,9 +155,10 @@ const mover = (r: Rect, cx: number, cy: number, e: number, dx: number, dy: numbe
  * justo para que el bloque entero siga DENTRO del lienzo, y se recalculan las zonas (donde se mide el fondo y se vela)
  * para que sigan cubriendo lo que antes estaba en cada una. Devuelve un layout nuevo con las `cajas` ya a posición final.
  */
-export function aplicarAjustesFinos(L: LayoutCartel, ajustes: AjustesFinos | undefined, medir: Medidor): LayoutCartel {
+export function aplicarAjustesFinos(L: LayoutCartel, ajustes: AjustesFinos | undefined, medir: Medidor, estilos?: EstilosBloques): LayoutCartel {
   const cajas = cajasDeBloques(L, medir);
-  const activos = BLOQUES.filter((b) => cajas[b] && ajustes?.[b] && !esIdentidad(ajustes[b]!));
+  const tocado = (b: BloqueAjustable) => (ajustes?.[b] && !esIdentidad(ajustes[b]!)) || (estilos?.[b] && Object.keys(estilos[b]!).length > 0);
+  const activos = BLOQUES.filter((b) => cajas[b] && tocado(b));
   if (!activos.length) return { ...L, cajas };
 
   const enAbajo = (l: Linea) => l.y >= L.zonas.abajo.y;
@@ -124,12 +168,38 @@ export function aplicarAjustesFinos(L: LayoutCartel, ajustes: AjustesFinos | und
   let logos = L.logos.map((r) => ({ ...r }));
   let titulo = L.titulo ? { ...L.titulo } : null;
   const nuevas: Partial<Record<BloqueAjustable, Rect>> = { ...cajas };
+  const ocultas = new Set<number>();
 
   for (const b of activos) {
     const caja = cajas[b]!;
+    const estilo = estilos?.[b];
+    if (estilo?.oculto) {
+      L.lineas.forEach((l, i) => l.bloque === b && ocultas.add(i));
+      if (b === 'qr') qr = null;
+      if (b === 'logos') logos = [];
+      if (b === 'nombre') titulo = null;
+      delete nuevas[b];
+      continue;
+    }
+    // Otra letra mide distinto: el bloque se reescala para conservar el ancho que tenía.
+    let porLetra = 1;
+    if (estilo?.fuente) {
+      const propias = L.lineas.filter((l) => l.bloque === b);
+      const viejo = Math.max(...propias.map((l) => medir(l.texto, l.px, l.peso, l.titulo, l.tracking)));
+      const nuevo = Math.max(...propias.map((l) => medir(l.texto, l.px, VOCES[estilo.fuente!].peso, estilo.fuente, l.tracking)));
+      if (nuevo > 0) porLetra = Math.max(0.5, Math.min(1.6, viejo / nuevo));
+      lineas.forEach((l, i) => {
+        if (L.lineas[i].bloque === b) {
+          l.voz = estilo.fuente;
+          l.peso = VOCES[estilo.fuente!].peso;
+        }
+      });
+    }
+    if (estilo?.color) lineas.forEach((l, i) => L.lineas[i].bloque === b && (l.color = estilo.color));
     // La escala se limita a lo que cabe en el lienzo: un nombre ya a todo el ancho no puede crecer más.
-    const e = Math.max(0.05, Math.min(ajustes![b]!.escala, L.ancho / caja.w, L.alto / caja.h));
-    const a = { ...ajustes![b]!, escala: e };
+    const pedida = (ajustes?.[b]?.escala ?? 1) * porLetra;
+    const e = Math.max(0.05, Math.min(pedida, L.ancho / caja.w, L.alto / caja.h));
+    const a = { dx: ajustes?.[b]?.dx ?? 0, dy: ajustes?.[b]?.dy ?? 0, escala: e };
     const cx = caja.x + caja.w / 2;
     const cy = caja.y + caja.h / 2;
     let dx = a.dx * L.ancho;
@@ -150,10 +220,18 @@ export function aplicarAjustesFinos(L: LayoutCartel, ajustes: AjustesFinos | und
     if (b === 'nombre' && titulo) titulo = mover(titulo, cx, cy, a.escala, dx, dy);
   }
 
+  // Con otra letra la caja es la del texto ya pintado en ella (no la de la letra anterior, escalada).
+  for (const b of activos) {
+    if (estilos?.[b]?.oculto || !estilos?.[b]?.fuente) continue;
+    const propias = lineas.filter((l, i) => L.lineas[i].bloque === b);
+    if (propias.length) nuevas[b] = propias.map((l) => cajaDeLinea(l, medir)).reduce<Rect | undefined>((acc, r) => union(acc, r), undefined);
+  }
+
   // Las zonas siguen cubriendo lo que estaba en cada una (arriba o abajo), allí donde haya quedado.
   let arribaH = L.zonas.arriba.h;
   let abajoY = L.zonas.abajo.y;
   lineas.forEach((l, i) => {
+    if (ocultas.has(i) || l.libre) return;
     if (abajoOriginal.has(L.lineas[i])) abajoY = Math.min(abajoY, l.y - l.px * 0.2);
     else arribaH = Math.max(arribaH, l.y + l.px * 1.1);
   });
@@ -163,7 +241,7 @@ export function aplicarAjustesFinos(L: LayoutCartel, ajustes: AjustesFinos | und
 
   return {
     ...L,
-    lineas,
+    lineas: lineas.filter((_, i) => !ocultas.has(i)),
     qr,
     logos,
     titulo,

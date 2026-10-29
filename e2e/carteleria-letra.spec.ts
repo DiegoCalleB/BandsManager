@@ -94,6 +94,25 @@ test('las plantillas de autor son un respaldo: no están por defecto y salen si 
   await expect(page.getByLabel('Retocar el fondo')).toHaveCount(0);
 });
 
+test('en el ordenador «Foto» e «IA» están siempre a la vista a la derecha y los fondos hechos no se esconden', async ({ page }) => {
+  await abrirCarteleria(page);
+  // El ayudante abre en móvil: se pasa a escritorio una vez dentro.
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.locator('button[title="Fondo con IA"]').click();
+  await page.getByRole('button', { name: 'Pintar fondo' }).click();
+  await expect(page.getByRole('button', { name: /Fondo con IA 1/ })).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByLabel('Fondos con IA de este bolo')).toBeVisible();
+
+  const ia = (await page.locator('button[title="Fondo con IA"]').boundingBox())!;
+  const foto = (await page.locator('label[title="Usar una foto vuestra"]').boundingBox())!;
+  const columna = (await page.getByRole('group', { name: 'Fondo del cartel' }).boundingBox())!;
+  // Dentro de la pantalla y a la derecha de los fondos fijos, sin tener que desplazar nada.
+  expect(ia.x + ia.width).toBeLessThanOrEqual(1280);
+  expect(foto.x).toBeGreaterThanOrEqual(columna.x + columna.width - 1);
+  expect(ia.x).toBeGreaterThan(foto.x);
+  await page.screenshot({ path: 'test-results/selector-fondo-escritorio.png' });
+});
+
 test('ajustar el texto a mano: arrastrar un bloque, escalarlo y volver al automático', async ({ page }) => {
   const { peticiones } = await abrirCarteleria(page);
   const antes = await cartel(page);
@@ -115,6 +134,53 @@ test('ajustar el texto a mano: arrastrar un bloque, escalarlo y volver al autom�
   await page.getByRole('button', { name: 'Volver al automático' }).click();
   await expect.poll(() => cartel(page), { timeout: 10_000 }).toBe(antes);
   await expect.poll(() => peticiones.filter((p) => p.ruta.endsWith('/config')).some((p) => !JSON.parse(p.cuerpo.toString()).ajustesFinos?.feed), { timeout: 8_000 }).toBe(true);
+});
+
+test('estilo de un bloque: cambiar su letra y su color, ocultarlo y volver a mostrarlo', async ({ page }) => {
+  const { peticiones } = await abrirCarteleria(page);
+  const antes = await cartel(page);
+  await page.getByRole('button', { name: 'Ajustar el texto' }).click();
+  await page.getByRole('button', { name: 'Mover Fecha' }).click();
+
+  await page.getByLabel('Letra de Fecha').selectOption('clasica');
+  await expect.poll(() => cartel(page), { timeout: 10_000 }).not.toBe(antes);
+  const conLetra = await cartel(page);
+  await page.getByRole('button', { name: 'Color #e63946' }).click();
+  await expect.poll(() => cartel(page), { timeout: 10_000 }).not.toBe(conLetra);
+  await page.screenshot({ path: 'test-results/estilo-bloque.png', fullPage: true });
+  await expect.poll(() => peticiones.some((p) => p.ruta.endsWith('/config') && JSON.parse(p.cuerpo.toString()).estilos?.fecha?.fuente === 'clasica'), { timeout: 8_000 }).toBe(true);
+
+  const conColor = await cartel(page);
+  await page.getByRole('button', { name: 'Ocultar' }).click();
+  await expect.poll(() => cartel(page), { timeout: 10_000 }).not.toBe(conColor);
+  await expect(page.getByRole('button', { name: 'Mover Fecha' })).toHaveCount(0);
+  await page.getByRole('button', { name: 'Mostrar fecha' }).click();
+  await expect(page.getByRole('button', { name: 'Mover Fecha' })).toBeVisible();
+  await expect.poll(() => cartel(page), { timeout: 10_000 }).toBe(conColor);
+});
+
+test('texto suelto: añadirlo, escribirlo, moverlo y quitarlo', async ({ page }) => {
+  const { peticiones } = await abrirCarteleria(page);
+  const antes = await cartel(page);
+  await page.getByRole('button', { name: 'Ajustar el texto' }).click();
+  await page.getByRole('button', { name: 'Añadir texto' }).click();
+  await expect.poll(() => cartel(page), { timeout: 10_000 }).not.toBe(antes);
+  await page.getByLabel('Texto', { exact: true }).fill('Entrada 8 €');
+  await expect(page.getByRole('button', { name: 'Mover Texto 1' })).toBeVisible();
+  const escrito = await cartel(page);
+  await page.getByLabel('Letra de Texto 1').selectOption('cartel');
+  await expect.poll(() => cartel(page), { timeout: 10_000 }).not.toBe(escrito);
+  const caja = (await page.getByRole('button', { name: 'Mover Texto 1' }).boundingBox())!;
+  await page.mouse.move(caja.x + caja.width / 2, caja.y + caja.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(caja.x + caja.width / 2 + 30, caja.y + caja.height / 2 + 40, { steps: 5 });
+  await page.mouse.up();
+  await page.screenshot({ path: 'test-results/texto-suelto.png', fullPage: true });
+  await expect.poll(() => peticiones.some((p) => p.ruta.endsWith('/config') && JSON.parse(p.cuerpo.toString()).libres?.[0] === 'Entrada 8 €' && JSON.parse(p.cuerpo.toString()).ajustesFinos?.feed?.libre1), { timeout: 8_000 }).toBe(true);
+
+  await page.getByRole('button', { name: 'Quitar' }).click();
+  await expect(page.getByRole('button', { name: 'Mover Texto 1' })).toHaveCount(0);
+  await expect.poll(() => cartel(page), { timeout: 10_000 }).toBe(antes);
 });
 
 test('editar el nombre y el lugar del cartel repinta y se guarda sin tocar el bolo', async ({ page }) => {

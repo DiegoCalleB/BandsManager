@@ -27,11 +27,15 @@ export interface DatosCartel {
   direccion?: string;
   /** Línea libre: «Anticipada 10 €». Puede traer varias líneas separadas por \n (las usa el modo con letras de IA). */
   extra: string;
+  /** Textos sueltos (hasta 3; los vacíos reservan su hueco). Se colocan en el centro y se mueven a mano. */
+  libres?: string[];
 }
 
 export interface OpcionesLayout {
   /** Ajustes a mano de este formato: mover y escalar bloques sobre el reparto automático. */
   ajustes?: import('./ajustesFinos').AjustesFinos;
+  /** Letra, color y ocultar de cada bloque (los mismos en todos los formatos). */
+  estilos?: import('./ajustesFinos').EstilosBloques;
   /** Reserva hueco para el QR (solo impresión). */
   qr: boolean;
   /** Texto de la URL corta, sin protocolo: `bandmanager.io/r/ab3k9x2`. */
@@ -54,7 +58,8 @@ export interface OpcionesLayout {
 }
 
 
-export type Medidor = (texto: string, px: number, peso: number, titulo?: boolean, tracking?: number) => number;
+/** `titulo`: `true` = la letra de exhibición del cartel; una voz = esa letra concreta (estilo de bloque). */
+export type Medidor = (texto: string, px: number, peso: number, titulo?: boolean | VozCartel, tracking?: number) => number;
 
 export interface Linea {
   texto: string;
@@ -70,6 +75,12 @@ export interface Linea {
   tracking?: number;
   /** A qué bloque ajustable pertenece (para moverlo y escalarlo a mano). */
   bloque?: import('./ajustesFinos').BloqueAjustable;
+  /** Letra elegida a mano para este bloque (pisa la de la voz del cartel). */
+  voz?: VozCartel;
+  /** Color elegido a mano para este bloque (pisa la tinta automática). */
+  color?: string;
+  /** Texto suelto de la persona: no entra en las zonas de velo y se pinta con su propia tinta, medida bajo él. */
+  libre?: boolean;
 }
 
 export interface Rect {
