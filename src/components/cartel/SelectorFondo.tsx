@@ -170,7 +170,7 @@ export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenera
         <div className="grid gap-2 rounded-[var(--r-m)] bg-[var(--sunken)] p-3" aria-label="Retocar el fondo">
           <p className="text-xs font-medium text-[var(--ink-2)]">Retocar este fondo</p>
           <p className="text-xs text-[var(--ink-2)] text-pretty">
-            Dile qué cambiar y se queda lo demás. Cada retoque es una versión nueva (1 imagen): las anteriores siguen en las miniaturas para volver.
+            Dile qué cambiar y se queda lo demás. Cada retoque es una versión nueva (1 imagen) que parte del original con todo lo que has ido pidiendo, para no perder detalle; las anteriores siguen en las miniaturas para volver.
           </p>
           <div className="flex flex-wrap gap-1.5" role="group" aria-label="Ejemplos de retoque">
             {EJEMPLOS_RETOQUE.map((e) => (

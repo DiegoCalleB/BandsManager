@@ -53,6 +53,7 @@ Cartelería: el cartel de un bolo.
 
 ## 🧪 Tests que lo cubren
 - `server/routes/__tests__/cartelria.test.ts`
+- `server/routes/__tests__/cartelriaRetoques.test.ts`
 
 ---
 
