@@ -14,6 +14,7 @@ import { leerArte, type ArtePapel } from './papel';
 import { encajarImagen, type Encaje } from './ventana';
 import { VOCES, type Composicion, type VozCartel } from './voces';
 import { tintarLogo } from './logos';
+import { sinMarco } from './marco';
 import { fondoConTexto } from './fondoIa';
 import { TINTA_PLANTILLA, dibujarPlantilla, type PlantillaId } from './plantillas';
 import { dibujarArteEntero, dibujarFondoImagen } from './arteCanvas';
@@ -344,8 +345,10 @@ export async function renderCartel(
   fondo: FondoCartel,
   piezas: PiezasCartel
 ): Promise<LayoutCartel> {
-  const imagen: HTMLImageElement | HTMLCanvasElement | null =
+  const cargada: HTMLImageElement | HTMLCanvasElement | null =
     fondo.tipo === 'imagen' ? await cargarImagen(fondo.url) : fondo.tipo === 'plantilla' ? lienzoDePlantilla(fondo.id, def, ancho, piezas.semilla) : null;
+  // La IA a veces dibuja «el cartel» con su papel y su borde: el arte vertical es el cartel entero, sin marco dentro.
+  const imagen = cargada && fondo.tipo === 'imagen' && fondo.origen === 'ia' && cargada.height / cargada.width >= 1.1 ? sinMarco(cargada) : cargada;
   // Una plantilla de autor se trata como una ilustración vertical a sangre: mismo texto encima, misma fibra de papel.
   const esIa = (fondo.tipo === 'imagen' && fondo.origen === 'ia') || fondo.tipo === 'plantilla';
   // Una ilustración de IA vertical (3:4) es el cartel entero: el texto va encima, en sus zonas calmadas.
