@@ -24,8 +24,14 @@ Credenciales de Instagram de UNA banda (las que guardó al conectar Instagram en
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server_services_asesorInstagram|server/services/asesorInstagram.ts]] *(from #service)*
 - [[server_services_metricasReels|server/services/metricasReels.ts]] *(from #service)*
 - [[server_services_socialPublisher|server/services/socialPublisher.ts]] *(from #service)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/services/__tests__/asesorInstagram.test.ts`
 
 ---
 

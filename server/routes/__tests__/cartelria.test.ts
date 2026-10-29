@@ -347,7 +347,7 @@ describe('POST /cartel/retocar', () => {
     expect(res.body).toMatchObject({ conTexto: false, textoOk: true });
     expect(servicio.retoques).toHaveLength(1);
     expect(servicio.retoques[0].bandId).toBe('band-a');
-    expect(servicio.retoques[0].prompt).toContain('<edit_request>El cielo más oscuro</edit_request>');
+    expect(servicio.retoques[0].prompt).toContain('<edit_request><change>El cielo más oscuro</change></edit_request>');
     expect(servicio.retoques[0].prompt).toMatch(/Apply ONLY the change/);
     expect(fila('c1').cartel_config.fondosIa).toEqual([res.body.url, URL_FONDO]);
   });

@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
+  cartelesAnteriores,
   ADN_INICIAL, sanearAdn, conReferencia, sinReferencia, conFavorito, sinFavorito, referenciasParaIa, estiloSugerido,
   MAX_REFERENCIAS, MAX_FAVORITOS, type AdnCartel, type FavoritoCartel,
 } from '../adn';
@@ -93,5 +94,20 @@ describe('estiloSugerido', () => {
     expect(estiloSugerido(ADN_INICIAL, { genero: 'Cantautor' })).toBe('minimal');
     expect(estiloSugerido(ADN_INICIAL, {})).toBe('gigposter');
     expect(estiloSugerido(ADN_INICIAL, { plantilla: 'rara', genero: '???' })).toBe('gigposter');
+  });
+});
+
+describe('cartelesAnteriores', () => {
+  const url = (n: string) => `https://x.supabase.co/storage/v1/object/public/carteles/banda/${n}.png`;
+  it('ofrece los carteles de otros bolos, sin repetir ni las referencias ni los de fuera', () => {
+    const concerts = [
+      { id: 'a', cartel_url: url('a') },
+      { id: 'b', cartel_url: url('b') },
+      { id: 'c', cartelUrl: url('b') + '?v=2' },
+      { id: 'd', cartel_url: url('d') },
+      { id: 'e', cartel_url: 'https://otro.com/cartel.png' },
+      { id: 'f' },
+    ];
+    expect(cartelesAnteriores(concerts, 'a', [url('d')])).toEqual([url('b')]);
   });
 });

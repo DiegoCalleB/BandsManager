@@ -10,6 +10,7 @@ vi.mock('../../ai.js', () => ({ getAiClient: () => ({}), generateContentWithFall
 
 import { briefSinTraducir, construirBrief, leerBrief } from '../briefCartel';
 import { IDEA_VACIA } from '../../../src/utils/cartel/idea';
+import { MAX_CAMPO_BRIEF } from '../../utils/promptCartel';
 
 const idea = { ...IDEA_VACIA, escena: 'Una guitarra con alas', colores: 'Rojo y crema' };
 const boceto = { mimeType: 'image/jpeg' as const, data: 'AAAA' };
@@ -30,9 +31,9 @@ describe('leerBrief', () => {
     expect(b?.scene).not.toMatch(/[<>]/);
   });
 
-  it('recorta cada campo a 240 caracteres', () => {
-    const b = leerBrief(JSON.stringify({ scene: 'x'.repeat(900), mood: '', palette: '', avoid: '', composition: '' }));
-    expect(b!.scene.length).toBeLessThanOrEqual(241);
+  it('recorta cada campo al máximo del brief', () => {
+    const b = leerBrief(JSON.stringify({ scene: 'x'.repeat(MAX_CAMPO_BRIEF + 100), mood: '', palette: '', avoid: '', composition: '' }));
+    expect(b!.scene.length).toBeLessThanOrEqual(MAX_CAMPO_BRIEF + 1);
   });
 });
 

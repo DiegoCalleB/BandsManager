@@ -21,6 +21,7 @@ Lo que se guarda de un cartel en `concerts.cartel_config` (jsonb). Lo usan el cl
 - [[src_utils_cartel_ajustesFinos|src/utils/cartel/ajustesFinos.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_formatos|src/utils/cartel/formatos.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_plantillas|src/utils/cartel/plantillas.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_cartel_textosLibres|src/utils/cartel/textosLibres.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_voces|src/utils/cartel/voces.ts]] *(Layer: #service, Domain: #system)*
 
 ---
@@ -41,6 +42,9 @@ Lo que se guarda de un cartel en `concerts.cartel_config` (jsonb). Lo usan el cl
 - `server/utils/__tests__/cartelUrl.test.ts`
 - `src/utils/cartel/__tests__/config.test.ts`
 - `src/utils/cartel/__tests__/datos.test.ts`
+- `src/utils/cartel/__tests__/estilosBloques.test.ts`
+- `src/utils/cartel/__tests__/retoques.test.ts`
+- `src/utils/cartel/__tests__/textosLibres.test.ts`
 
 ---
 

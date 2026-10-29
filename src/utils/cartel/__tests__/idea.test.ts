@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { CAMPOS_IDEA, EJEMPLOS_IDEA, IDEA_VACIA, MAX_CAMPO_IDEA, camposRellenos, ideaVacia, sanearIdea } from '../idea';
+import { CAMPOS_IDEA, EJEMPLOS_IDEA, IDEA_VACIA, MAX_IDEA, camposRellenos, ideaVacia, sanearIdea } from '../idea';
 
 describe('sanearIdea', () => {
   it('no acepta lo que no es un objeto', () => {
@@ -14,7 +14,7 @@ describe('sanearIdea', () => {
   it('quita caracteres de control, recorta y limita la longitud', () => {
     const r = sanearIdea({ escena: `  una\u0000 guitarra\n con alas  `, ambiente: 'x'.repeat(900) })!;
     expect(r.escena).toBe('una guitarra con alas');
-    expect(r.ambiente).toHaveLength(MAX_CAMPO_IDEA);
+    expect(r.ambiente).toHaveLength(MAX_IDEA.ambiente);
   });
 
   it('ignora campos que no son de la idea', () => {

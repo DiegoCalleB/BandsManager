@@ -6,7 +6,8 @@
 // almacenamiento y de la carpeta de ESA banda (`esUrlDeCartel` en server/utils/cartelUrl.ts).
 
 import { esPlantilla, type PlantillaId } from './plantillas';
-import { sanearAjustesFinos, type AjustesFinosPorFormato } from './ajustesFinos';
+import { MAX_LIBRES, MAX_TEXTO_LIBRE } from './textosLibres';
+import { sanearAjustesFinos, sanearEstilosBloques, type AjustesFinosPorFormato, type EstilosBloques } from './ajustesFinos';
 import { ORDEN_FORMATOS, type FormatoCartel } from './formatos';
 import { ELECCIONES_COMPOSICION, LETRAS_CARTEL, type ComposicionElegida, type LetraCartel } from './voces';
 
@@ -36,6 +37,10 @@ export interface CartelConfig {
   textos: TextosEditados;
   /** Lo que la persona movió o escaló a mano, por formato, sobre el reparto automático. */
   ajustesFinos: AjustesFinosPorFormato;
+  /** Letra, color y ocultar de cada bloque del texto. */
+  estilos: EstilosBloques;
+  /** Textos sueltos (hasta 3): los huecos vacíos se guardan para que cada texto conserve su sitio. */
+  libres: string[];
   marca: boolean;
   /** Logo de la banda en la fila de logos del cartel. */
   logo: boolean;
@@ -51,6 +56,12 @@ export interface CartelConfig {
   fondosIa: string[];
   /** Foto propia subida para este bolo. */
   foto: string | null;
+  /**
+   * Cómo se hizo cada fondo retocado. Cada vuelta de la IA sobre una imagen ya retocada la vuelve a pintar entera y
+   * pierde detalle; por eso un retoque nuevo parte del ORIGINAL con todas las instrucciones juntas. Lo escribe solo
+   * el servidor (el cliente no lo manda: el guardado lo conserva).
+   */
+  retoques: Record<string, LinajeRetoque>;
 }
 
 /** Versiones de fondo de IA que se recuerdan por bolo (cada retoque es una más). */
@@ -62,6 +73,14 @@ export interface TextosEditados {
 export const MAX_TEXTO_EDITADO = 60;
 
 export const MAX_FONDOS_IA = 8;
+/** Retoques que se encadenan sobre el MISMO original antes de partir de la imagen ya retocada. */
+export const MAX_PASOS_RETOQUE = 5;
+
+/** De dónde sale un fondo retocado: el original y todo lo que se le ha pedido, en orden. */
+export interface LinajeRetoque {
+  origen: string;
+  instrucciones: string[];
+}
 export const MAX_LOGOS = 4;
 export const MAX_EXTRA = 60;
 const MAX_CABEZA = 120;
@@ -78,6 +97,8 @@ export const CONFIG_INICIAL: CartelConfig = {
   qrDigital: false,
   textos: { nombre: '', lugar: '' },
   ajustesFinos: {},
+  estilos: {},
+  libres: [],
   marca: true,
   logo: true,
   letra: 'auto',
@@ -86,6 +107,7 @@ export const CONFIG_INICIAL: CartelConfig = {
   logos: [],
   fondosIa: [],
   foto: null,
+  retoques: {},
 };
 
 /** Sin caracteres de control (saltos de línea, nulos…): en un cartel solo hay texto de una línea. */
@@ -96,6 +118,13 @@ const booleano = (v: unknown, defecto: boolean) => (typeof v === 'boolean' ? v :
 function textosEditados(raw: unknown): TextosEditados {
   const r = raw && typeof raw === 'object' && !Array.isArray(raw) ? (raw as Record<string, unknown>) : {};
   return { nombre: texto(r.nombre, MAX_TEXTO_EDITADO), lugar: texto(r.lugar, MAX_TEXTO_EDITADO) };
+}
+
+/** Hasta tres textos sueltos de una línea; un hueco vacío se queda vacío (así cada texto conserva su bloque). */
+function textosLibres(raw: unknown): string[] {
+  const lista = (Array.isArray(raw) ? raw : []).slice(0, MAX_LIBRES).map((t) => texto(t, MAX_TEXTO_LIBRE));
+  while (lista.length && !lista[lista.length - 1]) lista.pop();
+  return lista;
 }
 
 /** Devuelve una configuración válida a partir de cualquier cosa (o null si no es un objeto). */
@@ -142,6 +171,8 @@ export function sanearConfigCartel(raw: unknown, esUrlPermitida: (url: string) =
     qrDigital: booleano(r.qrDigital, false),
     textos: textosEditados(r.textos),
     ajustesFinos: sanearAjustesFinos(r.ajustesFinos),
+    estilos: sanearEstilosBloques(r.estilos),
+    libres: textosLibres(r.libres),
     marca: booleano(r.marca, true),
     logo: booleano(r.logo, true),
     letra: (LETRAS_CARTEL as readonly string[]).includes(r.letra as string) ? (r.letra as LetraCartel) : 'auto',
@@ -150,19 +181,47 @@ export function sanearConfigCartel(raw: unknown, esUrlPermitida: (url: string) =
     logos,
     fondosIa,
     foto,
+    retoques: linajes(r.retoques, fondosIa, url),
   };
+}
+
+/** Linajes de retoque válidos: del historial del bolo, con su original también en el historial. */
+function linajes(raw: unknown, fondosIa: string[], url: (v: unknown) => string | null): Record<string, LinajeRetoque> {
+  const salida: Record<string, LinajeRetoque> = {};
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return salida;
+  for (const [clave, v] of Object.entries(raw as Record<string, unknown>).slice(0, MAX_FONDOS_IA)) {
+    const u = url(clave);
+    const l = v && typeof v === 'object' ? (v as Record<string, unknown>) : null;
+    const origen = url(l?.origen);
+    if (!u || !origen || !fondosIa.includes(u) || !fondosIa.includes(origen)) continue;
+    const instrucciones = (Array.isArray(l?.instrucciones) ? (l!.instrucciones as unknown[]) : []).map((t) => texto(t, 300)).filter(Boolean).slice(0, MAX_PASOS_RETOQUE);
+    if (instrucciones.length) salida[u] = { origen, instrucciones };
+  }
+  return salida;
+}
+
+/** Con estos linajes de retoque, quitando los de fondos (o con original) que ya no están en el historial. */
+export function conRetoques(config: CartelConfig, retoques: Record<string, LinajeRetoque>): CartelConfig {
+  const vivos = Object.entries(retoques).filter(([u, l]) => config.fondosIa.includes(u) && config.fondosIa.includes(l.origen));
+  return { ...config, retoques: Object.fromEntries(vivos) };
 }
 
 /** Añade un fondo de IA al historial (el más nuevo primero, sin repetidos, como mucho `MAX_FONDOS_IA`). */
 export function conFondoIa(config: CartelConfig, url: string): CartelConfig {
-  return { ...config, fondosIa: [url, ...config.fondosIa.filter((u) => u !== url)].slice(0, MAX_FONDOS_IA) };
+  const fondosIa = [url, ...config.fondosIa.filter((u) => u !== url)].slice(0, MAX_FONDOS_IA);
+  return conRetoques({ ...config, fondosIa }, config.retoques ?? {});
+}
+
+/** Anota de dónde sale un fondo retocado (para que el siguiente retoque parta del original). */
+export function conLinaje(config: CartelConfig, url: string, linaje: LinajeRetoque): CartelConfig {
+  return conFondoIa({ ...config, retoques: { ...config.retoques, [url]: linaje } }, url);
 }
 
 /** Lo que se decide por bolo y no es el fondo. */
-export type AjustesBolo = Pick<CartelConfig, 'cabeza' | 'extra' | 'horario' | 'direccion' | 'qr' | 'qrDigital' | 'ajustesFinos' | 'textos' | 'marca' | 'logo' | 'logosTinta' | 'letra' | 'composicion'>;
+export type AjustesBolo = Pick<CartelConfig, 'cabeza' | 'extra' | 'horario' | 'direccion' | 'qr' | 'qrDigital' | 'ajustesFinos' | 'estilos' | 'libres' | 'textos' | 'marca' | 'logo' | 'logosTinta' | 'letra' | 'composicion'>;
 
 export function ajustesDe(c: CartelConfig): AjustesBolo {
-  return { cabeza: c.cabeza, extra: c.extra, horario: c.horario, direccion: c.direccion, qr: c.qr, qrDigital: c.qrDigital, ajustesFinos: c.ajustesFinos, textos: c.textos, marca: c.marca, logo: c.logo, logosTinta: c.logosTinta, letra: c.letra, composicion: c.composicion };
+  return { cabeza: c.cabeza, extra: c.extra, horario: c.horario, direccion: c.direccion, qr: c.qr, qrDigital: c.qrDigital, ajustesFinos: c.ajustesFinos, estilos: c.estilos, libres: c.libres, textos: c.textos, marca: c.marca, logo: c.logo, logosTinta: c.logosTinta, letra: c.letra, composicion: c.composicion };
 }
 
 /**
@@ -183,5 +242,5 @@ export function configDesdeEstado(e: {
   if (fondo.tipo === 'imagen' && fondo.origen === 'foto' && fondo.url !== e.fotoRemota) {
     fondo = e.fotoRemota && fondo.url.startsWith('blob:') ? { tipo: 'imagen', origen: 'foto', url: e.fotoRemota } : e.anterior.fondo;
   }
-  return { v: 1, formato: e.formato, fondo, ...e.ajustes, logos: e.logos.slice(0, MAX_LOGOS), fondosIa: e.fondosIa.slice(0, MAX_FONDOS_IA), foto: e.fotoRemota };
+  return { v: 1, formato: e.formato, fondo, ...e.ajustes, logos: e.logos.slice(0, MAX_LOGOS), fondosIa: e.fondosIa.slice(0, MAX_FONDOS_IA), foto: e.fotoRemota, retoques: e.anterior.retoques };
 }

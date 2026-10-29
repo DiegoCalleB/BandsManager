@@ -3,6 +3,8 @@
 //   POST /api/asesor/pieza                  prepara con IA la pieza de una idea de hoy (solo el id).
 //   POST /api/asesor/accion                 hecho / saltado / pendiente de una idea de hoy.
 //   POST /api/asesor/resultado              los números (alcance, guardados) de una pieza ya publicada.
+//   GET  /api/asesor/instagram/medios       publicaciones de Instagram que pueden ser una pieza hecha.
+//   POST /api/asesor/instagram/medidas      alcance y guardados de UNA publicación, para rellenar el formulario.
 //   GET  /api/asesor/estrategia             estrategia guardada de la banda.
 //   PUT  /api/asesor/estrategia             la guarda, saneada por lista blanca.
 //   POST /api/asesor/estrategia/sugerir     borrador con IA a partir del perfil; NO se guarda.
@@ -15,6 +17,7 @@ import { apiAutenticadaRateLimiter, iaRateLimiter } from '../middleware/rateLimi
 import { captureError } from '../utils/errorTracking.js';
 import { dbGetEstrategiaMarketing, dbGuardarEstrategiaMarketing } from '../db/asesorMarketing.js';
 import { estadoDeHoy, generarPieza, registrarAccion, registrarResultado, sugerirEstrategia } from '../services/asesorMarketing.js';
+import { medidasDeMedio, mediosDeLaPieza } from '../services/asesorInstagram.js';
 import { ESTRATEGIA_INICIAL, sanearEstrategia } from '../../src/utils/asesor/estrategia.js';
 
 export const asesorRouter = express.Router();
@@ -69,6 +72,33 @@ asesorRouter.post('/asesor/resultado', requireAuth, apiAutenticadaRateLimiter, a
     res.json({ ok: true, titulo: r.titulo, veredicto: r.veredicto, mensaje: r.mensaje });
   } catch (e) {
     fallo(res, 'POST /asesor/resultado', e, 'No se pudo guardar.');
+  }
+});
+
+const SIN_INSTAGRAM = 'Esta banda no tiene Instagram conectado. Conéctalo en Métricas para traer los números.';
+const NO_ENCONTRADA = 'No encontramos esa publicación. Escribe los números a mano.';
+
+asesorRouter.get('/asesor/instagram/medios', requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
+  try {
+    const r = await mediosDeLaPieza(getTargetBandId(req), req.query.fecha, req.query.tarjetaId);
+    if (r.estado === 'sin_instagram') return res.status(409).json({ error: SIN_INSTAGRAM });
+    if (r.estado === 'no_existe') return res.status(404).json({ error: 'No encontramos esa publicación entre las que habéis marcado como hechas.' });
+    if (r.estado === 'error') return res.status(502).json({ error: r.motivo });
+    res.json({ medios: r.medios });
+  } catch (e) {
+    fallo(res, 'GET /asesor/instagram/medios', e, 'No se pudo consultar Instagram.');
+  }
+});
+
+asesorRouter.post('/asesor/instagram/medidas', requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
+  try {
+    const r = await medidasDeMedio(getTargetBandId(req), req.body?.medioId);
+    if (r.estado === 'sin_instagram') return res.status(409).json({ error: SIN_INSTAGRAM });
+    if (r.estado === 'no_existe') return res.status(404).json({ error: NO_ENCONTRADA });
+    if (r.estado === 'error') return res.status(502).json({ error: r.motivo });
+    res.json({ medidas: r.medidas });
+  } catch (e) {
+    fallo(res, 'POST /asesor/instagram/medidas', e, 'No se pudo consultar Instagram.');
   }
 });
 

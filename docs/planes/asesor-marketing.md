@@ -130,3 +130,17 @@ UI siguiendo la skill `visual-identity` (Espectro) y con color de módulo propio
 ## 5. Pendiente de Diego
 - ~~Apuntes del máster~~ ✅ integrados.
 - Validar las 6 preguntas de estrategia, que son el corazón de la personalización.
+
+## Métricas desde Instagram (pieza A)
+
+- [x] «Traer de Instagram» en cada pieza por medir: lista las publicaciones del mismo día (o el siguiente), la banda elige y se rellenan alcance, guardados y no seguidores. Siempre editable antes de guardar; solo lee.
+- [x] Con el token de la propia banda; el id elegido debe estar entre sus publicaciones recientes.
+- [x] Las stories quedan fuera: a las 48 h Instagram ya no las devuelve.
+- [ ] PENDIENTE: validar los nombres de las métricas (`reach`, `saved`, `breakdown=follow_type`) con la cuenta de Ruta 66.
+- [ ] Aviso de Meta: para otras bandas hace falta la revisión de la app (`instagram_manage_insights`).
+
+## Calendario (pieza B)
+
+- [x] Pestaña «Calendario»: agenda de tres semanas (7 días atrás, 14 adelante) solo con los días que tienen algo, y hoy siempre.
+- [x] Pone lo fijado (bolos, hitos de su campaña, estreno) y lo ya publicado con la lectura de sus números («Funcionó», «Sin medir»…). Lógica pura en `src/utils/asesor/agenda.ts`.
+- [ ] No planifica publicaciones futuras ni se arrastra nada: qué publicar cada día sigue decidiéndolo la pestaña «Hoy». Reservar ideas por día queda para una fase posterior.

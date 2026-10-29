@@ -66,13 +66,13 @@ test('C · lo que se comparte con un fondo de IA pasa a favoritos y se puede reu
   await expect(page.getByText('Tus favoritos')).toBeVisible();
 });
 
-test('el logo es opcional: un interruptor en Ajustes y por defecto apagado', async ({ page }) => {
+test('el logo es opcional: un interruptor en Ajustes, encendido por defecto', async ({ page }) => {
   await abrirCarteleria(page, { conLogo: true });
   await page.getByRole('button', { name: 'Más opciones del cartel' }).click();
   await page.getByRole('menuitem', { name: 'Ajustes del cartel' }).click();
   const interruptor = page.getByRole('switch', { name: 'Logo de la banda' });
   await expect(interruptor).toBeEnabled();
-  await expect(interruptor).toHaveAttribute('aria-checked', 'false');
-  await interruptor.click();
   await expect(interruptor).toHaveAttribute('aria-checked', 'true');
+  await interruptor.click();
+  await expect(interruptor).toHaveAttribute('aria-checked', 'false');
 });
