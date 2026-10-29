@@ -13,6 +13,7 @@ import { esConciertoPublicable, hoyIso } from '../utils/paginaConcierto.js';
 import { sanitizeExternalText } from '../utils/promptSafety.js';
 import { buildBandContextBlock, emptyBandProfile, loadBandProfile, type BandProfile } from '../utils/bandProfile.js';
 import { fechaCorta, sumarDias } from '../../src/utils/campanaConcierto.js';
+import { detectarCaida } from '../../src/utils/asesor/rescate.js';
 import { agendaDe, type DiaAgenda } from '../../src/utils/asesor/agenda.js';
 import { diagnosticar, type ConciertoParaAsesor, type Diagnostico } from '../../src/utils/asesor/diagnostico.js';
 import {
@@ -20,7 +21,7 @@ import {
 } from '../../src/utils/asesor/opciones.js';
 import { promptPieza, sanearPieza, type Pieza } from '../../src/utils/asesor/pieza.js';
 import {
-  porMedir, resumenDe, sanearMedidas, tituloDe, lecturaDe, type PorMedir, type Resumen,
+  porMedir, resumenDe, sanearMedidas, tituloDe, lecturaDe, type PorMedir, type ResultadoPieza as ResultadoMedido, type Resumen,
 } from '../../src/utils/asesor/resumen.js';
 import { bloqueVozAprendida, terminosProhibidosEn, vozAprendidaDe } from '../../src/utils/asesor/vozAprendida.js';
 import {
@@ -48,19 +49,22 @@ interface Contexto {
   hoy: string;
   diagnostico: Diagnostico;
   conciertos: ConciertoParaAsesor[];
+  /** Lo medido en el último mes: de ahí salen el rescate, el aprendizaje y el resumen. */
+  resultados: ResultadoMedido[];
   estrategia: EstrategiaMarketing;
   tieneEstrategia: boolean;
 }
 
 /** Los datos de los que sale el plan de hoy. null si la BD no responde: mejor un error claro que un plan a medias. */
 async function contextoDeHoy(bandId: string, ahora: Date): Promise<Contexto | null> {
-  const [guardada, conciertos, ultimaPublicacion] = await Promise.all([
+  const [guardada, conciertos, ultimaPublicacion, resultados] = await Promise.all([
     dbGetEstrategiaMarketing(bandId),
     dbGetConcerts(bandId).catch((e) => {
       console.warn('[Asesor] Sin conciertos:', (e as Error)?.message || e);
       return null;
     }),
     dbUltimaPublicacion(bandId),
+    dbResultadosDesde(bandId, sumarDias(hoyIso(ahora), -DIAS_APRENDIZAJE)),
   ]);
   if (guardada === undefined || conciertos === null) return null;
 
@@ -69,16 +73,15 @@ async function contextoDeHoy(bandId: string, ahora: Date): Promise<Contexto | nu
   const publicables: ConciertoParaAsesor[] = conciertos
     .filter(esConciertoPublicable)
     .map((c) => ({ id: String(c.id), fecha: String(c.fecha).slice(0, 10), sala: String(c.sala || ''), ciudad: String(c.ciudad || '') }));
-  const diagnostico = diagnosticar({ hoy, conciertos: publicables, lanzamiento: estrategia.lanzamiento, ultimaPublicacion });
-  return { hoy, diagnostico, conciertos: publicables, estrategia, tieneEstrategia: guardada !== null };
+  const diagnostico = diagnosticar({ hoy, conciertos: publicables, lanzamiento: estrategia.lanzamiento, ultimaPublicacion, rescate: detectarCaida(resultados, hoy) });
+  return { hoy, diagnostico, conciertos: publicables, resultados, estrategia, tieneEstrategia: guardada !== null };
 }
 
 export async function estadoDeHoy(bandId: string, ahora = new Date()): Promise<EstadoAsesor | null> {
   const ctx = await contextoDeHoy(bandId, ahora);
   if (!ctx) return null;
-  const desde = sumarDias(ctx.hoy, -DIAS_APRENDIZAJE);
-  const [historial, resultados] = await Promise.all([dbAccionesDesde(bandId, desde), dbResultadosDesde(bandId, desde)]);
-  const { conciertos, ...resto } = ctx;
+  const historial = await dbAccionesDesde(bandId, sumarDias(ctx.hoy, -DIAS_APRENDIZAJE));
+  const { conciertos, resultados, ...resto } = ctx;
   return {
     ...resto,
     agenda: agendaDe({ hoy: ctx.hoy, conciertos, lanzamiento: ctx.estrategia.lanzamiento, historial, resultados }),

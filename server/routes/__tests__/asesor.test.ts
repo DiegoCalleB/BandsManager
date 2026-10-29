@@ -318,4 +318,25 @@ describe('resultados de las piezas', () => {
     const res = await anotar(base);
     expect(res.body.titulo).toBe('Reel del sábado, 24 de octubre');
   });
+
+  it('modo rescate: tres piezas seguidas sin arrancar cambian el plan, y esas ideas se pueden marcar como hechas', async () => {
+    const dias = ['2026-10-24', '2026-10-25', '2026-10-26'];
+    fake.tablas.asesor_acciones = dias.map((fecha, i) => hecha({ fecha, tarjeta_id: `p${i}`, formato: 'reel', titulo: `Reel ${i}` }));
+    fake.tablas.asesor_resultados = dias.map((fecha, i) => ({ band_id: 'band-a', fecha, tarjeta_id: `p${i}`, formato: 'reel', titulo: `Reel ${i}`, alcance: 1000, guardados: 1, alcance_no_seguidores: 10 }));
+    await llamar('put', '/asesor/estrategia', { body: { horasSemana: 3 } });
+
+    const { diagnostico, opciones } = (await llamar('get', '/asesor/hoy')).body;
+    expect(diagnostico.modo).toBe('rescate');
+    expect(opciones.recomendadas[0]).toMatchObject({ id: 'rescate-opuesto', formato: 'carrusel' });
+
+    const res = await llamar('post', '/asesor/accion', { body: { tarjetaId: 'rescate-opuesto', accion: 'hecho' } });
+    expect(res.body).toEqual({ ok: true });
+    expect(fake.tablas.asesor_acciones.find((a) => a.tarjeta_id === 'rescate-opuesto')).toMatchObject({ band_id: 'band-a', formato: 'carrusel', accion: 'hecho' });
+  });
+
+  it('el rescate de una banda no cambia el plan de otra', async () => {
+    fake.tablas.asesor_resultados = ['2026-10-24', '2026-10-25', '2026-10-26'].map((fecha, i) => ({ band_id: 'band-b', fecha, tarjeta_id: `p${i}`, formato: 'reel', titulo: `Reel ${i}`, alcance: 1000, guardados: 1, alcance_no_seguidores: 10 }));
+    expect((await llamar('get', '/asesor/hoy')).body.diagnostico.modo).not.toBe('rescate');
+    expect((await llamar('get', '/asesor/hoy', { bandId: 'band-b' })).body.diagnostico.modo).toBe('rescate');
+  });
 });

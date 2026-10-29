@@ -33,6 +33,7 @@ _Sin dependencias salientes directas._
 - [[src_utils_asesor_diagnostico|src/utils/asesor/diagnostico.ts]] *(from #service)*
 - [[src_utils_asesor_instagramMedios|src/utils/asesor/instagramMedios.ts]] *(from #service)*
 - [[src_utils_asesor_opciones|src/utils/asesor/opciones.ts]] *(from #service)*
+- [[src_utils_asesor_rescate|src/utils/asesor/rescate.ts]] *(from #service)*
 - [[src_utils_asesor_resumen|src/utils/asesor/resumen.ts]] *(from #service)*
 - [[src_utils_promocionApi|src/utils/promocionApi.ts]] *(from #service)*
 

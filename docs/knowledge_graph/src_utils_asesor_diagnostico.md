@@ -19,6 +19,7 @@ El diagnóstico diario del asesor: en qué momento está la banda (modo). Qué p
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_utils_asesor_estrategia|src/utils/asesor/estrategia.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_asesor_reglasFormato|src/utils/asesor/reglasFormato.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_campanaConcierto|src/utils/campanaConcierto.ts]] *(Layer: #service, Domain: #system)*
 
 ---
@@ -28,6 +29,7 @@ El diagnóstico diario del asesor: en qué momento está la banda (modo). Qué p
 - [[src_components_asesor_AsesorView|src/components/asesor/AsesorView.tsx]] *(from #frontend)*
 - [[src_utils_asesor_agenda|src/utils/asesor/agenda.ts]] *(from #service)*
 - [[src_utils_asesor_opciones|src/utils/asesor/opciones.ts]] *(from #service)*
+- [[src_utils_asesor_rescate|src/utils/asesor/rescate.ts]] *(from #service)*
 - [[src_utils_asesorApi|src/utils/asesorApi.ts]] *(from #service)*
 
 ---
@@ -35,6 +37,7 @@ El diagnóstico diario del asesor: en qué momento está la banda (modo). Qué p
 ## 🧪 Tests que lo cubren
 - `src/utils/asesor/__tests__/diagnostico.test.ts`
 - `src/utils/asesor/__tests__/opciones.test.ts`
+- `src/utils/asesor/__tests__/rescate.test.ts`
 - `src/utils/asesor/__tests__/resumen.test.ts`
 
 ---

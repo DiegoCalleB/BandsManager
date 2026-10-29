@@ -59,7 +59,7 @@ La función pura `diagnosticar(banda, hoy)` devuelve **un modo** y su porqué:
 | Hay un bolo en ≤ 21 días | 🎫 Concierto | Campaña de hitos y QR de entradas |
 | Hay un lanzamiento en ≤ 30 días o han pasado ≤ 14 días | 💿 Lanzamiento | Teasers, presave y "la historia de la canción" |
 | Llevan más de 10 días sin publicar | 🔁 Reactivar | 1 pieza fácil y de bajo esfuerzo |
-| Las métricas caen 3 semanas seguidas | 🚑 Rescate | Cambiar de formato y probar lo opuesto *(aplazado: ya se miden las piezas, pero hace falta una serie semanal de varias semanas para detectar una caída)* |
+| Las métricas caen 3 semanas seguidas | 🚑 Rescate | Cambiar de formato y probar lo opuesto *(hecho: ver «Modo rescate»)* |
 | Nada de lo anterior | 🌱 Fondo | Rotar pilares y construir comunidad |
 
 **Por qué determinista:** es explicable ("te propongo esto porque tocas en 9 días"), testeable con Vitest y no cuesta tokens.
@@ -144,3 +144,11 @@ UI siguiendo la skill `visual-identity` (Espectro) y con color de módulo propio
 - [x] Pestaña «Calendario»: agenda de tres semanas (7 días atrás, 14 adelante) solo con los días que tienen algo, y hoy siempre.
 - [x] Pone lo fijado (bolos, hitos de su campaña, estreno) y lo ya publicado con la lectura de sus números («Funcionó», «Sin medir»…). Lógica pura en `src/utils/asesor/agenda.ts`.
 - [ ] No planifica publicaciones futuras ni se arrastra nada: qué publicar cada día sigue decidiéndolo la pestaña «Hoy». Reservar ideas por día queda para una fase posterior.
+
+## Modo rescate
+
+- [x] Se activa tras un bolo o un estreno (que siguen mandando) y antes de «volver a publicar». Lógica pura en `src/utils/asesor/rescate.ts`, sobre los resultados que la banda ya anotó.
+- [x] Dos señales: tres semanas seguidas con menos alcance medio (la última por debajo del 70 % de la primera) o las tres últimas piezas medidas sin arrancar. Sin datos de las tres semanas no se inventa ninguna caída.
+- [x] Propone probar lo opuesto al formato que no arranca (reel ↔ carrusel), repetir la estructura de la pieza que más se guardó y preguntar a los seguidores qué quieren ver.
+- [x] Cabecera «Cambiar de rumbo» y la misma validación de ideas por id en el servidor que el resto de modos.
+- [ ] Pendiente: aviso al salir del rescate («ya vuelve a subir») y que la IA compare qué cambió entre la mejor y la peor semana.

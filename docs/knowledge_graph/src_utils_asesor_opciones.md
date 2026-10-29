@@ -21,6 +21,7 @@ Qué publicar hoy: varias ideas por modo para que la banda elija, ordenadas por 
 - [[src_utils_asesor_diagnostico|src/utils/asesor/diagnostico.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_estrategia|src/utils/asesor/estrategia.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_reglasFormato|src/utils/asesor/reglasFormato.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_asesor_rescate|src/utils/asesor/rescate.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_resumen|src/utils/asesor/resumen.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_tipos|src/utils/asesor/tipos.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_campanaConcierto|src/utils/campanaConcierto.ts]] *(Layer: #service, Domain: #system)*
@@ -42,6 +43,7 @@ Qué publicar hoy: varias ideas por modo para que la banda elija, ordenadas por 
 ## 🧪 Tests que lo cubren
 - `src/utils/asesor/__tests__/opciones.test.ts`
 - `src/utils/asesor/__tests__/pieza.test.ts`
+- `src/utils/asesor/__tests__/rescate.test.ts`
 - `src/utils/asesor/__tests__/resumen.test.ts`
 
 ---
