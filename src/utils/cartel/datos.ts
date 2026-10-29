@@ -20,6 +20,8 @@ export interface AjustesTexto {
   direccion?: boolean;
   /** El nombre y el lugar que la persona escribió a mano (vacío = los del bolo). */
   textos?: { nombre: string; lugar: string };
+  /** Textos sueltos que se mueven a mano (hasta 3; un hueco vacío no se pinta). */
+  libres?: string[];
 }
 
 const clave = (s: string) => s.trim().toLocaleLowerCase('es');
@@ -64,6 +66,7 @@ export function datosDesdeConcierto(c: Concert, banda: string, ajustes: AjustesT
     ciudad: lugarEscrito ? '' : (c.ciudad || '').trim(),
     direccion: ajustes.direccion ? (c.direccion || '').trim().slice(0, 70) : '',
     extra: ajustes.extra.trim().slice(0, MAX_EXTRA),
+    libres: ajustes.libres,
   };
 }
 

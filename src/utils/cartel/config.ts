@@ -6,6 +6,7 @@
 // almacenamiento y de la carpeta de ESA banda (`esUrlDeCartel` en server/utils/cartelUrl.ts).
 
 import { esPlantilla, type PlantillaId } from './plantillas';
+import { MAX_LIBRES, MAX_TEXTO_LIBRE } from './textosLibres';
 import { sanearAjustesFinos, sanearEstilosBloques, type AjustesFinosPorFormato, type EstilosBloques } from './ajustesFinos';
 import { ORDEN_FORMATOS, type FormatoCartel } from './formatos';
 import { ELECCIONES_COMPOSICION, LETRAS_CARTEL, type ComposicionElegida, type LetraCartel } from './voces';
@@ -38,6 +39,8 @@ export interface CartelConfig {
   ajustesFinos: AjustesFinosPorFormato;
   /** Letra, color y ocultar de cada bloque del texto. */
   estilos: EstilosBloques;
+  /** Textos sueltos (hasta 3): los huecos vacíos se guardan para que cada texto conserve su sitio. */
+  libres: string[];
   marca: boolean;
   /** Logo de la banda en la fila de logos del cartel. */
   logo: boolean;
@@ -81,6 +84,7 @@ export const CONFIG_INICIAL: CartelConfig = {
   textos: { nombre: '', lugar: '' },
   ajustesFinos: {},
   estilos: {},
+  libres: [],
   marca: true,
   logo: true,
   letra: 'auto',
@@ -99,6 +103,13 @@ const booleano = (v: unknown, defecto: boolean) => (typeof v === 'boolean' ? v :
 function textosEditados(raw: unknown): TextosEditados {
   const r = raw && typeof raw === 'object' && !Array.isArray(raw) ? (raw as Record<string, unknown>) : {};
   return { nombre: texto(r.nombre, MAX_TEXTO_EDITADO), lugar: texto(r.lugar, MAX_TEXTO_EDITADO) };
+}
+
+/** Hasta tres textos sueltos de una línea; un hueco vacío se queda vacío (así cada texto conserva su bloque). */
+function textosLibres(raw: unknown): string[] {
+  const lista = (Array.isArray(raw) ? raw : []).slice(0, MAX_LIBRES).map((t) => texto(t, MAX_TEXTO_LIBRE));
+  while (lista.length && !lista[lista.length - 1]) lista.pop();
+  return lista;
 }
 
 /** Devuelve una configuración válida a partir de cualquier cosa (o null si no es un objeto). */
@@ -146,6 +157,7 @@ export function sanearConfigCartel(raw: unknown, esUrlPermitida: (url: string) =
     textos: textosEditados(r.textos),
     ajustesFinos: sanearAjustesFinos(r.ajustesFinos),
     estilos: sanearEstilosBloques(r.estilos),
+    libres: textosLibres(r.libres),
     marca: booleano(r.marca, true),
     logo: booleano(r.logo, true),
     letra: (LETRAS_CARTEL as readonly string[]).includes(r.letra as string) ? (r.letra as LetraCartel) : 'auto',
@@ -163,10 +175,10 @@ export function conFondoIa(config: CartelConfig, url: string): CartelConfig {
 }
 
 /** Lo que se decide por bolo y no es el fondo. */
-export type AjustesBolo = Pick<CartelConfig, 'cabeza' | 'extra' | 'horario' | 'direccion' | 'qr' | 'qrDigital' | 'ajustesFinos' | 'estilos' | 'textos' | 'marca' | 'logo' | 'logosTinta' | 'letra' | 'composicion'>;
+export type AjustesBolo = Pick<CartelConfig, 'cabeza' | 'extra' | 'horario' | 'direccion' | 'qr' | 'qrDigital' | 'ajustesFinos' | 'estilos' | 'libres' | 'textos' | 'marca' | 'logo' | 'logosTinta' | 'letra' | 'composicion'>;
 
 export function ajustesDe(c: CartelConfig): AjustesBolo {
-  return { cabeza: c.cabeza, extra: c.extra, horario: c.horario, direccion: c.direccion, qr: c.qr, qrDigital: c.qrDigital, ajustesFinos: c.ajustesFinos, estilos: c.estilos, textos: c.textos, marca: c.marca, logo: c.logo, logosTinta: c.logosTinta, letra: c.letra, composicion: c.composicion };
+  return { cabeza: c.cabeza, extra: c.extra, horario: c.horario, direccion: c.direccion, qr: c.qr, qrDigital: c.qrDigital, ajustesFinos: c.ajustesFinos, estilos: c.estilos, libres: c.libres, textos: c.textos, marca: c.marca, logo: c.logo, logosTinta: c.logosTinta, letra: c.letra, composicion: c.composicion };
 }
 
 /**

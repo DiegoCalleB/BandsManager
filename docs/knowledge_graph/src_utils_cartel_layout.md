@@ -22,6 +22,7 @@ Dónde va cada cosa en el cartel. Puro: recibe un medidor de texto (en el navega
 - [[src_utils_cartel_composiciones|src/utils/cartel/composiciones.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_formatos|src/utils/cartel/formatos.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_layoutBase|src/utils/cartel/layoutBase.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_cartel_textosLibres|src/utils/cartel/textosLibres.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
@@ -42,6 +43,7 @@ Dónde va cada cosa en el cartel. Puro: recibe un medidor de texto (en el navega
 - `src/utils/cartel/__tests__/estilosBloques.test.ts`
 - `src/utils/cartel/__tests__/layout.test.ts`
 - `src/utils/cartel/__tests__/placas.test.ts`
+- `src/utils/cartel/__tests__/textosLibres.test.ts`
 
 ---
 

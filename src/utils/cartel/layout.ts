@@ -8,6 +8,7 @@
 import type { DefFormato } from './formatos';
 import { aplicarAjustesFinos } from './ajustesFinos';
 import { composicionBase, composicionCentrada, composicionVentana } from './composiciones';
+import { anadirLibres } from './textosLibres';
 import { contexto, type DatosCartel, type LayoutCartel, type Medidor, type OpcionesLayout } from './layoutBase';
 
 export * from './layoutBase';
@@ -16,5 +17,5 @@ export function calcularLayout(def: DefFormato, ancho: number, datos: DatosCarte
   const c = contexto(def, ancho, datos, opciones, medir);
   const base = opciones.composicion === 'centrada' ? composicionCentrada(c) : opciones.composicion === 'base' ? composicionBase(c) : composicionVentana(c);
   // Lo que la persona movió o escaló a mano va encima del reparto automático.
-  return aplicarAjustesFinos(base, opciones.ajustes, medir, opciones.estilos);
+  return aplicarAjustesFinos(anadirLibres(base, datos.libres, medir), opciones.ajustes, medir, opciones.estilos);
 }

@@ -121,3 +121,17 @@ export function estiloSugerido(adn: AdnCartel, banda: { plantilla?: string; gene
   const g = banda.genero ?? '';
   return PISTAS_GENERO.find(([re]) => re.test(g))?.[1] ?? 'gigposter';
 }
+
+/** Carteles de OTROS bolos de la banda que se pueden ofrecer como referencia (ya viven en su carpeta), sin repetir las que ya lo son. */
+export function cartelesAnteriores(concerts: Array<{ id: string; cartel_url?: string | null; cartelUrl?: string | null }>, idActual: string, referencias: string[]): string[] {
+  const yaSon = new Set(referencias.map(sinVersion));
+  const lista: string[] = [];
+  for (const c of concerts) {
+    const u = c.id !== idActual ? c.cartel_url || c.cartelUrl : undefined;
+    if (!u || !u.startsWith('https://') || !u.includes('/storage/v1/object/public/') || !u.includes('/carteles/')) continue;
+    if (yaSon.has(sinVersion(u))) continue;
+    yaSon.add(sinVersion(u));
+    lista.push(u);
+  }
+  return lista.slice(0, 6);
+}

@@ -32,6 +32,7 @@ Ajuste fino a mano: mover y escalar cada bloque del texto (nombre, fecha, datos,
 - [[src_utils_cartel_config|src/utils/cartel/config.ts]] *(from #service)*
 - [[src_utils_cartel_layout|src/utils/cartel/layout.ts]] *(from #service)*
 - [[src_utils_cartel_layoutBase|src/utils/cartel/layoutBase.ts]] *(from #service)*
+- [[src_utils_cartel_textosLibres|src/utils/cartel/textosLibres.ts]] *(from #service)*
 
 ---
 
