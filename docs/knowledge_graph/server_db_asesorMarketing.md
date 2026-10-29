@@ -32,7 +32,13 @@ Datos del Asesor de Marketing: la estrategia de la banda (`band_estrategia_marke
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
 - [[server_routes_asesor|server/routes/asesor.ts]] *(from #route)*
+- [[server_services_asesorInstagram|server/services/asesorInstagram.ts]] *(from #service)*
 - [[server_services_asesorMarketing|server/services/asesorMarketing.ts]] *(from #service)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/services/__tests__/asesorInstagram.test.ts`
 
 ---
 
