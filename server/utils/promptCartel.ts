@@ -57,7 +57,8 @@ export interface BriefArte {
   composition: string;
 }
 
-export const MAX_CAMPO_BRIEF = 240;
+/** Lo que cabe en cada parte del brief: tanto como el campo más largo de la idea (si no, se cortaría lo que la persona contó). */
+export const MAX_CAMPO_BRIEF = 800;
 
 export type EncuadreFondo = 'ventana' | 'sangre';
 

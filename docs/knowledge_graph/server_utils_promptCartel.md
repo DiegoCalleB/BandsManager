@@ -32,6 +32,7 @@ Prompt del fondo de un cartel. Función pura: la IA pinta SOLO la ilustración; 
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/services/__tests__/briefCartel.test.ts`
 - `server/utils/__tests__/promptCartel.test.ts`
 
 ---
