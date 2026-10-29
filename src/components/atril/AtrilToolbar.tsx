@@ -10,6 +10,8 @@ import { ControlBucle } from "../chords/ControlBucle";
 import { ControlMetronomo } from "../chords/ControlMetronomo";
 import { ControlTonoAudio } from "../chords/ControlTonoAudio";
 import { ControlVelocidad } from "../chords/ControlVelocidad";
+import { ControlTonoDestino } from "../chords/ControlTonoDestino";
+import { usaBemoles } from "../../utils/teoriaArmonica";
 import { GrabarIdea } from "../chords/GrabarIdea";
 import { IrisStudio } from "../chords/IrisStudio";
 import { MezclaPistas } from "../chords/MezclaPistas";
@@ -24,7 +26,7 @@ import { useAtril } from "./AtrilContext";
  * @returns Sección de interfaz.
  */
 export function AtrilToolbar() {
-  const { activeTab, audioUrl, handleRestartAudio, formatAudioTime, audioCurrentTime, audioDuration, handleSeekAudio, stems, song, iris, separarConIris, modoEscucha, setModoEscucha, miId, setMiPistaId, velocidad, setVelocidad, transpose, audioSigueTono, setAudioSigueTono, bucle, marcarBucle, limpiarBucle, tomas, tomaActivaId, setTomaActivaId, onUpdateSong, pistasSonando, ajustesPistas, setAjustesPistas, modo, grabacion, guardandoIdea, guardarIdea, setTranspose, autoScroll, metronomo, setMasControles, masControles, setNotation, notation, showChordDiagrams, setShowChordDiagrams, handleCopyChords, copiedText } = useAtril();
+  const { activeTab, audioUrl, handleRestartAudio, formatAudioTime, audioCurrentTime, audioDuration, handleSeekAudio, stems, song, iris, separarConIris, modoEscucha, setModoEscucha, miId, setMiPistaId, velocidad, setVelocidad, transpose, audioSigueTono, setAudioSigueTono, bucle, marcarBucle, limpiarBucle, tomas, tomaActivaId, setTomaActivaId, onUpdateSong, pistasSonando, ajustesPistas, setAjustesPistas, modo, grabacion, guardandoIdea, guardarIdea, setTranspose, autoScroll, metronomo, setMasControles, masControles, setNotation, notation, showChordDiagrams, setShowChordDiagrams, handleCopyChords, copiedText, armonia } = useAtril();
   return (
     <>
       <div className="bg-[var(--surface)]/80 px-4 py-2.5 flex flex-wrap items-center justify-end gap-3 text-xs font-sans shrink-0">
@@ -110,6 +112,9 @@ export function AtrilToolbar() {
               >
                 +1
               </button>
+              {armonia && (
+                <ControlTonoDestino tonica={armonia.tonalidad.tonica} menor={armonia.tonalidad.menor} bemoles={usaBemoles(armonia.tonalidad, armonia.modo.id)} notation={notation} transpose={transpose} onTranspose={setTranspose} />
+              )}
               {transpose !== 0 && (
                 <IconButton
                   label="Restablecer tono original"

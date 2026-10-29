@@ -27,7 +27,7 @@ describe('mezcla y velocidad guardadas del Atril', () => {
   it('el Atril usa el hook y aplica la velocidad al audio', () => {
     const atril = leerAtril();
     expect(atril).toContain('useMezclaGuardada(song.id)');
-    expect(atril).toContain('audioRef.current.playbackRate = velocidad');
+    expect(atril).toContain('el.playbackRate = velocidad');
   });
 
   it('el control marca la velocidad activa, sin border', () => {

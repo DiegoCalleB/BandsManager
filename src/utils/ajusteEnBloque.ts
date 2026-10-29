@@ -25,12 +25,12 @@ export function movimientoHecho(antes: SegmentoAcordeAnalizado[], despues: Segme
   return null;
 }
 
-/** Índices de los demás cambios del rango que son el mismo cambio (mismo acorde entrando tras el mismo previo). */
+/** Índices de los demás cambios del rango que son el mismo cambio (mismo acorde entrando tras el mismo previo). Los ya corregidos a mano no se tocan. */
 export function cambiosHermanos(segmentos: SegmentoAcordeAnalizado[], mov: Movimiento, rango: RangoTiempo, excepto: number): number[] {
   const hermanos: number[] = [];
   for (let k = 1; k < segmentos.length; k++) {
     const s = segmentos[k];
-    if (Math.abs(s.t0 - excepto) < 1e-6 || s.t0 < rango.desde || s.t0 >= rango.hasta) continue;
+    if (s.editado || Math.abs(s.t0 - excepto) < 1e-6 || s.t0 < rango.desde || s.t0 >= rango.hasta) continue;
     if (s.acorde === mov.acorde && segmentos[k - 1].acorde === mov.previo) hermanos.push(k);
   }
   return hermanos;
