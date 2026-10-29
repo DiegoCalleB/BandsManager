@@ -19,6 +19,7 @@ Cliente de las rutas del Asesor de Marketing. Todas pasan por `apiFetch` (JWT + 
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_asesor_agenda|src/utils/asesor/agenda.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_diagnostico|src/utils/asesor/diagnostico.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_estrategia|src/utils/asesor/estrategia.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_instagramMedios|src/utils/asesor/instagramMedios.ts]] *(Layer: #service, Domain: #social)*

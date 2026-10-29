@@ -95,6 +95,11 @@ async function abrirAsesor(page: Page, { conAdn = false, sinFotos = false, conPe
         opciones: { recomendadas: vivas.slice(0, 2), alternativas: vivas.slice(2) },
         porMedir: conPendientes && !servidor.medido ? [{ fecha: '2026-10-24', tarjetaId: 'fondo-pilar', formato: 'reel', titulo: 'Tema de la semana: La furgo' }] : [],
         resumen: conPendientes ? RESUMEN : null,
+        agenda: [
+          { fecha: '2026-10-24', esHoy: false, eventos: [{ tipo: 'hecha', texto: 'Tema de la semana: La furgo', formato: 'reel', lectura: 'sin_medir' }] },
+          { fecha: '2026-10-28', esHoy: true, eventos: [] },
+          { fecha: '2026-10-31', esHoy: false, eventos: [{ tipo: 'bolo', texto: 'Concierto en Oktoberfest, Leganés' }, { tipo: 'hito', texto: 'Día D del bolo en Oktoberfest', objetivo: 'Que nadie se olvide de que es hoy.' }] },
+        ],
         semana: ['22', '23', '24', '25', '26', '27', '28'].map((d, k) => ({ fecha: `2026-10-${d}`, hechas: [0, 1, 0, 2, 0, 0, servidor.hechas.size][k] })),
         estrategia: { v: 1, objetivo: 'llenar_salas', etapa: 'local', publico: '', horasSemana: 3, camara: 'algunos', pilares: [], lineasRojas: [], referentes: [], lanzamiento: null, revisada: true },
         tieneEstrategia: true,
@@ -319,4 +324,19 @@ test('sin nada que medir, Resultados explica qué hacer en vez de quedarse vací
   await page.getByRole('tab', { name: 'Resultados' }).click();
   await expect(page.getByText('Aún no hay números que mirar.')).toBeVisible();
   await expect(page.getByText(/dos días después, apunta aquí/)).toBeVisible();
+});
+
+test('el calendario sitúa hoy y enseña lo publicado, el bolo y los hitos', async ({ page }) => {
+  await abrirAsesor(page);
+  await page.getByRole('tab', { name: 'Calendario' }).click();
+  const cal = page.getByRole('region', { name: 'Calendario' });
+  await expect(cal.getByText('Concierto en Oktoberfest, Leganés')).toBeVisible();
+  await expect(cal.getByText('Día D del bolo en Oktoberfest')).toBeVisible();
+  await expect(cal.getByText('Tema de la semana: La furgo')).toBeVisible();
+  await expect(cal.getByText('Sin medir')).toBeVisible();
+  await expect(cal.locator('[aria-current="date"]')).toContainText('Hoy');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await page.screenshot({ path: 'test-results/asesor-calendario.png' });
+  await cal.getByRole('button', { name: 'Ver qué toca' }).click();
+  await expect(page.getByRole('region', { name: 'Recomendado para hoy' })).toBeVisible();
 });
