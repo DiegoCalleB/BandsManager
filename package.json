@@ -46,6 +46,7 @@
     "migrate:check": "tsx scripts/migrate.ts --check",
     "eval:acordes": "tsx scripts/evaluar-acordes.ts",
     "benchmark:acordes": "tsx scripts/benchmark-acordes.ts",
+    "benchmark:exportar": "tsx scripts/exportar-benchmark.ts",
     "eval:agentes": "tsx scripts/evaluar-agentes.ts",
     "catalogo:salas": "tsx scripts/catalogo-salas.ts",
     "festivales:cargar": "tsx scripts/festivales-cargar.ts",

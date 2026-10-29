@@ -11,7 +11,11 @@ sección de evaluación del TFM: sin esto, cada mejora del detector es una opini
 
 > `ejemplo-sintetico` es un fixture inventado para probar la herramienta. **No cuenta como resultado**: bórralo cuando haya 10–15 canciones reales.
 
-## Cómo anotar una canción (≈10 min)
+## Atajo: exportar desde la app
+
+Corrige la canción en el visor («Corregir») y ejecuta `npm run benchmark:exportar` (Supabase o `-- --archivo volcado.json`, `-- --solo "título"`). Genera referencia y predicción de todas las canciones corregidas.
+
+## Cómo anotar una canción a mano (≈10 min)
 
 1. Abre la canción en el visor, escucha y apunta el segundo de cada cambio de acorde (o usa «Corregir» y exporta `referenciaManual`).
 2. Guarda `referencias/<cancion>.lab`. Anota solo lo que oyes; «N» para silencios.
