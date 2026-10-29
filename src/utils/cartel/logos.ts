@@ -61,6 +61,24 @@ export function mascaraDeLogo(rgba: Uint8ClampedArray, ancho: number, alto: numb
   return mascara;
 }
 
+/**
+ * Que la silueta sea TINTA y no un velo: un logo con semitransparencia, o con degradados y grises que el contraste
+ * deja a medias, salía como un fantasma. Se normaliza a su valor más alto y una curva empuja lo bastante cargado
+ * (≥ 55 %) a tinta llena y lo casi vacío (≤ 10 %) a nada, dejando suave solo el borde.
+ */
+export function solidificarMascara(mascara: Uint8ClampedArray): Uint8ClampedArray {
+  let maximo = 0;
+  for (let i = 0; i < mascara.length; i++) if (mascara[i] > maximo) maximo = mascara[i];
+  const fuera = new Uint8ClampedArray(mascara.length);
+  if (maximo === 0) return fuera;
+  const [desde, hasta] = [0.1, 0.55];
+  for (let i = 0; i < mascara.length; i++) {
+    const t = Math.min(1, Math.max(0, (mascara[i] / maximo - desde) / (hasta - desde)));
+    fuera[i] = Math.round(t * t * (3 - 2 * t) * 255);
+  }
+  return fuera;
+}
+
 function mulberry32(semilla: number) {
   let a = semilla >>> 0;
   return () => {
@@ -74,12 +92,12 @@ function mulberry32(semilla: number) {
 
 /**
  * Desgaste leve de tinta: unos píxeles con algo menos de tinta, como en una serigrafía. Determinista (misma
- * semilla → mismo logo), nunca borra la forma: el mínimo que deja es el 80 % de la tinta.
+ * semilla → mismo logo), nunca borra la forma: el mínimo que deja es el 92 % de la tinta (más desgaste hacía el logo translúcido).
  */
 export function conDesgasteDeTinta(mascara: Uint8ClampedArray, semilla: number): Uint8ClampedArray {
   const azar = mulberry32(semilla);
   const fuera = new Uint8ClampedArray(mascara.length);
-  for (let i = 0; i < mascara.length; i++) fuera[i] = Math.round(mascara[i] * (0.8 + 0.2 * azar()));
+  for (let i = 0; i < mascara.length; i++) fuera[i] = Math.round(mascara[i] * (0.92 + 0.08 * azar()));
   return fuera;
 }
 
@@ -117,7 +135,7 @@ export function tintarLogo(img: HTMLImageElement, url: string, tintaHex: string)
   const c = origen.getContext('2d', { willReadFrequently: true });
   if (!c) return origen;
   c.drawImage(img, 0, 0, w, h);
-  const mascara = conDesgasteDeTinta(mascaraDeLogo(c.getImageData(0, 0, w, h).data, w, h), semillaDeLogo(url));
+  const mascara = conDesgasteDeTinta(solidificarMascara(mascaraDeLogo(c.getImageData(0, 0, w, h).data, w, h)), semillaDeLogo(url));
 
   const [r, g, b] = rgbDeHex(tintaHex);
   const salida = c.createImageData(w, h);
