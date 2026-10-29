@@ -29,6 +29,7 @@ _Sin dependencias salientes directas._
 - [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(from #route)*
 - [[server_routes_leads_places|server/routes/leads/places.ts]] *(from #route)*
+- [[server_services_asesorMarketing|server/services/asesorMarketing.ts]] *(from #service)*
 - [[server_services_bandsintownVenueService|server/services/bandsintownVenueService.ts]] *(from #service)*
 - [[server_services_googlePlacesVenueService|server/services/googlePlacesVenueService.ts]] *(from #service)*
 - [[server_services_multiSourceVenueDiscoveryService|server/services/multiSourceVenueDiscoveryService.ts]] *(from #service)*

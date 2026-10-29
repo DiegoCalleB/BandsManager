@@ -39,6 +39,7 @@ Conciertos (`concerts`): lectura, upsert y borrado acotados por `bandId`.
 - [[server_routes_cartelria|server/routes/cartelria.ts]] *(from #route)*
 - [[server_routes_enlacesCortos|server/routes/enlacesCortos.ts]] *(from #route)*
 - [[server_routes_paginaConcierto|server/routes/paginaConcierto.ts]] *(from #route)*
+- [[server_services_asesorMarketing|server/services/asesorMarketing.ts]] *(from #service)*
 - [[server_utils_permisosConcierto|server/utils/permisosConcierto.ts]] *(from #service)*
 
 ---

@@ -24,7 +24,12 @@ _Sin dependencias salientes directas._
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_routes_campanaConcierto|server/routes/campanaConcierto.ts]] *(from #route)*
+- [[server_services_asesorMarketing|server/services/asesorMarketing.ts]] *(from #service)*
+- [[src_components_asesor_PorMedirCard|src/components/asesor/PorMedirCard.tsx]] *(from #frontend)*
 - [[src_components_calendar_PromocionConciertoModal|src/components/calendar/PromocionConciertoModal.tsx]] *(from #frontend)*
+- [[src_utils_asesor_diagnostico|src/utils/asesor/diagnostico.ts]] *(from #service)*
+- [[src_utils_asesor_opciones|src/utils/asesor/opciones.ts]] *(from #service)*
+- [[src_utils_asesor_resumen|src/utils/asesor/resumen.ts]] *(from #service)*
 - [[src_utils_promocionApi|src/utils/promocionApi.ts]] *(from #service)*
 
 ---

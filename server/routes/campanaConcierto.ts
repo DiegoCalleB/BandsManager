@@ -30,10 +30,13 @@ import {
 } from '../../src/utils/campanaConcierto.js';
 import type { RespuestaVariantesCampana } from '../tiposRespuestasIA.js';
 import { cartelriaRouter } from './cartelria.js';
+import { asesorRouter } from './asesor.js';
 
 export const campanaConciertoRouter = express.Router();
 // Cartelería: otra pieza de promoción de un concierto; cuelga de aquí para no inflar server.ts (§5.6).
 campanaConciertoRouter.use(cartelriaRouter);
+// Asesor de Marketing: mismo motivo, es la otra cara de la promoción de la banda.
+campanaConciertoRouter.use(asesorRouter);
 
 const HITOS: readonly HitoId[] = ['anuncio', 'recordatorio', 'ultima_llamada', 'dia_d'];
 const OBJETIVO: Record<HitoId, string> = {

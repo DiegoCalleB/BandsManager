@@ -22,11 +22,14 @@ Esquema relacional de tablas, índices pgvector, funciones y políticas RLS.
 - [[tabla_agent_jobs_queue|tabla agent_jobs_queue]] *(Layer: #schema, Domain: #system)*
 - [[tabla_agent_schedule_state|tabla agent_schedule_state]] *(Layer: #schema, Domain: #system)*
 - [[tabla_ai_token_ledger|tabla ai_token_ledger]] *(Layer: #schema, Domain: #system)*
+- [[tabla_asesor_acciones|tabla asesor_acciones]] *(Layer: #schema, Domain: #system)*
+- [[tabla_asesor_resultados|tabla asesor_resultados]] *(Layer: #schema, Domain: #system)*
 - [[tabla_autonomy_configs|tabla autonomy_configs]] *(Layer: #schema, Domain: #system)*
 - [[tabla_band_alert_settings|tabla band_alert_settings]] *(Layer: #schema, Domain: #system)*
 - [[tabla_band_cartel_estilo|tabla band_cartel_estilo]] *(Layer: #schema, Domain: #system)*
 - [[tabla_band_contacts|tabla band_contacts]] *(Layer: #schema, Domain: #system)*
 - [[tabla_band_email_accounts|tabla band_email_accounts]] *(Layer: #schema, Domain: #system)*
+- [[tabla_band_estrategia_marketing|tabla band_estrategia_marketing]] *(Layer: #schema, Domain: #system)*
 - [[tabla_band_gmail_oauth_accounts|tabla band_gmail_oauth_accounts]] *(Layer: #schema, Domain: #auth)*
 - [[tabla_band_letras_auto|tabla band_letras_auto]] *(Layer: #schema, Domain: #repertoire)*
 - [[tabla_band_print_settings|tabla band_print_settings]] *(Layer: #schema, Domain: #system)*

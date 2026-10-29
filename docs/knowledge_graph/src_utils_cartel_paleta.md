@@ -23,13 +23,16 @@ tags: ["service", "system", "auto"]
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_asesor_hooks_useLaminas|src/components/asesor/hooks/useLaminas.ts]] *(from #frontend)*
 - [[src_components_cartel_hooks_useAdnCartel|src/components/cartel/hooks/useAdnCartel.ts]] *(from #frontend)*
 - [[src_components_cartel_SelectorFondo|src/components/cartel/SelectorFondo.tsx]] *(from #frontend)*
+- [[src_utils_asesor_laminas|src/utils/asesor/laminas.ts]] *(from #service)*
 - [[src_utils_cartel_papel|src/utils/cartel/papel.ts]] *(from #service)*
 
 ---
 
 ## 🧪 Tests que lo cubren
+- `src/utils/asesor/__tests__/laminas.test.ts`
 - `src/utils/cartel/__tests__/paleta.test.ts`
 
 ---

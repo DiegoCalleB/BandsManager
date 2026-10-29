@@ -26,6 +26,7 @@ Campaña de cuenta atrás de un concierto: texto de cada publicación con su enl
 - [[server_db_concerts|server/db/concerts.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_enlacesCortos|server/db/enlacesCortos.ts]] *(Layer: #db, Domain: #system)*
 - [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(Layer: #security, Domain: #system)*
+- [[server_routes_asesor|server/routes/asesor.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_cartelria|server/routes/cartelria.ts]] *(Layer: #route, Domain: #system)*
 - [[server_services_perfilPublicoBanda|server/services/perfilPublicoBanda.ts]] *(Layer: #service, Domain: #system)*
 - [[server_tiposRespuestasIA|server/tiposRespuestasIA.ts]] *(Layer: #service, Domain: #system)*
