@@ -16,5 +16,5 @@ export function calcularLayout(def: DefFormato, ancho: number, datos: DatosCarte
   const c = contexto(def, ancho, datos, opciones, medir);
   const base = opciones.composicion === 'centrada' ? composicionCentrada(c) : opciones.composicion === 'base' ? composicionBase(c) : composicionVentana(c);
   // Lo que la persona movió o escaló a mano va encima del reparto automático.
-  return aplicarAjustesFinos(base, opciones.ajustes, medir);
+  return aplicarAjustesFinos(base, opciones.ajustes, medir, opciones.estilos);
 }

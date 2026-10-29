@@ -6,7 +6,7 @@
 // almacenamiento y de la carpeta de ESA banda (`esUrlDeCartel` en server/utils/cartelUrl.ts).
 
 import { esPlantilla, type PlantillaId } from './plantillas';
-import { sanearAjustesFinos, type AjustesFinosPorFormato } from './ajustesFinos';
+import { sanearAjustesFinos, sanearEstilosBloques, type AjustesFinosPorFormato, type EstilosBloques } from './ajustesFinos';
 import { ORDEN_FORMATOS, type FormatoCartel } from './formatos';
 import { ELECCIONES_COMPOSICION, LETRAS_CARTEL, type ComposicionElegida, type LetraCartel } from './voces';
 
@@ -36,6 +36,8 @@ export interface CartelConfig {
   textos: TextosEditados;
   /** Lo que la persona movió o escaló a mano, por formato, sobre el reparto automático. */
   ajustesFinos: AjustesFinosPorFormato;
+  /** Letra, color y ocultar de cada bloque del texto. */
+  estilos: EstilosBloques;
   marca: boolean;
   /** Logo de la banda en la fila de logos del cartel. */
   logo: boolean;
@@ -78,6 +80,7 @@ export const CONFIG_INICIAL: CartelConfig = {
   qrDigital: false,
   textos: { nombre: '', lugar: '' },
   ajustesFinos: {},
+  estilos: {},
   marca: true,
   logo: true,
   letra: 'auto',
@@ -142,6 +145,7 @@ export function sanearConfigCartel(raw: unknown, esUrlPermitida: (url: string) =
     qrDigital: booleano(r.qrDigital, false),
     textos: textosEditados(r.textos),
     ajustesFinos: sanearAjustesFinos(r.ajustesFinos),
+    estilos: sanearEstilosBloques(r.estilos),
     marca: booleano(r.marca, true),
     logo: booleano(r.logo, true),
     letra: (LETRAS_CARTEL as readonly string[]).includes(r.letra as string) ? (r.letra as LetraCartel) : 'auto',
@@ -159,10 +163,10 @@ export function conFondoIa(config: CartelConfig, url: string): CartelConfig {
 }
 
 /** Lo que se decide por bolo y no es el fondo. */
-export type AjustesBolo = Pick<CartelConfig, 'cabeza' | 'extra' | 'horario' | 'direccion' | 'qr' | 'qrDigital' | 'ajustesFinos' | 'textos' | 'marca' | 'logo' | 'logosTinta' | 'letra' | 'composicion'>;
+export type AjustesBolo = Pick<CartelConfig, 'cabeza' | 'extra' | 'horario' | 'direccion' | 'qr' | 'qrDigital' | 'ajustesFinos' | 'estilos' | 'textos' | 'marca' | 'logo' | 'logosTinta' | 'letra' | 'composicion'>;
 
 export function ajustesDe(c: CartelConfig): AjustesBolo {
-  return { cabeza: c.cabeza, extra: c.extra, horario: c.horario, direccion: c.direccion, qr: c.qr, qrDigital: c.qrDigital, ajustesFinos: c.ajustesFinos, textos: c.textos, marca: c.marca, logo: c.logo, logosTinta: c.logosTinta, letra: c.letra, composicion: c.composicion };
+  return { cabeza: c.cabeza, extra: c.extra, horario: c.horario, direccion: c.direccion, qr: c.qr, qrDigital: c.qrDigital, ajustesFinos: c.ajustesFinos, estilos: c.estilos, textos: c.textos, marca: c.marca, logo: c.logo, logosTinta: c.logosTinta, letra: c.letra, composicion: c.composicion };
 }
 
 /**

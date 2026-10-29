@@ -164,7 +164,7 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
       const voz = resolverVoz(ajustes.letra, estiloArranque);
       return {
         datos: datosDesdeConcierto(concierto, bandName, ajustes),
-        opciones: { qr: conQr, urlCorta: enlace?.corta ?? null, marca, ajustes: ajustes.ajustesFinos[f] },
+        opciones: { qr: conQr, urlCorta: enlace?.corta ?? null, marca, ajustes: ajustes.ajustesFinos[f], estilos: ajustes.estilos },
         qrUrl: conQr ? enlace!.url : null,
         semilla: `${concierto.id}|${bandName}`,
         paletaBanda,
@@ -276,7 +276,6 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     },
     [id, anotarPaso]
   );
-
   const elegirConcierto = (nuevo: string) => {
     setConcertId(nuevo);
     setError(null);
@@ -445,7 +444,7 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     return lista.slice(0, 6);
   }, [concerts, id, adn.adn.referencias]);
 
-  const { ajustarBloque, reiniciarAjustesFinos } = useAjusteFino(ajustes.ajustesFinos, formato, cambiarAjustes);
+  const { ajustarBloque, reiniciarAjustesFinos, estilarBloque } = useAjusteFino(ajustes, formato, cambiarAjustes);
 
   const exportar = useCallback(
     async (f: FormatoCartel, paraImprenta = false): Promise<Blob> => {
@@ -567,6 +566,7 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     puedeRehacer: historial.puedeRehacer,
     cajas,
     ajustarBloque,
+    estilarBloque,
     reiniciarAjustesFinos,
     hayAjustesFinos: !!ajustes.ajustesFinos[formato],
     compartido,
