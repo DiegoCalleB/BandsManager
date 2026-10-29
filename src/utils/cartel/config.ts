@@ -56,6 +56,12 @@ export interface CartelConfig {
   fondosIa: string[];
   /** Foto propia subida para este bolo. */
   foto: string | null;
+  /**
+   * Cómo se hizo cada fondo retocado. Cada vuelta de la IA sobre una imagen ya retocada la vuelve a pintar entera y
+   * pierde detalle; por eso un retoque nuevo parte del ORIGINAL con todas las instrucciones juntas. Lo escribe solo
+   * el servidor (el cliente no lo manda: el guardado lo conserva).
+   */
+  retoques: Record<string, LinajeRetoque>;
 }
 
 /** Versiones de fondo de IA que se recuerdan por bolo (cada retoque es una más). */
@@ -67,6 +73,14 @@ export interface TextosEditados {
 export const MAX_TEXTO_EDITADO = 60;
 
 export const MAX_FONDOS_IA = 8;
+/** Retoques que se encadenan sobre el MISMO original antes de partir de la imagen ya retocada. */
+export const MAX_PASOS_RETOQUE = 5;
+
+/** De dónde sale un fondo retocado: el original y todo lo que se le ha pedido, en orden. */
+export interface LinajeRetoque {
+  origen: string;
+  instrucciones: string[];
+}
 export const MAX_LOGOS = 4;
 export const MAX_EXTRA = 60;
 const MAX_CABEZA = 120;
@@ -93,6 +107,7 @@ export const CONFIG_INICIAL: CartelConfig = {
   logos: [],
   fondosIa: [],
   foto: null,
+  retoques: {},
 };
 
 /** Sin caracteres de control (saltos de línea, nulos…): en un cartel solo hay texto de una línea. */
@@ -166,12 +181,40 @@ export function sanearConfigCartel(raw: unknown, esUrlPermitida: (url: string) =
     logos,
     fondosIa,
     foto,
+    retoques: linajes(r.retoques, fondosIa, url),
   };
+}
+
+/** Linajes de retoque válidos: del historial del bolo, con su original también en el historial. */
+function linajes(raw: unknown, fondosIa: string[], url: (v: unknown) => string | null): Record<string, LinajeRetoque> {
+  const salida: Record<string, LinajeRetoque> = {};
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return salida;
+  for (const [clave, v] of Object.entries(raw as Record<string, unknown>).slice(0, MAX_FONDOS_IA)) {
+    const u = url(clave);
+    const l = v && typeof v === 'object' ? (v as Record<string, unknown>) : null;
+    const origen = url(l?.origen);
+    if (!u || !origen || !fondosIa.includes(u) || !fondosIa.includes(origen)) continue;
+    const instrucciones = (Array.isArray(l?.instrucciones) ? (l!.instrucciones as unknown[]) : []).map((t) => texto(t, 300)).filter(Boolean).slice(0, MAX_PASOS_RETOQUE);
+    if (instrucciones.length) salida[u] = { origen, instrucciones };
+  }
+  return salida;
+}
+
+/** Con estos linajes de retoque, quitando los de fondos (o con original) que ya no están en el historial. */
+export function conRetoques(config: CartelConfig, retoques: Record<string, LinajeRetoque>): CartelConfig {
+  const vivos = Object.entries(retoques).filter(([u, l]) => config.fondosIa.includes(u) && config.fondosIa.includes(l.origen));
+  return { ...config, retoques: Object.fromEntries(vivos) };
 }
 
 /** Añade un fondo de IA al historial (el más nuevo primero, sin repetidos, como mucho `MAX_FONDOS_IA`). */
 export function conFondoIa(config: CartelConfig, url: string): CartelConfig {
-  return { ...config, fondosIa: [url, ...config.fondosIa.filter((u) => u !== url)].slice(0, MAX_FONDOS_IA) };
+  const fondosIa = [url, ...config.fondosIa.filter((u) => u !== url)].slice(0, MAX_FONDOS_IA);
+  return conRetoques({ ...config, fondosIa }, config.retoques ?? {});
+}
+
+/** Anota de dónde sale un fondo retocado (para que el siguiente retoque parta del original). */
+export function conLinaje(config: CartelConfig, url: string, linaje: LinajeRetoque): CartelConfig {
+  return conFondoIa({ ...config, retoques: { ...config.retoques, [url]: linaje } }, url);
 }
 
 /** Lo que se decide por bolo y no es el fondo. */
@@ -199,5 +242,5 @@ export function configDesdeEstado(e: {
   if (fondo.tipo === 'imagen' && fondo.origen === 'foto' && fondo.url !== e.fotoRemota) {
     fondo = e.fotoRemota && fondo.url.startsWith('blob:') ? { tipo: 'imagen', origen: 'foto', url: e.fotoRemota } : e.anterior.fondo;
   }
-  return { v: 1, formato: e.formato, fondo, ...e.ajustes, logos: e.logos.slice(0, MAX_LOGOS), fondosIa: e.fondosIa.slice(0, MAX_FONDOS_IA), foto: e.fotoRemota };
+  return { v: 1, formato: e.formato, fondo, ...e.ajustes, logos: e.logos.slice(0, MAX_LOGOS), fondosIa: e.fondosIa.slice(0, MAX_FONDOS_IA), foto: e.fotoRemota, retoques: e.anterior.retoques };
 }

@@ -18,6 +18,11 @@ export const MODELO_IMAGEN_PRO = 'gemini-3-pro-image-preview';
 export const MODELO_IMAGEN = process.env.CARTEL_MODELO_IMAGEN || MODELO_IMAGEN_PRO;
 /** Variantes por cartel; un juez elige la mejor. 1 = sin juez. */
 export const VARIANTES_FONDO = Math.min(4, Math.max(1, Number(process.env.CARTEL_VARIANTES) || 3));
+/**
+ * Tamaño de la imagen del modelo Pro (`1K`, `2K` o `4K`; vacío = el del modelo, 1K). 2K cuesta lo mismo que 1K pero pesa
+ * más (varios MB por fondo) y se ve nítido en el A4 de imprenta. Apagado hasta probarlo con la clave real.
+ */
+export const TAMANO_IMAGEN = ['1K', '2K', '4K'].includes(process.env.CARTEL_TAMANO_IMAGEN ?? '') ? process.env.CARTEL_TAMANO_IMAGEN : undefined;
 /** Proporción del fondo de IA: apaisada si va en una ventana del papel, vertical si ocupa todo el cartel. */
 export const RELACION_FONDO = '4:3';
 export const RELACION_FONDO_SANGRE = '3:4';
@@ -47,7 +52,7 @@ async function unaVariante(bandId: string, modelo: string, prompt: string, refer
       // Apaisada: el cliente la encaja ENTERA en la ventana del cartel (entre las placas del texto), así que
       // un solo fondo pagado sirve para feed, historia e impresión. Pedir «deja sitio arriba y abajo» en un
       // lienzo vertical no funciona: un modelo de imagen no mide porcentajes y la ilustración salía cortada.
-      imageConfig: { aspectRatio: relacion },
+      imageConfig: { aspectRatio: relacion, ...(TAMANO_IMAGEN && modelo !== MODELO_IMAGEN_BASE ? { imageSize: TAMANO_IMAGEN } : {}) },
       abortSignal: AbortSignal.timeout(TIMEOUT_IA_LARGO_MS),
     },
   });

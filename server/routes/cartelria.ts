@@ -21,7 +21,7 @@ import { apiAutenticadaRateLimiter, ficherosRateLimiter, iaRateLimiter, imagenRa
 import { idSeguro } from '../utils/trackingSeguro.js';
 import { captureError } from '../utils/errorTracking.js';
 import { esConciertoPublicable } from '../utils/paginaConcierto.js';
-import { construirPromptFondo, construirPromptRetoque, esEstiloCartel, limpiarTextos, type TextosCartel } from '../utils/promptCartel.js';
+import { MAX_RETOQUE, construirPromptFondo, construirPromptRetoque, esEstiloCartel, limpiarTextos, type TextosCartel } from '../utils/promptCartel.js';
 import { carpetaCartel, carpetaReferencias, esUrlDeCartel, nombreSeguro, referenciasHuerfanas, rutaDeUrlCartel, rutaIdea } from '../utils/cartelUrl.js';
 import { borrarDeAlmacenamiento, descargarDeAlmacenamiento, uploadBufferToSupabase } from '../utils/storage.js';
 import { validarMagicBytes } from './upload.js';
@@ -32,7 +32,7 @@ import { construirBrief } from '../services/briefCartel.js';
 import { dbGetAdnCartel, dbGuardarAdnCartel } from '../db/cartelEstilo.js';
 import { isSpendCapOrQuotaError } from '../ai.js';
 import { loadBandProfile } from '../utils/bandProfile.js';
-import { CONFIG_INICIAL, MAX_LOGOS, conFondoIa, sanearConfigCartel, type CartelConfig } from '../../src/utils/cartel/config.js';
+import { CONFIG_INICIAL, MAX_LOGOS, MAX_PASOS_RETOQUE, conFondoIa, conLinaje, conRetoques, sanearConfigCartel, type CartelConfig } from '../../src/utils/cartel/config.js';
 import { FORMATOS } from '../../src/utils/cartel/formatos.js';
 import { conReferencia, referenciasParaIa, sanearAdn, type AdnCartel } from '../../src/utils/cartel/adn.js';
 import { IDEA_VACIA, sanearIdea } from '../../src/utils/cartel/idea.js';
@@ -196,7 +196,7 @@ cartelriaRouter.post('/cartel/fondo', requireAuth, imagenRateLimiter, async (req
 });
 
 /** Máximo que se descarga para retocar (un PNG de Gemini 3 Pro puede pasar de los 5 MB de las referencias). */
-const MAX_BYTES_RETOQUE = 12 * 1024 * 1024;
+const MAX_BYTES_RETOQUE = 15 * 1024 * 1024;
 
 // Retoca un fondo de IA ya hecho: la imagen sale SIEMPRE del historial de fondos de este bolo (nunca una URL
 // cualquiera del cuerpo) y la instrucción de la persona se trata como dato. Una imagen nueva, sin variantes.
@@ -227,10 +227,17 @@ cartelriaRouter.post('/cartel/retocar', requireAuth, imagenRateLimiter, async (r
       if (!textos) return res.status(409).json({ error: 'No podemos retocar un fondo con letras ahora mismo. Genera uno nuevo.' });
     }
 
-    const prompt = construirPromptRetoque({ instruccion, textos });
+    // Cada vuelta de la IA sobre una imagen ya retocada la pinta entera otra vez y pierde detalle: un retoque nuevo
+    // parte del ORIGINAL con todo lo pedido hasta ahora. Pasados MAX_PASOS_RETOQUE (o si el original ya no está en
+    // el historial) se parte de la imagen retocada, con solo lo nuevo.
+    const previo = configDe(concierto, bandId).retoques[url];
+    const desdeOriginal = !!previo && previo.instrucciones.length < MAX_PASOS_RETOQUE && !!rutaDeUrlCartel(previo.origen, bandId);
+    const origen = desdeOriginal ? previo.origen : url;
+    const anteriores = desdeOriginal ? previo.instrucciones : [];
+    const prompt = construirPromptRetoque({ instruccion, anteriores, textos });
     if (!prompt) return res.status(400).json({ error: 'Cuéntanos qué quieres cambiar.' });
 
-    const buf = await descargarDeAlmacenamiento(ruta, MAX_BYTES_RETOQUE);
+    const buf = await descargarDeAlmacenamiento(desdeOriginal ? rutaDeUrlCartel(origen, bandId)! : ruta, MAX_BYTES_RETOQUE);
     const mimeType = buf && tipoDeImagen(buf);
     if (!buf || !mimeType) return res.status(404).json({ error: 'No encontramos ese fondo. Prueba con otro.' });
     const medidas = mimeType === 'image/png' ? medidasPng(buf) : null;
@@ -239,7 +246,7 @@ cartelriaRouter.post('/cartel/retocar', requireAuth, imagenRateLimiter, async (r
     const retocado = await retocarFondoCartel(bandId, prompt, { mimeType, data: buf.toString('base64') }, relacion, textos);
     if (!retocado) return res.status(503).json({ error: 'No hemos podido retocar el fondo. Prueba en un rato.' });
 
-    await dbGuardarCartel(concertId, bandId, { cartel_config: conFondoIa(configDe(concierto, bandId), retocado.url) }).catch((e) =>
+    await dbGuardarCartel(concertId, bandId, { cartel_config: conLinaje(configDe(concierto, bandId), retocado.url, { origen, instrucciones: [...anteriores, instruccion.trim().slice(0, MAX_RETOQUE)] }) }).catch((e) =>
       console.warn('[cartel] No se pudo guardar el retoque en el historial:', (e as Error)?.message || e)
     );
     res.json({ url: retocado.url, conTexto, textoOk: retocado.textoOk });
@@ -259,8 +266,10 @@ cartelriaRouter.put('/cartel/:concertId/config', requireAuth, apiAutenticadaRate
     if (!bolo) return;
     const config = sanearConfigCartel(req.body, urlPermitida(bolo.bandId));
     if (!config) return res.status(400).json({ error: 'Configuración no válida.' });
-    await dbGuardarCartel(req.params.concertId, bolo.bandId, { cartel_config: config });
-    res.json({ config });
+    // Cómo se hicieron los fondos retocados lo escribe solo el servidor: el guardado del editor lo conserva.
+    const final = conRetoques(config, configDe(bolo.concierto, bolo.bandId).retoques);
+    await dbGuardarCartel(req.params.concertId, bolo.bandId, { cartel_config: final });
+    res.json({ config: final });
   } catch (e) {
     fallo(res, 'PUT /cartel/:concertId/config', e, 'No se pudo guardar el cartel.');
   }
