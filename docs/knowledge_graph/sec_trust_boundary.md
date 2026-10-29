@@ -48,6 +48,7 @@ Resolución forzosa del band_id desde la sesión autenticada. Bloquea inyeccione
 - [[server_routes_ai_music_rutasEstadoStems|server/routes/ai_music/rutasEstadoStems.ts]] *(from #route)*
 - [[server_routes_ai_music_rutasGeneracion|server/routes/ai_music/rutasGeneracion.ts]] *(from #route)*
 - [[server_routes_ai_music_separacionContexto|server/routes/ai_music/separacionContexto.ts]] *(from #route)*
+- [[server_routes_asesor|server/routes/asesor.ts]] *(from #route)*
 - [[server_routes_bandMusic|server/routes/bandMusic.ts]] *(from #route)*
 - [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
 - [[server_routes_bands_responseStrategies|server/routes/bands/responseStrategies.ts]] *(from #route)*

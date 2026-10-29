@@ -24,6 +24,7 @@ Velo bajo el texto: sombra de la propia imagen que se desvanece hacia el centro 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_utils_asesor_renderLaminas|src/utils/asesor/renderLaminas.ts]] *(from #service)*
 - [[src_utils_cartel_render|src/utils/cartel/render.ts]] *(from #service)*
 
 ---

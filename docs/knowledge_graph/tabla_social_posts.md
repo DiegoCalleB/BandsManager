@@ -24,6 +24,7 @@ Tabla de Supabase `social_posts` (21 columnas).
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
+- [[server_db_asesorMarketing|server/db/asesorMarketing.ts]] *(from #db)*
 - [[server_db_reelMetricas|server/db/reelMetricas.ts]] *(from #db)*
 - [[server_db_social|server/db/social.ts]] *(from #db)*
 - [[tabla_reel_metricas|tabla reel_metricas]] *(from #schema)*

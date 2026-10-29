@@ -36,10 +36,13 @@ Pinta el cartel en un canvas a partir del layout puro. Es la única pieza con DO
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_asesor_hooks_useLaminas|src/components/asesor/hooks/useLaminas.ts]] *(from #frontend)*
 - [[src_components_cartel_hooks_useAdnCartel|src/components/cartel/hooks/useAdnCartel.ts]] *(from #frontend)*
 - [[src_components_cartel_hooks_useEditorCartel|src/components/cartel/hooks/useEditorCartel.ts]] *(from #frontend)*
 - [[src_components_cartel_hooks_useIdeaCartel|src/components/cartel/hooks/useIdeaCartel.ts]] *(from #frontend)*
 - [[src_components_cartel_SelectorFondo|src/components/cartel/SelectorFondo.tsx]] *(from #frontend)*
+- [[src_utils_asesor_laminas|src/utils/asesor/laminas.ts]] *(from #service)*
+- [[src_utils_asesor_renderLaminas|src/utils/asesor/renderLaminas.ts]] *(from #service)*
 
 ---
 

@@ -26,14 +26,17 @@ El «ADN visual» de la banda: lo que hace que sus carteles se parezcan a ellos.
 - [[server_db_cartelEstilo|server/db/cartelEstilo.ts]] *(from #db)*
 - [[server_routes_cartelria|server/routes/cartelria.ts]] *(from #route)*
 - [[server_services_referenciasCartel|server/services/referenciasCartel.ts]] *(from #service)*
+- [[src_components_asesor_hooks_useLaminas|src/components/asesor/hooks/useLaminas.ts]] *(from #frontend)*
 - [[src_components_cartel_EstiloBanda|src/components/cartel/EstiloBanda.tsx]] *(from #frontend)*
 - [[src_components_cartel_hooks_useAdnCartel|src/components/cartel/hooks/useAdnCartel.ts]] *(from #frontend)*
 - [[src_components_cartel_hooks_useEditorCartel|src/components/cartel/hooks/useEditorCartel.ts]] *(from #frontend)*
+- [[src_utils_asesor_adnVisual|src/utils/asesor/adnVisual.ts]] *(from #service)*
 - [[src_utils_promocionApi|src/utils/promocionApi.ts]] *(from #service)*
 
 ---
 
 ## 🧪 Tests que lo cubren
+- `src/utils/asesor/__tests__/adnVisual.test.ts`
 - `src/utils/cartel/__tests__/adn.test.ts`
 
 ---

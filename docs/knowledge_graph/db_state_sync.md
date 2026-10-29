@@ -52,6 +52,7 @@ Copia en memoria de alta velocidad sincronizada con Supabase al arranque.
 - [[server_routes_ai_music_rutaSeparacion|server/routes/ai_music/rutaSeparacion.ts]] *(from #route)*
 - [[server_routes_ai_music_rutasEstadoStems|server/routes/ai_music/rutasEstadoStems.ts]] *(from #route)*
 - [[server_routes_ai_music_rutasGeneracion|server/routes/ai_music/rutasGeneracion.ts]] *(from #route)*
+- [[server_routes_asesor|server/routes/asesor.ts]] *(from #route)*
 - [[server_routes_bandMusic|server/routes/bandMusic.ts]] *(from #route)*
 - [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
 - [[server_routes_bands_responseStrategies|server/routes/bands/responseStrategies.ts]] *(from #route)*
@@ -102,6 +103,7 @@ Copia en memoria de alta velocidad sincronizada con Supabase al arranque.
 - [[server_routes_users_rutasSalidaBanda|server/routes/users/rutasSalidaBanda.ts]] *(from #route)*
 - [[server_routes_users_rutasSesion|server/routes/users/rutasSesion.ts]] *(from #route)*
 - [[server_services_agentIntelligence|server/services/agentIntelligence.ts]] *(from #agent)*
+- [[server_services_asesorMarketing|server/services/asesorMarketing.ts]] *(from #service)*
 - [[server_services_chatPrompt|server/services/chatPrompt.ts]] *(from #service)*
 - [[server_services_perfilDeLaPeticion|server/services/perfilDeLaPeticion.ts]] *(from #service)*
 - [[service_pitch_engine|Pitch Engine & Multi-Model Routing]] *(from #service)*

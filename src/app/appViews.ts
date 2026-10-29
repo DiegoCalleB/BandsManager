@@ -9,6 +9,7 @@ export type MainView =
   | "ensayos"
   | "reels"
   | "carteleria"
+  | "asesor"
   | "repertorio"
   | "catalogo"
   | "discografia"

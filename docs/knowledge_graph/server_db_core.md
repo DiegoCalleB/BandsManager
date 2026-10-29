@@ -34,6 +34,7 @@ Exporta: rolDeClaveSupabase, describirClaveSupabase, esSupabaseNoConfigurado, ge
 - [[server_auth|server/auth.ts]] *(from #security)*
 - [[server_db|server/db.ts]] *(from #db)*
 - [[server_db_alertSettings|server/db/alertSettings.ts]] *(from #db)*
+- [[server_db_asesorMarketing|server/db/asesorMarketing.ts]] *(from #db)*
 - [[server_db_autonomy|server/db/autonomy.ts]] *(from #db)*
 - [[server_db_bands|server/db/bands.ts]] *(from #db)*
 - [[server_db_campaigns|server/db/campaigns.ts]] *(from #db)*
