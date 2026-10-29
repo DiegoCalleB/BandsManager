@@ -1,8 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 // Las letras de cartel (nombre y día de la fecha): solo se cargan con esta vista.
 import '@fontsource/anton/latin-400.css';
 import '@fontsource/dm-serif-display/latin-400.css';
-import { Download, FileArchive, Move, Scissors, Settings2, Share2 } from 'lucide-react';
+import { Download, FileArchive, Move, Redo2, Scissors, Settings2, Share2, Undo2 } from 'lucide-react';
 import type { Concert } from '../../types';
 import { ActionMenu, Button, EmptyState, Select, Tabs } from '../ui';
 import { FORMATOS, ORDEN_FORMATOS, dimensiones, type FormatoCartel } from '../../utils/cartel/formatos';
@@ -42,6 +42,21 @@ const CarteleriaView: React.FC<Props> = ({ concerts, bandName, plan, banda, onCa
   const [bloqueElegido, setBloqueElegido] = useState<BloqueAjustable | null>(null);
   const ed = useEditorCartel({ canvasRef, concerts, bandName, initialConcertId, puedeQuitarMarca: puedeQuitarMarcaCartel(plan), banda, onCartelGuardado });
   const [ajustesAbiertos, setAjustesAbiertos] = useState(false);
+  const { deshacer, rehacer } = ed;
+
+  // Ctrl/⌘+Z deshace y Ctrl/⌘+Mayús+Z (o Ctrl+Y) rehace, salvo mientras se escribe en un campo.
+  useEffect(() => {
+    const alTeclear = (e: KeyboardEvent) => {
+      if (!(e.ctrlKey || e.metaKey) || (e.target as HTMLElement | null)?.closest('input, textarea, select, [contenteditable]')) return;
+      const k = e.key.toLowerCase();
+      if (k === 'z' || k === 'y') {
+        e.preventDefault();
+        (k === 'y' || e.shiftKey ? rehacer : deshacer)();
+      }
+    };
+    window.addEventListener('keydown', alTeclear);
+    return () => window.removeEventListener('keydown', alTeclear);
+  }, [deshacer, rehacer]);
 
   if (!ed.concierto) {
     return (
@@ -82,10 +97,18 @@ const CarteleriaView: React.FC<Props> = ({ concerts, bandName, plan, banda, onCa
               <BarraAjusteTexto elegido={bloqueElegido} ajustes={ed.ajustes.ajustesFinos[ed.formato] ?? {}} onAjustar={ed.ajustarBloque} onReiniciar={ed.reiniciarAjustesFinos} hayAjustes={ed.hayAjustesFinos} />
             </div>
           )}
-          <Button size="xs" variant={ajustandoTexto ? 'inverse' : 'raised'} aria-pressed={ajustandoTexto} className="mt-3" onClick={() => setAjustandoTexto((v) => !v)}>
-            <Move className="size-3.5" aria-hidden />
-            {ajustandoTexto ? 'Listo' : 'Ajustar el texto'}
-          </Button>
+          <div className="mt-3 flex items-center gap-2">
+            <Button size="xs" variant="raised" aria-label="Deshacer" disabled={!ed.puedeDeshacer} onClick={ed.deshacer}>
+              <Undo2 className="size-3.5" aria-hidden />
+            </Button>
+            <Button size="xs" variant="raised" aria-label="Rehacer" disabled={!ed.puedeRehacer} onClick={ed.rehacer}>
+              <Redo2 className="size-3.5" aria-hidden />
+            </Button>
+            <Button size="xs" variant={ajustandoTexto ? 'inverse' : 'raised'} aria-pressed={ajustandoTexto} onClick={() => setAjustandoTexto((v) => !v)}>
+              <Move className="size-3.5" aria-hidden />
+              {ajustandoTexto ? 'Listo' : 'Ajustar el texto'}
+            </Button>
+          </div>
         </div>
       </div>
 

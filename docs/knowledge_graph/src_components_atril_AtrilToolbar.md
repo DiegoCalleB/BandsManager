@@ -23,6 +23,7 @@ Barra de controles: transposición, notación, audio, bucle, autoscroll y herram
 - [[src_components_chords_ControlBucle|src/components/chords/ControlBucle.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_ControlMetronomo|src/components/chords/ControlMetronomo.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_ControlTonoAudio|src/components/chords/ControlTonoAudio.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_chords_ControlTonoDestino|src/components/chords/ControlTonoDestino.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_ControlVelocidad|src/components/chords/ControlVelocidad.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_GrabarIdea|src/components/chords/GrabarIdea.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_IrisStudio|src/components/chords/IrisStudio.tsx]] *(Layer: #frontend, Domain: #repertoire)*
@@ -33,6 +34,7 @@ Barra de controles: transposición, notación, audio, bucle, autoscroll y herram
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_utils_ideaDeAtril|src/utils/ideaDeAtril.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_irisTracks|src/utils/irisTracks.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[src_utils_teoriaArmonica|src/utils/teoriaArmonica.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

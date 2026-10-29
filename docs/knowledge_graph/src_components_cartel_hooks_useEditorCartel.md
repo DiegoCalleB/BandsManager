@@ -19,6 +19,8 @@ Exporta: EnlaceCartel, useEditorCartel, EditorCartel.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_cartel_hooks_useAdnCartel|src/components/cartel/hooks/useAdnCartel.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_cartel_hooks_useAjusteFino|src/components/cartel/hooks/useAjusteFino.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_cartel_hooks_useHistorialCartel|src/components/cartel/hooks/useHistorialCartel.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_cartel_hooks_useIdeaCartel|src/components/cartel/hooks/useIdeaCartel.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_adn|src/utils/cartel/adn.ts]] *(Layer: #service, Domain: #system)*
