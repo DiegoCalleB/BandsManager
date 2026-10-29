@@ -14,6 +14,7 @@ import { cartelesAnteriores } from '../../../utils/cartel/adn';
 import { useAdnCartel, type DatosBandaCartel } from './useAdnCartel';
 import { useIdeaCartel } from './useIdeaCartel';
 import { useAjusteFino } from './useAjusteFino';
+import { useEnlaceCartel } from './useEnlaceCartel';
 import { useHistorialCartel, type FotoDiseno } from './useHistorialCartel';
 import {
   canvasABlob,
@@ -26,7 +27,6 @@ import {
   type PiezasCartel,
 } from '../../../utils/cartel/render';
 import {
-  crearEnlace,
   generarFondoCartel,
   retocarFondoCartel,
   guardarConfigCartel,
@@ -46,13 +46,6 @@ const hoyMadrid = () => new Date().toLocaleDateString('sv-SE', { timeZone: 'Euro
 const mensajeDe = (e: unknown, defecto: string) => (e instanceof Error && e.message ? e.message : defecto);
 /** Lo que llega del servidor ya va saneado; aquí solo se exige https. */
 const esHttps = (u: string) => u.startsWith('https://');
-
-export interface EnlaceCartel {
-  /** URL completa (la del QR). */
-  url: string;
-  /** Sin protocolo, para imprimir debajo: `bandmanager.io/r/ab3k9x2`. */
-  corta: string;
-}
 
 interface Params {
   /** Lienzo de la vista previa. Lo crea la vista: devolverlo desde aquí hace que React trate todo el objeto como un ref. */
@@ -96,7 +89,6 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
   const [fotoRemotaPorBolo, setFotoRemotaPorBolo] = useState<PorBolo<string>>({});
   const [logosPorBolo, setLogosPorBolo] = useState<PorBolo<string[]>>({});
   const [subiendoLogo, setSubiendoLogo] = useState(false);
-  const [enlaces, setEnlaces] = useState<PorBolo<EnlaceCartel | null>>({});
   const [sucios, setSucios] = useState<PorBolo<boolean>>({});
   const [publicados, setPublicados] = useState<PorBolo<boolean>>({});
   /** Imágenes que no cargan (borradas, sin red, sin CORS): se dejan de ofrecer y el cartel cae al color. */
@@ -122,7 +114,9 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
   const fotoRemota = fotoRemotaPorBolo[id] ?? guardada.foto;
   const fotoCandidata = fotoLocalPorBolo[id] ?? fotoRemota;
   const foto = fotoCandidata && !rotas[fotoCandidata] ? fotoCandidata : null;
-  const enlace = enlaces[id] ?? null;
+  // Sin enlace de entradas el QR no puede ir ahí: vuelve a la página del bolo.
+  const destinoQr = ajustes.qrDestino === 'entradas' && !concierto?.entradasUrl ? 'concierto' : ajustes.qrDestino;
+  const enlace = useEnlaceCartel(id, destinoQr);
 
   // Un fondo de imagen solo vale si sigue siendo de este bolo (su historial de IA o su foto).
   const fondoElegido = fondoPorBolo[id] ?? guardada.fondo;
@@ -135,24 +129,6 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
   const compartido = concierto ? esCompartido(concierto, bandName) : false;
   const faltaCabeza = compartido && ajustes.cabeza === null;
   const marca = puedeQuitarMarca ? ajustes.marca : true;
-
-  // Enlace corto del cartel: canal «cartel», a la página del bolo. El servidor lo reutiliza si ya
-  // existe, así que sus escaneos se suman en la campaña del bolo. Sin enlace, el cartel sale sin QR.
-  useEffect(() => {
-    if (!id || id in enlaces) return;
-    let vigente = true;
-    crearEnlace({ concertId: id, destino: 'concierto', canal: 'cartel' })
-      .then((r) => {
-        if (vigente) setEnlaces((p) => ({ ...p, [id]: { url: r.url, corta: r.url.replace(/^https?:\/\//, '') } }));
-      })
-      .catch((e) => {
-        console.warn('[Cartelería] Sin enlace corto; el cartel sale sin QR:', e);
-        if (vigente) setEnlaces((p) => ({ ...p, [id]: null }));
-      });
-    return () => {
-      vigente = false;
-    };
-  }, [id, enlaces]);
 
   const conLogo = ajustes.logo && !!logoUrl;
   const { paletaBanda } = adn;
@@ -564,6 +540,7 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     tieneDireccion: !!concierto?.direccion?.trim(),
     tieneHorario: !!concierto && !!lineaHorario(concierto.logisticaTecnica?.horaAperturaPuertas, concierto.logisticaTecnica?.horaShow),
     tieneEnlace: !!enlace,
+    tieneEntradas: !!concierto?.entradasUrl,
     puedeQuitarMarca,
     adn,
     idea,

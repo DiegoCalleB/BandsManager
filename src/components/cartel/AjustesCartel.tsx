@@ -3,7 +3,7 @@ import { ImagePlus, X } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
 import { Field, IconButton, Input, Select, Switch } from '../ui';
 import { TODAS } from '../../utils/cartel/datos';
-import { MAX_EXTRA, MAX_LOGOS, MAX_TEXTO_EDITADO } from '../../utils/cartel/config';
+import { MAX_EXTRA, MAX_LOGOS, MAX_TEXTO_EDITADO, type DestinoQr } from '../../utils/cartel/config';
 import { ELECCIONES_COMPOSICION, ETIQUETA_COMPOSICION, ETIQUETA_LETRA, LETRAS_CARTEL, type ComposicionElegida, type LetraCartel } from '../../utils/cartel/voces';
 import type { AjustesBolo } from './hooks/useEditorCartel';
 
@@ -19,6 +19,8 @@ interface Props {
   lugarBolo: string;
   tieneDireccion: boolean;
   tieneEnlace: boolean;
+  /** El bolo tiene enlace de venta de entradas (si no, el QR no puede llevar ahí). */
+  tieneEntradas: boolean;
   tieneLogo: boolean;
   puedeQuitarMarca: boolean;
   /** Logos de otras bandas del bolo (subidos para este cartel). */
@@ -41,7 +43,7 @@ function Fila({ titulo, detalle, children }: { titulo: string; detalle: string; 
 }
 
 /** Lo que casi nadie toca, fuera de la pantalla principal (AGENTS.md §6). Se guarda por bolo. */
-export function AjustesCartel({ abierto, onCerrar, ajustes, onCambiar, bandas, tieneHorario, nombreBanda, lugarBolo, tieneDireccion, tieneEnlace, tieneLogo, puedeQuitarMarca, logos, subiendoLogo, onSubirLogo, onQuitarLogo }: Props) {
+export function AjustesCartel({ abierto, onCerrar, ajustes, onCambiar, bandas, tieneHorario, nombreBanda, lugarBolo, tieneDireccion, tieneEnlace, tieneEntradas, tieneLogo, puedeQuitarMarca, logos, subiendoLogo, onSubirLogo, onQuitarLogo }: Props) {
   if (!abierto) return null;
   return (
     <ModalPortal isOpen onClose={onCerrar}>
@@ -109,8 +111,16 @@ export function AjustesCartel({ abierto, onCerrar, ajustes, onCambiar, bandas, t
                 <Switch aria-label="Logos en una tinta" checked={ajustes.logosTinta} onCheckedChange={(v) => onCambiar({ logosTinta: v })} />
               </Fila>
             )}
-            <Fila titulo="QR en el impreso" detalle={tieneEnlace ? 'Lleva a la página del bolo y cuenta cada escaneo.' : 'No hay enlace disponible ahora mismo.'}>
+            <Fila titulo="QR en el impreso" detalle={tieneEnlace ? 'Cuenta cada escaneo en la campaña del bolo.' : 'No hay enlace disponible ahora mismo.'}>
               <Switch aria-label="QR en el impreso" checked={tieneEnlace && ajustes.qr} disabled={!tieneEnlace} onCheckedChange={(v) => onCambiar({ qr: v })} />
+            </Fila>
+            <Fila titulo="El QR lleva a" detalle="Cada escaneo se cuenta en la campaña del bolo.">
+              <Select aria-label="El QR lleva a" value={ajustes.qrDestino === 'entradas' && !tieneEntradas ? 'concierto' : ajustes.qrDestino} disabled={!tieneEnlace || !ajustes.qr}
+                onChange={(e) => onCambiar({ qrDestino: e.target.value as DestinoQr })}>
+                <option value="concierto">La página del bolo</option>
+                <option value="entradas" disabled={!tieneEntradas}>Las entradas{tieneEntradas ? '' : ' (añade el enlace al bolo)'}</option>
+                <option value="fans">La página de fans</option>
+              </Select>
             </Fila>
             <Fila titulo="QR también en Feed e Historia" detalle={tieneEnlace ? 'Para quien lo vea en otra pantalla o lo imprima de la captura.' : 'No hay enlace disponible ahora mismo.'}>
               <Switch aria-label="QR también en Feed e Historia" checked={tieneEnlace && ajustes.qr && ajustes.qrDigital} disabled={!tieneEnlace || !ajustes.qr} onCheckedChange={(v) => onCambiar({ qrDigital: v })} />
