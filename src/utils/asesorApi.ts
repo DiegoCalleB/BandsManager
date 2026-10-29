@@ -7,6 +7,7 @@ import type { Diagnostico } from './asesor/diagnostico';
 import type { EstrategiaMarketing } from './asesor/estrategia';
 import type { OpcionesDeHoy } from './asesor/opciones';
 import type { Pieza } from './asesor/pieza';
+import type { MedioInstagram } from './asesor/instagramMedios';
 import type { Medidas, PorMedir, Resumen } from './asesor/resumen';
 
 export interface EstadoAsesor {
@@ -47,3 +48,11 @@ export const guardarEstrategia = (estrategia: EstrategiaMarketing) =>
 
 export const sugerirEstrategia = () =>
   apiFetch<{ estrategia: EstrategiaMarketing }>('/api/asesor/estrategia/sugerir', { method: 'POST' });
+
+/** Publicaciones de Instagram que pueden ser esta pieza (el mismo día, o el siguiente). */
+export const mediosDeInstagram = (p: Pick<PorMedir, 'fecha' | 'tarjetaId'>) =>
+  apiFetch<{ medios: MedioInstagram[] }>(`/api/asesor/instagram/medios?fecha=${encodeURIComponent(p.fecha)}&tarjetaId=${encodeURIComponent(p.tarjetaId)}`);
+
+/** Lo que Instagram ha medido de una publicación; lo que no dé, no viene. */
+export const medidasDeInstagram = (medioId: string) =>
+  apiFetch<{ medidas: Partial<Medidas> & { alcance: number } }>('/api/asesor/instagram/medidas', { method: 'POST', body: JSON.stringify({ medioId }) });

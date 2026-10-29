@@ -28,6 +28,7 @@ Qué publicar hoy: varias ideas por modo para que la banda elija, ordenadas por 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server_services_asesorInstagram|server/services/asesorInstagram.ts]] *(from #service)*
 - [[server_services_asesorMarketing|server/services/asesorMarketing.ts]] *(from #service)*
 - [[src_components_asesor_AsesorView|src/components/asesor/AsesorView.tsx]] *(from #frontend)*
 - [[src_components_asesor_PiezaSheet|src/components/asesor/PiezaSheet.tsx]] *(from #frontend)*

@@ -27,6 +27,7 @@ El bucle de aprendizaje del asesor: qué piezas esperan sus números, qué cuent
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_db_asesorMarketing|server/db/asesorMarketing.ts]] *(from #db)*
+- [[server_services_asesorInstagram|server/services/asesorInstagram.ts]] *(from #service)*
 - [[server_services_asesorMarketing|server/services/asesorMarketing.ts]] *(from #service)*
 - [[src_components_asesor_hooks_useAsesor|src/components/asesor/hooks/useAsesor.ts]] *(from #frontend)*
 - [[src_components_asesor_PorMedirCard|src/components/asesor/PorMedirCard.tsx]] *(from #frontend)*
