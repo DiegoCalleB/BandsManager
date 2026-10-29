@@ -13,6 +13,7 @@ import { esConciertoPublicable, hoyIso } from '../utils/paginaConcierto.js';
 import { sanitizeExternalText } from '../utils/promptSafety.js';
 import { buildBandContextBlock, emptyBandProfile, loadBandProfile, type BandProfile } from '../utils/bandProfile.js';
 import { fechaCorta, sumarDias } from '../../src/utils/campanaConcierto.js';
+import { agendaDe, type DiaAgenda } from '../../src/utils/asesor/agenda.js';
 import { diagnosticar, type ConciertoParaAsesor, type Diagnostico } from '../../src/utils/asesor/diagnostico.js';
 import {
   DIAS_APRENDIZAJE, buscarTarjeta, opcionesDeHoy, semana, type Accion, type OpcionesDeHoy,
@@ -36,6 +37,8 @@ export interface EstadoAsesor {
   porMedir: PorMedir[];
   /** Lo que se ha aprendido de lo medido; null mientras no haya con qué concluir. */
   resumen: Resumen | null;
+  /** Tres semanas con lo fijado (bolos, hitos, lanzamiento) y lo ya publicado. */
+  agenda: DiaAgenda[];
   estrategia: EstrategiaMarketing;
   /** false si la banda aún no ha guardado ninguna estrategia: la pantalla le propone empezar por ahí. */
   tieneEstrategia: boolean;
@@ -44,6 +47,7 @@ export interface EstadoAsesor {
 interface Contexto {
   hoy: string;
   diagnostico: Diagnostico;
+  conciertos: ConciertoParaAsesor[];
   estrategia: EstrategiaMarketing;
   tieneEstrategia: boolean;
 }
@@ -66,7 +70,7 @@ async function contextoDeHoy(bandId: string, ahora: Date): Promise<Contexto | nu
     .filter(esConciertoPublicable)
     .map((c) => ({ id: String(c.id), fecha: String(c.fecha).slice(0, 10), sala: String(c.sala || ''), ciudad: String(c.ciudad || '') }));
   const diagnostico = diagnosticar({ hoy, conciertos: publicables, lanzamiento: estrategia.lanzamiento, ultimaPublicacion });
-  return { hoy, diagnostico, estrategia, tieneEstrategia: guardada !== null };
+  return { hoy, diagnostico, conciertos: publicables, estrategia, tieneEstrategia: guardada !== null };
 }
 
 export async function estadoDeHoy(bandId: string, ahora = new Date()): Promise<EstadoAsesor | null> {
@@ -74,8 +78,10 @@ export async function estadoDeHoy(bandId: string, ahora = new Date()): Promise<E
   if (!ctx) return null;
   const desde = sumarDias(ctx.hoy, -DIAS_APRENDIZAJE);
   const [historial, resultados] = await Promise.all([dbAccionesDesde(bandId, desde), dbResultadosDesde(bandId, desde)]);
+  const { conciertos, ...resto } = ctx;
   return {
-    ...ctx,
+    ...resto,
+    agenda: agendaDe({ hoy: ctx.hoy, conciertos, lanzamiento: ctx.estrategia.lanzamiento, historial, resultados }),
     opciones: opcionesDeHoy(ctx.diagnostico, ctx.estrategia, ctx.hoy, historial, resultados),
     semana: semana(historial, ctx.hoy),
     porMedir: porMedir(historial, resultados, ctx.hoy),

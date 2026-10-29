@@ -23,6 +23,7 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_utils_asesor_agenda|src/utils/asesor/agenda.ts]] *(from #service)*
 - [[src_utils_asesor_resumen|src/utils/asesor/resumen.ts]] *(from #service)*
 
 ---

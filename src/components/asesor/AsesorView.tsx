@@ -7,10 +7,11 @@ import { TarjetaHoy } from './TarjetaHoy';
 import { PiezaSheet } from './PiezaSheet';
 import { FormEstrategia } from './FormEstrategia';
 import { PorMedirCard } from './PorMedirCard';
+import { AgendaAsesor } from './AgendaAsesor';
 import { ResumenCard } from './ResumenCard';
 import type { BandaLaminas } from './hooks/useLaminas';
 
-type Pestana = 'hoy' | 'resultados' | 'estrategia';
+type Pestana = 'hoy' | 'calendario' | 'resultados' | 'estrategia';
 
 const MODO: Record<Modo, string> = {
   concierto: 'Modo concierto',
@@ -51,9 +52,10 @@ const AsesorView: React.FC<Props> = ({ onNavigate, banda }) => {
     );
   }
 
-  const { diagnostico, opciones, semana, porMedir, resumen, estrategia, tieneEstrategia } = a.estado;
+  const { diagnostico, opciones, semana, porMedir, resumen, agenda, estrategia, tieneEstrategia } = a.estado;
   const pestanas: TabItem<Pestana>[] = [
     { id: 'hoy', label: 'Hoy' },
+    { id: 'calendario', label: 'Calendario' },
     { id: 'resultados', label: porMedir.length ? `Resultados (${porMedir.length})` : 'Resultados' },
     { id: 'estrategia', label: 'Estrategia' },
   ];
@@ -122,6 +124,8 @@ const AsesorView: React.FC<Props> = ({ onNavigate, banda }) => {
           )}
         </>
       )}
+
+      {pestana === 'calendario' && <AgendaAsesor agenda={agenda} onHoy={() => setPestana('hoy')} />}
 
       {pestana === 'resultados' && (
         <section className="grid gap-4" aria-label="Resultados">

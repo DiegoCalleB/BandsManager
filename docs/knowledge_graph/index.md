@@ -81,12 +81,12 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 
 ## 🤖 Mapa automático (generado desde los imports reales)
 
-1910 nodos: 53 agent · 56 db · 12 external · 14 feature · 999 frontend · 43 hook · 97 route · 84 schema · 12 security · 540 service.
+1912 nodos: 53 agent · 56 db · 12 external · 14 feature · 1000 frontend · 43 hook · 97 route · 84 schema · 12 security · 541 service.
 No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el test `grafoConocimiento` falla si queda desfasado.
 
 ### 🔥 Los 20 ficheros más importados
 - [[src_types|src/types.ts]] — 580 ficheros dependen de él
-- [[src_components_ui_index|src/components/ui/index.ts]] — 378 ficheros dependen de él
+- [[src_components_ui_index|src/components/ui/index.ts]] — 379 ficheros dependen de él
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] — 180 ficheros dependen de él
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] — 174 ficheros dependen de él
 - [[src_utils_api|src/utils/api.ts]] — 96 ficheros dependen de él
