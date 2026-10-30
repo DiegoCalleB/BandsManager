@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { conDesgasteDeTinta, mascaraDeLogo, rgbDeHex, semillaDeLogo } from '../logos';
+import { conDesgasteDeTinta, mascaraDeLogo, rgbDeHex, semillaDeLogo, solidificarMascara } from '../logos';
 
 /** Imagen sintética de `ancho`×`alto`: `pintar(x, y)` devuelve [r, g, b, a]. */
 function imagen(ancho: number, alto: number, pintar: (x: number, y: number) => [number, number, number, number]) {
@@ -48,6 +48,27 @@ describe('mascaraDeLogo', () => {
   });
 });
 
+describe('solidificarMascara', () => {
+  it('un logo semitransparente pasa a tinta llena: no es un fantasma', () => {
+    const d = imagen(30, 30, (x, y) => (dentro(x, y) ? [200, 30, 30, 90] : [0, 0, 0, 0]));
+    const m = solidificarMascara(mascaraDeLogo(d, 30, 30));
+    expect(en(m, 30, 15, 15)).toBe(255);
+    expect(en(m, 30, 2, 2)).toBe(0);
+  });
+
+  it('los grises a medias (un degradado, una sombra) salen casi llenos o casi vacíos, no a medias', () => {
+    const m = solidificarMascara(Uint8ClampedArray.from([255, 200, 150, 100, 40, 10, 0]));
+    expect(Array.from(m)).toEqual([255, 255, 255, expect.any(Number), expect.any(Number), 0, 0]);
+    expect(m[3]).toBeGreaterThan(120);
+    expect(m[4]).toBeLessThan(40);
+  });
+
+  it('una máscara vacía se queda vacía y no divide por cero', () => {
+    expect(Array.from(solidificarMascara(new Uint8ClampedArray(5)))).toEqual([0, 0, 0, 0, 0]);
+    expect(solidificarMascara(new Uint8ClampedArray(0))).toHaveLength(0);
+  });
+});
+
 describe('conDesgasteDeTinta', () => {
   const base = new Uint8ClampedArray(1000).fill(255);
 
@@ -56,9 +77,9 @@ describe('conDesgasteDeTinta', () => {
     expect(Array.from(conDesgasteDeTinta(base, 7))).not.toEqual(Array.from(conDesgasteDeTinta(base, 8)));
   });
 
-  it('nunca borra la forma: deja al menos el 80 % de la tinta y no inventa tinta donde no la hay', () => {
+  it('nunca borra la forma: deja al menos el 90 % de la tinta y no inventa tinta donde no la hay', () => {
     const r = conDesgasteDeTinta(base, 3);
-    expect(Math.min(...r)).toBeGreaterThanOrEqual(204);
+    expect(Math.min(...r)).toBeGreaterThanOrEqual(230);
     expect(Math.max(...r)).toBeLessThanOrEqual(255);
     expect(Array.from(conDesgasteDeTinta(new Uint8ClampedArray(50), 3)).every((v) => v === 0)).toBe(true);
   });

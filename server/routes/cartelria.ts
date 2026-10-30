@@ -21,7 +21,7 @@ import { apiAutenticadaRateLimiter, ficherosRateLimiter, iaRateLimiter, imagenRa
 import { idSeguro } from '../utils/trackingSeguro.js';
 import { captureError } from '../utils/errorTracking.js';
 import { esConciertoPublicable } from '../utils/paginaConcierto.js';
-import { MAX_RETOQUE, construirPromptFondo, construirPromptRetoque, esEstiloCartel, limpiarTextos, type TextosCartel } from '../utils/promptCartel.js';
+import { MAX_RETOQUE, construirPromptFondo, type ModoRetoque, construirPromptRetoque, esEstiloCartel, limpiarTextos, type TextosCartel } from '../utils/promptCartel.js';
 import { carpetaCartel, carpetaReferencias, esUrlDeCartel, nombreSeguro, referenciasHuerfanas, rutaDeUrlCartel, rutaIdea } from '../utils/cartelUrl.js';
 import { borrarDeAlmacenamiento, descargarDeAlmacenamiento, uploadBufferToSupabase } from '../utils/storage.js';
 import { validarMagicBytes } from './upload.js';
@@ -204,6 +204,8 @@ cartelriaRouter.post('/cartel/retocar', requireAuth, imagenRateLimiter, async (r
   try {
     const bandId = getTargetBandId(req);
     const { concertId, url, instruccion } = req.body || {};
+    // «libre» (por defecto, como pedir un cambio en ChatGPT): la IA rehace el cartel con tu comentario. «fiel»: solo toca lo pedido.
+    const modo: ModoRetoque = req.body?.modo === 'fiel' ? 'fiel' : 'libre';
     if (typeof concertId !== 'string' || !idSeguro(concertId)) return res.status(400).json({ error: 'Concierto no válido.' });
     if (typeof url !== 'string' || typeof instruccion !== 'string') return res.status(400).json({ error: 'Petición no válida.' });
 
@@ -227,14 +229,15 @@ cartelriaRouter.post('/cartel/retocar', requireAuth, imagenRateLimiter, async (r
       if (!textos) return res.status(409).json({ error: 'No podemos retocar un fondo con letras ahora mismo. Genera uno nuevo.' });
     }
 
-    // Cada vuelta de la IA sobre una imagen ya retocada la pinta entera otra vez y pierde detalle: un retoque nuevo
-    // parte del ORIGINAL con todo lo pedido hasta ahora. Pasados MAX_PASOS_RETOQUE (o si el original ya no está en
-    // el historial) se parte de la imagen retocada, con solo lo nuevo.
+    // Modo fiel: cada vuelta de la IA sobre una imagen ya retocada la pinta entera otra vez y pierde detalle, así que un
+    // retoque nuevo parte del ORIGINAL con todo lo pedido hasta ahora (pasados MAX_PASOS_RETOQUE, o si el original ya no
+    // está en el historial, de la imagen retocada con solo lo nuevo). En libre se sigue la conversación: se parte de la
+    // imagen que se ve y solo con lo nuevo.
     const previo = configDe(concierto, bandId).retoques[url];
-    const desdeOriginal = !!previo && previo.instrucciones.length < MAX_PASOS_RETOQUE && !!rutaDeUrlCartel(previo.origen, bandId);
+    const desdeOriginal = modo === 'fiel' && !!previo && previo.instrucciones.length < MAX_PASOS_RETOQUE && !!rutaDeUrlCartel(previo.origen, bandId);
     const origen = desdeOriginal ? previo.origen : url;
     const anteriores = desdeOriginal ? previo.instrucciones : [];
-    const prompt = construirPromptRetoque({ instruccion, anteriores, textos });
+    const prompt = construirPromptRetoque({ instruccion, anteriores, textos, modo });
     if (!prompt) return res.status(400).json({ error: 'Cuéntanos qué quieres cambiar.' });
 
     const buf = await descargarDeAlmacenamiento(desdeOriginal ? rutaDeUrlCartel(origen, bandId)! : ruta, MAX_BYTES_RETOQUE);

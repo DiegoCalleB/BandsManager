@@ -50,6 +50,8 @@ export interface CartelConfig {
   letra: LetraCartel;
   /** Cómo se reparte el cartel: `auto` lo decide la letra. */
   composicion: ComposicionElegida;
+  /** Acabado del arte de IA (no se aplica si la IA dibuja las letras dentro: las estropearía). */
+  acabado: Acabado;
   /** Logos en la tinta del cartel (como impresos) en vez de a color sobre una placa clara. */
   logosTinta: boolean;
   /** Logos de otras bandas del bolo (subidos para este cartel), en el orden en que salen. */
@@ -77,6 +79,10 @@ export const MAX_TEXTO_EDITADO = 60;
 /** A dónde lleva el QR del cartel: la página del bolo, su venta de entradas o la página de fans de la banda. */
 export const DESTINOS_QR = ['concierto', 'entradas', 'fans'] as const;
 export type DestinoQr = (typeof DESTINOS_QR)[number];
+
+/** Acabado del arte de IA: tal cual sale, o pasado a serigrafía de tintas planas con trama (ver serigrafia.ts). */
+export const ACABADOS = ['natural', 'serigrafia'] as const;
+export type Acabado = (typeof ACABADOS)[number];
 
 export const MAX_FONDOS_IA = 8;
 /** Retoques que se encadenan sobre el MISMO original antes de partir de la imagen ya retocada. */
@@ -110,6 +116,7 @@ export const CONFIG_INICIAL: CartelConfig = {
   logo: true,
   letra: 'auto',
   composicion: 'auto',
+  acabado: 'natural',
   logosTinta: true,
   logos: [],
   fondosIa: [],
@@ -185,6 +192,7 @@ export function sanearConfigCartel(raw: unknown, esUrlPermitida: (url: string) =
     logo: booleano(r.logo, true),
     letra: (LETRAS_CARTEL as readonly string[]).includes(r.letra as string) ? (r.letra as LetraCartel) : 'auto',
     composicion: (ELECCIONES_COMPOSICION as readonly string[]).includes(r.composicion as string) ? (r.composicion as ComposicionElegida) : 'auto',
+    acabado: (ACABADOS as readonly string[]).includes(r.acabado as string) ? (r.acabado as Acabado) : 'natural',
     logosTinta: booleano(r.logosTinta, true),
     logos,
     fondosIa,
@@ -226,10 +234,10 @@ export function conLinaje(config: CartelConfig, url: string, linaje: LinajeRetoq
 }
 
 /** Lo que se decide por bolo y no es el fondo. */
-export type AjustesBolo = Pick<CartelConfig, 'cabeza' | 'extra' | 'horario' | 'direccion' | 'qr' | 'qrDigital' | 'qrDestino' | 'ajustesFinos' | 'estilos' | 'libres' | 'textos' | 'marca' | 'logo' | 'logosTinta' | 'letra' | 'composicion'>;
+export type AjustesBolo = Pick<CartelConfig, 'cabeza' | 'extra' | 'horario' | 'direccion' | 'qr' | 'qrDigital' | 'qrDestino' | 'ajustesFinos' | 'estilos' | 'libres' | 'textos' | 'marca' | 'logo' | 'logosTinta' | 'letra' | 'composicion' | 'acabado'>;
 
 export function ajustesDe(c: CartelConfig): AjustesBolo {
-  return { cabeza: c.cabeza, extra: c.extra, horario: c.horario, direccion: c.direccion, qr: c.qr, qrDigital: c.qrDigital, qrDestino: c.qrDestino, ajustesFinos: c.ajustesFinos, estilos: c.estilos, libres: c.libres, textos: c.textos, marca: c.marca, logo: c.logo, logosTinta: c.logosTinta, letra: c.letra, composicion: c.composicion };
+  return { cabeza: c.cabeza, extra: c.extra, horario: c.horario, direccion: c.direccion, qr: c.qr, qrDigital: c.qrDigital, qrDestino: c.qrDestino, ajustesFinos: c.ajustesFinos, estilos: c.estilos, libres: c.libres, textos: c.textos, marca: c.marca, logo: c.logo, logosTinta: c.logosTinta, letra: c.letra, composicion: c.composicion, acabado: c.acabado };
 }
 
 /**

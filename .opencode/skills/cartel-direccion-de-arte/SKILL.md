@@ -89,3 +89,5 @@ Si 2 o más de 6 fallan, el estilo no está listo. No se sube un estilo «porque
 ```bash
 npx vitest run server/utils/__tests__/promptCartel.test.ts src/utils/cartel
 ```
+
+- **Acabado de imprenta (`src/utils/cartel/serigrafia.ts`):** el rasgo que más delata a una imagen generada es lo continuo (degradados, mil matices, detalle uniforme). Pasar el arte a pocas tintas planas con trama y desregistro lo acerca a un cartel de gira impreso de verdad. Es un ajuste (`acabado`), solo sobre arte sin letras de IA. No prometas que nada «sea indetectable»: la mejora es de calidad y originalidad, y la marca de agua invisible del modelo no se toca.

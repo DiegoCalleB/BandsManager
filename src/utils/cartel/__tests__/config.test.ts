@@ -71,6 +71,12 @@ describe('la composición del cartel en la configuración', () => {
     expect(sanearConfigCartel({ v: 1, direccion: 'sí' }, () => true)?.direccion).toBe(false);
   });
 
+  it('el acabado del arte es uno conocido y por defecto natural', () => {
+    expect(CONFIG_INICIAL.acabado).toBe('natural');
+    expect(sanearConfigCartel({ v: 1, acabado: 'serigrafia' }, () => true)?.acabado).toBe('serigrafia');
+    expect(sanearConfigCartel({ v: 1, acabado: 'url(x)' }, () => true)?.acabado).toBe('natural');
+  });
+
   it('el QR en Feed e Historia viene encendido y solo se apaga con un false de verdad; el destino es uno conocido', () => {
     expect(CONFIG_INICIAL.qrDigital).toBe(true);
     expect(sanearConfigCartel({ v: 1, qrDigital: false }, () => true)?.qrDigital).toBe(false);

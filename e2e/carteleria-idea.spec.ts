@@ -104,6 +104,13 @@ test('retocar el fondo de IA manda la instrucción y deja la versión nueva al l
   const pedido = JSON.parse(peticiones.find((p) => p.ruta.endsWith('/cartel/retocar'))!.cuerpo.toString());
   expect(pedido.instruccion).toBe('Más oscuro');
   expect(pedido.url).toMatch(/ia-1\.png/);
+  // Por defecto se retoca en modo libre (como en ChatGPT); «Solo lo que pida» manda el modo fiel.
+  expect(pedido.modo).toBe('libre');
+  await expect(page.getByRole('button', { name: 'Libre, como en ChatGPT' })).toHaveAttribute('aria-pressed', 'true');
+  await page.getByRole('button', { name: 'Solo lo que pida' }).click();
+  await page.getByLabel('Qué quieres cambiar del fondo').fill('Sin nubes');
+  await retocar.click();
+  await expect.poll(() => peticiones.filter((p) => p.ruta.endsWith('/cartel/retocar')).map((p) => JSON.parse(p.cuerpo.toString()).modo), { timeout: 15_000 }).toEqual(['libre', 'fiel']);
   // La versión nueva pasa a ser el fondo; la anterior sigue ahí para volver.
   await expect(page.getByRole('button', { name: /Fondo con IA 1/ })).toBeVisible();
 });
