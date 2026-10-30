@@ -24,6 +24,7 @@ _Sin dependencias salientes directas._
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_utils_asesor_agenda|src/utils/asesor/agenda.ts]] *(from #service)*
+- [[src_utils_asesor_chat|src/utils/asesor/chat.ts]] *(from #service)*
 - [[src_utils_asesor_rescate|src/utils/asesor/rescate.ts]] *(from #service)*
 - [[src_utils_asesor_resumen|src/utils/asesor/resumen.ts]] *(from #service)*
 
