@@ -19,7 +19,7 @@ import { diagnosticar, type ConciertoParaAsesor, type Diagnostico } from '../../
 import {
   DIAS_APRENDIZAJE, buscarTarjeta, opcionesDeHoy, semana, type Accion, type OpcionesDeHoy,
 } from '../../src/utils/asesor/opciones.js';
-import { promptChat, sanearConversacion, sanearRespuesta } from '../../src/utils/asesor/chat.js';
+import { promptChat, sanearConversacion, sanearRespuestaChat, type AccionChat } from '../../src/utils/asesor/chat.js';
 import { promptPieza, sanearPieza, type Pieza } from '../../src/utils/asesor/pieza.js';
 import {
   porMedir, resumenDe, sanearMedidas, tituloDe, lecturaDe, type PorMedir, type ResultadoPieza as ResultadoMedido, type Resumen,
@@ -216,7 +216,7 @@ export async function generarPieza(bandId: string, tarjetaId: unknown, ahora = n
 
 /* ----------------------------------------------------------------- chat */
 
-export type ResultadoChat = { respuesta: string } | { error: 'invalido'; motivo: string } | { error: 'sin_bd' | 'sin_ia' };
+export type ResultadoChat = { respuesta: string; accion: AccionChat | null } | { error: 'invalido'; motivo: string } | { error: 'sin_bd' | 'sin_ia' };
 
 /**
  * Responde a una pregunta libre de la banda con lo que el asesor sabe de ella: estrategia, momento,
@@ -234,6 +234,8 @@ export async function chatAsesor(bandId: string, conversacionRaw: unknown, ahora
   const historial = await dbAccionesDesde(bandId, sumarDias(ctx.hoy, -DIAS_APRENDIZAJE));
   const opciones = opcionesDeHoy(ctx.diagnostico, ctx.estrategia, ctx.hoy, historial, ctx.resultados);
   const resumen = resumenDe(ctx.resultados, ctx.hoy);
+  // Solo se puede proponer preparar una idea de hoy que aún no se ha hecho; el id lo valida el servidor.
+  const pendientes = [...opciones.recomendadas, ...opciones.alternativas].filter((t) => !t.hecha);
   const recientes = [...ctx.resultados]
     .sort((a, b) => (a.fecha < b.fecha ? 1 : -1))
     .slice(0, 5)
@@ -247,14 +249,24 @@ export async function chatAsesor(bandId: string, conversacionRaw: unknown, ahora
         momento: ctx.diagnostico.porque,
         aprendido: resumen?.mensaje ?? null,
         recientes,
-        ideasDeHoy: [...opciones.recomendadas, ...opciones.alternativas].map((t) => t.titulo),
+        ideasDeHoy: pendientes.map((t) => ({ id: t.id, titulo: t.titulo })),
         conversacion,
       }),
-      config: { temperature: 0.6 },
+      config: { responseMimeType: 'application/json', temperature: 0.6 },
       bandId,
     });
-    const texto = sanearRespuesta(respuesta.text);
-    return texto ? { respuesta: texto } : { error: 'sin_ia' };
+    // Si el modelo no devuelve JSON, el texto suelto sigue valiendo como respuesta (sin acción).
+    const bruto = (respuesta.text || '').trim();
+    let parseada: unknown = null;
+    try {
+      parseada = safeParseJson(bruto);
+    } catch {
+      // Texto suelto: se trata más abajo.
+    }
+    // Un JSON roto no se enseña tal cual: mejor un error claro que llaves y comillas en pantalla.
+    const pareceJson = /^[{[]/.test(bruto);
+    const saneada = pareceJson && (!parseada || typeof parseada !== 'object') ? null : sanearRespuestaChat(parseada && typeof parseada === 'object' ? parseada : bruto, new Map(pendientes.map((t) => [t.id, t.titulo])));
+    return saneada ?? { error: 'sin_ia' };
   } catch (e) {
     console.warn('[Asesor] La IA no pudo responder en el chat:', (e as Error)?.message || e);
     return { error: 'sin_ia' };

@@ -26,6 +26,29 @@ export const PREGUNTAS_INICIALES = [
   '¿Qué pongo en la bio y el enlace?',
 ] as const;
 
+/**
+ * Lo que el chat puede proponer con un botón. Lista cerrada y sin efectos: preparar una de las ideas
+ * de hoy (la pieza la escribe la IA solo cuando la banda pulsa) o llevar a una pestaña. Nada se
+ * ejecuta solo, y el texto del botón lo pone el servidor, no el modelo.
+ */
+export const DESTINOS = {
+  hoy: 'Ver el plan de hoy',
+  calendario: 'Ver el calendario',
+  resultados: 'Anotar resultados',
+  estrategia: 'Revisar la estrategia',
+} as const;
+export type Destino = keyof typeof DESTINOS;
+
+export type AccionChat =
+  | { tipo: 'preparar'; tarjetaId: string; etiqueta: string }
+  | { tipo: 'ir'; destino: Destino; etiqueta: string };
+
+/** Lo que el cliente enseña: el mensaje y, si lo hay, el botón. Al servidor solo viaja el texto. */
+export interface MensajeChat extends Mensaje {
+  accion?: AccionChat | null;
+}
+
+const MAX_ETIQUETA = 60;
 const ROLES = new Set<string>(['banda', 'asesor']);
 
 /** Quita lo que no es texto de conversación: marcas de rol, delimitadores de sección y caracteres de control. */
@@ -65,6 +88,39 @@ export function sanearRespuesta(texto: unknown): string | null {
   return limpio || null;
 }
 
+export interface RespuestaChat {
+  respuesta: string;
+  accion: AccionChat | null;
+}
+
+/**
+ * Lo que devuelve el modelo, validado: la respuesta y, como mucho, una acción. Una acción solo vale si
+ * es de la lista cerrada y, para preparar, si la idea está entre las de hoy sin hacer (`ideas`: id → título).
+ * Una acción inválida no tumba la respuesta: se descarta. Texto suelto (sin JSON) también sirve.
+ */
+export function sanearRespuestaChat(raw: unknown, ideas: ReadonlyMap<string, string>): RespuestaChat | null {
+  const suelto = typeof raw === 'string' ? sanearRespuesta(raw) : null;
+  if (suelto) return { respuesta: suelto, accion: null };
+  if (!raw || typeof raw !== 'object') return null;
+  const { respuesta, accion } = raw as { respuesta?: unknown; accion?: unknown };
+  const texto = sanearRespuesta(respuesta);
+  if (!texto) return null;
+  return { respuesta: texto, accion: sanearAccion(accion, ideas) };
+}
+
+function sanearAccion(raw: unknown, ideas: ReadonlyMap<string, string>): AccionChat | null {
+  if (!raw || typeof raw !== 'object') return null;
+  const { tipo, tarjetaId, destino } = raw as { tipo?: unknown; tarjetaId?: unknown; destino?: unknown };
+  if (tipo === 'preparar' && typeof tarjetaId === 'string' && ideas.has(tarjetaId)) {
+    const titulo = limpiar(ideas.get(tarjetaId)!, MAX_ETIQUETA);
+    return { tipo, tarjetaId, etiqueta: `Preparar «${titulo}»` };
+  }
+  if (tipo === 'ir' && typeof destino === 'string' && Object.hasOwn(DESTINOS, destino)) {
+    return { tipo, destino: destino as Destino, etiqueta: DESTINOS[destino as Destino] };
+  }
+  return null;
+}
+
 export interface DatosChat {
   /** Ficha de la banda para prompts (la que ya usa el resto del asesor). */
   contextoBanda: string;
@@ -76,8 +132,8 @@ export interface DatosChat {
   aprendido: string | null;
   /** Las últimas piezas medidas, una por línea, con su lectura. */
   recientes: string[];
-  /** Las ideas que se les propone hoy, por título. */
-  ideasDeHoy: string[];
+  /** Las ideas de hoy que aún no han hecho, con su id (el modelo puede proponer prepararlas). */
+  ideasDeHoy: Array<{ id: string; titulo: string }>;
   conversacion: Mensaje[];
 }
 
@@ -95,7 +151,7 @@ LO QUE SABEMOS AHORA MISMO (datos reales de la banda):
 - Momento: ${d.momento}
 - Lo aprendido: ${d.aprendido ?? 'todavía no hay suficientes piezas medidas para concluir nada.'}
 - Últimas piezas medidas: ${d.recientes.length ? `\n  ${d.recientes.join('\n  ')}` : 'ninguna todavía.'}
-- Ideas que se les propone hoy: ${d.ideasDeHoy.length ? d.ideasDeHoy.join('; ') : 'ninguna.'}
+- Ideas que se les propone hoy (id: título): ${d.ideasDeHoy.length ? `\n  ${d.ideasDeHoy.map((i) => `${i.id}: ${limpiar(i.titulo, 80)}`).join('\n  ')}` : 'ninguna.'}
 
 CRITERIOS (del temario de la banda; úsalos, no los inventes):
 - Guardados en torno al ${pct(UMBRALES.guardar)} del alcance es una pieza que aporta valor; menos, el contenido no engancha.
@@ -110,9 +166,15 @@ REGLAS:
 - No inventes cifras, fechas ni resultados que no estén arriba. No prometas resultados.
 - Máximo 110 palabras, un párrafo o tres puntos cortos, y termina con UNA acción concreta para hoy. Sin encabezados ni emojis.
 
+ACCIÓN OPCIONAL (un botón que la banda puede pulsar; no se ejecuta nada solo):
+- Si tu consejo se resuelve preparando una de las ideas de hoy, pon "accion": {"tipo": "preparar", "tarjetaId": "<id exacto de la lista de arriba>"}.
+- Si se resuelve en otra pantalla, pon "accion": {"tipo": "ir", "destino": "hoy" | "calendario" | "resultados" | "estrategia"}.
+- Si no encaja con claridad, "accion": null. Nunca inventes un id.
+
 <conversacion>
 ${conversacion}
 </conversacion>
 
-Responde solo al último mensaje de la BANDA.`;
+Responde solo al último mensaje de la BANDA, con SOLO este JSON:
+{"respuesta": "tu respuesta", "accion": null}`;
 }

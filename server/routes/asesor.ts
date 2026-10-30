@@ -5,7 +5,7 @@
 //   POST /api/asesor/resultado              los números (alcance, guardados) de una pieza ya publicada.
 //   GET  /api/asesor/instagram/medios       publicaciones de Instagram que pueden ser una pieza hecha.
 //   POST /api/asesor/instagram/medidas      alcance y guardados de UNA publicación, para rellenar el formulario.
-//   POST /api/asesor/chat                   pregunta libre al asesor; solo responde, no cambia nada.
+//   POST /api/asesor/chat                   pregunta libre al asesor; responde y, como mucho, propone un botón (no ejecuta nada).
 //   GET  /api/asesor/estrategia             estrategia guardada de la banda.
 //   PUT  /api/asesor/estrategia             la guarda, saneada por lista blanca.
 //   POST /api/asesor/estrategia/sugerir     borrador con IA a partir del perfil; NO se guarda.
@@ -106,7 +106,7 @@ asesorRouter.post('/asesor/instagram/medidas', requireAuth, apiAutenticadaRateLi
 asesorRouter.post('/asesor/chat', requireAuth, iaRateLimiter, async (req, res) => {
   try {
     const r = await chatAsesor(getTargetBandId(req), req.body?.mensajes);
-    if ('respuesta' in r) return res.json({ respuesta: r.respuesta });
+    if ('respuesta' in r) return res.json({ respuesta: r.respuesta, accion: r.accion });
     if (r.error === 'invalido') return res.status(400).json({ error: r.motivo });
     res.status(503).json({ error: r.error === 'sin_ia' ? 'El asesor no ha podido responder. Prueba otra vez en un momento.' : 'No se pudo consultar ahora mismo.' });
   } catch (e) {

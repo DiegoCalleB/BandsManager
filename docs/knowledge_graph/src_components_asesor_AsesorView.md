@@ -28,6 +28,7 @@ Módulo sin exportaciones con nombre.
 - [[src_components_asesor_hooks_useAsesor|src/components/asesor/hooks/useAsesor.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_asesor_hooks_useLaminas|src/components/asesor/hooks/useLaminas.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_utils_asesor_chat|src/utils/asesor/chat.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_diagnostico|src/utils/asesor/diagnostico.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_opciones|src/utils/asesor/opciones.ts]] *(Layer: #service, Domain: #system)*
 

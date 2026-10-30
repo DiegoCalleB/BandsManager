@@ -2,19 +2,22 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Send, X } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
 import { Button, IconButton, Textarea } from '../ui';
-import { MAX_TEXTO_BANDA, PREGUNTAS_INICIALES } from '../../utils/asesor/chat';
+import { MAX_TEXTO_BANDA, PREGUNTAS_INICIALES, type AccionChat } from '../../utils/asesor/chat';
 import { useChatAsesor } from './hooks/useChatAsesor';
 
 interface Props {
   onCerrar: () => void;
+  /** Lo que la banda decide hacer con el botón de una respuesta; el chat se cierra detrás. */
+  onAccion: (accion: AccionChat) => void;
 }
 
 /**
- * Preguntas libres al asesor, en una hoja. Solo conversa: lo que aconseja sale de la estrategia y
- * de los números de la banda, y para cambiar el plan hay que usar las pestañas. Empieza con
+ * Preguntas libres al asesor, en una hoja. Lo que aconseja sale de la estrategia y de los números de
+ * la banda. Una respuesta puede traer un botón (preparar una idea de hoy, ir a una pestaña); nada
+ * se hace sin que la banda lo pulse, y el chat en sí no cambia el plan. Empieza con
  * preguntas hechas para que nadie se quede mirando una caja vacía.
  */
-export function ChatAsesor({ onCerrar }: Props) {
+export function ChatAsesor({ onCerrar, onAccion }: Props) {
   const { mensajes, enviando, error, preguntar } = useChatAsesor();
   const [texto, setTexto] = useState('');
   const fin = useRef<HTMLDivElement>(null);
@@ -41,7 +44,7 @@ export function ChatAsesor({ onCerrar }: Props) {
           <header className="flex items-start gap-3 px-5 pb-3 pt-5">
             <div className="grid min-w-0 flex-1 gap-0.5">
               <h2 className="text-lg font-semibold">Preguntar al asesor</h2>
-              <p className="text-xs text-[var(--ink-2)]">Responde con vuestra estrategia y vuestros números. No cambia el plan.</p>
+              <p className="text-xs text-[var(--ink-2)]">Responde con vuestra estrategia y vuestros números. Vosotros decidís qué hacer.</p>
             </div>
             <IconButton label="Cerrar" variant="ghost" onClick={onCerrar}><X className="size-5" aria-hidden /></IconButton>
           </header>
@@ -65,6 +68,11 @@ export function ChatAsesor({ onCerrar }: Props) {
                       <span className="sr-only">{m.rol === 'banda' ? 'Vosotros: ' : 'Asesor: '}</span>
                       {m.texto}
                     </p>
+                    {m.accion && (
+                      <div className="mt-1.5">
+                        <Button size="sm" variant="neutral" onClick={() => { onAccion(m.accion!); onCerrar(); }}>{m.accion.etiqueta}</Button>
+                      </div>
+                    )}
                   </li>
                 ))}
                 {enviando && <li className="justify-self-start text-sm text-[var(--ink-2)]">El asesor está pensando…</li>}
