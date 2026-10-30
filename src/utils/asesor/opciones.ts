@@ -10,7 +10,8 @@ import { diasEntre, planificarCampana } from '../campanaConcierto';
 import type { Diagnostico } from './diagnostico';
 import type { EstrategiaMarketing, HorasSemana } from './estrategia';
 import type { Formato, Red, TipoContenido } from './reglasFormato';
-import { impulsoPorFormato, type ResultadoPieza } from './resumen';
+import { FORMATO_OPUESTO } from './rescate';
+import { impulsoPorFormato, PLURAL_FORMATO, type ResultadoPieza } from './resumen';
 import type { AccionRegistrada } from './tipos';
 
 export type { Accion, AccionRegistrada } from './tipos';
@@ -116,6 +117,33 @@ function ideasLanzamiento(d: Diagnostico, e: EstrategiaMarketing): Idea[] {
   ];
 }
 
+/** Cómo se pide cada formato cuando toca probar «lo opuesto» a lo que no ha funcionado. */
+const PRUEBA_OPUESTA: Record<Formato, { titulo: string; idea: (e: EstrategiaMarketing) => string; redes: Red[] }> = {
+  carrusel: { titulo: 'Probad un carrusel', redes: IG, idea: () => 'Cinco slides con una sola idea útil o curiosa, la primera como gancho y la última con una pregunta para comentar.' },
+  reel: { titulo: 'Probad un reel sin producir', redes: AMBAS, idea: (e) => `Quince segundos de algo real del local, sin montar nada. ${comoGrabar(e)}` },
+  stories: { titulo: 'Probad unas stories', redes: IG, idea: () => 'Tres stories seguidas con una foto, una encuesta y una pregunta.' },
+  post: { titulo: 'Probad una foto con historia', redes: IG, idea: () => 'La mejor foto que tengáis y dos líneas de lo que pasó esa noche.' },
+};
+
+function ideasRescate(d: Diagnostico, e: EstrategiaMarketing): Idea[] {
+  const r = d.rescate!;
+  const formato = FORMATO_OPUESTO[r.formatoFlojo ?? 'reel'];
+  const prueba = PRUEBA_OPUESTA[formato];
+  const ideas: Idea[] = [
+    { id: 'rescate-opuesto', formato, redes: prueba.redes, tipo: 'humano', base: 8, titulo: prueba.titulo, idea: prueba.idea(e),
+      porque: r.formatoFlojo ? `Con ${PLURAL_FORMATO[r.formatoFlojo]} no está arrancando: cambiar de formato enseña más que insistir.` : 'Lo que venís haciendo no arranca: cambiar de formato enseña más que insistir.' },
+    { id: 'rescate-pregunta', formato: 'stories', redes: IG, tipo: 'participativo', base: 6, titulo: 'Preguntad qué quieren ver',
+      idea: 'Una caja de preguntas: «¿qué os gustaría ver de nosotros?» y una foto del local.', porque: 'Cuando no sabéis qué falla, preguntad: lo que respondan vale más que otra pieza a ciegas.' },
+    storyDelDia,
+  ];
+  if (r.mejor) {
+    ideas.splice(1, 0, { id: 'rescate-mejor', formato: r.mejor.formato, redes: r.mejor.formato === 'reel' ? AMBAS : IG, tipo: 'cultural', base: 7, titulo: `Repetid «${r.mejor.titulo}»`,
+      idea: 'La misma estructura con otro tema: lo que se guardó una vez suele volver a guardarse.',
+      porque: `Fue lo que más se guardó: ${(r.mejor.tasa * 100).toFixed(1).replace('.', ',')} % de quienes la vieron.` });
+  }
+  return ideas;
+}
+
 function ideasReactivar(e: EstrategiaMarketing): Idea[] {
   return [
     { id: 'reactivar', formato: 'stories', redes: IG, tipo: 'participativo', base: 6, titulo: 'Volver sin presión',
@@ -145,6 +173,7 @@ function ideasFondo(e: EstrategiaMarketing, hoy: string): Idea[] {
 function ideasDeHoy(d: Diagnostico, e: EstrategiaMarketing, hoy: string): Idea[] {
   if (d.modo === 'concierto' && d.concierto) return ideasConcierto(d, e, hoy);
   if (d.modo === 'lanzamiento') return ideasLanzamiento(d, e);
+  if (d.modo === 'rescate' && d.rescate) return ideasRescate(d, e);
   if (d.modo === 'reactivar') return ideasReactivar(e);
   return ideasFondo(e, hoy);
 }

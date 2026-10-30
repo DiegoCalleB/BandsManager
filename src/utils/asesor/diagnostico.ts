@@ -9,8 +9,9 @@
  */
 import { diasEntre } from '../campanaConcierto';
 import type { Lanzamiento } from './estrategia';
+import type { Formato } from './reglasFormato';
 
-export type Modo = 'concierto' | 'lanzamiento' | 'reactivar' | 'fondo';
+export type Modo = 'concierto' | 'lanzamiento' | 'rescate' | 'reactivar' | 'fondo';
 
 /** Ventanas de cada modo, en días. */
 export const VENTANA = {
@@ -34,6 +35,17 @@ export interface EntradaDiagnostico {
   lanzamiento: Lanzamiento | null;
   /** Última publicación que conocemos (AAAA-MM-DD), o null si no sabemos de ninguna. */
   ultimaPublicacion: string | null;
+  /** Si lo que publican lleva tiempo sin funcionar (`detectarCaida`). Sin pasarlo, no hay rescate. */
+  rescate?: Rescate | null;
+}
+
+/** Lo que lo publicado ha dejado de dar y qué se ha aprendido de lo que sí funcionó (ver `rescate.ts`). */
+export interface Rescate {
+  motivo: 'tres_semanas' | 'tres_seguidas';
+  /** El formato que más han usado en ese tiempo, o null si no se sabe. */
+  formatoFlojo: Formato | null;
+  /** La pieza que más se guardó en el último mes, para repetir su estructura. */
+  mejor: { titulo: string; formato: Formato; tasa: number } | null;
 }
 
 export interface Diagnostico {
@@ -43,11 +55,13 @@ export interface Diagnostico {
   concierto: ConciertoParaAsesor | null;
   /** Días hasta el bolo o el lanzamiento (negativo si el lanzamiento ya salió). */
   dias: number | null;
+  /** Solo en modo rescate. */
+  rescate?: Rescate;
 }
 
 const enDias = (n: number) => (n === 0 ? 'hoy' : n === 1 ? 'mañana' : `en ${n} días`);
 
-export function diagnosticar({ hoy, conciertos, lanzamiento, ultimaPublicacion }: EntradaDiagnostico): Diagnostico {
+export function diagnosticar({ hoy, conciertos, lanzamiento, ultimaPublicacion, rescate }: EntradaDiagnostico): Diagnostico {
   const proximo = conciertos
     .map((c) => ({ c, dias: diasEntre(hoy, c.fecha) }))
     .filter(({ dias }) => Number.isFinite(dias) && dias >= 0 && dias <= VENTANA.concierto)
@@ -66,6 +80,14 @@ export function diagnosticar({ hoy, conciertos, lanzamiento, ultimaPublicacion }
         : `«${lanzamiento.titulo}» salió hace ${-dias} días: ahora toca que se escuche.`;
       return { modo: 'lanzamiento', porque, concierto: null, dias };
     }
+  }
+
+  // Un bolo o un estreno mandan; si no hay ninguno y lo que publican no arranca, toca cambiar de rumbo.
+  if (rescate) {
+    const porque = rescate.motivo === 'tres_semanas'
+      ? 'Vuestro alcance lleva tres semanas bajando: toca probar algo distinto, no insistir.'
+      : 'Las tres últimas piezas no han arrancado: toca cambiar de formato.';
+    return { modo: 'rescate', porque, concierto: null, dias: null, rescate };
   }
 
   if (ultimaPublicacion) {
