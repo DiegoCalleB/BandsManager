@@ -151,6 +151,7 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
         composicion: resolverComposicion(ajustes.composicion, voz),
         vozAuto: ajustes.letra === 'auto',
         composicionAuto: ajustes.composicion === 'auto',
+        acabado: ajustes.acabado,
       };
     },
     [concierto, bandName, ajustes, enlace, marca, conLogo, logoUrl, paletaBanda, logosExtra, estiloArranque]

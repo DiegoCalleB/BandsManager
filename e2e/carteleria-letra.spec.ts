@@ -144,6 +144,24 @@ test('un fondo de IA dibujado con su propio marco de papel se recorta: el cartel
     .toBeLessThan(120);
 });
 
+test('el acabado de serigrafía repinta el arte de IA con tintas planas y se guarda en el bolo', async ({ page }) => {
+  const { peticiones } = await abrirCarteleria(page);
+  await page.route('**/ia-1.png*', (r) => r.fulfill({ body: fs.readFileSync(path.join(FIXTURES, 'fondo-ia-marco.png')), contentType: 'image/png', headers: { 'access-control-allow-origin': '*' } }));
+  await page.locator('button[title="Fondo con IA"]').click();
+  const letras = page.getByLabel('La IA dibuja el título y la fecha');
+  if (await letras.isChecked()) await letras.uncheck();
+  await page.getByRole('button', { name: 'Pintar fondo' }).click();
+  await expect(page.getByRole('button', { name: /Fondo con IA 1/ })).toHaveAttribute('aria-pressed', 'true', { timeout: 15_000 });
+  const antes = await cartel(page);
+  await abrirAjustes(page);
+  await expect(page.getByLabel('Acabado del arte')).toHaveValue('natural');
+  await page.getByLabel('Acabado del arte').selectOption('serigrafia');
+  await expect.poll(() => cartel(page), { timeout: 15_000 }).not.toBe(antes);
+  await expect.poll(() => peticiones.some((p) => p.ruta.endsWith('/config') && JSON.parse(p.cuerpo.toString()).acabado === 'serigrafia'), { timeout: 8_000 }).toBe(true);
+  await page.getByLabel('Acabado del arte').selectOption('natural');
+  await expect.poll(() => cartel(page), { timeout: 15_000 }).toBe(antes);
+});
+
 test('ajustar el texto a mano: arrastrar un bloque, escalarlo y volver al automático', async ({ page }) => {
   const { peticiones } = await abrirCarteleria(page);
   const antes = await cartel(page);

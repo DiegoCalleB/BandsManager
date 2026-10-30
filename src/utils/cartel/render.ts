@@ -15,6 +15,7 @@ import { encajarImagen, type Encaje } from './ventana';
 import { VOCES, type Composicion, type VozCartel } from './voces';
 import { tintarLogo } from './logos';
 import { sinMarco } from './marco';
+import { conSerigrafia } from './serigrafia';
 import { fondoConTexto } from './fondoIa';
 import { TINTA_PLANTILLA, dibujarPlantilla, type PlantillaId } from './plantillas';
 import { dibujarArteEntero, dibujarFondoImagen } from './arteCanvas';
@@ -54,6 +55,8 @@ export interface PiezasCartel {
   /** La letra / el reparto se dejaron en «automático»: sobre una ilustración a sangre el render elige los suyos. */
   vozAuto?: boolean;
   composicionAuto?: boolean;
+  /** Acabado del arte de IA: `serigrafia` lo pasa a tintas planas con trama (no se aplica con letras de IA dentro). */
+  acabado?: 'natural' | 'serigrafia';
   /** Una sola tinta para todos los logos (como impresos). Si no, a color sobre una placa clara. */
   logosTinta?: boolean;
   opciones: OpcionesLayout;
@@ -419,8 +422,13 @@ export async function renderCartel(
       }
     } else {
       // La foto propia de la banda se deja como es, a sangre; un arte con letras dentro se pinta entero.
-      if (textoIa) dibujarArteEntero(ctx, imagen, L.ancho, L.alto);
-      else dibujarFondoImagen(ctx, imagen, L.ancho, L.alto);
+      const pintarImagen = (c: CanvasRenderingContext2D) => (textoIa ? dibujarArteEntero(c, imagen, L.ancho, L.alto) : dibujarFondoImagen(c, imagen, L.ancho, L.alto));
+      // Serigrafía: solo sobre el arte de IA y nunca con letras dibujadas dentro (la trama las estropearía).
+      const serigrafiado = piezas.acabado === 'serigrafia' && !textoIa && aSangre && fondo.tipo === 'imagen' && fondo.origen === 'ia'
+        ? conSerigrafia(fondo.url.split('?')[0], L.ancho, L.alto, semillaDeTexto(piezas.semilla), pintarImagen)
+        : null;
+      if (serigrafiado) ctx.drawImage(serigrafiado, 0, 0);
+      else pintarImagen(ctx);
     }
   }
 
