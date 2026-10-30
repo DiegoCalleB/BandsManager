@@ -19,13 +19,14 @@ import { diagnosticar, type ConciertoParaAsesor, type Diagnostico } from '../../
 import {
   DIAS_APRENDIZAJE, buscarTarjeta, opcionesDeHoy, semana, type Accion, type OpcionesDeHoy,
 } from '../../src/utils/asesor/opciones.js';
+import { promptChat, sanearConversacion, sanearRespuesta } from '../../src/utils/asesor/chat.js';
 import { promptPieza, sanearPieza, type Pieza } from '../../src/utils/asesor/pieza.js';
 import {
   porMedir, resumenDe, sanearMedidas, tituloDe, lecturaDe, type PorMedir, type ResultadoPieza as ResultadoMedido, type Resumen,
 } from '../../src/utils/asesor/resumen.js';
 import { bloqueVozAprendida, terminosProhibidosEn, vozAprendidaDe } from '../../src/utils/asesor/vozAprendida.js';
 import {
-  CAMARAS, ESTRATEGIA_INICIAL, ETAPAS, HORAS, OBJETIVOS, sanearEstrategia, type EstrategiaMarketing,
+  CAMARAS, ESTRATEGIA_INICIAL, bloqueEstrategiaPrompt, ETAPAS, HORAS, OBJETIVOS, sanearEstrategia, type EstrategiaMarketing,
 } from '../../src/utils/asesor/estrategia.js';
 
 export interface EstadoAsesor {
@@ -209,6 +210,53 @@ export async function generarPieza(bandId: string, tarjetaId: unknown, ahora = n
     return { pieza: segunda && terminosProhibidosEn(segunda, aprendida.evitar).length < colados.length ? segunda : primera };
   } catch (e) {
     console.warn('[Asesor] La IA no pudo preparar la pieza:', (e as Error)?.message || e);
+    return { error: 'sin_ia' };
+  }
+}
+
+/* ----------------------------------------------------------------- chat */
+
+export type ResultadoChat = { respuesta: string } | { error: 'invalido'; motivo: string } | { error: 'sin_bd' | 'sin_ia' };
+
+/**
+ * Responde a una pregunta libre de la banda con lo que el asesor sabe de ella: estrategia, momento,
+ * lo medido y las ideas de hoy. Solo conversa: no guarda nada ni cambia el plan. La conversación la
+ * manda el cliente, pero se sanea y se trata como datos; los números salen siempre del servidor.
+ */
+export async function chatAsesor(bandId: string, conversacionRaw: unknown, ahora = new Date()): Promise<ResultadoChat> {
+  const conversacion = sanearConversacion(conversacionRaw);
+  if (typeof conversacion === 'string') return { error: 'invalido', motivo: conversacion };
+  const client = getAiClient();
+  if (!client) return { error: 'sin_ia' };
+  const ctx = await contextoDeHoy(bandId, ahora);
+  if (!ctx) return { error: 'sin_bd' };
+
+  const historial = await dbAccionesDesde(bandId, sumarDias(ctx.hoy, -DIAS_APRENDIZAJE));
+  const opciones = opcionesDeHoy(ctx.diagnostico, ctx.estrategia, ctx.hoy, historial, ctx.resultados);
+  const resumen = resumenDe(ctx.resultados, ctx.hoy);
+  const recientes = [...ctx.resultados]
+    .sort((a, b) => (a.fecha < b.fecha ? 1 : -1))
+    .slice(0, 5)
+    .map((r) => `«${sanitizeExternalText(r.titulo, 80)}» (${r.formato}, ${fechaCorta(r.fecha)}): ${r.alcance} cuentas alcanzadas, ${r.guardados} guardados. ${lecturaDe(r).mensaje}`);
+
+  try {
+    const respuesta = await generateContentWithFallback(client, {
+      contents: promptChat({
+        contextoBanda: (await contextoBanda(bandId)).bloque,
+        estrategia: bloqueEstrategiaPrompt(ctx.estrategia),
+        momento: ctx.diagnostico.porque,
+        aprendido: resumen?.mensaje ?? null,
+        recientes,
+        ideasDeHoy: [...opciones.recomendadas, ...opciones.alternativas].map((t) => t.titulo),
+        conversacion,
+      }),
+      config: { temperature: 0.6 },
+      bandId,
+    });
+    const texto = sanearRespuesta(respuesta.text);
+    return texto ? { respuesta: texto } : { error: 'sin_ia' };
+  } catch (e) {
+    console.warn('[Asesor] La IA no pudo responder en el chat:', (e as Error)?.message || e);
     return { error: 'sin_ia' };
   }
 }

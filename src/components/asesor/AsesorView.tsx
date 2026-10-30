@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { MessageCircle } from 'lucide-react';
 import { Button, EmptyState, Onda, SkeletonText, Tabs, type TabItem } from '../ui';
 import type { Modo } from '../../utils/asesor/diagnostico';
 import type { Tarjeta } from '../../utils/asesor/opciones';
@@ -7,6 +8,7 @@ import { TarjetaHoy } from './TarjetaHoy';
 import { PiezaSheet } from './PiezaSheet';
 import { FormEstrategia } from './FormEstrategia';
 import { PorMedirCard } from './PorMedirCard';
+import { ChatAsesor } from './ChatAsesor';
 import { AgendaAsesor } from './AgendaAsesor';
 import { ResumenCard } from './ResumenCard';
 import type { BandaLaminas } from './hooks/useLaminas';
@@ -39,6 +41,7 @@ const AsesorView: React.FC<Props> = ({ onNavigate, banda }) => {
   const a = useAsesor();
   const [pestana, setPestana] = useState<Pestana>('hoy');
   const [abierta, setAbierta] = useState<Tarjeta | null>(null);
+  const [chat, setChat] = useState(false);
 
   if (a.cargando) {
     return <div data-modulo="reels" className="mx-auto max-w-2xl px-4 py-6"><SkeletonText lines={6} /></div>;
@@ -84,6 +87,13 @@ const AsesorView: React.FC<Props> = ({ onNavigate, banda }) => {
           <span className="text-xs text-[var(--ink-2)] tabular-nums">{hechasSemana ? `${hechasSemana} esta semana` : 'Semana por estrenar'}</span>
         </div>
       </header>
+
+      <div>
+        <Button size="sm" variant="neutral" onClick={() => setChat(true)}>
+          <MessageCircle className="size-4" aria-hidden />
+          Preguntar al asesor
+        </Button>
+      </div>
 
       <Tabs<Pestana> aria-label="Asesor" layout="fill" items={pestanas} value={pestana} onChange={setPestana} />
 
@@ -154,6 +164,8 @@ const AsesorView: React.FC<Props> = ({ onNavigate, banda }) => {
       {pestana === 'estrategia' && (
         <FormEstrategia inicial={estrategia} guardando={a.guardando} sugiriendo={a.sugiriendo} onGuardar={a.guardar} onProponer={a.proponer} />
       )}
+
+      {chat && <ChatAsesor onCerrar={() => setChat(false)} />}
 
       {tarjetaAbierta && (
         <PiezaSheet

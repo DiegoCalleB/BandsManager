@@ -48,6 +48,7 @@ BandManager UI Component Library
 - [[src_app_MobileTopBar|src/app/MobileTopBar.tsx]] *(from #service)*
 - [[src_components_asesor_AgendaAsesor|src/components/asesor/AgendaAsesor.tsx]] *(from #frontend)*
 - [[src_components_asesor_AsesorView|src/components/asesor/AsesorView.tsx]] *(from #frontend)*
+- [[src_components_asesor_ChatAsesor|src/components/asesor/ChatAsesor.tsx]] *(from #frontend)*
 - [[src_components_asesor_FormEstrategia|src/components/asesor/FormEstrategia.tsx]] *(from #frontend)*
 - [[src_components_asesor_LaminasPieza|src/components/asesor/LaminasPieza.tsx]] *(from #frontend)*
 - [[src_components_asesor_PiezaSheet|src/components/asesor/PiezaSheet.tsx]] *(from #frontend)*
