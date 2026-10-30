@@ -4,6 +4,8 @@
 // Una fila por banda (`band_estrategia_marketing`). El mismo saneador en cliente y servidor: nunca
 // se guarda lo que mande el cliente tal cual.
 
+import { REDES, type Red } from './reglasFormato';
+
 export const OBJETIVOS = ['llenar_salas', 'streams', 'festivales', 'comunidad'] as const;
 export type Objetivo = (typeof OBJETIVOS)[number];
 
@@ -44,6 +46,8 @@ export interface EstrategiaMarketing {
   lineasRojas: string[];
   /** Artistas cuyo perfil en redes les gusta. */
   referentes: string[];
+  /** Las redes en las que están (o quieren estar): el asesor solo propone piezas para ellas. */
+  redes: Red[];
   /** El próximo single o disco, si lo hay: activa el modo lanzamiento. */
   lanzamiento: Lanzamiento | null;
   /** false hasta que la banda la revisa: lo prerrellenado por la IA es solo una propuesta. */
@@ -60,6 +64,7 @@ export const ESTRATEGIA_INICIAL: EstrategiaMarketing = {
   pilares: [],
   lineasRojas: [],
   referentes: [],
+  redes: ['instagram', 'tiktok'],
   lanzamiento: null,
   revisada: false,
 };
@@ -80,6 +85,13 @@ function lista(v: unknown, max: number): string[] {
 
 const esFecha = (v: unknown): v is string =>
   typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v) && !Number.isNaN(Date.parse(`${v}T12:00:00Z`));
+
+/** Solo redes conocidas y sin repetir, en el orden de siempre; sin ninguna válida, las de serie. */
+function redesDe(v: unknown): Red[] {
+  const pedidas = Array.isArray(v) ? v : [];
+  const validas = REDES.filter((r) => pedidas.includes(r));
+  return validas.length ? [...validas] : [...ESTRATEGIA_INICIAL.redes];
+}
 
 function lanzamiento(v: unknown): Lanzamiento | null {
   if (!v || typeof v !== 'object') return null;
@@ -103,6 +115,7 @@ export function sanearEstrategia(raw: unknown): EstrategiaMarketing | null {
     pilares: lista(r.pilares, MAX_PILARES),
     lineasRojas: lista(r.lineasRojas, MAX_LINEAS_ROJAS),
     referentes: lista(r.referentes, MAX_REFERENTES),
+    redes: redesDe(r.redes),
     lanzamiento: lanzamiento(r.lanzamiento),
     revisada: r.revisada === true,
   };
@@ -132,6 +145,7 @@ export const ETIQUETA_CAMARA: Record<Camara, string> = {
 export function bloqueEstrategiaPrompt(e: EstrategiaMarketing): string {
   const lineas = [
     `Objetivo: ${ETIQUETA_OBJETIVO[e.objetivo]}. Etapa: ${ETIQUETA_ETAPA[e.etapa]}.`,
+    `Redes: ${e.redes.join(', ')}.`,
     `Tiempo para redes: ${e.horasSemana} h a la semana. Cámara: ${ETIQUETA_CAMARA[e.camara]}.`,
   ];
   if (e.publico) lineas.push(`Público: ${e.publico}`);

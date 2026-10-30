@@ -161,3 +161,13 @@ UI siguiendo la skill `visual-identity` (Espectro) y con color de módulo propio
 - [x] La conversación vive solo en la sesión (no se guarda).
 - [x] Acciones con un toque: una respuesta puede traer un botón de una lista cerrada, «Preparar» una de las ideas de hoy sin hacer o «ir» a una pestaña (hoy, calendario, resultados, estrategia). El servidor valida el id y pone el texto del botón; nada se ejecuta solo y preparar solo gasta IA cuando la banda lo pulsa. No existe ninguna acción que escriba (marcar hecha, guardar) desde el chat.
 - [ ] Pendiente: que recuerde conversaciones anteriores.
+
+## TikTok y YouTube Shorts
+
+- [x] La banda elige en qué redes está (Instagram, TikTok, YouTube Shorts) en la pestaña Estrategia. Es un campo más del JSON de la estrategia: **sin migración**. Las estrategias guardadas antes siguen valiendo con las redes de serie (Instagram y TikTok).
+- [x] El plan solo propone piezas para sus redes: una banda solo de TikTok o de YouTube no ve carruseles ni stories de Instagram. Un vídeo vertical sirve para las tres redes, y el servidor valida con las mismas redes que el cliente. Si ninguna idea del día encaja, se dejan todas antes que un plan vacío.
+- [x] YouTube Shorts como red de los reels: texto en dos partes (título de hasta 70 caracteres, recortado en palabra entera, y descripción), hasta tres hashtags y reglas propias en `REGLAS_YOUTUBE`. La hoja de la pieza enseña y copia título y descripción por separado, como los pide YouTube Studio.
+- [x] Arreglo aparte: el limpiador de tics de texto colapsaba también los saltos de línea, así que cualquier texto con párrafos salía en una sola línea. Ahora los conserva.
+- [ ] Pendiente: las reglas de YouTube Shorts son criterio propio (títulos, descripción, frecuencia) hasta contrastarlas con una lección de Shorts del temario; solo la parte de portada y CTR sale del temario.
+- [ ] Pendiente: los resultados siguen siendo números de Instagram (alcance, guardados, no seguidores). TikTok no da alcance ni guardados de la misma forma y YouTube mide otras cosas (vistas, porcentaje visto); medirlas por red necesita otra tabla y una decisión de qué métricas importan en cada una.
+- [ ] Pendiente: traer las métricas por API de TikTok y YouTube. Ambas exigen revisión de la app (TikTok, auditoría; Google, verificación OAuth) antes de que otras bandas puedan conectar.

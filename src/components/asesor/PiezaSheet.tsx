@@ -4,7 +4,7 @@ import { ModalPortal } from '../common/ModalPortal';
 import { Button, Chip, IconButton, SkeletonText, Tabs, type TabItem } from '../ui';
 import { copyToClipboard } from '../../utils/shareUtils';
 import type { Tarjeta } from '../../utils/asesor/opciones';
-import { ETIQUETA_PASO, type Pieza } from '../../utils/asesor/pieza';
+import { ETIQUETA_PASO, partirTextoYoutube, type Pieza } from '../../utils/asesor/pieza';
 import type { Red } from '../../utils/asesor/reglasFormato';
 import type { EstadoPieza } from './hooks/useAsesor';
 import { NOMBRE_FORMATO, NOMBRE_RED } from './nombres';
@@ -56,6 +56,25 @@ const textoParaPegar = (p: Pieza, red: Red) => {
   return t ? [t.texto, t.hashtags.join(' ')].filter(Boolean).join('\n\n') : '';
 };
 
+/** YouTube Studio tiene dos campos: se enseñan y se copian por separado, no un texto junto. */
+function TextoYoutube({ texto, hashtags }: { texto: string; hashtags: string[] }) {
+  const { titulo, descripcion } = partirTextoYoutube(texto);
+  const descripcionCompleta = [descripcion, hashtags.join(' ')].filter(Boolean).join('\n\n');
+  return (
+    <>
+      <Bloque titulo={`Título (${titulo.length} de 70 caracteres)`} copiar={titulo}>
+        <p className="text-base font-semibold text-[var(--ink)]">{titulo}</p>
+      </Bloque>
+      {descripcionCompleta && (
+        <Bloque titulo="Descripción" copiar={descripcionCompleta}>
+          {descripcion && <p className="whitespace-pre-line text-sm text-[var(--ink)]">{descripcion}</p>}
+          {hashtags.length > 0 && <p className="text-sm text-[var(--acc-ink)]">{hashtags.join(' ')}</p>}
+        </Bloque>
+      )}
+    </>
+  );
+}
+
 function ContenidoPieza({ pieza: p, banda }: { pieza: Pieza; banda: BandaLaminas }) {
   const [red, setRed] = useState<Red>(p.textos[0].red);
   const redes: TabItem<Red>[] = p.textos.map((t) => ({ id: t.red, label: NOMBRE_RED[t.red] }));
@@ -91,11 +110,13 @@ function ContenidoPieza({ pieza: p, banda }: { pieza: Pieza; banda: BandaLaminas
         </Bloque>
       )}
 
-      <Bloque titulo="Texto para publicar" copiar={textoParaPegar(p, actual.red)}>
-        {redes.length > 1 && <Tabs<Red> aria-label="Red" layout="fill" items={redes} value={actual.red} onChange={setRed} />}
-        <p className="whitespace-pre-line text-sm text-[var(--ink)]">{actual.texto}</p>
-        {actual.hashtags.length > 0 && <p className="text-sm text-[var(--acc-ink)]">{actual.hashtags.join(' ')}</p>}
-      </Bloque>
+      {redes.length > 1 && <Tabs<Red> aria-label="Red" layout="fill" items={redes} value={actual.red} onChange={setRed} />}
+      {actual.red === 'youtube' ? <TextoYoutube texto={actual.texto} hashtags={actual.hashtags} /> : (
+        <Bloque titulo="Texto para publicar" copiar={textoParaPegar(p, actual.red)}>
+          <p className="whitespace-pre-line text-sm text-[var(--ink)]">{actual.texto}</p>
+          {actual.hashtags.length > 0 && <p className="text-sm text-[var(--acc-ink)]">{actual.hashtags.join(' ')}</p>}
+        </Bloque>
+      )}
 
       {p.cta && (
         <Bloque titulo="Para cerrar">

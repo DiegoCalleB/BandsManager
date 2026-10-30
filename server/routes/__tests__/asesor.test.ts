@@ -439,3 +439,51 @@ describe('chat del asesor', () => {
   });
 });
 
+describe('redes de la banda', () => {
+  it('se guardan saneadas y bajo la banda de la sesión', async () => {
+    await llamar('put', '/asesor/estrategia', { body: { redes: ['youtube', 'myspace', 'tiktok', 'tiktok'], band_id: 'band-b' } });
+    expect(fake.tablas.band_estrategia_marketing).toHaveLength(1);
+    expect(fake.tablas.band_estrategia_marketing[0]).toMatchObject({ band_id: 'band-a', estrategia: { redes: ['tiktok', 'youtube'] } });
+    const leida = (await llamar('get', '/asesor/estrategia')).body.estrategia;
+    expect(leida.redes).toEqual(['tiktok', 'youtube']);
+    expect((await llamar('get', '/asesor/estrategia', { bandId: 'band-b' })).body.estrategia.redes).toEqual(['instagram', 'tiktok']);
+  });
+
+  it('una estrategia guardada antes de existir el campo sigue funcionando con las redes de serie', async () => {
+    fake.tablas.band_estrategia_marketing = [{ band_id: 'band-a', estrategia: { v: 1, objetivo: 'streams', horasSemana: 6 } }];
+    const { opciones, estrategia } = (await llamar('get', '/asesor/hoy')).body;
+    expect(estrategia.redes).toEqual(['instagram', 'tiktok']);
+    expect([...opciones.recomendadas, ...opciones.alternativas].length).toBeGreaterThan(0);
+  });
+
+  it('el plan solo propone piezas para sus redes, y el servidor valida con ellas', async () => {
+    await llamar('put', '/asesor/estrategia', { body: { redes: ['youtube'], horasSemana: 6 } });
+    const { opciones } = (await llamar('get', '/asesor/hoy')).body;
+    const ideas = [...opciones.recomendadas, ...opciones.alternativas];
+    expect(ideas.length).toBeGreaterThan(0);
+    expect(ideas.every((t: { formato: string; redes: string[] }) => t.formato === 'reel' && t.redes.join() === 'youtube')).toBe(true);
+    // Una idea de Instagram que ya no existe para esta banda no se puede ni marcar ni preparar.
+    expect((await llamar('post', '/asesor/accion', { body: { tarjetaId: 'stories-dia', accion: 'hecho' } })).code).toBe(404);
+  });
+
+  it('la pieza de YouTube llega con su título dentro del límite y la descripción aparte', async () => {
+    await llamar('put', '/asesor/estrategia', { body: { redes: ['youtube'] } });
+    ia.cliente = {};
+    ia.texto = JSON.stringify({
+      gancho: 'Arrancamos con el estribillo', pasos: [{ titulo: 'Plano 1', detalle: 'Estribillo' }],
+      textos: [{ red: 'youtube', texto: `${'Rock en Leganés este sábado en directo '.repeat(3)}\n\nEntradas en la bio.`, hashtags: ['#fyp', 'rockmadrid'] }],
+      cta: 'Suscríbete', portada: 'Estribillo',
+    });
+    const { opciones } = (await llamar('get', '/asesor/hoy')).body;
+    const reel = [...opciones.recomendadas, ...opciones.alternativas][0];
+    const res = await llamar('post', '/asesor/pieza', { body: { tarjetaId: reel.id } });
+    const [t] = res.body.pieza.textos;
+    expect(t.red).toBe('youtube');
+    const [titulo, , descripcion] = t.texto.split('\n');
+    expect(titulo.length).toBeLessThanOrEqual(70);
+    expect(descripcion).toBe('Entradas en la bio.');
+    expect(t.hashtags).toEqual(['#rockmadrid']);
+    expect(ia.prompts[0]).toContain('YouTube Shorts');
+  });
+});
+

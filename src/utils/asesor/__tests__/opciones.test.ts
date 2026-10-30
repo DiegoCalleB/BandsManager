@@ -86,3 +86,40 @@ describe('buscarTarjeta y semana', () => {
     expect(s[0]).toEqual({ fecha: '2026-10-22', hechas: 1 });
   });
 });
+
+describe('ideas según las redes de la banda', () => {
+  const d = diagnosticar({ ...base, conciertos: [bolo('b1', '2026-11-04')] });
+  const todas = (e: EstrategiaMarketing) => { const o = opcionesDeHoy(d, e, HOY); return [...o.recomendadas, ...o.alternativas]; };
+  const e6 = (redes: EstrategiaMarketing['redes']) => est({ redes, horasSemana: 6 });
+
+  it('por defecto el vídeo va a Instagram y TikTok, nunca a YouTube sin pedirlo', () => {
+    const reel = todas(e6(['instagram', 'tiktok'])).find((t) => t.formato === 'reel')!;
+    expect(reel.redes).toEqual(['instagram', 'tiktok']);
+  });
+
+  it('el mismo vídeo sirve para YouTube Shorts si la banda está allí', () => {
+    const reel = todas(e6(['instagram', 'tiktok', 'youtube'])).find((t) => t.formato === 'reel')!;
+    expect(reel.redes).toEqual(['instagram', 'tiktok', 'youtube']);
+  });
+
+  it('una banda solo de TikTok o de YouTube no ve carruseles ni stories de Instagram', () => {
+    for (const redes of [['tiktok'], ['youtube'], ['tiktok', 'youtube']] as const) {
+      const ideas = todas(e6([...redes]));
+      expect(ideas.length).toBeGreaterThan(0);
+      expect(ideas.every((t) => t.formato === 'reel' && t.redes.every((r) => redes.includes(r as never)))).toBe(true);
+    }
+  });
+
+  it('el servidor valida con las mismas redes: una idea de Instagram no existe para una banda de TikTok', () => {
+    const solo = e6(['tiktok']);
+    expect(buscarTarjeta(d, solo, HOY, 'bolo-setlist')).toBeNull();
+    expect(buscarTarjeta(d, solo, HOY, 'bolo-teaser')).toMatchObject({ formato: 'reel', redes: ['tiktok'] });
+  });
+
+  it('si ninguna idea del día encaja con sus redes, se dejan todas antes que un plan vacío', () => {
+    const hito = diagnosticar({ ...base, conciertos: [bolo('b1', '2026-11-04')] });
+    const sinIg = opcionesDeHoy(hito, e6(['youtube']), HOY);
+    expect(sinIg.recomendadas.length + sinIg.alternativas.length).toBeGreaterThan(0);
+  });
+});
+

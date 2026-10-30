@@ -44,7 +44,8 @@ export const ESFUERZO_MIN: Record<Formato, number> = { stories: 5, post: 10, car
 export const DIAS_APRENDIZAJE = 30;
 const MAX_PENALIZACION = 3;
 
-const AMBAS: Red[] = ['instagram', 'tiktok'];
+/** Un vídeo vertical sirve igual en Instagram, TikTok y YouTube Shorts: luego se filtra por las redes de la banda. */
+const AMBAS: Red[] = ['instagram', 'tiktok', 'youtube'];
 const IG: Red[] = ['instagram'];
 
 interface Idea extends Omit<Tarjeta, 'esfuerzoMin' | 'hecha' | 'atajo'> {
@@ -170,12 +171,25 @@ function ideasFondo(e: EstrategiaMarketing, hoy: string): Idea[] {
   ];
 }
 
-function ideasDeHoy(d: Diagnostico, e: EstrategiaMarketing, hoy: string): Idea[] {
+function ideasSegunModo(d: Diagnostico, e: EstrategiaMarketing, hoy: string): Idea[] {
   if (d.modo === 'concierto' && d.concierto) return ideasConcierto(d, e, hoy);
   if (d.modo === 'lanzamiento') return ideasLanzamiento(d, e);
   if (d.modo === 'rescate' && d.rescate) return ideasRescate(d, e);
   if (d.modo === 'reactivar') return ideasReactivar(e);
   return ideasFondo(e, hoy);
+}
+
+/**
+ * Solo ideas para las redes en las que está la banda, y cada una solo con esas redes: una banda que
+ * solo está en TikTok no ve carruseles de Instagram. Si ninguna idea encaja, se dejan todas antes
+ * que un plan vacío.
+ */
+function ideasDeHoy(d: Diagnostico, e: EstrategiaMarketing, hoy: string): Idea[] {
+  const todas = ideasSegunModo(d, e, hoy);
+  const suyas = todas
+    .map((i) => ({ ...i, redes: i.redes.filter((r) => e.redes.includes(r)) }))
+    .filter((i) => i.redes.length > 0);
+  return suyas.length ? suyas : todas;
 }
 
 /** Cuánto baja cada formato: saltos menos hechos en el último mes, entre 0 y 3. */
