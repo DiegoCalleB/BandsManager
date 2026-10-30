@@ -159,4 +159,5 @@ UI siguiendo la skill `visual-identity` (Espectro) y con color de módulo propio
 - [x] `POST /api/asesor/chat` (con `requireAuth` y el limitador de IA). Responde con la estrategia de la banda, el momento, lo medido (últimas piezas y lo aprendido), las ideas de hoy y los criterios del temario (guardados ~3 %, ≥30 % de no seguidores, mínimo de alcance). Los números salen siempre del servidor, nunca del cliente.
 - [x] Lo que escribe la banda es dato: se acota (10 mensajes, 500 caracteres), se limpia de marcas de rol y delimitadores y va dentro de un bloque `<conversacion>`; la respuesta se sanea antes de enseñarla. Sin números suficientes dice que no los hay en vez de inventarlos.
 - [x] La conversación vive solo en la sesión (no se guarda).
-- [ ] Pendiente: que el chat proponga acciones con un toque («¿Preparo esa pieza?») y recuerde conversaciones anteriores.
+- [x] Acciones con un toque: una respuesta puede traer un botón de una lista cerrada, «Preparar» una de las ideas de hoy sin hacer o «ir» a una pestaña (hoy, calendario, resultados, estrategia). El servidor valida el id y pone el texto del botón; nada se ejecuta solo y preparar solo gasta IA cuando la banda lo pulsa. No existe ninguna acción que escriba (marcar hecha, guardar) desde el chat.
+- [ ] Pendiente: que recuerde conversaciones anteriores.

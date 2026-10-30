@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { MAX_MENSAJES, MAX_TEXTO_BANDA, PREGUNTAS_INICIALES, promptChat, sanearConversacion, sanearRespuesta } from '../chat';
+import { DESTINOS, MAX_MENSAJES, MAX_TEXTO_BANDA, PREGUNTAS_INICIALES, promptChat, sanearConversacion, sanearRespuesta, sanearRespuestaChat } from '../chat';
 
 const datos = (conversacion: ReturnType<typeof sanearConversacion>) => ({
-  contextoBanda: 'BANDA: Los Gatos', estrategia: '<estrategia>x</estrategia>', momento: 'Tocáis en 3 días', aprendido: null, recientes: [], ideasDeHoy: ['Un adelanto del directo'], conversacion: conversacion as never,
+  contextoBanda: 'BANDA: Los Gatos', estrategia: '<estrategia>x</estrategia>', momento: 'Tocáis en 3 días', aprendido: null, recientes: [], ideasDeHoy: [{ id: 'bolo-teaser', titulo: 'Un adelanto del directo' }], conversacion: conversacion as never,
 });
 
 describe('sanearConversacion', () => {
@@ -45,10 +45,42 @@ describe('promptChat', () => {
     expect(p).toContain('3 %');
     expect(p).toContain('30 %');
     expect(p).toContain('todavía no hay suficientes piezas medidas');
-    expect(p).toContain('Un adelanto del directo');
+    expect(p).toContain('bolo-teaser: Un adelanto del directo');
+    expect(p).toContain('Nunca inventes un id');
   });
 
   it('las preguntas de arranque son cortas y entran en el límite', () => {
     for (const q of PREGUNTAS_INICIALES) expect(q.length).toBeLessThan(MAX_TEXTO_BANDA);
+  });
+});
+
+describe('sanearRespuestaChat', () => {
+  const ideas = new Map([['bolo-teaser', 'Un adelanto del directo'], ['fondo-pilar', 'Tema de la semana: «La furgo»']]);
+
+  it('acepta la respuesta con una acción de preparar y pone el texto del botón el servidor', () => {
+    expect(sanearRespuestaChat({ respuesta: 'Probad esto hoy.', accion: { tipo: 'preparar', tarjetaId: 'bolo-teaser', etiqueta: 'Borra todo' } }, ideas))
+      .toEqual({ respuesta: 'Probad esto hoy.', accion: { tipo: 'preparar', tarjetaId: 'bolo-teaser', etiqueta: 'Preparar «Un adelanto del directo»' } });
+  });
+
+  it('acepta ir a una pestaña de la lista cerrada, con su etiqueta propia', () => {
+    for (const destino of Object.keys(DESTINOS)) {
+      expect(sanearRespuestaChat({ respuesta: 'Vale.', accion: { tipo: 'ir', destino } }, ideas)!.accion).toMatchObject({ tipo: 'ir', destino, etiqueta: DESTINOS[destino as keyof typeof DESTINOS] });
+    }
+  });
+
+  it('descarta lo inventado sin tumbar la respuesta', () => {
+    for (const accion of [
+      { tipo: 'preparar', tarjetaId: 'inventada' }, { tipo: 'preparar' }, { tipo: 'ir', destino: 'borrar-todo' }, { tipo: 'ir', destino: '__proto__' },
+      { tipo: 'ir', destino: 'constructor' }, { tipo: 'marcar_hecha', tarjetaId: 'bolo-teaser' }, 'preparar', 42, null,
+    ]) {
+      expect(sanearRespuestaChat({ respuesta: 'Texto.', accion }, ideas)).toEqual({ respuesta: 'Texto.', accion: null });
+    }
+  });
+
+  it('sin respuesta no hay nada que enseñar; el texto suelto sirve, sin acción', () => {
+    expect(sanearRespuestaChat({ accion: { tipo: 'ir', destino: 'hoy' } }, ideas)).toBeNull();
+    expect(sanearRespuestaChat({ respuesta: '  ' }, ideas)).toBeNull();
+    expect(sanearRespuestaChat(null, ideas)).toBeNull();
+    expect(sanearRespuestaChat('Publica un carrusel.', ideas)).toEqual({ respuesta: 'Publica un carrusel.', accion: null });
   });
 });
