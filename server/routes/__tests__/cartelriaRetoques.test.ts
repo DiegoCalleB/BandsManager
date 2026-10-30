@@ -51,7 +51,7 @@ async function llamar(metodo: string, ruta: string, { body, params = {} }: { bod
   await handler(metodo, ruta)({ user: { band_id: 'band-a', allowedBandIds: ['band-a'], role: 'leader' }, headers: {}, query: {}, params, body }, r);
   return r;
 }
-const retocar = (url: string, instruccion: string) => llamar('post', '/cartel/retocar', { body: { concertId: 'c1', url, instruccion } });
+const retocar = (url: string, instruccion: string, modo: 'libre' | 'fiel' = 'fiel') => llamar('post', '/cartel/retocar', { body: { concertId: 'c1', url, instruccion, modo } });
 const config = () => fake.tablas.concerts.find((c: any) => c.id === 'c1').cartel_config;
 const ORIGINAL = `${PUB}/carteles/band-a/ia-0.png`;
 const ruta = (u: string) => new URL(u).pathname.replace('/storage/v1/object/public/band-media/', '');
@@ -63,7 +63,33 @@ beforeEach(() => {
   contador = 0;
 });
 
-describe('retocar partiendo del original', () => {
+describe('retocar en modo libre (como una conversación)', () => {
+  it('es el modo por defecto, parte de la imagen que se ve y solo con lo nuevo', async () => {
+    const r1 = await llamar('post', '/cartel/retocar', { body: { concertId: 'c1', url: ORIGINAL, instruccion: 'Más oscuro' } });
+    const r2 = await retocar(r1.body.url, 'Sin nubes', 'libre');
+    expect(leidos).toEqual([ruta(ORIGINAL), ruta(r1.body.url)]);
+    expect(retoques[0].prompt).toMatch(/revising the artwork in a conversation/);
+    expect(retoques[1].prompt).toContain('<change>Sin nubes</change>');
+    expect(retoques[1].prompt).not.toContain('Más oscuro');
+    expect(config().retoques[r2.body.url]).toEqual({ origen: r1.body.url, instrucciones: ['Sin nubes'] });
+  });
+
+  it('el modo fiel exige no tocar nada más y el libre deja rehacer lo que haga falta', async () => {
+    await retocar(ORIGINAL, 'Más oscuro', 'fiel');
+    await retocar(ORIGINAL, 'Más oscuro', 'libre');
+    expect(retoques[0].prompt).toMatch(/Apply ONLY the change/);
+    expect(retoques[1].prompt).toMatch(/feel free to redraw/);
+    // En los dos la nitidez y el «sin grano» (el grano de papel lo añade la app).
+    for (const r of retoques) expect(r.prompt).toMatch(/add no grain or noise/);
+  });
+
+  it('un modo desconocido cuenta como libre', async () => {
+    await llamar('post', '/cartel/retocar', { body: { concertId: 'c1', url: ORIGINAL, instruccion: 'x', modo: 'hackeado' } });
+    expect(retoques[0].prompt).toMatch(/revising the artwork/);
+  });
+});
+
+describe('retocar partiendo del original (modo fiel)', () => {
   it('el primer retoque sale del original y anota su linaje', async () => {
     const r1 = await retocar(ORIGINAL, 'Más oscuro');
     expect(leidos).toEqual([ruta(ORIGINAL)]);

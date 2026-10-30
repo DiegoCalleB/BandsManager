@@ -370,14 +370,14 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
   const [retocando, setRetocando] = useState(false);
 
   /** Retoca el fondo de IA que se ve: una versión nueva (el original sigue en el historial para volver). */
-  const retocarIa = async (instruccion: string): Promise<boolean> => {
+  const retocarIa = async (instruccion: string, modo: 'libre' | 'fiel' = 'libre'): Promise<boolean> => {
     if (!id || fondo.tipo !== 'imagen' || fondo.origen !== 'ia') return false;
     const bolo = id;
     const origen = fondo.url;
     setRetocando(true);
     setError(null);
     try {
-      const r = await retocarFondoCartel({ concertId: bolo, url: origen, instruccion });
+      const r = await retocarFondoCartel({ concertId: bolo, url: origen, instruccion, modo });
       setFondosIaPorBolo((p) => ({ ...p, [bolo]: conFondoIa({ ...CONFIG_INICIAL, fondosIa: p[bolo] ?? fondosIa }, r.url).fondosIa }));
       ponerFondo(bolo, { tipo: 'imagen', origen: 'ia', url: r.url });
       // Mismo estilo y ambiente que el original, para guardarlo como favorito si les gusta.

@@ -20,7 +20,7 @@ interface Props {
   onGenerarIa: (estilo: EstiloCartel) => Promise<boolean>;
   generando: boolean;
   /** Retoca el fondo de IA que se ve con una instrucción (una versión nueva). */
-  onRetocar: (instruccion: string) => Promise<boolean>;
+  onRetocar: (instruccion: string, modo: 'libre' | 'fiel') => Promise<boolean>;
   retocando: boolean;
   /** La IA no pudo pintar el último fondo (sin cupo, caída…): se ofrecen los carteles de autor como respaldo. */
   iaFalla: boolean;
@@ -81,6 +81,7 @@ export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenera
   const [estiloElegido, setEstiloElegido] = useState<EstiloCartel | null>(null);
   const estilo = estiloElegido ?? estiloInicial;
   const [retoque, setRetoque] = useState('');
+  const [modoRetoque, setModoRetoque] = useState<'libre' | 'fiel'>('libre');
   const conFondoIa = fondo.tipo === 'imagen' && fondo.origen === 'ia';
   const esImagen = (url: string) => fondo.tipo === 'imagen' && fondo.url === url;
 
@@ -170,7 +171,18 @@ export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenera
         <div className="grid gap-2 rounded-[var(--r-m)] bg-[var(--sunken)] p-3" aria-label="Retocar el fondo">
           <p className="text-xs font-medium text-[var(--ink-2)]">Retocar este fondo</p>
           <p className="text-xs text-[var(--ink-2)] text-pretty">
-            Dile qué cambiar y se queda lo demás. Cada retoque es una versión nueva (1 imagen) que parte del original con todo lo que has ido pidiendo, para no perder detalle; las anteriores siguen en las miniaturas para volver.
+            Cuéntale a la IA qué quieres cambiar. Cada retoque es una versión nueva (1 imagen) y las anteriores siguen en las miniaturas para volver.
+          </p>
+          <div className="flex flex-wrap gap-1.5" role="group" aria-label="Cómo retocar">
+            <Button size="xs" variant={modoRetoque === 'libre' ? 'inverse' : 'raised'} aria-pressed={modoRetoque === 'libre'} onClick={() => setModoRetoque('libre')}>
+              Libre, como en ChatGPT
+            </Button>
+            <Button size="xs" variant={modoRetoque === 'fiel' ? 'inverse' : 'raised'} aria-pressed={modoRetoque === 'fiel'} onClick={() => setModoRetoque('fiel')}>
+              Solo lo que pida
+            </Button>
+          </div>
+          <p className="text-xs text-[var(--ink-2)] text-pretty">
+            {modoRetoque === 'libre' ? 'La IA vuelve a pintar el cartel con tu comentario: puede rehacer composición, luz y detalles para que quede coherente.' : 'Cambia solo lo que pidas y deja el resto como está; parte del original con todo lo que has ido pidiendo.'}
           </p>
           <div className="flex flex-wrap gap-1.5" role="group" aria-label="Ejemplos de retoque">
             {EJEMPLOS_RETOQUE.map((e) => (
@@ -184,7 +196,7 @@ export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenera
               onChange={(e) => setRetoque(e.target.value)} />
             <BotonVoz valor={retoque} maximo={MAX_RETOQUE} etiqueta="Dictar el retoque" onTexto={setRetoque} />
           </div>
-          <Button variant="soft" disabled={retocando || !retoque.trim()} onClick={async () => { if (await onRetocar(retoque.trim())) setRetoque(''); }}>
+          <Button variant="soft" disabled={retocando || !retoque.trim()} onClick={async () => { if (await onRetocar(retoque.trim(), modoRetoque)) setRetoque(''); }}>
             <Wand2 className="size-4" aria-hidden />
             {retocando ? 'Retocando…' : 'Retocar'}
           </Button>
