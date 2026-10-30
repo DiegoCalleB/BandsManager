@@ -109,6 +109,11 @@ async function abrirAsesor(page: Page, { conAdn = false, sinFotos = false, conPe
         tieneEstrategia: true,
       } });
     }
+    if (ruta.endsWith('/asesor/chat')) {
+      const pregunta = String(cuerpo.mensajes[cuerpo.mensajes.length - 1].texto);
+      if (/tiempo/.test(pregunta)) return route.fulfill({ json: { respuesta: 'Con poco tiempo, el adelanto del directo: 15 segundos y listo.', accion: { tipo: 'preparar', tarjetaId: 'bolo-teaser', etiqueta: 'Preparar «Un adelanto del directo»' } } });
+      return route.fulfill({ json: { respuesta: 'Vuestros reels llegan pero casi nadie los guarda. Probad un carrusel esta semana y anotad los números a las 48 h.', accion: { tipo: 'ir', destino: 'resultados', etiqueta: 'Anotar resultados' } } });
+    }
     if (ruta.endsWith('/asesor/pieza')) return route.fulfill({ json: { pieza: cuerpo.tarjetaId === 'bolo-setlist' ? CARRUSEL : cuerpo.tarjetaId === 'bolo-encuesta' ? STORIES : PIEZA } });
     if (ruta.endsWith('/asesor/resultado')) {
       servidor.medido = true;
@@ -354,4 +359,67 @@ test('en modo rescate la cabecera lo dice sin dramatismo y la idea propone cambi
   await expect(recomendado.getByText(/cambiar de formato enseña más que insistir/)).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   await page.screenshot({ path: 'test-results/asesor-rescate.png' });
+});
+
+test('el chat responde a una pregunta de arranque y a una escrita, sin salir de la pantalla', async ({ page }) => {
+  const { peticiones } = await abrirAsesor(page);
+  await page.getByRole('button', { name: 'Preguntar al asesor' }).click();
+  const chat = page.getByRole('dialog', { name: 'Preguntar al asesor' });
+  await expect(chat.getByText('Vosotros decidís qué hacer.')).toBeVisible();
+
+  await chat.getByRole('button', { name: '¿Por qué no me crece el alcance?' }).click();
+  await expect(chat.getByText('Probad un carrusel esta semana')).toBeVisible();
+  const primera = peticiones.find((p) => p.ruta.endsWith('/asesor/chat'))!.cuerpo as { mensajes: Array<{ rol: string; texto: string }> };
+  expect(primera.mensajes).toEqual([{ rol: 'banda', texto: '¿Por qué no me crece el alcance?' }]);
+
+  await chat.getByLabel('Tu pregunta').fill('¿Y cuándo publico?');
+  await chat.getByLabel('Tu pregunta').press('Enter');
+  await expect(chat.getByRole('listitem').filter({ hasText: '¿Y cuándo publico?' })).toBeVisible();
+  await expect.poll(() => peticiones.filter((p) => p.ruta.endsWith('/asesor/chat')).length).toBe(2);
+  const segunda = peticiones.filter((p) => p.ruta.endsWith('/asesor/chat'))[1].cuerpo as { mensajes: Array<{ rol: string }> };
+  expect(segunda.mensajes.map((m) => m.rol)).toEqual(['banda', 'asesor', 'banda']);
+  // Al servidor solo viaja el texto: los botones de las respuestas no se reenvían.
+  expect(segunda.mensajes.map((m) => Object.keys(m))).toEqual([['rol', 'texto'], ['rol', 'texto'], ['rol', 'texto']]);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await page.screenshot({ path: 'test-results/asesor-chat.png' });
+  await chat.getByRole('button', { name: 'Cerrar' }).click();
+  await expect(chat).toBeHidden();
+});
+
+test('si el asesor no responde, el chat lo dice y conserva lo escrito para reintentar', async ({ page }) => {
+  await abrirAsesor(page);
+  await page.route('**/api/asesor/chat', (r) => r.fulfill({ status: 503, json: { error: 'El asesor no ha podido responder. Prueba otra vez en un momento.' } }));
+  await page.getByRole('button', { name: 'Preguntar al asesor' }).click();
+  const chat = page.getByRole('dialog', { name: 'Preguntar al asesor' });
+  await chat.getByLabel('Tu pregunta').fill('¿Qué pongo en la bio?');
+  await chat.getByRole('button', { name: 'Enviar' }).click();
+  await expect(chat.getByRole('alert')).toContainText('no ha podido responder');
+  await expect(chat.getByLabel('Tu pregunta')).toHaveValue('¿Qué pongo en la bio?');
+});
+
+test('el botón de una respuesta del chat lleva a la pestaña y cierra el chat', async ({ page }) => {
+  await abrirAsesor(page);
+  await page.getByRole('button', { name: 'Preguntar al asesor' }).click();
+  const chat = page.getByRole('dialog', { name: 'Preguntar al asesor' });
+  await chat.getByRole('button', { name: '¿Por qué no me crece el alcance?' }).click();
+  await chat.getByRole('button', { name: 'Anotar resultados' }).click();
+  await expect(chat).toBeHidden();
+  await expect(page.getByRole('tab', { name: 'Resultados', exact: true })).toHaveAttribute('aria-selected', 'true');
+});
+
+test('el botón «Preparar» del chat abre la pieza de esa idea, y solo entonces se gasta la IA', async ({ page }) => {
+  const { peticiones } = await abrirAsesor(page);
+  await page.getByRole('button', { name: 'Preguntar al asesor' }).click();
+  const chat = page.getByRole('dialog', { name: 'Preguntar al asesor' });
+  await chat.getByRole('button', { name: 'Hoy no tengo tiempo: ¿qué es lo mínimo que publico?' }).click();
+  await expect(chat.getByText('15 segundos y listo.')).toBeVisible();
+  expect(peticiones.some((p) => p.ruta.endsWith('/asesor/pieza'))).toBe(false);
+  await page.screenshot({ path: 'test-results/asesor-chat-accion.png' });
+
+  await chat.getByRole('button', { name: 'Preparar «Un adelanto del directo»' }).click();
+  await expect(page.getByRole('dialog', { name: 'Pieza: Un adelanto del directo' })).toBeVisible();
+  await expect(page.getByText('Tres días para Leganés y aún no sabemos con qué abrir')).toBeVisible();
+  const pieza = peticiones.filter((p) => p.ruta.endsWith('/asesor/pieza'));
+  expect(pieza).toHaveLength(1);
+  expect(pieza[0].cuerpo).toEqual({ tarjetaId: 'bolo-teaser' });
 });

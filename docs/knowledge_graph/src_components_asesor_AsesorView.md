@@ -19,6 +19,7 @@ Módulo sin exportaciones con nombre.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_asesor_AgendaAsesor|src/components/asesor/AgendaAsesor.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_asesor_ChatAsesor|src/components/asesor/ChatAsesor.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_asesor_FormEstrategia|src/components/asesor/FormEstrategia.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_asesor_PiezaSheet|src/components/asesor/PiezaSheet.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_asesor_PorMedirCard|src/components/asesor/PorMedirCard.tsx]] *(Layer: #frontend, Domain: #system)*
@@ -27,6 +28,7 @@ Módulo sin exportaciones con nombre.
 - [[src_components_asesor_hooks_useAsesor|src/components/asesor/hooks/useAsesor.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_asesor_hooks_useLaminas|src/components/asesor/hooks/useLaminas.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_utils_asesor_chat|src/utils/asesor/chat.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_diagnostico|src/utils/asesor/diagnostico.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_opciones|src/utils/asesor/opciones.ts]] *(Layer: #service, Domain: #system)*
 

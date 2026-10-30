@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { MessageCircle } from 'lucide-react';
 import { Button, EmptyState, Onda, SkeletonText, Tabs, type TabItem } from '../ui';
 import type { Modo } from '../../utils/asesor/diagnostico';
 import type { Tarjeta } from '../../utils/asesor/opciones';
@@ -7,6 +8,8 @@ import { TarjetaHoy } from './TarjetaHoy';
 import { PiezaSheet } from './PiezaSheet';
 import { FormEstrategia } from './FormEstrategia';
 import { PorMedirCard } from './PorMedirCard';
+import { ChatAsesor } from './ChatAsesor';
+import type { AccionChat } from '../../utils/asesor/chat';
 import { AgendaAsesor } from './AgendaAsesor';
 import { ResumenCard } from './ResumenCard';
 import type { BandaLaminas } from './hooks/useLaminas';
@@ -39,6 +42,7 @@ const AsesorView: React.FC<Props> = ({ onNavigate, banda }) => {
   const a = useAsesor();
   const [pestana, setPestana] = useState<Pestana>('hoy');
   const [abierta, setAbierta] = useState<Tarjeta | null>(null);
+  const [chat, setChat] = useState(false);
 
   if (a.cargando) {
     return <div data-modulo="reels" className="mx-auto max-w-2xl px-4 py-6"><SkeletonText lines={6} /></div>;
@@ -65,6 +69,14 @@ const AsesorView: React.FC<Props> = ({ onNavigate, banda }) => {
     setAbierta(t);
     void a.preparar(t.id);
   };
+  /** El botón de una respuesta del chat: preparar una idea de hoy (si sigue ahí) o ir a una pestaña. */
+  const alAccionDelChat = (accion: AccionChat) => {
+    if (accion.tipo === 'ir') return setPestana(accion.destino);
+    const idea = [...opciones.recomendadas, ...opciones.alternativas].find((t) => t.id === accion.tarjetaId);
+    if (!idea) return setPestana('hoy');
+    setPestana('hoy');
+    preparar(idea);
+  };
   const irAlCartel = (vista: 'carteleria', concertId: string) => onNavigate(vista, { concertId });
   // La tarjeta abierta se refresca con el plan recargado (p. ej. al marcarla como hecha).
   const tarjetaAbierta = abierta && ([...opciones.recomendadas, ...opciones.alternativas].find((t) => t.id === abierta.id) ?? abierta);
@@ -84,6 +96,13 @@ const AsesorView: React.FC<Props> = ({ onNavigate, banda }) => {
           <span className="text-xs text-[var(--ink-2)] tabular-nums">{hechasSemana ? `${hechasSemana} esta semana` : 'Semana por estrenar'}</span>
         </div>
       </header>
+
+      <div>
+        <Button size="sm" variant="neutral" onClick={() => setChat(true)}>
+          <MessageCircle className="size-4" aria-hidden />
+          Preguntar al asesor
+        </Button>
+      </div>
 
       <Tabs<Pestana> aria-label="Asesor" layout="fill" items={pestanas} value={pestana} onChange={setPestana} />
 
@@ -154,6 +173,8 @@ const AsesorView: React.FC<Props> = ({ onNavigate, banda }) => {
       {pestana === 'estrategia' && (
         <FormEstrategia inicial={estrategia} guardando={a.guardando} sugiriendo={a.sugiriendo} onGuardar={a.guardar} onProponer={a.proponer} />
       )}
+
+      {chat && <ChatAsesor onCerrar={() => setChat(false)} onAccion={alAccionDelChat} />}
 
       {tarjetaAbierta && (
         <PiezaSheet

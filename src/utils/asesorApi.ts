@@ -3,6 +3,7 @@
  * como pide AGENTS.md §5.2.
  */
 import { apiFetch } from './api';
+import type { AccionChat, Mensaje } from './asesor/chat';
 import type { DiaAgenda } from './asesor/agenda';
 import type { Diagnostico } from './asesor/diagnostico';
 import type { EstrategiaMarketing } from './asesor/estrategia';
@@ -58,3 +59,7 @@ export const mediosDeInstagram = (p: Pick<PorMedir, 'fecha' | 'tarjetaId'>) =>
 /** Lo que Instagram ha medido de una publicación; lo que no dé, no viene. */
 export const medidasDeInstagram = (medioId: string) =>
   apiFetch<{ medidas: Partial<Medidas> & { alcance: number } }>('/api/asesor/instagram/medidas', { method: 'POST', body: JSON.stringify({ medioId }) });
+
+/** Pregunta libre al asesor. Responde y, como mucho, propone un botón: no cambia el plan ni guarda nada. */
+export const preguntarAlAsesor = (mensajes: Mensaje[]) =>
+  apiFetch<{ respuesta: string; accion: AccionChat | null }>('/api/asesor/chat', { method: 'POST', body: JSON.stringify({ mensajes }) });
