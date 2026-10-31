@@ -15,6 +15,7 @@
       ['PPC para B2B'], ['Retargeting'], ['Estrategia SEM'], ['Copywriting Ads'], ['Copywriting para landing pages']] },
     { t: 'Clientes', items: [['CRM']] }
   ];
+  window.EJ_GRUPOS = GRUPOS;
   var FILM = 'https://presentacion-storytelling.up.railway.app/';
   var path = location.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
   var hechos = [];
