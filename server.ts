@@ -591,11 +591,6 @@ async function startServer() {
         }
       }
     }));
-    // Página estática del ejercicio de YouTube: la URL sin .html es la que se comparte.
-    app.get("/ejercicio_youtube_crm", (_req, res) => {
-      res.setHeader("Cache-Control", "no-store");
-      res.sendFile(path.join(distPath, "ejercicio_youtube_crm.html"));
-    });
     // La landing en español (/) y en inglés (/en) llevan su <head> por idioma (canonical + hreflang).
     app.get("*", paginaRateLimiter, servirIndex(distPath, baseUrlPublica()));
   }
