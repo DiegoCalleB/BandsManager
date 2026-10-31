@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Send, X } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
-import { Button, IconButton, Textarea } from '../ui';
+import { Button, EcoAvatar, IconButton, Textarea } from '../ui';
 import { MAX_TEXTO_BANDA, PREGUNTAS_INICIALES, type AccionChat } from '../../utils/asesor/chat';
 import { useChatAsesor } from './hooks/useChatAsesor';
 
@@ -42,6 +42,7 @@ export function ChatAsesor({ onCerrar, onAccion }: Props) {
           onClick={(e) => e.stopPropagation()}
         >
           <header className="flex items-start gap-3 px-5 pb-3 pt-5">
+            <EcoAvatar className="size-10" />
             <div className="grid min-w-0 flex-1 gap-0.5">
               <h2 className="text-lg font-semibold">Preguntar al asesor</h2>
               <p className="text-xs text-[var(--ink-2)]">Responde con vuestra estrategia y vuestros números. Vosotros decidís qué hacer.</p>
