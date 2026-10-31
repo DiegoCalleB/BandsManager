@@ -75,7 +75,7 @@ export const generarFondoCartel = (datos: { concertId: string; estilo: EstiloCar
 const rutaCartel = (concertId: string, tramo: string) => `/api/cartel/${encodeURIComponent(concertId)}/${tramo}`;
 
 /** Retoca un fondo de IA del historial del bolo con una instrucción: devuelve una versión nueva. */
-export const retocarFondoCartel = (datos: { concertId: string; url: string; instruccion: string }) =>
+export const retocarFondoCartel = (datos: { concertId: string; url: string; instruccion: string; modo?: 'libre' | 'fiel' }) =>
   apiFetch<{ url: string; conTexto?: boolean; textoOk?: boolean }>('/api/cartel/retocar', { method: 'POST', body: JSON.stringify(datos) });
 
 export const guardarConfigCartel = (concertId: string, config: CartelConfig) =>

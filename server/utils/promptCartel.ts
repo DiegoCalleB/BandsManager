@@ -33,7 +33,8 @@ const DESCRIPCION_ESTILO: Record<EstiloCartel, string> = {
 export const DIRECCION_DE_ARTE = [
   'DESIGN DIRECTION: make this look like the work of a professional human graphic designer using Photoshop, Illustrator or real print techniques. It must never look AI-generated.',
   'Compose with one clear focal idea, asymmetric balance and deliberate empty space. Use a restrained palette of two to four colours, chosen like a printer\'s spot inks. Prefer bold simple shapes, confident linework and purposeful contrast of scale.',
-  'Add tactile craft: visible paper grain, ink texture, slight misregistration, halftone or risograph dots, hand-cut or hand-drawn edges. Imperfection must look intentional: uneven ink, small offsets, rough edges. Colour areas are flat or lightly textured, never airbrushed.',
+  'Add tactile craft through the DRAWING itself: ink texture in the brushwork, slight misregistration, hand-cut or hand-drawn edges, halftone or risograph shading only where it is a deliberate style choice. Imperfection must look intentional: uneven ink, small offsets, rough edges. Colour areas are flat or lightly textured, never airbrushed.',
+  'SHARPNESS: render at the highest level of detail, with crisp, clean linework and well-defined shapes. Do NOT paint paper grain, film grain, noise, speckle, dust or scratches over the picture, and do not blur or smudge: the app adds the paper grain afterwards, so every surface must stay clean and sharp.',
   'AVOID everything that reads as AI output: glossy, plastic or over-smooth surfaces; glowing orbs, lens flares, bokeh sparkles, volumetric god-rays; cosmic nebulae, cyberpunk neon cityscapes, generic fantasy landscapes; perfectly symmetrical "epic" compositions with a centred hero and radial glow; hyper-detailed noise on every surface; melted, warped or uncanny shapes and anatomy; waxy or airbrushed faces; HDR-like contrast; default teal-and-orange grading; dreamy soft-focus filler; emblem, badge, crest or circular-frame compositions; sunburst or radial rays; stock icons scattered as filler (microphones, beer glasses, raised fists, guitar pictograms); sticker-sheet or clip-art layouts.',
 ].join('\n');
 
@@ -166,16 +167,21 @@ export const MAX_RETOQUE = 300;
  * Prompt para retocar un fondo YA hecho: la imagen va adjunta y solo cambia lo que la persona pide. Lo que
  * escribe es un dato (saneado y entre etiquetas), nunca una orden que pueda soltar las reglas de abajo.
  */
-export function construirPromptRetoque(d: { instruccion: string; anteriores?: string[]; textos?: TextosCartel | null }): string | null {
+export type ModoRetoque = 'libre' | 'fiel';
+
+export function construirPromptRetoque(d: { instruccion: string; anteriores?: string[]; textos?: TextosCartel | null; modo?: ModoRetoque }): string | null {
   const limpia = (t: string) => sanitizeExternalText(t, MAX_RETOQUE).replace(/[<>]/g, '').trim();
   const pedido = limpia(d.instruccion);
   if (!pedido) return null;
   // Los retoques anteriores del mismo original viajan juntos: así la imagen se pinta UNA vez desde el original.
   const cambios = [...(d.anteriores ?? []).map(limpia), pedido].filter(Boolean);
   const textos = limpiarTextos(d.textos);
+  const libre = d.modo !== 'fiel';
   return [
-    'Edit the attached concert-poster artwork. Apply ONLY the change(s) described under <edit_request>, in order; keep everything else exactly as it is: composition, subject, palette, ink and paper texture, lighting, framing and aspect ratio.',
-    'Keep the full level of detail and sharpness of the original: every fine line, hatching, texture and face must stay as crisp as it is now. Do not redraw, smooth, blur, denoise, simplify or restyle any area the request does not mention, and add no extra grain or noise.',
+    libre
+      ? 'You are the illustrator of a concert poster, revising the artwork in a conversation with the client. The attached image is the current version. Paint the NEXT version applying the client\'s feedback under <edit_request>. Work like a creative partner, not like a photo editor: keep the overall concept, main subject, visual style and palette unless the feedback says otherwise, but feel free to redraw, recompose and re-render any part (lighting, poses, details, background) so the result is ONE coherent, polished illustration made from scratch, not the old picture with a patch on it. Same aspect ratio.'
+      : 'Edit the attached concert-poster artwork. Apply ONLY the change(s) described under <edit_request>, in order; keep everything else exactly as it is: composition, subject, palette, ink and paper texture, lighting, framing and aspect ratio. Do not redraw, smooth, blur, denoise, simplify or restyle any area the request does not mention.',
+    'Keep the full level of detail and sharpness: every fine line, hatching and face must be as crisp as in the original or crisper, and add no grain or noise.',
     DIRECCION_DE_ARTE,
     textos
       ? `The artwork already contains lettering. Keep these exact texts, spelled exactly the same, in the same place and style unless the request is about them, and add no other lettering: <poster_text><band_name>${textos.nombre}</band_name><date>${textos.fecha}</date><venue>${textos.lugar}</venue></poster_text>`

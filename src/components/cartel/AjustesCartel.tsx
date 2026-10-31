@@ -3,7 +3,7 @@ import { ImagePlus, X } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
 import { Field, IconButton, Input, Select, Switch } from '../ui';
 import { TODAS } from '../../utils/cartel/datos';
-import { MAX_EXTRA, MAX_LOGOS, MAX_TEXTO_EDITADO, type DestinoQr } from '../../utils/cartel/config';
+import { MAX_EXTRA, MAX_LOGOS, MAX_TEXTO_EDITADO, type Acabado, type DestinoQr } from '../../utils/cartel/config';
 import { ELECCIONES_COMPOSICION, ETIQUETA_COMPOSICION, ETIQUETA_LETRA, LETRAS_CARTEL, type ComposicionElegida, type LetraCartel } from '../../utils/cartel/voces';
 import type { AjustesBolo } from './hooks/useEditorCartel';
 
@@ -81,6 +81,13 @@ export function AjustesCartel({ abierto, onCerrar, ajustes, onCambiar, bandas, t
               {ELECCIONES_COMPOSICION.map((k) => (
                 <option key={k} value={k}>{ETIQUETA_COMPOSICION[k]}</option>
               ))}
+            </Select>
+          </Field>
+
+          <Field label="Acabado del arte" hint="Serigrafía pasa la ilustración de IA a tintas planas con trama y un leve desregistro, como un cartel de gira impreso. No se aplica si la IA dibuja las letras dentro.">
+            <Select aria-label="Acabado del arte" value={ajustes.acabado} onChange={(e) => onCambiar({ acabado: e.target.value as Acabado })}>
+              <option value="natural">Natural, tal cual sale</option>
+              <option value="serigrafia">Serigrafía de tintas planas</option>
             </Select>
           </Field>
 

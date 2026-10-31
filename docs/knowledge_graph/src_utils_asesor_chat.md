@@ -24,6 +24,7 @@ El chat del asesor: preguntas libres de la banda sobre su marketing («¿por qu�
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_services_asesorMarketing|server/services/asesorMarketing.ts]] *(from #service)*
+- [[src_components_asesor_AsesorView|src/components/asesor/AsesorView.tsx]] *(from #frontend)*
 - [[src_components_asesor_ChatAsesor|src/components/asesor/ChatAsesor.tsx]] *(from #frontend)*
 - [[src_components_asesor_hooks_useChatAsesor|src/components/asesor/hooks/useChatAsesor.ts]] *(from #frontend)*
 - [[src_utils_asesorApi|src/utils/asesorApi.ts]] *(from #service)*

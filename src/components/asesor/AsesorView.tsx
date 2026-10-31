@@ -9,6 +9,7 @@ import { PiezaSheet } from './PiezaSheet';
 import { FormEstrategia } from './FormEstrategia';
 import { PorMedirCard } from './PorMedirCard';
 import { ChatAsesor } from './ChatAsesor';
+import type { AccionChat } from '../../utils/asesor/chat';
 import { AgendaAsesor } from './AgendaAsesor';
 import { ResumenCard } from './ResumenCard';
 import type { BandaLaminas } from './hooks/useLaminas';
@@ -67,6 +68,14 @@ const AsesorView: React.FC<Props> = ({ onNavigate, banda }) => {
   const preparar = (t: Tarjeta) => {
     setAbierta(t);
     void a.preparar(t.id);
+  };
+  /** El botón de una respuesta del chat: preparar una idea de hoy (si sigue ahí) o ir a una pestaña. */
+  const alAccionDelChat = (accion: AccionChat) => {
+    if (accion.tipo === 'ir') return setPestana(accion.destino);
+    const idea = [...opciones.recomendadas, ...opciones.alternativas].find((t) => t.id === accion.tarjetaId);
+    if (!idea) return setPestana('hoy');
+    setPestana('hoy');
+    preparar(idea);
   };
   const irAlCartel = (vista: 'carteleria', concertId: string) => onNavigate(vista, { concertId });
   // La tarjeta abierta se refresca con el plan recargado (p. ej. al marcarla como hecha).
@@ -165,7 +174,7 @@ const AsesorView: React.FC<Props> = ({ onNavigate, banda }) => {
         <FormEstrategia inicial={estrategia} guardando={a.guardando} sugiriendo={a.sugiriendo} onGuardar={a.guardar} onProponer={a.proponer} />
       )}
 
-      {chat && <ChatAsesor onCerrar={() => setChat(false)} />}
+      {chat && <ChatAsesor onCerrar={() => setChat(false)} onAccion={alAccionDelChat} />}
 
       {tarjetaAbierta && (
         <PiezaSheet
