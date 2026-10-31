@@ -16,6 +16,7 @@ import { VOCES, type Composicion, type VozCartel } from './voces';
 import { tintarLogo } from './logos';
 import { sinMarco } from './marco';
 import { conSerigrafia } from './serigrafia';
+import { pintarConDesgaste } from './tintaImpresa';
 import { fondoConTexto } from './fondoIa';
 import { TINTA_PLANTILLA, dibujarPlantilla, type PlantillaId } from './plantillas';
 import { dibujarArteEntero, dibujarFondoImagen } from './arteCanvas';
@@ -457,6 +458,21 @@ export async function renderCartel(
         ctx.restore();
       }
       ctx.fillStyle = l.color ?? tintaDe(t);
+      // El título grande, como impreso: capa aparte con motas de tinta que faltan (solo sobre arte de IA).
+      if (esIa && l.titulo && l.px >= 60 * u) {
+        const ancho = ctx.measureText(l.texto).width;
+        const x = l.alinear === 'left' ? l.x : l.alinear === 'right' ? l.x - ancho : l.x - ancho / 2;
+        const color = ctx.fillStyle;
+        pintarConDesgaste(ctx, { x, y: l.y, w: ancho, h: l.px * 1.15 }, semillaDeTexto(`${piezas.semilla}|${l.texto}`), u, (c) => {
+          c.font = ctx.font;
+          conTracking(c, l.px, l.tracking);
+          c.textAlign = l.alinear;
+          c.fillStyle = color;
+          c.fillText(l.texto, l.x, l.y);
+        });
+        conTracking(ctx, l.px, l.tracking);
+        continue;
+      }
       ctx.fillText(l.texto, l.x, l.y);
     }
     conTracking(ctx, 1, 0);
