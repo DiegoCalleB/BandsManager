@@ -16,6 +16,7 @@ export default tseslint.config(
       'build/**',
       'node_modules/**',
       'public/**',
+      'ejercicios/**', // sitio estático aparte (JS de navegador sin tipos ni globals)
       'coverage/**',
       'assets/.aistudio/**',
     ],
