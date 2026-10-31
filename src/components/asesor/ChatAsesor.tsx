@@ -45,7 +45,7 @@ export function ChatAsesor({ onCerrar, onAccion }: Props) {
             <EcoAvatar className="size-10" />
             <div className="grid min-w-0 flex-1 gap-0.5">
               <h2 className="text-lg font-semibold">Preguntar al asesor</h2>
-              <p className="text-xs text-[var(--ink-2)]">Responde con vuestra estrategia y vuestros números. Vosotros decidís qué hacer.</p>
+              <p className="text-xs text-[var(--ink-2)]">Eco responde con vuestra estrategia y vuestros números. Vosotros decidís qué hacer.</p>
             </div>
             <IconButton label="Cerrar" variant="ghost" onClick={onCerrar}><X className="size-5" aria-hidden /></IconButton>
           </header>
