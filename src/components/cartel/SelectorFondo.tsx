@@ -218,7 +218,7 @@ export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenera
             <label className="flex cursor-pointer items-start gap-2 text-xs text-[var(--ink-2)]">
               <input type="checkbox" checked={letrasIa} onChange={(e) => onLetrasIa(e.target.checked)} className="mt-0.5 size-4 shrink-0 accent-[var(--acc)]" />
               <span className="text-pretty">
-                <span className="font-medium text-[var(--ink)]">La IA dibuja el título y la fecha</span>: letras integradas en el arte, más de cartel. Puede fallar alguna letra; si pasa, te lo decimos y puedes repetir sin esta opción.
+                <span className="font-medium text-[var(--ink)]">La IA dibuja el título y la fecha</span>: letras integradas en el arte, más de cartel, pero luego no puedes editarlas aquí ni aplicar la serigrafía. Puede fallar alguna letra; si pasa, te lo decimos y puedes repetir sin esta opción.
               </span>
             </label>
           )}

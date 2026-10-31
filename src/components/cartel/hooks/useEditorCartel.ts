@@ -330,8 +330,9 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     });
   };
 
-  // Que la IA dibuje el título y la fecha dentro del arte: más de cartel, pero solo con una banda (con varias va el lineup).
-  const [letrasIa, setLetrasIa] = useState(true);
+  // Que la IA dibuje el título y la fecha dentro del arte: más de cartel, pero NO se pueden editar y solo vale con una banda
+  // (con varias va el lineup). Apagado por defecto: el arte sale limpio y la tipografía es de BandManager (editable).
+  const [letrasIa, setLetrasIa] = useState(false);
   /** La IA no pudo pintar el último fondo (sin cupo, caída…): se ofrecen las plantillas de autor como respaldo. */
   const [iaFalla, setIaFalla] = useState(false);
   /** El estilo del último fondo cuyas letras salieron mal (para repetirlo sin letras de IA), o null. */
