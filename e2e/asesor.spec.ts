@@ -58,7 +58,7 @@ const RESUMEN = {
  * su galería. `sinFotos` la deja sin galería: «Poner foto» sube directamente desde el dispositivo.
  * `conPendientes`: una publicación espera sus números y ya hay con qué hacer un resumen.
  */
-async function abrirAsesor(page: Page, { conAdn = false, sinFotos = false, conPendientes = false, rescate = false }: { conAdn?: boolean; sinFotos?: boolean; conPendientes?: boolean; rescate?: boolean } = {}) {
+async function abrirAsesor(page: Page, { conAdn = false, sinFotos = false, conPendientes = false, rescate = false, red = 'instagram', otrasRedes = false }: { conAdn?: boolean; sinFotos?: boolean; conPendientes?: boolean; rescate?: boolean; red?: string; otrasRedes?: boolean } = {}) {
   const peticiones: Array<{ ruta: string; cuerpo: Record<string, unknown> | null }> = [];
   const servidor = { hechas: new Set<string>(), saltadas: new Set<string>(), medido: false };
   const ideas = [
@@ -98,7 +98,8 @@ async function abrirAsesor(page: Page, { conAdn = false, sinFotos = false, conPe
         opciones: rescate
           ? { recomendadas: [IDEA('rescate-opuesto', 'carrusel', 'Probad un carrusel', { porque: 'Con los reels no está arrancando: cambiar de formato enseña más que insistir.' })], alternativas: [IDEA('rescate-pregunta', 'stories', 'Preguntad qué quieren ver')] }
           : { recomendadas: vivas.slice(0, 2), alternativas: vivas.slice(2) },
-        porMedir: conPendientes && !servidor.medido ? [{ fecha: '2026-10-24', tarjetaId: 'fondo-pilar', formato: 'reel', titulo: 'Tema de la semana: La furgo' }] : [],
+        porMedir: conPendientes && !servidor.medido ? [{ fecha: '2026-10-24', tarjetaId: 'fondo-pilar', formato: 'reel', titulo: 'Tema de la semana: La furgo', red }] : [],
+        otrasRedes: otrasRedes ? [{ fecha: '2026-10-23', tarjetaId: 'bolo-teaser', formato: 'reel', titulo: 'Un adelanto del directo', redes: ['tiktok', 'youtube'] }] : [],
         resumen: conPendientes ? RESUMEN : null,
         agenda: [
           { fecha: '2026-10-24', esHoy: false, eventos: [{ tipo: 'hecha', texto: 'Tema de la semana: La furgo', formato: 'reel', lectura: 'sin_medir' }] },
@@ -117,6 +118,10 @@ async function abrirAsesor(page: Page, { conAdn = false, sinFotos = false, conPe
     }
     if (ruta.endsWith('/asesor/estrategia') && req.method() === 'PUT') return route.fulfill({ json: { estrategia: cuerpo } });
     if (ruta.endsWith('/asesor/pieza')) return route.fulfill({ json: { pieza: cuerpo.tarjetaId === 'bolo-setlist' ? CARRUSEL : cuerpo.tarjetaId === 'bolo-encuesta' ? STORIES : PIEZA } });
+    if (ruta.endsWith('/asesor/resultado') && cuerpo.red && cuerpo.red !== 'instagram') {
+      servidor.medido = true;
+      return route.fulfill({ json: { ok: true, titulo: 'Tema de la semana: La furgo', veredicto: 'por_encima', mensaje: 'Llegó más lejos de lo habitual: 2,0× vuestra mediana en TikTok. Repetid lo que hicisteis.' } });
+    }
     if (ruta.endsWith('/asesor/resultado')) {
       servidor.medido = true;
       return route.fulfill({ json: { ok: true, titulo: 'Tema de la semana: La furgo', veredicto: 'falla_valor', mensaje: POCO_VALOR } });
@@ -458,4 +463,52 @@ test('la banda elige sus redes en la estrategia, no puede quedarse sin ninguna y
   await page.getByRole('button', { name: /Guardar/ }).click();
   await expect.poll(() => peticiones.some((p) => p.ruta.endsWith('/asesor/estrategia'))).toBe(true);
   expect((peticiones.find((p) => p.ruta.endsWith('/asesor/estrategia'))!.cuerpo as { redes: string[] }).redes).toEqual(['youtube']);
+});
+
+test('TikTok como red principal: el formulario pide lo de TikTok, sin números de Instagram ni atajo de traerlos', async ({ page }) => {
+  const { peticiones } = await abrirAsesor(page, { conPendientes: true, red: 'tiktok' });
+  await page.getByRole('tab', { name: /Resultados/ }).click();
+  const tarjeta = page.getByRole('form', { name: /Resultados de Tema de la semana/ });
+  await expect(tarjeta.getByLabel('Visualizaciones')).toBeVisible();
+  await expect(tarjeta.getByLabel('Lo vieron entero (%)')).toBeVisible();
+  await expect(tarjeta.getByText('Cuentas alcanzadas')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Traer de Instagram' })).toHaveCount(0);
+
+  // Más guardados que visualizaciones no es posible: se avisa sin llamar al servidor.
+  await tarjeta.getByLabel('Visualizaciones').fill('100');
+  await tarjeta.getByLabel('Guardados').fill('500');
+  await tarjeta.getByRole('button', { name: 'Guardar los números' }).click();
+  await expect(tarjeta.getByRole('alert')).toContainText('No pueden haberlo guardado más personas');
+  expect(peticiones.some((p) => p.ruta.endsWith('/resultado'))).toBe(false);
+
+  await tarjeta.getByLabel('Visualizaciones').fill('12000');
+  await tarjeta.getByLabel('Guardados').fill('300');
+  await tarjeta.getByLabel('Lo vieron entero (%)').fill('41.5');
+  await tarjeta.getByRole('button', { name: 'Guardar los números' }).click();
+  await expect(page.getByRole('status').filter({ hasText: 'Anotado' })).toContainText('2,0× vuestra mediana en TikTok');
+  const enviado = peticiones.find((p) => p.ruta.endsWith('/resultado'))!.cuerpo;
+  expect(enviado).toEqual({ fecha: '2026-10-24', tarjetaId: 'fondo-pilar', red: 'tiktok', visualizaciones: 12000, guardados: 300, compartidos: null, pctCompleto: 41.5 });
+  await page.screenshot({ path: 'test-results/asesor-metricas-tiktok.png' });
+});
+
+test('las otras redes de un vídeo son opcionales, van plegadas y se anotan sin salir de Resultados', async ({ page }) => {
+  const { peticiones } = await abrirAsesor(page, { conPendientes: true, otrasRedes: true });
+  await page.getByRole('tab', { name: /Resultados/ }).click();
+  const resumen = page.getByText('¿Lo publicasteis también en otras redes?');
+  await expect(resumen).toBeVisible();
+  await expect(page.getByLabel('Visualizaciones')).toBeHidden(); // plegado: no estorba
+  await resumen.click();
+
+  await page.getByRole('tab', { name: 'YouTube Shorts' }).click();
+  const yt = page.getByRole('form', { name: /en YouTube Shorts/ });
+  await expect(yt.getByLabel('Vistas')).toBeVisible();
+  await expect(yt.getByLabel('Se quedaron a verlo (%)')).toBeVisible();
+  await expect(yt.getByText('Guardados')).toHaveCount(0); // YouTube no tiene «guardados»
+  await page.getByRole('tab', { name: 'TikTok' }).click();
+  const tt = page.getByRole('form', { name: /en TikTok/ });
+  await tt.getByLabel('Visualizaciones').fill('800');
+  await page.screenshot({ path: 'test-results/asesor-otras-redes.png' });
+  await tt.getByRole('button', { name: 'Guardar los números' }).click();
+  await expect.poll(() => peticiones.filter((p) => p.ruta.endsWith('/resultado')).length).toBe(1);
+  expect(peticiones.find((p) => p.ruta.endsWith('/resultado'))!.cuerpo).toMatchObject({ fecha: '2026-10-23', tarjetaId: 'bolo-teaser', red: 'tiktok', visualizaciones: 800 });
 });

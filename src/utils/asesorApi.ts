@@ -10,6 +10,7 @@ import type { EstrategiaMarketing } from './asesor/estrategia';
 import type { OpcionesDeHoy } from './asesor/opciones';
 import type { Pieza } from './asesor/pieza';
 import type { MedioInstagram } from './asesor/instagramMedios';
+import type { MetricasRed, PorMedirOtrasRedes, RedExtra } from './asesor/metricasPorRed';
 import type { Medidas, PorMedir, Resumen } from './asesor/resumen';
 
 export interface EstadoAsesor {
@@ -18,6 +19,7 @@ export interface EstadoAsesor {
   opciones: OpcionesDeHoy;
   semana: Array<{ fecha: string; hechas: number }>;
   porMedir: PorMedir[];
+  otrasRedes: PorMedirOtrasRedes[];
   resumen: Resumen | null;
   agenda: DiaAgenda[];
   estrategia: EstrategiaMarketing;
@@ -27,7 +29,7 @@ export interface EstadoAsesor {
 export type AccionAsesor = 'hecho' | 'saltado' | 'pendiente';
 
 /** Un servidor que aún no conoce los resultados (despliegue a medias) no tumba la pantalla: llegan vacíos. */
-export const obtenerHoyAsesor = async (): Promise<EstadoAsesor> => ({ porMedir: [], resumen: null, agenda: [], ...(await apiFetch<EstadoAsesor>('/api/asesor/hoy')) });
+export const obtenerHoyAsesor = async (): Promise<EstadoAsesor> => ({ porMedir: [], otrasRedes: [], resumen: null, agenda: [], ...(await apiFetch<EstadoAsesor>('/api/asesor/hoy')) });
 
 export const prepararPieza = (tarjetaId: string) =>
   apiFetch<{ pieza: Pieza }>('/api/asesor/pieza', { method: 'POST', body: JSON.stringify({ tarjetaId }) });
@@ -45,6 +47,10 @@ export interface RespuestaResultado {
 
 export const guardarResultado = (p: Pick<PorMedir, 'fecha' | 'tarjetaId'>, m: Medidas) =>
   apiFetch<RespuestaResultado>('/api/asesor/resultado', { method: 'POST', body: JSON.stringify({ fecha: p.fecha, tarjetaId: p.tarjetaId, ...m }) });
+
+/** Los números de una pieza en TikTok o YouTube Shorts: cada red mide lo suyo. */
+export const guardarResultadoRed = (p: Pick<PorMedir, 'fecha' | 'tarjetaId'>, red: RedExtra, m: MetricasRed) =>
+  apiFetch<RespuestaResultado>('/api/asesor/resultado', { method: 'POST', body: JSON.stringify({ fecha: p.fecha, tarjetaId: p.tarjetaId, red, ...m }) });
 
 export const guardarEstrategia = (estrategia: EstrategiaMarketing) =>
   apiFetch<{ estrategia: EstrategiaMarketing }>('/api/asesor/estrategia', { method: 'PUT', body: JSON.stringify(estrategia) });

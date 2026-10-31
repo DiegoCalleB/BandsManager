@@ -169,5 +169,15 @@ UI siguiendo la skill `visual-identity` (Espectro) y con color de módulo propio
 - [x] YouTube Shorts como red de los reels: texto en dos partes (título de hasta 70 caracteres, recortado en palabra entera, y descripción), hasta tres hashtags y reglas propias en `REGLAS_YOUTUBE`. La hoja de la pieza enseña y copia título y descripción por separado, como los pide YouTube Studio.
 - [x] Arreglo aparte: el limpiador de tics de texto colapsaba también los saltos de línea, así que cualquier texto con párrafos salía en una sola línea. Ahora los conserva.
 - [ ] Pendiente: las reglas de YouTube Shorts son criterio propio (títulos, descripción, frecuencia) hasta contrastarlas con una lección de Shorts del temario; solo la parte de portada y CTR sale del temario.
-- [ ] Pendiente: los resultados siguen siendo números de Instagram (alcance, guardados, no seguidores). TikTok no da alcance ni guardados de la misma forma y YouTube mide otras cosas (vistas, porcentaje visto); medirlas por red necesita otra tabla y una decisión de qué métricas importan en cada una.
+- [x] Resultados por red: ver «Métricas por red».
 - [ ] Pendiente: traer las métricas por API de TikTok y YouTube. Ambas exigen revisión de la app (TikTok, auditoría; Google, verificación OAuth) antes de que otras bandas puedan conectar.
+
+## Métricas por red
+
+- [x] **Instagram no cambia**: sigue en `asesor_resultados` (alcance, guardados, no seguidores) con los umbrales del temario. TikTok y YouTube van en una tabla nueva, `asesor_resultados_red` (migración `20261125`, solo `CREATE TABLE IF NOT EXISTS`): una fila por banda, día, idea y red, con las métricas en un JSONB que valida el servidor.
+- [x] Cada red mide lo suyo, con el nombre que tiene en su propia app (`src/utils/asesor/metricasPorRed.ts`): TikTok, visualizaciones, guardados, compartidos y % que lo ve entero; YouTube, vistas, % que se queda a verlo, % medio visto y suscriptores (no tiene «guardados»). Solo las visualizaciones son obligatorias.
+- [x] **Sin umbrales inventados**: el temario solo da umbrales para Instagram. Para TikTok y YouTube la lectura compara las visualizaciones con la mediana de las otras piezas de la banda en esa red (mínimo 3 piezas y 100 visualizaciones; ±50 % cuenta como distinto, criterio propio). Cuando se queda corta, el consejo sí es de la lección de cada red: los 3 primeros segundos en TikTok, portada y título en YouTube.
+- [x] **Red principal**: Instagram si la banda está; si no, la primera que tenga. Decide cuándo una pieza «espera sus números» (el aviso de Hoy). Las demás redes de un vídeo (solo los reels van a varias) son opcionales: aparecen plegadas en Resultados, «¿Lo publicasteis también en otras redes?», y no bloquean nada.
+- [x] El calendario y el chat leen también los resultados de TikTok y YouTube.
+- [ ] Pendiente: el bucle de aprendizaje (formato ganador, impulso del plan y modo rescate) sigue basándose solo en Instagram. Una banda sin Instagram ve la lectura de cada pieza, pero el asesor aún no reordena ideas ni detecta caídas con sus números de TikTok o YouTube.
+- [ ] Pendiente: traer estos números por API (TikTok: auditoría de la app; YouTube: verificación OAuth de Google). Hoy se anotan a mano.

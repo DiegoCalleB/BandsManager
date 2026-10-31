@@ -51,7 +51,9 @@ BandManager UI Component Library
 - [[src_components_asesor_AsesorView|src/components/asesor/AsesorView.tsx]] *(from #frontend)*
 - [[src_components_asesor_ChatAsesor|src/components/asesor/ChatAsesor.tsx]] *(from #frontend)*
 - [[src_components_asesor_FormEstrategia|src/components/asesor/FormEstrategia.tsx]] *(from #frontend)*
+- [[src_components_asesor_FormMetricasRed|src/components/asesor/FormMetricasRed.tsx]] *(from #frontend)*
 - [[src_components_asesor_LaminasPieza|src/components/asesor/LaminasPieza.tsx]] *(from #frontend)*
+- [[src_components_asesor_OtrasRedesCard|src/components/asesor/OtrasRedesCard.tsx]] *(from #frontend)*
 - [[src_components_asesor_PiezaSheet|src/components/asesor/PiezaSheet.tsx]] *(from #frontend)*
 - [[src_components_asesor_PorMedirCard|src/components/asesor/PorMedirCard.tsx]] *(from #frontend)*
 - [[src_components_asesor_ResumenCard|src/components/asesor/ResumenCard.tsx]] *(from #frontend)*
