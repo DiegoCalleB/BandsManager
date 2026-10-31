@@ -20,6 +20,7 @@ Burbuja de un mensaje del chat con su texto formateado, hora y acciones propuest
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_chatbot_ChatContext|src/components/chatbot/ChatContext.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_chatbot_chatTypes|src/components/chatbot/chatTypes.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_ui_EcoAvatar|src/components/ui/EcoAvatar.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*

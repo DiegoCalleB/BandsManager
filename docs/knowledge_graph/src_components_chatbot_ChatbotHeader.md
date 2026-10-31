@@ -19,6 +19,7 @@ Exporta: ChatbotHeaderProps, ChatbotHeader.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_Chatbot|src/components/Chatbot.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_ui_EcoAvatar|src/components/ui/EcoAvatar.tsx]] *(Layer: #frontend, Domain: #system)*
 
 ---
 

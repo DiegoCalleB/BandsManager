@@ -2,10 +2,11 @@
  * Burbuja de un mensaje del chat con su texto formateado, hora y acciones propuestas.
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
-import { CheckCircle, Download, Guitar, PlayCircle, RefreshCw, Save, Sparkles, User } from "lucide-react";
+import { CheckCircle, Download, PlayCircle, RefreshCw, Save, Sparkles, User } from "lucide-react";
 import { MelodicInstrument } from "../../types";
 import { Button, Select } from "../ui";
 import { ShowIcon } from "../ui/ShowIcon";
+import { EcoAvatar } from "../ui/EcoAvatar";
 import { useChat } from "./ChatContext";
 import { ChatMessage } from "./chatTypes";
 
@@ -29,7 +30,7 @@ export function ChatMessageBubble({ msg }: ChatMessageBubbleProps) {
           isBot ? 'bg-[var(--tentative)]/5 text-[var(--tentative)]' : 'bg-[var(--sunken)] text-[var(--ink-2)]'
         }`}
       >
-        {isBot ? <Guitar className="w-3.5 h-3.5" /> : <User className="w-3.5 h-3.5" />}
+        {isBot ? <EcoAvatar className="size-6" /> : <User className="w-3.5 h-3.5" />}
       </div>
 
       <div className="space-y-2">

@@ -17,6 +17,9 @@ export type { ButtonProps, IconButtonProps } from './Button';
 export { Chip } from './Chip';
 export type { ChipProps } from './Chip';
 
+export { EcoAvatar } from './EcoAvatar';
+export type { EcoAvatarProps } from './EcoAvatar';
+
 export { ShowIcon } from './ShowIcon';
 
 export { Input, Textarea } from './Input';

@@ -1,6 +1,7 @@
-import { Guitar, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import React from 'react';
 import { ChatMessage } from '../Chatbot';
+import { EcoAvatar } from '../ui/EcoAvatar';
 
 export interface ChatbotHeaderProps {
   isStitchLight: boolean;
@@ -47,7 +48,7 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
             'bg-[var(--acc-soft)] text-[var(--acc)]'
           }`}
         >
-          <Guitar className="w-4 h-4" />
+          <EcoAvatar className="size-6" />
         </div>
         <div>
           <h4

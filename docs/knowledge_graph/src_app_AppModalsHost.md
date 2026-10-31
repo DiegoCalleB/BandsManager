@@ -22,6 +22,7 @@ Modales globales cargados bajo demanda, chat flotante, estudio y avisos.
 - [[src_app_lazyViews|src/app/lazyViews.ts]] *(Layer: #service, Domain: #system)*
 - [[src_components_SaveErrorBanner|src/components/SaveErrorBanner.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_booking_DealSupportPrompt|src/components/booking/DealSupportPrompt.tsx]] *(Layer: #frontend, Domain: #booking)*
+- [[src_components_ui_EcoAvatar|src/components/ui/EcoAvatar.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---

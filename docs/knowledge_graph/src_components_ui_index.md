@@ -24,6 +24,7 @@ BandManager UI Component Library
 - [[src_components_ui_ChannelChip|src/components/ui/ChannelChip.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_Chip|src/components/ui/Chip.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_CurveSeries|src/components/ui/CurveSeries.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_ui_EcoAvatar|src/components/ui/EcoAvatar.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_EmptyState|src/components/ui/EmptyState.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_Field|src/components/ui/Field.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_Input|src/components/ui/Input.tsx]] *(Layer: #frontend, Domain: #system)*
@@ -427,6 +428,7 @@ BandManager UI Component Library
 ---
 
 ## 🧪 Tests que lo cubren
+- `src/components/ui/__tests__/EcoAvatar.test.tsx`
 - `src/components/ui/__tests__/primitives.test.tsx`
 
 ---
