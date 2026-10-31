@@ -16,7 +16,7 @@
     { t: 'Clientes', items: [['CRM']] }
   ];
   var FILM = 'https://presentacion-storytelling.up.railway.app/';
-  var path = location.pathname.replace(/\/$/, '') || '/';
+  var path = location.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
   var hechos = [];
   GRUPOS.forEach(function (g) { g.items.forEach(function (i) { if (i[1]) hechos.push(i); }); });
 

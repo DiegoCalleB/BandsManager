@@ -1,6 +1,6 @@
 # Ejercicios del máster
 
-Sitio estático de los ejercicios del máster de Desarrollo con IA (The Big School), aparte de la aplicación.
+Sitio estático de los ejercicios del Máster de Marketing Digital con IA, aparte de la aplicación.
 Se despliega como un servicio propio de Railway con **Root Directory = `/ejercicios`** (Dockerfile + Caddy), igual que [`presentacion/`](../presentacion/). No lleva `noindex` por meta: lo manda la cabecera `X-Robots-Tag` del `Caddyfile`.
 
 | URL | Archivo |
