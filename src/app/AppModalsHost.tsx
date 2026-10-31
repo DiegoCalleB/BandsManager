@@ -2,10 +2,11 @@
  * Modales globales cargados bajo demanda, chat flotante, estudio y avisos.
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
-import { Guitar,RefreshCw,X } from "lucide-react";
+import { RefreshCw,X } from "lucide-react";
 import { Suspense } from "react";
 import { SaveErrorBanner } from "../components/SaveErrorBanner";
 import { DealSupportPrompt } from "../components/booking/DealSupportPrompt";
+import { EcoAvatar } from "../components/ui/EcoAvatar";
 import type { EPKConfig,Song } from "../types";
 import { useApp } from "./AppContext";
 import { BandSwitcherModal,CampaignManagerModal,Chatbot,FontSelectorModal,MusicianOnboardingModal,NotificationSettingsModal,OnboardingWizardModal,PlanLimitModal,SongStudioModal,UserManagementModal,UserProfileModal } from "./lazyViews";
@@ -144,7 +145,7 @@ export function AppModalsHost() {
                     {isChatLoading ? (
                       <RefreshCw className="w-4 h-4 animate-spin text-[var(--acc)]" />
                     ) : (
-                      <Guitar className="w-4 h-4 text-[var(--acc)]" />
+                      <EcoAvatar className="size-7" />
                     )}
                     <span
                       className={`absolute -top-1 -right-1 w-2 h-2 rounded-full ${isChatLoading ? "bg-amber-400" : "bg-emerald-400"}`}
