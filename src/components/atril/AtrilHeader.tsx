@@ -31,9 +31,9 @@ export function AtrilHeader() {
             }`}
             title={
               isPlayingAudio
-                ? "Pausar audio de la canción"
+                ? "Pausar (Espacio)"
                 : audioUrl
-                  ? "Reproducir audio de la canción (Escuchar mientras lees el cifrado)"
+                  ? "Reproducir (Espacio) · ← → saltan 5 s · M más controles · E escenario · F pantalla completa"
                   : "Esta canción no tiene archivo de audio adjunto en Repertorio"
             }
           >
@@ -113,7 +113,7 @@ export function AtrilHeader() {
               { label: "Compartir por WhatsApp o app", icon: MessageSquare, onSelect: () => setShowShareModal(true) },
               { label: "Metrónomo", icon: Timer, onSelect: () => setShowMetronomeModal(true) },
               { label: "Afinador", icon: Guitar, onSelect: () => setShowTunerModal(true) },
-              { label: modoEscenario ? "Salir del modo escenario" : "Modo escenario (letra grande)", icon: Theater, onSelect: () => setModoEscenario((v) => !v) },
+              { label: modoEscenario ? "Salir del modo escenario" : "Modo escenario (letra grande) · tecla E", icon: Theater, onSelect: () => setModoEscenario((v) => !v) },
               { label: "Imprimir cifrado", icon: Printer, onSelect: () => window.print() },
               { label: "Ficha de sustituto urgente", icon: UserCheck, onSelect: () => setActiveTab("substitute") },
               { label: "Editar cifrado", icon: Edit3, onSelect: () => setActiveTab("edit") },

@@ -26,6 +26,7 @@ Exporta: AtrilView.
 - [[src_components_atril_AtrilModals|src/components/atril/AtrilModals.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_atril_AtrilToolbar|src/components/atril/AtrilToolbar.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_atril_DetectedChordsPanel|src/components/atril/DetectedChordsPanel.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_atril_hooks_useAtajosAtril|src/components/atril/hooks/useAtajosAtril.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_AcordeActual|src/components/chords/AcordeActual.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_acordeActualEstado|src/components/chords/acordeActualEstado.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] *(Layer: #frontend, Domain: #system)*
