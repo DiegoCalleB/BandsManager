@@ -10,7 +10,9 @@
  */
 
 export type Formato = 'reel' | 'carrusel' | 'stories' | 'post';
-export type Red = 'instagram' | 'tiktok';
+export const REDES = ['instagram', 'tiktok', 'youtube'] as const;
+/** `youtube` es YouTube Shorts: el reel vertical de la banda, publicado también allí. */
+export type Red = (typeof REDES)[number];
 /** Etapa del embudo: descubrimiento, consideración, decisión (lección de estrategia de IG). */
 export type Embudo = 'tofu' | 'mofu' | 'bofu';
 
@@ -102,6 +104,20 @@ export const REGLAS_TIKTOK: Regla[] = [
 ];
 
 /**
+ * YouTube Shorts: el mismo vídeo vertical del reel, con título y descripción propios. Las reglas de
+ * portada (arriba) ya vienen de la lección de CTR; lo de aquí es criterio propio hasta que haya una
+ * lección específica de Shorts en el temario.
+ */
+export const REGLAS_YOUTUBE: Regla[] = [
+  yt('El título abre una pregunta o una promesa y la portada la complementa; no repitas lo mismo en los dos.'),
+  musica('Título corto (hasta unos 60-70 caracteres, para que no se corte en el móvil) y con la palabra clave primero: género y ciudad, o el nombre de la canción.'),
+  musica('El texto de YouTube tiene dos partes: primera línea = título; después de una línea en blanco, la descripción.'),
+  musica('Descripción: una o dos frases con la palabra clave y, si existe, el enlace a la canción o a las entradas. Nada de párrafos.'),
+  musica('Una sola idea y el mejor momento de la canción desde el primer segundo; YouTube premia que se vea entero.'),
+  musica('Cierra pidiendo UNA cosa (suscribirse o ver el siguiente vídeo), no varias.'),
+];
+
+/**
  * Portada de un reel o miniatura de un Short: lo que decide el clic (lección de CTR de YouTube).
  * También cuenta en la cuadrícula del perfil de Instagram.
  */
@@ -117,6 +133,8 @@ export const REGLAS_PORTADA: Regla[] = [
 export const FRECUENCIA_CRECIMIENTO: Record<Red, { piezasSemana: [number, number]; fuente: Fuente }> = {
   instagram: { piezasSemana: [3, 4], fuente: 'ig-estrategia' },
   tiktok: { piezasSemana: [3, 5], fuente: 'tt-estrategia' },
+  // Criterio propio mientras no haya lección de Shorts: con los mismos vídeos que ya hacen para reels, 1-2 a la semana.
+  youtube: { piezasSemana: [1, 2], fuente: 'criterio-musica' },
 };
 /** Además de las piezas: stories todos los días (lección de estrategia de IG). */
 export const STORIES_DIARIAS = true;
@@ -142,6 +160,7 @@ const HASHTAGS_VACIOS = new Set([
 export const LIMITE_HASHTAGS: Record<Red, { min: number; max: number }> = {
   instagram: { min: 3, max: 5 },
   tiktok: { min: 2, max: 3 },  // 2-3 (algoritmo) y 3 óptimo (estrategia): el máximo coincide
+  youtube: { min: 2, max: 3 },  // YouTube enseña los tres primeros encima del título
 };
 
 /**
@@ -165,10 +184,10 @@ export function sanearHashtags(tags: unknown, red: Red): string[] {
 export function bloqueReglasPrompt(formato: Formato, red: Red): string {
   const f = REGLAS_FORMATO[formato];
   const esVideo = formato === 'reel';
-  const reglas = [...f.reglas, ...(esVideo && red === 'tiktok' ? REGLAS_TIKTOK : []), ...(esVideo ? REGLAS_PORTADA : [])];
+  const reglas = [...f.reglas, ...(esVideo && red === 'tiktok' ? REGLAS_TIKTOK : []), ...(esVideo && red === 'youtube' ? REGLAS_YOUTUBE : []), ...(esVideo ? REGLAS_PORTADA : [])];
   const { min, max } = LIMITE_HASHTAGS[red];
   return [
-    `Formato: ${formato} en ${red}. Función: ${f.funcion}`,
+    `Formato: ${formato} en ${red === 'youtube' ? 'YouTube Shorts' : red}. Función: ${f.funcion}`,
     ...reglas.map((r) => `- ${r.texto}`),
     `- Entre ${min} y ${max} hashtags muy específicos del nicho; nunca genéricos (#fyp, #viral, #music).`,
   ].join('\n');

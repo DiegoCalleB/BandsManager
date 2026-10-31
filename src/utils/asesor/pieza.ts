@@ -38,11 +38,27 @@ export const ETIQUETA_PASO: Record<Formato, string> = { reel: 'Plano', carrusel:
 
 /** Tics de texto generado que delatan a la IA (skill prompt-craft-and-dna). */
 function sinTics(s: string): string {
-  return s.replace(/\s*[—–]\s*/g, ', ').replace(/\s*--\s*/g, ', ').replace(/\s{2,}/g, ' ').trim();
+  // Colapsa espacios y tabuladores, no los saltos de línea: un texto con párrafos (o el título y la descripción de YouTube) los conserva.
+  return s.replace(/[ \t]*[—–][ \t]*/g, ', ').replace(/[ \t]*--[ \t]*/g, ', ').replace(/[ \t]{2,}/g, ' ').replace(/[ \t]*\n[ \t]*/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
 }
 
 const sinControl = (s: string) => Array.from(s).filter((ch) => { const c = ch.charCodeAt(0); return c === 10 || (c >= 32 && c !== 127); }).join('');
 const texto = (v: unknown, max: number) => (typeof v === 'string' ? sinTics(sinControl(v)).slice(0, max) : '');
+
+export const MAX_TITULO_YOUTUBE = 70;
+
+/** Primera línea = título; lo que sigue a la línea en blanco = descripción (así se pega en YouTube Studio). */
+export function partirTextoYoutube(texto: string): { titulo: string; descripcion: string } {
+  const [primera, ...resto] = texto.trim().split('\n');
+  return { titulo: primera.trim(), descripcion: resto.join('\n').trim() };
+}
+
+/** El título no pasa de 70 caracteres (se corta en el móvil), recortado en una palabra entera. */
+function sanearTextoYoutube(texto: string): string {
+  const { titulo, descripcion } = partirTextoYoutube(texto);
+  const corto = titulo.length <= MAX_TITULO_YOUTUBE ? titulo : titulo.slice(0, MAX_TITULO_YOUTUBE + 1).replace(/\s+\S*$/, '').replace(/[\s,;:.-]+$/, '');
+  return descripcion ? `${corto}\n\n${descripcion}` : corto;
+}
 
 /** null si no sirve: sin gancho, o sin ningún texto para publicar en las redes de la tarjeta. */
 export function sanearPieza(raw: unknown, formato: Formato, redes: Red[]): Pieza | null {
@@ -59,7 +75,8 @@ export function sanearPieza(raw: unknown, formato: Formato, redes: Red[]): Pieza
   const textos: TextoPorRed[] = [];
   for (const red of redes) {
     const t = crudos.find((x) => x && typeof x === 'object' && (x as Record<string, unknown>).red === red) as Record<string, unknown> | undefined;
-    const cuerpo = texto(t?.texto, MAX_LARGO);
+    const crudo = texto(t?.texto, MAX_LARGO);
+    const cuerpo = red === 'youtube' ? sanearTextoYoutube(crudo) : crudo;
     if (cuerpo) textos.push({ red, texto: cuerpo, hashtags: sanearHashtags(t?.hashtags, red) });
   }
 
@@ -117,7 +134,7 @@ Devuelve SOLO un JSON:
 {
   "gancho": "lo primero que se ve o se oye, en una frase corta",
   "pasos": [{"titulo": "...", "detalle": "..."}],
-  "textos": [${t.redes.map((red) => `{"red": "${red}", "texto": "el texto de la publicación para ${red}", "hashtags": ["sin #, específicos del nicho"]}`).join(', ')}],
+  "textos": [${t.redes.map((red) => `{"red": "${red}", "texto": "${red === 'youtube' ? 'primera línea: el título (máximo 70 caracteres); línea en blanco; después la descripción' : `el texto de la publicación para ${red}`}", "hashtags": ["sin #, específicos del nicho"]}`).join(', ')}],
   "cta": "la llamada a la acción final",
   "portada": "${t.formato === 'reel' ? 'texto de la portada, máximo 4 palabras' : ''}"
 }

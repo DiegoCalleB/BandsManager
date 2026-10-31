@@ -18,7 +18,7 @@ La «estrategia de marketing» de la banda: la capa del ADN que dice qué quiere
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[src_utils_asesor_reglasFormato|src/utils/asesor/reglasFormato.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
