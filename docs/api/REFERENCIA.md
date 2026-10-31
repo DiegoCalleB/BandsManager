@@ -2,7 +2,7 @@
 
 > Generado automáticamente por `scripts/generate-openapi.mjs` a partir del código. No se edita a mano: ejecuta `npm run docs:api`.
 
-**437 rutas HTTP** (386 declaraciones de handler; el resto son alias) en 31 dominios. Contrato máquina-legible: [`openapi.json`](./openapi.json) (OpenAPI 3.1). Visor interactivo: [`index.html`](./index.html) (hay que abrirlo en un navegador; GitHub no lo renderiza). Decisión de diseño: [ADR 0012](../adr/0012-contrato-api-openapi-por-ast.md).
+**438 rutas HTTP** (387 declaraciones de handler; el resto son alias) en 31 dominios. Contrato máquina-legible: [`openapi.json`](./openapi.json) (OpenAPI 3.1). Visor interactivo: [`index.html`](./index.html) (hay que abrirlo en un navegador; GitHub no lo renderiza). Decisión de diseño: [ADR 0012](../adr/0012-contrato-api-openapi-por-ast.md).
 
 ## Cómo leerla
 
@@ -16,7 +16,7 @@
 | Sesión (comprobada en el handler) | 6 |
 | Sesión opcional | 3 |
 | Firma o secreto | 7 |
-| Pública | 71 |
+| Pública | 72 |
 
 ## Rutas sin sesión de middleware
 
@@ -77,7 +77,8 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `GET` | `/directories/venues/{comunidad}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:89`](../../server/routes/paginasSeo.ts#L89) |
 | `GET` | `/directories/venues/{comunidad}/{ciudad}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:90`](../../server/routes/paginasSeo.ts#L90) |
 | `GET` | `/directories/venues/{comunidad}/{ciudad}/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:91`](../../server/routes/paginasSeo.ts#L91) |
-| `GET` | `/e/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:71`](../../server/routes/paginaConcierto.ts#L71) |
+| `GET` | `/e/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:73`](../../server/routes/paginaConcierto.ts#L73) |
+| `GET` | `/ejercicio_youtube_crm` | Pública | publicoRateLimiter |  | [`server/routes/ejercicioYoutube.ts:12`](../../server/routes/ejercicioYoutube.ts#L12) |
 | `GET` | `/en/directories` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:81`](../../server/routes/paginasSeo.ts#L81) |
 | `GET` | `/en/directories/festivals` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:84`](../../server/routes/paginasSeo.ts#L84) |
 | `GET` | `/en/directories/festivals/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:85`](../../server/routes/paginasSeo.ts#L85) |
@@ -89,8 +90,8 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `GET` | `/en/festivals/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:104`](../../server/routes/paginasSeo.ts#L104) |
 | `GET` | `/en/guides` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:64`](../../server/routes/paginasSeo.ts#L64) |
 | `GET` | `/en/guides/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:65`](../../server/routes/paginasSeo.ts#L65) |
-| `GET` | `/en/llms.txt` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:210`](../../server/routes/paginaConcierto.ts#L210) |
-| `GET` | `/en/technical-rider-template` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:67`](../../server/routes/paginaConcierto.ts#L67) |
+| `GET` | `/en/llms.txt` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:212`](../../server/routes/paginaConcierto.ts#L212) |
+| `GET` | `/en/technical-rider-template` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:69`](../../server/routes/paginaConcierto.ts#L69) |
 | `GET` | `/festivales` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:101`](../../server/routes/paginasSeo.ts#L101) |
 | `GET` | `/festivales/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:102`](../../server/routes/paginasSeo.ts#L102) |
 | `GET` | `/guias` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:62`](../../server/routes/paginasSeo.ts#L62) |
@@ -101,15 +102,15 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `GET` | `/listados` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:98`](../../server/routes/paginasSeo.ts#L98) |
 | `GET` | `/listados/festivales` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:99`](../../server/routes/paginasSeo.ts#L99) |
 | `GET` | `/listados/festivales/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:100`](../../server/routes/paginasSeo.ts#L100) |
-| `GET` | `/llms.txt` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:209`](../../server/routes/paginaConcierto.ts#L209) |
+| `GET` | `/llms.txt` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:211`](../../server/routes/paginaConcierto.ts#L211) |
 | `GET` | `/netflix` | Pública | publicoRateLimiter |  | [`server/routes/presentacionTfm.ts:25`](../../server/routes/presentacionTfm.ts#L25) |
-| `GET` | `/plantilla-rider-tecnico` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:66`](../../server/routes/paginaConcierto.ts#L66) |
+| `GET` | `/plantilla-rider-tecnico` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:68`](../../server/routes/paginaConcierto.ts#L68) |
 | `GET` | `/presentacion_tfm` | Pública | publicoRateLimiter |  | [`server/routes/presentacionTfm.ts:24`](../../server/routes/presentacionTfm.ts#L24) |
 | `GET` | `/privacy` | Pública | — |  | [`server.ts:182`](../../server.ts#L182) |
 | `GET` | `/r/{code}` | Pública | publicoRateLimiter |  | [`server/routes/enlacesCortos.ts:49`](../../server/routes/enlacesCortos.ts#L49) |
-| `GET` | `/robots.txt` | Pública | — |  | [`server/routes/paginaConcierto.ts:187`](../../server/routes/paginaConcierto.ts#L187) |
-| `GET` | `/sitemap.xml` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:169`](../../server/routes/paginaConcierto.ts#L169) |
-| `GET` | `/technical-rider-template` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:62`](../../server/routes/paginaConcierto.ts#L62) |
+| `GET` | `/robots.txt` | Pública | — |  | [`server/routes/paginaConcierto.ts:189`](../../server/routes/paginaConcierto.ts#L189) |
+| `GET` | `/sitemap.xml` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:171`](../../server/routes/paginaConcierto.ts#L171) |
+| `GET` | `/technical-rider-template` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:64`](../../server/routes/paginaConcierto.ts#L64) |
 | `GET` | `/terms` | Pública | — |  | [`server.ts:224`](../../server.ts#L224) |
 
 ## Operaciones con esquema documentado
@@ -511,7 +512,8 @@ Salas, festivales y contactos del CRM de booking. Los agentes (Scout, Redactor, 
 | `GET` | `/directories/venues/{comunidad}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:89`](../../server/routes/paginasSeo.ts#L89) |
 | `GET` | `/directories/venues/{comunidad}/{ciudad}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:90`](../../server/routes/paginasSeo.ts#L90) |
 | `GET` | `/directories/venues/{comunidad}/{ciudad}/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:91`](../../server/routes/paginasSeo.ts#L91) |
-| `GET` | `/e/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:71`](../../server/routes/paginaConcierto.ts#L71) |
+| `GET` | `/e/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:73`](../../server/routes/paginaConcierto.ts#L73) |
+| `GET` | `/ejercicio_youtube_crm` | Pública | publicoRateLimiter |  | [`server/routes/ejercicioYoutube.ts:12`](../../server/routes/ejercicioYoutube.ts#L12) |
 | `GET` | `/en/directories` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:81`](../../server/routes/paginasSeo.ts#L81) |
 | `GET` | `/en/directories/festivals` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:84`](../../server/routes/paginasSeo.ts#L84) |
 | `GET` | `/en/directories/festivals/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:85`](../../server/routes/paginasSeo.ts#L85) |
@@ -523,8 +525,8 @@ Salas, festivales y contactos del CRM de booking. Los agentes (Scout, Redactor, 
 | `GET` | `/en/festivals/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:104`](../../server/routes/paginasSeo.ts#L104) |
 | `GET` | `/en/guides` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:64`](../../server/routes/paginasSeo.ts#L64) |
 | `GET` | `/en/guides/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:65`](../../server/routes/paginasSeo.ts#L65) |
-| `GET` | `/en/llms.txt` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:210`](../../server/routes/paginaConcierto.ts#L210) |
-| `GET` | `/en/technical-rider-template` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:67`](../../server/routes/paginaConcierto.ts#L67) |
+| `GET` | `/en/llms.txt` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:212`](../../server/routes/paginaConcierto.ts#L212) |
+| `GET` | `/en/technical-rider-template` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:69`](../../server/routes/paginaConcierto.ts#L69) |
 | `GET` | `/festivales` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:101`](../../server/routes/paginasSeo.ts#L101) |
 | `GET` | `/festivales/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:102`](../../server/routes/paginasSeo.ts#L102) |
 | `GET` | `/guias` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:62`](../../server/routes/paginasSeo.ts#L62) |
@@ -534,13 +536,13 @@ Salas, festivales y contactos del CRM de booking. Los agentes (Scout, Redactor, 
 | `GET` | `/listados` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:98`](../../server/routes/paginasSeo.ts#L98) |
 | `GET` | `/listados/festivales` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:99`](../../server/routes/paginasSeo.ts#L99) |
 | `GET` | `/listados/festivales/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:100`](../../server/routes/paginasSeo.ts#L100) |
-| `GET` | `/llms.txt` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:209`](../../server/routes/paginaConcierto.ts#L209) |
+| `GET` | `/llms.txt` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:211`](../../server/routes/paginaConcierto.ts#L211) |
 | `GET` | `/netflix` | Pública | publicoRateLimiter |  | [`server/routes/presentacionTfm.ts:25`](../../server/routes/presentacionTfm.ts#L25) |
-| `GET` | `/plantilla-rider-tecnico` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:66`](../../server/routes/paginaConcierto.ts#L66) |
+| `GET` | `/plantilla-rider-tecnico` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:68`](../../server/routes/paginaConcierto.ts#L68) |
 | `GET` | `/presentacion_tfm` | Pública | publicoRateLimiter |  | [`server/routes/presentacionTfm.ts:24`](../../server/routes/presentacionTfm.ts#L24) |
-| `GET` | `/robots.txt` | Pública | — |  | [`server/routes/paginaConcierto.ts:187`](../../server/routes/paginaConcierto.ts#L187) |
-| `GET` | `/sitemap.xml` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:169`](../../server/routes/paginaConcierto.ts#L169) |
-| `GET` | `/technical-rider-template` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:62`](../../server/routes/paginaConcierto.ts#L62) |
+| `GET` | `/robots.txt` | Pública | — |  | [`server/routes/paginaConcierto.ts:189`](../../server/routes/paginaConcierto.ts#L189) |
+| `GET` | `/sitemap.xml` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:171`](../../server/routes/paginaConcierto.ts#L171) |
+| `GET` | `/technical-rider-template` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:64`](../../server/routes/paginaConcierto.ts#L64) |
 
 ### posts
 
