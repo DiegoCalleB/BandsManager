@@ -30,7 +30,7 @@ interface QuickQuestion {
 
 const CONTENT_OFICIAL = {
   es: {
-    greet: '¡Hola! 👋 Soy el asistente de BandManager. ¿En qué puedo ayudarte para gestionar tu banda?',
+    greet: '¡Hola! 👋 Soy Eco, el asistente de BandManager. ¿En qué puedo ayudarte para gestionar tu banda?',
     questions: [
       {
         label: '¿Es gratis para empezar?',
@@ -76,7 +76,7 @@ const CONTENT_OFICIAL = {
     restart: 'Ver otras preguntas',
   },
   en: {
-    greet: 'Hey! 👋 I\'m the BandManager assistant. How can I help you manage your band?',
+    greet: 'Hey! 👋 I\'m Eco, the BandManager assistant. How can I help you manage your band?',
     questions: [
       {
         label: 'Is it free to get started?',
@@ -125,7 +125,7 @@ const CONTENT_OFICIAL = {
 
 const CONTENT_TFM = {
   es: {
-    greet: '¡Hola! 👋 Asistente de BandManager.io (Entorno de Demostración TFM). ¿Qué deseas consultar?',
+    greet: '¡Hola! 👋 Soy Eco, el asistente de BandManager.io (Entorno de Demostración TFM). ¿Qué deseas consultar?',
     questions: [
       {
         label: '¿Cómo funciona la custodia de señal (Escrow)?',
@@ -171,7 +171,7 @@ const CONTENT_TFM = {
     restart: 'Reiniciar opciones',
   },
   en: {
-    greet: 'Hello! 👋 BandManager.io Assistant (TFM Demonstration Environment). What would you like to explore?',
+    greet: 'Hello! 👋 I\'m Eco, the BandManager.io assistant (TFM Demonstration Environment). What would you like to explore?',
     questions: [
       {
         label: 'How does the Escrow deposit work?',
@@ -290,7 +290,7 @@ export const LandingChatWidget: React.FC<LandingChatWidgetProps> = ({ onEntrar, 
           ref={containerRef}
           role="dialog"
           aria-modal="true"
-          aria-label={lang === 'es' ? 'Asistente de BandManager' : 'BandManager Assistant'}
+          aria-label={lang === 'es' ? 'Eco, asistente de BandManager' : 'Eco, BandManager Assistant'}
           className="fixed bottom-24 right-4 z-50 flex w-[min(23rem,calc(100vw-2rem))] flex-col overflow-hidden rounded-[var(--r-xl)] bg-[var(--surface)] sm:right-6"
           style={{ maxHeight: 'calc(100dvh - 8rem)' }}
         >
@@ -302,7 +302,7 @@ export const LandingChatWidget: React.FC<LandingChatWidgetProps> = ({ onEntrar, 
               </span>
               <div>
                 <p className="text-sm font-semibold text-inherit">
-                  BandManager {mode === 'tfm' ? '· TFM' : ''}
+                  Eco · BandManager{mode === 'tfm' ? ' · TFM' : ''}
                 </p>
                 <div className="flex items-center gap-1.5">
                   <span className="size-1.5 rounded-full bg-[var(--ok)]" aria-hidden />

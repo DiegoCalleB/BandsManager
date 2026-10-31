@@ -56,7 +56,7 @@ export const ChatbotHeader: React.FC<ChatbotHeaderProps> = ({
               'text-[var(--ink)]'
             }`}
           >
-            Mánager Virtual IA{' '}
+            Eco · Mánager Virtual IA{' '}
             <span
               className={`w-1.5 h-1.5 rounded-[var(--r-pill)] inline-block ${
                 'bg-[var(--acc)]'
