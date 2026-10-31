@@ -18,9 +18,11 @@ Exporta: PorMedirCard.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_asesor_FormMetricasRed|src/components/asesor/FormMetricasRed.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_utils_asesorApi|src/utils/asesorApi.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_instagramMedios|src/utils/asesor/instagramMedios.ts]] *(Layer: #service, Domain: #social)*
+- [[src_utils_asesor_metricasPorRed|src/utils/asesor/metricasPorRed.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_resumen|src/utils/asesor/resumen.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_campanaConcierto|src/utils/campanaConcierto.ts]] *(Layer: #service, Domain: #system)*
 

@@ -21,6 +21,7 @@ Datos del Asesor de Marketing: la estrategia de la banda (`band_estrategia_marke
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_tolerantWrite|server/db/tolerantWrite.ts]] *(Layer: #db, Domain: #system)*
 - [[src_utils_asesor_estrategia|src/utils/asesor/estrategia.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_asesor_metricasPorRed|src/utils/asesor/metricasPorRed.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_reglasFormato|src/utils/asesor/reglasFormato.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_resumen|src/utils/asesor/resumen.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_tipos|src/utils/asesor/tipos.ts]] *(Layer: #service, Domain: #system)*
@@ -34,6 +35,7 @@ Datos del Asesor de Marketing: la estrategia de la banda (`band_estrategia_marke
 - [[server_routes_asesor|server/routes/asesor.ts]] *(from #route)*
 - [[server_services_asesorInstagram|server/services/asesorInstagram.ts]] *(from #service)*
 - [[server_services_asesorMarketing|server/services/asesorMarketing.ts]] *(from #service)*
+- [[server_services_asesorRedes|server/services/asesorRedes.ts]] *(from #service)*
 
 ---
 

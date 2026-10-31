@@ -45,4 +45,27 @@ describe('agendaDe', () => {
     const dias = agendaDe({ ...base, conciertos: [{ id: 'c', fecha: '2026-12-31', sala: 'Lejos', ciudad: '' }], historial: [hecha('2026-09-01', 'vieja')] });
     expect(dias).toEqual([{ fecha: HOY, esHoy: true, eventos: [] }]);
   });
+
+  it('una pieza medida solo en TikTok o YouTube también se lee, comparada con lo habitual de esa red', () => {
+    const rr = (fecha: string, tarjetaId: string, v: number) => ({ fecha, tarjetaId, red: 'tiktok' as const, formato: 'reel' as const, titulo: `Idea ${tarjetaId}`, metricas: { visualizaciones: v } });
+    const dias = agendaDe({
+      ...base,
+      historial: [hecha('2026-10-22', 'a'), hecha('2026-10-23', 'b'), hecha('2026-10-24', 'c'), hecha('2026-10-26', 'd')],
+      // Cada pieza se compara con la mediana de las demás de esa red: 1000 y 2000 quedan por debajo de lo habitual, 3000 y 6000 por encima.
+      resultadosRed: [rr('2026-10-22', 'a', 1000), rr('2026-10-23', 'b', 2000), rr('2026-10-24', 'c', 3000), rr('2026-10-26', 'd', 6000)],
+    });
+    const lecturas = dias.flatMap((d) => d.eventos).filter((e) => e.tipo === 'hecha').map((e) => (e as { lectura: string }).lectura);
+    expect(lecturas).toEqual(['por_debajo', 'por_debajo', 'por_encima', 'por_encima']);
+  });
+
+  it('si la pieza tiene números de Instagram, mandan esos y no los de otra red', () => {
+    const dias = agendaDe({
+      ...base,
+      historial: [hecha('2026-10-24', 'a')],
+      resultados: [{ fecha: '2026-10-24', tarjetaId: 'a', formato: 'reel', titulo: 'Idea a', alcance: 1000, guardados: 60, alcanceNoSeguidores: 500 }],
+      resultadosRed: [{ fecha: '2026-10-24', tarjetaId: 'a', red: 'tiktok', formato: 'reel', titulo: 'Idea a', metricas: { visualizaciones: 9 } }],
+    });
+    expect(dias.flatMap((d) => d.eventos).find((e) => e.tipo === 'hecha')).toMatchObject({ lectura: 'funciona' });
+  });
 });
+

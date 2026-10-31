@@ -2,7 +2,7 @@
 //   GET  /api/asesor/hoy                    modo de hoy, opciones y semana (sin IA).
 //   POST /api/asesor/pieza                  prepara con IA la pieza de una idea de hoy (solo el id).
 //   POST /api/asesor/accion                 hecho / saltado / pendiente de una idea de hoy.
-//   POST /api/asesor/resultado              los números (alcance, guardados) de una pieza ya publicada.
+//   POST /api/asesor/resultado              los números de una pieza ya publicada (Instagram, o `red`: tiktok / youtube).
 //   GET  /api/asesor/instagram/medios       publicaciones de Instagram que pueden ser una pieza hecha.
 //   POST /api/asesor/instagram/medidas      alcance y guardados de UNA publicación, para rellenar el formulario.
 //   POST /api/asesor/chat                   pregunta libre al asesor; responde y, como mucho, propone un botón (no ejecuta nada).
@@ -18,6 +18,7 @@ import { apiAutenticadaRateLimiter, iaRateLimiter } from '../middleware/rateLimi
 import { captureError } from '../utils/errorTracking.js';
 import { dbGetEstrategiaMarketing, dbGuardarEstrategiaMarketing } from '../db/asesorMarketing.js';
 import { chatAsesor, estadoDeHoy, generarPieza, registrarAccion, registrarResultado, sugerirEstrategia } from '../services/asesorMarketing.js';
+import { registrarResultadoRed } from '../services/asesorRedes.js';
 import { medidasDeMedio, mediosDeLaPieza } from '../services/asesorInstagram.js';
 import { ESTRATEGIA_INICIAL, sanearEstrategia } from '../../src/utils/asesor/estrategia.js';
 
@@ -66,7 +67,9 @@ asesorRouter.post('/asesor/accion', requireAuth, apiAutenticadaRateLimiter, asyn
 
 asesorRouter.post('/asesor/resultado', requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
   try {
-    const r = await registrarResultado(getTargetBandId(req), req.body ?? {});
+    const body = req.body ?? {};
+    // Sin `red` (o Instagram) es el camino de siempre; TikTok y YouTube miden otras cosas y tienen el suyo.
+    const r = body.red === undefined || body.red === 'instagram' ? await registrarResultado(getTargetBandId(req), body) : await registrarResultadoRed(getTargetBandId(req), body);
     if (r.estado === 'invalido') return res.status(400).json({ error: r.motivo });
     if (r.estado === 'no_existe') return res.status(404).json({ error: 'No encontramos esa publicación entre las que habéis marcado como hechas.' });
     if (r.estado === 'sin_bd') return res.status(503).json({ error: 'No se pudo guardar ahora mismo.' });

@@ -7,6 +7,7 @@ import { TarjetaHoy } from './TarjetaHoy';
 import { PiezaSheet } from './PiezaSheet';
 import { FormEstrategia } from './FormEstrategia';
 import { PorMedirCard } from './PorMedirCard';
+import { OtrasRedesCard } from './OtrasRedesCard';
 import { ChatAsesor } from './ChatAsesor';
 import type { AccionChat } from '../../utils/asesor/chat';
 import { AgendaAsesor } from './AgendaAsesor';
@@ -56,7 +57,7 @@ const AsesorView: React.FC<Props> = ({ onNavigate, banda }) => {
     );
   }
 
-  const { diagnostico, opciones, semana, porMedir, resumen, agenda, estrategia, tieneEstrategia } = a.estado;
+  const { diagnostico, opciones, semana, porMedir, otrasRedes, resumen, agenda, estrategia, tieneEstrategia } = a.estado;
   const pestanas: TabItem<Pestana>[] = [
     { id: 'hoy', label: 'Hoy' },
     { id: 'calendario', label: 'Calendario' },
@@ -158,11 +159,19 @@ const AsesorView: React.FC<Props> = ({ onNavigate, banda }) => {
           {porMedir.length > 0 && (
             <div className="grid gap-3">
               <h2 className="text-sm font-medium text-[var(--ink-2)]">Esperan sus números</h2>
-              {porMedir.map((p) => <PorMedirCard key={`${p.fecha}-${p.tarjetaId}`} pieza={p} onGuardar={(m) => a.medir(p, m)} />)}
+              {porMedir.map((p) => <PorMedirCard key={`${p.fecha}-${p.tarjetaId}`} pieza={p} onGuardar={(m) => a.medir(p, m)} onGuardarRed={(red, m) => a.medirRed(p, red, m)} />)}
             </div>
           )}
+          {otrasRedes.length > 0 && (
+            <details className="group grid gap-3 rounded-[var(--r-m)] bg-[var(--sunken)] p-4">
+              <summary className="cursor-pointer text-sm font-medium text-[var(--ink)]">¿Lo publicasteis también en otras redes? <span className="font-normal text-[var(--ink-2)]">(opcional)</span></summary>
+              <div className="mt-3 grid gap-3">
+                {otrasRedes.map((p) => <OtrasRedesCard key={`${p.fecha}-${p.tarjetaId}`} pieza={p} onGuardar={(red, m) => a.medirRed(p, red, m)} />)}
+              </div>
+            </details>
+          )}
           {resumen && <ResumenCard resumen={resumen} />}
-          {!porMedir.length && !resumen && !a.anotado && (
+          {!porMedir.length && !otrasRedes.length && !resumen && !a.anotado && (
             <EmptyState title="Aún no hay números que mirar."
               description="Marca una pieza como publicada y, dos días después, apunta aquí cuántas personas la vieron y la guardaron. Con eso sabremos qué os funciona." />
           )}

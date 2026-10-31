@@ -8,6 +8,7 @@ import { sanearEstrategia, type EstrategiaMarketing } from '../../src/utils/ases
 import type { Accion, AccionRegistrada } from '../../src/utils/asesor/tipos.js';
 import type { Formato } from '../../src/utils/asesor/reglasFormato.js';
 import type { ResultadoPieza } from '../../src/utils/asesor/resumen.js';
+import { REDES_EXTRA, sanearMetricasRed, type RedExtra, type ResultadoRed } from '../../src/utils/asesor/metricasPorRed.js';
 
 const FORMATOS: unknown[] = ['reel', 'carrusel', 'stories', 'post'];
 
@@ -145,3 +146,47 @@ export async function dbGuardarResultado(bandId: string, r: ResultadoPieza): Pro
   }
   return true;
 }
+
+/* ----------------------------------------------------------------- resultados en TikTok y YouTube */
+
+const RESULTADOS_RED = 'asesor_resultados_red';
+
+/** Resultados de TikTok y YouTube desde `desde`. [] si falla (o aún no existe la tabla): el plan sigue sin ellos. */
+export async function dbResultadosRedDesde(bandId: string, desde: string): Promise<ResultadoRed[]> {
+  const { data, error } = await getSupabase()
+    .from(RESULTADOS_RED)
+    .select('fecha, tarjeta_id, red, formato, titulo, metricas')
+    .eq('band_id', cleanBandId(bandId))
+    .gte('fecha', desde);
+  if (error) {
+    console.warn('[Asesor DB] Sin resultados por red de %s:', bandId, error.message);
+    return [];
+  }
+  return ((data || []) as unknown as Array<Record<string, unknown>>).flatMap((f) => {
+    // Lo que sale de la BD se vuelve a validar: una fila rara se descarta, no tumba el plan.
+    if (!FORMATOS.includes(f.formato) || !REDES_EXTRA.includes(f.red as RedExtra)) return [];
+    const metricas = sanearMetricasRed(f.red as RedExtra, f.metricas);
+    if (typeof metricas === 'string') return [];
+    return [{ fecha: String(f.fecha).slice(0, 10), tarjetaId: String(f.tarjeta_id), red: f.red as RedExtra, formato: f.formato as Formato, titulo: String(f.titulo ?? ''), metricas }];
+  });
+}
+
+/** Guarda (o corrige) los números de una pieza en una red. */
+export async function dbGuardarResultadoRed(bandId: string, r: ResultadoRed): Promise<boolean> {
+  const sb = getSupabase();
+  const banda = cleanBandId(bandId);
+  const borrado = await sb.from(RESULTADOS_RED).delete().eq('band_id', banda).eq('fecha', r.fecha).eq('tarjeta_id', r.tarjetaId).eq('red', r.red);
+  if (borrado.error) {
+    console.error('[Asesor DB] Error limpiando el resultado por red de %s:', banda, borrado.error.message);
+    return false;
+  }
+  const { error } = await sb.from(RESULTADOS_RED).insert({
+    band_id: banda, fecha: r.fecha, tarjeta_id: r.tarjetaId, red: r.red, formato: r.formato, titulo: r.titulo, metricas: r.metricas,
+  });
+  if (error) {
+    console.error('[Asesor DB] Error guardando el resultado por red de %s:', banda, error.message);
+    return false;
+  }
+  return true;
+}
+

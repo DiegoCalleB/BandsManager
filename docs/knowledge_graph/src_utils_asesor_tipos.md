@@ -25,12 +25,14 @@ Tipos compartidos del asesor que no pertenecen a un solo módulo: lo que la band
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_db_asesorMarketing|server/db/asesorMarketing.ts]] *(from #db)*
 - [[src_utils_asesor_agenda|src/utils/asesor/agenda.ts]] *(from #service)*
+- [[src_utils_asesor_metricasPorRed|src/utils/asesor/metricasPorRed.ts]] *(from #service)*
 - [[src_utils_asesor_opciones|src/utils/asesor/opciones.ts]] *(from #service)*
 
 ---
 
 ## 🧪 Tests que lo cubren
 - `src/utils/asesor/__tests__/agenda.test.ts`
+- `src/utils/asesor/__tests__/metricasPorRed.test.ts`
 - `src/utils/asesor/__tests__/resumen.test.ts`
 
 ---

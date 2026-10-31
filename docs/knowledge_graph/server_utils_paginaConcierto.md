@@ -34,6 +34,7 @@ Página pública de un concierto (`/e/<slug>`), generada en el servidor.
 - [[server_routes_referidos|server/routes/referidos.ts]] *(from #route)*
 - [[server_services_asesorInstagram|server/services/asesorInstagram.ts]] *(from #service)*
 - [[server_services_asesorMarketing|server/services/asesorMarketing.ts]] *(from #service)*
+- [[server_services_asesorRedes|server/services/asesorRedes.ts]] *(from #service)*
 - [[server_utils_seo_cabeza|server/utils/seo/cabeza.ts]] *(from #service)*
 - [[server_utils_seo_sitemap|server/utils/seo/sitemap.ts]] *(from #service)*
 

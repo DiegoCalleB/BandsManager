@@ -238,16 +238,16 @@ Son las que un revisor de seguridad querrá mirar primero.
 
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
-| `POST` | `/api/asesor/accion` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/asesor.ts:54`](../../server/routes/asesor.ts#L54) |
-| `POST` | `/api/asesor/chat` | Sesión | iaRateLimiter |  | [`server/routes/asesor.ts:106`](../../server/routes/asesor.ts#L106) |
-| `GET` | `/api/asesor/estrategia` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/asesor.ts:117`](../../server/routes/asesor.ts#L117) |
-| `PUT` | `/api/asesor/estrategia` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/asesor.ts:127`](../../server/routes/asesor.ts#L127) |
-| `POST` | `/api/asesor/estrategia/sugerir` | Sesión | iaRateLimiter |  | [`server/routes/asesor.ts:140`](../../server/routes/asesor.ts#L140) |
-| `GET` | `/api/asesor/hoy` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/asesor.ts:31`](../../server/routes/asesor.ts#L31) |
-| `POST` | `/api/asesor/instagram/medidas` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/asesor.ts:94`](../../server/routes/asesor.ts#L94) |
-| `GET` | `/api/asesor/instagram/medios` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/asesor.ts:82`](../../server/routes/asesor.ts#L82) |
-| `POST` | `/api/asesor/pieza` | Sesión | iaRateLimiter |  | [`server/routes/asesor.ts:41`](../../server/routes/asesor.ts#L41) |
-| `POST` | `/api/asesor/resultado` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/asesor.ts:67`](../../server/routes/asesor.ts#L67) |
+| `POST` | `/api/asesor/accion` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/asesor.ts:55`](../../server/routes/asesor.ts#L55) |
+| `POST` | `/api/asesor/chat` | Sesión | iaRateLimiter |  | [`server/routes/asesor.ts:109`](../../server/routes/asesor.ts#L109) |
+| `GET` | `/api/asesor/estrategia` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/asesor.ts:120`](../../server/routes/asesor.ts#L120) |
+| `PUT` | `/api/asesor/estrategia` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/asesor.ts:130`](../../server/routes/asesor.ts#L130) |
+| `POST` | `/api/asesor/estrategia/sugerir` | Sesión | iaRateLimiter |  | [`server/routes/asesor.ts:143`](../../server/routes/asesor.ts#L143) |
+| `GET` | `/api/asesor/hoy` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/asesor.ts:32`](../../server/routes/asesor.ts#L32) |
+| `POST` | `/api/asesor/instagram/medidas` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/asesor.ts:97`](../../server/routes/asesor.ts#L97) |
+| `GET` | `/api/asesor/instagram/medios` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/asesor.ts:85`](../../server/routes/asesor.ts#L85) |
+| `POST` | `/api/asesor/pieza` | Sesión | iaRateLimiter |  | [`server/routes/asesor.ts:42`](../../server/routes/asesor.ts#L42) |
+| `POST` | `/api/asesor/resultado` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/asesor.ts:68`](../../server/routes/asesor.ts#L68) |
 | `POST` | `/api/campana-concierto/redactar` | Sesión | iaRateLimiter |  | [`server/routes/campanaConcierto.ts:108`](../../server/routes/campanaConcierto.ts#L108) |
 | `GET` | `/api/cartel/adn` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:426`](../../server/routes/cartelria.ts#L426) |
 | `PUT` | `/api/cartel/adn` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:437`](../../server/routes/cartelria.ts#L437) |
