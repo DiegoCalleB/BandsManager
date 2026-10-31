@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Canal de BandManager: CRM para bandas · Plan de YouTube</title>
+<meta name="description" content="Ejercicio de marketing digital: 8 vídeos en 4 semanas para posicionar la keyword CRM desde el nicho de las bandas.">
+<style>
+@font-face{font-family:Onest;font-weight:400;font-display:swap;src:url(onest-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:Onest;font-weight:700;font-display:swap;src:url(onest-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:Onest;font-weight:800;font-display:swap;src:url(onest-latin-800-normal.woff2) format("woff2")}
+:root{--bg:#F6F7F9;--surface:#FFFFFF;--sunken:#E8EBEF;--ink:#2A2E35;--ink-2:#646C78;--ink-3:#98A0AC;--ok:#17998C;
+--acc:#D86E31;--acc-soft:#F9EAE1;--acc-ink:#813F18;--on-acc:#FFFFFF;
+--r-s:12px;--r-m:18px;--r-l:24px;--r-xl:32px;--r-pill:999px}
+[data-theme="dark"]{--bg:#101216;--surface:#191C21;--sunken:#0B0D10;--ink:#E3E7EC;--ink-2:#99A1AC;--ink-3:#6B7380;--ok:#4FC7B8;
+--acc:#E99463;--acc-soft:#2A1B12;--acc-ink:#E99463;--on-acc:#2C1606}
+[data-theme="classic"]{--bg:#121110;--surface:#18181B;--sunken:#0D0C0C;--ink:#F4F4F5;--ink-2:#A1A1AA;--ink-3:#71717A;--ok:#10B981;
+--acc:#F2CA50;--acc-soft:#2C2310;--acc-ink:#F2CA50;--on-acc:#2C2200}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 Onest,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+main{max-width:1180px;margin:0 auto;padding:0 16px 140px}
+a{color:var(--acc-ink);text-underline-offset:3px}
+.temas{display:flex;gap:6px;justify-content:flex-end;padding:16px 0 0}
+.temas button{font:700 13px Onest,system-ui;background:var(--sunken);color:var(--ink-2);border:0;border-radius:var(--r-pill);padding:7px 14px;cursor:pointer}
+.temas button[aria-pressed=true]{background:var(--acc);color:var(--on-acc)}
+.temas button:focus-visible,a:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.banner{height:150px;border-radius:var(--r-xl);background:var(--acc-soft);display:flex;align-items:flex-end;gap:7px;padding:0 24px;overflow:hidden;margin-top:12px}
+.banner i{display:block;width:14px;border-radius:var(--r-pill);background:var(--acc);opacity:.9}.banner i.o{background:var(--ok)}.banner i.n{background:var(--sunken)}
+.canal{display:flex;gap:20px;align-items:center;padding:20px 4px 8px;flex-wrap:wrap}
+.avatar{width:104px;height:104px;border-radius:var(--r-pill);background:var(--acc);overflow:hidden;flex:none;display:grid;place-items:end center;cursor:pointer}
+.avatar img{width:128%;margin-bottom:-14%;animation:rock 3.2s ease-in-out infinite;transform-origin:50% 90%}
+.canal h1{font-size:clamp(24px,4vw,34px);margin:0;line-height:1.1;font-weight:800;letter-spacing:-.01em}
+.canal p{margin:4px 0 0;color:var(--ink-2);font-size:14.5px}
+.canal .cta{margin-left:auto;display:flex;gap:8px}
+.btn{font:700 14px Onest,system-ui;border:0;border-radius:var(--r-pill);padding:11px 20px;cursor:pointer;text-decoration:none;display:inline-block}
+.btn.p{background:var(--ink);color:var(--bg)}.btn.a{background:var(--acc);color:var(--on-acc)}
+.tabs{display:flex;gap:6px;margin:18px 0 22px;position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:4;overflow-x:auto}
+.tabs button{font:700 14px Onest,system-ui;background:var(--sunken);color:var(--ink-2);border:0;border-radius:var(--r-pill);padding:9px 18px;cursor:pointer;white-space:nowrap}
+.tabs button[aria-selected=true]{background:var(--ink);color:var(--bg)}
+.tabs button:focus-visible,.card:focus-visible,.btn:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:26px 16px}
+.card{background:none;border:0;padding:0;text-align:left;cursor:pointer;color:inherit;font:inherit}
+.card .th{position:relative;border-radius:var(--r-m);overflow:hidden;aspect-ratio:16/9;background:var(--sunken)}
+.card img.m{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s cubic-bezier(.23,1,.32,1)}
+.card:hover img.m{transform:scale(1.04)}
+.card .tag{position:absolute;right:8px;bottom:8px;background:var(--ink);color:var(--bg);font-size:12px;font-weight:700;padding:3px 9px;border-radius:var(--r-pill)}
+.card .info{display:flex;gap:12px;margin-top:10px}
+.card .av{width:36px;height:36px;border-radius:var(--r-pill);background:var(--acc);flex:none;overflow:hidden;display:grid;place-items:end center}.card .av img{width:130%;margin-bottom:-14%}
+.card h3{font-size:16px;line-height:1.3;margin:0 0 3px;font-weight:700}
+.card .meta{font-size:13px;color:var(--ink-2)}
+dialog{width:min(920px,calc(100vw - 24px));max-height:calc(100vh - 24px);border:0;border-radius:var(--r-xl);background:var(--surface);color:var(--ink);padding:0;overflow:auto}
+dialog::backdrop{background:rgba(16,18,22,.62)}
+dialog .big{width:100%;display:block;aspect-ratio:16/9;object-fit:cover}
+dialog .pad{padding:24px 28px 30px}
+dialog h2{font-size:26px;margin:0 0 6px;line-height:1.15}
+dialog .canalfila{display:flex;align-items:center;gap:12px;margin:14px 0}
+dialog .caja{background:var(--bg);border-radius:var(--r-l);padding:16px 18px;font-size:14.5px;color:var(--ink-2)}
+dialog .caja b{color:var(--ink)}
+dialog .hash{color:var(--acc-ink);font-weight:700;margin:0 0 8px;font-size:14px}
+.cerrar{position:absolute;right:14px;top:14px;background:var(--surface);color:var(--ink);width:40px;height:40px;border-radius:var(--r-pill);border:0;font-size:22px;cursor:pointer}
+.nav2{display:flex;justify-content:space-between;margin-top:16px}
+[hidden]{display:none!important}
+h2.sec{font-size:26px;margin:8px 0 14px;font-weight:800}
+h2{font-size:28px;margin:60px 0 16px;letter-spacing:-.01em;font-weight:800}
+.tri{display:grid;grid-template-columns:2fr 1.2fr 1.6fr;gap:12px}
+.tri div{background:var(--surface);border-radius:var(--r-l);padding:20px}.tri div:first-child{background:var(--acc-soft)}
+.tri b{display:block;color:var(--acc-ink);font-size:14px;margin-bottom:4px}
+.tabla{overflow-x:auto;background:var(--surface);border-radius:var(--r-l);padding:8px}
+table{border-collapse:separate;border-spacing:0 4px;width:100%;min-width:620px}th,td{text-align:left;padding:12px 14px;font-size:14.5px;vertical-align:top}
+th{color:var(--ink-3);font-weight:700}tbody tr:nth-child(odd) td{background:var(--bg)}
+tbody td:first-child{border-radius:var(--r-s) 0 0 var(--r-s);white-space:nowrap;color:var(--ink-2)}tbody td:last-child{border-radius:0 var(--r-s) var(--r-s) 0}
+.vid{background:var(--surface);border-radius:var(--r-xl);overflow:hidden;margin:0 0 20px;display:grid;grid-template-columns:1fr 1fr}
+.vid:nth-of-type(even) .mini{order:2}
+.mini{width:100%;height:100%;object-fit:cover;display:block}
+.cuerpo{padding:24px}.cuerpo h3{margin:2px 0 12px;font-size:22px;line-height:1.2;font-weight:800}.cuerpo p{margin:0 0 10px;font-size:14.5px;color:var(--ink-2)}.cuerpo p b{color:var(--ink)}
+.pieza{background:var(--acc-soft);padding:10px 14px;border-radius:var(--r-m);color:var(--ink)!important}
+.chips{list-style:none;padding:0;margin:0 0 12px;display:flex;flex-wrap:wrap;gap:6px}.chips li{background:var(--sunken);border-radius:var(--r-pill);padding:4px 12px;font-size:12.5px;color:var(--ink-2)}
+.resp{color:var(--ink-3)}
+ul.reglas{padding-left:20px;color:var(--ink-2)}ul.reglas li{margin-bottom:8px}
+#guia{position:fixed;right:12px;bottom:10px;width:150px;z-index:5;pointer-events:none;text-align:center}
+#guia img{width:100%;pointer-events:auto;cursor:pointer;animation:rock 3.6s ease-in-out infinite;transform-origin:50% 90%}
+#guia .bubble{position:absolute;right:8px;bottom:100%;width:210px;margin-bottom:2px;background:var(--acc);color:var(--on-acc);border-radius:var(--r-m);padding:9px 14px;font-size:13.5px;font-weight:700;line-height:1.3;opacity:0;transform:translateY(8px) scale(.95);transition:.25s;text-align:left}
+#guia .bubble.on{opacity:1;transform:none}
+.pop{animation:pop .45s cubic-bezier(.3,1.6,.5,1)}@keyframes pop{0%{transform:scale(.7) rotate(-8deg)}100%{transform:none}}
+footer{color:var(--ink-3);font-size:13px;margin-top:56px}
+@media (max-width:760px){header.hero{grid-template-columns:1fr}#ecoHero{max-width:240px}.tri{grid-template-columns:1fr}.vid{grid-template-columns:1fr}.vid:nth-of-type(even) .mini{order:0}#guia{width:96px}#guia .bubble{width:170px;font-size:12.5px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+</style></head><body><main>
+<nav class="temas" aria-label="Tema"><button data-t="light">Claro</button><button data-t="dark">Oscuro</button><button data-t="classic">Clásico</button></nav>
+<div class="banner" aria-hidden="true"><i class="" style="height:44px"></i><i class="n" style="height:70px"></i><i class="" style="height:98px"></i><i class="o" style="height:56px"></i><i class="" style="height:120px"></i><i class="" style="height:80px"></i><i class="n" style="height:48px"></i><i class="" style="height:104px"></i><i class="" style="height:62px"></i><i class="" style="height:112px"></i><i class="o" style="height:40px"></i><i class="n" style="height:86px"></i><i class="" style="height:74px"></i><i class="" style="height:52px"></i><i class="" style="height:116px"></i><i class="" style="height:70px"></i><i class="n" style="height:92px"></i><i class="o" style="height:58px"></i><i class="" style="height:100px"></i><i class="" style="height:66px"></i><i class="" style="height:46px"></i><i class="n" style="height:84px"></i><i class="" style="height:108px"></i><i class="" style="height:60px"></i></div>
+<section class="canal"><div class="avatar" id="avatar" title="Pulsa a Eco"><img id="ecoHero" src="eco/pillo.webp" alt="Eco, la mascota del canal"></div>
+<div><h1>BandManager · Booking para bandas</h1><p>@bandmanagerio · 8 vídeos planificados · CRM para bandas, sin cara: voz, pantalla y Eco</p><p>Ejercicio de marketing digital del máster de Desarrollo con IA. Propuesta, no canal publicado.</p></div>
+<div class="cta"><a class="btn a" href="/">Probar gratis 14 días</a></div></section>
+<div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-tab="videos">Vídeos</button><button role="tab" aria-selected="false" data-tab="calendario">Calendario</button><button role="tab" aria-selected="false" data-tab="plan">Plan y reglas</button></div>
+
+<section id="t-videos"><div class="grid"><button class="card" data-n="1"><div class="th"><img class="m" src="mini/v1.jpg" width="1280" height="720" alt="Miniatura: Perdimos un bolo por no tener un CRM" loading="lazy"><span class="tag">Mar 17 nov</span></div>
+<div class="info"><div class="av"><img src="eco/pillo.webp" alt=""></div><div><h3>Perdimos un bolo por no tener un CRM</h3><div class="meta">BandManager · Booking para bandas<br>Programado · Mar 17 nov</div></div></div></button><button class="card" data-n="2"><div class="th"><img class="m" src="mini/v2.jpg" width="1280" height="720" alt="Miniatura: Borra el Excel de tu banda" loading="lazy"><span class="tag">Jue 19 nov</span></div>
+<div class="info"><div class="av"><img src="eco/pillo.webp" alt=""></div><div><h3>Borra el Excel de tu banda</h3><div class="meta">BandManager · Booking para bandas<br>Programado · Jue 19 nov</div></div></div></button><button class="card" data-n="3"><div class="th"><img class="m" src="mini/v3.jpg" width="1280" height="720" alt="Miniatura: Probé 4 CRM para mi banda. 3 suspendieron" loading="lazy"><span class="tag">Mar 24 nov</span></div>
+<div class="info"><div class="av"><img src="eco/pillo.webp" alt=""></div><div><h3>Probé 4 CRM para mi banda. 3 suspendieron</h3><div class="meta">BandManager · Booking para bandas<br>Programado · Mar 24 nov</div></div></div></button><button class="card" data-n="4"><div class="th"><img class="m" src="mini/v4.jpg" width="1280" height="720" alt="Miniatura: Los CRM gratis no son gratis" loading="lazy"><span class="tag">Jue 26 nov</span></div>
+<div class="info"><div class="av"><img src="eco/pillo.webp" alt=""></div><div><h3>Los CRM gratis no son gratis</h3><div class="meta">BandManager · Booking para bandas<br>Programado · Jue 26 nov</div></div></div></button><button class="card" data-n="5"><div class="th"><img class="m" src="mini/v5.jpg" width="1280" height="720" alt="Miniatura: Mi banda con web y QR de fans en 10 minutos (o pago la ronda)" loading="lazy"><span class="tag">Mar 1 dic</span></div>
+<div class="info"><div class="av"><img src="eco/pillo.webp" alt=""></div><div><h3>Mi banda con web y QR de fans en 10 minutos (o pago la ronda)</h3><div class="meta">BandManager · Booking para bandas<br>Programado · Mar 1 dic</div></div></div></button><button class="card" data-n="6"><div class="th"><img class="m" src="mini/v6.jpg" width="1280" height="720" alt="Miniatura: Mandamos un email a 40 salas: 19 abrieron el dossier y 3 contestaron" loading="lazy"><span class="tag">Jue 3 dic</span></div>
+<div class="info"><div class="av"><img src="eco/pillo.webp" alt=""></div><div><h3>Mandamos un email a 40 salas: 19 abrieron el dossier y 3 contestaron</h3><div class="meta">BandManager · Booking para bandas<br>Programado · Jue 3 dic</div></div></div></button><button class="card" data-n="7"><div class="th"><img class="m" src="mini/v7.jpg" width="1280" height="720" alt="Miniatura: Por qué bandas peores que la tuya tocan más" loading="lazy"><span class="tag">Mar 8 dic</span></div>
+<div class="info"><div class="av"><img src="eco/pillo.webp" alt=""></div><div><h3>Por qué bandas peores que la tuya tocan más</h3><div class="meta">BandManager · Booking para bandas<br>Programado · Mar 8 dic</div></div></div></button><button class="card" data-n="8"><div class="th"><img class="m" src="mini/v8.jpg" width="1280" height="720" alt="Miniatura: Dejé que una IA escribiera a 30 salas. Esto contestaron" loading="lazy"><span class="tag">Jue 10 dic</span></div>
+<div class="info"><div class="av"><img src="eco/pillo.webp" alt=""></div><div><h3>Dejé que una IA escribiera a 30 salas. Esto contestaron</h3><div class="meta">BandManager · Booking para bandas<br>Programado · Jue 10 dic</div></div></div></button></div></section>
+
+<section id="t-calendario" hidden><h2 class="sec">Calendario: martes y jueves, del 17 nov al 10 dic</h2>
+<div class="tabla"><table><thead><tr><th>Día</th><th>Título</th><th>Pieza de BandManager que enseña</th></tr></thead><tbody><tr><td>Mar 17 nov</td><td><a href="#v1" data-n="1">1. Perdimos un bolo por no tener un CRM</a></td><td>Embudo de booking: de primer email a fecha cerrada, que pasa sola al calendario</td></tr><tr><td>Jue 19 nov</td><td><a href="#v2" data-n="2">2. Borra el Excel de tu banda</a></td><td>Historial de cada sala y aviso de seguimiento</td></tr><tr><td>Mar 24 nov</td><td><a href="#v3" data-n="3">3. Probé 4 CRM para mi banda. 3 suspendieron</a></td><td>Base de salas y festivales, pitch con IA</td></tr><tr><td>Jue 26 nov</td><td><a href="#v4" data-n="4">4. Los CRM gratis no son gratis</a></td><td>Plan gratuito y su límite</td></tr><tr><td>Mar 1 dic</td><td><a href="#v5" data-n="5">5. Mi banda con web y QR de fans en 10 minutos (o pago la ronda)</a></td><td>Dossier EPK web, landing de fans y QR</td></tr><tr><td>Jue 3 dic</td><td><a href="#v6" data-n="6">6. Mandamos un email a 40 salas: 19 abrieron el dossier y 3 contestaron</a></td><td>Seguimiento de aperturas del email y visitas al dossier</td></tr><tr><td>Mar 8 dic</td><td><a href="#v7" data-n="7">7. Por qué bandas peores que la tuya tocan más</a></td><td>Seguimiento constante y acuerdos guardados (caché, rider)</td></tr><tr><td>Jue 10 dic</td><td><a href="#v8" data-n="8">8. Dejé que una IA escribiera a 30 salas. Esto contestaron</a></td><td>Agentes Scout, Redactor, Enviador y Lector con tu aprobación</td></tr></tbody></table></div></section>
+
+<section id="t-plan" hidden>
+<div class="tri"><div><b>Público</b>Lucía, 27 años, bajista indie en España o Latinoamérica. Escribe a salas desde Gmail, lo apunta en un Excel y pierde fechas por no hacer seguimiento.</div>
+<div><b>Idea</b>Cada vídeo enseña una pieza distinta de lo que un CRM puede hacer por una banda. Título y miniatura abren una pregunta; el vídeo la responde en 30 s.</div>
+<div><b>Objetivo</b>Posicionar «CRM» desde un nicho sin competencia: va en la voz, la descripción, las etiquetas y el título de respaldo. CTA: prueba gratis de 14 días de De Gira (propuesta de marketing).</div></div>
+<h2 class="sec" style="margin-top:36px">Miniaturas</h2>
+<p style="color:var(--ink-2)">Mismo formato en las 8: máximo 4 palabras a rotulador sobre cinta americana, una pieza de la app dibujada y Eco con la emoción del vídeo. El texto nunca repite el título: lo completa. Son concept art; la versión final lleva fotos reales y capturas de la app.</p>
+<h2 class="sec" style="margin-top:36px">Reglas y medición</h2>
+<ul class="reglas"><li>Toda cifra de un título es real. Las del vídeo 6 (40, 19, 3) son un ejemplo hasta tener el envío hecho.</li>
+<li>Polémica con ideas, no con nombres. La promesa de la miniatura se paga en 30 s.</li>
+<li>Los emails en frío (vídeos 6 y 8) deben cumplir LSSI y RGPD. El «10 minutos» se cronometra antes de grabar.</li>
+<li>KPIs: CTR de miniatura &gt; 5 %, retención a 30 s &gt; 60 %, clics por UTM y registros a la prueba. A las 48 h se compara título principal con el de respaldo.</li></ul>
+<h2 class="sec" style="margin-top:36px">Después del mes 1</h2>
+<p style="color:var(--ink-2)">El CRM de bandas conecta con el resto de BandManager y da para más series: el cartel del concierto, los reels y el repertorio.</p></section>
+<footer>Ejercicio del máster de Desarrollo con IA · The Big School · <a href="/">BandManager.io</a></footer>
+</main>
+
+<dialog id="dlg" aria-labelledby="dt"><button class="cerrar" id="x" aria-label="Cerrar">×</button>
+<img class="big" id="dimg" alt=""><div class="pad"><h2 id="dt"></h2><p class="hash" id="dh"></p>
+<div class="canalfila"><div class="card"><div class="av" style="width:44px;height:44px"><img src="eco/pillo.webp" alt=""></div></div><div><b>BandManager · Booking para bandas</b><div class="meta" id="dm" style="color:var(--ink-2);font-size:13px"></div></div><a class="btn a" style="margin-left:auto" href="/">Probar gratis</a></div>
+<div class="caja"><p style="margin:0 0 10px"><b>Descripción</b><br><span id="dd"></span></p><p style="margin:0 0 10px"><b>Pieza de BandManager que enseña</b><br><span id="dp"></span></p><p style="margin:0 0 10px"><b>Por qué este vídeo</b><br><span id="dw"></span></p><p style="margin:0;color:var(--ink-3)" id="dr"></p></div>
+<div class="nav2"><button class="btn p" id="prev">← Anterior</button><button class="btn p" id="next">Siguiente →</button></div></div></dialog>
+<div id="guia" aria-hidden="true"><div class="bubble" id="bubble"></div><img id="ecoGuia" src="eco/pillo.webp" alt=""></div>
+<script>
+(function(){
+  var D={"1": {"n": 1, "dia": "Mar 17 nov", "t": "Perdimos un bolo por no tener un CRM", "pieza": "Embudo de booking: de primer email a fecha cerrada, que pasa sola al calendario", "d": "¿Escribes a salas y ya no sabes quién te contestó? Qué es un CRM, cómo funciona el embudo de una banda y cómo montarlo. Prueba gratis 14 días De Gira.", "tags": ["qué es un crm", "crm para bandas", "crm para músicos", "cómo conseguir conciertos", "booking de bandas", "gestión de bandas"], "por": "Enseña el concepto con una historia que engancha y concentra la autoridad del canal.", "resp": "Qué es un CRM para bandas", "dice": "¡Tres semanas sin ver la oferta!", "pose": "horror"}, "2": {"n": 2, "dia": "Jue 19 nov", "t": "Borra el Excel de tu banda", "pieza": "Historial de cada sala y aviso de seguimiento", "d": "El Excel de booking acaba con 60 filas que nadie entiende. Lo comparo con un CRM con el mismo caso: 20 salas, 3 semanas. Y lo que un Excel no te dirá nunca: quién abrió tu dossier.", "tags": ["crm vs excel", "excel para bandas", "organizar conciertos", "seguimiento de salas", "crm para bandas"], "por": "Excel es el competidor real. Atacarlo con honestidad («si escribes a menos de 10 salas, te basta») genera confianza.", "resp": "CRM vs Excel para tu banda", "dice": "Yo sí sé quién lo abrió.", "pose": "pillo"}, "3": {"n": 3, "dia": "Mar 24 nov", "t": "Probé 4 CRM para mi banda. 3 suspendieron", "pieza": "Base de salas y festivales, pitch con IA", "d": "4 formas de llevar el booking, 5 criterios: precio, puesta en marcha, seguimiento, cachés y riders, ahorro de emails. Somos BandManager y te diremos cuándo no nos necesitas.", "tags": ["mejor crm para músicos", "crm para bandas", "crm vs notion", "hubspot para músicos", "comparativa crm"], "por": "La búsqueda más cercana a la compra. BandManager se juzga con los mismos criterios que los demás.", "resp": "El mejor CRM para músicos en 2026", "dice": "Nota para todos. También para nosotros.", "pose": "critico"}, "4": {"n": 4, "dia": "Jue 26 nov", "t": "Los CRM gratis no son gratis", "pieza": "Plan gratuito y su límite", "d": "Sheets, Notion, HubSpot y BandManager tienen versión gratuita. Qué incluye cada una, qué límites tiene y cuándo se queda corta. Sin letra pequeña.", "tags": ["crm gratis", "crm gratuito", "crm gratis para músicos", "herramientas gratis para bandas", "crm para bandas"], "por": "«Gratis» tira más que nada en un público sin presupuesto y desmonta «no quiero otra suscripción».", "resp": "CRM gratis para músicos: dónde está la trampa", "dice": "Mira la letra pequeña.", "pose": "desconfiado"}, "5": {"n": 5, "dia": "Mar 1 dic", "t": "Mi banda con web y QR de fans en 10 minutos (o pago la ronda)", "pieza": "Dossier EPK web, landing de fans y QR", "d": "Montas en 10 minutos el dossier EPK en una web, para el pie de cada email a las salas, y la landing de fans con un QR para el concierto. Cada fan que se apunta entra en tu CRM solo. Con cronómetro en pantalla.", "tags": ["epk gratis", "dossier de banda", "web para bandas", "qr para conciertos", "landing para fans", "crm para bandas", "tutorial crm"], "por": "Convierte el concepto en algo que se hace esa noche, con un resultado que se ve. Prepara el vídeo 6.", "resp": "Cómo hacer un EPK y un QR de fans en 10 minutos", "dice": "¡Que llego!", "pose": "sudando"}, "6": {"n": 6, "dia": "Jue 3 dic", "t": "Mandamos un email a 40 salas: 19 abrieron el dossier y 3 contestaron", "pieza": "Seguimiento de aperturas del email y visitas al dossier", "d": "Qué poner en el asunto, qué enlazar (tu EPK, en el pie), cuánto escribir y cuándo enviarlo. Y lo que casi nadie mira: quién abrió el email, quién abrió el dossier y cuántas veces, para saber a quién escribir otra vez. Incluye plantilla gratuita.", "tags": ["email a salas de conciertos", "cómo contactar salas", "plantilla email booking", "dossier de banda", "epk", "saber si abren mi email", "seguimiento de salas", "crm para bandas"], "por": "Ataca el dolor número uno y enseña lo que ningún Excel tiene. Las aperturas del email no son del todo fiables (Apple las infla): la visita al dossier es la señal fuerte.", "resp": "Email a salas de conciertos que sí responden", "dice": "Lo vieron… y nada.", "pose": "avergonzado"}, "7": {"n": 7, "dia": "Mar 8 dic", "t": "Por qué bandas peores que la tuya tocan más", "pieza": "Seguimiento constante y acuerdos guardados (caché, rider)", "d": "No hacer seguimiento, mandar el mismo email a todas, no saber si abrieron tu dossier, escribir con la programación cerrada, no apuntar lo pactado. Cinco errores de booking y cómo un CRM los evita. Cuenta el tuyo en comentarios.", "tags": ["errores de booking", "cómo conseguir conciertos", "booking de bandas", "consejos para bandas", "música independiente", "crm para bandas"], "por": "Toca el ego del músico y genera comentarios. Paga la promesa en 30 s: tocan más porque hacen seguimiento.", "resp": "5 errores de booking que un CRM evita", "dice": "No es la música. Es el seguimiento.", "pose": "indignado"}, "8": {"n": 8, "dia": "Jue 10 dic", "t": "Dejé que una IA escribiera a 30 salas. Esto contestaron", "pieza": "Agentes Scout, Redactor, Enviador y Lector con tu aprobación", "d": "La IA encuentra salas que encajan con tu estilo, escribe el primer email con el tono de tu banda y lee las respuestas. Qué sigue siendo mejor a mano y por qué nada se envía sin tu aprobación.", "tags": ["crm con ia", "inteligencia artificial para músicos", "ia para bandas", "automatizar booking", "agentes de ia", "buscar salas de conciertos", "crm para bandas"], "por": "Es lo que separa a BandManager de un Excel o un CRM genérico. Solo es cierto si cada email lo aprueba una persona, y el vídeo lo dice en los primeros 30 s.", "resp": "CRM con IA para bandas: tú solo apruebas", "dice": "¿Y si escribe como un robot? Tú apruebas.", "pose": "miedo"}};
+  var K='bm-tema-ejercicio',bs=document.querySelectorAll('.temas button');
+  function tema(t){document.documentElement.dataset.theme=t;bs.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.t===t)});try{localStorage.setItem(K,t)}catch(e){}}
+  var ini=null;try{ini=localStorage.getItem(K)}catch(e){}
+  tema(ini||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
+  bs.forEach(function(b){b.addEventListener('click',function(){tema(b.dataset.t)})});
+  var tabs=document.querySelectorAll('.tabs button');
+  function tab(n){tabs.forEach(function(b){b.setAttribute('aria-selected',b.dataset.tab===n)});['videos','calendario','plan'].forEach(function(x){document.getElementById('t-'+x).hidden=x!==n})}
+  tabs.forEach(function(b){b.addEventListener('click',function(){tab(b.dataset.tab)})});
+  var guia=document.getElementById('ecoGuia'),bub=document.getElementById('bubble'),t;
+  function decir(x){bub.textContent=x;bub.classList.add('on');clearTimeout(t);t=setTimeout(function(){bub.classList.remove('on')},3800)}
+  function pose(p,x){guia.dataset.p=p;guia.src='eco/'+p+'.webp';guia.classList.remove('pop');void guia.offsetWidth;guia.classList.add('pop');if(x)decir(x)}
+  var dlg=document.getElementById('dlg'),cur=1;
+  function abrir(n){n=+n;if(n<1)n=8;if(n>8)n=1;cur=n;var v=D[n];
+    document.getElementById('dimg').src='mini/v'+n+'.jpg';document.getElementById('dimg').alt='Miniatura: '+v.t;
+    document.getElementById('dt').textContent=v.t;document.getElementById('dh').textContent=v.tags.slice(0,3).map(function(x){return '#'+x.replace(/\s+/g,'')}).join(' ');
+    document.getElementById('dm').textContent='Programado · '+v.dia;document.getElementById('dd').textContent=v.d;document.getElementById('dp').textContent=v.pieza;document.getElementById('dw').textContent=v.por;
+    document.getElementById('dr').textContent='Etiquetas: '+v.tags.join(', ')+'. Título de respaldo SEO a las 48 h: «'+v.resp+'».';
+    if(!dlg.open)dlg.showModal();dlg.scrollTop=0;pose(v.pose,v.dice);history.replaceState(null,'','#v'+n)}
+  document.querySelectorAll('[data-n]').forEach(function(el){el.addEventListener('click',function(ev){ev.preventDefault();abrir(el.dataset.n)})});
+  document.getElementById('x').onclick=function(){dlg.close()};
+  dlg.addEventListener('click',function(ev){if(ev.target===dlg)dlg.close()});
+  dlg.addEventListener('close',function(){history.replaceState(null,'','#')});
+  document.getElementById('prev').onclick=function(){abrir(cur-1)};document.getElementById('next').onclick=function(){abrir(cur+1)};
+  var m=/^#v([1-8])$/.exec(location.hash);if(m)abrir(m[1]);
+  var frases=['¡Rock!','¿Otra vez? Qué pesado.','Esto lo grabo en un take.','Dame una guitarra y te hago el pitch.'],i=0;
+  function salto(el){el.classList.remove('salto');void el.offsetWidth;el.classList.add('salto')}
+  document.getElementById('avatar').addEventListener('click',function(){salto(this);decir(frases[i++%frases.length])});
+  guia.addEventListener('click',function(){salto(guia);decir(frases[i++%frases.length])});
+})();
+</script></body></html>
