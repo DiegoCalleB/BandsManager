@@ -11,7 +11,7 @@ const FIXTURES = path.join(process.cwd(), 'e2e', 'fixtures', 'cartel');
 test.setTimeout(120_000);
 
 const IDEA = (id: string, formato: string, titulo: string, extra: Record<string, unknown> = {}) => ({
-  id, formato, titulo, redes: formato === 'reel' ? ['instagram', 'tiktok'] : ['instagram'], tipo: 'humano',
+  id, formato, titulo, redes: formato === 'reel' ? ['instagram', 'tiktok', 'youtube'] : ['instagram'], tipo: 'humano',
   idea: 'Quince segundos del estribillo, empezando fuerte.', porque: 'Los reels llegan a gente que aún no os sigue.',
   esfuerzoMin: formato === 'reel' ? 45 : 5, atajo: null, hecha: false, ...extra,
 });
@@ -22,6 +22,7 @@ const PIEZA = {
   textos: [
     { red: 'instagram', texto: 'El sábado en Oktoberfest. Vota en stories.', hashtags: ['#rockleganes', '#rutA66band'] },
     { red: 'tiktok', texto: 'Rock en Leganés este sábado', hashtags: ['#rockmadrid'] },
+    { red: 'youtube', texto: 'Rock en Leganés: el estribillo que cierra el bolo\n\nEl sábado en Oktoberfest, Leganés. Entradas en la bio.', hashtags: ['#rockleganes', '#rockmadrid'] },
   ],
   cta: 'Guárdalo para el sábado', portada: 'Abrimos con…',
 };
@@ -105,7 +106,7 @@ async function abrirAsesor(page: Page, { conAdn = false, sinFotos = false, conPe
           { fecha: '2026-10-31', esHoy: false, eventos: [{ tipo: 'bolo', texto: 'Concierto en Oktoberfest, Leganés' }, { tipo: 'hito', texto: 'Día D del bolo en Oktoberfest', objetivo: 'Que nadie se olvide de que es hoy.' }] },
         ],
         semana: ['22', '23', '24', '25', '26', '27', '28'].map((d, k) => ({ fecha: `2026-10-${d}`, hechas: [0, 1, 0, 2, 0, 0, servidor.hechas.size][k] })),
-        estrategia: { v: 1, objetivo: 'llenar_salas', etapa: 'local', publico: '', horasSemana: 3, camara: 'algunos', pilares: [], lineasRojas: [], referentes: [], lanzamiento: null, revisada: true },
+        estrategia: { v: 1, objetivo: 'llenar_salas', etapa: 'local', publico: '', horasSemana: 3, camara: 'algunos', pilares: [], lineasRojas: [], referentes: [], redes: ['instagram', 'tiktok'], lanzamiento: null, revisada: true },
         tieneEstrategia: true,
       } });
     }
@@ -114,6 +115,7 @@ async function abrirAsesor(page: Page, { conAdn = false, sinFotos = false, conPe
       if (/tiempo/.test(pregunta)) return route.fulfill({ json: { respuesta: 'Con poco tiempo, el adelanto del directo: 15 segundos y listo.', accion: { tipo: 'preparar', tarjetaId: 'bolo-teaser', etiqueta: 'Preparar «Un adelanto del directo»' } } });
       return route.fulfill({ json: { respuesta: 'Vuestros reels llegan pero casi nadie los guarda. Probad un carrusel esta semana y anotad los números a las 48 h.', accion: { tipo: 'ir', destino: 'resultados', etiqueta: 'Anotar resultados' } } });
     }
+    if (ruta.endsWith('/asesor/estrategia') && req.method() === 'PUT') return route.fulfill({ json: { estrategia: cuerpo } });
     if (ruta.endsWith('/asesor/pieza')) return route.fulfill({ json: { pieza: cuerpo.tarjetaId === 'bolo-setlist' ? CARRUSEL : cuerpo.tarjetaId === 'bolo-encuesta' ? STORIES : PIEZA } });
     if (ruta.endsWith('/asesor/resultado')) {
       servidor.medido = true;
@@ -422,4 +424,38 @@ test('el botón «Preparar» del chat abre la pieza de esa idea, y solo entonces
   const pieza = peticiones.filter((p) => p.ruta.endsWith('/asesor/pieza'));
   expect(pieza).toHaveLength(1);
   expect(pieza[0].cuerpo).toEqual({ tarjetaId: 'bolo-teaser' });
+});
+
+test('YouTube Shorts: la pieza enseña el título (con su límite) y la descripción por separado', async ({ page }) => {
+  await abrirAsesor(page);
+  await page.getByRole('button', { name: 'Preparar pieza' }).nth(1).click();
+  const hoja = page.getByRole('dialog', { name: /Un adelanto del directo/ });
+  await hoja.getByRole('tab', { name: 'YouTube Shorts' }).click();
+  await expect(hoja.getByText(/Título \(\d+ de 70 caracteres\)/)).toBeVisible();
+  await expect(hoja.getByText('Rock en Leganés: el estribillo que cierra el bolo')).toBeVisible();
+  await expect(hoja.getByText('Descripción', { exact: true })).toBeVisible();
+  await expect(hoja.getByText('Entradas en la bio.')).toBeVisible();
+  await expect(hoja.getByText('#rockleganes #rockmadrid')).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await hoja.screenshot({ path: 'test-results/asesor-youtube.png' });
+});
+
+test('la banda elige sus redes en la estrategia, no puede quedarse sin ninguna y se guardan', async ({ page }) => {
+  const { peticiones } = await abrirAsesor(page);
+  await page.getByRole('tab', { name: 'Estrategia' }).click();
+  const redes = page.getByRole('group', { name: '¿En qué redes estáis?' });
+  await expect(redes.getByRole('checkbox', { name: 'Instagram' })).toHaveAttribute('aria-checked', 'true');
+  await expect(redes.getByRole('checkbox', { name: 'YouTube Shorts' })).toHaveAttribute('aria-checked', 'false');
+
+  await redes.getByRole('checkbox', { name: 'YouTube Shorts' }).click();
+  await expect(redes.getByRole('checkbox', { name: 'YouTube Shorts' })).toHaveAttribute('aria-checked', 'true');
+  await redes.getByRole('checkbox', { name: 'Instagram' }).click();
+  await redes.getByRole('checkbox', { name: 'TikTok' }).click();
+  // La última red no se puede quitar: sin ninguna, el asesor no tendría para qué proponer nada.
+  await expect(redes.getByRole('checkbox', { name: 'YouTube Shorts' })).toHaveAttribute('aria-checked', 'true');
+  await page.screenshot({ path: 'test-results/asesor-redes.png' });
+
+  await page.getByRole('button', { name: /Guardar/ }).click();
+  await expect.poll(() => peticiones.some((p) => p.ruta.endsWith('/asesor/estrategia'))).toBe(true);
+  expect((peticiones.find((p) => p.ruta.endsWith('/asesor/estrategia'))!.cuerpo as { redes: string[] }).redes).toEqual(['youtube']);
 });

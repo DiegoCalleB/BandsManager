@@ -46,3 +46,23 @@ describe('bloqueEstrategiaPrompt', () => {
     expect(bloque).not.toContain('Público:');
   });
 });
+
+describe('redes de la banda', () => {
+  it('por defecto Instagram y TikTok; solo se aceptan redes conocidas, sin repetir y en orden fijo', () => {
+    expect(ESTRATEGIA_INICIAL.redes).toEqual(['instagram', 'tiktok']);
+    expect(sanearEstrategia({})!.redes).toEqual(['instagram', 'tiktok']);
+    expect(sanearEstrategia({ redes: ['youtube', 'instagram', 'youtube', 'myspace', 7, null] })!.redes).toEqual(['instagram', 'youtube']);
+    expect(sanearEstrategia({ redes: ['tiktok'] })!.redes).toEqual(['tiktok']);
+  });
+
+  it('sin ninguna red válida vuelve a las de serie, y lo viejo sin el campo sigue valiendo', () => {
+    for (const redes of [[], ['facebook'], 'instagram', null, undefined, {}]) {
+      expect(sanearEstrategia({ redes })!.redes).toEqual(['instagram', 'tiktok']);
+    }
+  });
+
+  it('el prompt dice en qué redes están', () => {
+    expect(bloqueEstrategiaPrompt({ ...ESTRATEGIA_INICIAL, redes: ['tiktok', 'youtube'] })).toContain('Redes: tiktok, youtube.');
+  });
+});
+

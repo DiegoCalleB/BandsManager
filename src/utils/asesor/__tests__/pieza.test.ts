@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { ESTRATEGIA_INICIAL } from '../estrategia';
 import type { Tarjeta } from '../opciones';
-import { promptPieza, sanearPieza } from '../pieza';
+import { MAX_TITULO_YOUTUBE, partirTextoYoutube, promptPieza, sanearPieza } from '../pieza';
 
 const tarjeta: Tarjeta = {
   id: 'fondo-pilar', formato: 'reel', redes: ['instagram', 'tiktok'], tipo: 'humano', titulo: 'La furgo', idea: 'Un viaje.',
@@ -73,3 +73,45 @@ describe('promptPieza', () => {
     expect(promptPieza({ contextoBanda: '', estrategia: ESTRATEGIA_INICIAL, tarjeta, momento: '' })).not.toContain('intento anterior');
   });
 });
+
+describe('saltos de línea', () => {
+  it('un texto con párrafos conserva sus párrafos y sigue sin guiones largos', () => {
+    const p = sanearPieza({ gancho: 'x', pasos: [], textos: [{ red: 'instagram', texto: 'Primera línea — con guion\n\n\n\nSegundo   párrafo\nTercera', hashtags: [] }], cta: '', portada: '' }, 'post', ['instagram'])!;
+    expect(p.textos[0].texto).toBe('Primera línea, con guion\n\nSegundo párrafo\nTercera');
+  });
+});
+
+describe('YouTube Shorts', () => {
+  const yt = (texto: string, hashtags: unknown = ['rockmadrid']) => ({ gancho: 'Arrancamos con el estribillo', pasos: [], textos: [{ red: 'youtube', texto, hashtags }], cta: 'Suscríbete', portada: 'Estribillo' });
+
+  it('parte el texto en título y descripción', () => {
+    expect(partirTextoYoutube('Rock en Leganés\n\nEl sábado en Oktoberfest.\nEntradas en la bio.')).toEqual({ titulo: 'Rock en Leganés', descripcion: 'El sábado en Oktoberfest.\nEntradas en la bio.' });
+    expect(partirTextoYoutube('Solo título')).toEqual({ titulo: 'Solo título', descripcion: '' });
+  });
+
+  it('el título no pasa de 70 caracteres ni se corta a mitad de palabra, y la descripción se conserva', () => {
+    const largo = 'Rock en Leganés este sábado: la banda que lleva tres años tocando en la misma sala sin parar';
+    const p = sanearPieza(yt(`${largo}\n\nEntradas en la bio.`), 'reel', ['youtube'])!;
+    const { titulo, descripcion } = partirTextoYoutube(p.textos[0].texto);
+    expect(titulo.length).toBeLessThanOrEqual(MAX_TITULO_YOUTUBE);
+    expect(largo.startsWith(titulo)).toBe(true);
+    expect(largo[titulo.length]).toBe(' ');
+    expect(descripcion).toBe('Entradas en la bio.');
+  });
+
+  it('un título corto queda tal cual, y los hashtags son 3 como mucho y sin genéricos', () => {
+    const p = sanearPieza(yt('Rock en Leganés', ['#fyp', 'rockmadrid', 'leganes', 'oktoberfest', 'sala66']), 'reel', ['youtube'])!;
+    expect(p.textos[0].texto).toBe('Rock en Leganés');
+    expect(p.textos[0].hashtags).toEqual(['#rockmadrid', '#leganes', '#oktoberfest']);
+  });
+
+  it('el prompt pide título y descripción y trae las reglas de Shorts', () => {
+    const t: Tarjeta = { ...tarjeta, redes: ['instagram', 'youtube'] };
+    const prompt = promptPieza({ contextoBanda: 'BANDA', estrategia: ESTRATEGIA_INICIAL, tarjeta: t, momento: '' });
+    expect(prompt).toContain('YouTube Shorts');
+    expect(prompt).toContain('primera línea: el título (máximo 70 caracteres)');
+    expect(prompt).toContain('El texto de YouTube tiene dos partes');
+    expect(prompt).toContain('"red": "instagram", "texto": "el texto de la publicación para instagram"');
+  });
+});
+

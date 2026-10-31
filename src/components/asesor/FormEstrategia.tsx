@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
+import { Check } from 'lucide-react';
 import { Button, Field, Input, Select, Textarea } from '../ui';
+import { REDES, type Red } from '../../utils/asesor/reglasFormato';
+import { NOMBRE_RED } from './nombres';
 import {
   CAMARAS, ETAPAS, ETIQUETA_CAMARA, ETIQUETA_ETAPA, ETIQUETA_OBJETIVO, HORAS, MAX_PILARES, OBJETIVOS,
   sanearEstrategia, type EstrategiaMarketing, type HorasSemana,
@@ -86,6 +89,25 @@ export function FormEstrategia({ inicial, guardando, sugiriendo, onGuardar, onPr
       <Field label="¿A quién le habláis?" hint="Edad, qué escucha, por dónde sale.">
         <Textarea rows={2} value={e.publico} maxLength={300} onChange={(ev) => poner('publico', ev.target.value)} />
       </Field>
+
+      {/* Un grupo de opciones va en fieldset: dentro de Field (un <label>) tocar el texto activaría la primera red. */}
+      <fieldset className="grid gap-1.5">
+        <legend className="mb-1.5 text-xs font-medium text-[var(--ink-2)]">¿En qué redes estáis?</legend>
+        <div className="flex flex-wrap gap-2">
+          {REDES.map((r: Red) => {
+            const activa = e.redes.includes(r);
+            return (
+              <Button key={r} type="button" size="sm" role="checkbox" aria-checked={activa} variant={activa ? 'selected' : 'ghost'}
+                // Al menos una red: sin ninguna el asesor no tendría para qué proponer nada.
+                onClick={() => poner('redes', activa ? (e.redes.length > 1 ? e.redes.filter((x) => x !== r) : e.redes) : REDES.filter((x) => x === r || e.redes.includes(x)))}>
+                {activa && <Check className="size-3.5" aria-hidden />}
+                {NOMBRE_RED[r]}
+              </Button>
+            );
+          })}
+        </div>
+        <p className="text-xs text-[var(--ink-2)]">El asesor solo os propondrá piezas para estas. Un vídeo sirve para las tres.</p>
+      </fieldset>
 
       <Field label="Tiempo real para redes, a la semana">
         <div className="flex gap-1 rounded-[var(--r-pill)] bg-[var(--sunken)] p-1" role="radiogroup" aria-label="Horas a la semana">
