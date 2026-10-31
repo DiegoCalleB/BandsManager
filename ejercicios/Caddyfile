@@ -1,0 +1,14 @@
+:{$PORT:8080} {
+	root * /srv
+	encode zstd gzip
+	header {
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		X-Robots-Tag "noindex, nofollow"
+		Cache-Control "public, max-age=300"
+	}
+	header /assets/* Cache-Control "public, max-age=86400"
+	# /youtube-crm sirve youtube-crm.html: las URL se comparten sin extensión.
+	try_files {path} {path}.html {path}/index.html
+	file_server
+}
