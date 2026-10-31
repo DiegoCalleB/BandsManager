@@ -30,6 +30,7 @@ Piezas comunes del layout del cartel: tipos, el reparto del nombre en líneas, l
 - [[src_utils_cartel_composiciones|src/utils/cartel/composiciones.ts]] *(from #service)*
 - [[src_utils_cartel_layout|src/utils/cartel/layout.ts]] *(from #service)*
 - [[src_utils_cartel_textosLibres|src/utils/cartel/textosLibres.ts]] *(from #service)*
+- [[src_utils_cartel_tintaImpresa|src/utils/cartel/tintaImpresa.ts]] *(from #service)*
 
 ---
 

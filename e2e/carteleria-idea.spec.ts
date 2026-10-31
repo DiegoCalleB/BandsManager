@@ -69,15 +69,20 @@ test('el boceto sube como JPEG, se usa al generar y se puede quitar', async ({ p
   await expect.poll(() => peticiones.some((p) => p.ruta.endsWith('/cartel/idea') && p.metodo === 'DELETE')).toBe(true);
 });
 
-test('«La IA dibuja el título y la fecha» viaja al pedir el fondo y se puede desmarcar', async ({ page }) => {
+test('por defecto la IA pinta el arte sin letras; «La IA dibuja el título y la fecha» se puede marcar y viaja al pedir el fondo', async ({ page }) => {
   const { peticiones } = await abrirCarteleria(page);
   await abrirIa(page);
   const casilla = page.getByLabel(/La IA dibuja el título y la fecha/);
-  await expect(casilla).toBeChecked();
+  await expect(casilla).not.toBeChecked();
   await page.getByRole('button', { name: 'Pintar fondo' }).click();
   await expect(page.getByRole('button', { name: /Fondo con IA 1/ })).toHaveAttribute('aria-pressed', 'true', { timeout: 15_000 });
-  expect(fondoPedido(peticiones).conTexto).toBe(true);
+  expect(fondoPedido(peticiones).conTexto).toBe(false);
   expect(fondoPedido(peticiones).encuadre).toBe('sangre');
+
+  await abrirIa(page);
+  await casilla.check();
+  await page.getByRole('button', { name: 'Pintar fondo' }).click();
+  await expect.poll(() => peticiones.filter((p) => p.ruta.endsWith('/cartel/fondo')).map((p) => JSON.parse(p.cuerpo.toString()).conTexto), { timeout: 15_000 }).toEqual([false, true]);
 });
 
 test('con varias bandas en el bolo no se ofrece que la IA dibuje las letras', async ({ page }) => {
@@ -126,6 +131,7 @@ test('si la IA falla una letra se ofrece repetir con el texto exacto, sin letras
     primera = false;
   });
   await abrirIa(page);
+  await page.getByLabel(/La IA dibuja el título y la fecha/).check();
   await page.getByRole('button', { name: 'Pintar fondo' }).click();
   await expect(page.getByRole('status').filter({ hasText: /ha fallado alguna letra/ })).toBeVisible({ timeout: 15_000 });
   await page.getByRole('button', { name: 'Repetir con el texto exacto' }).click();
