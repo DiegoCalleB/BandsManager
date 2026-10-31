@@ -27,6 +27,7 @@ main{max-width:980px;margin:0 auto;padding:0 16px 80px}a{color:var(--acc-ink)}
 footer{color:var(--ink-3);font-size:13px;margin-top:48px}
 @media (max-width:760px){.hero{grid-template-columns:1fr}.hero video{max-width:220px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.ej-bloque h2{font-size:20px;margin:26px 0 10px;font-weight:800}.ej-chips{display:flex;flex-wrap:wrap;gap:8px}.ej-chip{background:var(--sunken);color:var(--ink-3);border-radius:var(--r-pill);padding:7px 14px;font-size:14px}.ej-chip.on{background:var(--acc);color:var(--on-acc);text-decoration:none;font-weight:700}
 </style></head><body><main>
 <div class="top"><a class="marca" href="/"><img src="assets/logo_bandmanager_symbol.png" width="512" height="512" alt="Logo de BandManager"><span>BandManager</span></a>
 <nav class="temas" aria-label="Tema"><button data-t="light">Claro</button><button data-t="dark">Oscuro</button><button data-t="classic">Clásico</button></nav></div>
@@ -34,10 +35,8 @@ footer{color:var(--ink-3);font-size:13px;margin-top:48px}
 <p>Máster de Desarrollo con IA de The Big School. Cada ejercicio es una propuesta aplicada a un producto real: una aplicación para que las bandas gestionen conciertos, salas y fans.</p>
 <p><a href="https://bandmanager.io">Ir a BandManager.io</a></p></div>
 <video autoplay muted loop playsinline preload="metadata" poster="assets/login-animation-poster.jpg" aria-label="Logo animado de BandManager.io"><source src="assets/login-animation.webm" type="video/webm"><source src="assets/login-animation.mp4" type="video/mp4"></video></header>
-<section class="lista" aria-label="Ejercicios">
-<a class="ej" href="/youtube-crm"><img src="assets/youtube-crm/mini/v6.jpg" width="1280" height="720" alt="Miniatura del vídeo 6: 19 lo vieron" loading="lazy"><div><p class="et">Marketing digital · YouTube</p><h2>CRM para bandas: 8 vídeos en 4 semanas</h2><p>Plan para posicionar la keyword «CRM» desde un nicho sin competencia, con Eco como mascota.</p></div></a>
-<a class="ej" href="https://presentacion-storytelling.up.railway.app/"><div style="padding-top:22px"><p class="et">Trabajo de fin de máster</p><h2>La película del TFM</h2><p>La defensa de BandManager como una película interactiva.</p></div></a>
-</section>
-<footer>Contenido de ejercicio, no de la aplicación en producción.</footer></main>
+<section aria-label="Ejercicios"><a class="ej" href="/youtube-crm" style="max-width:420px;margin-bottom:28px"><img src="assets/youtube-crm/mini/v6.jpg" width="1280" height="720" alt="Miniatura del vídeo 6: 19 lo vieron" loading="lazy"><div><p class="et">Ya publicado · YouTube</p><h2>CRM para bandas: 8 vídeos en 4 semanas</h2><p>Plan para posicionar la keyword «CRM» desde un nicho sin competencia, con Eco como mascota.</p></div></a>
+<div id="ejLista"></div></section>
+<noscript><p>Activa JavaScript para ver la lista de ejercicios.</p></noscript><footer>Contenido de ejercicio, no de la aplicación en producción.</footer></main>
 <script>(function(){var K='bm-tema-ejercicio',bs=document.querySelectorAll('.temas button');function t(x){document.documentElement.dataset.theme=x;bs.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.t===x)});try{localStorage.setItem(K,x)}catch(e){}}var i=null;try{i=localStorage.getItem(K)}catch(e){}t(i||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));bs.forEach(function(b){b.addEventListener('click',function(){t(b.dataset.t)})})})();</script>
-</body></html>
+<script src="/assets/ejercicios.js" defer></script></body></html>

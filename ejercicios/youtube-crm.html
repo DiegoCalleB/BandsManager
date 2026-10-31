@@ -150,7 +150,8 @@ footer{color:var(--ink-3);font-size:13px;margin-top:56px}
 <li>KPIs: CTR de miniatura &gt; 5 %, retención a 30 s &gt; 60 %, clics por UTM y registros a la prueba. A las 48 h se compara título principal con el de respaldo.</li></ul>
 <h2 class="sec" style="margin-top:36px">Después del mes 1</h2>
 <p style="color:var(--ink-2)">El CRM de bandas conecta con el resto de BandManager y da para más series: el cartel del concierto, los reels y el repertorio.</p></section>
-<div class="pie"><video class="logo-g" autoplay muted loop playsinline preload="metadata" poster="/assets/login-animation-poster.jpg" aria-label="Logo animado de BandManager.io"><source src="/assets/login-animation.webm" type="video/webm"><source src="/assets/login-animation.mp4" type="video/mp4"></video><footer>Ejercicio del máster de Desarrollo con IA · The Big School · <a href="https://bandmanager.io">BandManager.io</a></footer></div>
+<div class="pie"><video class="logo-g" autoplay muted loop playsinline preload="metadata" poster="/assets/login-animation-poster.jpg" aria-label="Logo animado de BandManager.io"><source src="/assets/login-animation.webm" type="video/webm"><source src="/assets/login-animation.mp4" type="video/mp4"></video><div id="ejPrevNext"></div>
+<footer>Ejercicio del máster de Desarrollo con IA · The Big School · <a href="https://bandmanager.io">BandManager.io</a></footer></div>
 </main>
 
 <dialog id="dlg" aria-labelledby="dt"><button class="cerrar" id="x" aria-label="Cerrar">×</button>
@@ -191,4 +192,4 @@ footer{color:var(--ink-3);font-size:13px;margin-top:56px}
   document.getElementById('avatar').addEventListener('click',function(){salto(this);decir(frases[i++%frases.length])});
   guia.addEventListener('click',function(){salto(guia);decir(frases[i++%frases.length])});
 })();
-</script></body></html>
+</script><script src="/assets/ejercicios.js" defer></script></body></html>
