@@ -9,7 +9,8 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowRight, MessageCircle, X } from 'lucide-react';
+import { ArrowRight, X } from 'lucide-react';
+import { EcoAvatar } from './ui/EcoAvatar';
 import { useLanguage } from '../context/idioma';
 import { Button } from './ui';
 
@@ -297,7 +298,7 @@ export const LandingChatWidget: React.FC<LandingChatWidgetProps> = ({ onEntrar, 
           <div className="flex items-center justify-between bg-[var(--acc)] px-4 py-3 text-[var(--on-acc)]">
             <div className="flex items-center gap-2">
               <span className="flex size-7 items-center justify-center rounded-full bg-[var(--ink)]/20">
-                <MessageCircle className="size-4 text-inherit" aria-hidden />
+                <EcoAvatar className="size-6" />
               </span>
               <div>
                 <p className="text-sm font-semibold text-inherit">
@@ -406,7 +407,7 @@ export const LandingChatWidget: React.FC<LandingChatWidgetProps> = ({ onEntrar, 
         {open ? (
           <X className="size-6" aria-hidden />
         ) : (
-          <MessageCircle className="size-6" aria-hidden />
+          <EcoAvatar className="size-12" />
         )}
 
         {/* Indicador de mensaje no leído */}

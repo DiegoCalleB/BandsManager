@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { MessageCircle } from 'lucide-react';
-import { Button, EmptyState, Onda, SkeletonText, Tabs, type TabItem } from '../ui';
+import { Button, EcoAvatar, EmptyState, Onda, SkeletonText, Tabs, type TabItem } from '../ui';
 import type { Modo } from '../../utils/asesor/diagnostico';
 import type { Tarjeta } from '../../utils/asesor/opciones';
 import { useAsesor } from './hooks/useAsesor';
@@ -99,7 +98,7 @@ const AsesorView: React.FC<Props> = ({ onNavigate, banda }) => {
 
       <div>
         <Button size="sm" variant="neutral" onClick={() => setChat(true)}>
-          <MessageCircle className="size-4" aria-hidden />
+          <EcoAvatar className="size-5" />
           Preguntar al asesor
         </Button>
       </div>

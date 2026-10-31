@@ -26,6 +26,7 @@ _Sin dependencias salientes directas._
 - [[src_app_AppModalsHost|src/app/AppModalsHost.tsx]] *(from #service)*
 - [[src_components_chatbot_ChatbotHeader|src/components/chatbot/ChatbotHeader.tsx]] *(from #frontend)*
 - [[src_components_chatbot_ChatMessageBubble|src/components/chatbot/ChatMessageBubble.tsx]] *(from #frontend)*
+- [[src_components_LandingChatWidget|src/components/LandingChatWidget.tsx]] *(from #frontend)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(from #frontend)*
 
 ---
