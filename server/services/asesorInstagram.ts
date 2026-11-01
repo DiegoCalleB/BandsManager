@@ -17,8 +17,8 @@ const FECHA_ISO = /^\d{4}-\d{2}-\d{2}$/;
 /** Las publicaciones recientes bastan: se miden a las 48 h y como mucho a los 14 días. */
 const MEDIOS_A_PEDIR = 50;
 
-type Peticion = (url: string) => Promise<{ ok: boolean; cuerpo: unknown }>;
-const peticionReal: Peticion = async (url) => {
+export type Peticion = (url: string) => Promise<{ ok: boolean; cuerpo: unknown }>;
+export const peticionReal: Peticion = async (url) => {
   const res = await fetch(url);
   return { ok: res.ok, cuerpo: await res.json().catch(() => ({})) };
 };

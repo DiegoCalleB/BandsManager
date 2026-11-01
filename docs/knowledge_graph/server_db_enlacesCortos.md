@@ -31,6 +31,7 @@ Enlaces cortos (`short_links`) y sus clics (`short_link_clicks`). Toda lectura/e
 - [[server_routes_campanaConcierto|server/routes/campanaConcierto.ts]] *(from #route)*
 - [[server_routes_enlacesCortos|server/routes/enlacesCortos.ts]] *(from #route)*
 - [[server_routes_paginaConcierto|server/routes/paginaConcierto.ts]] *(from #route)*
+- [[server_services_asesorPresencia|server/services/asesorPresencia.ts]] *(from #service)*
 
 ---
 

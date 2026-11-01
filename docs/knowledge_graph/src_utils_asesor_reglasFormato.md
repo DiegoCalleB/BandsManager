@@ -24,18 +24,26 @@ _Sin dependencias salientes directas._
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_db_asesorMarketing|server/db/asesorMarketing.ts]] *(from #db)*
+- [[server_services_asesorPresencia|server/services/asesorPresencia.ts]] *(from #service)*
+- [[src_components_asesor_AuditoriaPanel|src/components/asesor/AuditoriaPanel.tsx]] *(from #frontend)*
+- [[src_components_asesor_EnlacesPanel|src/components/asesor/EnlacesPanel.tsx]] *(from #frontend)*
 - [[src_components_asesor_FormEstrategia|src/components/asesor/FormEstrategia.tsx]] *(from #frontend)*
+- [[src_components_asesor_hooks_usePresencia|src/components/asesor/hooks/usePresencia.ts]] *(from #frontend)*
 - [[src_components_asesor_nombres|src/components/asesor/nombres.ts]] *(from #frontend)*
 - [[src_components_asesor_PiezaSheet|src/components/asesor/PiezaSheet.tsx]] *(from #frontend)*
 - [[src_utils_asesor_agenda|src/utils/asesor/agenda.ts]] *(from #service)*
+- [[src_utils_asesor_auditoria|src/utils/asesor/auditoria.ts]] *(from #service)*
+- [[src_utils_asesor_clicsPieza|src/utils/asesor/clicsPieza.ts]] *(from #service)*
 - [[src_utils_asesor_diagnostico|src/utils/asesor/diagnostico.ts]] *(from #service)*
 - [[src_utils_asesor_estrategia|src/utils/asesor/estrategia.ts]] *(from #service)*
 - [[src_utils_asesor_instagramMedios|src/utils/asesor/instagramMedios.ts]] *(from #service)*
 - [[src_utils_asesor_metricasPorRed|src/utils/asesor/metricasPorRed.ts]] *(from #service)*
 - [[src_utils_asesor_opciones|src/utils/asesor/opciones.ts]] *(from #service)*
 - [[src_utils_asesor_pieza|src/utils/asesor/pieza.ts]] *(from #service)*
+- [[src_utils_asesor_presencia|src/utils/asesor/presencia.ts]] *(from #service)*
 - [[src_utils_asesor_rescate|src/utils/asesor/rescate.ts]] *(from #service)*
 - [[src_utils_asesor_resumen|src/utils/asesor/resumen.ts]] *(from #service)*
+- [[src_utils_asesor_seo|src/utils/asesor/seo.ts]] *(from #service)*
 - [[src_utils_asesor_tipos|src/utils/asesor/tipos.ts]] *(from #service)*
 
 ---
