@@ -1,11 +1,11 @@
 import { textoDeParte } from "./utils/textoDeParteIA.js";
-import { FALLBACK_MODELS, MODELOS_GEMINI_RETIRADOS, contieneBinarios } from "./utils/modelosGemini.js";
+import { FALLBACK_MODELS, MODELOS_GEMINI_RETIRADOS, MODELO_TEXTO, MODELO_DEEPSEEK, contieneBinarios, modelosAProbar, registrarFalloModelo } from "./utils/modelosGemini.js";
 import { GoogleGenAI, type ContentListUnion, type GenerateContentConfig } from "@google/genai";
 import { dbRecordAiUsage } from "./db/aiLedger.js";
 import type { EPKConfig } from "../src/types.js";
 import { comoErrorCapturado, type ErrorCapturado } from '../src/utils/errorCapturado.js';
 
-export const GEMINI_MODEL = "gemini-2.5-flash";
+export const GEMINI_MODEL = MODELO_TEXTO;
 
 // Ninguna llamada a un proveedor de IA tenía timeout, mientras el resto del repo sí usa el
 // patrón (server/routes/bands.ts, server/routes/leads/enrichment.ts). Una petición colgada
@@ -149,7 +149,7 @@ export function getAvailableAIProviders() {
       id: "deepseek",
       name: "DeepSeek V3",
       shortName: "DeepSeek V3",
-      model: "deepseek-chat",
+      model: MODELO_DEEPSEEK,
       tagline: "Directo, conciso y económico",
       description: "Excelente estructuración en español, llamadas a la acción directas y condiciones comerciales.",
       icon: "🚀",
@@ -167,7 +167,7 @@ export function getAvailableAIProviders() {
       id: "gemini",
       name: "Google Gemini 3.7 Flash",
       shortName: "Gemini Flash",
-      model: "gemini-3.7-flash",
+      model: MODELO_TEXTO,
       tagline: "Ultra rápido y analítico",
       description: "Ideal para análisis de agenda, datos técnicos de la sala y búsqueda de información con Free Tier.",
       icon: "⚡",
@@ -267,9 +267,7 @@ export async function generateContentWithFallback(
     bandId?: string;
   }
 ) {
-  const modelsToTry = params.preferredModel
-    ? [params.preferredModel, ...FALLBACK_MODELS.filter(m => m !== params.preferredModel)]
-    : FALLBACK_MODELS;
+  const modelsToTry = modelosAProbar(params.preferredModel);
 
   let lastError: ErrorCapturado | null = null;
   let deepSeekError: ErrorCapturado | null = null;
@@ -303,6 +301,7 @@ export async function generateContentWithFallback(
       } catch (errCapturado) {
         const err = comoErrorCapturado(errCapturado);
         lastError = err;
+        registrarFalloModelo(modelName, err);
         if (isSpendingCapError(err)) {
           geminiSpendingCapUntil = Date.now() + 15 * 60 * 1000;
           console.log(`[Gemini API] Límite de gasto mensual alcanzado (spending cap). Conmutando de inmediato a DeepSeek V3...`);
@@ -626,7 +625,7 @@ export async function callDeepSeek(params: {
     throw new Error("DEEPSEEK_API_KEY no configurada.");
   }
 
-  const model = params.model || "deepseek-chat";
+  const model = params.model || MODELO_DEEPSEEK;
   const messages: Array<{ role: string; content: string }> = [];
 
   if (params.systemPrompt) {
@@ -685,12 +684,12 @@ export async function generateUnifiedAI(params: {
     const text = await callDeepSeek({
       prompt: params.prompt,
       systemPrompt: params.systemPrompt,
-      model: params.modelName || "deepseek-chat",
+      model: params.modelName || MODELO_DEEPSEEK,
       temperature: params.temperature,
       maxTokens: params.maxTokens,
       timeoutMs: params.timeoutMs
     });
-    return { text, provider: "deepseek", modelName: params.modelName || "deepseek-chat" };
+    return { text, provider: "deepseek", modelName: params.modelName || MODELO_DEEPSEEK };
   }
 
   // Default Gemini
@@ -739,7 +738,7 @@ export async function generateUnifiedAI(params: {
         temperature: params.temperature,
         maxTokens: params.maxTokens
       });
-      return { text, provider: "deepseek", modelName: "deepseek-chat (fallback)", fallbackFrom: "gemini" };
+      return { text, provider: "deepseek", modelName: `${MODELO_DEEPSEEK} (fallback)`, fallbackFrom: "gemini" };
     } catch (dsErrCapturado) {
       const dsErr = comoErrorCapturado(dsErrCapturado);
       console.warn("[AI Engine] Fallback a DeepSeek falló:", dsErr.message);

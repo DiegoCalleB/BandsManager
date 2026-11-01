@@ -13,7 +13,7 @@ tags: ["service", "system", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Cadena de modelos Gemini, del preferido al último recurso. Los 1.5 y 2.0 están retirados: dejarlos
+ÚNICA fuente de verdad de los modelos de IA de Google/DeepSeek que usa el servidor.
 
 ---
 
@@ -24,6 +24,15 @@ _Sin dependencias salientes directas._
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_ai|server/ai.ts]] *(from #service)*
+- [[server_routes_ai_music_rutasGeneracion|server/routes/ai_music/rutasGeneracion.ts]] *(from #route)*
+- [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
+- [[server_services_imagenCartel|server/services/imagenCartel.ts]] *(from #service)*
+- [[server_services_pitchVectorStore|server/services/pitchVectorStore.ts]] *(from #service)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/__tests__/modelosIA.test.ts`
 
 ---
 
