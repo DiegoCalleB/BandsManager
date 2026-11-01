@@ -42,7 +42,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
     setGeneratedLyrics("");
 
     try {
-      const data = await apiFetch<{ success?: boolean; audioBase64?: string; mimeType?: string; lyrics?: string; error?: string }>("/api/ai-music/generate", {
+      const data = await apiFetch<{ success?: boolean; audioBase64?: string; mimeType?: string; lyrics?: string; error?: string }>("/api/generate-music", {
         method: "POST",
         body: JSON.stringify({
           prompt,
