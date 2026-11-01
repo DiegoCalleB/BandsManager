@@ -31,6 +31,7 @@ Asesor de Marketing: lo que la banda ve al abrir la pantalla (modo de hoy, opcio
 - [[src_utils_asesor_chat|src/utils/asesor/chat.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_diagnostico|src/utils/asesor/diagnostico.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_estrategia|src/utils/asesor/estrategia.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_asesor_hitosLanzamiento|src/utils/asesor/hitosLanzamiento.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_metricasPorRed|src/utils/asesor/metricasPorRed.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_opciones|src/utils/asesor/opciones.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_pieza|src/utils/asesor/pieza.ts]] *(Layer: #service, Domain: #system)*

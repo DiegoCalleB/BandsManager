@@ -13,6 +13,7 @@ import { esConciertoPublicable, hoyIso } from '../utils/paginaConcierto.js';
 import { sanitizeExternalText } from '../utils/promptSafety.js';
 import { buildBandContextBlock, emptyBandProfile, loadBandProfile, type BandProfile } from '../utils/bandProfile.js';
 import { fechaCorta, sumarDias } from '../../src/utils/campanaConcierto.js';
+import { proximoHito } from '../../src/utils/asesor/hitosLanzamiento.js';
 import { ETIQUETA_RED_METRICAS, lecturaRelativa, otrasRedesPorMedir, previasDe, redPrincipal, type PorMedirOtrasRedes } from '../../src/utils/asesor/metricasPorRed.js';
 import { detectarCaida } from '../../src/utils/asesor/rescate.js';
 import { agendaDe, type DiaAgenda } from '../../src/utils/asesor/agenda.js';
@@ -224,6 +225,12 @@ export async function generarPieza(bandId: string, tarjetaId: unknown, ahora = n
 
 /* ----------------------------------------------------------------- chat */
 
+/** «Lo siguiente del estreno: …» si hay un estreno en la estrategia y le quedan hitos; vacío si no. */
+function hitoDelEstreno(e: EstrategiaMarketing, hoy: string): string {
+  const hito = e.lanzamiento ? proximoHito(e.lanzamiento.fecha, hoy) : null;
+  return hito ? `Lo siguiente del estreno de «${sanitizeExternalText(e.lanzamiento!.titulo, 80)}»: ${hito.titulo} (${fechaCorta(hito.fecha)}).` : '';
+}
+
 export type ResultadoChat = { respuesta: string; accion: AccionChat | null } | { error: 'invalido'; motivo: string } | { error: 'sin_bd' | 'sin_ia' };
 
 /**
@@ -261,7 +268,7 @@ export async function chatAsesor(bandId: string, conversacionRaw: unknown, ahora
       contents: promptChat({
         contextoBanda: (await contextoBanda(bandId)).bloque,
         estrategia: bloqueEstrategiaPrompt(ctx.estrategia),
-        momento: ctx.diagnostico.porque,
+        momento: [ctx.diagnostico.porque, hitoDelEstreno(ctx.estrategia, ctx.hoy)].filter(Boolean).join(' '),
         aprendido: resumen?.mensaje ?? null,
         recientes: [...recientes, ...recientesRed],
         ideasDeHoy: pendientes.map((t) => ({ id: t.id, titulo: t.titulo })),

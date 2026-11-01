@@ -486,3 +486,37 @@ describe('redes de la banda', () => {
     expect(ia.prompts[0]).toContain('YouTube Shorts');
   });
 });
+
+describe('el chat y la hoja de ruta del estreno', () => {
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date('2026-10-30T10:00:00Z'));
+  });
+  const preguntar = () => llamar('post', '/asesor/chat', { body: { mensajes: [{ rol: 'banda', texto: '¿Qué toca esta semana?' }] } });
+
+  it('sabe cuál es el siguiente hito del estreno', async () => {
+    ia.cliente = {};
+    ia.texto = JSON.stringify({ respuesta: 'El pitch a Spotify.', accion: null });
+    await llamar('put', '/asesor/estrategia', { body: { lanzamiento: { titulo: 'Nuevo single', fecha: '2026-11-20' } } });
+    await preguntar();
+    expect(ia.prompts[0]).toContain('Lo siguiente del estreno de «Nuevo single»: Enviar la canción a las playlists de Spotify');
+  });
+
+  it('sin estreno, o con el estreno ya pasado, no lo menciona', async () => {
+    ia.cliente = {};
+    ia.texto = JSON.stringify({ respuesta: 'Vale.', accion: null });
+    await preguntar();
+    await llamar('put', '/asesor/estrategia', { body: { lanzamiento: { titulo: 'Viejo', fecha: '2026-06-01' } } });
+    await preguntar();
+    for (const p of ia.prompts) expect(p).not.toContain('Lo siguiente del estreno');
+  });
+
+  it('el calendario del plan de hoy incluye los hitos del estreno', async () => {
+    await llamar('put', '/asesor/estrategia', { body: { lanzamiento: { titulo: 'Nuevo single', fecha: '2026-11-12' } } });
+    const eventos = (await llamar('get', '/asesor/hoy')).body.agenda.flatMap((d: { eventos: any[] }) => d.eventos);
+    expect(eventos.find((e: any) => e.tipo === 'hito' && e.texto === 'Primer teaser (reel de 10 segundos) · «Nuevo single»')).toBeTruthy();
+    expect(eventos.find((e: any) => e.tipo === 'hito' && e.texto.startsWith('Stories con cuenta atrás'))).toBeTruthy();
+    expect(eventos.filter((e: any) => e.tipo === 'lanzamiento')).toHaveLength(1);
+  });
+});
+

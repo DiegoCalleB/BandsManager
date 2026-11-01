@@ -5,7 +5,7 @@
 
 import { dbGetEpkConfig, dbGetRegisteredBandById } from '../db.js';
 import { dbGetConcerts } from '../db/concerts.js';
-import { dbAccionesDesde, dbGetEstrategiaMarketing } from '../db/asesorMarketing.js';
+import { dbAccionesDesde, dbGetEstrategiaMarketing, dbResultadosDesde, dbResultadosRedDesde } from '../db/asesorMarketing.js';
 import { dbClicsDeBanda, dbListarEnlaces, type EnlaceFila } from '../db/enlacesCortos.js';
 import { loadState } from '../state.js';
 import { baseUrlPublica, esConciertoPublicable, hoyIso } from '../utils/paginaConcierto.js';
@@ -15,6 +15,7 @@ import { credencialesInstagram } from './credencialesInstagram.js';
 import { hostGraphPara } from './publicadores/instagramReels.js';
 import { peticionReal, type Peticion } from './asesorInstagram.js';
 import { diasEntre, sumarDias } from '../../src/utils/campanaConcierto.js';
+import { candidatosAnuncio, DIAS_VENTANA } from '../../src/utils/asesor/anuncios.js';
 import { auditar, type DatosAuditoria, type EnlaceDeSeguimiento } from '../../src/utils/asesor/auditoria.js';
 import type { BiosPegadas, Presencia } from '../../src/utils/asesor/presencia.js';
 import { clicsTrasPublicar, DIAS_CLICS_PIEZA } from '../../src/utils/asesor/clicsPieza.js';
@@ -82,16 +83,21 @@ export async function presenciaDeLaBanda(bandId: string, biosRaw: unknown, ahora
   const hoy = hoyIso(ahora);
   const bios = sanearBios(biosRaw);
 
-  const [guardada, epk, conciertos, enlaces, acciones, perfilIg] = await Promise.all([
+  const desdeResultados = sumarDias(hoy, -DIAS_VENTANA - 28);
+  const [guardada, epk, conciertos, enlaces, acciones, perfilIg, resultados, resultadosRed] = await Promise.all([
     dbGetEstrategiaMarketing(bandId),
     dbGetEpkConfig(bandId).catch(() => null),
     dbGetConcerts(bandId).catch(() => null),
     dbListarEnlaces(bandId).catch(() => [] as EnlaceFila[]),
     dbAccionesDesde(bandId, sumarDias(hoy, -DIAS_CLICS_PIEZA)),
     leerPerfilInstagram(bandId, pedir),
+    // Lo que la banda midió: de ahí sale qué merece dinero. Se lee más atrás de la ventana porque TikTok compara con «lo habitual».
+    dbResultadosDesde(bandId, desdeResultados),
+    dbResultadosRedDesde(bandId, desdeResultados),
   ]);
   if (guardada === undefined || conciertos === null) return null;
-  const redes = (guardada ?? ESTRATEGIA_INICIAL).redes;
+  const estrategia = guardada ?? ESTRATEGIA_INICIAL;
+  const redes = estrategia.redes;
 
   const perfil = await loadBandProfile(bandId, {
     getBand: (id) => dbGetRegisteredBandById(id),
@@ -154,6 +160,7 @@ export async function presenciaDeLaBanda(bandId: string, biosRaw: unknown, ahora
   };
 
   const seguidores = perfilIg?.seguidores ?? null;
+  const referentes = [...new Set([...estrategia.referentes, ...(Array.isArray(epk?.bandasSimilares) ? epk!.bandasSimilares : [])].map((x) => limpiar(x)).filter(Boolean))].slice(0, 3);
   return {
     auditoria: auditar(datos),
     kit: {
@@ -170,6 +177,10 @@ export async function presenciaDeLaBanda(bandId: string, biosRaw: unknown, ahora
       }),
       clicsTrasPublicar: clicsTrasPublicar(acciones, enlaces, clics, hoy, redes),
     },
+    anuncios: candidatosAnuncio({
+      hoy, resultados, resultadosRed, ciudad: perfil.location, genero: perfil.genre, referentes,
+      proximoBolo: proximo && bolo ? { sala: bolo.sala, ciudad: limpiar(proximo.c.ciudad), dias: bolo.dias, tieneEntradas: bolo.tieneEntradas } : null,
+    }),
     instagram: {
       leido: !!perfilIg,
       seguidores,

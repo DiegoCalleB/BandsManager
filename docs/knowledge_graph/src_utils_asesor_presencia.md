@@ -18,6 +18,7 @@ La forma de lo que devuelve `POST /api/asesor/presencia`: la define aquí, en `s
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_utils_asesor_anuncios|src/utils/asesor/anuncios.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_auditoria|src/utils/asesor/auditoria.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_clicsPieza|src/utils/asesor/clicsPieza.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_reglasFormato|src/utils/asesor/reglasFormato.ts]] *(Layer: #service, Domain: #system)*

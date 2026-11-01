@@ -3,6 +3,7 @@
  * servidor y la pantalla compartan una sola definición. Solo tipos: la lógica está en `auditoria.ts`,
  * `seo.ts` y `clicsPieza.ts`, y el servidor que lo reúne en `server/services/asesorPresencia.ts`.
  */
+import type { CandidatoAnuncio } from './anuncios';
 import type { Auditoria, DestinoEnlace } from './auditoria';
 import type { ClicsDePieza } from './clicsPieza';
 import type { Red } from './reglasFormato';
@@ -34,6 +35,8 @@ export interface Presencia {
     porRed: EnlaceDeRed[];
     clicsTrasPublicar: ClicsDePieza[];
   };
+  /** Qué piezas recientes merece la pena impulsar con dinero y cuáles no. */
+  anuncios: CandidatoAnuncio[];
   instagram: {
     /** false si no está conectado o no se pudo leer: la bio hay que pegarla. */
     leido: boolean;

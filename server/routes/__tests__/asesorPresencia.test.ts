@@ -9,7 +9,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { crearFakeSupabaseTablas } from '../../db/__tests__/helpers/fakeSupabaseTablas';
 
-const fake = crearFakeSupabaseTablas({ band_estrategia_marketing: [['band_id']], asesor_acciones: [['band_id', 'fecha', 'tarjeta_id']] });
+const fake = crearFakeSupabaseTablas({ band_estrategia_marketing: [['band_id']], asesor_acciones: [['band_id', 'fecha', 'tarjeta_id']], asesor_resultados: [['band_id', 'fecha', 'tarjeta_id']], asesor_resultados_red: [['band_id', 'fecha', 'tarjeta_id', 'red']] });
 vi.mock('../../db/core.js', async (orig) => ({ ...(await orig<any>()), getSupabase: () => fake.client }));
 vi.mock('../../state.js', async (orig) => ({ ...(await orig<any>()), loadState: () => ({}), saveState: () => {} }));
 
@@ -205,3 +205,38 @@ describe('bios pegadas', () => {
     for (const t of Object.keys(fake.tablas)) expect(fake.tablas[t]).toHaveLength(0);
   });
 });
+
+describe('anuncios: qué merece dinero', () => {
+  const ig = (banda: string, id: string, extra: Record<string, unknown> = {}) => ({ band_id: banda, fecha: '2026-10-25', tarjeta_id: id, formato: 'reel', titulo: `Idea ${id}`, alcance: 1000, guardados: 40, alcance_no_seguidores: 100, ...extra });
+
+  it('impulsa lo que gusta pero no sale de casa, no gasta en lo que no se guarda, y usa los datos de la banda', async () => {
+    fake.tablas.asesor_resultados = [ig('band-a', 'gusta'), ig('band-a', 'mala', { guardados: 5, alcance_no_seguidores: 50 }), ig('band-b', 'ajena')];
+    datos.epk = { ...datos.epk, bandasSimilares: ['Los Suaves', 'Leño'] };
+    fake.tablas.band_estrategia_marketing = [{ band_id: 'band-a', estrategia: { v: 1, referentes: ['Extremoduro'] } }];
+    const { anuncios } = (await llamar()).body;
+    expect(anuncios.map((a: any) => [a.tarjetaId, a.decision])).toEqual([['gusta', 'impulsar'], ['mala', 'no_gastar']]); // la de band-b no entra
+    expect(anuncios[0].plan).toMatchObject({ objetivo: 'alcance', zona: 'Madrid y unos 50 km alrededor', total: 25 });
+    expect(anuncios[0].plan.publico).toBe('Gente de la zona: quienes escuchan rock y fans de Extremoduro, Los Suaves, Leño.');
+    expect(anuncios[1].plan).toBeNull();
+  });
+
+  it('con un bolo cerca y entradas, el anuncio busca visitas al enlace en la ciudad del bolo', async () => {
+    fake.tablas.asesor_resultados = [ig('band-a', 'gusta')];
+    datos.conciertos = [{ id: 'c1', fecha: '2026-11-04', sala: 'Oktoberfest', ciudad: 'Leganés', tipo: 'publico', entradas_url: 'https://entradas.test/c1' }];
+    const [a] = (await llamar()).body.anuncios;
+    expect(a.plan).toMatchObject({ objetivo: 'entradas', zona: 'Leganés y unos 30 km alrededor', dias: 5 });
+  });
+
+  it('con los resultados de TikTok compara con lo habitual de la propia banda', async () => {
+    const t = (fecha: string, id: string, v: number) => ({ band_id: 'band-a', fecha, tarjeta_id: id, red: 'tiktok', formato: 'reel', titulo: `Idea ${id}`, metricas: { visualizaciones: v } });
+    fake.tablas.asesor_resultados_red = [t('2026-10-10', 'p1', 1000), t('2026-10-12', 'p2', 2000), t('2026-10-14', 'p3', 3000), t('2026-10-26', 'nueva', 6000)];
+    const a = (await llamar()).body.anuncios.find((x: any) => x.tarjetaId === 'nueva');
+    expect(a).toMatchObject({ red: 'tiktok', decision: 'impulsar' });
+    expect(a.plan.pasos[0]).toContain('Abrid el vídeo');
+  });
+
+  it('sin resultados no hay anuncios que proponer', async () => {
+    expect((await llamar()).body.anuncios).toEqual([]);
+  });
+});
+

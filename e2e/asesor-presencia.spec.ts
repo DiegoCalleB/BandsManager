@@ -83,7 +83,7 @@ test('enlaces y clics: avisa si el enlace no lleva donde toca y crea el que falt
 
   await page.getByRole('button', { name: 'Revisar presencia' }).click();
   const hoja = page.getByRole('dialog', { name: 'Revisar presencia' });
-  await hoja.getByRole('tab', { name: 'Enlaces y clics' }).click();
+  await hoja.getByRole('tab', { name: 'Enlaces' }).click();
   await expect(hoja.getByText('Ahora, el enlace de la bio debería llevar a las entradas del bolo')).toBeVisible();
   await expect(hoja.getByText('Faltan 7 días para el bolo')).toBeVisible();
   const ig = hoja.getByRole('article').filter({ hasText: 'Instagram' });
@@ -98,3 +98,29 @@ test('enlaces y clics: avisa si el enlace no lleva donde toca y crea el que falt
   await expect(hoja.getByText('https://bandmanager.io/r/zzz2345')).toBeVisible();
   expect(peticiones.find((p) => p.ruta.endsWith('/short-links'))!.cuerpo).toEqual({ concertId: 'c1', destino: 'entradas', canal: 'tiktok' });
 });
+
+test('impulsar: dice qué piezas merece la pena pagar y cuáles no, con el plan paso a paso', async ({ page }) => {
+  await abrirAsesor(page);
+  await page.getByRole('button', { name: 'Revisar presencia' }).click();
+  const hoja = page.getByRole('dialog', { name: 'Revisar presencia' });
+  await hoja.getByRole('tab', { name: 'Impulsar' }).click();
+  await expect(hoja.getByText('Un anuncio solo amplifica.')).toBeVisible();
+
+  const buena = hoja.getByRole('article').filter({ hasText: 'Tema de la semana: La furgo' });
+  await expect(buena).toContainText('Impulsad');
+  await expect(buena).toContainText('Leganés y unos 30 km alrededor');
+  await expect(buena).toContainText('5 € al día durante 5 días (25 € en total)');
+  await expect(buena.getByText('pulsad «Promocionar»')).toBeHidden(); // los pasos van plegados
+  await buena.getByText('Cómo hacerlo, paso a paso').click();
+  await expect(buena.getByText('Abrid la publicación en vuestro perfil y pulsad «Promocionar».')).toBeVisible();
+
+  const mala = hoja.getByRole('article').filter({ hasText: 'Un adelanto del directo' });
+  await expect(mala).toContainText('No gastéis');
+  await expect(mala).toContainText('más gente que pasa de largo');
+  await expect(mala.getByText('Cuánto')).toHaveCount(0); // sin plan: no se invita a gastar
+
+  await expect(hoja.getByText('Importes, zona y duración: criterio propio')).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await hoja.screenshot({ path: 'test-results/asesor-impulsar.png' });
+});
+
