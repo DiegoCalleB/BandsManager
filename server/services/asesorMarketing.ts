@@ -8,11 +8,12 @@ import { getAiClient, generateContentWithFallback } from '../ai.js';
 import { safeParseJson } from '../utils.js';
 import { dbGetEpkConfig, dbGetRegisteredBandById } from '../db.js';
 import { dbGetConcerts } from '../db/concerts.js';
-import { dbAccionesDesde, dbGetEstrategiaMarketing, dbGuardarAccion, dbGuardarResultado, dbResultadosDesde, dbUltimaPublicacion } from '../db/asesorMarketing.js';
+import { dbAccionesDesde, dbResultadosRedDesde, dbGetEstrategiaMarketing, dbGuardarAccion, dbGuardarResultado, dbResultadosDesde, dbUltimaPublicacion } from '../db/asesorMarketing.js';
 import { esConciertoPublicable, hoyIso } from '../utils/paginaConcierto.js';
 import { sanitizeExternalText } from '../utils/promptSafety.js';
 import { buildBandContextBlock, emptyBandProfile, loadBandProfile, type BandProfile } from '../utils/bandProfile.js';
 import { fechaCorta, sumarDias } from '../../src/utils/campanaConcierto.js';
+import { ETIQUETA_RED_METRICAS, lecturaRelativa, otrasRedesPorMedir, previasDe, redPrincipal, type PorMedirOtrasRedes } from '../../src/utils/asesor/metricasPorRed.js';
 import { detectarCaida } from '../../src/utils/asesor/rescate.js';
 import { agendaDe, type DiaAgenda } from '../../src/utils/asesor/agenda.js';
 import { diagnosticar, type ConciertoParaAsesor, type Diagnostico } from '../../src/utils/asesor/diagnostico.js';
@@ -35,8 +36,10 @@ export interface EstadoAsesor {
   opciones: OpcionesDeHoy;
   /** Piezas hechas cada uno de los últimos 7 días. */
   semana: Array<{ fecha: string; hechas: number }>;
-  /** Publicadas hace 2 días o más que esperan sus números. */
+  /** Publicadas hace 2 días o más que esperan sus números en la red principal. */
   porMedir: PorMedir[];
+  /** Vídeos ya medidos en la principal que pudieron salir también en otra red de la banda. Opcional: no bloquea nada. */
+  otrasRedes: PorMedirOtrasRedes[];
   /** Lo que se ha aprendido de lo medido; null mientras no haya con qué concluir. */
   resumen: Resumen | null;
   /** Tres semanas con lo fijado (bolos, hitos, lanzamiento) y lo ya publicado. */
@@ -81,14 +84,19 @@ async function contextoDeHoy(bandId: string, ahora: Date): Promise<Contexto | nu
 export async function estadoDeHoy(bandId: string, ahora = new Date()): Promise<EstadoAsesor | null> {
   const ctx = await contextoDeHoy(bandId, ahora);
   if (!ctx) return null;
-  const historial = await dbAccionesDesde(bandId, sumarDias(ctx.hoy, -DIAS_APRENDIZAJE));
+  const desde = sumarDias(ctx.hoy, -DIAS_APRENDIZAJE);
+  const [historial, resultadosRed] = await Promise.all([dbAccionesDesde(bandId, desde), dbResultadosRedDesde(bandId, desde)]);
   const { conciertos, resultados, ...resto } = ctx;
+  // La red principal decide cuándo una pieza «espera sus números»: Instagram si están, y si no la primera que tengan.
+  const principal = redPrincipal(ctx.estrategia.redes);
+  const medidasPrincipal = principal === 'instagram' ? resultados : resultadosRed.filter((r) => r.red === principal);
   return {
     ...resto,
-    agenda: agendaDe({ hoy: ctx.hoy, conciertos, lanzamiento: ctx.estrategia.lanzamiento, historial, resultados }),
+    agenda: agendaDe({ hoy: ctx.hoy, conciertos, lanzamiento: ctx.estrategia.lanzamiento, historial, resultados, resultadosRed }),
     opciones: opcionesDeHoy(ctx.diagnostico, ctx.estrategia, ctx.hoy, historial, resultados),
     semana: semana(historial, ctx.hoy),
-    porMedir: porMedir(historial, resultados, ctx.hoy),
+    porMedir: porMedir(historial, medidasPrincipal, ctx.hoy).map((p) => ({ ...p, red: principal })),
+    otrasRedes: otrasRedesPorMedir(historial, medidasPrincipal, resultadosRed, ctx.hoy, ctx.estrategia.redes),
     resumen: resumenDe(resultados, ctx.hoy),
   };
 }
@@ -241,6 +249,13 @@ export async function chatAsesor(bandId: string, conversacionRaw: unknown, ahora
     .slice(0, 5)
     .map((r) => `«${sanitizeExternalText(r.titulo, 80)}» (${r.formato}, ${fechaCorta(r.fecha)}): ${r.alcance} cuentas alcanzadas, ${r.guardados} guardados. ${lecturaDe(r).mensaje}`);
 
+  // TikTok y YouTube: cada línea con su lectura frente a lo habitual de la propia banda en esa red.
+  const resultadosRed = await dbResultadosRedDesde(bandId, sumarDias(ctx.hoy, -DIAS_APRENDIZAJE));
+  const recientesRed = [...resultadosRed]
+    .sort((a, b) => (a.fecha < b.fecha ? 1 : -1))
+    .slice(0, 5)
+    .map((r) => `«${sanitizeExternalText(r.titulo, 80)}» (${ETIQUETA_RED_METRICAS[r.red]}, ${fechaCorta(r.fecha)}): ${r.metricas.visualizaciones} visualizaciones. ${lecturaRelativa(r.red, r.metricas, previasDe(resultadosRed, r, ctx.hoy)).mensaje}`);
+
   try {
     const respuesta = await generateContentWithFallback(client, {
       contents: promptChat({
@@ -248,7 +263,7 @@ export async function chatAsesor(bandId: string, conversacionRaw: unknown, ahora
         estrategia: bloqueEstrategiaPrompt(ctx.estrategia),
         momento: ctx.diagnostico.porque,
         aprendido: resumen?.mensaje ?? null,
-        recientes,
+        recientes: [...recientes, ...recientesRed],
         ideasDeHoy: pendientes.map((t) => ({ id: t.id, titulo: t.titulo })),
         conversacion,
       }),

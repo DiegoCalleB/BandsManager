@@ -32,6 +32,7 @@ Exporta: ModoLocalEnVivoTab.
 - [[src_hooks_useFullscreen|src/hooks/useFullscreen.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_hooks_useMetronomo|src/hooks/useMetronomo.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_hooks_useNavegacionItems|src/hooks/useNavegacionItems.ts]] *(Layer: #hook, Domain: #system)*
+- [[src_hooks_useNotacion|src/hooks/useNotacion.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_hooks_useSeguimientoEnsayo|src/hooks/useSeguimientoEnsayo.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_hooks_useWakeLock|src/hooks/useWakeLock.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*

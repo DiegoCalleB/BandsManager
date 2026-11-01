@@ -7,12 +7,14 @@ import { formatSongTitle } from "../../utils/formatSongTitle";
 import { ActionMenu,Button } from "../ui";
 import { AtrilTabs } from "./AtrilTabs";
 import { useAtril } from "./AtrilContext";
+import { useFormatoTono } from "../../hooks/useNotacion";
 
 /**
  * Cabecera del Atril: título, tonalidad, ficha del tema y acciones.
  * @returns Sección de interfaz.
  */
 export function AtrilHeader() {
+  const fmtTono = useFormatoTono();
   const { handleToggleAudio, isPlayingAudio, audioUrl, song, handleGenerateWithAi, isGeneratingAi, analisisAcordes, isAnalyzingChords, setShowAnalisisAcordes, handleAnalyzeChordsFromAudio, setShowStructureUploadModal, setShowShareModal, setShowMetronomeModal, setShowTunerModal, setActiveTab, esMovil, modoEscenario, setModoEscenario } = useAtril();
   return (
     <>
@@ -55,7 +57,7 @@ export function AtrilHeader() {
               )}
             </div>
             <p className="text-xs text-[var(--ink-2)] font-sans mt-0.5">
-              {[song.tonalidad || "Mim", `${song.bpm || 120} BPM`, song.afinacion, song.duracion].filter(Boolean).join(" · ")}
+              {[fmtTono(song.tonalidad) || "Em", `${song.bpm || 120} BPM`, song.afinacion, song.duracion].filter(Boolean).join(" · ")}
             </p>
           </div>
         </div>

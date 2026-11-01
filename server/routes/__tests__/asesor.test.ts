@@ -12,7 +12,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { crearFakeSupabaseTablas } from '../../db/__tests__/helpers/fakeSupabaseTablas';
 
-const fake = crearFakeSupabaseTablas({ band_estrategia_marketing: [['band_id']], asesor_acciones: [['band_id', 'fecha', 'tarjeta_id']], asesor_resultados: [['band_id', 'fecha', 'tarjeta_id']] });
+const fake = crearFakeSupabaseTablas({ band_estrategia_marketing: [['band_id']], asesor_acciones: [['band_id', 'fecha', 'tarjeta_id']], asesor_resultados: [['band_id', 'fecha', 'tarjeta_id']], asesor_resultados_red: [['band_id', 'fecha', 'tarjeta_id', 'red']] });
 vi.mock('../../db/core.js', async (orig) => ({ ...(await orig<any>()), getSupabase: () => fake.client }));
 vi.mock('../../state.js', async (orig) => ({ ...(await orig<any>()), loadState: () => ({}), saveState: () => {} }));
 const dna = { valor: null as unknown };
@@ -244,7 +244,7 @@ describe('resultados de las piezas', () => {
   it('pide los números de lo publicado hace 2 días o más, y deja de pedirlos cuando se anotan', async () => {
     fake.tablas.asesor_acciones = [hecha(), hecha({ fecha: '2026-10-28', tarjeta_id: 'hoy-mismo' })];
     const antes = (await llamar('get', '/asesor/hoy')).body;
-    expect(antes.porMedir).toEqual([{ fecha: '2026-10-24', tarjetaId: 'fondo-pilar', formato: 'reel', titulo: 'Tema de la semana: La furgo' }]);
+    expect(antes.porMedir).toEqual([{ fecha: '2026-10-24', tarjetaId: 'fondo-pilar', formato: 'reel', titulo: 'Tema de la semana: La furgo', red: 'instagram' }]);
     expect(antes.resumen).toBeNull();
 
     const res = await anotar(base);
@@ -486,4 +486,3 @@ describe('redes de la banda', () => {
     expect(ia.prompts[0]).toContain('YouTube Shorts');
   });
 });
-

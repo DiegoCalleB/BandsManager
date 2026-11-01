@@ -10,6 +10,7 @@ import { AppearanceSettings } from "./AppearanceSettings";
 import { BandLogoSection } from "./BandLogoSection";
 import { BandSelectionSection } from "./BandSelectionSection";
 import { EspectroPreferenceCard } from "./EspectroPreferenceCard";
+import { NotacionPreferenceCard } from "./NotacionPreferenceCard";
 import { IdentityFields } from "./IdentityFields";
 import { LanguageSelector } from "./LanguageSelector";
 import { NotificationSettingsCard } from "./NotificationSettingsCard";
@@ -64,6 +65,7 @@ export function UserProfileView() {
 
       <AppearanceSettings />
       <EspectroPreferenceCard />
+      <NotacionPreferenceCard />
       <AgentConfigCard />
 
       <NotificationSettingsCard />

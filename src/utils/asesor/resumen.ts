@@ -10,7 +10,7 @@
 import { diasEntre, fechaCorta } from '../campanaConcierto';
 import { ALCANCE_MINIMO, diagnosticarPieza, type Veredicto } from './diagnosticoMetricas';
 import type { AccionRegistrada } from './opciones';
-import type { Formato } from './reglasFormato';
+import type { Formato, Red } from './reglasFormato';
 
 /** Los números de Instagram se miran a las 48 h (lección de métricas clave). */
 export const DIAS_PARA_MEDIR = 2;
@@ -40,6 +40,8 @@ export interface PorMedir {
   tarjetaId: string;
   formato: Formato;
   titulo: string;
+  /** La red en la que se anotan sus números: Instagram si la banda está, y si no la primera que tenga. Sin ella, Instagram. */
+  red?: Red;
 }
 
 export const ETIQUETA_FORMATO: Record<Formato, string> = { reel: 'Reel', carrusel: 'Carrusel', stories: 'Stories', post: 'Post' };

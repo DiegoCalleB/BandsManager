@@ -212,7 +212,7 @@ export function ImportSetlistModal({
             titulo,
             duracion: "0:00",
             duracionSegundos: 0,
-            tonalidad: "Mim",
+            tonalidad: "Em",
             bpm: 120,
           };
           // Secuencial (no Promise.all): así cada id generado con Date.now() es único de verdad.

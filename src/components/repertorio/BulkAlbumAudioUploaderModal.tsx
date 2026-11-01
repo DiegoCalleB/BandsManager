@@ -3,6 +3,8 @@ import { X, Upload, CheckCircle2, AlertCircle, Play, Pause, RefreshCw, FileAudio
 import { Song, ThemeColors } from "../../types";
 import { ModalPortal } from "../common/ModalPortal";
 import { uploadFileToServer } from "../../utils/audioStorage";
+import type { ProgresoSubida } from "../../utils/subidaConProgreso";
+import { BarraProgresoSubida } from "./BarraProgresoSubida";
 import { formatSecondsToMmSs } from "../../utils/repertorioUtils";
 import { apiFetch } from "../../utils/api";
 import { analizarAcordesDelAudio } from "../../utils/analisisAcordesCliente";
@@ -69,6 +71,19 @@ export function BulkAlbumAudioUploaderModal({
     total: number;
     currentName: string;
   }>({ current: 0, total: 0, currentName: "" });
+  const [subida, setSubida] = useState<ProgresoSubida | null>(null);
+  // Los acordes se analizan de uno en uno y en segundo plano: no hacen esperar a quien sube el disco.
+  const colaAnalisis = useRef<Promise<unknown>>(Promise.resolve());
+  const [analizandoFondo, setAnalizandoFondo] = useState(0);
+  const marcarGuardada = (itemId: string, uploadedUrl: string, songId: string) => {
+    setItems((prev) => prev.map((it) => (it.id === itemId ? { ...it, status: "success", uploadedUrl } : it)));
+    setAnalizandoFondo((n) => n + 1);
+    colaAnalisis.current = colaAnalisis.current
+      .then(() => analizarAcordesDelAudio(songId))
+      .then(() => setItems((prev) => prev.map((it) => (it.id === itemId ? { ...it, chordsSource: "audio_real", esAproximado: true } : it))))
+      .catch((e) => console.warn("No se pudieron analizar los acordes de", songId, e))
+      .finally(() => setAnalizandoFondo((n) => n - 1));
+  };
   const [playingItemIndex, setPlayingItemIndex] = useState<number | null>(null);
   const [feedbackMsg, setFeedbackMsg] = useState<{
     type: "success" | "error";
@@ -366,9 +381,10 @@ export function BulkAlbumAudioUploaderModal({
     albumSongs.forEach((s) => updatedSongsMap.set(s.id, s));
 
     const newlyCreatedSongs: Song[] = [];
-    let successCount = 0;
+    let successCount = items.filter((it) => it.status === "success").length; // al reintentar cuentan también las ya guardadas
 
     for (let i = 0; i < items.length; i++) {
+      if (items[i].status === "success") continue; // al reintentar solo se repiten las que fallaron
       const item = items[i];
 
       setUploadProgress({
@@ -383,12 +399,14 @@ export function BulkAlbumAudioUploaderModal({
         ),
       );
 
+      setSubida(null);
       try {
         // Upload audio file to backend / Supabase Storage
         const uploadedUrl = await uploadFileToServer(item.file, {
           bandId: bandId,
           category: "audio",
           folder: `discografia/${finalAlbumTitle.replace(/[^a-zA-Z0-9_-]/g, "_")}`,
+          onProgress: setSubida,
         });
 
         const newDurationFormatted = formatSecondsToMmSs(item.durationSeconds);
@@ -434,38 +452,7 @@ export function BulkAlbumAudioUploaderModal({
           const savedSong = savedData?.song || newSong;
           newlyCreatedSongs.push(savedSong);
           successCount++;
-          setItems((prev) =>
-            prev.map((it, idx) =>
-              idx === i ? { ...it, status: "transcribing", uploadedUrl } : it,
-            ),
-          );
-          try {
-            await analizarAcordesDelAudio(savedSong.id);
-            setItems((prev) =>
-              prev.map((it, idx) =>
-                idx === i
-                  ? {
-                      ...it,
-                      status: "success",
-                      uploadedUrl,
-                      chordsSource: "audio_real",
-                      esAproximado: true,
-                    }
-                  : it,
-              ),
-            );
-          } catch (chordErr) {
-            console.warn(
-              "No se pudieron analizar los acordes de",
-              savedSong.titulo,
-              chordErr,
-            );
-            setItems((prev) =>
-              prev.map((it, idx) =>
-                idx === i ? { ...it, status: "success", uploadedUrl } : it,
-              ),
-            );
-          }
+          marcarGuardada(item.id, uploadedUrl, savedSong.id);
         } else {
           // UPDATE EXISTING SONG
           const targetSong = updatedSongsMap.get(item.matchedSongId);
@@ -503,40 +490,7 @@ export function BulkAlbumAudioUploaderModal({
             const finalSaved = savedData?.song || updatedSong;
             updatedSongsMap.set(finalSaved.id, finalSaved);
             successCount++;
-            setItems((prev) =>
-              prev.map((it, idx) =>
-                idx === i
-                  ? { ...it, status: "transcribing", uploadedUrl }
-                  : it,
-              ),
-            );
-            try {
-              await analizarAcordesDelAudio(finalSaved.id);
-              setItems((prev) =>
-                prev.map((it, idx) =>
-                  idx === i
-                    ? {
-                        ...it,
-                        status: "success",
-                        uploadedUrl,
-                        chordsSource: "audio_real",
-                        esAproximado: true,
-                      }
-                    : it,
-                ),
-              );
-            } catch (chordErr) {
-              console.warn(
-                "No se pudieron analizar los acordes de",
-                finalSaved.titulo,
-                chordErr,
-              );
-              setItems((prev) =>
-                prev.map((it, idx) =>
-                  idx === i ? { ...it, status: "success", uploadedUrl } : it,
-                ),
-              );
-            }
+            marcarGuardada(item.id, uploadedUrl, finalSaved.id);
           }
         }
       } catch (errCapturado) {
@@ -562,9 +516,15 @@ export function BulkAlbumAudioUploaderModal({
 
     setFeedbackMsg({
       type: "success",
-      text: `¡${successCount} pistas completas guardadas con éxito en el álbum "${finalAlbumTitle}"!`,
+      text: `✓ ${successCount} ${successCount === 1 ? "pista guardada" : "pistas guardadas"} en "${finalAlbumTitle}". Pulsa «Listo» para cerrar.`,
     });
   };
+
+  const guardadas = items.filter((it) => it.status === "success").length;
+  const fallidas = items.filter((it) => it.status === "error").length;
+  // Terminado = ya no queda nada por subir. Entonces el botón principal es «Listo» (cierra), nunca «Guardar» otra vez.
+  const terminado = !isUploading && guardadas > 0 && guardadas + fallidas === items.length;
+  const bloqueado = isUploading || terminado;
 
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
@@ -614,7 +574,7 @@ export function BulkAlbumAudioUploaderModal({
         {/* Modal Body */}
         <div className="p-6 overflow-y-auto space-y-6 flex-1">
           {/* Top Form (Album Title & Cover for New Album) */}
-          {isCreatingBrandNewAlbum && (
+          {isCreatingBrandNewAlbum && !bloqueado && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 rounded-[var(--r-l)] bg-[var(--ink)]/5">
               <div className="md:col-span-2 space-y-2">
                 <label className="text-xs font-sans font-bold text-[var(--ink-2)]">
@@ -660,8 +620,8 @@ export function BulkAlbumAudioUploaderModal({
             </div>
           )}
 
-          {/* Drag and Drop Zone */}
-          <div
+          {/* Drag and Drop Zone: solo antes de subir */}
+          {!bloqueado && <div
             onDragOver={handleDragOver}
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
@@ -701,7 +661,7 @@ export function BulkAlbumAudioUploaderModal({
                 M4A)
               </p>
             </div>
-          </div>
+          </div>}
 
           {/* Feedback messages */}
           {feedbackMsg && (
@@ -721,28 +681,11 @@ export function BulkAlbumAudioUploaderModal({
             </div>
           )}
 
-          {/* Upload Progress Bar (when active) */}
-          {isUploading && (
-            <div className="p-4 rounded-[var(--r-l)] bg-[var(--ink)]/5 space-y-2">
-              <div className="flex items-center justify-between text-xs font-sans">
-                <span className="flex items-center gap-2 text-[var(--ok)] font-bold">
-                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                  Subiendo pista {uploadProgress.current} de{" "}
-                  {uploadProgress.total}...
-                </span>
-                <span className="text-[var(--ink-2)] truncate max-w-[200px]">
-                  {uploadProgress.currentName}
-                </span>
-              </div>
-              <div className="w-full h-2 bg-[var(--surface)]/80 rounded-[var(--r-pill)] overflow-hidden">
-                <div
-                  className="h-full bg-[var(--surface)] transition-ui duration-300 rounded-[var(--r-pill)]"
-                  style={{
-                    width: `${(uploadProgress.current / Math.max(1, uploadProgress.total)) * 100}%`,
-                  }}
-                />
-              </div>
-            </div>
+          {isUploading && <BarraProgresoSubida {...uploadProgress} progreso={subida} />}
+          {analizandoFondo > 0 && (
+            <p className="text-xs font-sans text-[var(--ink-2)] flex items-center gap-2 px-1">
+              <RefreshCw className="w-3.5 h-3.5 animate-spin" /> Detectando acordes en segundo plano ({analizandoFondo}); puedes cerrar, se guardan solos.
+            </p>
           )}
 
           {/* Tracks List / Matching Table */}
@@ -931,39 +874,38 @@ export function BulkAlbumAudioUploaderModal({
           )}
         </div>
 
-        {/* Modal Footer */}
+        {/* Modal Footer: antes de subir «Cancelar / Guardar»; al terminar solo «Listo» (cierra) */}
         <div className="p-5 flex items-center justify-between shrink-0 bg-[var(--sunken)]">
-          <button
-            type="button"
-            onClick={onClose}
-            disabled={isUploading}
-            className="px-5 py-2.5 rounded-[var(--r-l)] hover:bg-[var(--ink)]/5 text-xs font-sans font-bold transition cursor-pointer disabled:opacity-50"
-          >
-            Cancelar
-          </button>
-
-          <button
-            type="button"
-            onClick={handleStartUpload}
-            disabled={isUploading || items.length === 0}
-            className="px-6 py-2.5 rounded-[var(--r-l)] bg-[var(--surface)] hover:bg-[var(--surface)] text-[var(--ink)] text-xs font-sans font-bold flex items-center gap-2 cursor-pointer transition disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isUploading ? (
-              <>
-                <RefreshCw className="w-4 h-4 animate-spin" />
-                <span>Guardando pistas…</span>
-              </>
-            ) : (
-              <>
-                <Upload className="w-4 h-4" />
-                <span>
-                  {isCreatingBrandNewAlbum
-                    ? `Crear Disco con ${items.length} Pistas`
-                    : `Guardar Pistas Completas`}
-                </span>
-              </>
-            )}
-          </button>
+          {terminado ? (
+            <>
+              {fallidas > 0 ? (
+                <button type="button" onClick={handleStartUpload} className="px-5 py-2.5 rounded-[var(--r-l)] bg-[var(--alert)]/10 text-[var(--alert)] text-xs font-sans font-bold cursor-pointer">
+                  Reintentar las {fallidas} que fallaron
+                </button>
+              ) : <span />}
+              <button type="button" onClick={onClose} className="px-6 py-2.5 rounded-[var(--r-l)] bg-[var(--ok)] text-white text-xs font-sans font-bold flex items-center gap-2 cursor-pointer">
+                <CheckCircle2 className="w-4 h-4" /> Listo
+              </button>
+            </>
+          ) : (
+            <>
+              <button type="button" onClick={onClose} disabled={isUploading} className="px-5 py-2.5 rounded-[var(--r-l)] hover:bg-[var(--ink)]/5 text-xs font-sans font-bold transition cursor-pointer disabled:opacity-50">
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={handleStartUpload}
+                disabled={isUploading || items.length === 0}
+                className="px-6 py-2.5 rounded-[var(--r-l)] bg-[var(--ok)] text-white text-xs font-sans font-bold flex items-center gap-2 cursor-pointer transition disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isUploading ? (
+                  <><RefreshCw className="w-4 h-4 animate-spin" /><span>Subiendo {uploadProgress.current} de {uploadProgress.total}…</span></>
+                ) : (
+                  <><Upload className="w-4 h-4" /><span>{isCreatingBrandNewAlbum ? `Crear disco con ${items.length} pistas` : `Subir ${items.length} ${items.length === 1 ? "pista" : "pistas"}`}</span></>
+                )}
+              </button>
+            </>
+          )}
         </div>
       </div>
       </div>

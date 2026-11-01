@@ -30,6 +30,7 @@ Persistencia de canciones, pistas, energía y afinaciones.
 - [[src_db_seed|src/db_seed.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_irisTracks|src/utils/irisTracks.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[src_utils_notacionAcordes|src/utils/notacionAcordes.ts]] *(Layer: #service, Domain: #system)*
 - [[tabla_setlist_shortcuts|tabla setlist_shortcuts]] *(Layer: #schema, Domain: #repertoire)*
 - [[tabla_setlists|tabla setlists]] *(Layer: #schema, Domain: #repertoire)*
 - [[tabla_songs|tabla songs]] *(Layer: #schema, Domain: #repertoire)*
@@ -45,6 +46,7 @@ Persistencia de canciones, pistas, energía y afinaciones.
 - [[server_db|server/db.ts]] *(from #db)*
 - [[server_db_sync|server/db/sync.ts]] *(from #db)*
 - [[server_routes_songs_structureUpload|server/routes/songs/structureUpload.ts]] *(from #route)*
+- [[server_services_analisisAcordesRapido|server/services/analisisAcordesRapido.ts]] *(from #service)*
 - [[server_utils_enrichCoversWithoutAudio|server/utils/enrichCoversWithoutAudio.ts]] *(from #service)*
 - [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 

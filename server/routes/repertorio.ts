@@ -13,6 +13,7 @@ import { safeParseJson } from "../utils.js";
 import { pistasDeCancion } from "../../src/utils/irisTracks.js";
 import { getAudioSnippetPath } from "./concert_to_album.js";
 import { analizarAcordesDeCancion } from "../services/acordesCancion.js";
+import { afinarCompasesEnSegundoPlano, cancionPorId } from "../services/analisisAcordesRapido.js";
 import { ejecutarLetraSincronizada } from "../services/letraCancion.js";
 import { resumenCola, encolarLetras, cancelarCola, dbSetLetrasAuto } from "../services/colaLetras.js";
 import { analisisAcordesEnCurso } from "../utils/bloqueoOido.js";
@@ -207,12 +208,10 @@ router.post("/songs/:id/analizar-dinamica", requireAuth, async (req, res) => {
   }
 });
 
-// POST analizar los acordes del audio de una canción (Chordify propio): detecta acordes con
-// tiempos sobre el audio, sin IA generativa ni coste, y guarda el resultado en la canción.
-// Es un cálculo local de ~1 s por tema: se responde en la misma petición, sin cola.
-// Peticiones idénticas a la vez (subida masiva + apertura del visor, dos pestañas, un reintento del
-// móvil…): la segunda NO falla con un 409 que el usuario ve como «no se pudo guardar»; espera al
-// análisis en marcha y recibe el mismo resultado.
+// POST analizar los acordes del audio de una canción (Chordify propio): sin IA generativa ni coste. Responde
+// en ~4 s con el pulso clásico; los compases se afinan después con la red (analisisAcordesRapido.ts).
+// Peticiones idénticas a la vez (subida masiva + visor, dos pestañas, reintento del móvil…) esperan al análisis
+// en marcha y reciben el mismo resultado, sin un 409 que el usuario ve como «no se pudo guardar».
 /** Respuesta HTTP de un análisis de acordes: código y cuerpo JSON. */
 interface ResultadoAnalisisAcordes {
   status: number;
@@ -224,8 +223,7 @@ const analisisAcordesPromesas = new Map<string, Promise<ResultadoAnalisisAcordes
 async function ejecutarAnalisisAcordes(id: string, userBandId: string, sobrescribir: boolean, alAvanzar?: (etapa: string, detalle: string) => void): Promise<ResultadoAnalisisAcordes> {
   // El audio se lee SIEMPRE de la canción guardada, no del cuerpo: así no se puede analizar
   // un fichero ajeno a la banda ni pasar una ruta arbitraria.
-  const songs: Song[] = await dbGetSongs(userBandId);
-  const song = Array.isArray(songs) ? songs.find((s) => s.id === id) : null;
+  const song = await cancionPorId(id, userBandId);
   if (!song) return { status: 404, body: { error: "Canción no encontrada." } };
 
   // Reanalizar sustituye todo el análisis: no se pisan correcciones manuales sin confirmación.
@@ -234,13 +232,14 @@ async function ejecutarAnalisisAcordes(id: string, userBandId: string, sobrescri
     return { status: 409, body: { error: `Hay ${corregidos} acordes corregidos a mano; reanalizar los perdería.`, correcciones: corregidos } };
   }
 
-  const resultado = await analizarAcordesDeCancion(song, alAvanzar);
+  const resultado = await analizarAcordesDeCancion(song, alAvanzar, { pulsoNeuronal: false });
   if (resultado.ok === false) return { status: resultado.status, body: { error: resultado.error } };
   // Las correcciones manuales se pierden al reanalizar, pero su «verdad» no: así el análisis nuevo
   // se puede medir contra lo que la banda corrigió (ver scripts/evaluar-acordes.ts).
   const referencia = song.analisisAcordes?.referenciaManual;
   const analisis = referencia ? { ...resultado.analisis, referenciaManual: referencia } : resultado.analisis;
   const guardada = await dbGuardarAnalisisAcordes(id, userBandId, analisis);
+  afinarCompasesEnSegundoPlano(id, userBandId, analisis.analizadoEn);
   return { status: 200, body: { success: true, analisis, song: guardada } };
 }
 
@@ -779,7 +778,7 @@ router.post("/ai-composer-arrangement", requireAuth, async (req, res) => {
 
     const prompt = `Eres un músico profesional de sesión, productor y co-autor de una banda independiente. Estás colaborando con la banda en el estudio de ensayo.
 Canción: "${titulo}"
-Tonalidad: "${tonalidad || 'Mim'}"
+Tonalidad: "${tonalidad || 'Em'}"
 Tempo: ${bpm || 120} BPM
 Parte de la canción seleccionada: ${seccionCancion || 'General'}
 Momento / Minuto de aplicación: ${tiempoMinuto || 'Toda la canción / Inicio'}

@@ -6,12 +6,14 @@ import { Headphones,Sliders,Sparkles } from "lucide-react";
 import { getIdeaTracks } from "../../utils/irisTracks";
 import { Button } from "../ui";
 import { useSetlistPerformance } from "./SetlistPerformanceContext";
+import { useFormatoTono } from "../../hooks/useNotacion";
 
 /**
  * Barra de práctica del modo ensayo para el tema actual.
  * @returns Sección de interfaz.
  */
 export function PerformanceRehearsalBar() {
+  const fmtTono = useFormatoTono();
   const { modeArchetype, isBlock, currentSong, glareMode, irisStemIdea, handleLaunchPractice, handleLaunchStudio } = useSetlistPerformance();
   return (
     <>
@@ -38,7 +40,7 @@ export function PerformanceRehearsalBar() {
         Modo ensayo activo
       </span>
       <span className="opacity-80 ml-2 font-sans text-xs">
-        {currentSong.tonalidad ? `Tono: ${currentSong.tonalidad}` : ""}
+        {fmtTono(currentSong.tonalidad) ? `Tono: ${fmtTono(currentSong.tonalidad)}` : ""}
         {currentSong.bpm ? ` · ${currentSong.bpm} BPM` : ""}
         {irisStemIdea
           ? ` · ${getIdeaTracks(irisStemIdea).length} pistas Iris`

@@ -4,17 +4,44 @@ import { fechaCorta } from '../../utils/campanaConcierto';
 import { mediosDeInstagram, medidasDeInstagram } from '../../utils/asesorApi';
 import type { MedioInstagram } from '../../utils/asesor/instagramMedios';
 import { ETIQUETA_FORMATO, sanearMedidas, type Medidas, type PorMedir } from '../../utils/asesor/resumen';
+import { ETIQUETA_RED_METRICAS, type MetricasRed, type RedExtra } from '../../utils/asesor/metricasPorRed';
+import { FormMetricasRed } from './FormMetricasRed';
 
 interface Props {
   pieza: PorMedir;
   onGuardar: (m: Medidas) => Promise<string | null>;
+  onGuardarRed: (red: RedExtra, metricas: MetricasRed) => Promise<string | null>;
 }
 
 /**
- * Una pieza publicada que espera sus números. Son tres, y están en «Estadísticas» de la publicación
- * en Instagram (lección de métricas clave: se miran a las 48 h). La tercera es opcional.
+ * Una pieza publicada que espera sus números en la red principal de la banda. En Instagram son tres
+ * (con el atajo de traerlos de la cuenta); en TikTok o YouTube, los de esa red.
  */
-export function PorMedirCard({ pieza, onGuardar }: Props) {
+export function PorMedirCard({ pieza, onGuardar, onGuardarRed }: Props) {
+  const red = pieza.red;
+  if (red && red !== 'instagram') {
+    return (
+      <Card as="article" radius="m" className="grid gap-3">
+        <div className="grid gap-1">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <Chip tone="acc">{ETIQUETA_FORMATO[pieza.formato]}</Chip>
+            <Chip>{ETIQUETA_RED_METRICAS[red]}</Chip>
+            <span className="text-xs text-[var(--ink-2)]">Publicada el {fechaCorta(pieza.fecha)}</span>
+          </div>
+          <h3 className="text-base font-semibold text-[var(--ink)]">{pieza.titulo}</h3>
+        </div>
+        <FormMetricasRed red={red} etiqueta={`Resultados de ${pieza.titulo}`} onGuardar={(m) => onGuardarRed(red, m)} />
+      </Card>
+    );
+  }
+  return <PorMedirInstagram pieza={pieza} onGuardar={onGuardar} />;
+}
+
+/**
+ * Los tres números de Instagram están en «Estadísticas» de la publicación (lección de métricas
+ * clave: se miran a las 48 h). La tercera es opcional.
+ */
+function PorMedirInstagram({ pieza, onGuardar }: Pick<Props, 'pieza' | 'onGuardar'>) {
   const [alcance, setAlcance] = useState('');
   const [guardados, setGuardados] = useState('');
   const [noSeguidores, setNoSeguidores] = useState('');

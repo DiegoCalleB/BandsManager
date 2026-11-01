@@ -26,6 +26,7 @@ La «estrategia de marketing» de la banda: la capa del ADN que dice qué quiere
 - [[server_db_asesorMarketing|server/db/asesorMarketing.ts]] *(from #db)*
 - [[server_routes_asesor|server/routes/asesor.ts]] *(from #route)*
 - [[server_services_asesorMarketing|server/services/asesorMarketing.ts]] *(from #service)*
+- [[server_services_asesorRedes|server/services/asesorRedes.ts]] *(from #service)*
 - [[src_components_asesor_FormEstrategia|src/components/asesor/FormEstrategia.tsx]] *(from #frontend)*
 - [[src_components_asesor_hooks_useAsesor|src/components/asesor/hooks/useAsesor.ts]] *(from #frontend)*
 - [[src_utils_asesor_agenda|src/utils/asesor/agenda.ts]] *(from #service)*

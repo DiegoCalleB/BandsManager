@@ -19,6 +19,7 @@ import {
 import { Button, Input, MenuItem, Select } from '../ui';
 import { Song, Setlist, SetlistShortcut, SetlistItem } from "../../types";
 import { formatSongTitle } from "../../utils/formatSongTitle";
+import { useFormatoTono } from "../../hooks/useNotacion";
 
 interface SetlistAddBarProps {
   activeSetlist: Setlist;
@@ -74,6 +75,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
   setNewShortcutMinutes,
   handleCreateShortcut,
 }) => {
+  const fmtTono = useFormatoTono();
   const [showEventMenu, setShowEventMenu] = useState(false);
 
   // Selected item title for insertion mode
@@ -149,7 +151,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
             const cleanTitle = formatSongTitle(s.titulo);
             return (
               <option key={`${s.id}-${idx}`} value={s.id}>
-                [{albumLabel}] {cleanTitle} ({s.tonalidad ? `${s.tonalidad} · ` : ""}
+                [{albumLabel}] {cleanTitle} ({fmtTono(s.tonalidad) ? `${fmtTono(s.tonalidad)} · ` : ""}
                 {s.duracion || "0:00"})
               </option>
             );

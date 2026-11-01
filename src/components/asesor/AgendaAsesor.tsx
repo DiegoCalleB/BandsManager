@@ -15,6 +15,10 @@ const LECTURA: Record<string, { texto: string; tone: 'ok' | 'alert' | 'neutral' 
   falla_descubrimiento: { texto: 'Gustó, llegó poco', tone: 'neutral' },
   falla_todo: { texto: 'No arrancó', tone: 'alert' },
   sin_datos: { texto: 'Pocos datos', tone: 'neutral' },
+  por_encima: { texto: 'Más de lo habitual', tone: 'ok' },
+  en_su_linea: { texto: 'Como siempre', tone: 'neutral' },
+  por_debajo: { texto: 'Menos de lo habitual', tone: 'neutral' },
+  sin_comparar: { texto: 'Anotada', tone: 'neutral' },
   sin_medir: { texto: 'Sin medir', tone: 'neutral' },
 };
 

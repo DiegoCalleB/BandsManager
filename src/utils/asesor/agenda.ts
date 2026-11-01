@@ -6,6 +6,7 @@
  */
 import { diasEntre, planificarCampana, sumarDias } from '../campanaConcierto';
 import type { Veredicto } from './diagnosticoMetricas';
+import { lecturaRelativa, previasDe, type EstadoLectura, type ResultadoRed } from './metricasPorRed';
 import type { ConciertoParaAsesor } from './diagnostico';
 import type { Lanzamiento } from './estrategia';
 import type { ResultadoPieza } from './resumen';
@@ -20,7 +21,7 @@ export type EventoAgenda =
   | { tipo: 'bolo'; texto: string }
   | { tipo: 'hito'; texto: string; objetivo: string }
   | { tipo: 'lanzamiento'; texto: string }
-  | { tipo: 'hecha'; texto: string; formato: Formato; lectura: Veredicto | 'sin_medir' };
+  | { tipo: 'hecha'; texto: string; formato: Formato; lectura: Veredicto | EstadoLectura | 'sin_medir' };
 
 export interface DiaAgenda {
   fecha: string;
@@ -34,12 +35,14 @@ export interface EntradaAgenda {
   lanzamiento: Lanzamiento | null;
   historial: AccionRegistrada[];
   resultados: ResultadoPieza[];
+  /** Resultados de TikTok y YouTube: si la pieza solo se midió allí, la lectura sale de compararla con lo habitual de esa red. */
+  resultadosRed?: ResultadoRed[];
 }
 
 const donde = (c: ConciertoParaAsesor) => [c.sala, c.ciudad].filter(Boolean).join(', ');
 
 /** Solo los días con algo que contar, y siempre hoy, para que la banda se sitúe. */
-export function agendaDe({ hoy, conciertos, lanzamiento, historial, resultados }: EntradaAgenda): DiaAgenda[] {
+export function agendaDe({ hoy, conciertos, lanzamiento, historial, resultados, resultadosRed = [] }: EntradaAgenda): DiaAgenda[] {
   const desde = sumarDias(hoy, -DIAS_ATRAS);
   const hasta = sumarDias(hoy, DIAS_ADELANTE);
   const dentro = (f: string) => f >= desde && f <= hasta;
@@ -59,7 +62,9 @@ export function agendaDe({ hoy, conciertos, lanzamiento, historial, resultados }
   for (const a of historial) {
     if (a.accion !== 'hecho') continue;
     const r = resultados.find((x) => x.fecha === a.fecha && x.tarjetaId === a.tarjetaId);
-    poner(a.fecha, { tipo: 'hecha', texto: tituloDe(a), formato: a.formato, lectura: r ? lecturaDe(r).veredicto : 'sin_medir' });
+    const rr = r ? undefined : resultadosRed.find((x) => x.fecha === a.fecha && x.tarjetaId === a.tarjetaId);
+    const lectura = r ? lecturaDe(r).veredicto : rr ? lecturaRelativa(rr.red, rr.metricas, previasDe(resultadosRed, rr, hoy)).estado : 'sin_medir';
+    poner(a.fecha, { tipo: 'hecha', texto: tituloDe(a), formato: a.formato, lectura });
   }
 
   const dias: DiaAgenda[] = [];
