@@ -80,6 +80,7 @@ Exporta: rolDeClaveSupabase, describirClaveSupabase, esSupabaseNoConfigurado, ge
 - [[server_routes_users_adminInicial|server/routes/users/adminInicial.ts]] *(from #route)*
 - [[server_services_agentIntelligence|server/services/agentIntelligence.ts]] *(from #agent)*
 - [[server_services_agentQueueService|server/services/agentQueueService.ts]] *(from #agent)*
+- [[server_services_analisisAcordesRapido|server/services/analisisAcordesRapido.ts]] *(from #service)*
 - [[server_services_avisosPublicacion|server/services/avisosPublicacion.ts]] *(from #service)*
 - [[server_services_colaLetras|server/services/colaLetras.ts]] *(from #service)*
 - [[server_services_emailAgentClient|server/services/emailAgentClient.ts]] *(from #agent)*

@@ -70,6 +70,7 @@ _Sin dependencias salientes directas._
 - [[server_routes_tracking|server/routes/tracking.ts]] *(from #route)*
 - [[server_services_acordesCancion|server/services/acordesCancion.ts]] *(from #service)*
 - [[server_services_agentIntelligence|server/services/agentIntelligence.ts]] *(from #agent)*
+- [[server_services_analisisAcordesRapido|server/services/analisisAcordesRapido.ts]] *(from #service)*
 - [[server_services_chatLecturas|server/services/chatLecturas.ts]] *(from #service)*
 - [[server_services_chatPrompt|server/services/chatPrompt.ts]] *(from #service)*
 - [[server_services_letraCancion|server/services/letraCancion.ts]] *(from #service)*
