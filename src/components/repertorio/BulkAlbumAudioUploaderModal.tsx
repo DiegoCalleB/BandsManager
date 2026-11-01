@@ -3,6 +3,8 @@ import { X, Upload, CheckCircle2, AlertCircle, Play, Pause, RefreshCw, FileAudio
 import { Song, ThemeColors } from "../../types";
 import { ModalPortal } from "../common/ModalPortal";
 import { uploadFileToServer } from "../../utils/audioStorage";
+import type { ProgresoSubida } from "../../utils/subidaConProgreso";
+import { BarraProgresoSubida } from "./BarraProgresoSubida";
 import { formatSecondsToMmSs } from "../../utils/repertorioUtils";
 import { apiFetch } from "../../utils/api";
 import { analizarAcordesDelAudio } from "../../utils/analisisAcordesCliente";
@@ -69,6 +71,7 @@ export function BulkAlbumAudioUploaderModal({
     total: number;
     currentName: string;
   }>({ current: 0, total: 0, currentName: "" });
+  const [subida, setSubida] = useState<ProgresoSubida | null>(null);
   const [playingItemIndex, setPlayingItemIndex] = useState<number | null>(null);
   const [feedbackMsg, setFeedbackMsg] = useState<{
     type: "success" | "error";
@@ -383,12 +386,14 @@ export function BulkAlbumAudioUploaderModal({
         ),
       );
 
+      setSubida(null);
       try {
         // Upload audio file to backend / Supabase Storage
         const uploadedUrl = await uploadFileToServer(item.file, {
           bandId: bandId,
           category: "audio",
           folder: `discografia/${finalAlbumTitle.replace(/[^a-zA-Z0-9_-]/g, "_")}`,
+          onProgress: setSubida,
         });
 
         const newDurationFormatted = formatSecondsToMmSs(item.durationSeconds);
@@ -721,29 +726,7 @@ export function BulkAlbumAudioUploaderModal({
             </div>
           )}
 
-          {/* Upload Progress Bar (when active) */}
-          {isUploading && (
-            <div className="p-4 rounded-[var(--r-l)] bg-[var(--ink)]/5 space-y-2">
-              <div className="flex items-center justify-between text-xs font-sans">
-                <span className="flex items-center gap-2 text-[var(--ok)] font-bold">
-                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                  Subiendo pista {uploadProgress.current} de{" "}
-                  {uploadProgress.total}...
-                </span>
-                <span className="text-[var(--ink-2)] truncate max-w-[200px]">
-                  {uploadProgress.currentName}
-                </span>
-              </div>
-              <div className="w-full h-2 bg-[var(--surface)]/80 rounded-[var(--r-pill)] overflow-hidden">
-                <div
-                  className="h-full bg-[var(--surface)] transition-ui duration-300 rounded-[var(--r-pill)]"
-                  style={{
-                    width: `${(uploadProgress.current / Math.max(1, uploadProgress.total)) * 100}%`,
-                  }}
-                />
-              </div>
-            </div>
-          )}
+          {isUploading && <BarraProgresoSubida {...uploadProgress} progreso={subida} />}
 
           {/* Tracks List / Matching Table */}
           {items.length > 0 && (

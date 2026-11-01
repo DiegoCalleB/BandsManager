@@ -6,6 +6,7 @@
  */
 
 import { getAuthHeaders } from '../services/api';
+import { enviarConProgreso, ErrorSubidaRechazada, type ProgresoSubida } from './subidaConProgreso';
 import { comoErrorCapturado, type ErrorCapturado } from './errorCapturado';
 import type { AudioTrack, Setlist, SetlistItem, Song, SongAudioIdea } from '../types';
 
@@ -302,36 +303,28 @@ export function isGoogleDriveUrl(url: string): boolean {
  */
 export async function uploadFileToServer(
   file: File,
-  options?: { bandId?: string; category?: string; folder?: string } | string
+  options?: { bandId?: string; category?: string; folder?: string; onProgress?: (p: ProgresoSubida) => void } | string
 ): Promise<string> {
   const opts = typeof options === 'string' ? { bandId: options } : options || {};
 
   try {
-    const authHeaders = getAuthHeaders() as Record<string, string>;
     const formData = new FormData();
     formData.append('file', file);
-    if (opts.bandId) formData.append('bandId', opts.bandId);
-    if (opts.category) formData.append('category', opts.category);
-    if (opts.folder) formData.append('folder', opts.folder);
+    for (const campo of ['bandId', 'category', 'folder'] as const) if (opts[campo]) formData.append(campo, opts[campo] as string);
 
-    const headers: Record<string, string> = { ...authHeaders };
+    const headers = { ...(getAuthHeaders() as Record<string, string>) };
     delete headers['Content-Type'];
     delete headers['content-type'];
     if (opts.bandId) headers['x-band-id'] = opts.bandId;
 
-    const response = await fetch('/api/upload', {
-      method: 'POST',
-      headers,
-      body: formData,
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      if (data && data.url) return data.url;
-    } else {
-      console.warn(`/api/upload returned status ${response.status}, trying fallback`);
-    }
+    const { status, datos } = await enviarConProgreso('/api/upload', headers, formData, opts.onProgress);
+    if (status >= 200 && status < 300 && datos?.url) return datos.url;
+    // Un 4xx es un rechazo explicado (tipo no permitido, archivo dañado, sin acceso): reintentar en base64 o
+    // guardar en el navegador solo lo escondería y el archivo "parecería" subido sin estarlo.
+    if (status >= 400 && status < 500 && datos?.error) throw new ErrorSubidaRechazada(datos.error);
+    console.warn(`/api/upload returned status ${status}, trying fallback`);
   } catch (formDataErr) {
+    if (formDataErr instanceof ErrorSubidaRechazada) throw formDataErr;
     console.warn('FormData upload failed, trying base64 fallback:', formDataErr);
   }
 

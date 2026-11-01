@@ -28,7 +28,7 @@
   "server/routes/repertorio.ts": 1003,
   "server/routes/billing.ts": 991,
   "src/components/repertorio/EscenarioView.tsx": 989,
-  "src/components/repertorio/BulkAlbumAudioUploaderModal.tsx": 973,
+  "src/components/repertorio/BulkAlbumAudioUploaderModal.tsx": 956,
   "server/services/spotifyService.ts": 935,
   "src/components/booking/venue_modal/VenueEmailThread.tsx": 930,
   "src/components/repertorio/EnergyChart.tsx": 915,
@@ -85,6 +85,6 @@
   "src/components/dashboard/widgets/CalendarWidget.tsx": 618,
   "src/components/repertorio/pdf_export/buildPrintStyles.ts": 617,
   "src/components/ensayos/GrabacionActaTab.tsx": 616,
-  "src/utils/audioStorage.ts": 615,
+  "src/utils/audioStorage.ts": 608,
   "src/utils/teoriaArmonica.ts": 602
 }
