@@ -19,6 +19,7 @@ Exporta: TONALIDAD_FALLBACK, ParsedKey, parseTonalidad, tonalidadesSonFiables, C
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_notacionAcordes|src/utils/notacionAcordes.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

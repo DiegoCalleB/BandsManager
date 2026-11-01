@@ -7,13 +7,14 @@ import { dbRecordAiUsage } from '../db/aiLedger.js';
 import { uploadBufferToSupabase } from '../utils/storage.js';
 import { elegirMejorVariante, type VarianteFondo } from './juezCartel.js';
 import { isSpendCapOrQuotaError } from '../ai.js';
+import { MODELO_IMAGEN_BASE_ID, MODELO_IMAGEN_PRO_ID } from '../utils/modelosGemini.js';
 import { costeImagenEur, type EncuadreFondo, type TextosCartel } from '../utils/promptCartel.js';
 import { carpetaCartel } from '../utils/cartelUrl.js';
 import { PREFIJO_FONDO_CON_TEXTO, fondoConTexto } from '../../src/utils/cartel/fondoIa.js';
 import type { ImagenReferencia } from './referenciasCartel.js';
 
-export const MODELO_IMAGEN_BASE = 'gemini-2.5-flash-image';
-export const MODELO_IMAGEN_PRO = 'gemini-3-pro-image-preview';
+export const MODELO_IMAGEN_BASE = MODELO_IMAGEN_BASE_ID;
+export const MODELO_IMAGEN_PRO = MODELO_IMAGEN_PRO_ID;
 /** Modelo principal. Se puede bajar al barato con CARTEL_MODELO_IMAGEN sin tocar código. */
 export const MODELO_IMAGEN = process.env.CARTEL_MODELO_IMAGEN || MODELO_IMAGEN_PRO;
 /** Variantes por cartel; un juez elige la mejor. 1 = sin juez. */

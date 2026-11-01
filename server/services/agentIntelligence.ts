@@ -1,6 +1,6 @@
 import { dbGetConcerts, dbGetUsers, dbGetUserBands } from "../db.js";
 import { Concert } from "../../src/types.js";
-import { getAiClient } from "../ai.js";
+import { getAiClient, GEMINI_MODEL } from "../ai.js";
 import { Type } from "@google/genai";
 import { loadState } from "../state.js";
 import { cleanBandId } from "../db/core.js";
@@ -245,7 +245,7 @@ ${incomingMessage.slice(0, 1500)}
 Devuelve un JSON estrictamente estructurado según el schema.`;
 
     const response = await aiClient.models.generateContent({
-      model: "gemini-3.8-flash",
+      model: GEMINI_MODEL,
       contents: prompt,
       config: {
         temperature: 0.1,

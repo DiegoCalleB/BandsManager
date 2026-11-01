@@ -22,6 +22,8 @@ import { getEnergyInfo } from "../../utils/energyPacingUtils";
 import { evaluarCalidadUnion } from "../../utils/setlistCompatibility";
 import { isSongMarkedForMember } from "../../utils/repertorioUtils";
 import { Song, SetlistItem } from "../../types";
+import { useFormatoTono, useNotacion } from "../../hooks/useNotacion";
+import { normalizarTonalidad, NOTAS_BASE } from "../../utils/notacionAcordes";
 
 export interface SetlistSongRowProps {
   item: SetlistItem;
@@ -108,6 +110,7 @@ export const SetlistSongRow: React.FC<SetlistSongRowProps> = ({
   currentUser,
   onToggleDuda,
 }) => {
+  const fmtTono = useFormatoTono();
   const memberNotesCount = song.notasMiembros
     ? Object.values(song.notasMiembros).filter(
         (v) => typeof v === "string" && v.trim().length > 0,
@@ -117,36 +120,9 @@ export const SetlistSongRow: React.FC<SetlistSongRowProps> = ({
   // Calculo de tono deseado y opciones de tono
   const desiredKey = item.tonalidadDeseada;
   const rawOrigKey = (song.tonalidad || "").trim();
-  const isEsKey = /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test(rawOrigKey);
-  const baseRoots = isEsKey
-    ? [
-        "Do",
-        "Do#",
-        "Re",
-        "Re#",
-        "Mi",
-        "Fa",
-        "Fa#",
-        "Sol",
-        "Sol#",
-        "La",
-        "La#",
-        "Si",
-      ]
-    : [
-        "C",
-        "C#",
-        "D",
-        "D#",
-        "E",
-        "F",
-        "F#",
-        "G",
-        "G#",
-        "A",
-        "A#",
-        "B",
-      ];
+  const [notacion] = useNotacion();
+  const isEsKey = notacion === "ES";
+  const baseRoots = NOTAS_BASE[isEsKey ? "ES" : "EN"];
   const keyMatch = rawOrigKey.match(
     /^(Do#|Re#|Fa#|Sol#|La#|Do|Re|Mi|Fa|Sol|La|Si|C#|D#|F#|G#|A#|Db|Eb|Gb|Ab|Bb|C|D|E|F|G|A|B)(.*)$/i,
   );
@@ -239,13 +215,13 @@ export const SetlistSongRow: React.FC<SetlistSongRowProps> = ({
             }`}
             title={
               desiredKey
-                ? `Original: ${song.tonalidad || "—"} · Tocar en este repertorio: ${desiredKey}. Clic para cambiar.`
+                ? `Original: ${fmtTono(song.tonalidad) || "—"} · Tocar en este repertorio: ${fmtTono(desiredKey)}. Clic para cambiar.`
                 : "Tonalidad original. Clic para definir en qué tono tocarla en este repertorio (transposición automática)."
             }
           >
             {desiredKey
-              ? `${song.tonalidad || "—"} → ${desiredKey}`
-              : song.tonalidad || "—"}
+              ? `${fmtTono(song.tonalidad) || "—"} → ${fmtTono(desiredKey)}`
+              : fmtTono(song.tonalidad) || "—"}
           </button>
           {isEditingKey &&
             keyPopoverPos &&
@@ -260,16 +236,16 @@ export const SetlistSongRow: React.FC<SetlistSongRowProps> = ({
                 onClick={(e) => e.stopPropagation()}
               >
                 <p className="text-micro font-sans text-[var(--ink-2)] px-0.5">
-                  Tocar en tono (original: {song.tonalidad || "—"}):
+                  Tocar en tono (original: {fmtTono(song.tonalidad) || "—"}):
                 </p>
                 <div className="grid grid-cols-4 gap-1">
                   {keyNotes.map((note) => (
                     <button
                       key={note}
                       type="button"
-                      onClick={() => onSetTonalidadDeseada(note)}
+                      onClick={() => onSetTonalidadDeseada(normalizarTonalidad(note))}
                       className={`px-1 py-1 rounded text-micro font-sans font-bold transition cursor-pointer ${
-                        desiredKey === note
+                        normalizarTonalidad(desiredKey) === normalizarTonalidad(note)
                           ? "bg-[var(--ink)] text-[var(--bg)]"
                           : "bg-[var(--surface)]/80 text-[var(--ink)] hover:bg-[var(--surface)]/70"
                       }`}
@@ -284,7 +260,7 @@ export const SetlistSongRow: React.FC<SetlistSongRowProps> = ({
                     onClick={() => onSetTonalidadDeseada(null)}
                     className="w-full text-center text-micro font-sans text-[var(--ink-2)] hover:text-[var(--alert)] pt-1.5 cursor-pointer"
                   >
-                    Volver al original ({song.tonalidad || "—"})
+                    Volver al original ({fmtTono(song.tonalidad) || "—"})
                   </button>
                 )}
               </div>,

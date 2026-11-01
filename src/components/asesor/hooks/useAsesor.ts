@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
+import type { MetricasRed, RedExtra } from '../../../utils/asesor/metricasPorRed';
 import { sanearEstrategia, type EstrategiaMarketing } from '../../../utils/asesor/estrategia';
 import type { Pieza } from '../../../utils/asesor/pieza';
 import type { Medidas, PorMedir } from '../../../utils/asesor/resumen';
 import {
-  guardarEstrategia, guardarResultado, marcarAccion, obtenerHoyAsesor, prepararPieza, sugerirEstrategia, type AccionAsesor, type EstadoAsesor,
+  guardarEstrategia, guardarResultado, guardarResultadoRed, marcarAccion, obtenerHoyAsesor, prepararPieza, sugerirEstrategia, type AccionAsesor, type EstadoAsesor,
 } from '../../../utils/asesorApi';
 
 const mensajeDe = (e: unknown, defecto: string) => (e instanceof Error && e.message ? e.message : defecto);
@@ -92,6 +93,18 @@ export function useAsesor() {
     }
   }, [recargar]);
 
+  /** Lo mismo para TikTok o YouTube: cada red mide lo suyo y la lectura compara con lo habitual de la banda. */
+  const medirRed = useCallback(async (pieza: Pick<PorMedir, 'fecha' | 'tarjetaId'>, red: RedExtra, metricas: MetricasRed): Promise<string | null> => {
+    try {
+      const r = await guardarResultadoRed(pieza, red, metricas);
+      setAnotado({ titulo: r.titulo, mensaje: r.mensaje });
+      await recargar();
+      return null;
+    } catch (e) {
+      return mensajeDe(e, 'No se pudo guardar.');
+    }
+  }, [recargar]);
+
   const guardar = useCallback(async (estrategia: EstrategiaMarketing): Promise<boolean> => {
     setGuardando(true);
     setError(null);
@@ -121,5 +134,5 @@ export function useAsesor() {
     }
   }, []);
 
-  return { estado, cargando, error, guardando, sugiriendo, ocupadas, piezas, anotado, cerrarAnotado: () => setAnotado(null), recargar, preparar, accion, medir, guardar, proponer };
+  return { estado, cargando, error, guardando, sugiriendo, ocupadas, piezas, anotado, cerrarAnotado: () => setAnotado(null), recargar, preparar, accion, medir, medirRed, guardar, proponer };
 }

@@ -1,20 +1,13 @@
 import React, { useState, useMemo } from "react";
 import { Plus, Disc3, Clock, CheckSquare, Square, Trash2, ArrowUp, ArrowDown, Play, CheckCircle2, X, Layers, ListOrdered, GripVertical, Search, Star, Undo2, FolderInput } from "lucide-react";
-import {
-  Rehearsal,
-  RehearsalAgendaItem,
-  RehearsalObjective,
-  Song,
-  Setlist,
-  Concert,
-  ThemeColors,
-} from "../../types";
+import { Rehearsal, RehearsalAgendaItem, RehearsalObjective, Song, Setlist, Concert, ThemeColors } from "../../types";
 import { formatSongTitle } from "../../utils/formatSongTitle";
 import { formatSecondsToMmSs } from "../../utils/repertorioUtils";
 import { ModalPortal } from "../common/ModalPortal";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, Select } from '../ui';
+import { useFormatoTono } from "../../hooks/useNotacion";
 
 interface OrdenDelDiaTabProps {
   rehearsal: Rehearsal;
@@ -87,6 +80,7 @@ export function OrdenDelDiaTab({
   setlists = [],
   onGoToLiveMode
 }: OrdenDelDiaTabProps) {
+  const fmtTono = useFormatoTono();
   const agenda = useMemo(() => rehearsal.agenda || [], [rehearsal.agenda]);
   const objetivos = rehearsal.objetivos || [];
 
@@ -289,7 +283,7 @@ export function OrdenDelDiaTab({
         duracionEstimadaMin: estMin,
         prioridad: "media",
         enfoque: s?.tonalidad
-          ? `Tonalidad: ${s.tonalidad} • BPM: ${s.bpm || "--"}`
+          ? `Tonalidad: ${fmtTono(s.tonalidad)} • BPM: ${s.bpm || "--"}`
           : "",
       };
     });
@@ -711,7 +705,7 @@ export function OrdenDelDiaTab({
                             {/* Song state info from catalog */}
                             {matchedSong?.tonalidad && (
                               <span className="px-1.5 py-0.5 rounded text-micro font-sans bg-[var(--surface)]/80 text-[var(--acc-ink)]">
-                                {matchedSong.tonalidad}
+                                {fmtTono(matchedSong.tonalidad)}
                               </span>
                             )}
                             {matchedSong?.bpm && (
@@ -975,7 +969,7 @@ export function OrdenDelDiaTab({
                           </div>
                           <div className="text-micro text-[var(--ink-2)] font-sans truncate">
                             {s.albumDisco || s.album || "Sin álbum"} ·{" "}
-                            {s.tonalidad || "—"} ·{" "}
+                            {fmtTono(s.tonalidad) || "—"} ·{" "}
                             {s.bpm ? `${s.bpm} BPM · ` : ""}
                             {formatSecondsToMmSs(s.duracionSegundos || 0)}
                           </div>

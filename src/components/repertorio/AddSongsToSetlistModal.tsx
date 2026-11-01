@@ -6,6 +6,7 @@ import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import { formatSecondsToMmSs } from "../../utils/repertorioUtils";
 import { formatSongTitle } from "../../utils/formatSongTitle";
 import { Button, IconButton, Input, Select } from '../ui';
+import { useFormatoTono } from "../../hooks/useNotacion";
 
 interface AddSongsToSetlistModalProps {
   isOpen: boolean;
@@ -24,6 +25,7 @@ export function AddSongsToSetlistModal({
   onClose,
   onAddSongs,
 }: AddSongsToSetlistModalProps) {
+  const fmtTono = useFormatoTono();
   const [search, setSearch] = useState("");
   const [onlyFavoritos, setOnlyFavoritos] = useState(false);
   const [albumFilter, setAlbumFilter] = useState("todos");
@@ -232,7 +234,7 @@ export function AddSongsToSetlistModal({
                       </div>
                       <div className="text-micro text-[var(--ink-2)] font-sans truncate">
                         {s.albumDisco || s.album || "Sin álbum"} ·{" "}
-                        {s.tonalidad || "—"} ·{" "}
+                        {fmtTono(s.tonalidad) || "—"} ·{" "}
                         {formatSecondsToMmSs(s.duracionSegundos || 0)}
                       </div>
                     </div>

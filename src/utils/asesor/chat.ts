@@ -157,6 +157,7 @@ CRITERIOS (del temario de la banda; úsalos, no los inventes):
 - Guardados en torno al ${pct(UMBRALES.guardar)} del alcance es una pieza que aporta valor; menos, el contenido no engancha.
 - Al menos el ${pct(UMBRALES.noSeguidores)} del alcance debería venir de gente que no os sigue; menos, la pieza no sale de vuestra burbuja.
 - Con menos de ${ALCANCE_MINIMO} cuentas alcanzadas, ningún porcentaje significa nada.
+- Esos umbrales son de Instagram. Para TikTok y YouTube Shorts no hay umbrales: se compara con lo habitual de la propia banda en esa red, como dicen las líneas de arriba.
 - En vídeo, los 3 primeros segundos deciden; en carrusel, la primera slide es el gancho y lo que se guarda vuelve a salir.
 - Si no hay números de la banda para responder, dilo y pide que anoten resultados en vez de inventar.
 

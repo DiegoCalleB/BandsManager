@@ -21,6 +21,7 @@ Módulo sin exportaciones con nombre.
 - [[src_components_asesor_AgendaAsesor|src/components/asesor/AgendaAsesor.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_asesor_ChatAsesor|src/components/asesor/ChatAsesor.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_asesor_FormEstrategia|src/components/asesor/FormEstrategia.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_asesor_OtrasRedesCard|src/components/asesor/OtrasRedesCard.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_asesor_PiezaSheet|src/components/asesor/PiezaSheet.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_asesor_PorMedirCard|src/components/asesor/PorMedirCard.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_asesor_ResumenCard|src/components/asesor/ResumenCard.tsx]] *(Layer: #frontend, Domain: #system)*

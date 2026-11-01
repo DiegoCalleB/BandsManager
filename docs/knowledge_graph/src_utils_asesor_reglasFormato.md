@@ -31,6 +31,7 @@ _Sin dependencias salientes directas._
 - [[src_utils_asesor_diagnostico|src/utils/asesor/diagnostico.ts]] *(from #service)*
 - [[src_utils_asesor_estrategia|src/utils/asesor/estrategia.ts]] *(from #service)*
 - [[src_utils_asesor_instagramMedios|src/utils/asesor/instagramMedios.ts]] *(from #service)*
+- [[src_utils_asesor_metricasPorRed|src/utils/asesor/metricasPorRed.ts]] *(from #service)*
 - [[src_utils_asesor_opciones|src/utils/asesor/opciones.ts]] *(from #service)*
 - [[src_utils_asesor_pieza|src/utils/asesor/pieza.ts]] *(from #service)*
 - [[src_utils_asesor_rescate|src/utils/asesor/rescate.ts]] *(from #service)*
