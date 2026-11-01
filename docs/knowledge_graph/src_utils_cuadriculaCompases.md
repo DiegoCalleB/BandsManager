@@ -29,6 +29,7 @@ Exporta: Compas, Bloque, Cuadricula, PulsoMedido, MotivoSinCuadricula, AjusteCom
 - [[src_components_chords_PanelArmonia|src/components/chords/PanelArmonia.tsx]] *(from #frontend)*
 - [[src_components_chords_RegletaCompases|src/components/chords/RegletaCompases.tsx]] *(from #frontend)*
 - [[src_components_chords_VistaCompases|src/components/chords/VistaCompases.tsx]] *(from #frontend)*
+- [[src_utils_acordeEnHermanos|src/utils/acordeEnHermanos.ts]] *(from #service)*
 - [[src_utils_ajusteCompases|src/utils/ajusteCompases.ts]] *(from #service)*
 - [[src_utils_vistaCompases|src/utils/vistaCompases.ts]] *(from #service)*
 
@@ -36,6 +37,7 @@ Exporta: Compas, Bloque, Cuadricula, PulsoMedido, MotivoSinCuadricula, AjusteCom
 
 ## 🧪 Tests que lo cubren
 - `src/audit/vistaCompases.test.tsx`
+- `src/utils/__tests__/acordeEnHermanos.test.ts`
 - `src/utils/__tests__/ajusteCompases.test.ts`
 - `src/utils/__tests__/cuadriculaCompases.test.ts`
 - `src/utils/__tests__/vistaCompases.test.ts`
