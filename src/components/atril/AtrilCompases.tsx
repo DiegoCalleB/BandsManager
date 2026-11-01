@@ -9,6 +9,7 @@ import { mensajeCompases } from "../../utils/ajusteCompases";
 import { moverCambio, moverCambioA, ponerAcordeEnRango } from "../../utils/lineaTiempoAcordes";
 import { cambiosHermanos, moverHermanos, movimientoHecho, type Movimiento } from "../../utils/ajusteEnBloque";
 import type { SegmentoAcordeAnalizado } from "../../types";
+import { compasesHermanos, ponerAcordeEnHermanos, type AcordePuesto } from "../../utils/acordeEnHermanos";
 import { filasDeCompases, letraPorCompas } from "../../utils/vistaCompases";
 import { VistaCompases } from "../chords/VistaCompases";
 import { useAtril } from "./AtrilContext";
@@ -99,12 +100,28 @@ export function AtrilCompases() {
     const tiempo = casillas.findIndex((k) => k.t0 === seleccion) - casillas.findIndex((k) => k.t0 >= c.t0 - 1e-6);
     return `Compás ${c.n}, tiempo ${tiempo + 1}`;
   }, [cuadricula, seleccion, casillas]);
+  // Último acorde escrito: permite ofrecer el mismo a los compases iguales del bloque.
+  const [escrito, setEscrito] = useState<{ cancion: string; t0: number; puesto: AcordePuesto } | null>(null);
+  const hermanosAcorde = useMemo(
+    () => (analisisAcordes && cuadricula && escrito?.cancion === String(song.id) && escrito.t0 === seleccion ? compasesHermanos(cuadricula, analisisAcordes.segmentos, escrito.puesto) : []),
+    [analisisAcordes, cuadricula, escrito, seleccion, song.id],
+  );
   const ponerAcorde = (texto: string): boolean => {
-    if (!analisisAcordes || seleccion === null || finDeCompas === undefined) return false;
+    if (!analisisAcordes || !cuadricula || seleccion === null || finDeCompas === undefined) return false;
     const segmentos = ponerAcordeEnRango(analisisAcordes.segmentos, seleccion, finDeCompas, texto);
     if (!segmentos) return false;
-    aplicarCorreccion(analisisAcordes.segmentos, segmentos);
+    const c = cuadricula.compases.find((x) => seleccion >= x.t0 - 1e-6 && seleccion < x.t1 - 1e-6);
+    const tiempo = c ? Math.max(0, casillas.findIndex((k) => k.t0 === seleccion) - casillas.findIndex((k) => k.t0 >= c.t0 - 1e-6)) : 0;
+    setEscrito(c ? { cancion: String(song.id), t0: seleccion, puesto: { compas: c.n, tiempo, antes: c.acordes.slice(tiempo), acorde: texto } } : null);
+    setUltimo(null);
+    handleCorregirAcordes(segmentos);
     return true;
+  };
+  const ponerComoElUltimo = () => {
+    if (!analisisAcordes || !escrito) return;
+    const { segmentos, cambiados } = ponerAcordeEnHermanos(analisisAcordes.segmentos, hermanosAcorde, escrito.puesto.acorde);
+    if (cambiados > 0) handleCorregirAcordes(segmentos);
+    setEscrito(null);
   };
 
   const arrastrarA = (origen: number, destino: number) => {
@@ -131,7 +148,7 @@ export function AtrilCompases() {
     <div className="space-y-3">
       {ajustes}
       {aviso && <p className="text-sm text-[var(--ink-2)] bg-[var(--acc-soft)] rounded-[var(--r-m)] px-3 py-2">{aviso}</p>}
-      {acordeElegido && <EditorAcordeCasilla key={seleccion} actual={acordeElegido.acorde === "N" ? "" : nombre(acordeElegido.acorde)} lugar={lugarElegido} onAplicar={ponerAcorde} onCerrar={() => { setElegida(null); setUltimo(null); }} />}
+      {acordeElegido && <EditorAcordeCasilla key={seleccion} actual={acordeElegido.acorde === "N" ? "" : nombre(acordeElegido.acorde)} lugar={lugarElegido} onAplicar={ponerAcorde} hermanos={hermanosAcorde.length} onHermanos={ponerComoElUltimo} onCerrar={() => { setElegida(null); setUltimo(null); setEscrito(null); }} />}
       {acordeElegido?.cambia && <AjusteCambioAcorde acorde={nombre(acordeElegido.acorde)} onMover={moverElegido} hermanos={hermanos.length} onHermanos={moverComoElUltimo} onCerrar={() => { setElegida(null); setUltimo(null); }} />}
       <VistaCompases
         cuadricula={cuadricula}

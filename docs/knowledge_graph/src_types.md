@@ -542,6 +542,7 @@ _Sin dependencias salientes directas._
 - [[src_services_tiposApi|src/services/tiposApi.ts]] *(from #service)*
 - [[src_services_tiposRespuestasHerramientas|src/services/tiposRespuestasHerramientas.ts]] *(from #service)*
 - [[src_utils_accompanimentSynth|src/utils/accompanimentSynth.ts]] *(from #service)*
+- [[src_utils_acordeEnHermanos|src/utils/acordeEnHermanos.ts]] *(from #service)*
 - [[src_utils_agendaASetlist|src/utils/agendaASetlist.ts]] *(from #service)*
 - [[src_utils_agendaEnsayo|src/utils/agendaEnsayo.ts]] *(from #service)*
 - [[src_utils_ajusteEnBloque|src/utils/ajusteEnBloque.ts]] *(from #service)*
@@ -648,6 +649,7 @@ _Sin dependencias salientes directas._
 - `src/components/user_profile/hooks/__tests__/useProfileBands.behavior.test.ts`
 - `src/hooks/__tests__/useAuth.behavior.test.ts`
 - `src/hooks/__tests__/useStagePlayer.behavior.test.ts`
+- `src/utils/__tests__/acordeEnHermanos.test.ts`
 - `src/utils/__tests__/agendaASetlist.test.ts`
 - `src/utils/__tests__/audioCueDetector.test.ts`
 - `src/utils/__tests__/bookingUtils.test.ts`

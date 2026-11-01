@@ -14,6 +14,9 @@ interface Props {
   lugar: string;
   /** Aplica lo escrito; devuelve false si no es un acorde reconocible o no cambia nada. */
   onAplicar: (texto: string) => boolean;
+  /** Compases iguales del bloque donde se puede poner lo mismo; con 0 no se ofrece. */
+  hermanos?: number;
+  onHermanos?: () => void;
   onCerrar: () => void;
 }
 
@@ -21,7 +24,7 @@ interface Props {
  * Campo de texto para poner o corregir el acorde de una casilla.
  * @returns Sección de interfaz.
  */
-export function EditorAcordeCasilla({ actual, lugar, onAplicar, onCerrar }: Props) {
+export function EditorAcordeCasilla({ actual, lugar, onAplicar, hermanos = 0, onHermanos, onCerrar }: Props) {
   const [texto, setTexto] = useState("");
   const [error, setError] = useState(false);
   const aplicar = (valor: string) => {
@@ -49,6 +52,11 @@ export function EditorAcordeCasilla({ actual, lugar, onAplicar, onCerrar }: Prop
         className="min-h-11 flex-1 min-w-40 rounded-[var(--r-s)] bg-[var(--surface)] px-3 text-sm text-[var(--ink)] placeholder:text-[var(--ink-3)]"
       />
       <button type="submit" className={`${PILDORA} text-[var(--acc-ink)]`} disabled={!texto.trim()}>Poner</button>
+      {hermanos > 0 && onHermanos && (
+        <button type="button" className={`${PILDORA} text-[var(--acc-ink)]`} onClick={onHermanos}>
+          Igual en {hermanos} {hermanos === 1 ? "compás más" : "compases más"}
+        </button>
+      )}
       <button type="button" className={PILDORA} onClick={() => aplicar("N")}>Quitar acorde</button>
       <button type="button" className={`${PILDORA} text-[var(--ink-2)]`} onClick={onCerrar}>Listo</button>
       {error && <p role="alert" className="basis-full text-xs text-[var(--alert)]">Eso no es un acorde que conozca. Prueba con C, Am, G7, F#m, Do o Sib.</p>}
