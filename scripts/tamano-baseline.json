@@ -25,7 +25,7 @@
   "src/components/repertorio/SetlistAIAnalysisModal.tsx": 1023,
   "server/state.ts": 1015,
   "src/components/SpotifyPlayerBar.tsx": 1004,
-  "server/routes/repertorio.ts": 1003,
+  "server/routes/repertorio.ts": 1002,
   "server/routes/billing.ts": 991,
   "src/components/repertorio/EscenarioView.tsx": 989,
   "src/components/repertorio/BulkAlbumAudioUploaderModal.tsx": 915,
