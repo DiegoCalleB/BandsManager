@@ -44,6 +44,7 @@
     "audit:clases": "vitest run src/audit",
     "migrate": "tsx scripts/migrate.ts",
     "migrate:check": "tsx scripts/migrate.ts --check",
+    "check:modelos": "tsx scripts/check-modelos-ia.ts",
     "eval:acordes": "tsx scripts/evaluar-acordes.ts",
     "benchmark:acordes": "tsx scripts/benchmark-acordes.ts",
     "benchmark:exportar": "tsx scripts/exportar-benchmark.ts",

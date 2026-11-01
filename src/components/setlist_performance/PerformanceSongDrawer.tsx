@@ -8,12 +8,14 @@ import { Button,IconButton } from "../ui";
 import { ShowIcon } from "../ui/ShowIcon";
 import { getBlockMeta } from "./performanceModel";
 import { useSetlistPerformance } from "./SetlistPerformanceContext";
+import { useFormatoTono } from "../../hooks/useNotacion";
 
 /**
  * Cajón con la lista completa de temas y bloques del repertorio.
  * @returns Sección de interfaz.
  */
 export function PerformanceSongDrawer() {
+  const fmtTono = useFormatoTono();
   const { showSongListDrawer, songsWithIrisCount, songsInSetlistCount, setShowSongListDrawer, allItems, songs, currentIndex, setCurrentIndex, handleLaunchPractice, handleLaunchStudio } = useSetlistPerformance();
   return (
     <>
@@ -121,7 +123,7 @@ export function PerformanceSongDrawer() {
                   <div className="flex items-center gap-2 text-micro text-[var(--ink-2)] font-sans">
                     {song.tonalidad && (
                       <span className="text-[var(--acc)]/70">
-                        Tono: {song.tonalidad}
+                        Tono: {fmtTono(song.tonalidad)}
                       </span>
                     )}
                     {song.bpm ? <span>· {song.bpm} BPM</span> : null}

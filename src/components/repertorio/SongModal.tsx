@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useFormatoTono } from "../../hooks/useNotacion";
 import { X, Upload, Disc3, CheckCircle2, Music, Users, ChevronDown, ChevronUp, SlidersHorizontal } from 'lucide-react';
 import { ThemeColors, Song } from '../../types';
 import { BandMemberOption, resolveBandMembers, getSongMemberNote, isSongTonoMarkedForMember, isSongBpmMarkedForMember } from '../../utils/repertorioUtils';
@@ -30,6 +31,7 @@ export function SongModal({
   defaultAlbumForNewSong = '',
   bandMembers = []
 }: SongModalProps) {
+  const fmtTono = useFormatoTono();
   const effectiveDefaultAlbum = defaultAlbumForNewSong || defaultAlbum || '';
   const resolvedMembers = resolveBandMembers(bandMembers, editingSong?.notasMiembros);
 
@@ -299,7 +301,7 @@ export function SongModal({
                     size="sm"
                     name="tonalidad"
                     type="text"
-                    defaultValue={editingSong?.tonalidad || ''}
+                    defaultValue={fmtTono(editingSong?.tonalidad)}
                     className="w-full"
                     placeholder="ej. Am"
                   />
