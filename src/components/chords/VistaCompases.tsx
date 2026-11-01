@@ -16,7 +16,7 @@ interface Props {
   onIr: (segundos: number) => void;
   /** Casilla (por su instante) elegida para mover su cambio de acorde. */
   seleccion?: number | null;
-  /** Si se pasa, tocar una casilla donde cambia el acorde la elige además de saltar ahí. */
+  /** Si se pasa, tocar una casilla la elige (para corregir su acorde) además de saltar ahí. */
   onSeleccion?: (t0: number | null) => void;
   /** Si se pasa, un cambio de acorde se puede arrastrar (pulsación larga) a otra casilla. */
   onMover?: (origen: number, destino: number) => void;
@@ -124,8 +124,8 @@ export const VistaCompases: React.FC<Props> = ({ cuadricula, letras, nombre, aud
                           type="button"
                           data-t0={k.t0}
                           {...manejadores(k.t0, k.cambia)}
-                          onClick={() => { if (esClicDeArrastre()) return; onIr(k.t0); onSeleccion?.(k.cambia ? (seleccion === k.t0 ? null : k.t0) : null); }}
-                          aria-pressed={onSeleccion && k.cambia ? seleccion === k.t0 : undefined}
+                          onClick={() => { if (esClicDeArrastre()) return; onIr(k.t0); onSeleccion?.(seleccion === k.t0 ? null : k.t0); }}
+                          aria-pressed={onSeleccion ? seleccion === k.t0 : undefined}
                           aria-label={`Compás ${c.n}, tiempo ${j + 1}${k.acorde === 'N' ? '' : `: ${nombre(k.acorde)}`}`}
                           style={{ gridColumn: j + 1, gridRow: 1 }}
                           className={`h-12 group-data-[escenario=true]/esc:h-16 cursor-pointer transition-ui select-none [-webkit-touch-callout:none] ${
