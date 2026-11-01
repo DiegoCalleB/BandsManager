@@ -37,6 +37,7 @@ Exporta: indiceSegmentoEn, siguienteAcordeReal, RangoBucle, rangoBucle, saltoDeB
 ## 🧪 Tests que lo cubren
 - `src/utils/__tests__/ajusteEnBloque.test.ts`
 - `src/utils/__tests__/lineaTiempoAcordes.test.ts`
+- `src/utils/__tests__/ponerAcordeEnRango.test.ts`
 
 ---
 

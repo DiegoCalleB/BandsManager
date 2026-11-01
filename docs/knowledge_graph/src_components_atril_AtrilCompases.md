@@ -21,6 +21,7 @@ Pestaña de letra y acordes en modo «Compases»: la rejilla de compases del aud
 - [[src_components_atril_AjusteCambioAcorde|src/components/atril/AjusteCambioAcorde.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_atril_AjusteCompases|src/components/atril/AjusteCompases.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_atril_AtrilContext|src/components/atril/AtrilContext.ts]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_atril_EditorAcordeCasilla|src/components/atril/EditorAcordeCasilla.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_VistaCompases|src/components/chords/VistaCompases.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_useVistaAcordes|src/components/chords/useVistaAcordes.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*

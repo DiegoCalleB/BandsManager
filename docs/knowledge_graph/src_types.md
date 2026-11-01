@@ -672,6 +672,7 @@ _Sin dependencias salientes directas._
 - `src/utils/__tests__/midiExport.test.ts`
 - `src/utils/__tests__/pistasDeCancion.test.ts`
 - `src/utils/__tests__/pistasDeDisco.test.ts`
+- `src/utils/__tests__/ponerAcordeEnRango.test.ts`
 - `src/utils/__tests__/repertorioPdf.test.ts`
 - `src/utils/__tests__/separacionIris.test.ts`
 - `src/utils/__tests__/setlistCompatibility.test.ts`
