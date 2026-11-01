@@ -47,4 +47,4 @@ Las páginas de los ejercicios (`public/ejercicio_youtube_crm*` y `ejercicios/`)
 | `--acc` / `--acc-ink` | `#F5A300` (ámbar) / `#FFC21A` (dorado) |
 | `--on-acc` | `#140d00` |
 
-Lema: «Tu manager de bolsillo.». Las miniaturas de YouTube usan la misma paleta: fondo negro con foco ámbar, texto crema con contorno negro y una palabra en ámbar, Eco grande a la derecha y un único objeto de la app a la izquierda.
+Lema: «Tu manager de bolsillo.». Las miniaturas de YouTube usan la misma paleta y una receta fija: la mitad izquierda en negro con 2 a 3 palabras en crema (una en ámbar) y contorno negro; la derecha, una ráfaga de luz ámbar con rayos y la cara de Eco enorme, a sangre, con la emoción del vídeo (su silueta oscura destaca sobre el fondo claro); abajo a la izquierda, un único objeto de la app que prueba la promesa. Se comprueban a 360 px de ancho antes de subirlas.
