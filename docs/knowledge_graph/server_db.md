@@ -100,6 +100,7 @@ Módulo sin exportaciones con nombre.
 - [[server_routes_users_rutasSesion|server/routes/users/rutasSesion.ts]] *(from #route)*
 - [[server_services_agentIntelligence|server/services/agentIntelligence.ts]] *(from #agent)*
 - [[server_services_asesorMarketing|server/services/asesorMarketing.ts]] *(from #service)*
+- [[server_services_asesorPresencia|server/services/asesorPresencia.ts]] *(from #service)*
 - [[server_services_campaignRadarScheduler|server/services/campaignRadarScheduler.ts]] *(from #service)*
 - [[server_services_colaLetras|server/services/colaLetras.ts]] *(from #service)*
 - [[server_services_instagramDescubrimiento|server/services/instagramDescubrimiento.ts]] *(from #service)*
