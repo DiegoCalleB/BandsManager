@@ -60,6 +60,19 @@ dialog .hash{color:var(--acc-ink);font-weight:700;margin:0 0 8px;font-size:14px}
 .cerrar{position:absolute;right:14px;top:14px;background:var(--surface);color:var(--ink);width:40px;height:40px;border-radius:var(--r-pill);border:0;font-size:22px;cursor:pointer}
 .nav2{display:flex;justify-content:space-between;margin-top:16px}
 [hidden]{display:none!important}
+.vista{display:inline-flex;gap:4px;background:var(--sunken);border-radius:var(--r-pill);padding:4px;margin:0 0 14px}
+.vista button{font:700 13px Onest,system-ui;background:transparent;color:var(--ink-2);border:0;border-radius:var(--r-pill);padding:7px 16px;cursor:pointer}
+.vista button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.mes{background:var(--surface);border-radius:var(--r-l);padding:12px;margin:0 0 14px}
+.mes h3{margin:2px 4px 10px;font-size:17px;font-weight:800;text-transform:capitalize}
+.cuad{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cuad .dn{font:700 11px Onest,system-ui;color:var(--ink-3);text-align:center;padding:2px 0}
+.cuad .dc{min-height:64px;background:var(--sunken);border-radius:10px;padding:5px;font-size:12px;color:var(--ink-3);display:flex;flex-direction:column;gap:3px;min-width:0}
+.cuad .dc.v{background:var(--acc-soft);color:var(--ink)}.cuad .dc.o{background:transparent}
+.cuad .dc a{display:block;background:var(--acc);color:var(--on-acc);font:800 11px/1.2 Onest,system-ui;border-radius:7px;padding:4px 5px;text-decoration:none;overflow:hidden}
+.cuad .dc a b{display:block;font-size:13px}.cuad .dc a span{display:block;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cuad .dc a:focus-visible{outline:3px solid var(--ink);outline-offset:1px}
+@media(max-width:640px){.cuad .dc{min-height:48px;padding:3px}.cuad .dc a span{display:none}}
 h2.sec{font-size:26px;margin:8px 0 14px;font-weight:800}
 h2{font-size:28px;margin:60px 0 16px;letter-spacing:-.01em;font-weight:800}
 .tri{display:grid;grid-template-columns:2fr 1.2fr 1.6fr;gap:12px}
@@ -152,7 +165,9 @@ footer{color:var(--ink-3);font-size:13px;margin-top:56px}
 <div class="info"><div class="av"><img src="/ejercicio_youtube_crm/eco/pillo.webp" alt=""></div><div><h3>Me prometieron 800 € por tocar. Me pagaron 300</h3><div class="meta">BandManager · Booking para bandas<br>Programado · Mar 15 dic</div></div></div></button></div></section>
 
 <section id="t-calendario" hidden><h2 class="sec">Calendario: martes y jueves, del 17 nov al 15 dic</h2>
-<div class="tabla"><table><thead><tr><th>Día</th><th>Título</th><th>Pieza de BandManager que enseña</th></tr></thead><tbody><tr><td>Mar 17 nov</td><td><a href="#v1" data-n="1">1. Perdimos un bolo por no tener un CRM</a></td><td>Embudo de booking: de primer email a fecha cerrada, que pasa sola al calendario</td></tr><tr><td>Jue 19 nov</td><td><a href="#v2" data-n="2">2. Borra el Excel de tu banda</a></td><td>Historial de cada sala y aviso de seguimiento</td></tr><tr><td>Mar 24 nov</td><td><a href="#v3" data-n="3">3. Probé 4 CRM para mi banda. 3 suspendieron</a></td><td>Base de salas y festivales, pitch con IA</td></tr><tr><td>Jue 26 nov</td><td><a href="#v4" data-n="4">4. Los CRM gratis no son gratis</a></td><td>Plan gratuito y su límite</td></tr><tr><td>Mar 1 dic</td><td><a href="#v5" data-n="5">5. Mi banda con web y QR de fans en 10 minutos (o pago la ronda)</a></td><td>Dossier EPK web, landing de fans y QR</td></tr><tr><td>Jue 3 dic</td><td><a href="#v6" data-n="6">6. Mandamos un email a 40 salas: 19 abrieron el dossier y 3 contestaron</a></td><td>Seguimiento de aperturas del email y visitas al dossier</td></tr><tr><td>Mar 8 dic</td><td><a href="#v7" data-n="7">7. Por qué bandas peores que la tuya tocan más</a></td><td>Seguimiento constante y acuerdos guardados (caché, rider)</td></tr><tr><td>Jue 10 dic</td><td><a href="#v8" data-n="8">8. Dejé que una IA escribiera a 30 salas. Esto contestaron</a></td><td>Agentes Scout, Redactor, Enviador y Lector con tu aprobación</td></tr><tr><td>Mar 15 dic</td><td><a href="#v9" data-n="9">9. Me prometieron 800 € por tocar. Me pagaron 300</a></td><td>Acuerdo de concierto con firma: caché, forma de pago y rider en un enlace que firma la sala, con aviso a los dos y estado de pago</td></tr></tbody></table></div></section>
+<div class="vista" role="group" aria-label="Vista del calendario"><button type="button" data-vista="cal" aria-pressed="true">Calendario</button><button type="button" data-vista="agenda" aria-pressed="false">Agenda</button></div>
+<div id="calGrid"></div>
+<div class="tabla" id="calAgenda" hidden><table><thead><tr><th>Día</th><th>Título</th><th>Pieza de BandManager que enseña</th></tr></thead><tbody><tr><td>Mar 17 nov</td><td><a href="#v1" data-n="1">1. Perdimos un bolo por no tener un CRM</a></td><td>Embudo de booking: de primer email a fecha cerrada, que pasa sola al calendario</td></tr><tr><td>Jue 19 nov</td><td><a href="#v2" data-n="2">2. Borra el Excel de tu banda</a></td><td>Historial de cada sala y aviso de seguimiento</td></tr><tr><td>Mar 24 nov</td><td><a href="#v3" data-n="3">3. Probé 4 CRM para mi banda. 3 suspendieron</a></td><td>Base de salas y festivales, pitch con IA</td></tr><tr><td>Jue 26 nov</td><td><a href="#v4" data-n="4">4. Los CRM gratis no son gratis</a></td><td>Plan gratuito y su límite</td></tr><tr><td>Mar 1 dic</td><td><a href="#v5" data-n="5">5. Mi banda con web y QR de fans en 10 minutos (o pago la ronda)</a></td><td>Dossier EPK web, landing de fans y QR</td></tr><tr><td>Jue 3 dic</td><td><a href="#v6" data-n="6">6. Mandamos un email a 40 salas: 19 abrieron el dossier y 3 contestaron</a></td><td>Seguimiento de aperturas del email y visitas al dossier</td></tr><tr><td>Mar 8 dic</td><td><a href="#v7" data-n="7">7. Por qué bandas peores que la tuya tocan más</a></td><td>Seguimiento constante y acuerdos guardados (caché, rider)</td></tr><tr><td>Jue 10 dic</td><td><a href="#v8" data-n="8">8. Dejé que una IA escribiera a 30 salas. Esto contestaron</a></td><td>Agentes Scout, Redactor, Enviador y Lector con tu aprobación</td></tr><tr><td>Mar 15 dic</td><td><a href="#v9" data-n="9">9. Me prometieron 800 € por tocar. Me pagaron 300</a></td><td>Acuerdo de concierto con firma: caché, forma de pago y rider en un enlace que firma la sala, con aviso a los dos y estado de pago</td></tr></tbody></table></div></section>
 
 <section id="t-plan" hidden>
 <div class="tri"><div><b>Público</b>Lucía, 27 años, bajista indie en España o Latinoamérica. Escribe a salas desde Gmail, lo apunta en un Excel y pierde fechas por no hacer seguimiento.</div>
@@ -210,6 +225,16 @@ footer{color:var(--ink-3);font-size:13px;margin-top:56px}
     document.getElementById('dm').textContent='Programado · '+v.dia;document.getElementById('dd').textContent=v.d;document.getElementById('dp').textContent=v.pieza;document.getElementById('dw').textContent=v.por;
     document.getElementById('dr').textContent='Etiquetas: '+v.tags.join(', ')+'. Título de respaldo SEO a las 48 h: «'+v.resp+'».';
     if(!dlg.open)dlg.showModal();dlg.scrollTop=0;pose(v.pose,v.dice);history.replaceState(null,'','#v'+n)}
+  (function(){var M={nov:10,dic:11},nombres=['noviembre','diciembre'],g=document.getElementById('calGrid'),ev={};
+    Object.keys(D).forEach(function(k){var p=D[k].dia.split(' ');ev[M[p[2]]+'-'+p[1]]=k});
+    [10,11].forEach(function(m,i){var f=new Date(2026,m,1),off=(f.getDay()+6)%7,n=new Date(2026,m+1,0).getDate(),h='<div class="mes"><h3>'+nombres[i]+' 2026</h3><div class="cuad">';
+      ['L','M','X','J','V','S','D'].forEach(function(d){h+='<div class="dn">'+d+'</div>'});
+      for(var x=0;x<off;x++)h+='<div class="dc o"></div>';
+      for(var d=1;d<=n;d++){var k=ev[m+'-'+d];h+=k?'<div class="dc v">'+d+'<a href="#v'+k+'" data-n="'+k+'" title="'+D[k].t.replace(/"/g,'&quot;')+'"><b>Vídeo '+k+'</b><span>'+D[k].t+'</span></a></div>':'<div class="dc">'+d+'</div>'}
+      g.insertAdjacentHTML('beforeend',h+'</div></div>')});
+    var bt=document.querySelectorAll('[data-vista]'),ag=document.getElementById('calAgenda');
+    bt.forEach(function(b){b.addEventListener('click',function(){var c=b.dataset.vista==='cal';g.hidden=!c;ag.hidden=c;bt.forEach(function(x){x.setAttribute('aria-pressed',x===b)});try{localStorage.setItem('ejCalVista',b.dataset.vista)}catch(e){}})});
+    try{if(localStorage.getItem('ejCalVista')==='agenda')bt[1].click()}catch(e){}})();
   document.querySelectorAll('[data-n]').forEach(function(el){el.addEventListener('click',function(ev){ev.preventDefault();abrir(el.dataset.n)})});
   document.getElementById('x').onclick=function(){dlg.close()};
   dlg.addEventListener('click',function(ev){if(ev.target===dlg)dlg.close()});
