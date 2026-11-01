@@ -138,7 +138,7 @@ export function BandCrmHeader() {
         </Button>
 
         <a
-          href="/api/export-excel"
+          href="/api/download-excel"
           download="band_data.xlsx"
           className="max-sm:hidden px-2.5 py-1.5 rounded-[var(--r-s)] text-xs font-medium bg-[var(--surface)] hover:bg-[var(--surface)]/80 text-[var(--ink-2)] transition-ui flex items-center gap-1.5 active:scale-[0.97] cursor-pointer"
           title="Exportar Excel completo (.xlsx)"
@@ -152,7 +152,7 @@ export function BandCrmHeader() {
           items={[
             { label: "Date Swap", icon: Repeat, onSelect: () => { if (bands.length > 0) { setSelectedPitchBand(bands[0]); setIsPitchModalOpen(true); } else { alert("Añade primero una banda para generar un pitch de intercambio."); } } },
             { label: "Scout IA", icon: Sparkles, onSelect: () => setIsScoutModalOpen(true) },
-            { label: "Exportar Excel", icon: FileSpreadsheet, onSelect: () => { const a = document.createElement("a"); a.href = "/api/export-excel"; a.download = "band_data.xlsx"; a.click(); } },
+            { label: "Exportar Excel", icon: FileSpreadsheet, onSelect: () => { const a = document.createElement("a"); a.href = "/api/download-excel"; a.download = "band_data.xlsx"; a.click(); } },
           ]}
         />
       </div>

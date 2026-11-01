@@ -18,6 +18,7 @@ Formularios de alta de reunión, ensayo y concierto.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[route_repertoire|Repertoire & Setlists Route]] *(Layer: #route, Domain: #repertoire)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
 
