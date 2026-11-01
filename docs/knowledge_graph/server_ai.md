@@ -13,13 +13,14 @@ tags: ["service", "system", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: GEMINI_MODEL, TIMEOUT_IA_MS, TIMEOUT_IA_LARGO_MS, MODELOS_GEMINI_RETIRADOS, FALLBACK_MODELS, contieneBinarios, getAiClient, getDeepSeekKey.
+Exporta: GEMINI_MODEL, TIMEOUT_IA_MS, TIMEOUT_IA_LARGO_MS, getAiClient, getDeepSeekKey, AI_PRICING_TABLE, estimateTokens, AICostEstimate.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[db_ai_ledger|AI Token Ledger]] *(Layer: #db, Domain: #system)*
 - [[ext_gemini|Gemini (Google GenAI)]] *(Layer: #external, Domain: #system)*
+- [[server_utils_modelosGemini|server/utils/modelosGemini.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_textoDeParteIA|server/utils/textoDeParteIA.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
