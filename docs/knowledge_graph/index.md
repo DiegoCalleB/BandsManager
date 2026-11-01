@@ -99,7 +99,7 @@ No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el t
 - [[server_ai|server/ai.ts]] — 49 ficheros dependen de él
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] — 49 ficheros dependen de él
 - [[src_services_api|src/services/api.ts]] — 45 ficheros dependen de él
-- [[server_utils_errorHttp|server/utils/errorHttp.ts]] — 40 ficheros dependen de él
+- [[server_utils_errorHttp|server/utils/errorHttp.ts]] — 41 ficheros dependen de él
 - [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] — 39 ficheros dependen de él
 - [[server_db_bands|server/db/bands.ts]] — 37 ficheros dependen de él
 - [[ext_ffmpeg|FFmpeg]] — 34 ficheros dependen de él

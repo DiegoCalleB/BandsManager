@@ -13,7 +13,7 @@ tags: ["service", "system", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: GEMINI_MODEL, TIMEOUT_IA_MS, TIMEOUT_IA_LARGO_MS, FALLBACK_MODELS, getAiClient, getDeepSeekKey, AI_PRICING_TABLE, estimateTokens.
+Exporta: GEMINI_MODEL, TIMEOUT_IA_MS, TIMEOUT_IA_LARGO_MS, MODELOS_GEMINI_RETIRADOS, FALLBACK_MODELS, contieneBinarios, getAiClient, getDeepSeekKey.
 
 ---
 

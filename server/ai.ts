@@ -13,12 +13,26 @@ export const TIMEOUT_IA_MS = 60_000;
 /** Las llamadas multimodales con audio (concert_to_album) necesitan bastante más margen. */
 export const TIMEOUT_IA_LARGO_MS = 300_000;
 
-export const FALLBACK_MODELS = [
-  "gemini-2.5-flash",
-  "gemini-2.0-flash",
-  "gemini-1.5-flash-8b",
-  "gemini-1.5-flash"
-];
+/**
+ * Cadena de modelos Gemini, del preferido al último recurso. Los 1.5 y 2.0 están retirados: dejarlos
+ * aquí solo añadía 404 seguros antes de rendirse. Se puede sobrescribir sin redeploy de código con
+ * `GEMINI_MODELS=modelo1,modelo2` (lo vigila el test de ai_fallback para que no reaparezcan retirados).
+ */
+export const MODELOS_GEMINI_RETIRADOS = /gemini-(1\.|2\.0)/;
+const MODELOS_GEMINI_POR_DEFECTO = ["gemini-3.7-flash", "gemini-3.8-flash", "gemini-2.5-flash"];
+const modelosDeEntorno = (process.env.GEMINI_MODELS || "").split(",").map(m => m.trim()).filter(Boolean);
+export const FALLBACK_MODELS: string[] = modelosDeEntorno.length > 0 ? modelosDeEntorno : MODELOS_GEMINI_POR_DEFECTO;
+
+/** ¿Lleva el contenido una imagen, PDF o audio? DeepSeek solo lee texto: con binarios no puede responder. */
+export function contieneBinarios(contents: unknown): boolean {
+  if (!contents || typeof contents === "string") return false;
+  const lista = Array.isArray(contents) ? contents : [contents];
+  return lista.some((c: unknown) => {
+    if (typeof c !== "object" || c === null) return false;
+    const obj = c as { inlineData?: unknown; fileData?: unknown; parts?: unknown };
+    return !!obj.inlineData || !!obj.fileData || (Array.isArray(obj.parts) && contieneBinarios(obj.parts));
+  });
+}
 
 let cachedClient: { key: string; client: GoogleGenAI } | null = null;
 
@@ -325,7 +339,9 @@ export async function generateContentWithFallback(
 
   // Automatic Failover to DeepSeek if Gemini quota/spending cap is exhausted
   const promptText = extractTextFromContents(params.contents);
-  if (promptText && getDeepSeekKey()) {
+  // DeepSeek solo lee texto: con una imagen/PDF adjunto recibiría un prompt sin documento y
+  // devolvería una respuesta inventada que parece buena. Mejor fallar de cara.
+  if (promptText && getDeepSeekKey() && !contieneBinarios(params.contents)) {
     try {
       console.log("[AI Engine] Activando failover automático a DeepSeek V3 por fallo/cuota en Gemini...");
       const text = await callDeepSeek({

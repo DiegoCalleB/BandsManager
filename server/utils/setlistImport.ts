@@ -1,4 +1,5 @@
-import { getAiClient, generateContentWithFallback } from "../ai.js";
+import { getAiClient, generateContentWithFallback, isSpendCapOrQuotaError } from "../ai.js";
+import { ErrorHttp } from "./errorHttp.js";
 import { SetlistItem } from "../../src/types.js";
 import { BLOCK_TYPES } from "./perfectSetlistPlanner.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
@@ -126,13 +127,35 @@ IMPORTANTE:
 - No añadas temas que no estén escritos, ni completes un repertorio "típico".`;
 
   const client = getAiClient();
-  const response = await generateContentWithFallback(client, {
-    contents: [
-      { inlineData: { mimeType, data: fileBuffer.toString('base64') } },
-      { text: prompt }
-    ]
-  });
+  if (!client) {
+    throw new ErrorHttp(503, 'ia_no_configurada', 'La IA no está configurada en el servidor (falta la clave de Gemini).');
+  }
+
+  let response;
+  try {
+    response = await generateContentWithFallback(client, {
+      contents: [
+        { inlineData: { mimeType, data: fileBuffer.toString('base64') } },
+        { text: prompt }
+      ],
+      config: { responseMimeType: 'application/json' },
+      // Un PDF de varias páginas tarda más que un prompt de texto.
+      timeoutMs: 120_000
+    });
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
+    console.error('[Setlist import] Fallaron todos los modelos de IA:', err.message);
+    if (isSpendCapOrQuotaError(err)) {
+      throw new ErrorHttp(503, 'ia_cuota', 'La IA ha agotado su cuota ahora mismo. Inténtalo en unos minutos.');
+    }
+    throw new ErrorHttp(503, 'ia_no_disponible', 'La IA no pudo leer el archivo ahora mismo. Inténtalo de nuevo en un momento.');
+  }
 
   const text = response.text || response.candidates?.[0]?.content?.parts?.[0]?.text || "";
-  return parseRawSetlistAIResponse(text);
+  try {
+    return parseRawSetlistAIResponse(text);
+  } catch (_errCapturado) {
+    // Respuesta vacía, JSON roto o sin temas: es un problema del archivo/lectura, no del servidor.
+    throw new ErrorHttp(422, 'setlist_ilegible', 'No pude leer ningún tema en el archivo. Prueba con una foto más nítida o un PDF con texto.');
+  }
 }
