@@ -181,3 +181,16 @@ UI siguiendo la skill `visual-identity` (Espectro) y con color de módulo propio
 - [x] El calendario y el chat leen también los resultados de TikTok y YouTube.
 - [ ] Pendiente: el bucle de aprendizaje (formato ganador, impulso del plan y modo rescate) sigue basándose solo en Instagram. Una banda sin Instagram ve la lectura de cada pieza, pero el asesor aún no reordena ideas ni detecta caídas con sus números de TikTok o YouTube.
 - [ ] Pendiente: traer estos números por API (TikTok: auditoría de la app; YouTube: verificación OAuth de Google). Hoy se anotan a mano.
+
+## Equipo de especialistas: auditoría 360 y kit SEO
+
+Primer paso de «el mejor asistente de marketing digital»: especialistas que revisan lo que BandManager sabe de la banda, con fuente y sin inventar. Botón «Revisar presencia» junto al chat; una hoja con tres secciones. **No usa IA** (determinista, coste cero) y **no necesita migración**.
+
+- [x] **Auditoría 360** (`src/utils/asesor/auditoria.ts`): cinco especialistas (SEO y descubrimiento, Instagram, TikTok, YouTube Shorts, CTR y conversión) con unas veinte comprobaciones. Solo se auditan las redes de la estrategia. Cada hallazgo es `ok`, `mejorar` o `sin_datos`, con impacto, minutos de esfuerzo, qué hacer y su **origen** («Del temario» o «Criterio propio»). Arriba salen las tres cosas que más mueven la aguja.
+- [x] **Lo que no sabe, lo pide**: la bio de una red solo se juzga si se conoce. Si Instagram está conectado se lee de la cuenta (nombre, bio y seguidores; PENDIENTE validar los campos con una cuenta real); si no, la banda la pega y se queda solo en su navegador. Sin dato no se da por bueno ni por malo.
+- [x] **Kit SEO** (`src/utils/asesor/seo.ts`): las frases con las que os buscan (género + ciudad + sala del próximo bolo), el nombre del perfil de Instagram (el campo «Nombre» es el que se busca) y bios para elegir por red, cada una dentro de su límite (Instagram 150, TikTok 80, descripción del canal de YouTube 1000). Plantillas y límites son criterio propio.
+- [x] **Enlaces con seguimiento**: el asesor dice a dónde debería llevar el enlace de la bio (entradas del bolo si falta menos de 21 días; si no, el dossier), avisa si un enlace lleva a otro sitio o a un bolo ya pasado, y crea el que falta con la infraestructura de enlaces cortos que ya había (`POST /api/short-links`, idempotente).
+- [x] **Medición honesta**: clics por red en 7 días, clics en las 48 h tras publicar cada pieza y, con seguidores, comparación con la horquilla sana del temario (0,5 a 2 % a la semana). Es aproximado porque el enlace de la bio es uno por red y no distingue qué pieza trajo cada clic; la pantalla lo dice.
+- [ ] Pendiente: especialistas de streaming (Spotify, presave, playlists), colaboraciones y prensa (reutilizando el Scout de booking), community manager y anuncios.
+- [ ] Pendiente: contrastar con apuntes del máster los criterios marcados «Criterio propio» (SEO, bios, CTR, enlace de la bio).
+- [ ] Pendiente: enlace por pieza (atribución exacta). Las stories permiten un enlace por pieza; en TikTok y YouTube Shorts no es fiable.
