@@ -1,4 +1,5 @@
 import { textoDeParte } from "./utils/textoDeParteIA.js";
+import { FALLBACK_MODELS, MODELOS_GEMINI_RETIRADOS, contieneBinarios } from "./utils/modelosGemini.js";
 import { GoogleGenAI, type ContentListUnion, type GenerateContentConfig } from "@google/genai";
 import { dbRecordAiUsage } from "./db/aiLedger.js";
 import type { EPKConfig } from "../src/types.js";
@@ -13,12 +14,7 @@ export const TIMEOUT_IA_MS = 60_000;
 /** Las llamadas multimodales con audio (concert_to_album) necesitan bastante más margen. */
 export const TIMEOUT_IA_LARGO_MS = 300_000;
 
-export const FALLBACK_MODELS = [
-  "gemini-2.5-flash",
-  "gemini-2.0-flash",
-  "gemini-1.5-flash-8b",
-  "gemini-1.5-flash"
-];
+export { FALLBACK_MODELS, MODELOS_GEMINI_RETIRADOS, contieneBinarios };
 
 let cachedClient: { key: string; client: GoogleGenAI } | null = null;
 
@@ -325,7 +321,9 @@ export async function generateContentWithFallback(
 
   // Automatic Failover to DeepSeek if Gemini quota/spending cap is exhausted
   const promptText = extractTextFromContents(params.contents);
-  if (promptText && getDeepSeekKey()) {
+  // DeepSeek solo lee texto: con una imagen/PDF adjunto recibiría un prompt sin documento y
+  // devolvería una respuesta inventada que parece buena. Mejor fallar de cara.
+  if (promptText && getDeepSeekKey() && !contieneBinarios(params.contents)) {
     try {
       console.log("[AI Engine] Activando failover automático a DeepSeek V3 por fallo/cuota en Gemini...");
       const text = await callDeepSeek({

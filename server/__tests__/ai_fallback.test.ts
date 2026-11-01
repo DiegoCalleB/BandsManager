@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { generateContentWithFallback, generateSmartLocalPitchFallback, callDeepSeek, TIMEOUT_IA_MS } from '../ai';
+import { generateContentWithFallback, generateSmartLocalPitchFallback, callDeepSeek, TIMEOUT_IA_MS, FALLBACK_MODELS, MODELOS_GEMINI_RETIRADOS, contieneBinarios } from '../ai';
 
 /**
  * Lo que se prueba aquí es el cambio de contrato: cuando se agotan todos los proveedores,
@@ -92,6 +92,32 @@ describe('generateContentWithFallback: el generador local es opt-in', () => {
     ).rejects.toThrow();
     const primeraLlamada = clienteQueSiempreFalla.models.generateContent.mock.calls[0][0];
     expect(primeraLlamada.config?.abortSignal).toBeInstanceOf(AbortSignal);
+  }, 15000);
+});
+
+describe('cadena de modelos y adjuntos binarios', () => {
+  it('no contiene modelos Gemini retirados (1.x / 2.0)', () => {
+    expect(FALLBACK_MODELS.length).toBeGreaterThan(0);
+    for (const m of FALLBACK_MODELS) expect(m).not.toMatch(MODELOS_GEMINI_RETIRADOS);
+  });
+
+  it('contieneBinarios detecta imagen/PDF y no texto plano', () => {
+    expect(contieneBinarios('hola')).toBe(false);
+    expect(contieneBinarios([{ text: 'hola' }])).toBe(false);
+    expect(contieneBinarios([{ inlineData: { mimeType: 'application/pdf', data: 'x' } }, { text: 'a' }])).toBe(true);
+    expect(contieneBinarios([{ parts: [{ inlineData: { mimeType: 'image/png', data: 'x' } }] }])).toBe(true);
+  });
+
+  it('con un adjunto binario NO cae a DeepSeek (no puede ver la imagen)', async () => {
+    process.env.DEEPSEEK_API_KEY = 'clave-de-prueba-suficientemente-larga';
+    const fetchEspia = vi.fn();
+    vi.stubGlobal('fetch', fetchEspia);
+    await expect(
+      generateContentWithFallback(clienteQueSiempreFalla, {
+        contents: [{ inlineData: { mimeType: 'image/png', data: 'AAAA' } }, { text: 'lee esto' }],
+      })
+    ).rejects.toThrow();
+    expect(fetchEspia).not.toHaveBeenCalled();
   }, 15000);
 });
 
