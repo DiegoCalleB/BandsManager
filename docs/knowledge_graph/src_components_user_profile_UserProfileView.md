@@ -28,6 +28,7 @@ Exporta: UserProfileView.
 - [[src_components_user_profile_EspectroPreferenceCard|src/components/user_profile/EspectroPreferenceCard.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_user_profile_IdentityFields|src/components/user_profile/IdentityFields.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_user_profile_LanguageSelector|src/components/user_profile/LanguageSelector.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_user_profile_NotacionPreferenceCard|src/components/user_profile/NotacionPreferenceCard.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_user_profile_NotificationSettingsCard|src/components/user_profile/NotificationSettingsCard.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_user_profile_PasswordSection|src/components/user_profile/PasswordSection.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_user_profile_ProfileFooter|src/components/user_profile/ProfileFooter.tsx]] *(Layer: #frontend, Domain: #system)*

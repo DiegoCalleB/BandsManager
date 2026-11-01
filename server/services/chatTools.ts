@@ -359,7 +359,7 @@ export const chatFunctionDeclarations: FunctionDeclaration[] = [
           description: "Parámetros de síntesis sonora Web Audio.",
           properties: {
             bpm: { type: Type.NUMBER, description: "Tempo en pulsaciones por minuto (e.g. 120)." },
-            keyName: { type: Type.STRING, description: "Tonalidad (e.g. 'Do', 'Lam', 'Sol', 'Fa#m')." },
+            keyName: { type: Type.STRING, description: "Tonalidad (notación americana, e.g. 'C', 'Am', 'G', 'F#m')." },
             drumPattern: {
               type: Type.STRING,
               description: "Estilo de batería ('rock' | 'pop' | 'funk' | 'reggae' | 'ska' | 'cumbia' | 'punk').",

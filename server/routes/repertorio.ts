@@ -779,7 +779,7 @@ router.post("/ai-composer-arrangement", requireAuth, async (req, res) => {
 
     const prompt = `Eres un músico profesional de sesión, productor y co-autor de una banda independiente. Estás colaborando con la banda en el estudio de ensayo.
 Canción: "${titulo}"
-Tonalidad: "${tonalidad || 'Mim'}"
+Tonalidad: "${tonalidad || 'Em'}"
 Tempo: ${bpm || 120} BPM
 Parte de la canción seleccionada: ${seccionCancion || 'General'}
 Momento / Minuto de aplicación: ${tiempoMinuto || 'Toda la canción / Inicio'}

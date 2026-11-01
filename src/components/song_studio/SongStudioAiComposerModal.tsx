@@ -7,6 +7,7 @@ import { apiFetch } from '../../utils/api';
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, Select, Textarea } from '../ui';
 import { comoErrorCapturado } from '../../utils/errorCapturado';
+import { useFormatoTono } from "../../hooks/useNotacion";
 
 /** Idea de arreglo que devuelve `POST /api/ai-composer-arrangement`. */
 interface IdeaCompositorIa {
@@ -32,6 +33,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
   onAddIdea,
   currentUsername,
 }) => {
+  const fmtTono = useFormatoTono();
   const [estiloMusico, setEstiloMusico] = useState<string>('Productor y Arreglista General');
   const [objetivoIdea, setObjetivoIdea] = useState<string>('Nuevo Riff o Puente Instrumental');
   const [seccionCancion, setSeccionCancion] = useState<string>('Estribillo');
@@ -154,7 +156,7 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
             </p>
             <p className="text-xs text-[var(--ink-2)] leading-relaxed">
               ¿Te has quedado estancado en el local de ensayo? Nuestro músico virtual analiza la tonalidad (
-              {song.tonalidad || 'Sin definir'}), el tempo ({song.bpm} BPM) y los acordes de "{song.titulo}" para proponerte arreglos
+              {fmtTono(song.tonalidad) || 'Sin definir'}), el tempo ({song.bpm} BPM) y los acordes de "{song.titulo}" para proponerte arreglos
               profesionales, melodías, puentes o variaciones armónicas originales.
             </p>
           </div>

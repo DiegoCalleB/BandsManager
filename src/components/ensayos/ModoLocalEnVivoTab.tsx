@@ -20,6 +20,7 @@ import { BotonesEvaluacion } from "./BotonesEvaluacion";
 import { useFullscreen } from "../../hooks/useFullscreen";
 import { useWakeLock } from '../../hooks/useWakeLock';
 import { accionDeTecla, direccionDeSwipe } from '../../utils/pasarPagina';
+import { useNotacion } from "../../hooks/useNotacion";
 
 interface ModoLocalEnVivoTabProps {
   rehearsal: Rehearsal;
@@ -76,7 +77,7 @@ export function ModoLocalEnVivoTab({
 
   // Atril Mode State: Transpose, Notation, Font Size, Auto-Scroll, Diagrams
   const [transpose, setTranspose] = useState<number>(0);
-  const [notation, setNotation] = useState<"ES" | "EN">("ES");
+  const [notation, setNotation, fmtTono] = useNotacion();
   const [fontSizeIndex, setFontSizeIndex] = useState<number>(1); // 0=sm, 1=md, 2=lg, 3=xl
   const [showChordDiagrams, setShowChordDiagrams] = useState<boolean>(false);
   const [editingSongModal, setEditingSongModal] = useState<Song | null>(null);
@@ -190,9 +191,8 @@ export function ModoLocalEnVivoTab({
     autoScroll.setActivo(false);
   }
 
-  // Current chord text
-  // Sin cifrado guardado se muestra vacío: antes caía en una letra
-  // de ejemplo escrita en el código que parecía la letra de la canción.
+  // Sin cifrado guardado se muestra vacío: antes caía en una letra de ejemplo escrita en el código
+  // que parecía la letra de la canción.
   const rawChordText = currentSong?.cifradoTexto || "";
   const tonalidadHoja = useMemo(() => tonalidadDelCifrado(rawChordText, currentSong?.tonalidad), [rawChordText, currentSong?.tonalidad]);
   const { acordes: uniqueChords, contexto: contextoAcordes } = useAcordesDeLaHoja(rawChordText, tonalidadHoja, 0);
@@ -360,7 +360,7 @@ export function ModoLocalEnVivoTab({
                   Tonalidad
                 </span>
                 <span className="text-lg sm:text-3xl font-sans font-black text-[var(--acc)]">
-                  {currentSong?.tonalidad || "—"}
+                  {fmtTono(currentSong?.tonalidad) || "—"}
                 </span>
               </div>
 
@@ -741,7 +741,7 @@ export function ModoLocalEnVivoTab({
 
               <div className="flex items-center gap-2 text-xs font-sans">
                 <span className="px-2 py-1 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--acc)] font-bold">
-                  Tonalidad: {currentSong?.tonalidad || "Am"}
+                  Tonalidad: {fmtTono(currentSong?.tonalidad) || "Am"}
                 </span>
                 <span className="px-2 py-1 rounded-[var(--r-m)] bg-[var(--sunken)] text-[var(--ink-2)]">
                   {currentSong?.afinacion || "Standard E"}

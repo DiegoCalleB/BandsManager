@@ -22,6 +22,7 @@ Barra inferior: tono y tempo, navegación y siguiente tema.
 - [[src_components_setlist_performance_SetlistPerformanceContext|src/components/setlist_performance/SetlistPerformanceContext.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_setlist_performance_performanceModel|src/components/setlist_performance/performanceModel.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_hooks_useNotacion|src/hooks/useNotacion.ts]] *(Layer: #hook, Domain: #system)*
 
 ---
 

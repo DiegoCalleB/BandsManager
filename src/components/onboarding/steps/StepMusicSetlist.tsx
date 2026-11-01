@@ -4,6 +4,7 @@ import { SpotifyAlbum, ManualSongItem } from "../types";
 import { Song } from "../../../types";
 import { ShowIcon } from '../../ui/ShowIcon';
 import { Button, IconButton, Input, Textarea } from '../../ui';
+import { useFormatoTono } from "../../../hooks/useNotacion";
 
 interface StepMusicSetlistProps {
   musicSubTab: "spotify" | "upload" | "manual";
@@ -69,6 +70,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
   onGenerateSetlist,
   totalImportedSongsCount
 }) => {
+  const fmtTono = useFormatoTono();
   const audioInputRef = useRef<HTMLInputElement | null>(null);
   const [bulkText, setBulkText] = useState("");
   const [showBulkInput, setShowBulkInput] = useState(false);
@@ -392,7 +394,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
                     {s.titulo}
                   </span>
                   <div className="flex items-center gap-3 text-[var(--ink-2)]">
-                    {s.tonalidad && <span>{s.tonalidad}</span>}
+                    {fmtTono(s.tonalidad) && <span>{fmtTono(s.tonalidad)}</span>}
                     {s.duracion && <span>{s.duracion}</span>}
                     <IconButton
                       label="Eliminar"

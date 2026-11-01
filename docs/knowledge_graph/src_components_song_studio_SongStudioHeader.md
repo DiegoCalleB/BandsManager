@@ -22,6 +22,7 @@ Cabecera del estudio: título, estado, favorita, preparación, herramientas y co
 - [[src_components_song_studio_SongStudioHeaderControls|src/components/song_studio/SongStudioHeaderControls.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_song_studio_SongStudioReadinessSelect|src/components/song_studio/SongStudioReadinessSelect.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_song_studio_SongStudioToolsMenu|src/components/song_studio/SongStudioToolsMenu.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_hooks_useNotacion|src/hooks/useNotacion.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_utils_formatSongTitle|src/utils/formatSongTitle.ts]] *(Layer: #service, Domain: #repertoire)*
 
 ---

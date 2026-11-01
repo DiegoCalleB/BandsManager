@@ -10,6 +10,7 @@ import { transposeChordToken, getSemitoneDifference } from '../utils/chordUtils'
 import { useTonePitchShift } from '../hooks/useTonePitchShift';
 import { usePlayer } from '../context/playerContextValue';
 import { Button, IconButton, Select } from './ui';
+import { useFormatoTono } from "../hooks/useNotacion";
 
 interface SpotifyPlayerBarProps {
   song: Song | null;
@@ -74,6 +75,7 @@ export default function SpotifyPlayerBar({
   onIsPlayingChange,
   transposeSemitones: propTransposeSemitones = 0
 }: SpotifyPlayerBarProps) {
+  const fmtTono = useFormatoTono();
   const { setCurrentTime: setContextCurrentTime, setDuration: setContextDuration } = usePlayer();
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -107,9 +109,8 @@ export default function SpotifyPlayerBar({
     setTransposeSemitones(calculatedSemitones);
   }
 
-  // Fundido real (5s, curva de potencia constante) al pasar al siguiente tema de la cola —
-  // desactivado por defecto, mismo interruptor tanto si la cola es el catálogo, un álbum de
-  // Discografía o un repertorio (ver `songs`, que decide qué es"el siguiente tema" en cada caso).
+  // Fundido real (5s, curva de potencia constante) al pasar al siguiente tema de la cola — desactivado por
+  // defecto, mismo interruptor para catálogo, álbum de Discografía o repertorio (ver `songs`: decide el siguiente).
   const [crossfadeEnabled, setCrossfadeEnabled] = useState(false);
   const [isCrossfading, setIsCrossfading] = useState(false);
 
@@ -144,9 +145,8 @@ export default function SpotifyPlayerBar({
 
   const crossfadeRafRef = useRef<number | null>(null);
   const isCrossfadingRef = useRef(false);
-  // Id de la última canción que llegó aquí por un fundido recién completado — le dice al efecto
-  // de"cambió la canción" que ese tema ya está sonando de verdad (arrancó durante el fundido) y
-  // que NO debe recargar el audio ni relanzar la reproducción desde cero.
+  // Id de la última canción que llegó aquí por un fundido recién completado — le dice al efecto de"cambió la
+  // canción" que ya está sonando (arrancó durante el fundido) y que NO debe recargar el audio ni relanzarlo.
   const promotedSongIdRef = useRef<string | null>(null);
 
   const cancelCrossfade = () => {
@@ -645,7 +645,7 @@ export default function SpotifyPlayerBar({
                 <div className="hidden sm:block text-micro text-[var(--ink-2)] font-sans truncate">
                   <span>{song.artista || 'Banda'}</span>
                   <span className="mx-1">•</span>
-                  <span className="text-[var(--ok)] font-semibold">{song.tonalidad || 'Am'}</span>
+                  <span className="text-[var(--ok)] font-semibold">{fmtTono(song.tonalidad) || 'Am'}</span>
                   {transposeSemitones !== 0 && (
                     <span className="text-[var(--alert)] ml-1 font-bold">
                       {transposeChordToken(
@@ -767,7 +767,7 @@ export default function SpotifyPlayerBar({
                     <span className="text-[var(--ink)] font-medium">{song.artista || 'Banda'}</span>
                     <span>•</span>
                     <span className="text-[var(--ok)] font-semibold">
-                      {song.tonalidad || 'Am'}
+                      {fmtTono(song.tonalidad) || 'Am'}
                       {transposeSemitones !== 0 && (
                         <span className="text-[var(--alert)] ml-1 font-bold">
                           ➔{' '}

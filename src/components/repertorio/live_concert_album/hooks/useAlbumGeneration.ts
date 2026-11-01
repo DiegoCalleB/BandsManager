@@ -87,7 +87,7 @@ export function useAlbumGeneration({ tracks, setErrorMessage, youtubeUrl, analyz
       notaTema:
         t.speechTranscription ||
         (t.type === "musica"
-          ? `Tonalidad: ${t.tonalidad || "Mim"} | BPM: ${t.bpm || 120}`
+          ? `Tonalidad: ${t.tonalidad || "Em"} | BPM: ${t.bpm || 120}`
           : ""),
       duracionEstimadaMinutos: Math.max(1, Math.round(t.duration / 60)),
       duracionEstimadaSegundos: t.duration || 180,
