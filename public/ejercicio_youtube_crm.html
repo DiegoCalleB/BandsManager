@@ -14,6 +14,8 @@
 --acc:#E99463;--acc-soft:#2A1B12;--acc-ink:#E99463;--on-acc:#2C1606}
 [data-theme="classic"]{--bg:#121110;--surface:#18181B;--sunken:#0D0C0C;--ink:#F4F4F5;--ink-2:#A1A1AA;--ink-3:#71717A;--ok:#10B981;
 --acc:#F2CA50;--acc-soft:#2C2310;--acc-ink:#F2CA50;--on-acc:#2C2200}
+[data-theme="marca"]{--bg:#0b0b0d;--surface:#15151a;--sunken:#1f1f26;--ink:#FFE08A;--ink-2:#CDB878;--ink-3:#9A8D68;--ok:#FFC21A;--acc:#F5A300;--acc-soft:#2a1f07;--acc-ink:#FFC21A;--on-acc:#140d00}
+.lema{color:var(--acc-ink);font-weight:800;font-size:18px;margin:2px 0 4px}
 *{box-sizing:border-box}html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 Onest,system-ui,sans-serif;font-variant-numeric:tabular-nums}
 main{max-width:1180px;margin:0 auto;padding:0 16px 140px}
@@ -116,10 +118,10 @@ footer{color:var(--ink-3);font-size:13px;margin-top:56px}
 @keyframes sube{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
 .card:hover .th{transform:rotate(-1.2deg) scale(1.02)}.card .th{transition:transform .3s cubic-bezier(.23,1,.32,1)}
 </style></head><body><main>
-<div class="top"><a class="marca" href="/" aria-label="BandManager.io"><img class="logo" src="/logo_bandmanager_symbol.png" width="512" height="512" alt="Logo de BandManager"><span>BandManager</span></a><nav class="temas" aria-label="Tema"><button data-t="light">Claro</button><button data-t="dark">Oscuro</button><button data-t="classic">Clásico</button></nav></div>
+<div class="top"><a class="marca" href="/" aria-label="BandManager.io"><img class="logo" src="/logo_bandmanager_symbol.png" width="512" height="512" alt="Logo de BandManager"><span>BandManager</span></a><nav class="temas" aria-label="Tema"><button data-t="marca">Marca</button><button data-t="light">Claro</button><button data-t="dark">Oscuro</button><button data-t="classic">Clásico</button></nav></div>
 <div class="banner" aria-hidden="true"><i class="" style="height:44px"></i><i class="n" style="height:70px"></i><i class="" style="height:98px"></i><i class="o" style="height:56px"></i><i class="" style="height:120px"></i><i class="" style="height:80px"></i><i class="n" style="height:48px"></i><i class="" style="height:104px"></i><i class="" style="height:62px"></i><i class="" style="height:112px"></i><i class="o" style="height:40px"></i><i class="n" style="height:86px"></i><i class="" style="height:74px"></i><i class="" style="height:52px"></i><i class="" style="height:116px"></i><i class="" style="height:70px"></i><i class="n" style="height:92px"></i><i class="o" style="height:58px"></i><i class="" style="height:100px"></i><i class="" style="height:66px"></i><i class="" style="height:46px"></i><i class="n" style="height:84px"></i><i class="" style="height:108px"></i><i class="" style="height:60px"></i></div>
 <section class="canal"><div class="avatar" id="avatar" title="Pulsa a Eco"><img id="ecoHero" src="/ejercicio_youtube_crm/eco/pillo.webp" alt="Eco, la mascota del canal"></div>
-<div><h1>BandManager · Booking para bandas</h1><p>@bandmanagerio · 9 vídeos planificados · CRM para bandas, sin cara: voz, pantalla y Eco</p><p>Ejercicio de YouTube del Máster de Marketing Digital con IA. Propuesta, no canal publicado.</p></div>
+<div><h1>BandManager · Booking para bandas</h1><p class="lema">Tu manager de bolsillo.</p><p>@bandmanagerio · 9 vídeos planificados · CRM para bandas, sin cara: voz, pantalla y Eco</p><p>Ejercicio de YouTube del Máster de Marketing Digital con IA. Propuesta, no canal publicado.</p></div>
 <div class="cta"><div class="ritmo-box"><button class="btn p" id="ritmo" type="button" aria-pressed="false">Dale ritmo</button><label id="bpmBox" hidden>BPM <input type="range" id="bpm" min="70" max="170" value="120" aria-label="Ritmo en pulsaciones por minuto"><b id="bpmN">120</b></label></div><a class="btn p" href="/presentacion_tfm">Ver la película del TFM</a><a class="btn a" href="/">Probar gratis 14 días</a></div></section>
 <div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-tab="videos">Vídeos</button><button role="tab" aria-selected="false" data-tab="calendario">Calendario</button><button role="tab" aria-selected="false" data-tab="plan">Plan y reglas</button></div>
 
@@ -176,7 +178,7 @@ footer{color:var(--ink-3);font-size:13px;margin-top:56px}
   var K='bm-tema-ejercicio',bs=document.querySelectorAll('.temas button');
   function tema(t){document.documentElement.dataset.theme=t;bs.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.t===t)});try{localStorage.setItem(K,t)}catch(e){}}
   var ini=null;try{ini=localStorage.getItem(K)}catch(e){}
-  tema(ini||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
+  tema(ini||'marca');
   bs.forEach(function(b){b.addEventListener('click',function(){tema(b.dataset.t)})});
   var tabs=document.querySelectorAll('.tabs button');
   function tab(n){tabs.forEach(function(b){b.setAttribute('aria-selected',b.dataset.tab===n)});['videos','calendario','plan'].forEach(function(x){document.getElementById('t-'+x).hidden=x!==n})}
