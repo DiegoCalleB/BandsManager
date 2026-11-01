@@ -19,12 +19,12 @@ Subida de archivos (simple y por chunks) a Supabase Storage, estadísticas de al
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[db_state_sync|In-Memory State & Supabase Sync]] *(Layer: #db, Domain: #system)*
-- [[ext_ffmpeg|FFmpeg]] *(Layer: #external, Domain: #system)*
 - [[ext_supabase|Supabase (Postgres)]] *(Layer: #external, Domain: #system)*
 - [[ext_supabase_storage|Supabase Storage]] *(Layer: #external, Domain: #system)*
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_erroresSubida|server/utils/erroresSubida.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_optimizarAudioSubido|server/utils/optimizarAudioSubido.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---

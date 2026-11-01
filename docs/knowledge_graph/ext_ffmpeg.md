@@ -38,7 +38,6 @@ _Sin dependencias salientes directas._
 - [[server_routes_ai_music_separacionContexto|server/routes/ai_music/separacionContexto.ts]] *(from #route)*
 - [[server_routes_concert_to_album|server/routes/concert_to_album.ts]] *(from #route)*
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
-- [[server_routes_upload|server/routes/upload.ts]] *(from #route)*
 - [[server_services_audioSeparator_AudioSeparatorService|server/services/audioSeparator/AudioSeparatorService.ts]] *(from #service)*
 - [[server_services_audioSeparator_LocalDspService|server/services/audioSeparator/LocalDspService.ts]] *(from #service)*
 - [[server_services_audioTransposeService|server/services/audioTransposeService.ts]] *(from #service)*
@@ -49,6 +48,7 @@ _Sin dependencias salientes directas._
 - [[server_utils_audioKey|server/utils/audioKey.ts]] *(from #service)*
 - [[server_utils_clipFiltros|server/utils/clipFiltros.ts]] *(from #service)*
 - [[server_utils_controlCalidadClip|server/utils/controlCalidadClip.ts]] *(from #service)*
+- [[server_utils_optimizarAudioSubido|server/utils/optimizarAudioSubido.ts]] *(from #service)*
 - [[server_utils_optimizeExistingWavs|server/utils/optimizeExistingWavs.ts]] *(from #service)*
 - [[server_utils_reelsCore|server/utils/reelsCore.ts]] *(from #service)*
 - [[server_utils_rejillaBeats|server/utils/rejillaBeats.ts]] *(from #service)*

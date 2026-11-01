@@ -142,6 +142,7 @@ Vista tipada de un valor capturado en un `catch`.
 - [[server_utils_audioKey|server/utils/audioKey.ts]] *(from #service)*
 - [[server_utils_emailValidator|server/utils/emailValidator.ts]] *(from #service)*
 - [[server_utils_enrichCoversWithoutAudio|server/utils/enrichCoversWithoutAudio.ts]] *(from #service)*
+- [[server_utils_optimizarAudioSubido|server/utils/optimizarAudioSubido.ts]] *(from #service)*
 - [[server_utils_optimizeExistingWavs|server/utils/optimizeExistingWavs.ts]] *(from #service)*
 - [[server_utils_perfectSetlistPlanner|server/utils/perfectSetlistPlanner.ts]] *(from #service)*
 - [[server_utils_setlistImport|server/utils/setlistImport.ts]] *(from #service)*
