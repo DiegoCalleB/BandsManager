@@ -148,7 +148,7 @@ export function AtrilCompases() {
     <div className="space-y-3">
       {ajustes}
       {aviso && <p className="text-sm text-[var(--ink-2)] bg-[var(--acc-soft)] rounded-[var(--r-m)] px-3 py-2">{aviso}</p>}
-      {acordeElegido && <EditorAcordeCasilla key={seleccion} actual={acordeElegido.acorde === "N" ? "" : nombre(acordeElegido.acorde)} lugar={lugarElegido} onAplicar={ponerAcorde} hermanos={hermanosAcorde.length} onHermanos={ponerComoElUltimo} onCerrar={() => { setElegida(null); setUltimo(null); setEscrito(null); }} />}
+      {acordeElegido && <div className="sticky bottom-2 z-10 space-y-2"><EditorAcordeCasilla key={seleccion} actual={acordeElegido.acorde === "N" ? "" : nombre(acordeElegido.acorde)} lugar={lugarElegido} onAplicar={ponerAcorde} hermanos={hermanosAcorde.length} onHermanos={ponerComoElUltimo} onCerrar={() => { setElegida(null); setUltimo(null); setEscrito(null); }} /></div>}
       {acordeElegido?.cambia && <AjusteCambioAcorde acorde={nombre(acordeElegido.acorde)} onMover={moverElegido} hermanos={hermanos.length} onHermanos={moverComoElUltimo} onCerrar={() => { setElegida(null); setUltimo(null); }} />}
       <VistaCompases
         cuadricula={cuadricula}
