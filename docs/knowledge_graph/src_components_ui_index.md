@@ -196,6 +196,7 @@ BandManager UI Component Library
 - [[src_components_cartel_CarteleriaView|src/components/cartel/CarteleriaView.tsx]] *(from #frontend)*
 - [[src_components_cartel_EstiloBanda|src/components/cartel/EstiloBanda.tsx]] *(from #frontend)*
 - [[src_components_cartel_IdeaCartel|src/components/cartel/IdeaCartel.tsx]] *(from #frontend)*
+- [[src_components_cartel_OrdenCartel|src/components/cartel/OrdenCartel.tsx]] *(from #frontend)*
 - [[src_components_cartel_PreguntaCabeza|src/components/cartel/PreguntaCabeza.tsx]] *(from #frontend)*
 - [[src_components_cartel_SelectorFondo|src/components/cartel/SelectorFondo.tsx]] *(from #frontend)*
 - [[src_components_chatbot_ActiveRunPanel|src/components/chatbot/ActiveRunPanel.tsx]] *(from #frontend)*

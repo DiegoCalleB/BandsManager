@@ -26,8 +26,10 @@ Textos sueltos de la persona («Entrada 8 €», «Con Los Toros»): hasta tres 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_cartel_AjusteTexto|src/components/cartel/AjusteTexto.tsx]] *(from #frontend)*
 - [[src_components_cartel_hooks_useAjusteFino|src/components/cartel/hooks/useAjusteFino.ts]] *(from #frontend)*
+- [[src_components_cartel_hooks_useOrdenCartel|src/components/cartel/hooks/useOrdenCartel.ts]] *(from #frontend)*
 - [[src_utils_cartel_config|src/utils/cartel/config.ts]] *(from #service)*
 - [[src_utils_cartel_layout|src/utils/cartel/layout.ts]] *(from #service)*
+- [[src_utils_cartel_ordenes|src/utils/cartel/ordenes.ts]] *(from #service)*
 
 ---
 

@@ -81,12 +81,12 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 
 ## 🤖 Mapa automático (generado desde los imports reales)
 
-1926 nodos: 53 agent · 56 db · 12 external · 14 feature · 1005 frontend · 43 hook · 98 route · 85 schema · 12 security · 548 service.
+1930 nodos: 53 agent · 56 db · 12 external · 14 feature · 1007 frontend · 43 hook · 98 route · 85 schema · 12 security · 550 service.
 No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el test `grafoConocimiento` falla si queda desfasado.
 
 ### 🔥 Los 20 ficheros más importados
 - [[src_types|src/types.ts]] — 580 ficheros dependen de él
-- [[src_components_ui_index|src/components/ui/index.ts]] — 382 ficheros dependen de él
+- [[src_components_ui_index|src/components/ui/index.ts]] — 383 ficheros dependen de él
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] — 180 ficheros dependen de él
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] — 174 ficheros dependen de él
 - [[src_utils_api|src/utils/api.ts]] — 96 ficheros dependen de él
@@ -96,7 +96,7 @@ No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el t
 - [[server_db_core|server/db/core.ts]] — 69 ficheros dependen de él
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] — 65 ficheros dependen de él
 - [[server_db|server/db.ts]] — 55 ficheros dependen de él
-- [[server_ai|server/ai.ts]] — 49 ficheros dependen de él
+- [[server_ai|server/ai.ts]] — 50 ficheros dependen de él
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] — 49 ficheros dependen de él
 - [[src_services_api|src/services/api.ts]] — 45 ficheros dependen de él
 - [[server_utils_errorHttp|server/utils/errorHttp.ts]] — 40 ficheros dependen de él

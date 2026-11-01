@@ -91,3 +91,5 @@ npx vitest run server/utils/__tests__/promptCartel.test.ts src/utils/cartel
 ```
 
 - **Acabado de imprenta (`src/utils/cartel/serigrafia.ts`):** el rasgo que más delata a una imagen generada es lo continuo (degradados, mil matices, detalle uniforme). Pasar el arte a pocas tintas planas con trama y desregistro lo acerca a un cartel de gira impreso de verdad. Es un ajuste (`acabado`), solo sobre arte sin letras de IA. No prometas que nada «sea indetectable»: la mejora es de calidad y originalidad, y la marca de agua invisible del modelo no se toca.
+
+- **Pídele cambios al cartel (`src/utils/cartel/ordenes.ts`, `server/services/ordenCartel.ts`):** la frase libre es DATO; la IA de texto solo propone un plan y el servidor lo sanea contra un catálogo cerrado de acciones. Si añades una capacidad nueva al editor que quieras poder pedir con la voz, añade su acción al catálogo (tipo, saneado, `aplicarAcciones` y la línea del prompt), nunca dejes pasar texto libre al editor.

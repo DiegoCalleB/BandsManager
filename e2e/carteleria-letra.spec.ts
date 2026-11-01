@@ -162,6 +162,62 @@ test('el acabado de serigrafía repinta el arte de IA con tintas planas y se gua
   await expect.poll(() => cartel(page), { timeout: 15_000 }).toBe(antes);
 });
 
+test('«Pídele cambios al cartel»: una frase cambia las capas de golpe, se guarda y se deshace de una vez', async ({ page }) => {
+  const { peticiones } = await abrirCarteleria(page);
+  const pedidos: unknown[] = [];
+  await page.route('**/api/cartel/orden', (r) => {
+    pedidos.push(JSON.parse(r.request().postData() || '{}'));
+    return r.fulfill({
+      json: {
+        plan: {
+          resumen: 'Fecha en rojo, QR a la página de fans y un texto nuevo',
+          acciones: [
+            { tipo: 'estilo', bloque: 'fecha', color: '#e63946' },
+            { tipo: 'elegir', campo: 'qrDestino', valor: 'fans' },
+            { tipo: 'libre', indice: 0, texto: 'Entrada libre' },
+          ],
+          arte: '',
+        },
+      },
+    });
+  });
+  const antes = await cartel(page);
+  await page.getByLabel('Qué quieres cambiar del cartel').fill('Pon la fecha en roja, el QR a los fans y añade Entrada libre');
+  await page.getByRole('button', { name: 'Aplicar el cambio' }).click();
+  await expect(page.getByRole('status').filter({ hasText: /Fecha en rojo/ })).toContainText('3 cambios');
+  expect(pedidos[0]).toMatchObject({ orden: expect.stringContaining('Entrada libre'), huecosLibres: [0, 1, 2] });
+  await expect.poll(() => cartel(page), { timeout: 10_000 }).not.toBe(antes);
+  await expect
+    .poll(() => peticiones.some((p) => {
+      if (!p.ruta.endsWith('/config')) return false;
+      const c = JSON.parse(p.cuerpo.toString());
+      return c.estilos?.fecha?.color === '#e63946' && c.qrDestino === 'fans' && c.libres?.[0] === 'Entrada libre';
+    }), { timeout: 8_000 })
+    .toBe(true);
+
+  // Toda la orden es UN paso: un solo «Deshacer» devuelve el cartel de antes.
+  await page.getByRole('button', { name: 'Deshacer' }).click();
+  await expect.poll(() => cartel(page), { timeout: 10_000 }).toBe(antes);
+});
+
+test('una orden que habla de la ilustración sin fondo de IA lo dice y no inventa nada', async ({ page }) => {
+  await abrirCarteleria(page);
+  await page.route('**/api/cartel/orden', (r) => r.fulfill({ json: { plan: { resumen: 'Cielo más oscuro', acciones: [], arte: 'El cielo más oscuro' } } }));
+  await page.getByLabel('Qué quieres cambiar del cartel').fill('El cielo más oscuro');
+  await page.getByRole('button', { name: 'Aplicar el cambio' }).click();
+  await expect(page.getByRole('status').filter({ hasText: /necesita un fondo con IA/ })).toBeVisible();
+});
+
+test('si la IA no entiende la orden, se avisa y el cartel no cambia', async ({ page }) => {
+  await abrirCarteleria(page);
+  await page.route('**/api/cartel/orden', (r) => r.fulfill({ status: 503, json: { error: 'No hemos podido entender el cambio ahora mismo. Prueba en un rato.' } }));
+  const antes = await cartel(page);
+  await page.getByLabel('Qué quieres cambiar del cartel').fill('Haz algo');
+  await page.getByRole('button', { name: 'Aplicar el cambio' }).click();
+  await expect(page.getByRole('alert')).toContainText('No hemos podido entender');
+  expect(await cartel(page)).toBe(antes);
+});
+
 test('ajustar el texto a mano: arrastrar un bloque, escalarlo y volver al automático', async ({ page }) => {
   const { peticiones } = await abrirCarteleria(page);
   const antes = await cartel(page);
@@ -177,7 +233,7 @@ test('ajustar el texto a mano: arrastrar un bloque, escalarlo y volver al autom�
   await expect.poll(() => peticiones.some((p) => p.ruta.endsWith('/config') && JSON.parse(p.cuerpo.toString()).ajustesFinos?.feed?.nombre), { timeout: 8_000 }).toBe(true);
 
   const movido = await cartel(page);
-  await page.getByRole('button', { name: 'Más grande' }).click();
+  await page.getByRole('button', { name: 'Más grande', exact: true }).click();
   await expect.poll(() => cartel(page), { timeout: 10_000 }).not.toBe(movido);
 
   await page.getByRole('button', { name: 'Volver al automático' }).click();

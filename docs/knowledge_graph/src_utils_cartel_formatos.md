@@ -27,10 +27,12 @@ _Sin dependencias salientes directas._
 - [[src_components_cartel_CarteleriaView|src/components/cartel/CarteleriaView.tsx]] *(from #frontend)*
 - [[src_components_cartel_hooks_useAjusteFino|src/components/cartel/hooks/useAjusteFino.ts]] *(from #frontend)*
 - [[src_components_cartel_hooks_useEditorCartel|src/components/cartel/hooks/useEditorCartel.ts]] *(from #frontend)*
+- [[src_components_cartel_hooks_useOrdenCartel|src/components/cartel/hooks/useOrdenCartel.ts]] *(from #frontend)*
 - [[src_utils_cartel_ajustesFinos|src/utils/cartel/ajustesFinos.ts]] *(from #service)*
 - [[src_utils_cartel_config|src/utils/cartel/config.ts]] *(from #service)*
 - [[src_utils_cartel_layout|src/utils/cartel/layout.ts]] *(from #service)*
 - [[src_utils_cartel_layoutBase|src/utils/cartel/layoutBase.ts]] *(from #service)*
+- [[src_utils_cartel_ordenes|src/utils/cartel/ordenes.ts]] *(from #service)*
 - [[src_utils_cartel_render|src/utils/cartel/render.ts]] *(from #service)*
 
 ---

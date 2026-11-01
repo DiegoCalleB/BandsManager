@@ -22,6 +22,7 @@ Módulo sin exportaciones con nombre.
 - [[src_components_cartel_AjustesCartel|src/components/cartel/AjustesCartel.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_cartel_EstiloBanda|src/components/cartel/EstiloBanda.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_cartel_IdeaCartel|src/components/cartel/IdeaCartel.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_cartel_OrdenCartel|src/components/cartel/OrdenCartel.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_cartel_PreguntaCabeza|src/components/cartel/PreguntaCabeza.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_cartel_SelectorFondo|src/components/cartel/SelectorFondo.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_cartel_hooks_useEditorCartel|src/components/cartel/hooks/useEditorCartel.ts]] *(Layer: #frontend, Domain: #system)*

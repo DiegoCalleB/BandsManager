@@ -20,6 +20,8 @@ describe('autoguardado de la cartelería', () => {
   it('no avisa por cada fallo del PUT de la configuración: el editor reintenta solo y avisa si no pudo', () => {
     expect(debeAvisar('PUT', '/api/cartel/c1/config', 0)).toBe(false);
     expect(debeAvisar('PUT', '/api/cartel/c1/config', 503)).toBe(false);
+    // «Pídele cambios al cartel» avisa en su propia caja, no con el aviso global de «no se pudo guardar».
+    expect(debeAvisar('POST', '/api/cartel/orden', 503)).toBe(false);
     // Lo demás del cartel sigue avisando.
     expect(debeAvisar('PUT', '/api/cartel/c1/imagen', 500)).toBe(true);
     expect(debeAvisar('POST', '/api/cartel/fondo', 500)).toBe(true);

@@ -28,6 +28,7 @@ Cartelería: el cartel de un bolo.
 - [[server_routes_upload|server/routes/upload.ts]] *(Layer: #route, Domain: #system)*
 - [[server_services_briefCartel|server/services/briefCartel.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_imagenCartel|server/services/imagenCartel.ts]] *(Layer: #service, Domain: #system)*
+- [[server_services_ordenCartel|server/services/ordenCartel.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_referenciasCartel|server/services/referenciasCartel.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_bandProfile|server/utils/bandProfile.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_cartelUrl|server/utils/cartelUrl.ts]] *(Layer: #service, Domain: #system)*

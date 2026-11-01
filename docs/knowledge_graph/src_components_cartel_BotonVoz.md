@@ -26,6 +26,7 @@ Exporta: BotonVoz.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_cartel_IdeaCartel|src/components/cartel/IdeaCartel.tsx]] *(from #frontend)*
+- [[src_components_cartel_OrdenCartel|src/components/cartel/OrdenCartel.tsx]] *(from #frontend)*
 - [[src_components_cartel_SelectorFondo|src/components/cartel/SelectorFondo.tsx]] *(from #frontend)*
 
 ---
