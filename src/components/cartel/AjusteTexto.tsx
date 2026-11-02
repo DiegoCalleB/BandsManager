@@ -115,7 +115,7 @@ export function BarraAjusteTexto({ elegido: elegidoPedido, ajustes, onAjustar, o
               aria-label={`Letra de ${ETIQUETA_BLOQUE[elegido]}`}
               value={estilo?.fuente ?? ''}
               onChange={(e) => onEstilar(elegido, { fuente: (e.target.value || undefined) as VozCartel | undefined })}
-              className="h-7 rounded-[var(--r-s)] bg-[var(--raised)] px-2 text-xs text-[var(--ink)]"
+              className="h-7 rounded-[var(--r-s)] bg-[var(--sunken)] px-2 text-xs text-[var(--ink)]"
             >
               <option value="">Letra automática</option>
               {VOCES_CARTEL.map((v) => (
@@ -136,7 +136,7 @@ export function BarraAjusteTexto({ elegido: elegidoPedido, ajustes, onAjustar, o
           {indiceLibre >= 0 ? (
             <>
               <input aria-label="Texto" value={libres[indiceLibre] ?? ''} maxLength={MAX_TEXTO_LIBRE} onChange={(e) => onLibre(indiceLibre, e.target.value)}
-                className="h-7 w-40 rounded-[var(--r-s)] bg-[var(--raised)] px-2 text-xs text-[var(--ink)]" />
+                className="h-7 w-40 rounded-[var(--r-s)] bg-[var(--sunken)] px-2 text-xs text-[var(--ink)]" />
               <Button size="xs" variant="raised" onClick={() => onLibre(indiceLibre, '')}>
                 <Trash2 className="size-3.5" aria-hidden />
                 Quitar

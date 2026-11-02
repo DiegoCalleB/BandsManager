@@ -258,7 +258,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
                     type="date"
                     value={fechaEvento}
                     onChange={(e) => setFechaEvento(e.target.value)}
-                    className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--card)] border border-[var(--line)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--line-strong)]"
+                    className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] border border-[var(--line)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--line-strong)]"
                   />
                 </div>
                 <div>
@@ -267,7 +267,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
                     type="time"
                     value={horaLlegada}
                     onChange={(e) => setHoraLlegada(e.target.value)}
-                    className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--card)] border border-[var(--line)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--line-strong)]"
+                    className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] border border-[var(--line)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--line-strong)]"
                   />
                 </div>
                 <div>
@@ -276,7 +276,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
                     type="time"
                     value={horaConcierto}
                     onChange={(e) => setHoraConcierto(e.target.value)}
-                    className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--card)] border border-[var(--line)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--line-strong)]"
+                    className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] border border-[var(--line)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--line-strong)]"
                   />
                 </div>
               </div>
@@ -293,7 +293,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
                   <button
                     type="button"
                     onClick={() => setTipoRemuneracion('cache_fijo')}
-                    className={`px-2 py-0.5 rounded-[var(--r-xs)] transition-colors cursor-pointer ${
+                    className={`px-2 py-0.5 rounded-[var(--r-s)] transition-colors cursor-pointer ${
                       tipoRemuneracion === 'cache_fijo'
                         ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
                         : 'text-[var(--ink-2)]'
@@ -304,7 +304,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
                   <button
                     type="button"
                     onClick={() => setTipoRemuneracion('taquilla')}
-                    className={`px-2 py-0.5 rounded-[var(--r-xs)] transition-colors cursor-pointer ${
+                    className={`px-2 py-0.5 rounded-[var(--r-s)] transition-colors cursor-pointer ${
                       tipoRemuneracion === 'taquilla'
                         ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
                         : 'text-[var(--ink-2)]'
@@ -327,7 +327,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
                       step="50"
                       value={cacheBase}
                       onChange={(e) => setCacheBase(Number(e.target.value))}
-                      className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--card)] border border-[var(--line)] text-xs text-[var(--ink)] font-mono font-bold pr-7 focus:outline-none focus:border-[var(--line-strong)]"
+                      className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] border border-[var(--line)] text-xs text-[var(--ink)] font-mono font-bold pr-7 focus:outline-none focus:border-[var(--line-strong)]"
                     />
                     <span className="absolute right-2.5 top-1.5 text-xs text-[var(--ink-2)]">€</span>
                   </div>
@@ -338,7 +338,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
                   <select
                     value={formaPago}
                     onChange={(e) => setFormaPago(e.target.value as typeof formaPago)}
-                    className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--card)] border border-[var(--line)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--line-strong)]"
+                    className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] border border-[var(--line)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--line-strong)]"
                   >
                     <option value="efectivo"><ShowIcon inline emoji="💵" />Efectivo al terminar (sobre)</option>
                     <option value="transferencia"><ShowIcon inline emoji="🏦" />Transferencia / Bizum</option>
@@ -466,7 +466,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
                   placeholder="Ej: 5 cenas en sala, camerino con agua y cerveza"
                   value={hospitalidadNotas}
                   onChange={(e) => setHospitalidadNotas(e.target.value)}
-                  className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--card)] border border-[var(--line)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--line-strong)]"
+                  className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] border border-[var(--line)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--line-strong)]"
                 />
               </div>
             )}
@@ -509,7 +509,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
                 </div>
 
                 {/* BOTÓN 1: ENLACE AI STUDIO (PRUEBAS / DEMO ACTUAL) */}
-                <div className="p-3 rounded-[var(--r-s)] bg-[var(--card)] space-y-2">
+                <div className="p-3 rounded-[var(--r-s)] bg-[var(--sunken)] space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-[11px] font-bold text-[var(--acc-ink)] flex items-center gap-1.5">
                       <Sparkles className="w-3.5 h-3.5 text-[var(--acc)]" />
@@ -547,7 +547,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
                 </div>
 
                 {/* BOTÓN 2: ENLACE OFICIAL (BANDMANAGER.IO) */}
-                <div className="p-3 rounded-[var(--r-s)] bg-[var(--card)] space-y-2">
+                <div className="p-3 rounded-[var(--r-s)] bg-[var(--sunken)] space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-[11px] font-bold text-[var(--ok)] flex items-center gap-1.5">
                       <ShieldCheck className="w-3.5 h-3.5 text-[var(--ok)]" />
@@ -611,7 +611,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
             </div>
             <button
               onClick={onClose}
-              className="text-[var(--ink-2)] hover:text-[var(--ink)] px-2.5 py-1 rounded hover:bg-[var(--card)] cursor-pointer"
+              className="text-[var(--ink-2)] hover:text-[var(--ink)] px-2.5 py-1 rounded hover:bg-[var(--sunken)] cursor-pointer"
             >
               Cerrar
             </button>

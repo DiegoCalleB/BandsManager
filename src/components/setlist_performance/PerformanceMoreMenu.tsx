@@ -77,7 +77,7 @@ export function PerformanceMoreMenu() {
               setGlareMode((v) => !v);
               setShowMoreMenu(false);
             }}
-            className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${glareMode ? "hover:bg-[var(--sunken)]" : "hover:bg-[var(--ink)]/10"} ${glareMode ? "text-[var(--accent-alt)]" : ""}`}
+            className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${glareMode ? "hover:bg-[var(--sunken)]" : "hover:bg-[var(--ink)]/10"} ${glareMode ? "text-[var(--acc)]" : ""}`}
           >
             <Sun className="w-4 h-4 shrink-0" />{" "}
             {glareMode ? "Quitar" : "Activar"} alto contraste

@@ -76,7 +76,7 @@ export function InstagramConnectionModal() {
               className={`p-4 rounded-[var(--r-m)] ${
                 igStatus?.connected
                   ? "bg-[var(--ok)]/10 text-[var(--ok)]"
-                  : "bg-[var(--accent-alt)]/10 text-[var(--accent-alt)]"
+                  : "bg-[var(--acc)]/10 text-[var(--acc)]"
               }`}
             >
               <div className="flex items-start justify-between gap-3">

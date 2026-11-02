@@ -706,7 +706,7 @@ export default function Merchan({
                             <div className="font-sans text-micro text-[var(--ink)] font-bold leading-tight">
                               {displayBandName.toUpperCase()}
                               <br />
-                              <span className="text-[var(--accent-alt)]">
+                              <span className="text-[var(--acc)]">
                                 SCAN QR
                               </span>
                             </div>

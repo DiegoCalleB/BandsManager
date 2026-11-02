@@ -82,7 +82,7 @@ export const EPK_TEMPLATES: EPKTemplateMeta[] = [
       cardBg: "bg-[#241c17]",
       accent: "bg-[var(--acc)]",
       text: "text-[var(--acc)]/80",
-      pill: "bg-[var(--accent-alt)]/10 text-[var(--acc)]/80",
+      pill: "bg-[var(--acc)]/10 text-[var(--acc)]/80",
     },
   },
 ];
@@ -368,7 +368,7 @@ export function getTemplateStyles(templateId?: EPKTemplateId): EPKThemeStyles {
         card: "bg-[#201a16]/40 text-[var(--ink)]",
         cardHighlight: "bg-[#261e19] text-[var(--ink)] hover:bg-[#2f2620]",
         statNumber: "text-[var(--acc)]/80 font-sans",
-        badge: "bg-[var(--accent-alt)]/10 text-[var(--acc)]/80",
+        badge: "bg-[var(--acc)]/10 text-[var(--acc)]/80",
         accentBtn:
           "bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--ink)] font-bold",
         accentBtnSubtle:
@@ -378,9 +378,9 @@ export function getTemplateStyles(templateId?: EPKTemplateId): EPKThemeStyles {
         bookingTitle: "text-[var(--acc)]/80 font-bold",
         memberRole: "text-[var(--acc)]/80 font-sans",
         memberCard: "bg-[#201a16]/40",
-        quoteIcon: "text-[var(--accent-alt)]",
+        quoteIcon: "text-[var(--acc)]",
         quoteMedium: "text-[var(--acc)]/80 font-sans",
-        footer: "text-[var(--accent-alt)]/70",
+        footer: "text-[var(--acc)]/70",
         stickyPlayer: "bg-[#201a16]/95 text-[var(--ink)]",
       };
 

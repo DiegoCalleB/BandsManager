@@ -133,7 +133,7 @@ export function ShareModal({
               <button
                 onClick={handleCopy}
                 className={`flex items-center justify-center gap-2 py-3 px-3 rounded-[var(--r-m)] font-semibold text-xs transition-ui active:scale-[0.97] ${
-                  copied ? 'bg-[var(--accent-alt)] text-[var(--ink)]' : 'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)]'
+                  copied ? 'bg-[var(--ok-soft)] text-[var(--ok)]' : 'bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)]'
                 }`}
               >
                 {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
