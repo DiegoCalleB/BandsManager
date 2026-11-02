@@ -394,7 +394,7 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                           key={lead.id}
                           className={`rounded-[var(--r-m)] p-3.5 flex flex-col justify-between transition-ui ${
                             isSuggested
-                              ? "bg-[var(--accent-alt)]/10"
+                              ? "bg-[var(--acc)]/10"
                               : "bg-[var(--surface)]"
                           }`}
                         >

@@ -16,7 +16,7 @@ export function FansCard() {
       {/* Fans Registrados (BBDD / Formulario Únete) Card */}
       {hasFans && (
         <div
-          className={`p-4 rounded-[var(--r-m)] flex flex-col justify-between space-y-3 ${"bg-[var(--accent-alt)]/10"}`}
+          className={`p-4 rounded-[var(--r-m)] flex flex-col justify-between space-y-3 ${"bg-[var(--acc)]/10"}`}
         >
           <div className="flex items-center justify-between">
             <span className="text-micro font-sans text-[var(--acc)] font-bold flex items-center gap-1.5">

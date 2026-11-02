@@ -20,6 +20,7 @@ Exporta: NextGigStrip.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_dashboard_executiveSummaryUtils|src/components/dashboard/executiveSummaryUtils.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_hoyMadrid|src/utils/hoyMadrid.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

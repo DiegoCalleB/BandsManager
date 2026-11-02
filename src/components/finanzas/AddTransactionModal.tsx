@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ThemeColors, Payment } from '../../types';
 import { X, Plus } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
+import { hoyMadrid } from '../../utils/hoyMadrid';
 import { IconButton, Input, Select } from '../ui';
 
 interface AddTransactionModalProps {
@@ -16,7 +17,7 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen
   const [categoria, setCategoria] = useState<Payment['categoria']>('concierto');
   const [concepto, setConcepto] = useState('');
   const [importe, setImporte] = useState('');
-  const [fecha, setFecha] = useState(new Date().toISOString().split('T')[0]);
+  const [fecha, setFecha] = useState(hoyMadrid());
   const [estado, setEstado] = useState<'pendiente' | 'pagado'>('pagado');
   const [isSubmitting, setIsSubmitting] = useState(false);
 

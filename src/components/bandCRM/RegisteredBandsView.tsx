@@ -43,7 +43,7 @@ export function RegisteredBandsView() {
           <span>Actualizar</span>
         </button>
         <a
-          href="/api/export-excel"
+          href="/api/download-excel"
           download="band_data.xlsx"
           className="p-2.5 rounded-[var(--r-m)] bg-[var(--ok)]/20 hover:bg-[var(--ok)]/30 text-[var(--ink)] text-xs font-sans flex items-center gap-1.5 transition-ui cursor-pointer"
         >

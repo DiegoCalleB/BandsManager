@@ -21,6 +21,7 @@ Exporta: NeedsAttentionBanner.
 - [[src_components_Dashboard|src/components/Dashboard.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_hoyMadrid|src/utils/hoyMadrid.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

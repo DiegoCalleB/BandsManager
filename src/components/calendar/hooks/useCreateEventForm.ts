@@ -106,8 +106,8 @@ export function useCreateEventForm({ setSelectedBandIdForNewEvent, activeBandId,
     const loadData = async () => {
       try {
         const [setlistsRes, songsRes] = await Promise.all([
-          apiFetch<{ setlists: Setlist[] }>('/api/repertorio/setlists').catch(() => null),
-          apiFetch<{ songs: Song[] }>('/api/repertorio/songs').catch(() => null),
+          apiFetch<{ setlists: Setlist[] }>('/api/setlists').catch(() => null),
+          apiFetch<{ songs: Song[] }>('/api/songs').catch(() => null),
         ]);
 
         if (isMounted) {

@@ -88,7 +88,7 @@ export function PerformanceTopBar() {
       onClick={() => setShowSongListDrawer(true)}
       className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-1.5 transition shrink-0 cursor-pointer ${
         glareMode
-          ? "bg-[var(--accent-alt)]/10 hover:bg-[var(--accent-alt)]/30 text-[var(--accent-alt)]"
+          ? "bg-[var(--acc)]/10 hover:bg-[var(--acc)]/30 text-[var(--acc)]"
           : "bg-[var(--acc)]/15 hover:bg-[var(--acc)]/25 text-[var(--ink)]"
       }`}
       title="Repertorio completo: ver todos los temas, estado de pistas Iris y accesos directos a Studio"

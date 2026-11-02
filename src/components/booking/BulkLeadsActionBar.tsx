@@ -207,7 +207,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
               <button
                 type="button"
                 onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
-                className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${"bg-[var(--accent-alt)]/10 hover:bg-[var(--accent-alt)]/30 text-[var(--accent-alt)]"}`}
+                className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui flex items-center gap-1.5 cursor-pointer ${"bg-[var(--acc)]/10 hover:bg-[var(--acc)]/30 text-[var(--acc)]"}`}
                 title="Cambiar el estado de todos los seleccionados"
               >
                 <CheckCircle2 className="w-3.5 h-3.5 text-[var(--acc)]" />

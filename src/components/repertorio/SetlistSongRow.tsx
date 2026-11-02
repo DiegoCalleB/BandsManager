@@ -442,7 +442,7 @@ export const SetlistSongRow: React.FC<SetlistSongRowProps> = ({
                 e.stopPropagation();
                 onToggleDuda();
               }}
-              className={`shrink-0 ${dudaMarcada ? "text-[var(--accent-alt)]" : ""}`}
+              className={`shrink-0 ${dudaMarcada ? "text-[var(--acc)]" : ""}`}
             >
               <HelpCircle className="w-3.5 h-3.5" />
             </IconButton>
@@ -494,7 +494,7 @@ export const SetlistSongRow: React.FC<SetlistSongRowProps> = ({
           .join(", ");
         return (
           <div
-            className="px-2.5 pt-1.5 text-micro font-sans text-[var(--accent-alt)]"
+            className="px-2.5 pt-1.5 text-micro font-sans text-[var(--acc)]"
             title={nombres ? `Dudan: ${nombres}` : undefined}
           >
             <HelpCircle
@@ -527,7 +527,7 @@ export const SetlistSongRow: React.FC<SetlistSongRowProps> = ({
           >
             {song.notasRepertorio && (
               <div
-                className="text-[var(--accent-alt)]/80 truncate"
+                className="text-[var(--acc)]/80 truncate"
                 title={song.notasRepertorio}
               >
                 <ShowIcon inline emoji="📝" />

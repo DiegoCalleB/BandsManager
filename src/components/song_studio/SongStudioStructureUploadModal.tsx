@@ -473,7 +473,7 @@ export const SongStudioStructureUploadModal: React.FC<
                     className={`w-full px-3 py-2 rounded-[var(--r-s)] text-xs font-semibold transition flex items-center justify-center gap-1.5 disabled:opacity-50 ${
                       song.estructuraVerificada
                         ? "bg-[var(--ok)]/20 text-[var(--ink)] hover:bg-[var(--ok)]/30"
-                        : "bg-[var(--accent-alt)]/20 text-[var(--acc)]/80 hover:bg-[var(--accent-alt)]/30"
+                        : "bg-[var(--acc)]/20 text-[var(--ink)] hover:bg-[var(--acc)]/30"
                     }`}
                   >
                     <ShieldCheck className="w-3.5 h-3.5" />
