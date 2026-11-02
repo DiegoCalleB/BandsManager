@@ -10,6 +10,7 @@ import { Concert, Lead, Rehearsal } from "../../types";
 import type { NavigationOptions } from "../Dashboard";
 import { diasHasta, formatearCuentaAtras } from './executiveSummaryUtils';
 import { ShowIcon } from '../ui/ShowIcon';
+import { hoyMadrid } from "../../utils/hoyMadrid";
 
 interface ExecutiveSummaryHeroProps {
   concerts?: Concert[];
@@ -89,7 +90,7 @@ export const ExecutiveSummaryHero: React.FC<ExecutiveSummaryHeroProps> = ({
   rehearsals = [],
   onNavigate,
 }) => {
-  const hoyIso = new Date().toISOString().slice(0, 10);
+  const hoyIso = hoyMadrid();
 
   const proximoShow = concerts
     .filter((c) => c.fecha >= hoyIso)

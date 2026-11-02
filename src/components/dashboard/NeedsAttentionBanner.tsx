@@ -3,6 +3,7 @@ import { AlertCircle, ArrowRight, DollarSign, Mail } from "lucide-react";
 import { Concert, Lead } from "../../types";
 import type { NavigationOptions } from "../Dashboard";
 import { ShowIcon } from '../ui/ShowIcon';
+import { hoyMadrid } from "../../utils/hoyMadrid";
 
 interface NeedsAttentionBannerProps {
   concerts?: Concert[];
@@ -37,7 +38,7 @@ export const NeedsAttentionBanner: React.FC<NeedsAttentionBannerProps> = ({
   leads = [],
   onNavigate,
 }) => {
-  const hoyIso = new Date().toISOString().slice(0, 10);
+  const hoyIso = hoyMadrid();
 
   const leadsSinResponder = leads
     .filter(

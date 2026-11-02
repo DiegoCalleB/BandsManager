@@ -2,6 +2,7 @@ import React from 'react';
 import { ChevronRight, Mic } from 'lucide-react';
 import type { Concert } from '../../types';
 import { diasHasta, formatearCuentaAtras } from './executiveSummaryUtils';
+import { hoyMadrid } from '../../utils/hoyMadrid';
 
 interface NextGigStripProps {
   concerts: Concert[];
@@ -14,7 +15,7 @@ interface NextGigStripProps {
  * Resumen Ejecutivo, por eso solo aparece en pantallas estrechas. Si no hay bolo, no ocupa sitio.
  */
 export const NextGigStrip: React.FC<NextGigStripProps> = ({ concerts, onNavigate }) => {
-  const hoy = new Date().toISOString().slice(0, 10);
+  const hoy = hoyMadrid();
   const proximo = concerts
     .filter((c) => c.fecha >= hoy && !c.is_posible)
     .sort((a, b) => a.fecha.localeCompare(b.fecha))[0];
