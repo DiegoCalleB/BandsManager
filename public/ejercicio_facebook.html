@@ -1,191 +1,231 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>Estrategia de Facebook · Ejercicio de marketing digital</title>
-<meta name="description" content="Ejercicio de marketing digital: estrategia de Facebook con tres tipos de contenido para una clínica dental, y la misma estrategia aplicada a BandManager.">
+<title>Clínica Dental Pérez · Estrategia de Facebook</title>
+<meta name="description" content="Ejercicio de marketing digital: estrategia de Facebook para Clínica Dental Pérez, una clínica de barrio para toda la familia, con tres tipos de contenido justificados, calendario de un mes, anuncios y medición.">
 <style>
 @font-face{font-family:Onest;font-weight:400;font-display:swap;src:url(/ejercicio_youtube_crm/onest-latin-400-normal.woff2) format("woff2")}
 @font-face{font-family:Onest;font-weight:700;font-display:swap;src:url(/ejercicio_youtube_crm/onest-latin-700-normal.woff2) format("woff2")}
 @font-face{font-family:Onest;font-weight:800;font-display:swap;src:url(/ejercicio_youtube_crm/onest-latin-800-normal.woff2) format("woff2")}
-:root{--bg:#F6F7F9;--surface:#FFFFFF;--sunken:#E8EBEF;--ink:#2A2E35;--ink-2:#646C78;--ink-3:#98A0AC;--ok:#17998C;
---acc:#D86E31;--acc-soft:#F9EAE1;--acc-ink:#813F18;--on-acc:#FFFFFF;
+:root{--bg:#FBF7F0;--surface:#FFFFFF;--sunken:#EFE8DC;--ink:#12343B;--ink-2:#4C6A70;--ink-3:#8AA0A4;
+--acc:#1D7A87;--acc-soft:#DDEFF1;--acc-ink:#0F4F59;--on-acc:#FFFFFF;--oro:#F2B632;--oro-soft:#FCEFCB;
 --r-s:12px;--r-m:18px;--r-l:24px;--r-xl:32px;--r-pill:999px}
-[data-theme="dark"]{--bg:#101216;--surface:#191C21;--sunken:#0B0D10;--ink:#E3E7EC;--ink-2:#99A1AC;--ink-3:#6B7380;--ok:#4FC7B8;
---acc:#E99463;--acc-soft:#2A1B12;--acc-ink:#E99463;--on-acc:#2C1606}
-[data-theme="classic"]{--bg:#121110;--surface:#18181B;--sunken:#0D0C0C;--ink:#F4F4F5;--ink-2:#A1A1AA;--ink-3:#71717A;--ok:#10B981;
---acc:#F2CA50;--acc-soft:#2C2310;--acc-ink:#F2CA50;--on-acc:#2C2200}
 *{box-sizing:border-box}html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 Onest,system-ui,sans-serif}
-main{max-width:1180px;margin:0 auto;padding:0 16px 140px}
+main{max-width:1080px;margin:0 auto;padding:0 16px 120px}
 a{color:var(--acc-ink);text-underline-offset:3px}
 a:focus-visible,button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
-.top{display:flex;align-items:center;justify-content:space-between;padding-top:14px;gap:12px}
-.marca{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-weight:800;font-size:18px}
-.logo{width:46px;height:46px;border-radius:var(--r-m);display:block}
-.temas{display:flex;gap:6px}
-.temas button{font:700 13px Onest,system-ui;background:var(--sunken);color:var(--ink-2);border:0;border-radius:var(--r-pill);padding:7px 14px;cursor:pointer}
-.temas button[aria-pressed=true]{background:var(--acc);color:var(--on-acc)}
-.hero{display:grid;grid-template-columns:1fr 240px;gap:24px;align-items:center;margin-top:28px;background:var(--acc-soft);border-radius:var(--r-xl);padding:32px}
+h1{font-size:clamp(30px,5vw,48px);line-height:1.08;margin:10px 0 14px;font-weight:800;letter-spacing:-.015em}
+h2{font-size:clamp(24px,3.4vw,32px);margin:64px 0 10px;font-weight:800;letter-spacing:-.01em}
+.lead{color:var(--ink-2);margin:0 0 20px;max-width:68ch}
 .eyebrow{color:var(--acc-ink);font-weight:800;font-size:13px;letter-spacing:.08em;text-transform:uppercase}
-h1{font-size:clamp(28px,5vw,44px);line-height:1.1;margin:8px 0 12px;font-weight:800;letter-spacing:-.01em}
-.hero p{margin:0;color:var(--ink-2);max-width:56ch}
-.hero .eco{width:100%;max-width:240px;justify-self:center;animation:rock 3.2s ease-in-out infinite;transform-origin:50% 90%}
-h2{font-size:28px;margin:56px 0 16px;letter-spacing:-.01em;font-weight:800}
-.lead{color:var(--ink-2);margin:-8px 0 18px;max-width:70ch}
-.ruta{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.ruta a{background:var(--surface);border-radius:var(--r-l);padding:18px;text-decoration:none;color:var(--ink);display:block}
-.ruta a small{display:block;color:var(--acc-ink);font-weight:800;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
-.ruta a b{display:block;margin:4px 0 2px}.ruta a span{color:var(--ink-2);font-size:14px}
-.ruta a.aqui{background:var(--acc);color:var(--on-acc)}.ruta a.aqui small,.ruta a.aqui span{color:var(--on-acc)}
-.tabs{display:flex;gap:6px;margin:0 0 16px;overflow-x:auto}
-.tabs button{font:700 14px Onest,system-ui;background:var(--sunken);color:var(--ink-2);border:0;border-radius:var(--r-pill);padding:9px 18px;cursor:pointer;white-space:nowrap}
-.tabs button[aria-selected=true]{background:var(--ink);color:var(--bg)}
-.el-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.el{background:var(--surface);border:0;border-radius:var(--r-l);padding:20px;text-align:left;cursor:pointer;color:var(--ink);font:inherit;transition:transform .3s cubic-bezier(.23,1,.32,1)}
-.el:hover{transform:translateY(-3px)}
-.el b{display:block;color:var(--acc-ink);font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
-.el span{font-size:14.5px;color:var(--ink-2)}
-.el[aria-expanded=true]{background:var(--acc);}
-.el[aria-expanded=true] b,.el[aria-expanded=true] span{color:var(--on-acc)}
-.detalle{display:grid;grid-template-columns:1fr 200px;gap:20px;background:var(--surface);border-radius:var(--r-xl);padding:28px;margin-top:14px}
-.detalle h3{margin:0 0 8px;font-size:24px;font-weight:800}
-.detalle p{margin:0 0 12px;color:var(--ink-2)}.detalle p b{color:var(--ink)}
-.se-ve{background:var(--acc-soft);border-radius:var(--r-m);padding:12px 16px;color:var(--ink)!important;font-size:14.5px}
-.eco-col{position:relative;text-align:center}
-.eco-col img{width:100%;max-width:190px;animation:rock 3.6s ease-in-out infinite;transform-origin:50% 90%}
-.bubble{background:var(--acc);color:var(--on-acc);border-radius:var(--r-m);padding:9px 14px;font-size:13.5px;font-weight:700;line-height:1.3;text-align:left;margin-bottom:8px}
-.lucia{display:grid;grid-template-columns:1.1fr 1fr;gap:12px}
-.lucia>div{background:var(--surface);border-radius:var(--r-l);padding:22px}.lucia>div:first-child{background:var(--acc-soft)}
-.lucia b{color:var(--acc-ink)}.lucia ul{margin:6px 0 0;padding-left:18px;color:var(--ink-2)}
-.cita{font-size:20px;font-weight:800;line-height:1.3;margin:0 0 12px}
+.hero>*,.cols>*,.perez-sec>*{min-width:0}
+.hero{display:grid;grid-template-columns:1.25fr 1fr;gap:24px;align-items:center;margin-top:24px;background:var(--acc-soft);border-radius:var(--r-xl);padding:36px}
+.hero p{margin:0 0 16px;color:var(--ink-2)}
+.logo{display:block;width:min(360px,100%);border-radius:var(--r-l);background:#fff;margin-bottom:18px}
+.lema{display:inline-block;background:var(--oro);color:var(--ink);font-weight:800;border-radius:var(--r-pill);padding:8px 18px;font-size:17px}
+.hero .perez{width:100%;max-width:330px;justify-self:center;animation:mece 3.6s ease-in-out infinite;transform-origin:50% 92%}
+@keyframes mece{0%,100%{transform:rotate(-2.5deg)}50%{transform:rotate(2.5deg)}}
+.tres{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.tres div{background:var(--surface);border-radius:var(--r-l);padding:22px}
+.tres.pasos div:nth-child(1){background:var(--acc)}.tres.pasos div:nth-child(1) *{color:var(--on-acc)!important}
+.tres.pasos div:nth-child(2){background:var(--oro-soft)}
+.tres small{font-weight:800;font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--acc-ink)}
+.tres b{display:block;font-size:22px;margin:4px 0 6px}.tres span{font-size:14.5px;color:var(--ink-2)}
+.caja{background:var(--surface);border-radius:var(--r-l);padding:22px 24px}
+.caja b{color:var(--acc-ink)}
+.obj{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}
+.obj div{background:var(--surface);border-radius:var(--r-l);padding:18px;text-align:center}
+.obj strong{display:block;font-size:30px;font-weight:800;color:var(--acc)}.obj span{font-size:13.5px;color:var(--ink-2)}
 .tabla{overflow-x:auto;background:var(--surface);border-radius:var(--r-l);padding:8px}
-table{border-collapse:separate;border-spacing:0 4px;width:100%;min-width:560px}th,td{text-align:left;padding:12px 14px;font-size:14.5px;vertical-align:top}
+table{border-collapse:separate;border-spacing:0 4px;width:100%;min-width:640px}th,td{text-align:left;padding:12px 14px;font-size:14.5px;vertical-align:top}
 th{color:var(--ink-3);font-weight:700}tbody tr:nth-child(odd) td{background:var(--bg)}
-tbody td:first-child{border-radius:var(--r-s) 0 0 var(--r-s);color:var(--ink-2);white-space:nowrap}tbody td:last-child{border-radius:0 var(--r-s) var(--r-s) 0}
-.voz{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.voz div{background:var(--surface);border-radius:var(--r-l);padding:20px}
-.voz small{color:var(--acc-ink);font-weight:800;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
-.voz p{margin:6px 0 0;font-size:15.5px}
-.slogan{margin-top:40px;background:var(--acc);color:var(--on-acc);border-radius:var(--r-xl);padding:32px;text-align:center}
-.slogan b{display:block;font-size:clamp(26px,5vw,42px);font-weight:800;line-height:1.1}
-.slogan span{display:block;margin-top:6px;font-weight:700;opacity:.9}
-details{margin-top:24px;background:var(--surface);border-radius:var(--r-l);padding:14px 20px}
-summary{cursor:pointer;font-weight:700}details img{width:100%;height:auto;border-radius:var(--r-m);margin-top:14px;display:block}
-#ejPrevNext{margin-top:32px}
-footer{color:var(--ink-3);font-size:13px;margin-top:56px}
-@keyframes rock{0%,100%{transform:rotate(-2.5deg)}50%{transform:rotate(2.5deg)}}
-@media (max-width:760px){.hero{grid-template-columns:1fr}.hero .eco{max-width:170px}.ruta,.el-grid,.lucia,.voz{grid-template-columns:1fr}.detalle{grid-template-columns:1fr}.eco-col{order:-1}}
+tbody td:first-child{border-radius:var(--r-s) 0 0 var(--r-s);font-weight:700;white-space:nowrap}tbody td:last-child{border-radius:0 var(--r-s) var(--r-s) 0}
+.tabs{display:flex;gap:6px;margin:0 0 16px;overflow-x:auto}
+.tabs button,.pose-b button{font:700 14px Onest,system-ui;background:var(--sunken);color:var(--ink-2);border:0;border-radius:var(--r-pill);padding:10px 20px;cursor:pointer;white-space:nowrap}
+.tabs button[aria-selected=true]{background:var(--ink);color:var(--bg)}
+.det{background:var(--surface);border-radius:var(--r-xl);padding:30px}
+.det h3{margin:0 0 4px;font-size:26px;font-weight:800}
+.det .sub{color:var(--acc-ink);font-weight:700;margin:0 0 16px}
+.cols{display:grid;grid-template-columns:1.1fr 1fr;gap:22px}
+.serie{background:var(--bg);border-radius:var(--r-m);padding:14px 16px;margin-bottom:10px}
+.serie b{display:block}.serie span{font-size:14.5px;color:var(--ink-2)}
+.por{background:var(--acc-soft);border-radius:var(--r-m);padding:14px 16px;color:var(--ink);font-size:14.5px;margin:0 0 12px}
+.post{background:var(--oro-soft);border-radius:var(--r-m);padding:14px 16px;font-size:14.5px;margin:0 0 10px}
+.post small{display:block;color:var(--ink-3);margin-top:6px;font-size:12.5px}
+.kpi{font-size:14.5px;color:var(--ink-2);margin:12px 0 0}
+.barra{display:flex;height:48px;border-radius:var(--r-pill);overflow:hidden;font-weight:800;font-size:14px}
+.barra div{display:flex;align-items:center;justify-content:center;text-align:center}
+.p1{background:var(--acc);color:var(--on-acc)}.p2{background:var(--oro);color:var(--ink)}.p3{background:var(--ink);color:var(--bg)}
+.chips{list-style:none;padding:0;margin:8px 0 0;display:flex;flex-wrap:wrap;gap:6px}.chips li{background:var(--sunken);border-radius:var(--r-pill);padding:4px 12px;font-size:13px;color:var(--ink-2)}
+.pilar-1{color:var(--acc-ink)}
+.perez-sec{display:grid;grid-template-columns:1fr 1.1fr;gap:24px;align-items:center;background:var(--oro-soft);border-radius:var(--r-xl);padding:32px}
+.escena{background:var(--surface);border-radius:var(--r-xl);padding:18px;text-align:center;min-height:360px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
+.escena img{max-width:100%;max-height:300px;object-fit:contain}
+.bocadillo{background:var(--acc);color:var(--on-acc);border-radius:var(--r-m);padding:10px 16px;font-weight:700;font-size:15px;margin-bottom:12px}
+.pose-b{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.pose-b button[aria-pressed=true]{background:var(--acc);color:var(--on-acc)}
+ul.reglas{padding-left:20px;margin:8px 0 0}ul.reglas li{margin-bottom:8px;color:var(--ink-2)}ul.reglas b{color:var(--ink)}
+.cierre{margin-top:48px;background:var(--ink);color:var(--bg);border-radius:var(--r-xl);padding:34px;text-align:center}
+.cierre b{display:block;font-size:clamp(24px,4vw,36px);font-weight:800}.cierre span{display:block;margin-top:8px;opacity:.85}
+#ejPrevNext{margin-top:36px}
+footer{color:var(--ink-3);font-size:13px;margin-top:48px}
+@media (max-width:820px){.hero,.perez-sec,.cols{grid-template-columns:minmax(0,1fr)}.tres,.obj{grid-template-columns:1fr 1fr}.hero .perez{max-width:220px}.escena{min-height:300px}}
+@media (max-width:520px){.tres,.obj{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
-
-.resp{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.resp>div{background:var(--surface);border-radius:var(--r-l);padding:20px}.resp>div:first-child{background:var(--acc-soft)}
-.resp small{color:var(--acc-ink);font-weight:800;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
-.resp b{display:block;font-size:19px;margin:4px 0 6px}.resp span{color:var(--ink-2);font-size:14.5px}
-.barra{display:flex;height:44px;border-radius:var(--r-pill);overflow:hidden;font-weight:800;font-size:14px}
-.barra div{display:flex;align-items:center;justify-content:center;color:var(--on-acc)}
-.b1{background:var(--acc)}.b2{background:var(--ok);color:#fff!important}.b3{background:var(--ink);color:var(--bg)!important}
-.post{background:var(--bg);border-radius:var(--r-m);padding:12px 16px;font-style:italic;color:var(--ink)}
-.kpi{color:var(--ink-2);font-size:14.5px}
-.caso2{background:var(--surface);border-radius:var(--r-xl);padding:28px}
-.map{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
-.map>div{background:var(--bg);border-radius:var(--r-l);padding:18px}
-.map small{color:var(--acc-ink);font-weight:800;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
-.map p{margin:6px 0 0;font-size:14.5px;color:var(--ink-2)}.map p b{color:var(--ink)}
-@media (max-width:760px){.resp,.map{grid-template-columns:1fr}.barra{font-size:12px}}
 </style></head><body><main>
 
-<div class="top"><a class="marca" href="/" aria-label="BandManager.io"><img class="logo" src="/logo_bandmanager_symbol.png" width="512" height="512" alt="Logo de BandManager"><span>BandManager</span></a>
-<nav class="temas" aria-label="Tema"><button data-t="light">Claro</button><button data-t="dark">Oscuro</button><button data-t="classic">Clásico</button></nav></div>
+<header class="hero">
+<div>
+<div class="eyebrow">Máster de Marketing Digital · Facebook</div>
+<img class="logo" src="/ejercicio_facebook/logo.webp" width="470" height="205" alt="Logo de Clínica Dental Pérez: un diente con una puerta y la placa R. Pérez">
+<h1>Una clínica de barrio para toda la familia, con los peques como puerta de entrada</h1>
+<p>Estrategia de Facebook para <b>Clínica Dental Pérez</b>: mostrar cercanía con pacientes y futuros pacientes y promover los tratamientos de la clínica, con tres tipos de contenido y su justificación.</p>
+<span class="lema">Haciendo barrio, boca a boca.</span>
+</div>
+<img class="perez" src="/ejercicio_facebook/perez/saluda.webp" alt="Pérez, el ratoncito de la clínica, saludando con bata blanca" width="330" height="330">
+</header>
 
-<header class="hero"><div><div class="eyebrow">Máster de Marketing Digital · Facebook</div>
-<h1>Facebook para una clínica dental: cercanía, confianza y citas</h1>
-<p>Tres tipos de contenido que llevan al paciente de «no os conozco» a «quiero pedir cita». Al final, la misma estrategia aplicada a BandManager.</p></div>
-<img class="eco" src="/ejercicio_youtube_crm/eco/pillo.webp" alt="Eco, la mascota de BandManager" onerror="this.hidden=true"></header>
-
-<h2>Respuesta en 10 segundos</h2>
-<p class="lead">Objetivo del cliente: mostrar más cercanía con pacientes y posibles pacientes y promover los tratamientos. Un tipo de contenido por cada tramo del embudo.</p>
-<div class="resp">
-<div><small>1 · Conocer</small><b>Cercanía</b><span>El equipo y la clínica: caras reales que bajan el miedo al dentista.</span></div>
-<div><small>2 · Confiar</small><b>Educativo</b><span>Tratamientos explicados por el dentista: autoridad sin sonar a anuncio.</span></div>
-<div><small>3 · Reservar</small><b>Promocional</b><span>Ofertas y casos con botón de cita: convierte a quien ya confía.</span></div>
+<h2>La respuesta, en diez segundos</h2>
+<p class="lead">El lema es la estrategia. Cada parte lleva al paciente un paso más cerca de pedir cita.</p>
+<div class="tres pasos">
+<div><small>1 · Conocer · 50 %</small><b>Haciendo barrio</b><span>Cercanía: el equipo, Pérez, el teléfono y el barrio. Caras reales que bajan el miedo al dentista.</span></div>
+<div><small>2 · Confiar · 30 %</small><b>Diente a diente</b><span>Educativo: tratamientos y cuidados explicados por edades, por el propio dentista.</span></div>
+<div><small>3 · Reservar · 20 %</small><b>Boca a boca</b><span>Promocional y recomendación: primera visita, ofertas y reseñas de vecinos con botón de cita.</span></div>
 </div>
 
-<h2>Cómo encaja con el resto de ejercicios</h2>
-<p class="lead">El embudo conocer → confiar → reservar es el mismo del CRM de bandas: nuevo → contactado → confirmado.</p>
-<nav class="ruta" aria-label="Ruta de ejercicios">
-<a href="/ejercicio_branding"><small>Viene de</small><b>Branding</b><span>La voz y el público que usamos en el caso 2.</span></a>
-<a href="/ejercicio_youtube_crm"><small>Complementa</small><b>YouTube y CRM</b><span>Los vídeos alimentan el contenido educativo.</span></a>
-<a class="aqui" href="#clinica" aria-current="page"><small>Estás aquí</small><b>Facebook</b><span>Clínica dental y BandManager.</span></a>
-<a href="#bandmanager"><small>Lleva a</small><b>Caso BandManager</b><span>Mismo método, otro cliente.</span></a>
-</nav>
+<h2>El cliente y lo que quiere</h2>
+<div class="caja"><b>Clínica Dental Pérez</b> es una clínica de barrio que quiere <b>mostrar más cercanía</b> con sus pacientes y con los vecinos que aún no la conocen, y <b>promover sus tratamientos</b>. Tiene una zona de juegos y una especialidad en odontopediatría: los peques entran por la puerta y la familia entera se queda. Con un matiz clave: el público no son solo niños, también parejas sin hijos, adultos, abuelos y todo el barrio.</div>
+<p class="lead" style="margin-top:22px">Objetivos a 90 días (propuestos, a validar con el cliente tras medir el primer mes):</p>
+<div class="obj">
+<div><strong>+500</strong><span>seguidores del barrio (radio de 5 km)</span></div>
+<div><strong>20</strong><span>mensajes al mes de pacientes nuevos</span></div>
+<div><strong>15</strong><span>reseñas nuevas en Facebook y Google</span></div>
+<div><strong>&lt; 24 h</strong><span>tiempo de respuesta a mensajes y comentarios</span></div>
+</div>
 
-<h2 id="clinica">Caso 1 · La clínica dental</h2>
-<p class="lead">Toca cada tipo de contenido para ver qué se publica, por qué y cómo se mide.</p>
+<h2>A quién le hablamos</h2>
+<p class="lead">Una regla: cada publicación se dirige a un solo segmento y lo dice. Un post para todos no le habla a nadie.</p>
+<div class="tabla"><table><thead><tr><th>Segmento</th><th>Qué busca</th><th>Qué le decimos</th><th>Contenido principal</th></tr></thead><tbody>
+<tr><td>Familias con peques</td><td>Que su hijo no tenga miedo</td><td>«Aquí los peques vienen a jugar con Pérez»</td><td>Cercanía y educativo «Para peques»</td></tr>
+<tr><td>Parejas sin hijos</td><td>Estética, prevención, comodidad</td><td>«Tu sonrisa, sin esperas»</td><td>Educativo «Para ti» y promocional</td></tr>
+<tr><td>Adultos y profesionales</td><td>Resolver sin perder tiempo</td><td>«Horarios y financiación a tu medida»</td><td>Educativo «Para ti» y promocional</td></tr>
+<tr><td>Mayores y sus familias</td><td>Trato humano y claridad</td><td>«El mismo equipo de siempre te lo explica»</td><td>Cercanía y educativo «Para nuestros mayores»</td></tr>
+<tr><td>El barrio entero</td><td>Un sitio de confianza cerca</td><td>«Somos vecinos»</td><td>Cercanía y reseñas</td></tr>
+</tbody></table></div>
+
+<h2>Los tres tipos de contenido</h2>
+<p class="lead">Toca cada uno para ver qué se publica, por qué lo justificamos así y cómo se mide.</p>
 <div class="tabs" role="tablist" id="tabs" aria-label="Tipos de contenido"></div>
-<section class="detalle" id="detalle" aria-live="polite"></section>
+<section class="det" id="det" aria-live="polite"></section>
 
 <h2>Cuánto de cada cosa</h2>
-<p class="lead">Si se vende más del 20 % del tiempo, la audiencia desconecta.</p>
-<div class="barra" role="img" aria-label="50 % cercanía, 30 % educativo, 20 % promocional"><div class="b1" style="width:50%">50 % Cercanía</div><div class="b2" style="width:30%">30 % Educativo</div><div class="b3" style="width:20%">20 % Promo</div></div>
+<p class="lead">Si se vende más del 20 % del tiempo, la audiencia desconecta. Y si nunca se vende, la clínica no llena la agenda.</p>
+<div class="barra" role="img" aria-label="50 % cercanía, 30 % educativo, 20 % promocional"><div class="p1" style="width:50%">50 % Haciendo barrio</div><div class="p2" style="width:30%">30 % Diente a diente</div><div class="p3" style="width:20%">20 % Boca a boca</div></div>
 
-<h2>Cómo se mide</h2>
-<div class="tabla"><table><thead><tr><th>Contenido</th><th>Fase</th><th>Qué se mide</th><th>Qué decide</th></tr></thead><tbody>
-<tr><td>Cercanía</td><td>Conocer</td><td>Alcance orgánico, comentarios y compartidos</td><td>Si la clínica se hace conocida</td></tr>
-<tr><td>Educativo</td><td>Confiar</td><td>Reproducciones de más de 15 s, guardados</td><td>Si el contenido genera confianza</td></tr>
-<tr><td>Promocional</td><td>Reservar</td><td>Clics al botón, leads, coste por cita</td><td>Si el dinero en anuncios rinde</td></tr>
+<h2>El primer mes, publicación a publicación</h2>
+<p class="lead">10 publicaciones (5 · 3 · 2), más stories diarias y un directo mensual «Pregunta al dentista». El calendario respeta la proporción.</p>
+<div class="tabla"><table><thead><tr><th>Semana</th><th>Día</th><th>Pilar</th><th>Pieza</th><th>Formato</th></tr></thead><tbody>
+<tr><td>1 · Abrimos la puerta</td><td>Lunes</td><td>Haciendo barrio</td><td>Presentación del equipo y de la clínica: «Aquí os cuidamos»</td><td>Vídeo corto</td></tr>
+<tr><td>1</td><td>Miércoles</td><td>Diente a diente</td><td>Tu primera visita, paso a paso (para peques y adultos)</td><td>Carrusel</td></tr>
+<tr><td>1</td><td>Viernes</td><td>Haciendo barrio</td><td>Conoce a Pérez y su teléfono</td><td>Reel</td></tr>
+<tr><td>2 · Pérez escucha</td><td>Martes</td><td>Haciendo barrio</td><td>Abre «Cartas al ratoncito Pérez» y primera respuesta</td><td>Vídeo + foto del buzón</td></tr>
+<tr><td>2</td><td>Jueves</td><td>Diente a diente</td><td>Para peques: el primer diente y cómo cuidarlo</td><td>Vídeo con el dentista</td></tr>
+<tr><td>3 · Toda la familia</td><td>Lunes</td><td>Haciendo barrio</td><td>Un día en la clínica, de la sala de juegos a la consulta</td><td>Reel</td></tr>
+<tr><td>3</td><td>Miércoles</td><td>Boca a boca</td><td>Revisión familiar: trae a toda la familia y pide cita</td><td>Post con botón de WhatsApp</td></tr>
+<tr><td>3</td><td>Viernes</td><td>Diente a diente</td><td>Para ti: mitos del blanqueamiento</td><td>Carrusel</td></tr>
+<tr><td>4 · Somos vecinos</td><td>Martes</td><td>Haciendo barrio</td><td>Un comercio o colegio del barrio y taller de cepillado</td><td>Fotos y vídeo</td></tr>
+<tr><td>4</td><td>Jueves</td><td>Boca a boca</td><td>Reseñas de vecinos y cómo contar tu experiencia</td><td>Post con reseñas reales</td></tr>
 </tbody></table></div>
-<p class="kpi" style="margin-top:12px"><b>Con IA:</b> calendario mensual, variantes de copy, guiones de vídeo y borradores de respuesta. Fotos y vídeos de pacientes y equipo, siempre reales y con consentimiento.</p>
 
-<h2 id="bandmanager">Caso 2 · Y si el cliente fuera BandManager</h2>
-<p class="lead">El método no cambia, cambia el público: Lucía busca soluciones en YouTube, en Instagram y TikTok de otros músicos y en grupos de Facebook y Discord de bandas.</p>
-<section class="caso2">
-<p style="margin:0"><b>Objetivo:</b> que Lucía, la booker por descarte, conozca BandManager, confíe y se registre al plan gratuito Ensayo (0 €).</p>
-<div class="map">
-<div><small>Cercanía · 50 %</small><p><b>Eco y el equipo.</b> Eco con humor de ensayo («Suspenso. Asunto genérico y sin dossier»), el fundador en el local de ensayo, bandas reales con permiso. Voz de colega, sin vender.</p></div>
-<div><small>Educativo · 30 %</small><p><b>Los vídeos de YouTube recortados:</b> «Borra el Excel de tu banda» o el email que sí responde, con el enlace al vídeo completo. Plantilla gratuita como lead magnet.</p></div>
-<div><small>Promocional · 20 %</small><p><b>Plan Ensayo (0 €)</b> y el momento en que se queda corto. Casos reales de bandas y botón «Probar gratis». Anuncios segmentados a músicos de España y Latinoamérica.</p></div>
+<h2>Anuncios y medición</h2>
+<div class="cols" style="gap:14px">
+<div class="caja"><b>Anuncios (orientativo)</b>
+<ul class="reglas">
+<li><b>Objetivo:</b> mensajes (WhatsApp) y clics en reservar cita.</li>
+<li><b>Zona:</b> radio de 3 a 5 km alrededor de la clínica.</li>
+<li><b>Públicos:</b> madres y padres de 28 a 45 años para lo infantil; adultos de 35 a 65 para tratamientos; hijos de 45 a 65 años para los mayores de la familia.</li>
+<li><b>Presupuesto:</b> unos 5 a 8 € al día, con prueba de creatividades las dos primeras semanas y se escala lo que da cita.</li>
+</ul></div>
+<div class="caja"><b>Qué se mide en cada pilar</b>
+<ul class="reglas">
+<li><b>Haciendo barrio:</b> alcance local, comentarios, compartidos, seguidores del barrio.</li>
+<li><b>Diente a diente:</b> reproducciones de más de 15 s, guardados, preguntas.</li>
+<li><b>Boca a boca:</b> clics a WhatsApp, citas, coste por mensaje, reseñas.</li>
+<li><b>Revisión:</b> cada mes se corta lo que no mueve y se repite lo que sí.</li>
+</ul></div>
 </div>
-<p class="kpi" style="margin-top:14px">Mismos KPIs del canal: CTR, retención a 30 s, clics por UTM y registros al plan gratuito. Y la misma regla de marca: honestidad, cifras reales y nada de «soluciones integrales».</p>
-</section>
+
+<h2>Pérez: la cara de la clínica</h2>
+<p class="lead">Pérez es el ratoncito de la puerta del logo (la placa «R. Pérez» es de Ratoncito). Habla a los peques y a las familias. El equipo habla a los adultos.</p>
+<div class="perez-sec">
+<div>
+<b>Cuándo aparece y cuándo no</b>
+<ul class="reglas">
+<li><b>Sí:</b> en contenido infantil, en cartas, en el teléfono y en cuentos.</li>
+<li><b>No:</b> en tratamientos de adultos, donde manda la cara del dentista.</li>
+<li><b>Nunca:</b> da diagnósticos ni sustituye al equipo. Siempre deriva a la clínica.</li>
+</ul>
+<div class="pose-b" id="poses" role="group" aria-label="Poses de Pérez"></div>
+</div>
+<div class="escena"><div class="bocadillo" id="bocadillo"></div><img id="escena" alt="" width="300" height="300"></div>
+</div>
+
+<h2>Reglas y riesgos</h2>
+<div class="caja">
+<ul class="reglas" style="margin:0">
+<li><b>Publicidad sanitaria:</b> sin promesas ni garantías de resultado, y revisar la normativa de cada comunidad autónoma antes de anunciar ofertas.</li>
+<li><b>Políticas de Meta:</b> la categoría de salud restringe, por ejemplo, las imágenes de antes y después en anuncios. Por eso la prueba social va en reseñas, no en comparativas.</li>
+<li><b>Menores:</b> ninguna foto, vídeo ni voz de un niño sin consentimiento escrito de sus padres, y los anuncios se dirigen a adultos.</li>
+<li><b>Comentarios:</b> no se dan diagnósticos en público. Se responde con empatía y se invita a pedir cita o escribir por privado.</li>
+<li><b>Mascota:</b> Pérez está generado con IA. Para uso comercial a largo plazo, conviene encargar la versión final a un ilustrador y registrar la marca.</li>
+</ul></div>
+
+<h2>Cómo ayuda la IA, y dónde no</h2>
+<div class="tres">
+<div style="background:var(--surface)"><small style="color:var(--acc-ink)">Ayuda con</small><b style="font-size:19px">Producción</b><span>Calendario, variantes de copy, guiones de vídeo y la hoja de poses de Pérez.</span></div>
+<div style="background:var(--surface)"><small style="color:var(--acc-ink)">Ayuda con</small><b style="font-size:19px">Atención</b><span>Borradores de respuesta a preguntas frecuentes, siempre revisados por una persona.</span></div>
+<div style="background:var(--oro-soft)"><small style="color:var(--acc-ink)">No sustituye</small><b style="font-size:19px">Lo clínico y lo humano</b><span>Los consejos de salud los valida el dentista, y el equipo y los vecinos salen con fotos y vídeos reales.</span></div>
+</div>
+
+<div class="cierre"><b>Haciendo barrio, boca a boca.</b><span>Conocer, confiar, reservar: una clínica en la que los peques entran y la familia se queda.</span></div>
 
 <div id="ejPrevNext"></div>
-<footer>Ejercicio de marketing digital · BandManager.io</footer>
+<footer>Ejercicio de marketing digital · Estrategia de Facebook</footer>
 </main>
 <script>
-const T=[
-{n:"Cercanía",f:"Conocer",e:"pillo",l:"Que te vean la cara antes de verte la boca.",
- q:"Presentación del equipo, «un día en la clínica», cumpleaños del personal, pacientes que terminan su tratamiento (con consentimiento firmado).",
- fm:"Reels y vídeos cortos, fotos reales; nada de bancos de imágenes.",
- p:"El miedo al dentista es la barrera nº 1: ver caras reales lo baja antes de pedir cita. Además lo humano genera comentarios, y Facebook premia la interacción. Cubre directamente el objetivo de cercanía.",
- ej:"«Os presentamos a Lucía, nuestra higienista. Dice que su mejor truco para los nervios es el humor… y un buen café después.»",
- k:"Alcance orgánico, comentarios y compartidos."},
-{n:"Educativo",f:"Confiar",e:"critico",l:"Si lo explicas bien, te elige a ti.",
- q:"Qué es un implante, cuánto dura un blanqueamiento, mitos y verdades, cuidados de la ortodoncia, preguntas frecuentes.",
- fm:"Carruseles, vídeos de 30-60 s con el dentista, infografías.",
- p:"Quien busca «implantes» quiere información antes de decidir. Genera autoridad y confianza, y promueve los tratamientos sin sonar a anuncio, que es más creíble.",
- ej:"«¿Duele un implante? 3 mitos que oímos cada semana en consulta (y qué pasa de verdad).»",
- k:"Reproducciones de más de 15 s, guardados y compartidos."},
-{n:"Promocional",f:"Reservar",e:"sudando",l:"Aquí sí se vende. Pero solo el 20 %.",
- q:"Primera revisión gratuita o con descuento, ortodoncia invisible, casos antes y después (con consentimiento), financiación.",
- fm:"Posts con llamada a la acción clara (botón de WhatsApp o reserva) y anuncios segmentados por zona y edad.",
- p:"Es el contenido que convierte seguidores en citas. Funciona mejor tras los otros dos, porque la clínica ya es conocida y de confianza. Es fácil de medir.",
- ej:"«Revisión + limpieza este mes. Reserva por WhatsApp en un clic.» (ejemplo ficticio)",
- k:"Clics al botón, leads y coste por cita."}];
+const P=[
+{n:"Haciendo barrio",k:"Cercanía · Conocer · 50 %",
+ series:[["Abrimos la puerta","El equipo, la clínica y la zona de juegos, con caras y lugares reales."],["Cartas al ratoncito Pérez","Los peques dejan una carta en la clínica o en su colegio y Pérez les responde en vídeo."],["El teléfono de Pérez","Un teléfono en la sala de juegos donde los niños hablan con Pérez. Se publica solo la voz de Pérez."],["Vecinos","Comercios y colegios del barrio, talleres de cepillado y eventos."]],
+ por:"El miedo al dentista es la primera barrera, y ver caras conocidas la baja antes de pedir cita. En una clínica de barrio, la recomendación entre vecinos pesa más que cualquier anuncio, y lo humano genera comentarios y compartidos, que es lo que Facebook premia. Cubre directamente el objetivo de cercanía.",
+ post:[["Hoy abrimos la puerta. Pasad y conoced a quienes cuidan vuestra sonrisa 🦷 #HaciendoBarrio","Ejemplo para la semana 1"],["Carta de un peque del barrio: «Querido Pérez, se me ha caído un diente jugando al fútbol.» Pérez ya le ha contestado 👇","Ejemplo ficticio. Con consentimiento de los padres"]],
+ kpi:"Alcance local, comentarios, compartidos y seguidores del barrio."},
+{n:"Diente a diente",k:"Educativo · Confiar · 30 %",
+ series:[["Para peques","El primer diente, chupete y dedo, caries del biberón y cómo perder el miedo. Pérez cuenta cuentos."],["Para ti","Blanqueamiento, ortodoncia invisible, implantes y encías sangrantes, con el dentista."],["Para nuestros mayores","Prótesis, boca seca, revisiones y cuidado de la dentadura, con explicaciones sencillas."],["Pregunta al dentista","Directo mensual para resolver dudas en tiempo real."]],
+ por:"Quien busca «implantes» o «mi hijo no quiere cepillarse» necesita información antes de decidir, y si se la da la clínica, la elige. Genera autoridad y confianza sin sonar a anuncio, y promueve los tratamientos de forma indirecta, que es más creíble. Los tres bloques por edades hacen que cada segmento vea algo suyo.",
+ post:[["¿Sangran las encías al cepillarte? Esto es lo que debes saber, y cuándo pedir cita. #DienteADiente","Ejemplo «Para ti»"],["Pérez te enseña a cepillarte en 2 minutos. ¿Lo hacemos juntos? 🪥","Ejemplo «Para peques»"]],
+ kpi:"Reproducciones de más de 15 s, guardados, compartidos y preguntas en comentarios."},
+{n:"Boca a boca",k:"Promocional y recomendación · Reservar · 20 %",
+ series:[["Primera visita sin miedo","Valoración inicial, con paseo por la clínica y visita a Pérez para los peques."],["Revisión familiar","Cita agrupada para toda la familia, con botón de WhatsApp."],["Tratamientos de adultos","Ortodoncia invisible, implantes y blanqueamiento, con opciones de financiación."],["Vecinos que nos recomiendan","Reseñas reales, con consentimiento, en lugar de comparativas de antes y después."]],
+ por:"Es el contenido que convierte seguidores en citas. Funciona mejor después de los dos primeros, porque la clínica ya es conocida y de confianza. Y en una clínica de barrio, la recomendación entre vecinos es el activo más valioso, así que lo promovemos con reseñas. Es fácil de medir con clics, mensajes y citas.",
+ post:[["Primera visita de valoración. Escríbenos por WhatsApp y te damos cita esta semana.","Ejemplo. Condiciones a definir con el cliente"],["¿Te cuidamos bien? Cuéntaselo a un vecino, y a nosotros con una reseña ⭐ #BocaABoca","Ejemplo de la semana 4"]],
+ kpi:"Clics a WhatsApp, citas, coste por mensaje, número y nota de reseñas."}];
 const $=s=>document.querySelector(s);let sel=0;
-function render(){
-$('#tabs').innerHTML=T.map((t,i)=>`<button role="tab" aria-selected="${i==sel}" data-i="${i}">${i+1} · ${t.n}</button>`).join('');
-document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{sel=+b.dataset.i;render()});
-const t=T[sel];
-$('#detalle').innerHTML=`<div><h3>${t.n} <span style="color:var(--ink-3);font-weight:700;font-size:15px">· ${t.f}</span></h3>
-<p><b>Qué se publica:</b> ${t.q}</p><p><b>Formato:</b> ${t.fm}</p>
-<p class="se-ve"><b>Por qué:</b> ${t.p}</p>
-<div class="post">${t.ej}</div><p class="kpi" style="margin:12px 0 0"><b>KPI:</b> ${t.k}</p></div>
-<div class="eco-col"><div class="bubble">${t.l}</div><img src="/ejercicio_youtube_crm/eco/${t.e}.webp" alt="" onerror="this.hidden=true"></div>`}
-render();
-const tb=document.querySelectorAll('.temas button');
-function tema(t){if(t==='light')document.documentElement.removeAttribute('data-theme');else document.documentElement.setAttribute('data-theme',t);tb.forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===t));try{localStorage.setItem('tema',t)}catch(e){}}
-tb.forEach(b=>b.onclick=()=>tema(b.dataset.t));
-let t0='light';try{t0=localStorage.getItem('tema')||'light'}catch(e){}tema(t0);
+function pinta(){
+ $('#tabs').innerHTML=P.map((p,i)=>`<button role="tab" aria-selected="${i==sel}" data-i="${i}">${i+1} · ${p.n}</button>`).join('');
+ document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{sel=+b.dataset.i;pinta()});
+ const p=P[sel];
+ $('#det').innerHTML=`<h3>${p.n}</h3><p class="sub">${p.k}</p><div class="cols"><div><b>Qué se publica</b><div style="margin-top:8px">${p.series.map(s=>`<div class="serie"><b>${s[0]}</b><span>${s[1]}</span></div>`).join('')}</div></div>
+ <div><b>Por qué</b><p class="por" style="margin-top:8px">${p.por}</p><b>Ejemplos de publicación</b><div style="margin-top:8px">${p.post.map(x=>`<div class="post">${x[0]}<small>${x[1]}</small></div>`).join('')}</div><p class="kpi"><b>Cómo se mide:</b> ${p.kpi}</p></div></div>`;
+}
+pinta();
+const Q=[["saluda","Saludo","¡Hola, vecino! Pasa, que la puerta está abierta."],["telefono","El teléfono","Ring, ring. Pérez al aparato: ¿qué diente se ha caído hoy?"],["presenta","Premio","¡Atención! Este diente de leche se merece un premio."],["pulgar","Aprobado","Cepillado de diez. Aprobado."],["cepillo","Cepillo","Dos minutos, dos veces al día. Yo me lo sé de memoria."],["sorpresa","Susto","¿Que anoche no te lavaste los dientes? ¡Ay, ay, ay!"],["duerme","Almohada","Shhh… recogiendo dientes bajo la almohada."],["celebra","Fiesta","¡Primer diente de leche del mes! Fiesta."],["libro","Cuento","Hoy toca cuento: «El diente que no quería caerse»."],["pizarra","Clase","Clase de hoy: por qué las encías también importan."],["heroe","Misión","Misión de hoy: defender tu sonrisa de las caries."],["saco","Cosecha","Qué buena cosecha de dientes de leche en el barrio."]];
+let q=0;
+function escena(){const e=Q[q];$('#escena').src='/ejercicio_facebook/perez/'+e[0]+'.webp';$('#bocadillo').textContent=e[2];
+ document.querySelectorAll('#poses button').forEach((b,i)=>b.setAttribute('aria-pressed',i==q))}
+$('#poses').innerHTML=Q.map((e,i)=>`<button type="button" data-i="${i}" aria-pressed="${i==0}">${e[1]}</button>`).join('');
+document.querySelectorAll('#poses button').forEach(b=>b.onclick=()=>{q=+b.dataset.i;escena()});
+escena();
 </script>
 <script src="/ejercicio_youtube_crm/ejercicios.js" defer></script>
 </body></html>
