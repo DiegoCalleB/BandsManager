@@ -20,7 +20,7 @@
 body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 Onest,system-ui,sans-serif;font-variant-numeric:tabular-nums}
 main{max-width:1180px;margin:0 auto;padding:0 16px 140px}
 a{color:var(--acc-ink);text-underline-offset:3px}
-.temas{display:flex;gap:6px;justify-content:flex-end;padding:16px 0 0}
+.temas{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;padding:16px 0 0}
 .temas button{font:700 13px Onest,system-ui;background:var(--sunken);color:var(--ink-2);border:0;border-radius:var(--r-pill);padding:7px 14px;cursor:pointer}
 .temas button[aria-pressed=true]{background:var(--acc);color:var(--on-acc)}
 .temas button:focus-visible,a:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
@@ -106,7 +106,7 @@ footer{color:var(--ink-3);font-size:13px;margin-top:56px}
 @keyframes brazo{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
 .marca:hover .b{animation-duration:.45s}
 .temas{padding-top:0!important}
-.pie{display:flex;align-items:center;gap:18px;margin-top:56px;color:var(--ink-3);font-size:13px}.pie footer{margin:0}
+.pie{display:flex;align-items:center;gap:18px;margin-top:56px;color:var(--ink-3);font-size:13px}.pie footer{margin:0}.pie{flex-wrap:wrap}.pie .cta-fin{flex:1 1 300px;min-width:0;margin-top:0}@media(max-width:640px){.pie{flex-direction:column;align-items:stretch}.pie .logo-g{width:140px;height:140px;align-self:center}.cta-fin{padding:20px 18px}}
 .logo{width:46px;height:46px;border-radius:var(--r-m);display:block}.logo-g{width:200px;height:200px;border-radius:var(--r-xl);display:block;object-fit:cover;flex:none}
 .ritmo-box{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .ritmo-box label{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2);font-weight:700}
