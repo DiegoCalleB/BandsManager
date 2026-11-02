@@ -522,7 +522,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
                       type="text"
                       readOnly
                       value={dealGenerated.aiStudioUrl}
-                      className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-[11px] font-mono text-[var(--ink)] select-all"
+                      className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)] text-[11px] font-mono text-[var(--ink)] select-all"
                     />
                     <button
                       type="button"
@@ -560,7 +560,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
                       type="text"
                       readOnly
                       value={dealGenerated.officialUrl}
-                      className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-[11px] font-mono text-[var(--ink)] select-all"
+                      className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--surface)] text-[11px] font-mono text-[var(--ink)] select-all"
                     />
                     <button
                       type="button"
