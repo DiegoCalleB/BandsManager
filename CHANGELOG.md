@@ -4,6 +4,96 @@ Las versiones siguen [SemVer](https://semver.org/lang/es/) y este archivo lo gen
 [release-please](https://github.com/googleapis/release-please) a partir de los Conventional Commits.
 Solo recoge lo que nota quien usa la app (novedades, correcciones y rendimiento); la documentación y las refactorizaciones se ven en el historial de git. No lo edites a mano: cada release añade su sección arriba. Las reglas están en [AGENTS.md §7](./AGENTS.md).
 
+## [3.2.0](https://github.com/DiegoCalleB/BandsManager/compare/bandmanager-v3.1.0...bandmanager-v3.2.0) (2026-11-02)
+
+
+### Novedades
+
+* **acordes:** la rejilla no manda sobre la armonía + métrica de sesgo ([#426](https://github.com/DiegoCalleB/BandsManager/issues/426)) ([ff8f44c](https://github.com/DiegoCalleB/BandsManager/commit/ff8f44cb6c23cbdf20fcf1e4d83dd93db8912814))
+* **asesor:** asesor de marketing con ADN de banda ([#427](https://github.com/DiegoCalleB/BandsManager/issues/427)) ([899708a](https://github.com/DiegoCalleB/BandsManager/commit/899708acf7e8b35e8b09e77266875c0f14eed15c))
+* **asesor:** auditoría 360, kit SEO y enlaces con seguimiento ([#464](https://github.com/DiegoCalleB/BandsManager/issues/464)) ([f85c06b](https://github.com/DiegoCalleB/BandsManager/commit/f85c06bf20f046f0c2f0b4f1eeb6e25cd07921d6))
+* **asesor:** calendario de tres semanas con bolos, hitos y lo publicado ([#437](https://github.com/DiegoCalleB/BandsManager/issues/437)) ([6b52229](https://github.com/DiegoCalleB/BandsManager/commit/6b5222973a5ede81d58a9a0c5b00d47b2ac8eaf5))
+* **asesor:** chat para preguntar al asesor de marketing ([#445](https://github.com/DiegoCalleB/BandsManager/issues/445)) ([490641d](https://github.com/DiegoCalleB/BandsManager/commit/490641da14cbe8c2d2f8179ace8dbc2519c061cc))
+* **asesor:** el chat propone acciones con un toque ([#446](https://github.com/DiegoCalleB/BandsManager/issues/446)) ([3c621e2](https://github.com/DiegoCalleB/BandsManager/commit/3c621e23f21e066353f892c2a36888c247eff60b))
+* **asesor:** elegir redes y YouTube Shorts junto a TikTok ([#449](https://github.com/DiegoCalleB/BandsManager/issues/449)) ([f6beb7e](https://github.com/DiegoCalleB/BandsManager/commit/f6beb7e3001b76ee6b32dc89be4eec49adaca53e))
+* **asesor:** métricas por red para TikTok y YouTube Shorts ([#458](https://github.com/DiegoCalleB/BandsManager/issues/458)) ([1c0a40c](https://github.com/DiegoCalleB/BandsManager/commit/1c0a40c051644ae6792c2d032efe24e7f11fcf51))
+* **asesor:** modo rescate cuando lo publicado deja de funcionar ([#444](https://github.com/DiegoCalleB/BandsManager/issues/444)) ([f7f14a7](https://github.com/DiegoCalleB/BandsManager/commit/f7f14a76b9138c0914baae4ca355d494801f928f))
+* **asesor:** traer de Instagram los números de cada pieza ([#435](https://github.com/DiegoCalleB/BandsManager/issues/435)) ([27beaac](https://github.com/DiegoCalleB/BandsManager/commit/27beaacf5619e05290f2f9cd6095e18c25241bb9))
+* **atril:** atajos de teclado y corrección de acordes por casilla ([#463](https://github.com/DiegoCalleB/BandsManager/issues/463)) ([cec020e](https://github.com/DiegoCalleB/BandsManager/commit/cec020e7573c39b38b4475fdff27aab10a68f16f))
+* **atril:** el botón «Letra del audio» pasa a llamarse «Transcribir letra» ([eea2cde](https://github.com/DiegoCalleB/BandsManager/commit/eea2cde0b4f6ae02445e7f21a1cbd62a09fffa8c))
+* **atril:** tono destino, velocidad fina y corrección en bloque que respeta lo editado ([#436](https://github.com/DiegoCalleB/BandsManager/issues/436)) ([d880acb](https://github.com/DiegoCalleB/BandsManager/commit/d880acb6c0d65abed139e6733366cceb9af5ebed))
+* **atril:** vista Compases estilo Chordify/Moises y modo batería en Armonía ([#423](https://github.com/DiegoCalleB/BandsManager/issues/423)) ([f9041b1](https://github.com/DiegoCalleB/BandsManager/commit/f9041b1ac5cafee3e6a815083a0b2e84cf2f2173))
+* benchmark de acordes contra referencias manuales con línea base ([#441](https://github.com/DiegoCalleB/BandsManager/issues/441)) ([8df6819](https://github.com/DiegoCalleB/BandsManager/commit/8df681924f41c48fd55a94e02078de27d7cd990d))
+* **cartel:** acabado de serigrafia para que el arte de IA parezca impreso ([cf4d329](https://github.com/DiegoCalleB/BandsManager/commit/cf4d32946d2560b048400692bc7faad41e1ee918))
+* **cartel:** ajustar el texto a mano (mover y escalar por formato) y editar el nombre y el lugar del cartel ([39199dc](https://github.com/DiegoCalleB/BandsManager/commit/39199dc3a62ded9df0ce39eb53cad1107f970c77))
+* **cartel:** ajustar el texto a mano (mover y escalar por formato) y editar el nombre y el lugar del cartel sin tocar el bolo ([3e4f725](https://github.com/DiegoCalleB/BandsManager/commit/3e4f7254fbfb513995bc04adfa998276756aadfe))
+* **cartel:** deshacer y rehacer en el editor del cartel ([d7094cb](https://github.com/DiegoCalleB/BandsManager/commit/d7094cbb544a38a9dcc2550decf3be9447384f9c))
+* **cartel:** deshacer y rehacer en el editor del cartel ([1864a3d](https://github.com/DiegoCalleB/BandsManager/commit/1864a3dabceae3e830aefdfd9d5acc481edc3405))
+* **cartel:** el QR sale en todos los formatos y puede llevar a la pagina de fans o a las entradas ([cecda09](https://github.com/DiegoCalleB/BandsManager/commit/cecda09764ddce3990adc859b13f6e628ac33a49))
+* **cartel:** el QR sale en todos los formatos y puede llevar a la página de fans o a las entradas ([27c646f](https://github.com/DiegoCalleB/BandsManager/commit/27c646fb2c21f03bb731cb93a4c5b55c1ea90967))
+* **cartel:** hora y dirección del bolo en el cartel, también con las letras dibujadas por la IA ([3f9c151](https://github.com/DiegoCalleB/BandsManager/commit/3f9c15117020a810bc366d8f5c65204d57f519ab))
+* **cartel:** hora y dirección, retocar fondos con versiones, imprenta con sangrado y autoguardado con reintentos ([de8949a](https://github.com/DiegoCalleB/BandsManager/commit/de8949a05448c74913bbaa23cf2c90a14a594d2e))
+* **cartel:** la idea del cartel admite mucho mas texto ([dd7b462](https://github.com/DiegoCalleB/BandsManager/commit/dd7b4628ea2f7657135ad155f015b34ed98b6afc))
+* **cartel:** las plantillas de autor pasan a ser un respaldo que solo sale si la IA falla ([bac9070](https://github.com/DiegoCalleB/BandsManager/commit/bac90705afd749a068d985e6e3d129354eb5e77e))
+* **cartel:** letra, color y ocultar por bloque en el ajuste del texto ([dd30901](https://github.com/DiegoCalleB/BandsManager/commit/dd30901e7d93b18b44eb9229190becc4ba1c8263))
+* **cartel:** letra, color y ocultar por bloque en el ajuste del texto ([5da2cc0](https://github.com/DiegoCalleB/BandsManager/commit/5da2cc077930902446a0a4e843289841c5afd6a4))
+* **cartel:** letras de IA apagadas por defecto y titulo con motas de tinta como impreso ([cc11b5a](https://github.com/DiegoCalleB/BandsManager/commit/cc11b5ab29c74b2372324dfb3f833059f71b44f3))
+* **cartel:** letras de IA apagadas por defecto y título con motas de tinta como impreso ([2b526a0](https://github.com/DiegoCalleB/BandsManager/commit/2b526a0106d7410511954f3dc058f72ad54ff487))
+* **cartel:** plantillas de autor como respaldo cuando la IA falla (sol retro, círculos, montañas, vinilo, arcos, retícula) ([cf6f0d3](https://github.com/DiegoCalleB/BandsManager/commit/cf6f0d368dd7892883273df7dffcff78185b4689))
+* **cartel:** QR del concierto también en Feed e Historia y franja libre del 22 % para las letras de la IA ([667c3f6](https://github.com/DiegoCalleB/BandsManager/commit/667c3f6a7b3c8e6a3397d9cb980c24e9d12beb0e))
+* **cartel:** QR también en Feed e Historia (opcional) y franja inferior libre del 22 % para las letras de la IA ([1f971eb](https://github.com/DiegoCalleB/BandsManager/commit/1f971ebb29f8e72b886930a300ef42e0d8647f8f))
+* **cartel:** repetir sin letras de IA, autoguardado con reintentos y A4 para imprenta con sangrado y marcas de corte ([d777f2a](https://github.com/DiegoCalleB/BandsManager/commit/d777f2a96186cc5e31433b8ccef306ad4905e91c))
+* **cartel:** retocar en modo libre, como en ChatGPT, y sin pedir grano a la IA ([ae66923](https://github.com/DiegoCalleB/BandsManager/commit/ae6692338e65ad4c055b7d779710820e14c935c9))
+* **cartel:** retocar un fondo de IA con una instrucción y volver a versiones anteriores ([649face](https://github.com/DiegoCalleB/BandsManager/commit/649face11338a5171cda43dc7072185b64403f33))
+* **cartel:** retoque libre, logo sólido y acabado de serigrafía ([d68f631](https://github.com/DiegoCalleB/BandsManager/commit/d68f631a7b9056728c1968b78414c667f55447aa))
+* **cartel:** seis plantillas de autor (sol retro, círculos, montañas, vinilo, arcos, retícula) sin IA y sin coste ([b8b7832](https://github.com/DiegoCalleB/BandsManager/commit/b8b78327be37c82759ff400cb5e9523372fc4dfc))
+* **cartel:** textos sueltos movibles en el cartel ([4f93837](https://github.com/DiegoCalleB/BandsManager/commit/4f9383706ffc054e7c60e3e11aea63e52fcaa07a))
+* **cartel:** textos sueltos movibles en el cartel ([33b1988](https://github.com/DiegoCalleB/BandsManager/commit/33b19885a9b6009880f70ad83adbdc8df16518a4))
+* **compases:** mover un cambio de acorde por casilla y guardar el ajuste de la rejilla para toda la banda ([#425](https://github.com/DiegoCalleB/BandsManager/issues/425)) ([e6e10df](https://github.com/DiegoCalleB/BandsManager/commit/e6e10dfb0d0a8e306feb21653e99a8f2bbf0e678))
+* **eco:** Eco se presenta con su nombre en todos los asistentes y se documenta la marca ([#456](https://github.com/DiegoCalleB/BandsManager/issues/456)) ([4c6dcd1](https://github.com/DiegoCalleB/BandsManager/commit/4c6dcd1017a539bc2fa81bdc570e8088c8549d12))
+* **ejercicios:** chat guiado de Eco sobre los ejercicios, sin backend ([#454](https://github.com/DiegoCalleB/BandsManager/issues/454)) ([b1963fd](https://github.com/DiegoCalleB/BandsManager/commit/b1963fd99f007edb91c5c95f52ecaa5b23ad2b82))
+* **ejercicios:** llamada a la acción grande y email sin registrarse ([#470](https://github.com/DiegoCalleB/BandsManager/issues/470)) ([af34920](https://github.com/DiegoCalleB/BandsManager/commit/af3492089e7da7b6a33432f5dbab31ad1e8ce71c))
+* **ejercicios:** miniaturas de YouTube v3, con Eco enorme sobre ráfaga ámbar ([#467](https://github.com/DiegoCalleB/BandsManager/issues/467)) ([8c7a287](https://github.com/DiegoCalleB/BandsManager/commit/8c7a287e471e7e7f904594498ecc55e0d997875c))
+* **ejercicios:** páginas de branding y Facebook del máster ([#468](https://github.com/DiegoCalleB/BandsManager/issues/468)) ([07019fa](https://github.com/DiegoCalleB/BandsManager/commit/07019fa0856f24b39b39b13504d499fc3490c178))
+* **ejercicios:** piel de marca (negro y ámbar), lema y miniaturas de YouTube nuevas ([#465](https://github.com/DiegoCalleB/BandsManager/issues/465)) ([d949a71](https://github.com/DiegoCalleB/BandsManager/commit/d949a718a4a9998d2f6b4e7bdfaf0ae35fc43147))
+* **landing:** guías y listados de salas y festivales accesibles desde las dos landing ([#418](https://github.com/DiegoCalleB/BandsManager/issues/418)) ([5ff3519](https://github.com/DiegoCalleB/BandsManager/commit/5ff35193d682fefa61ce6864dafea2648aa6e90b))
+* modelos de IA centralizados, progreso de subida de audio y notación de acordes elegible ([#460](https://github.com/DiegoCalleB/BandsManager/issues/460)) ([92664c4](https://github.com/DiegoCalleB/BandsManager/commit/92664c4696883eefa5bb0565d8f099d8df09f1ba))
+* **presentacion:** grabaciones propias de la voz para las escenas de «Mis bandas» y «Un sueño hecho realidad» ([5540953](https://github.com/DiegoCalleB/BandsManager/commit/554095387b21a4f978b4b2ae1f04d1c1055f0de8))
+* **presentacion:** Silvestre en el inicio, música del inicio, logo de Silvestre y ajustes de la película ([9cf2402](https://github.com/DiegoCalleB/BandsManager/commit/9cf2402a473d2359af1d3b760b9a5c7c4233b679))
+* **presentacion:** Silvestre en el inicio, música del inicio, logo de Silvestre y ajustes de la película ([#422](https://github.com/DiegoCalleB/BandsManager/issues/422)) ([9cf2402](https://github.com/DiegoCalleB/BandsManager/commit/9cf2402a473d2359af1d3b760b9a5c7c4233b679))
+* **public:** página estática del ejercicio de YouTube «CRM para bandas» ([#448](https://github.com/DiegoCalleB/BandsManager/issues/448)) ([66ac42b](https://github.com/DiegoCalleB/BandsManager/commit/66ac42b4074f67d9da769d77faff73d70303df82))
+* **public:** vídeo 9 sobre contratos firmados y Eco a ritmo en la página del ejercicio ([#452](https://github.com/DiegoCalleB/BandsManager/issues/452)) ([606a344](https://github.com/DiegoCalleB/BandsManager/commit/606a344f6a0109d96b9b0a078be04ef6824f8be9))
+* **pulso:** compases del audio con Beat This! y correcciones rápidas en el Atril ([#424](https://github.com/DiegoCalleB/BandsManager/issues/424)) ([e021261](https://github.com/DiegoCalleB/BandsManager/commit/e02126153f5d8d82df0383a8516929464349eb38))
+* **ui:** Eco como cara del agente de IA ([#453](https://github.com/DiegoCalleB/BandsManager/issues/453)) ([bbb6a29](https://github.com/DiegoCalleB/BandsManager/commit/bbb6a294dec7801d2327f2d51aaffbdaedfb1938))
+* **ui:** Eco en el chat de la landing y en el asesor ([#455](https://github.com/DiegoCalleB/BandsManager/issues/455)) ([123e688](https://github.com/DiegoCalleB/BandsManager/commit/123e68806ef5490df1c32dbae72486858fdc384a))
+
+
+### Correcciones
+
+* **audio:** el audio grabado en el navegador se sube con su extensión real ([66ce2e6](https://github.com/DiegoCalleB/BandsManager/commit/66ce2e63e1aed40d4409b4c06578f4f240e01ce2))
+* **audio:** subida de audios y mensajes de error; «Transcribir letra» en el Atril ([c6a4490](https://github.com/DiegoCalleB/BandsManager/commit/c6a44904263970cc34ef95b5bc7b5912d35e591f))
+* **cartel:** "Foto" e "IA" fijos a la derecha del selector de fondo y fondos de IA visibles ([cdce9c6](https://github.com/DiegoCalleB/BandsManager/commit/cdce9c62ac430f02ebe1871268696ad5f2b91b9c))
+* **cartel:** "Foto" e "IA" fijos a la derecha del selector de fondo y fondos de IA visibles ([de32c65](https://github.com/DiegoCalleB/BandsManager/commit/de32c65ae8691e20f481fc2d4afcce5e5c0977eb))
+* **cartel:** el cartel es el arte hasta el borde, sin marco de papel dentro ([6092b9a](https://github.com/DiegoCalleB/BandsManager/commit/6092b9a017b908e2a14455619c48b17dd6a08488))
+* **cartel:** el logo en tinta sale solido, no semitransparente ([667b4a0](https://github.com/DiegoCalleB/BandsManager/commit/667b4a0922679d1b6d855ca1fe8f6b6c375fd0fc))
+* **cartel:** los retoques parten del original para no perder calidad ([57590eb](https://github.com/DiegoCalleB/BandsManager/commit/57590eb86c922f0a364f4ab8e60baebe5c4627a8))
+* **cartel:** retoques desde el original, sin marco de papel y más texto en la idea ([a44bcaf](https://github.com/DiegoCalleB/BandsManager/commit/a44bcaf4cebc647aa5e146faaf5164517ce1800c))
+* **deps:** actualiza body-parser, multer, nodemailer, mailparser y undici (npm audit) ([813e318](https://github.com/DiegoCalleB/BandsManager/commit/813e318315c9f4f78ce88f72183a18b9a37635fd))
+* **deps:** actualiza dependencias con avisos de npm audit ([ea72203](https://github.com/DiegoCalleB/BandsManager/commit/ea722037a2b442a5e92ca466c0f1652ffbd2fe26))
+* **deps:** actualiza qs y re2js para cerrar los avisos de npm audit (main en rojo) ([51cdb06](https://github.com/DiegoCalleB/BandsManager/commit/51cdb06f8bd31475f2b02a7607ae04202dc49452))
+* **deps:** actualiza qs y re2js para cerrar los avisos de npm audit (main en rojo) ([6258ab7](https://github.com/DiegoCalleB/BandsManager/commit/6258ab747c07e57ab2ff616854bb8757bcf6f126))
+* **discografia:** subir el audio de una canción nueva a un disco que ya existe ([17cca13](https://github.com/DiegoCalleB/BandsManager/commit/17cca13c3b2f15682af9580589d6b28337ac1d06))
+* **discografia:** subir el audio de una canción nueva a un disco que ya existe ([ad84a3e](https://github.com/DiegoCalleB/BandsManager/commit/ad84a3eafb17525bbc05fd08a7d55e0b938eb470))
+* **public:** rutas absolutas de imágenes y menú de ejercicios del máster ([#451](https://github.com/DiegoCalleB/BandsManager/issues/451)) ([9efd083](https://github.com/DiegoCalleB/BandsManager/commit/9efd08353047ce2e5117fe7a9ec469daca9b4132))
+* **public:** servir el ejercicio de YouTube y el sitio de ejercicios del máster ([#450](https://github.com/DiegoCalleB/BandsManager/issues/450)) ([5695606](https://github.com/DiegoCalleB/BandsManager/commit/569560622de8848f7d5cd3b6ed9cd6260febfe3e))
+* **repertorio:** importar repertorio desde imagen/PDF vuelve a funcionar ([#459](https://github.com/DiegoCalleB/BandsManager/issues/459)) ([04f1ca6](https://github.com/DiegoCalleB/BandsManager/commit/04f1ca68c2030b57483f3887e292feaf73869e42))
+* **upload:** los errores de subida explican qué pasó y qué hacer ([da6e5dc](https://github.com/DiegoCalleB/BandsManager/commit/da6e5dc3ec17311a96b3a3438ed69108a80a8453))
+
+
+### Rendimiento
+
+* subida de audio más rápida, modal de disco simplificado y acordes en ~4 s ([#462](https://github.com/DiegoCalleB/BandsManager/issues/462)) ([5b1439a](https://github.com/DiegoCalleB/BandsManager/commit/5b1439aa6a85dc306f0c890ae138605f4899bf09))
+
 ## [3.1.0](https://github.com/DiegoCalleB/BandsManager/compare/bandmanager-v3.0.0...bandmanager-v3.1.0) (2026-10-25)
 
 
