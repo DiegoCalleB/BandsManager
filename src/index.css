@@ -18,6 +18,10 @@
   --text-micro: 0.6875rem;
   --text-micro--line-height: 1.45;
 
+  /* Breakpoint `xs:` (móvil grande). Tailwind v4 no lo trae: sin esta línea los ~28 usos de `xs:`
+     (p. ej. `hidden xs:inline` en las etiquetas de los botones) no se aplicaban en ningún ancho. */
+  --breakpoint-xs: 30rem;
+
   /* Movimiento por defecto de `transition`: rápido y con salida fuerte, nunca `ease-in`. */
   --default-transition-duration: 150ms;
   --default-transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
