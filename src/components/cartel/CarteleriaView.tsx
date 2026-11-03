@@ -13,6 +13,7 @@ import { PreguntaCabeza } from './PreguntaCabeza';
 import { EstiloBanda } from './EstiloBanda';
 import { IdeaCartel } from './IdeaCartel';
 import { AjustesCartel } from './AjustesCartel';
+import { OrdenCartel } from './OrdenCartel';
 import { BarraAjusteTexto, CapaAjusteTexto } from './AjusteTexto';
 import { LIBRES, type BloqueAjustable } from '../../utils/cartel/ajustesFinos';
 import { puedeQuitarMarcaCartel } from '../../utils/planPermissions';
@@ -122,6 +123,8 @@ const CarteleriaView: React.FC<Props> = ({ concerts, bandName, plan, banda, onCa
 
       {/* Bloque 3 · fondo y acciones */}
       <div className="grid content-start gap-4 md:col-start-2 md:row-start-2">
+        <OrdenCartel ordenar={ed.orden.ordenar} ordenando={ed.orden.ordenando} resultado={ed.orden.resultado} hayFondoIa={ed.fondo.tipo === 'imagen' && ed.fondo.origen === 'ia'} />
+
         {ed.faltaCabeza && <PreguntaCabeza bandas={ed.bandas} onElegir={(cabeza) => ed.cambiarAjustes({ cabeza })} />}
 
         <SelectorFondo

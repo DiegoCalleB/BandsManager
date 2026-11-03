@@ -33,7 +33,9 @@ Lo que se guarda de un cartel en `concerts.cartel_config` (jsonb). Lo usan el cl
 - [[src_components_cartel_hooks_useEditorCartel|src/components/cartel/hooks/useEditorCartel.ts]] *(from #frontend)*
 - [[src_components_cartel_hooks_useEnlaceCartel|src/components/cartel/hooks/useEnlaceCartel.ts]] *(from #frontend)*
 - [[src_components_cartel_hooks_useHistorialCartel|src/components/cartel/hooks/useHistorialCartel.ts]] *(from #frontend)*
+- [[src_components_cartel_hooks_useOrdenCartel|src/components/cartel/hooks/useOrdenCartel.ts]] *(from #frontend)*
 - [[src_utils_cartel_datos|src/utils/cartel/datos.ts]] *(from #service)*
+- [[src_utils_cartel_ordenes|src/utils/cartel/ordenes.ts]] *(from #service)*
 - [[src_utils_cartel_render|src/utils/cartel/render.ts]] *(from #service)*
 - [[src_utils_promocionApi|src/utils/promocionApi.ts]] *(from #service)*
 
@@ -44,6 +46,7 @@ Lo que se guarda de un cartel en `concerts.cartel_config` (jsonb). Lo usan el cl
 - `src/utils/cartel/__tests__/config.test.ts`
 - `src/utils/cartel/__tests__/datos.test.ts`
 - `src/utils/cartel/__tests__/estilosBloques.test.ts`
+- `src/utils/cartel/__tests__/ordenes.test.ts`
 - `src/utils/cartel/__tests__/retoques.test.ts`
 - `src/utils/cartel/__tests__/textosLibres.test.ts`
 

@@ -28,6 +28,7 @@ import { validarMagicBytes } from './upload.js';
 import { generarFondoCartel, retocarFondoCartel, relacionDe, RELACION_FONDO_SANGRE } from '../services/imagenCartel.js';
 import { fondoConTexto } from '../../src/utils/cartel/fondoIa.js';
 import { cargarReferencias, tipoDeImagen, type ImagenReferencia } from '../services/referenciasCartel.js';
+import { planDeOrden } from '../services/ordenCartel.js';
 import { construirBrief } from '../services/briefCartel.js';
 import { dbGetAdnCartel, dbGuardarAdnCartel } from '../db/cartelEstilo.js';
 import { isSpendCapOrQuotaError } from '../ai.js';
@@ -414,6 +415,24 @@ cartelriaRouter.post('/cartel/brief', requireAuth, iaRateLimiter, async (req, re
     res.json({ brief: resultado?.brief ?? null, traducido: resultado?.traducido ?? false, conBoceto: !!boceto });
   } catch (e) {
     fallo(res, 'POST /cartel/brief', e, 'No se pudo preparar la idea.');
+  }
+});
+
+/**
+ * «Pídele cambios al cartel»: una frase libre → un plan (acciones sobre las capas de BandManager + un retoque de
+ * la ilustración). No lee ni escribe nada del bolo: devuelve el plan y el editor lo aplica como un cambio normal.
+ */
+cartelriaRouter.post('/cartel/orden', requireAuth, iaRateLimiter, async (req, res) => {
+  try {
+    const bandId = getTargetBandId(req);
+    const orden = typeof req.body?.orden === 'string' ? req.body.orden.trim() : '';
+    if (!orden) return res.status(400).json({ error: 'Cuéntanos qué quieres cambiar.' });
+    const huecos = (Array.isArray(req.body?.huecosLibres) ? req.body.huecosLibres : []).filter((i: unknown): i is number => Number.isInteger(i));
+    const plan = await planDeOrden(bandId, orden, huecos);
+    if (!plan) return res.status(503).json({ error: 'No hemos podido entender el cambio ahora mismo. Prueba en un rato.' });
+    res.json({ plan });
+  } catch (e) {
+    fallo(res, 'POST /cartel/orden', e, 'No se pudo preparar el cambio.');
   }
 });
 
