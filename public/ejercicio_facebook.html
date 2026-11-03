@@ -56,6 +56,9 @@ ul.l{padding-left:20px;margin:8px 0 0}ul.l li{margin-bottom:8px;color:var(--ink-
 .bocadillo{background:var(--acc);color:var(--on-acc);border-radius:var(--r-m);padding:10px 16px;font-weight:700;font-size:15px;margin-bottom:10px}
 .pose-b{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
 .pose-b button[aria-pressed=true]{background:var(--acc);color:var(--on-acc)}
+.escucha{font:700 14px Onest,system-ui;background:var(--ink);color:var(--bg);border:0;border-radius:var(--r-pill);padding:10px 20px;cursor:pointer;margin-top:10px}
+.escucha[aria-pressed=true]{background:var(--sunken);color:var(--ink-2)}
+.aviso{font-size:12.5px;color:var(--ink-3);margin:8px 0 0}
 .cierre{margin-top:44px;background:var(--ink);color:var(--bg);border-radius:var(--r-xl);padding:30px;text-align:center}
 .cierre b{display:block;font-size:clamp(22px,3.6vw,32px);font-weight:800}.cierre span{display:block;margin-top:6px;opacity:.85}
 .fuentes{font-size:13.5px;color:var(--ink-2)}.fuentes li{margin-bottom:4px}
@@ -125,7 +128,7 @@ footer{color:var(--ink-3);font-size:13px;margin-top:40px}
 </ul>
 <div class="pose-b" id="poses" role="group" aria-label="Poses de Pérez"></div>
 </div>
-<div class="escena"><div class="bocadillo" id="bocadillo"></div><img id="escena" alt="" width="240" height="240"></div>
+<div class="escena"><div class="bocadillo" id="bocadillo"></div><img id="escena" alt="" width="240" height="240"><div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center"><button type="button" class="escucha" id="oir">Escuchar a Pérez</button><button type="button" class="escucha" id="mudo" aria-pressed="false">Silenciar</button></div><p class="aviso">Voz de Pérez generada con IA (ElevenLabs).</p></div>
 </div>
 
 <h2>Cuidado con la publicidad sanitaria</h2>
@@ -178,9 +181,13 @@ function pinta(){
 pinta();
 const Q=[["saluda","Saludo","¡Hola, vecino! Pasa, que la puerta está abierta."],["telefono","El teléfono","Ring, ring. Pérez al aparato: ¿qué diente se ha caído hoy?"],["presenta","Premio","¡Atención! Este diente de leche se merece un premio."],["pulgar","Aprobado","Cepillado de diez. Aprobado."],["cepillo","Cepillo","Dos minutos, dos veces al día. Yo me lo sé de memoria."],["duerme","Almohada","Shhh… recogiendo dientes bajo la almohada."],["libro","Cuento","Hoy toca cuento: «El diente que no quería caerse»."],["pizarra","Clase","Clase de hoy: por qué las encías también importan."]];
 let q=0;
+let voz=null,mudo=false;
+function habla(){if(mudo)return;try{if(voz){voz.pause();voz.currentTime=0}voz=new Audio('/ejercicio_facebook/voz/'+Q[q][0]+'.mp3');voz.play().catch(()=>{})}catch(e){}}
 function escena(){const e=Q[q];$('#escena').src='/ejercicio_facebook/perez/'+e[0]+'.webp';$('#bocadillo').textContent=e[2];document.querySelectorAll('#poses button').forEach((b,i)=>b.setAttribute('aria-pressed',i==q))}
 $('#poses').innerHTML=Q.map((e,i)=>`<button type="button" data-i="${i}" aria-pressed="${i==0}">${e[1]}</button>`).join('');
-document.querySelectorAll('#poses button').forEach(b=>b.onclick=()=>{q=+b.dataset.i;escena()});
+document.querySelectorAll('#poses button').forEach(b=>b.onclick=()=>{q=+b.dataset.i;escena();habla()});
+$('#oir').onclick=()=>{if(mudo){mudo=false;$('#mudo').setAttribute('aria-pressed','false');$('#mudo').textContent='Silenciar'}habla()};
+$('#mudo').onclick=()=>{mudo=!mudo;$('#mudo').setAttribute('aria-pressed',mudo);$('#mudo').textContent=mudo?'Activar voz':'Silenciar';if(mudo&&voz){voz.pause()}};
 escena();
 </script>
 <script src="/ejercicio_youtube_crm/ejercicios.js" defer></script>
