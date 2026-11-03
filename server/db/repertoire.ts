@@ -146,9 +146,8 @@ export async function analizarYGuardarDinamicaCancion(
     cambios.tonalidad_detectada_en = ahora;
   }
 
-  // Si no hay NADA que guardar (ni dinámica ni BPM ni tonalidad), no tocar la fila: así una
-  // repesca manual sobre una canción sin análisis posible puede reintentarse más tarde en vez
-  // de quedar marcada como "analizada" con un 0 falso.
+  // Si no hay NADA que guardar (ni dinámica ni BPM ni tonalidad), no tocar la fila: la repesca podrá reintentarse
+  // más tarde en vez de quedar marcada como "analizada" con un 0 falso.
   if (Object.keys(cambios).length === 0) {
     return {
       variacion: 0,
