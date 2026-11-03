@@ -474,7 +474,7 @@ export function BulkAlbumAudioUploaderModal({
                   fecha: new Date().toISOString(),
                 },
                 ...(targetSong.audioIdeas || []).filter(
-                  (a) => !a.titulo.toLowerCase().includes("preview oficial"),
+                  (a) => !/preview oficial|máster completo/i.test(a.titulo),
                 ),
               ],
             };

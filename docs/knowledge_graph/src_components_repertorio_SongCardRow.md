@@ -22,6 +22,7 @@ Exporta: SongCardRowProps, SongCardRow.
 - [[src_hooks_useNotacion|src/hooks/useNotacion.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_formatSongTitle|src/utils/formatSongTitle.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[src_utils_ideasAudio|src/utils/ideasAudio.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_irisTracks|src/utils/irisTracks.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_posicionMenu|src/utils/posicionMenu.ts]] *(Layer: #service, Domain: #system)*
 

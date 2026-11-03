@@ -574,6 +574,7 @@ _Sin dependencias salientes directas._
 - [[src_utils_growthPlanEngine|src/utils/growthPlanEngine.ts]] *(from #service)*
 - [[src_utils_harmonicAnalysis|src/utils/harmonicAnalysis.ts]] *(from #service)*
 - [[src_utils_ideaDeAtril|src/utils/ideaDeAtril.ts]] *(from #service)*
+- [[src_utils_ideasAudio|src/utils/ideasAudio.ts]] *(from #service)*
 - [[src_utils_indicadoresMarketing|src/utils/indicadoresMarketing.ts]] *(from #service)*
 - [[src_utils_instrumentSynth|src/utils/instrumentSynth.ts]] *(from #service)*
 - [[src_utils_irisTracks|src/utils/irisTracks.ts]] *(from #service)*
@@ -665,6 +666,7 @@ _Sin dependencias salientes directas._
 - `src/utils/__tests__/formatSongTitle.test.ts`
 - `src/utils/__tests__/grabarIdea.test.ts`
 - `src/utils/__tests__/harmonicAnalysis.test.ts`
+- `src/utils/__tests__/ideasAudio.test.ts`
 - `src/utils/__tests__/indicadoresMarketing.test.ts`
 - `src/utils/__tests__/instrumentSynth.test.ts`
 - `src/utils/__tests__/irisTracks.test.ts`

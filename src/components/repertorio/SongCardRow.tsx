@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
+import { contarIdeasDeUsuario } from "../../utils/ideasAudio";
 import { posicionMenu } from '../../utils/posicionMenu';
 import { createPortal } from 'react-dom';
 import { Song, ThemeColors } from '../../types';
@@ -131,7 +132,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
     (song.duracionSegundos
       ? `${Math.floor(song.duracionSegundos / 60)}:${String(Math.floor(song.duracionSegundos % 60)).padStart(2, '0')}`
       : '—');
-  const ideasCount = (song.audioIdeas || []).length;
+  const ideasCount = contarIdeasDeUsuario(song.audioIdeas); // solo las de Studio, no el audio que crea el sistema
   const isDriveAudio = (song.audioPrincipalUrl || '').includes('drive.google.com');
 
   return (
