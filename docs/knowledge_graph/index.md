@@ -37,7 +37,7 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 - [[ext_sentry|Sentry]] — 2 ficheros lo usan
 - [[ext_spotify|Spotify]] — 7 ficheros lo usan
 - [[ext_stripe|Stripe]] — 4 ficheros lo usan
-- [[ext_supabase|Supabase (Postgres)]] — 4 ficheros lo usan
+- [[ext_supabase|Supabase (Postgres)]] — 5 ficheros lo usan
 - [[ext_supabase_storage|Supabase Storage]] — 8 ficheros lo usan
 
 ---
@@ -81,7 +81,7 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 
 ## 🤖 Mapa automático (generado desde los imports reales)
 
-1955 nodos: 53 agent · 56 db · 12 external · 14 feature · 1017 frontend · 44 hook · 98 route · 85 schema · 12 security · 564 service.
+1956 nodos: 53 agent · 57 db · 12 external · 14 feature · 1017 frontend · 44 hook · 98 route · 85 schema · 12 security · 564 service.
 No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el test `grafoConocimiento` falla si queda desfasado.
 
 ### 🔥 Los 20 ficheros más importados
