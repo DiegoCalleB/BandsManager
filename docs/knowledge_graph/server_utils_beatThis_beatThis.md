@@ -26,6 +26,7 @@ Pulsos y compases del audio con Beat This! (Foscarin, Schlüter y Widmer, ISMIR 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_services_acordesCancion|server/services/acordesCancion.ts]] *(from #service)*
 - [[server_utils_beatThis_compases|server/utils/beatThis/compases.ts]] *(from #service)*
+- [[server_utils_bpmDeAudio|server/utils/bpmDeAudio.ts]] *(from #service)*
 
 ---
 

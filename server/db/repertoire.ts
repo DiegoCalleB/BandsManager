@@ -14,7 +14,7 @@ import {
   analizarAudioConIris,
   detectarTonalidadDesdeAudio,
 } from "../utils/audioKey.js";
-
+import { medirBpmPreciso } from "../utils/bpmDeAudio.js";
 import { INITIAL_SONGS, INITIAL_SETLISTS } from "../../src/db_seed.js";
 import { pistasDeIdeas, metaStemsDeIdeas } from "../../src/utils/irisTracks.js";
 import type { AnalisisAcordes, AudioTrack, SongAudioIdea, StemsMeta } from "../../src/types.js";
@@ -95,7 +95,7 @@ export async function analizarYGuardarDinamicaCancion(
   // Independiente de la curva de energía (usa su propia extracción de PCM): un audio puede fallar el análisis de
   // dinámica y aun así ser decodificable para BPM/tonalidad, así que no se condiciona a `audioAnalizable`.
   const {
-    bpm: bpmDetectado,
+    bpm: bpmPorAtaques,
     tonalidad: tonalidadDetectada,
     onsetDensity,
   } = await analizarAudioConIris(audioUrl, { timeoutMs: 90_000 }).catch(
@@ -107,6 +107,8 @@ export async function analizarYGuardarDinamicaCancion(
       return { bpm: null, tonalidad: null, onsetDensity: null };
     },
   );
+  // El BPM sale de los pulsos de la red (~95 % de aciertos); sin ella, del detector por ataques (~55 %).
+  const bpmDetectado = (await medirBpmPreciso(audioUrl, { timeoutMs: 90_000, maxDuracionSeg: 360 }).catch(() => null)) ?? bpmPorAtaques;
   console.log(
     "[Repertorio] Análisis de audio de %s: dinámica=%s bpm=%s tonalidad=%s densidadOnsets=%s", songId, audioAnalizable ? "ok" : "no analizable", bpmDetectado ?? "-", tonalidadDetectada?.tonalidad ?? "-", onsetDensity?.toFixed(2) ?? "-",
   );
@@ -130,11 +132,10 @@ export async function analizarYGuardarDinamicaCancion(
     cambios.energia_variacion = variacion;
     cambios.energia_variacion_calculada_en = ahora;
   }
-  // Independiente de audioAnalizable: el BPM ya no sale de la curva de energía, así que puede
-  // detectarse aunque esa curva concreta haya fallado (y viceversa).
+  // Independiente de audioAnalizable: el BPM no sale de la curva de energía (puede detectarse aunque falle).
   if (bpmDetectado !== null) {
     cambios.energia_bpm_detectado = bpmDetectado; // sigue alimentando el recalibrado interno de energía
-    cambios.bpm = bpmDetectado;
+    cambios.bpm = Math.round(bpmDetectado); // songs.bpm es entero; energia_bpm_detectado conserva el decimal
     cambios.bpm_detectado_en = ahora;
   }
   if (onsetDensity !== null) {

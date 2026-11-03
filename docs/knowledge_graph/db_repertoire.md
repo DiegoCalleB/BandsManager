@@ -27,6 +27,7 @@ Persistencia de canciones, pistas, energía y afinaciones.
 - [[server_services_colaLetras|server/services/colaLetras.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_utils_audioEnergy|server/utils/audioEnergy.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_utils_audioKey|server/utils/audioKey.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[server_utils_bpmDeAudio|server/utils/bpmDeAudio.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_db_seed|src/db_seed.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_irisTracks|src/utils/irisTracks.ts]] *(Layer: #service, Domain: #repertoire)*
