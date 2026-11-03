@@ -29,6 +29,7 @@ Detección de tonalidad (tono/clave musical) desde audio.
 - [[server_services_acordesCancion|server/services/acordesCancion.ts]] *(from #service)*
 - [[server_services_clipNovedades|server/services/clipNovedades.ts]] *(from #service)*
 - [[server_utils_beatThis_beatThis|server/utils/beatThis/beatThis.ts]] *(from #service)*
+- [[server_utils_bpmDeAudio|server/utils/bpmDeAudio.ts]] *(from #service)*
 - [[server_utils_chordDetection|server/utils/chordDetection.ts]] *(from #service)*
 - [[server_utils_realinearAcordes|server/utils/realinearAcordes.ts]] *(from #service)*
 - [[server_utils_refinarFronteras|server/utils/refinarFronteras.ts]] *(from #service)*
