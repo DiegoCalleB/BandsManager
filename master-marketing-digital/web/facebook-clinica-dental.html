@@ -4,9 +4,9 @@
 <title>Clínica Dental Pérez · Estrategia de Facebook</title>
 <meta name="description" content="Ejercicio de marketing digital: estrategia de Facebook para Clínica Dental Pérez, una clínica de barrio, con tres tipos de contenido y su justificación.">
 <style>
-@font-face{font-family:Onest;font-weight:400;font-display:swap;src:url(/ejercicio_youtube_crm/onest-latin-400-normal.woff2) format("woff2")}
-@font-face{font-family:Onest;font-weight:700;font-display:swap;src:url(/ejercicio_youtube_crm/onest-latin-700-normal.woff2) format("woff2")}
-@font-face{font-family:Onest;font-weight:800;font-display:swap;src:url(/ejercicio_youtube_crm/onest-latin-800-normal.woff2) format("woff2")}
+@font-face{font-family:Onest;font-weight:400;font-display:swap;src:url(/master-marketing-digital/assets/fonts/onest-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:Onest;font-weight:700;font-display:swap;src:url(/master-marketing-digital/assets/fonts/onest-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:Onest;font-weight:800;font-display:swap;src:url(/master-marketing-digital/assets/fonts/onest-latin-800-normal.woff2) format("woff2")}
 :root{--bg:#FBF7F0;--surface:#FFFFFF;--sunken:#EFE8DC;--ink:#12343B;--ink-2:#4C6A70;--ink-3:#8AA0A4;
 --acc:#1D7A87;--acc-soft:#DDEFF1;--acc-ink:#0F4F59;--on-acc:#FFFFFF;--oro:#F2B632;--oro-soft:#FCEFCB;
 --r-s:12px;--r-m:18px;--r-l:24px;--r-xl:32px;--r-pill:999px}
@@ -72,12 +72,12 @@ footer{color:var(--ink-3);font-size:13px;margin-top:40px}
 <header class="hero">
 <div>
 <div class="eyebrow">Máster de Marketing Digital · Facebook</div>
-<img class="logo" src="/ejercicio_facebook/logo.webp" width="470" height="205" alt="Logo de Clínica Dental Pérez: un diente con una puerta y la placa R. Pérez">
+<img class="logo" src="/master-marketing-digital/assets/clinica/logo.webp" width="470" height="205" alt="Logo de Clínica Dental Pérez: un diente con una puerta y la placa R. Pérez">
 <h1>Estrategia de Facebook para una clínica de barrio</h1>
 <p>Cliente: <b>Clínica Dental Pérez</b>, que quiere mostrar más cercanía con sus pacientes y con los vecinos que aún no la conocen, y promover sus tratamientos. Atiende a toda la familia, y los peques son la puerta de entrada.</p>
 <span class="lema">Haciendo barrio, boca a boca.</span>
 </div>
-<img class="perez" src="/ejercicio_facebook/perez/saluda.webp" alt="Pérez, el ratoncito de la clínica, saludando con bata blanca" width="290" height="290">
+<img class="perez" src="/master-marketing-digital/assets/clinica/perez/saluda.webp" alt="Pérez, el ratoncito de la clínica, saludando con bata blanca" width="290" height="290">
 </header>
 
 <h2>Los tres tipos de contenido que utilizaría</h2>
@@ -182,13 +182,13 @@ pinta();
 const Q=[["saluda","Saludo","¡Hola, vecino! Pasa, que la puerta está abierta."],["telefono","El teléfono","Ring, ring. Pérez al aparato: ¿qué diente se ha caído hoy?"],["presenta","Premio","¡Atención! Este diente de leche se merece un premio."],["pulgar","Aprobado","Cepillado de diez. Aprobado."],["cepillo","Cepillo","Dos minutos, dos veces al día. Yo me lo sé de memoria."],["duerme","Almohada","Shhh… recogiendo dientes bajo la almohada."],["libro","Cuento","Hoy toca cuento: «El diente que no quería caerse»."],["pizarra","Clase","Clase de hoy: por qué las encías también importan."]];
 let q=0;
 let voz=null,mudo=false;
-function habla(){if(mudo)return;try{if(voz){voz.pause();voz.currentTime=0}voz=new Audio('/ejercicio_facebook/voz/'+Q[q][0]+'.mp3');voz.play().catch(()=>{})}catch(e){}}
-function escena(){const e=Q[q];$('#escena').src='/ejercicio_facebook/perez/'+e[0]+'.webp';$('#bocadillo').textContent=e[2];document.querySelectorAll('#poses button').forEach((b,i)=>b.setAttribute('aria-pressed',i==q))}
+function habla(){if(mudo)return;try{if(voz){voz.pause();voz.currentTime=0}voz=new Audio('/master-marketing-digital/assets/clinica/voz/'+Q[q][0]+'.mp3');voz.play().catch(()=>{})}catch(e){}}
+function escena(){const e=Q[q];$('#escena').src='/master-marketing-digital/assets/clinica/perez/'+e[0]+'.webp';$('#bocadillo').textContent=e[2];document.querySelectorAll('#poses button').forEach((b,i)=>b.setAttribute('aria-pressed',i==q))}
 $('#poses').innerHTML=Q.map((e,i)=>`<button type="button" data-i="${i}" aria-pressed="${i==0}">${e[1]}</button>`).join('');
 document.querySelectorAll('#poses button').forEach(b=>b.onclick=()=>{q=+b.dataset.i;escena();habla()});
 $('#oir').onclick=()=>{if(mudo){mudo=false;$('#mudo').setAttribute('aria-pressed','false');$('#mudo').textContent='Silenciar'}habla()};
 $('#mudo').onclick=()=>{mudo=!mudo;$('#mudo').setAttribute('aria-pressed',mudo);$('#mudo').textContent=mudo?'Activar voz':'Silenciar';if(mudo&&voz){voz.pause()}};
 escena();
 </script>
-<script src="/ejercicio_youtube_crm/ejercicios.js" defer></script>
+<script src="/master-marketing-digital/assets/ejercicios.js" defer></script>
 </body></html>

@@ -190,6 +190,8 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 
 ---
 
+> **Fuera del alcance del TFM:** la carpeta `master-marketing-digital/` contiene los ejercicios de otro máster (Marketing Digital con IA) y se sirve como web estática. No es software de BandManager: no la analices, no la refactorices ni la uses como ejemplo de código salvo petición expresa. Ver `master-marketing-digital/README.md`.
+
 ## 🎨 4. Subsistemas Especializados (Índice Rápido)
 
 > Los detalles de implementación, invariantes y flujos específicos se han modularizado bajo demanda en **[docs/referencia/SUBSISTEMAS.md](./docs/referencia/SUBSISTEMAS.md)**. Consulta ese documento al modificar o ampliar cualquiera de estos módulos:

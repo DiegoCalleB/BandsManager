@@ -3,9 +3,9 @@
 (function () {
   var GRUPOS = [
     { t: 'Redes sociales', items: [
-      ['Comunidades'], ['Facebook'], ['Instagram'], ['TikTok'], ['YouTube', '/youtube-crm'], ['X (Twitter)'], ['LinkedIn'],
+      ['Comunidades'], ['Facebook', '/master-marketing-digital/facebook-clinica-dental'], ['Instagram'], ['TikTok'], ['YouTube', '/master-marketing-digital/youtube-crm'], ['X (Twitter)'], ['LinkedIn'],
       ['Herramientas para RRSS'], ['Estrategia RRSS']] },
-    { t: 'Marca y estrategia', items: [['Branding e identidad corporativa'], ['Estrategia digital'], ['Marketing de influencers']] },
+    { t: 'Marca y estrategia', items: [['Branding e identidad corporativa', '/master-marketing-digital/branding'], ['Estrategia digital'], ['Marketing de influencers']] },
     { t: 'SEO', items: [
       ['Keyword research'], ['Arquitectura SEO'], ['URLs'], ['Headings'], ['Contenidos'], ['Metadatos'], ['Imágenes'],
       ['Enlazado interno'], ['Robots'], ['Sitemaps'], ['Datos estructurados'], ['Indexación'], ['WPO'], ['Mobile'], ['Blog'],
@@ -16,7 +16,8 @@
     { t: 'Clientes', items: [['CRM']] }
   ];
   window.EJ_GRUPOS = GRUPOS;
-  var FILM = 'https://presentacion-storytelling.up.railway.app/';
+  var FILM = '/presentacion_tfm';
+  var HOME = '/master-marketing-digital';
   var path = location.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
   var hechos = [];
   GRUPOS.forEach(function (g) { g.items.forEach(function (i) { if (i[1]) hechos.push(i); }); });
@@ -30,7 +31,7 @@
   function grupos() {
     return GRUPOS.map(function (g) {
       var hecho = g.items.filter(function (i) { return i[1]; }).length;
-      var abierto = g.items.some(function (i) { return i[1] && i[1] === path; }) || path === '/';
+      var abierto = g.items.some(function (i) { return i[1] && i[1] === path; }) || path === HOME;
       return '<details class="ej-g"' + (abierto ? ' open' : '') + '><summary>' + esc(g.t) + '<span>' + hecho + '/' + g.items.length + '</span></summary><ul>' + g.items.map(item).join('') + '</ul></details>';
     }).join('');
   }
@@ -57,7 +58,7 @@
   var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
 
   var nav = document.createElement('nav'); nav.className = 'ej-nav'; nav.id = 'ejNav'; nav.setAttribute('aria-label', 'Ejercicios del máster');
-  nav.innerHTML = '<a class="ej-home" href="/">Ejercicios del máster</a><input type="search" id="ejQ" placeholder="Buscar ejercicio" aria-label="Buscar ejercicio">' +
+  nav.innerHTML = '<a class="ej-home" href="/master-marketing-digital/">Ejercicios del máster</a><input type="search" id="ejQ" placeholder="Buscar ejercicio" aria-label="Buscar ejercicio">' +
     '<div id="ejG">' + grupos() + '</div><a class="ej-film" href="' + FILM + '">Ver la película del TFM</a>';
   var btn = document.createElement('button'); btn.className = 'ej-btn'; btn.type = 'button'; btn.textContent = 'Ejercicios'; btn.setAttribute('aria-controls', 'ejNav'); btn.setAttribute('aria-expanded', 'false');
   document.body.insertBefore(nav, document.body.firstChild); document.body.insertBefore(btn, nav);

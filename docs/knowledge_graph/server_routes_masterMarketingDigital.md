@@ -1,19 +1,19 @@
 ---
-id: server_routes_ejercicioYoutube
-title: "server/routes/ejercicioYoutube.ts"
+id: server_routes_masterMarketingDigital
+title: "server/routes/masterMarketingDigital.ts"
 layer: route
 domain: system
-file: "server/routes/ejercicioYoutube.ts"
+file: "server/routes/masterMarketingDigital.ts"
 tags: ["route", "system", "auto"]
 ---
 
-# 📌 server/routes/ejercicioYoutube.ts
+# 📌 server/routes/masterMarketingDigital.ts
 
-> **Ubicación:** `server/routes/ejercicioYoutube.ts`  
+> **Ubicación:** `server/routes/masterMarketingDigital.ts`  
 > **Capa:** `#layer/route` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Página estática del ejercicio de YouTube («CRM para bandas»): /ejercicio_youtube_crm sin extensión.
+Web estática del Máster de Marketing Digital (carpeta aparte: master-marketing-digital/web). No es parte del TFM de
 
 ---
 
@@ -29,7 +29,7 @@ Página estática del ejercicio de YouTube («CRM para bandas»): /ejercicio_you
 ---
 
 ## 🧪 Tests que lo cubren
-- `server/routes/__tests__/ejercicioYoutube.test.ts`
+- `server/routes/__tests__/masterMarketingDigital.test.ts`
 
 ---
 
