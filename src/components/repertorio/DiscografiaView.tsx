@@ -11,6 +11,7 @@ import {
   TrackCutItem,
 } from "./LiveConcertToAlbumModal";
 import { SpotifyDiscographyModal } from "./SpotifyDiscographyModal";
+import { bpmPorRemedir } from "../../utils/versionBpm";
 import { BulkAlbumAudioUploaderModal } from "./BulkAlbumAudioUploaderModal";
 import { ExportAlbumSongsModal } from "./ExportAlbumSongsModal";
 import { SongCardRow } from "./SongCardRow";
@@ -380,15 +381,14 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
   // (ver dbUpsertSong en el servidor); esto es solo para ponerse al día con canciones subidas
   // antes de que existiera cada parte de esta feature — que no es toda a la vez: BPM y tonalidad
   // se añadieron después de la dinámica, así que una canción puede tener dinámica calculada y
-  // aun así no tener nunca bpmDetectadoEn/tonalidadDetectadaEn. Sin comprobar los tres por
-  // separado, esas canciones nunca volverían a aparecer como pendientes aunque el botón se
-  // pulse mil veces.
+  // aun así no tener nunca bpmDetectadoEn/tonalidadDetectadaEn. Sin comprobar los tres por separado, esas
+  // canciones nunca volverían a aparecer como pendientes aunque el botón se pulse mil veces.
   const songsPendingDynamicsAnalysis = safeSongs.filter((s) => {
     const audio = s.audioPrincipalUrl || s.audioUrl;
     return (
       Boolean(audio) &&
       (!s.energiaVariacionCalculadaEn ||
-        !s.bpmDetectadoEn ||
+        bpmPorRemedir(s.bpmDetectadoEn) ||
         !s.tonalidadDetectadaEn)
     );
   });
