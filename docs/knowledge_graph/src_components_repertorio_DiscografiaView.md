@@ -35,6 +35,7 @@ Exporta: DiscografiaView.
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_transcripcionMasiva|src/utils/transcripcionMasiva.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_versionBpm|src/utils/versionBpm.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

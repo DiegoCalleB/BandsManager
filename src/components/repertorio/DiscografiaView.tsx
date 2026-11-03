@@ -11,6 +11,7 @@ import {
   TrackCutItem,
 } from "./LiveConcertToAlbumModal";
 import { SpotifyDiscographyModal } from "./SpotifyDiscographyModal";
+import { bpmPorRemedir } from "../../utils/versionBpm";
 import { BulkAlbumAudioUploaderModal } from "./BulkAlbumAudioUploaderModal";
 import { ExportAlbumSongsModal } from "./ExportAlbumSongsModal";
 import { SongCardRow } from "./SongCardRow";
@@ -388,7 +389,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
     return (
       Boolean(audio) &&
       (!s.energiaVariacionCalculadaEn ||
-        !s.bpmDetectadoEn ||
+        bpmPorRemedir(s.bpmDetectadoEn) ||
         !s.tonalidadDetectadaEn)
     );
   });

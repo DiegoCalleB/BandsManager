@@ -187,7 +187,7 @@ export async function analizarYGuardarDinamicaCancion(
   return {
     variacion,
     audioAnalizable,
-    bpmDetectado,
+    bpmDetectado: bpmDetectado === null ? null : Math.round(bpmDetectado), // lo mismo que se guarda en songs.bpm (entero)
     tonalidadDetectada: tonalidadDetectada?.tonalidad ?? null,
   };
 }

@@ -35,10 +35,28 @@ export function bpmDesdePulsos(pulsos: number[]): number | null {
     puntos.push([n, pulsos[i]]);
   }
   if (puntos.length < 8) return null;
-  const mx = puntos.reduce((a, p) => a + p[0], 0) / puntos.length;
-  const my = puntos.reduce((a, p) => a + p[1], 0) / puntos.length;
-  let num = 0, den = 0;
-  for (const [x, y] of puntos) { num += (x - mx) * (y - my); den += (x - mx) ** 2; }
-  const periodo = num / den;
+  // Pendiente (periodo) de una recta por mínimos cuadrados sobre un tramo de puntos.
+  const periodoDe = (tramo: Array<[number, number]>): number => {
+    const mx = tramo.reduce((a, p) => a + p[0], 0) / tramo.length;
+    const my = tramo.reduce((a, p) => a + p[1], 0) / tramo.length;
+    let num = 0, den = 0;
+    for (const [x, y] of tramo) { num += (x - mx) * (y - my); den += (x - mx) ** 2; }
+    return num / den;
+  };
+  // Con tramos largos basta la mediana de los tempos de cada tramo de ~16 pulsos: un final con aplausos, un
+  // parón o un cambio de tempo (marcas espurias que arrastran una única recta global: 92,5 en vez de 93 en un
+  // directo real) no mueven la mediana. Con pocos pulsos, una sola recta.
+  const VENTANA = 16;
+  let periodo: number;
+  if (puntos.length >= VENTANA * 2) {
+    const locales: number[] = [];
+    for (let i = 0; i + VENTANA <= puntos.length; i += VENTANA / 2) {
+      const p = periodoDe(puntos.slice(i, i + VENTANA));
+      if (p > 0) locales.push(p);
+    }
+    periodo = locales.length ? mediana(locales) : periodoDe(puntos);
+  } else {
+    periodo = periodoDe(puntos);
+  }
   return periodo > 0 ? Math.round((60 / periodo) * 10) / 10 : null;
 }

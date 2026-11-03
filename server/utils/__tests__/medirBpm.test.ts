@@ -1,4 +1,6 @@
 import { describe, it, expect } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { bpmDesdePulsos } from '../medirBpm';
 
 /** Pulsos de un tema a `bpm` fijo, cuantizados a tramas de 20 ms como los que da la red. */
@@ -40,5 +42,18 @@ describe('bpmDesdePulsos', () => {
     expect(bpmDesdePulsos([1, 2, 3])).toBeNull();
     expect(bpmDesdePulsos(Array.from({ length: 30 }, (_, i) => i * 0.05))).toBeNull(); // 1200 BPM
     expect(bpmDesdePulsos(Array.from({ length: 30 }, (_, i) => i * 3))).toBeNull(); // 20 BPM
+  });
+});
+
+describe('canción real: «Going Down» en directo (Greek Theatre)', () => {
+  // 594 pulsos que midió Beat This! sobre el audio real (6:18, directo con deriva de ±1 BPM y un final con aplausos
+  // y marcas espurias a partir de ~330 s). La banda la toca a 93; el detector antiguo guardaba 91.
+  const real: number[] = JSON.parse(readFileSync(join(__dirname, 'fixtures', 'pulsos-going-down.json'), 'utf8'));
+
+  it('sale 93 al redondear, y el final ruidoso no lo mueve', () => {
+    const entera = bpmDesdePulsos(real) as number;
+    const sinFinal = bpmDesdePulsos(real.filter((t) => t < 330)) as number;
+    expect(Math.round(entera)).toBe(93);
+    expect(Math.abs(entera - sinFinal)).toBeLessThan(0.3);
   });
 });
