@@ -15,6 +15,7 @@ import { useAdnCartel, type DatosBandaCartel } from './useAdnCartel';
 import { useIdeaCartel } from './useIdeaCartel';
 import { useAjusteFino } from './useAjusteFino';
 import { useEnlaceCartel } from './useEnlaceCartel';
+import { useOrdenCartel } from './useOrdenCartel';
 import { useHistorialCartel, type FotoDiseno } from './useHistorialCartel';
 import {
   canvasABlob,
@@ -410,6 +411,7 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
   /** Carteles de OTROS bolos de la banda que se pueden ofrecer como referencia (ya viven en su carpeta). */
   const anteriores = useMemo(() => cartelesAnteriores(concerts, id, adn.adn.referencias), [concerts, id, adn.adn.referencias]);
 
+  const orden = useOrdenCartel({ ajustes, formato, cambiarAjustes, puedeRetocar: fondo.tipo === 'imagen' && fondo.origen === 'ia', retocarIa, setError, mensajeDe });
   const { ajustarBloque, reiniciarAjustesFinos, estilarBloque, editarLibre } = useAjusteFino(ajustes, formato, cambiarAjustes);
 
   const exportar = useCallback(
@@ -534,6 +536,7 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     ajustarBloque,
     estilarBloque,
     editarLibre,
+    orden,
     reiniciarAjustesFinos,
     hayAjustesFinos: !!ajustes.ajustesFinos[formato],
     compartido,
