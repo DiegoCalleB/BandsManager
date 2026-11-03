@@ -25,6 +25,7 @@ Catálogo de canciones, setlists, atril, modo escenario y práctica.
 - [[ext_supabase_storage|Supabase Storage]] *(Layer: #external, Domain: #system)*
 - [[route_repertoire|Repertoire & Setlists Route]] *(Layer: #route, Domain: #repertoire)*
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_guardarCancion|server/db/guardarCancion.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_tiposAdn|server/db/tiposAdn.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_tiposRepertorio|server/db/tiposRepertorio.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
