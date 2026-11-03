@@ -23,6 +23,7 @@ Persistencia de canciones, pistas, energía y afinaciones.
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_guardarCancion|server/db/guardarCancion.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_tiposRepertorio|server/db/tiposRepertorio.ts]] *(Layer: #db, Domain: #system)*
 - [[server_services_colaLetras|server/services/colaLetras.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_utils_audioEnergy|server/utils/audioEnergy.ts]] *(Layer: #service, Domain: #repertoire)*
