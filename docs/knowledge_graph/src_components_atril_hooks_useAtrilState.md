@@ -21,6 +21,7 @@ Estado base del Atril: pestañas, notación, transposición, cifrado, paneles y 
 - [[src_components_chords_useVistaAcordes|src/components/chords/useVistaAcordes.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_hooks_useAutoScroll|src/hooks/useAutoScroll.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_hooks_useMetronomo|src/hooks/useMetronomo.ts]] *(Layer: #hook, Domain: #system)*
+- [[src_hooks_useNotacion|src/hooks/useNotacion.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_modosAtril|src/utils/modosAtril.ts]] *(Layer: #service, Domain: #repertoire)*
 

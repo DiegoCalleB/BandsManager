@@ -18,6 +18,7 @@ import { ModalPortal } from "../common/ModalPortal";
 import { ShowIcon } from '../ui/ShowIcon';
 import { textOnColor } from '../../utils/contrastText';
 import { Button, IconButton, Input, Textarea } from '../ui';
+import { useFormatoTono } from "../../hooks/useNotacion";
 
 interface MemberNotesModalProps {
   isOpen: boolean;
@@ -35,6 +36,7 @@ export function MemberNotesModal({
   onClose,
   onSaveSongNotes
 }: MemberNotesModalProps) {
+  const fmtTono = useFormatoTono();
   const resolvedMembers = resolveBandMembers(bandMembers, song?.notasMiembros);
 
   // Initialize local state of notes per member
@@ -233,7 +235,7 @@ export function MemberNotesModal({
                   <span className="font-bold text-[var(--ink)]">
                     {formatSongTitle(song.titulo)}
                   </span>{" "}
-                  {song.tonalidad && `(${song.tonalidad})`}
+                  {fmtTono(song.tonalidad) && `(${fmtTono(song.tonalidad)})`}
                 </p>
               </div>
             </div>

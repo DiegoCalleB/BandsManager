@@ -110,6 +110,7 @@ interface EnergyChartProps {
 }
 
 import { monotonePath } from "../../utils/curve";
+import { useFormatoTono } from "../../hooks/useNotacion";
 
 const CONSULTA_PUNTERO_FINO = "(hover: hover) and (pointer: fine)";
 const suscribirPunteroFino = (avisar: () => void) => {
@@ -146,6 +147,7 @@ export function EnergyChart({
   expandedWidthPx,
   belowChartSlot,
 }: EnergyChartProps) {
+  const fmtTono = useFormatoTono();
   const fontSize = 11;
   // Tres velocidades de animación según el motivo del cambio — nunca la misma para las tres,
   // porque cada una pide algo distinto:
@@ -209,9 +211,8 @@ export function EnergyChart({
     selectedSetlistItemId && selectedSetlistItemId !== dismissedId
       ? (chartData.find((d) => d.id === selectedSetlistItemId) ?? null)
       : null;
-  // Único punto de entrada para seleccionar un punto (clic en el punto, en el contenedor, o tap
-  // sin arrastre) — limpia el "cerrado a mano" para que volver a tocar el mismo punto tras cerrar
-  // su panel lo vuelva a abrir, no lo deje muerto para siempre.
+  // Único punto de entrada para seleccionar un punto (clic, contenedor o tap sin arrastre) — limpia el "cerrado a mano"
+  // para que volver a tocar el mismo punto tras cerrar su panel lo vuelva a abrir, no lo deje muerto.
   const selectPoint = (id: string) => {
     setDismissedId(null);
     onSelectItem?.(id);
@@ -390,8 +391,7 @@ export function EnergyChart({
           setHoverIndex(getIndexFromClientX(e.clientX));
           return;
         }
-        const canEditEnergy =
-          !!onEnergyChange && from !== null && chartData[from]?.songId != null;
+        const canEditEnergy = !!onEnergyChange && from !== null && chartData[from]?.songId != null;
         // En táctil el arrastre vertical NO edita la energía: se cambiaba sin querer al hacer
         // scroll. Allí se edita con el joystick del punto seleccionado.
         dragAxisRef.current =
@@ -738,7 +738,7 @@ export function EnergyChart({
                       return (
                         <span className="absolute pointer-events-none -translate-x-1/2 rounded-[var(--r-pill)] bg-[var(--surface)] px-1.5 font-mono font-semibold text-[var(--ink)] leading-[1.35]"
                           style={{ left: x, top: abajo ? y + r + 3 : y - r - 5 - fs - 3, fontSize: fs }}>
-                          {d.tonalidad}
+                          {fmtTono(d.tonalidad)}
                         </span>
                       );
                     })()}
@@ -771,7 +771,7 @@ export function EnergyChart({
             <p className="font-bold text-[var(--acc-ink)] truncate">{chartData[tip.i].name}</p>
             <p className="text-[var(--ink-2)] truncate">
               <ShowIcon inline emoji={chartData[tip.i].icon} /> {chartData[tip.i].label} ({typeof chartData[tip.i].score === "number" ? Math.round((chartData[tip.i].score as number) / 2) : "–"}/10)
-              {chartData[tip.i].tonalidad ? ` · ${chartData[tip.i].tonalidad}` : ""}
+              {fmtTono(chartData[tip.i].tonalidad) ? ` · ${fmtTono(chartData[tip.i].tonalidad)}` : ""}
               {typeof chartData[tip.i].bpm === "number" ? ` · ${chartData[tip.i].bpm} BPM` : ""}
             </p>
           </div>
@@ -848,7 +848,7 @@ export function EnergyChart({
                   )}
                   {d.tonalidad && (
                     <p className="text-[var(--acc)]/70 mt-0.5">
-                      <ShowIcon inline emoji="🎼" />{d.tonalidad}
+                      <ShowIcon inline emoji="🎼" />{fmtTono(d.tonalidad)}
                     </p>
                   )}
                   {d.variance > 0 && (

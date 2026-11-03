@@ -147,9 +147,27 @@ export function useSongEditing({ setStatusBanner, setSongs, editingSong, activeP
     const hasNewAudio = Boolean(audioFile && audioFile.size > 0);
     if (hasNewAudio) {
       try {
-        audioPrincipalUrl = await uploadFileToServer(audioFile);
+        audioPrincipalUrl = await uploadFileToServer(audioFile, {
+          onProgress: (p) =>
+            setStatusBanner({
+              type: "loading",
+              text: p.fase === "subiendo"
+                ? `⬆️ Subiendo "${audioFile.name}" ${p.pct}%…`
+                : `⚙️ "${audioFile.name}" ya está en el servidor: se está optimizando y guardando (un WAV grande puede tardar un par de minutos)…`,
+            }),
+        });
+        // Si el servidor no lo aceptó y cayó al respaldo local, el audio solo existe en este navegador.
+        if (!/^https?:\/\//i.test(audioPrincipalUrl) && !audioPrincipalUrl.startsWith("/")) {
+          setStatusBanner({ type: "warning", text: `"${audioFile.name}" no llegó al servidor: solo está guardado en este navegador. Vuelve a subirlo cuando tengas conexión.` });
+        } else {
+          setStatusBanner({ type: "success", text: "Audio subido correctamente." });
+          setTimeout(() => setStatusBanner(null), 3000);
+        }
       } catch (err) {
-        console.error("Error reading uploaded audio file:", err);
+        // Antes solo se hacía console.error y la canción se guardaba con el audio anterior sin decir nada.
+        console.error("Error subiendo el audio:", err);
+        setStatusBanner({ type: "error", text: `No se pudo subir el audio: ${err instanceof Error ? err.message : "error desconocido"}. No se ha guardado el cambio.` });
+        return;
       }
     }
 

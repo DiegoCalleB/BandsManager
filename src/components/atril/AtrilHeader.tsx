@@ -7,12 +7,14 @@ import { formatSongTitle } from "../../utils/formatSongTitle";
 import { ActionMenu,Button } from "../ui";
 import { AtrilTabs } from "./AtrilTabs";
 import { useAtril } from "./AtrilContext";
+import { useFormatoTono } from "../../hooks/useNotacion";
 
 /**
  * Cabecera del Atril: título, tonalidad, ficha del tema y acciones.
  * @returns Sección de interfaz.
  */
 export function AtrilHeader() {
+  const fmtTono = useFormatoTono();
   const { handleToggleAudio, isPlayingAudio, audioUrl, song, handleGenerateWithAi, isGeneratingAi, analisisAcordes, isAnalyzingChords, setShowAnalisisAcordes, handleAnalyzeChordsFromAudio, setShowStructureUploadModal, setShowShareModal, setShowMetronomeModal, setShowTunerModal, setActiveTab, esMovil, modoEscenario, setModoEscenario } = useAtril();
   return (
     <>
@@ -31,9 +33,9 @@ export function AtrilHeader() {
             }`}
             title={
               isPlayingAudio
-                ? "Pausar audio de la canción"
+                ? "Pausar (Espacio)"
                 : audioUrl
-                  ? "Reproducir audio de la canción (Escuchar mientras lees el cifrado)"
+                  ? "Reproducir (Espacio) · ← → saltan 5 s · M más controles · E escenario · F pantalla completa"
                   : "Esta canción no tiene archivo de audio adjunto en Repertorio"
             }
           >
@@ -55,7 +57,7 @@ export function AtrilHeader() {
               )}
             </div>
             <p className="text-xs text-[var(--ink-2)] font-sans mt-0.5">
-              {[song.tonalidad || "Mim", `${song.bpm || 120} BPM`, song.afinacion, song.duracion].filter(Boolean).join(" · ")}
+              {[fmtTono(song.tonalidad) || "Em", `${song.bpm || 120} BPM`, song.afinacion, song.duracion].filter(Boolean).join(" · ")}
             </p>
           </div>
         </div>
@@ -113,7 +115,7 @@ export function AtrilHeader() {
               { label: "Compartir por WhatsApp o app", icon: MessageSquare, onSelect: () => setShowShareModal(true) },
               { label: "Metrónomo", icon: Timer, onSelect: () => setShowMetronomeModal(true) },
               { label: "Afinador", icon: Guitar, onSelect: () => setShowTunerModal(true) },
-              { label: modoEscenario ? "Salir del modo escenario" : "Modo escenario (letra grande)", icon: Theater, onSelect: () => setModoEscenario((v) => !v) },
+              { label: modoEscenario ? "Salir del modo escenario" : "Modo escenario (letra grande) · tecla E", icon: Theater, onSelect: () => setModoEscenario((v) => !v) },
               { label: "Imprimir cifrado", icon: Printer, onSelect: () => window.print() },
               { label: "Ficha de sustituto urgente", icon: UserCheck, onSelect: () => setActiveTab("substitute") },
               { label: "Editar cifrado", icon: Edit3, onSelect: () => setActiveTab("edit") },

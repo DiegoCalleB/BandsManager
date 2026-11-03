@@ -211,3 +211,33 @@ export function moverCambio(segmentos: SegmentoAcordeAnalizado[], tiempos: numbe
   const destino = tiempos[casillaMasCercana(tiempos, t0) + direccion];
   return destino === undefined ? null : moverCambioA(segmentos, tiempos, t0, destino);
 }
+
+/**
+ * Pone `acorde` (lo que escribe el músico: «C», «Do», «Am7») en el rango [t0, t1) partiendo los
+ * tramos que haga falta; lo de fuera del rango se queda como estaba. Sirve para añadir el acorde
+ * que el detector no vio o cambiar uno mal puesto, sin tocar el resto del compás.
+ * @returns Los tramos nuevos, o null si el acorde no es reconocible o no cambia nada.
+ */
+export function ponerAcordeEnRango(segmentos: SegmentoAcordeAnalizado[], t0: number, t1: number, acorde: string): SegmentoAcordeAnalizado[] | null {
+  const nombre = normalizarAcorde(acorde);
+  if (nombre === null || !(t1 > t0)) return null;
+  const solapan = segmentos.filter((s) => s.t1 > t0 && s.t0 < t1);
+  if (solapan.length === 0 || solapan.every((s) => s.acorde === nombre)) return null;
+
+  const primero = solapan[0];
+  const ultimo = solapan[solapan.length - 1];
+  const antes = segmentos.filter((s) => s.t1 <= t0);
+  const despues = segmentos.filter((s) => s.t0 >= t1);
+  const izquierda: SegmentoAcordeAnalizado[] = [];
+  const derecha: SegmentoAcordeAnalizado[] = [];
+  let ini = Math.max(t0, primero.t0);
+  let fin = Math.min(t1, ultimo.t1);
+  // Si lo que sobra del tramo original es menos que TRAMO_MINIMO, se absorbe en vez de dejar una astilla.
+  if (primero.t0 < t0) { if (t0 - primero.t0 >= TRAMO_MINIMO) izquierda.push({ ...primero, t1: redondear(t0) }); else ini = primero.t0; }
+  if (ultimo.t1 > t1) { if (ultimo.t1 - t1 >= TRAMO_MINIMO) derecha.push({ ...ultimo, t0: redondear(t1) }); else fin = ultimo.t1; }
+  ini = redondear(ini);
+  fin = redondear(fin);
+  const detectado = primero.editado ? primero.detectado : primero.acorde;
+  const nuevo: SegmentoAcordeAnalizado = { t0: ini, t1: fin, acorde: nombre, confianza: 1, editado: true, ...(detectado ? { detectado } : {}) };
+  return [...antes, ...izquierda, nuevo, ...derecha, ...despues];
+}

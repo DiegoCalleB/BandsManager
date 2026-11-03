@@ -95,6 +95,7 @@ Vista tipada de un valor capturado en un `catch`.
 - [[server_routes_users_rutasPreferencias|server/routes/users/rutasPreferencias.ts]] *(from #route)*
 - [[server_routes_users_rutasRegistro|server/routes/users/rutasRegistro.ts]] *(from #route)*
 - [[server_services_agentQueueWorker|server/services/agentQueueWorker.ts]] *(from #agent)*
+- [[server_services_analisisAcordesRapido|server/services/analisisAcordesRapido.ts]] *(from #service)*
 - [[server_services_apifyInstagramService|server/services/apifyInstagramService.ts]] *(from #service)*
 - [[server_services_audioSeparator_AudioSeparatorService|server/services/audioSeparator/AudioSeparatorService.ts]] *(from #service)*
 - [[server_services_audioSeparator_FalAiService|server/services/audioSeparator/FalAiService.ts]] *(from #service)*
@@ -142,6 +143,7 @@ Vista tipada de un valor capturado en un `catch`.
 - [[server_utils_audioKey|server/utils/audioKey.ts]] *(from #service)*
 - [[server_utils_emailValidator|server/utils/emailValidator.ts]] *(from #service)*
 - [[server_utils_enrichCoversWithoutAudio|server/utils/enrichCoversWithoutAudio.ts]] *(from #service)*
+- [[server_utils_optimizarAudioSubido|server/utils/optimizarAudioSubido.ts]] *(from #service)*
 - [[server_utils_optimizeExistingWavs|server/utils/optimizeExistingWavs.ts]] *(from #service)*
 - [[server_utils_perfectSetlistPlanner|server/utils/perfectSetlistPlanner.ts]] *(from #service)*
 - [[server_utils_setlistImport|server/utils/setlistImport.ts]] *(from #service)*

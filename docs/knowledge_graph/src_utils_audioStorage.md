@@ -22,6 +22,7 @@ Audio Storage & Utility Helpers for BandManager
 - [[src_services_api|src/services/api.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_subidaConProgreso|src/utils/subidaConProgreso.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

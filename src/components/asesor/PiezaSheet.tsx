@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { Check, Copy, RefreshCw, X } from 'lucide-react';
+import { Check, RefreshCw, X } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
 import { Button, Chip, IconButton, SkeletonText, Tabs, type TabItem } from '../ui';
-import { copyToClipboard } from '../../utils/shareUtils';
 import type { Tarjeta } from '../../utils/asesor/opciones';
 import { ETIQUETA_PASO, partirTextoYoutube, type Pieza } from '../../utils/asesor/pieza';
 import type { Red } from '../../utils/asesor/reglasFormato';
 import type { EstadoPieza } from './hooks/useAsesor';
 import { NOMBRE_FORMATO, NOMBRE_RED } from './nombres';
+import { BotonCopiar } from './BotonCopiar';
 import { LaminasPieza } from './LaminasPieza';
 import { esFormatoLamina } from '../../utils/asesor/laminas';
 import type { BandaLaminas } from './hooks/useLaminas';
@@ -20,22 +20,6 @@ interface Props {
   onCerrar: () => void;
   onOtraVersion: () => void;
   onHecha: () => void;
-}
-
-function BotonCopiar({ texto, etiqueta = 'Copiar' }: { texto: string; etiqueta?: string }) {
-  const [copiado, setCopiado] = useState(false);
-  const copiar = async () => {
-    if (await copyToClipboard(texto)) {
-      setCopiado(true);
-      setTimeout(() => setCopiado(false), 1500);
-    }
-  };
-  return (
-    <Button size="xs" variant="ghost" onClick={copiar}>
-      {copiado ? <Check className="size-3.5" aria-hidden /> : <Copy className="size-3.5" aria-hidden />}
-      {copiado ? 'Copiado' : etiqueta}
-    </Button>
-  );
 }
 
 function Bloque({ titulo, children, copiar }: { titulo: string; children: React.ReactNode; copiar?: string }) {

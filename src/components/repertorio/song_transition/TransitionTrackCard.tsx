@@ -8,6 +8,7 @@ import { ShowIcon } from "../../ui/ShowIcon";
 import { useSongTransition } from "./SongTransitionContext";
 import { formatSec } from "./transitionFormat";
 import type { Pista } from "./types";
+import { useFormatoTono } from "../../../hooks/useNotacion";
 
 // Clases literales por pista (Tailwind solo genera las que aparecen enteras en el código).
 // A acaba (color del módulo), B entra (en curso), según la gramática de color de Espectro.
@@ -37,6 +38,7 @@ const ESTILO = {
  * @param props.track Pista que pinta.
  */
 export function TransitionTrackCard({ track }: { track: Pista }) {
+  const fmtTono = useFormatoTono();
   const ctx = useSongTransition();
   const esA = track === "A";
   const song = esA ? ctx.songA : ctx.songB;
@@ -73,7 +75,7 @@ export function TransitionTrackCard({ track }: { track: Pista }) {
           </span>
           <div className="flex items-center gap-1">
             <span className="px-1.5 py-0.2 rounded bg-[var(--sunken)] text-[var(--acc-ink)] font-sans text-micro font-semibold">
-              <ShowIcon inline emoji="🎼" /> {item?.tonalidadDeseada || song.tonalidad || "Sin tono"}
+              <ShowIcon inline emoji="🎼" /> {fmtTono(item?.tonalidadDeseada || song.tonalidad) || "Sin tono"}
             </span>
             {song.bpm && (
               <span className="px-1.5 py-0.2 rounded bg-[var(--sunken)] text-[var(--ink-2)] font-sans text-micro font-semibold">

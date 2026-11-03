@@ -15,4 +15,18 @@ router.get('/ejercicio_youtube_crm', publicoRateLimiter, (_req, res, next) => {
   res.sendFile(ARCHIVO_EJERCICIO_YOUTUBE(), (err) => { if (err) next(); });
 });
 
+// Resto de ejercicios del máster: mismas reglas (HTML suelto en dist/, sin datos de bandas). Rutas literales.
+export const ARCHIVO_EJERCICIO_BRANDING = () => path.join(process.cwd(), 'dist', 'ejercicio_branding.html');
+export const ARCHIVO_EJERCICIO_FACEBOOK = () => path.join(process.cwd(), 'dist', 'ejercicio_facebook.html');
+
+router.get('/ejercicio_branding', publicoRateLimiter, (_req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store');
+  res.sendFile(ARCHIVO_EJERCICIO_BRANDING(), (err) => { if (err) next(); });
+});
+
+router.get('/ejercicio_facebook', publicoRateLimiter, (_req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store');
+  res.sendFile(ARCHIVO_EJERCICIO_FACEBOOK(), (err) => { if (err) next(); });
+});
+
 export default router;

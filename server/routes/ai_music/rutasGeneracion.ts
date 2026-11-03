@@ -5,6 +5,7 @@ import express from 'express';
 import { requireAuth } from '../../state.js';
 import { iaRateLimiter } from '../../middleware/rateLimiter.js';
 import { costEurFromTokens, generateContentWithFallback } from '../../ai.js';
+import { MODELO_LYRIA_CLIP, MODELO_LYRIA_PRO } from '../../utils/modelosGemini.js';
 import { dbRecordAiUsage } from '../../db/aiLedger.js';
 import { getTargetBandId } from '../../utils/bandAccess.js';
 import { ai, generateMusicGenTrack, callLyriaWithRetries } from './generacionMusical.js';
@@ -28,7 +29,7 @@ router.post(
       const fullPrompt = `Create a professional custom soundtrack, jingle or background music in the musical style of: ${style || 'rock'}. User prompt / description: ${prompt || 'Energetic independent band theme'}. Band style, ideology and lyric context: ${lyrics || 'Independent music passion'}`;
 
       const response = await ai.models.generateContentStream({
-        model: 'lyria-3-clip-preview',
+        model: MODELO_LYRIA_CLIP,
         contents: fullPrompt,
       });
 
@@ -81,7 +82,7 @@ router.post(
           bandId,
           promptTokens,
           completionTokens,
-          modelName: 'lyria-3-clip-preview',
+          modelName: MODELO_LYRIA_CLIP,
           estimatedCostEur: costEurFromTokens(
             'gemini',
             promptTokens,
@@ -209,7 +210,7 @@ REMINDER: the final audio must clearly and unmistakably be ${genreLabel}, matchi
       // más largas — de nada sirve una pista de 3 minutos si suena a otra canción. Se queda en 30s
       // fijos (limitación del propio modelo), y solo si falla del todo probamos Pro con una
       // instrucción de duración explícita, priorizando "algo largo" sobre "nada" en ese caso extremo.
-      let modelUsed = 'lyria-3-clip-preview';
+      let modelUsed = MODELO_LYRIA_CLIP;
 
       try {
         const result = await callLyriaWithRetries(modelUsed, basePrompt, 2);
@@ -221,7 +222,7 @@ REMINDER: the final audio must clearly and unmistakably be ${genreLabel}, matchi
           `Lyria ${modelUsed} falló tras reintentos, probando fallback a lyria-3-pro-preview (más duración, pero menos fiel al contexto en pruebas):`,
           lyriaClipErr
         );
-        modelUsed = 'lyria-3-pro-preview';
+        modelUsed = MODELO_LYRIA_PRO;
         const clampedDurationSec =
           Math.max(30, Math.min(175, Number(targetDurationSec) || 0)) ||
           undefined;
@@ -251,7 +252,7 @@ REMINDER: the final audio must clearly and unmistakably be ${genreLabel}, matchi
       }
 
       const modelLabel =
-        modelUsed === 'lyria-3-pro-preview'
+        modelUsed === MODELO_LYRIA_PRO
           ? 'Lyria 3 Pro · larga duración'
           : 'Lyria 3 Clip · 30s fijos';
       return res.json({

@@ -24,6 +24,7 @@ Asesor de Marketing.
 - [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(Layer: #security, Domain: #system)*
 - [[server_services_asesorInstagram|server/services/asesorInstagram.ts]] *(Layer: #service, Domain: #social)*
 - [[server_services_asesorMarketing|server/services/asesorMarketing.ts]] *(Layer: #service, Domain: #system)*
+- [[server_services_asesorPresencia|server/services/asesorPresencia.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_asesorRedes|server/services/asesorRedes.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_errorTracking|server/utils/errorTracking.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_estrategia|src/utils/asesor/estrategia.ts]] *(Layer: #service, Domain: #system)*
@@ -38,6 +39,7 @@ Asesor de Marketing.
 
 ## 🧪 Tests que lo cubren
 - `server/routes/__tests__/asesor.test.ts`
+- `server/routes/__tests__/asesorPresencia.test.ts`
 - `server/routes/__tests__/asesorRedes.test.ts`
 
 ---

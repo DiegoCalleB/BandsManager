@@ -6,6 +6,7 @@
 //   GET  /api/asesor/instagram/medios       publicaciones de Instagram que pueden ser una pieza hecha.
 //   POST /api/asesor/instagram/medidas      alcance y guardados de UNA publicación, para rellenar el formulario.
 //   POST /api/asesor/chat                   pregunta libre al asesor; responde y, como mucho, propone un botón (no ejecuta nada).
+//   POST /api/asesor/presencia              auditoría 360, kit SEO y clics de los enlaces; solo lee, sin IA.
 //   GET  /api/asesor/estrategia             estrategia guardada de la banda.
 //   PUT  /api/asesor/estrategia             la guarda, saneada por lista blanca.
 //   POST /api/asesor/estrategia/sugerir     borrador con IA a partir del perfil; NO se guarda.
@@ -18,6 +19,7 @@ import { apiAutenticadaRateLimiter, iaRateLimiter } from '../middleware/rateLimi
 import { captureError } from '../utils/errorTracking.js';
 import { dbGetEstrategiaMarketing, dbGuardarEstrategiaMarketing } from '../db/asesorMarketing.js';
 import { chatAsesor, estadoDeHoy, generarPieza, registrarAccion, registrarResultado, sugerirEstrategia } from '../services/asesorMarketing.js';
+import { presenciaDeLaBanda } from '../services/asesorPresencia.js';
 import { registrarResultadoRed } from '../services/asesorRedes.js';
 import { medidasDeMedio, mediosDeLaPieza } from '../services/asesorInstagram.js';
 import { ESTRATEGIA_INICIAL, sanearEstrategia } from '../../src/utils/asesor/estrategia.js';
@@ -114,6 +116,16 @@ asesorRouter.post('/asesor/chat', requireAuth, iaRateLimiter, async (req, res) =
     res.status(503).json({ error: r.error === 'sin_ia' ? 'El asesor no ha podido responder. Prueba otra vez en un momento.' : 'No se pudo consultar ahora mismo.' });
   } catch (e) {
     fallo(res, 'POST /asesor/chat', e, 'No se pudo responder.');
+  }
+});
+
+asesorRouter.post('/asesor/presencia', requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
+  try {
+    const presencia = await presenciaDeLaBanda(getTargetBandId(req), req.body?.bios);
+    if (!presencia) return res.status(503).json({ error: 'No se pudo revisar vuestra presencia ahora mismo.' });
+    res.json(presencia);
+  } catch (e) {
+    fallo(res, 'POST /asesor/presencia', e, 'No se pudo revisar vuestra presencia.');
   }
 });
 

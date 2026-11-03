@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ShowIcon } from '../ui/ShowIcon';
 
-const SILENT_AUDIO_URI =
-  "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=";
+const SILENT_AUDIO_URI = "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=";
 import { Song, Setlist, SetlistItem } from "../../types";
 import { Printer, Music, Mic, Radio, SkipBack, SkipForward, Play, Pause, Repeat, Heart, Footprints, FileText, WifiOff, Check } from "lucide-react";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
@@ -12,6 +11,7 @@ import { cacheActiveStageSetlist } from "../../utils/stageOfflineCache";
 import { formatSongTitle } from "../../utils/formatSongTitle";
 import { Button, Select } from '../ui';
 import { useReajusteAlCambiar } from "../../hooks/useReajusteAlCambiar";
+import { useFormatoTono } from "../../hooks/useNotacion";
 
 interface EscenarioViewProps {
   activeSetlist: Setlist | null;
@@ -122,6 +122,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
   formatItemDuration,
   embedded = false,
 }) => {
+  const fmtTono = useFormatoTono();
   const currentStageItem =
     stagePlayingIndex !== null && activeSetlist
       ? activeSetlist.items[stagePlayingIndex]
@@ -355,7 +356,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                 {currentStageSong && (
                   <div className="text-xs font-sans text-[var(--ink-2)] flex items-center gap-2 mt-0.5 flex-wrap">
                     <span className="font-bold text-[var(--ink)]">
-                      {currentStageSong.tonalidad || "Am"}
+                      {fmtTono(currentStageSong.tonalidad) || "Am"}
                     </span>
                     <span>•</span>
                     <span className="flex items-center gap-1.5 font-bold text-[var(--acc)]/70">
@@ -648,7 +649,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
               <div className="text-xs font-sans text-[var(--ink-2)] flex items-center gap-2">
                 {currentStageSong.tonalidad && (
                   <span className="px-2 py-0.5 rounded bg-[var(--sunken)] text-[var(--acc-ink)] font-bold">
-                    Tono: {currentStageSong.tonalidad}
+                    Tono: {fmtTono(currentStageSong.tonalidad)}
                   </span>
                 )}
                 {currentStageSong.bpm && (
@@ -778,8 +779,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                   const s = songs.find((x) => x.id === it.songId);
                   if (!s) return null;
 
-                  const isPlayingThis =
-                    stagePlayingIndex === idx && stageIsPlaying;
+                  const isPlayingThis = stagePlayingIndex === idx && stageIsPlaying;
                   const isSelectedThis = stagePlayingIndex === idx;
 
                   return (
@@ -840,7 +840,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
 
                       <div className="col-span-2 text-center">
                         <span className="px-2.5 py-1 bg-[var(--surface)]/20 text-[var(--ok)] rounded-[var(--r-s)] text-xs font-sans font-bold">
-                          {s.tonalidad || "Am"}
+                          {fmtTono(s.tonalidad) || "Am"}
                         </span>
                       </div>
 

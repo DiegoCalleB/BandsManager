@@ -1,0 +1,24 @@
+name: Modelos de IA
+
+# Los modelos de Google se retiran sin que nadie toque este repo (Gemini 1.5/2.0, text-embedding-004,
+# Imagen 3...). Este workflow semanal compara los IDs de server/utils/modelosGemini.ts con la API real
+# y falla ANTES de que lo descubra un usuario. Necesita el secreto GEMINI_API_KEY; sin él se salta.
+on:
+  schedule:
+    - cron: '17 6 * * 1'
+  workflow_dispatch:
+
+jobs:
+  modelos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+      - name: Comprobar que los modelos registrados siguen existiendo
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: npm run check:modelos

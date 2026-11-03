@@ -5,6 +5,7 @@
 import { apiFetch } from './api';
 import type { AccionChat, Mensaje } from './asesor/chat';
 import type { DiaAgenda } from './asesor/agenda';
+import type { BiosPegadas, Presencia } from './asesor/presencia';
 import type { Diagnostico } from './asesor/diagnostico';
 import type { EstrategiaMarketing } from './asesor/estrategia';
 import type { OpcionesDeHoy } from './asesor/opciones';
@@ -69,3 +70,7 @@ export const medidasDeInstagram = (medioId: string) =>
 /** Pregunta libre al asesor. Responde y, como mucho, propone un botón: no cambia el plan ni guarda nada. */
 export const preguntarAlAsesor = (mensajes: Mensaje[]) =>
   apiFetch<{ respuesta: string; accion: AccionChat | null }>('/api/asesor/chat', { method: 'POST', body: JSON.stringify({ mensajes }) });
+
+/** La auditoría 360, el kit SEO y los clics de los enlaces. Solo lee; las bios que pega la banda viajan en la petición y no se guardan. */
+export const obtenerPresencia = (bios: BiosPegadas) =>
+  apiFetch<Presencia>('/api/asesor/presencia', { method: 'POST', body: JSON.stringify({ bios }) });

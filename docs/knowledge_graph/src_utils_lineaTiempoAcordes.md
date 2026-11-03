@@ -27,6 +27,7 @@ Exporta: indiceSegmentoEn, siguienteAcordeReal, RangoBucle, rangoBucle, saltoDeB
 - [[src_components_atril_AtrilCompases|src/components/atril/AtrilCompases.tsx]] *(from #frontend)*
 - [[src_components_atril_hooks_useAtrilHarmony|src/components/atril/hooks/useAtrilHarmony.ts]] *(from #frontend)*
 - [[src_components_chords_LineaTiempoAcordes|src/components/chords/LineaTiempoAcordes.tsx]] *(from #frontend)*
+- [[src_utils_acordeEnHermanos|src/utils/acordeEnHermanos.ts]] *(from #service)*
 - [[src_utils_ajusteEnBloque|src/utils/ajusteEnBloque.ts]] *(from #service)*
 - [[src_utils_alineacionAcordes|src/utils/alineacionAcordes.ts]] *(from #service)*
 - [[src_utils_armoniaVisor|src/utils/armoniaVisor.ts]] *(from #service)*
@@ -37,6 +38,7 @@ Exporta: indiceSegmentoEn, siguienteAcordeReal, RangoBucle, rangoBucle, saltoDeB
 ## 🧪 Tests que lo cubren
 - `src/utils/__tests__/ajusteEnBloque.test.ts`
 - `src/utils/__tests__/lineaTiempoAcordes.test.ts`
+- `src/utils/__tests__/ponerAcordeEnRango.test.ts`
 
 ---
 

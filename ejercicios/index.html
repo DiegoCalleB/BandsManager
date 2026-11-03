@@ -10,6 +10,8 @@
 :root{--bg:#F6F7F9;--surface:#FFFFFF;--sunken:#E8EBEF;--ink:#2A2E35;--ink-2:#646C78;--ink-3:#98A0AC;--acc:#D86E31;--acc-soft:#F9EAE1;--acc-ink:#813F18;--on-acc:#FFFFFF;--r-m:18px;--r-l:24px;--r-xl:32px;--r-pill:999px}
 [data-theme="dark"]{--bg:#101216;--surface:#191C21;--sunken:#0B0D10;--ink:#E3E7EC;--ink-2:#99A1AC;--ink-3:#6B7380;--acc:#E99463;--acc-soft:#2A1B12;--acc-ink:#E99463;--on-acc:#2C1606}
 [data-theme="classic"]{--bg:#121110;--surface:#18181B;--sunken:#0D0C0C;--ink:#F4F4F5;--ink-2:#A1A1AA;--ink-3:#71717A;--acc:#F2CA50;--acc-soft:#2C2310;--acc-ink:#F2CA50;--on-acc:#2C2200}
+[data-theme="marca"]{--bg:#0b0b0d;--surface:#15151a;--sunken:#1f1f26;--ink:#FFE08A;--ink-2:#CDB878;--ink-3:#9A8D68;--ok:#FFC21A;--acc:#F5A300;--acc-soft:#2a1f07;--acc-ink:#FFC21A;--on-acc:#140d00}
+.lema{color:var(--acc-ink);font-weight:800;font-size:18px;margin:2px 0 4px}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 Onest,system-ui,sans-serif}
 main{max-width:980px;margin:0 auto;padding:0 16px 80px}a{color:var(--acc-ink)}
 .top{display:flex;align-items:center;justify-content:space-between;padding-top:14px;gap:12px}
@@ -30,13 +32,13 @@ footer{color:var(--ink-3);font-size:13px;margin-top:48px}
 .ej-bloque h2{font-size:20px;margin:26px 0 10px;font-weight:800}.ej-chips{display:flex;flex-wrap:wrap;gap:8px}.ej-chip{background:var(--sunken);color:var(--ink-3);border-radius:var(--r-pill);padding:7px 14px;font-size:14px}.ej-chip.on{background:var(--acc);color:var(--on-acc);text-decoration:none;font-weight:700}
 </style></head><body><main>
 <div class="top"><a class="marca" href="/"><img src="/assets/logo_bandmanager_symbol.png" width="512" height="512" alt="Logo de BandManager"><span>BandManager</span></a>
-<nav class="temas" aria-label="Tema"><button data-t="light">Claro</button><button data-t="dark">Oscuro</button><button data-t="classic">Clásico</button></nav></div>
-<header class="hero"><div><h1>Ejercicios del máster, hechos con BandManager</h1>
+<nav class="temas" aria-label="Tema"><button data-t="marca">Marca</button><button data-t="light">Claro</button><button data-t="dark">Oscuro</button><button data-t="classic">Clásico</button></nav></div>
+<header class="hero"><div><h1>Ejercicios del máster, hechos con BandManager</h1><p class="lema">Tu manager de bolsillo.</p>
 <p>Máster de Marketing Digital con IA. Cada ejercicio es una propuesta aplicada a un producto real: una aplicación para que las bandas gestionen conciertos, salas y fans.</p>
 <p><a href="https://bandmanager.io">Ir a BandManager.io</a></p></div>
 <video autoplay muted loop playsinline preload="metadata" poster="/assets/login-animation-poster.jpg" aria-label="Logo animado de BandManager.io"><source src="/assets/login-animation.webm" type="video/webm"><source src="/assets/login-animation.mp4" type="video/mp4"></video></header>
 <section aria-label="Ejercicios"><a class="ej" href="/youtube-crm" style="max-width:420px;margin-bottom:28px"><img src="/assets/youtube-crm/mini/v6.jpg" width="1280" height="720" alt="Miniatura del vídeo 6: 19 lo vieron" loading="lazy"><div><p class="et">Ya publicado · YouTube</p><h2>CRM para bandas: 9 vídeos en 5 semanas</h2><p>Plan para posicionar la keyword «CRM» desde un nicho sin competencia, con Eco como mascota.</p></div></a>
 <div id="ejLista"></div></section>
 <noscript><p>Activa JavaScript para ver la lista de ejercicios.</p></noscript><footer>Contenido de ejercicio, no de la aplicación en producción.</footer></main>
-<script>(function(){var K='bm-tema-ejercicio',bs=document.querySelectorAll('.temas button');function t(x){document.documentElement.dataset.theme=x;bs.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.t===x)});try{localStorage.setItem(K,x)}catch(e){}}var i=null;try{i=localStorage.getItem(K)}catch(e){}t(i||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));bs.forEach(function(b){b.addEventListener('click',function(){t(b.dataset.t)})})})();</script>
+<script>(function(){var K='bm-tema-ejercicio',bs=document.querySelectorAll('.temas button');function t(x){document.documentElement.dataset.theme=x;bs.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.t===x)});try{localStorage.setItem(K,x)}catch(e){}}var i=null;try{i=localStorage.getItem(K)}catch(e){}t(i||'marca');bs.forEach(function(b){b.addEventListener('click',function(){t(b.dataset.t)})})})();</script>
 <script src="/assets/ejercicios.js" defer></script><script src="/assets/ejercicios-chat.js" defer></script></body></html>

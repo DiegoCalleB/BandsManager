@@ -8,12 +8,14 @@ import { ShowIcon } from "../../ui/ShowIcon";
 import { AdvancedSettingsToggle } from "./AdvancedSettingsToggle";
 import { ModeAndTargetRow } from "./ModeAndTargetRow";
 import { usePdfExport } from "./PdfExportContext";
+import { useFormatoTono } from "../../../hooks/useNotacion";
 
 /**
  * Panel de personalización: modo, miembro, diseño, tipografía, contenido y marcas.
  * @returns Sección de interfaz.
  */
 export function PdfControlPanel() {
+  const fmtTono = useFormatoTono();
   const { showAdvancedSettings, handwritingFont, setHandwritingFont, setHandwritingColor, handwritingColor, showBandLogo, setShowBandLogo, showWatermark, setShowWatermark, showTonality, setShowTonality, showBpm, setShowBpm, showDuration, setShowDuration, showGeneralNotes, setShowGeneralNotes, badgesScope, setBadgesScope, setShowMarksPanel, showMarksPanel, markedCountForMember, saveFailed, currentPreviewMember, setAllMarks, activeSetlist, songs, isMarked, setMark } = usePdfExport();
   return (
     <>
@@ -253,7 +255,7 @@ export function PdfControlPanel() {
                     {(song.tonalidad || song.bpm) && (
                       <span className="text-[var(--ink-3)]">
                         {" "}
-                        · {[song.tonalidad, song.bpm ? `${song.bpm} BPM` : ""].filter(Boolean).join(" ")}
+                        · {[fmtTono(song.tonalidad), song.bpm ? `${song.bpm} BPM` : ""].filter(Boolean).join(" ")}
                       </span>
                     )}
                   </span>

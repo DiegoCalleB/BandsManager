@@ -259,14 +259,9 @@ export function getSemitoneDifference(fromKey: string, toKey: string): number | 
 }
 
 export function transposeSingleNote(rootNote: string, semitones: number, targetNotation: 'ES' | 'EN'): string {
-  if (
-    semitones === 0 &&
-    ((targetNotation === 'ES' && ES_TO_EN_MAP[rootNote] === undefined) || (targetNotation === 'EN' && EN_TO_ES_MAP[rootNote] === undefined))
-  ) {
-    // Check if notation change needed
-    if (targetNotation === 'ES' && EN_TO_ES_MAP[rootNote]) return EN_TO_ES_MAP[rootNote];
-    if (targetNotation === 'EN' && ES_TO_EN_MAP[rootNote]) return ES_TO_EN_MAP[rootNote];
-    return rootNote;
+  if (semitones === 0) {
+    // Sin transposición solo cambia el idioma de la nota, y respetando su ortografía (Bb sigue siendo Bb, no A#).
+    return (targetNotation === 'ES' ? EN_TO_ES_MAP[rootNote] : ES_TO_EN_MAP[rootNote]) ?? rootNote;
   }
 
   // Convert rootNote to standard EN index

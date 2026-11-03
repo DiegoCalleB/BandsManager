@@ -30,11 +30,13 @@ El bucle de aprendizaje del asesor: qué piezas esperan sus números, qué cuent
 - [[server_services_asesorInstagram|server/services/asesorInstagram.ts]] *(from #service)*
 - [[server_services_asesorMarketing|server/services/asesorMarketing.ts]] *(from #service)*
 - [[server_services_asesorRedes|server/services/asesorRedes.ts]] *(from #service)*
+- [[src_components_asesor_EnlacesPanel|src/components/asesor/EnlacesPanel.tsx]] *(from #frontend)*
 - [[src_components_asesor_hooks_useAsesor|src/components/asesor/hooks/useAsesor.ts]] *(from #frontend)*
 - [[src_components_asesor_OtrasRedesCard|src/components/asesor/OtrasRedesCard.tsx]] *(from #frontend)*
 - [[src_components_asesor_PorMedirCard|src/components/asesor/PorMedirCard.tsx]] *(from #frontend)*
 - [[src_components_asesor_ResumenCard|src/components/asesor/ResumenCard.tsx]] *(from #frontend)*
 - [[src_utils_asesor_agenda|src/utils/asesor/agenda.ts]] *(from #service)*
+- [[src_utils_asesor_clicsPieza|src/utils/asesor/clicsPieza.ts]] *(from #service)*
 - [[src_utils_asesor_metricasPorRed|src/utils/asesor/metricasPorRed.ts]] *(from #service)*
 - [[src_utils_asesor_opciones|src/utils/asesor/opciones.ts]] *(from #service)*
 - [[src_utils_asesor_rescate|src/utils/asesor/rescate.ts]] *(from #service)*

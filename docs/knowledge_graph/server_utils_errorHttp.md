@@ -63,6 +63,7 @@ Respuestas de error seguras.
 - [[server_routes_users_rutasBandas|server/routes/users/rutasBandas.ts]] *(from #route)*
 - [[server_routes_users_rutasMiembros|server/routes/users/rutasMiembros.ts]] *(from #route)*
 - [[server_routes_users_rutasPreferencias|server/routes/users/rutasPreferencias.ts]] *(from #route)*
+- [[server_utils_setlistImport|server/utils/setlistImport.ts]] *(from #service)*
 
 ---
 

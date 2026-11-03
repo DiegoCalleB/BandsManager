@@ -9,7 +9,8 @@ import { getSupabase } from "../db/core.js";
 import { dbGetBandContacts, dbUpsertBandContact, dbDeleteBandContact, dbBulkDeleteBandContacts, dbGetBandSchedule, dbUpsertBandSchedule, dbGetBandEmailAccount, dbUpsertBandEmailAccount, toSafeEmailAccountResponse, dbUpdateBandDnaExpresion, dbGetRegisteredBandById, dbGetEpkConfig } from "../db.js";
 import { sendTransactionalEmail } from "../services/transactionalEmail.js";
 import { buildBandNotificationEmailHtml } from "../utils/emailTemplate.js";
-import { getAiClient, generateContentWithFallback } from "../ai.js";
+import { getAiClient, generateContentWithFallback, GEMINI_MODEL } from "../ai.js";
+import { MODELOS_IMAGEN_LOGO, registrarFalloModelo } from "../utils/modelosGemini.js";
 import { autoEnrichBandContact } from "../auto_enrichment.js";
 import { resolverUrlSpotifyDeBanda } from "../services/spotifyService.js";
 import { esUrlExternaSegura } from "../utils/ssrfGuard.js";
@@ -1038,20 +1039,18 @@ router.post("/bands/generate-logo", requireAuth, iaRateLimiter, async (req, res)
       try {
         const imagePrompt = `Professional music band logo for '${bandName}'. Genre: ${bandGenre}. Style: ${visualConcept}. ${customPrompt ? `Additional creative direction: ${customPrompt}.` : ''} Clean graphic design, centered emblem on dark isolated background, vector art quality, iconic branding.`;
         
-        const imgResponse = await client.models.generateImages({
-          model: 'imagen-3.0-generate-002',
-          prompt: imagePrompt,
-          config: {
-            numberOfImages: 1,
-            outputMimeType: 'image/png',
-            aspectRatio: '1:1',
-          },
-        }).catch(() => null);
-
-        if (imgResponse?.generatedImages?.[0]?.image?.imageBytes) {
-          const base64 = imgResponse.generatedImages[0].image.imageBytes;
-          logoDataUrl = `data:image/png;base64,${base64}`;
-          generationMethod = "imagen_ai";
+        for (const modeloImagen of MODELOS_IMAGEN_LOGO) {
+          const imgResponse = await client.models.generateImages({
+            model: modeloImagen,
+            prompt: imagePrompt,
+            config: { numberOfImages: 1, outputMimeType: 'image/png', aspectRatio: '1:1' },
+          }).catch((e: unknown) => { registrarFalloModelo(modeloImagen, e); console.warn(`[Logo Generator] ${modeloImagen} falló:`, comoErrorCapturado(e).message); return null; });
+          const base64 = imgResponse?.generatedImages?.[0]?.image?.imageBytes;
+          if (base64) {
+            logoDataUrl = `data:image/png;base64,${base64}`;
+            generationMethod = "imagen_ai";
+            break;
+          }
         }
       } catch (imgErr) {
         console.warn("[Logo Generator] Imagen API no disponible o falló, recurriendo al diseñador vectorial de precisión:", imgErr);
@@ -1078,7 +1077,7 @@ REQUISITOS ESTRICTOS DEL SVG:
 
         const response = await generateContentWithFallback(client, {
           contents: [{ role: "user", parts: [{ text: svgPrompt }] }],
-          preferredModel: "gemini-3.7-flash",
+          preferredModel: GEMINI_MODEL,
           timeoutMs: 30000,
           bandId
         });

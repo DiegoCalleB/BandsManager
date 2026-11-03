@@ -6,93 +6,15 @@ import fs from "fs";
 import path from "path";
 import crypto from "crypto";
 import multer from "multer";
-import ffmpeg from "fluent-ffmpeg";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { requireAuth } from "../state.js";
 import { getTargetBandId, puedeEscribirEnBanda, bandaSolicitada } from "../utils/bandAccess.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 import { responderError } from '../utils/errorHttp.js';
 import { MENSAJE_TIPO_NO_PERMITIDO, mensajeFirmaNoValida } from '../utils/erroresSubida.js';
+import { compressAudioFileIfNeeded, detectMimeType } from '../utils/optimizarAudioSubido.js';
 
-export function detectMimeType(ext: string, fallback?: string): string {
-  const cleanExt = (ext || '').toLowerCase().replace('.', '');
-  const mimeMap: Record<string, string> = {
-    png: 'image/png',
-    jpg: 'image/jpeg',
-    jpeg: 'image/jpeg',
-    webp: 'image/webp',
-    gif: 'image/gif',
-    svg: 'image/svg+xml',
-    mp3: 'audio/mpeg',
-    wav: 'audio/wav',
-    m4a: 'audio/x-m4a',
-    ogg: 'audio/ogg',
-    aac: 'audio/aac',
-    flac: 'audio/flac',
-    pdf: 'application/pdf',
-    doc: 'application/msword',
-    docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    mp4: 'video/mp4',
-    mov: 'video/quicktime',
-    webm: 'video/webm'
-  };
-  return mimeMap[cleanExt] || (fallback && fallback !== 'application/octet-stream' ? fallback : 'application/octet-stream');
-}
-
-/**
- * Optimizador transparente de archivos de audio.
- * Si el usuario sube un archivo de audio (.wav, .flac, .aiff, .m4a, .wma, etc. o mp3 pesado > 2MB),
- * lo recodifica en segundo plano a MP3 de alta fidelidad (256kbps), reduciendo el peso de almacenamiento
- * en Supabase/disco hasta un 93% sin pérdida de calidad auditiva apreciable.
- */
-async function compressAudioFileIfNeeded(inputPath: string, fallbackMime?: string): Promise<{ finalPath: string; wasCompressed: boolean; newMime: string; newExt: string }> {
-  const ext = path.extname(inputPath).toLowerCase().replace('.', '');
-  const isAudioExt = ['wav', 'flac', 'aiff', 'aif', 'alac', 'm4a', 'wma', 'ogg', 'opus'].includes(ext);
-  
-  if (!fs.existsSync(inputPath)) {
-    return { finalPath: inputPath, wasCompressed: false, newMime: detectMimeType(ext, fallbackMime), newExt: ext };
-  }
-
-  const stats = fs.statSync(inputPath);
-  
-  // Si no es un formato de audio pesado o es un mp3 pequeño (< 2MB), no hace falta comprimir
-  if (!isAudioExt && (ext !== 'mp3' || stats.size < 2 * 1024 * 1024)) {
-    return { finalPath: inputPath, wasCompressed: false, newMime: detectMimeType(ext, fallbackMime), newExt: ext };
-  }
-
-  const outputPath = inputPath.replace(new RegExp(`\\.${ext}$`, 'i'), '-opt.mp3');
-
-  try {
-    await new Promise<void>((resolve, reject) => {
-      ffmpeg(inputPath)
-        .audioBitrate("256k")
-        .output(outputPath)
-        .on("end", () => resolve())
-        .on("error", (err) => reject(err))
-        .run();
-    });
-
-    if (fs.existsSync(outputPath) && fs.statSync(outputPath).size > 0) {
-      const origMB = (stats.size / 1024 / 1024).toFixed(2);
-      const newMB = (fs.statSync(outputPath).size / 1024 / 1024).toFixed(2);
-      console.log(`[Audio Upload Optimizer] Audio optimizado con éxito: ${inputPath} (${origMB}MB) -> (${newMB}MB)`);
-
-      const finalCompressedPath = inputPath.replace(new RegExp(`\\.${ext}$`, 'i'), '.mp3');
-      fs.unlinkSync(inputPath);
-      fs.renameSync(outputPath, finalCompressedPath);
-
-      return { finalPath: finalCompressedPath, wasCompressed: true, newMime: 'audio/mpeg', newExt: 'mp3' };
-    }
-  } catch (errCapturado) {
-    const err = comoErrorCapturado(errCapturado);
-    console.warn(`[Audio Upload Optimizer] Aviso al comprimir audio con FFmpeg, usando original:`, err?.message || err);
-    if (fs.existsSync(outputPath)) {
-      try { fs.unlinkSync(outputPath); } catch { /* el temporal ya no existe: nada que limpiar */ }
-    }
-  }
-
-  return { finalPath: inputPath, wasCompressed: false, newMime: 'audio/mpeg', newExt: ext };
-}
+export { detectMimeType };
 
 /**
  * Sub-carpeta pedida por el cliente, saneada. Cuelga siempre de la carpeta de la banda: se
@@ -506,6 +428,7 @@ router.post("/cleanup-unused-media", requireAuth, async (req, res) => {
 });
 
 router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("file")), async (req, res) => {
+  const t0 = Date.now();
   try {
     let filePath = "";
     let originalFilename = "";
@@ -592,9 +515,11 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
       let uploadError: unknown = null;
       for (let attempt = 0; attempt < 2 && storageEngine !== "supabase"; attempt++) {
         try {
-          const { error } = await supabase.storage
-            .from(bucketName)
-            .upload(storagePath, fileContent, { contentType: mimeType, upsert: true });
+          // Sin tope, una subida a Storage colgada dejaba la petición abierta para siempre.
+          const { error } = await Promise.race([
+            supabase.storage.from(bucketName).upload(storagePath, fileContent, { contentType: mimeType, upsert: true }),
+            new Promise<never>((_, rechazar) => setTimeout(() => rechazar(new Error("Supabase Storage no respondió en 120 s")), 120_000)),
+          ]);
 
           if (!error) {
             const { data: publicUrlData } = supabase.storage
@@ -628,6 +553,7 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
       }
     }
 
+    console.log(`[Upload] ${originalFilename} -> ${storageEngine} en ${((Date.now() - t0) / 1000).toFixed(1)}s`);
     res.json({
       url: finalUrl,
       filePath: filePath,

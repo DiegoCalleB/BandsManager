@@ -24,6 +24,7 @@ export { rutaFuenteSegura, rutaEnDirectorio, indicePistaSeguro, esUrlYoutube, ex
 import type { Part } from '@google/genai';
 import type { AnalisisConciertoIA, CapituloYoutube, ClasificacionPistasIA } from './tiposConcertToAlbum.js';
 import { responderError } from '../utils/errorHttp.js';
+import { normalizarTonalidad, normalizarTextoAcordes, TONALIDAD_POR_DEFECTO } from "../../src/utils/notacionAcordes.js";
 
 if (ffmpegStatic) {
   ffmpeg.setFfmpegPath(ffmpegStatic);
@@ -217,8 +218,8 @@ export async function detectCuesForAudioFile(
 
 
 // Routes for YouTube Cookies Management
-// requireAuth en las tres: el fichero de cookies guarda la sesión de YouTube con la que el
-// servidor descarga vídeos. Abiertas, cualquiera podía sobrescribirlo con las suyas o borrarlo.
+// requireAuth en las tres: el fichero de cookies guarda la sesión de YouTube con la que el servidor descarga vídeos.
+// Abiertas, cualquiera podía sobrescribirlo con las suyas o borrarlo.
 router.get("/cookies-status", requireAuth, ficherosRateLimiter, (req, res) => {
   try {
     if (fs.existsSync(COOKIES_FILE)) {
@@ -446,8 +447,7 @@ async function detectSilencesWithFFmpeg(filePath: string, videoDuration: number)
 }
 
 // 1. ANALYZE CONCERT ROUTE
-// requireAuth: descarga vídeo, gasta CPU y llama a la IA. Abierta era trabajo pesado gratis
-// para cualquiera que diera con la URL.
+// requireAuth: descarga vídeo, gasta CPU y llama a la IA; abierta era trabajo pesado gratis para cualquiera.
 router.post("/analyze", requireAuth, ficherosRateLimiter, async (req, res) => {
   try {
     const { url, useAi, transcribeFirst, bandName } = req.body;
@@ -612,7 +612,7 @@ Responde ÚNICAMENTE con un JSON válido con este esquema exacto:
       "type": "musica" | "dialogo",
       "speechTranscription": "Transcripción hablada o nota si es tipo dialogo",
       "lyricsWithChords": "",
-      "tonalidad": "Mim",
+      "tonalidad": "Em",
       "bpm": 120
     }
   ]
@@ -715,8 +715,8 @@ Responde ÚNICAMENTE con un JSON válido con este esquema exacto:
                   duration,
                   type,
                   speechTranscription: t.speechTranscription || (type === "dialogo" ? `Presentación o palabras del artista` : ""),
-                  lyricsWithChords: t.lyricsWithChords || "",
-                  tonalidad: t.tonalidad || "Mim",
+                  lyricsWithChords: normalizarTextoAcordes(t.lyricsWithChords || ""),
+                  tonalidad: normalizarTonalidad(t.tonalidad) || TONALIDAD_POR_DEFECTO,
                   bpm: typeof t.bpm === "number" ? t.bpm : 120,
                 };
               });
@@ -1510,15 +1510,15 @@ ${speechTranscription ? `Anotaciones o contexto previo: "${speechTranscription}"
 
 INSTRUCCIONES DE TRANSCRIPCIÓN BASADA EN EL AUDIO REAL:
 1. Escucha la interpretación real en el audio y transcribe la LETRA EXACTA cantada por el vocalista. No inventes estrofas que no suenan en la grabación.
-2. Escucha la armonía e instrumentos para determinar la TONALIDAD REAL (ej. "Mim / Em", "Sol / G", "Lam / Am") y el TEMPO estimado en BPM (ej. 120).
-3. Transcribe el CIFRADO DE ACORDES en formato estándar (LaCuerda / Ultimate Guitar), colocando los acordes en notación [Acorde] antes de la palabra o sílaba correspondiente.
+2. Escucha la armonía e instrumentos para determinar la TONALIDAD REAL (en notación americana, ej. "Em", "G", "Am", "F#m") y el TEMPO estimado en BPM (ej. 120).
+3. Transcribe el CIFRADO DE ACORDES en formato estándar (LaCuerda / Ultimate Guitar), colocando los acordes en notación americana (C, Dm, Em, G7; nunca Do/Re/Mi) con formato [Acorde] antes de la palabra o sílaba correspondiente.
 4. Si la interpretación en vivo varía respecto a la versión en estudio (un solo extra, intro extendida, improvisación de voz), refleja la versión exacta del directo.
 
 Responde ÚNICAMENTE con un JSON válido con esta estructura exacta:
 {
-  "tonalidad": "Mim / Em",
+  "tonalidad": "Em",
   "bpm": 120,
-  "lyricsWithChords": "[Intro]\nMim  Do  Sol  Re\n\n[Verso 1]\n[Mim]En la noche que caía [Do]sobre la ciudad..."
+  "lyricsWithChords": "[Intro]\nEm  C  G  D\n\n[Verso 1]\n[Em]En la noche que caía [C]sobre la ciudad..."
 }
 `;
 
@@ -1528,9 +1528,9 @@ Responde ÚNICAMENTE con un JSON válido con esta estructura exacta:
       "Audio no disponible localmente, genera el cifrado de acordes y letra profesional en directo para esta canción."
     );
 
-    let tonalidad = "Mim / Em";
+    let tonalidad = TONALIDAD_POR_DEFECTO;
     let bpm = 125;
-    let lyricsWithChords = `[Intro]\n[Mim]  [Do]  [Sol]  [Re]\n\n[Verso 1]\n[Mim]Caminando por las calles del sur [Do]con el bajo y la ilusión...\n[Sol]El violín marca el compás [Re]y encendemos la función.\n\n[Estribillo]\n[Mim]¡Fuego en la sala, [Do]ska y emoción!\n[Sol]Nadie nos para [Re]en esta misión.`;
+    let lyricsWithChords = `[Intro]\n[Em]  [C]  [G]  [D]\n\n[Verso 1]\n[Em]Caminando por las calles del sur [C]con el bajo y la ilusión...\n[G]El violín marca el compás [D]y encendemos la función.\n\n[Estribillo]\n[Em]¡Fuego en la sala, [C]ska y emoción!\n[G]Nadie nos para [D]en esta misión.`;
 
     try {
       const response = await generateContentWithFallback(aiClient, {
@@ -1544,9 +1544,9 @@ Responde ÚNICAMENTE con un JSON válido con esta estructura exacta:
 
       if (match) {
         const resultData = JSON.parse(match);
-        if (resultData.tonalidad) tonalidad = resultData.tonalidad;
+        if (resultData.tonalidad) tonalidad = normalizarTonalidad(resultData.tonalidad) || tonalidad;
         if (resultData.bpm) bpm = Number(resultData.bpm) || 125;
-        if (resultData.lyricsWithChords) lyricsWithChords = resultData.lyricsWithChords;
+        if (resultData.lyricsWithChords) lyricsWithChords = normalizarTextoAcordes(resultData.lyricsWithChords);
       }
     } catch (aiErrCapturado) {
       const aiErr = comoErrorCapturado(aiErrCapturado);

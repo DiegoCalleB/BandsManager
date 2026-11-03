@@ -37,6 +37,7 @@ _Sin dependencias salientes directas._
 - [[src_components_setlist_performance_hooks_usePageTurning|src/components/setlist_performance/hooks/usePageTurning.ts]] *(from #frontend)*
 - [[src_components_SpotifyPlayerBar|src/components/SpotifyPlayerBar.tsx]] *(from #frontend)*
 - [[src_hooks_useAcordesDeLaHoja|src/hooks/useAcordesDeLaHoja.ts]] *(from #hook)*
+- [[src_utils_notacionAcordes|src/utils/notacionAcordes.ts]] *(from #service)*
 - [[src_utils_vistaAcordes|src/utils/vistaAcordes.ts]] *(from #service)*
 
 ---

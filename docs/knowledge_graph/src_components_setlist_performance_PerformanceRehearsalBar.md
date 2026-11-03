@@ -20,6 +20,7 @@ Barra de práctica del modo ensayo para el tema actual.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_setlist_performance_SetlistPerformanceContext|src/components/setlist_performance/SetlistPerformanceContext.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_hooks_useNotacion|src/hooks/useNotacion.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_utils_irisTracks|src/utils/irisTracks.ts]] *(Layer: #service, Domain: #repertoire)*
 
 ---

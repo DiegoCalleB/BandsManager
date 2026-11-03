@@ -3,9 +3,9 @@
 (function () {
   var GRUPOS = [
     { t: 'Redes sociales', items: [
-      ['Comunidades'], ['Facebook'], ['Instagram'], ['TikTok'], ['YouTube', '/ejercicio_youtube_crm'], ['X (Twitter)'], ['LinkedIn'],
+      ['Comunidades'], ['Facebook', '/ejercicio_facebook'], ['Instagram'], ['TikTok'], ['YouTube', '/ejercicio_youtube_crm'], ['X (Twitter)'], ['LinkedIn'],
       ['Herramientas para RRSS'], ['Estrategia RRSS']] },
-    { t: 'Marca y estrategia', items: [['Branding e identidad corporativa'], ['Estrategia digital'], ['Marketing de influencers']] },
+    { t: 'Marca y estrategia', items: [['Branding e identidad corporativa', '/ejercicio_branding'], ['Estrategia digital'], ['Marketing de influencers']] },
     { t: 'SEO', items: [
       ['Keyword research'], ['Arquitectura SEO'], ['URLs'], ['Headings'], ['Contenidos'], ['Metadatos'], ['Imágenes'],
       ['Enlazado interno'], ['Robots'], ['Sitemaps'], ['Datos estructurados'], ['Indexación'], ['WPO'], ['Mobile'], ['Blog'],

@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Identidad de marca de BandManager · Ejercicio de branding</title>
+<meta name="description" content="Ejercicio de marketing digital: los 9 elementos de la identidad de BandManager (núcleo, posicionamiento y brand persona) y cómo conectan con Lucía, el canal de YouTube y Eco.">
+<style>
+@font-face{font-family:Onest;font-weight:400;font-display:swap;src:url(/ejercicio_youtube_crm/onest-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:Onest;font-weight:700;font-display:swap;src:url(/ejercicio_youtube_crm/onest-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:Onest;font-weight:800;font-display:swap;src:url(/ejercicio_youtube_crm/onest-latin-800-normal.woff2) format("woff2")}
+:root{--bg:#F6F7F9;--surface:#FFFFFF;--sunken:#E8EBEF;--ink:#2A2E35;--ink-2:#646C78;--ink-3:#98A0AC;--ok:#17998C;
+--acc:#D86E31;--acc-soft:#F9EAE1;--acc-ink:#813F18;--on-acc:#FFFFFF;
+--r-s:12px;--r-m:18px;--r-l:24px;--r-xl:32px;--r-pill:999px}
+[data-theme="dark"]{--bg:#101216;--surface:#191C21;--sunken:#0B0D10;--ink:#E3E7EC;--ink-2:#99A1AC;--ink-3:#6B7380;--ok:#4FC7B8;
+--acc:#E99463;--acc-soft:#2A1B12;--acc-ink:#E99463;--on-acc:#2C1606}
+[data-theme="classic"]{--bg:#121110;--surface:#18181B;--sunken:#0D0C0C;--ink:#F4F4F5;--ink-2:#A1A1AA;--ink-3:#71717A;--ok:#10B981;
+--acc:#F2CA50;--acc-soft:#2C2310;--acc-ink:#F2CA50;--on-acc:#2C2200}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 Onest,system-ui,sans-serif}
+main{max-width:1180px;margin:0 auto;padding:0 16px 140px}
+a{color:var(--acc-ink);text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.top{display:flex;align-items:center;justify-content:space-between;padding-top:14px;gap:12px}
+.marca{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-weight:800;font-size:18px}
+.logo{width:46px;height:46px;border-radius:var(--r-m);display:block}
+.temas{display:flex;gap:6px}
+.temas button{font:700 13px Onest,system-ui;background:var(--sunken);color:var(--ink-2);border:0;border-radius:var(--r-pill);padding:7px 14px;cursor:pointer}
+.temas button[aria-pressed=true]{background:var(--acc);color:var(--on-acc)}
+.hero{display:grid;grid-template-columns:1fr 240px;gap:24px;align-items:center;margin-top:28px;background:var(--acc-soft);border-radius:var(--r-xl);padding:32px}
+.eyebrow{color:var(--acc-ink);font-weight:800;font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+h1{font-size:clamp(28px,5vw,44px);line-height:1.1;margin:8px 0 12px;font-weight:800;letter-spacing:-.01em}
+.hero p{margin:0;color:var(--ink-2);max-width:56ch}
+.hero .eco{width:100%;max-width:240px;justify-self:center;animation:rock 3.2s ease-in-out infinite;transform-origin:50% 90%}
+h2{font-size:28px;margin:56px 0 16px;letter-spacing:-.01em;font-weight:800}
+.lead{color:var(--ink-2);margin:-8px 0 18px;max-width:70ch}
+.ruta{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.ruta a{background:var(--surface);border-radius:var(--r-l);padding:18px;text-decoration:none;color:var(--ink);display:block}
+.ruta a small{display:block;color:var(--acc-ink);font-weight:800;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.ruta a b{display:block;margin:4px 0 2px}.ruta a span{color:var(--ink-2);font-size:14px}
+.ruta a.aqui{background:var(--acc);color:var(--on-acc)}.ruta a.aqui small,.ruta a.aqui span{color:var(--on-acc)}
+.tabs{display:flex;gap:6px;margin:0 0 16px;overflow-x:auto}
+.tabs button{font:700 14px Onest,system-ui;background:var(--sunken);color:var(--ink-2);border:0;border-radius:var(--r-pill);padding:9px 18px;cursor:pointer;white-space:nowrap}
+.tabs button[aria-selected=true]{background:var(--ink);color:var(--bg)}
+.el-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.el{background:var(--surface);border:0;border-radius:var(--r-l);padding:20px;text-align:left;cursor:pointer;color:var(--ink);font:inherit;transition:transform .3s cubic-bezier(.23,1,.32,1)}
+.el:hover{transform:translateY(-3px)}
+.el b{display:block;color:var(--acc-ink);font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+.el span{font-size:14.5px;color:var(--ink-2)}
+.el[aria-expanded=true]{background:var(--acc);}
+.el[aria-expanded=true] b,.el[aria-expanded=true] span{color:var(--on-acc)}
+.detalle{display:grid;grid-template-columns:1fr 200px;gap:20px;background:var(--surface);border-radius:var(--r-xl);padding:28px;margin-top:14px}
+.detalle h3{margin:0 0 8px;font-size:24px;font-weight:800}
+.detalle p{margin:0 0 12px;color:var(--ink-2)}.detalle p b{color:var(--ink)}
+.se-ve{background:var(--acc-soft);border-radius:var(--r-m);padding:12px 16px;color:var(--ink)!important;font-size:14.5px}
+.eco-col{position:relative;text-align:center}
+.eco-col img{width:100%;max-width:190px;animation:rock 3.6s ease-in-out infinite;transform-origin:50% 90%}
+.bubble{background:var(--acc);color:var(--on-acc);border-radius:var(--r-m);padding:9px 14px;font-size:13.5px;font-weight:700;line-height:1.3;text-align:left;margin-bottom:8px}
+.lucia{display:grid;grid-template-columns:1.1fr 1fr;gap:12px}
+.lucia>div{background:var(--surface);border-radius:var(--r-l);padding:22px}.lucia>div:first-child{background:var(--acc-soft)}
+.lucia b{color:var(--acc-ink)}.lucia ul{margin:6px 0 0;padding-left:18px;color:var(--ink-2)}
+.cita{font-size:20px;font-weight:800;line-height:1.3;margin:0 0 12px}
+.tabla{overflow-x:auto;background:var(--surface);border-radius:var(--r-l);padding:8px}
+table{border-collapse:separate;border-spacing:0 4px;width:100%;min-width:560px}th,td{text-align:left;padding:12px 14px;font-size:14.5px;vertical-align:top}
+th{color:var(--ink-3);font-weight:700}tbody tr:nth-child(odd) td{background:var(--bg)}
+tbody td:first-child{border-radius:var(--r-s) 0 0 var(--r-s);color:var(--ink-2);white-space:nowrap}tbody td:last-child{border-radius:0 var(--r-s) var(--r-s) 0}
+.voz{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.voz div{background:var(--surface);border-radius:var(--r-l);padding:20px}
+.voz small{color:var(--acc-ink);font-weight:800;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.voz p{margin:6px 0 0;font-size:15.5px}
+.slogan{margin-top:40px;background:var(--acc);color:var(--on-acc);border-radius:var(--r-xl);padding:32px;text-align:center}
+.slogan b{display:block;font-size:clamp(26px,5vw,42px);font-weight:800;line-height:1.1}
+.slogan span{display:block;margin-top:6px;font-weight:700;opacity:.9}
+details{margin-top:24px;background:var(--surface);border-radius:var(--r-l);padding:14px 20px}
+summary{cursor:pointer;font-weight:700}details img{width:100%;height:auto;border-radius:var(--r-m);margin-top:14px;display:block}
+#ejPrevNext{margin-top:32px}
+footer{color:var(--ink-3);font-size:13px;margin-top:56px}
+@keyframes rock{0%,100%{transform:rotate(-2.5deg)}50%{transform:rotate(2.5deg)}}
+@media (max-width:760px){.hero{grid-template-columns:1fr}.hero .eco{max-width:170px}.ruta,.el-grid,.lucia,.voz{grid-template-columns:1fr}.detalle{grid-template-columns:1fr}.eco-col{order:-1}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style></head><body><main>
+
+<div class="top"><a class="marca" href="/" aria-label="BandManager.io"><img class="logo" src="/logo_bandmanager_symbol.png" width="512" height="512" alt="Logo de BandManager"><span>BandManager</span></a>
+<nav class="temas" aria-label="Tema"><button data-t="light">Claro</button><button data-t="dark">Oscuro</button><button data-t="classic">Clásico</button></nav></div>
+
+<header class="hero"><div><div class="eyebrow">Máster de Marketing Digital · Branding</div>
+<h1>La identidad de BandManager, en 9 piezas</h1>
+<p>Núcleo de marca, posicionamiento y brand persona. No es un ejercicio suelto: de aquí salen el buyer persona (Lucía), la voz del canal de YouTube y el carácter de Eco.</p></div>
+<img class="eco" id="ecoHero" src="/ejercicio_youtube_crm/eco/pillo.webp" alt="Eco, la mascota de BandManager" onerror="this.hidden=true"></header>
+
+<h2>Cómo encaja con el resto de ejercicios</h2>
+<p class="lead">Cada ejercicio usa lo que decide el anterior. Si cambia la marca, cambian todos.</p>
+<nav class="ruta" aria-label="Ruta de ejercicios">
+<a class="aqui" href="#nueve" aria-current="page"><small>1 · Marca</small><b>Identidad</b><span>Quiénes somos y cómo hablamos.</span></a>
+<a href="#lucia"><small>2 · Cliente</small><b>Lucía, la booker por descarte</b><span>A quién le hablamos.</span></a>
+<a href="/ejercicio_youtube_crm"><small>3 · Canal</small><b>YouTube y CRM</b><span>Cómo le hablamos: 9 vídeos en 4 semanas.</span></a>
+<a href="#voz"><small>4 · Voz</small><b>Eco y el tono</b><span>La voz que se repite en cada pieza.</span></a>
+</nav>
+
+<h2 id="nueve">Los 9 elementos</h2>
+<p class="lead">Toca un elemento. Eco te dice dónde se nota ya en el ejercicio de YouTube.</p>
+<div class="tabs" role="tablist" id="tabs" aria-label="Bloques"></div>
+<div class="el-grid" id="grid"></div>
+<section class="detalle" id="detalle" aria-live="polite"></section>
+
+<h2 id="lucia">El público tiene nombre: Lucía</h2>
+<p class="lead">El elemento «Público» no es «bandas de 18 a 40». Es esta persona. Es un arquetipo a validar con 5-10 entrevistas antes de grabar.</p>
+<div class="lucia">
+<div><p class="cita">«Somos músicos, no comerciales. Pero si no escribo yo, no tocamos.»</p>
+<b>Lucía, 27 años</b> · guitarrista y booker «por descarte» de Los Faros (indie rock, 4 miembros, 15-25 conciertos al año). Trabaja de 9 a 18 y la música aún no paga. Usa Gmail, WhatsApp, Instagram y un Excel.</div>
+<div><b>Dolores</b><ul><li>Escribe a 40 salas y le responden 3.</li><li>Pierde hilos entre email, DM y WhatsApp.</li><li>No sabe a quién hizo seguimiento ni cuándo.</li></ul>
+<p style="margin:12px 0 0"><b>Objeciones:</b> «un CRM es cosa de empresas», «no tengo dinero para otra suscripción», «la IA escribe emails que suenan a robot».</p></div>
+</div>
+
+<h2 id="voz">La voz: hablar como músico, no como comercial</h2>
+<p class="lead">Brand persona hecha práctica: tuteo, frases cortas y cada término de ventas traducido al local de ensayo.</p>
+<div class="tabla"><table><thead><tr><th>Término de CRM</th><th>Cómo lo decimos</th><th>España</th><th>Latinoamérica</th></tr></thead><tbody>
+<tr><td>Lead</td><td>Una sala, festival o programador al que escribes</td><td>sala, programador</td><td>foro, venue, promotor</td></tr>
+<tr><td>Deal / venta</td><td>Una fecha</td><td>bolo, concierto</td><td>tocada (México), toque (Colombia)</td></tr>
+<tr><td>Pipeline</td><td>La hoja de ruta de tus fechas</td><td>embudo de bolos</td><td>embudo de tocadas o fechas</td></tr>
+<tr><td>Precio</td><td>Caché o taquilla</td><td>caché, a taquilla</td><td>cachet, a puerta, boletería</td></tr>
+<tr><td>Propuesta comercial</td><td>El pitch + tu dossier (EPK)</td><td>dossier</td><td>press kit, EPK</td></tr>
+</tbody></table></div>
+<div class="voz" style="margin-top:14px">
+<div><small>Guion del vídeo 1</small><p>«¡Eh! Una sala te ofrece fecha. Tú lo ves tres semanas tarde, enterrado en un hilo de Gmail. Y esa fecha ya es de otra banda.»</p></div>
+<div><small>Eco en el chat</small><p>«¡Hola! 👋 Soy Eco, el asistente de BandManager. ¿En qué puedo ayudarte para gestionar tu banda?»</p></div>
+<div><small>Eco en TikTok</small><p>Eco corrige tu email a las salas en rojo: «Suspenso. Asunto genérico y sin dossier.»</p></div>
+</div>
+
+<div class="slogan"><b>Tu manager de bolsillo.</b><span>La plataforma integral para tus bandas</span></div>
+
+<details><summary>Ver la tabla en una sola imagen (para compartir)</summary>
+<picture><source srcset="/ejercicio_branding/bandmanager_branding_web_1600.webp 1600w, /ejercicio_branding/bandmanager_branding_web.webp 3200w" sizes="(max-width:1180px) 100vw, 1180px" type="image/webp">
+<img src="/ejercicio_branding/bandmanager_branding_web_1600.webp" width="1600" height="920" loading="lazy" alt="Tabla de identidad de marca de BandManager: núcleo de marca, posicionamiento y brand persona, con el eslogan «Tu manager de bolsillo»"></picture></details>
+
+<div id="ejPrevNext"></div>
+<footer>Ejercicio de marketing digital · BandManager.io</footer>
+</main>
+<script>
+const G={"Núcleo de marca":[
+{n:"Propósito",t:"Que los artistas dediquen su tiempo a crear y actuar, no a perseguir salas, emails y papeleo.",v:"Vídeo 8: la IA busca salas y redacta, pero nada se envía sin tu aprobación. Quitar papeleo sin quitarte el control.",e:"pillo",l:"Menos papeleo, más escenario."},
+{n:"Visión",t:"Ser el manager digital de referencia para artistas independientes en español: la estructura de una agencia sin pagar una.",v:"Después del mes 1, el canal crece hacia el cartel del concierto, los reels y el repertorio.",e:"pillo",l:"Hoy, el CRM. Mañana, todo el directo."},
+{n:"Valores",t:"Autonomía · Cercanía · Practicidad · Honestidad · Pasión por el directo",v:"Honestidad: el vídeo 2 dice «si escribes a menos de 10 salas, te basta con Excel». Y el 3 reconoce lo que hacen bien los demás.",e:"critico",l:"Si no te hacemos falta, te lo decimos."}],
+"Posicionamiento":[
+{n:"Público",t:"Bandas y artistas indie (18–40) que gestionan sus bolos. Después: monologuistas, DJs, solistas, managers y salas.",v:"Lucía, la booker por descarte, es la persona principal. Javi, mánager de 3-5 bandas, es la secundaria (plan Cabeza de Cartel).",e:"desconfiado",l:"Ella no quiere un CRM. Quiere tocar."},
+{n:"Mercado",t:"Software de gestión para artistas independientes. España primero, luego Latinoamérica. Competencia real: Gmail + WhatsApp + Excel.",v:"Vídeos 2, 3 y 4: Excel, Notion, HubSpot y BandManager comparados con los mismos criterios.",e:"critico",l:"Mi rival es tu Excel de 60 filas."},
+{n:"Objetivos",t:"Año 1: 100 artistas activos y 10 casos de éxito (objetivo propuesto). Freemium: plan Ensayo (0 €) → De Gira (29 €/mes).",v:"KPIs del canal: CTR de miniatura > 5 %, retención a 30 s > 60 %, clics por UTM y registros al plan gratuito.",e:"sudando",l:"Cada vídeo tiene que pagar su promesa en 30 s."}],
+"Brand persona":[
+{n:"Personalidad",t:"El colega del grupo que se organiza de maravilla: cercano, resolutivo, con humor, alma de músico y cabeza de gestor. Su cara es Eco.",v:"Eco: murciélago rockero, socarrón y sincero. Dice lo que nadie te dice de tu email. Nunca vende ni se burla de una banda concreta.",e:"indignado",l:"Sincero, no borde. Casi siempre."},
+{n:"Voz",t:"Tuteo, frases cortas, humor de local de ensayo, verbos de acción. Nada de «soluciones integrales».",v:"Cada término de ventas se traduce: «lead» es una sala a la que escribes; «deal», una fecha.",e:"horror",l:"¿«Soluciones integrales»? Eso no se dice en el local."},
+{n:"Eslogan",t:"Tu manager de bolsillo.",v:"Promete móvil primero y ayuda constante. «La plataforma integral para tus bandas» queda como descriptor, como en el logo.",e:"pillo",l:"Un manager que cabe en el bolsillo del vaquero."}]};
+const $=s=>document.querySelector(s);let cur=Object.keys(G)[0],sel=0;
+function det(){const k=G[cur][sel];$('#detalle').innerHTML=`<div><h3>${k.n}</h3><p><b>${k.t}</b></p><p class="se-ve"><b>Se nota en el ejercicio:</b> ${k.v}</p></div><div class="eco-col"><div class="bubble">${k.l}</div><img src="/ejercicio_youtube_crm/eco/${k.e}.webp" alt="" onerror="this.hidden=true"></div>`}
+function render(){$('#tabs').innerHTML=Object.keys(G).map(g=>`<button role="tab" aria-selected="${g==cur}" data-g="${g}">${g}</button>`).join('');
+$('#grid').innerHTML=G[cur].map((k,i)=>`<button class="el" aria-expanded="${i==sel}" data-i="${i}"><b>${k.n}</b><span>${k.t.length>78?k.t.slice(0,75)+'…':k.t}</span></button>`).join('');
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{cur=b.dataset.g;sel=0;render()});
+document.querySelectorAll('.el').forEach(b=>b.onclick=()=>{sel=+b.dataset.i;render()});det()}
+render();
+const tb=document.querySelectorAll('.temas button');
+function tema(t){if(t==='light')document.documentElement.removeAttribute('data-theme');else document.documentElement.setAttribute('data-theme',t);tb.forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===t));try{localStorage.setItem('tema',t)}catch(e){}}
+tb.forEach(b=>b.onclick=()=>tema(b.dataset.t));
+let t0='light';try{t0=localStorage.getItem('tema')||'light'}catch(e){}tema(t0);
+</script>
+<script src="/ejercicio_youtube_crm/ejercicios.js" defer></script>
+</body></html>

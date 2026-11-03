@@ -24,8 +24,11 @@ Exporta: NOMBRE_FORMATO, NOMBRE_RED.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_asesor_AgendaAsesor|src/components/asesor/AgendaAsesor.tsx]] *(from #frontend)*
+- [[src_components_asesor_AuditoriaPanel|src/components/asesor/AuditoriaPanel.tsx]] *(from #frontend)*
+- [[src_components_asesor_EnlacesPanel|src/components/asesor/EnlacesPanel.tsx]] *(from #frontend)*
 - [[src_components_asesor_FormEstrategia|src/components/asesor/FormEstrategia.tsx]] *(from #frontend)*
 - [[src_components_asesor_PiezaSheet|src/components/asesor/PiezaSheet.tsx]] *(from #frontend)*
+- [[src_components_asesor_SeoPanel|src/components/asesor/SeoPanel.tsx]] *(from #frontend)*
 - [[src_components_asesor_TarjetaHoy|src/components/asesor/TarjetaHoy.tsx]] *(from #frontend)*
 
 ---

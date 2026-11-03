@@ -8,12 +8,14 @@ import { useSongStudio } from "./SongStudioContext";
 import { SongStudioHeaderControls } from "./SongStudioHeaderControls";
 import { SongStudioReadinessSelect } from "./SongStudioReadinessSelect";
 import { SongStudioToolsMenu } from "./SongStudioToolsMenu";
+import { useFormatoTono } from "../../hooks/useNotacion";
 
 /**
  * Cabecera del estudio: título, estado, favorita, preparación, herramientas y controles
  * @returns Sección de interfaz.
  */
 export function SongStudioHeader() {
+  const fmtTono = useFormatoTono();
   const { song } = useSongStudio();
   return (
     <>
@@ -27,7 +29,7 @@ export function SongStudioHeader() {
             <div className="flex items-center gap-2 flex-wrap">
               <h2
                 className="text-xl font-bold tracking-tight text-[var(--ink)]"
-                title={`⏱️ ${song.duracion} · 🎵 ${song.tonalidad} · ⚡ ${song.bpm} BPM${song.afinacion ? ` · 🎸 ${song.afinacion}` : ''}`}
+                title={`⏱️ ${song.duracion} · 🎵 ${fmtTono(song.tonalidad)} · ⚡ ${song.bpm} BPM${song.afinacion ? ` · 🎸 ${song.afinacion}` : ''}`}
               >
                 {formatSongTitle(song.titulo)}
               </h2>

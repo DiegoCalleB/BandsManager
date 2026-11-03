@@ -9,6 +9,7 @@ import { useMetronomo } from "../../../hooks/useMetronomo";
 import { AnalisisAcordes,Song,SongSubstituteGuide } from "../../../types";
 import { ajustesDeModoAtril,ModoAtril } from "../../../utils/modosAtril";
 import { useNivelAcordes,useVistaAcordes } from "../../chords/useVistaAcordes";
+import { useNotacion } from "../../../hooks/useNotacion";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface AtrilStateParams {
@@ -29,7 +30,7 @@ export function useAtrilState({ modo, song }: AtrilStateParams) {
   const [activeTab, setActiveTab] = useState<"chords" | "substitute" | "armonia" | "edit">(
     "chords",
   );
-  const [notation, setNotation] = useState<"ES" | "EN">("ES");
+  const [notation, setNotation] = useNotacion();
   const [transpose, setTranspose] = useState<number>(0);
 
   // Auto-scroll state

@@ -13,7 +13,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 4. **Arquitectura Limpia & Anti-God Components (§5.6):** Archivos saludables (<600 líneas, límite 800). Desacoplamiento obligatorio de modales, lógica pura y hooks.
 5. **Simplicidad de Interfaz & Mobile-First (§6):** La potencia vive en el backend y los agentes; la interfaz es limpia, sin saturación y diseñada para 390 px.
 
-**Índice:** 1. Arquitectura · 2. Seguridad y multi-tenancy · 3. Agentes IA · 4. Subsistemas · 5. Código y calidad · 6. Simplicidad en pantalla · 7. Eficiencia de desarrollo · 8. Riesgos Legales
+**Índice:** 1. Arquitectura · 2. Seguridad y multi-tenancy · 3. Agentes IA · 4. Subsistemas · 5. Código y calidad · 6. Simplicidad en pantalla · 7. Eficiencia de desarrollo · 8. Riesgos Legales · 9. Git y GitHub
 
 ---
 
@@ -22,6 +22,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 * **Arranque local (Quickstart):** `npm install` → copiar `.env.example` a `.env` y rellenar al menos `SUPABASE_URL`/`SUPABASE_SERVICE_ROLE_KEY` y `GEMINI_API_KEY` → `npm run dev` (Express + Vite, `server.ts`). Sin `.env` configurado la app también arranca usando usuarios semilla de `src/db_seed.ts` y estado en memoria. `npm run build` tipa (`tsc --noEmit`) antes de compilar. Comandos rápidos de verificación: `npm run check:fast` (<1.5s), `npm test`, `npm run lint:eslint`.
 * **Variables de entorno por subsistema:** Referencia completa en `.env.example` (~20 variables). Cada subsistema degrada de forma tolerante si faltan claves secundarias (IA multi-modelo, Stripe, Resend, Gmail OAuth, Replicate/Fal).
 * **Observabilidad en Dos Capas:** (1) `agent_execution_logs` en Supabase audita eventos de negocio esperables de los agentes (cuentas no conectadas, salas sin email). (2) `server/utils/errorTracking.ts` y `src/utils/errorTracking.ts` (Sentry) capturan excepciones runtime inesperadas.
+* **Modelos de IA (`server/utils/modelosGemini.ts`):** único sitio donde se escribe un ID de modelo (Gemini, embeddings, Imagen, Lyria, DeepSeek); cada familia tiene override por variable de entorno (`GEMINI_MODELS`, `GEMINI_EMBEDDING_MODELS`, `IMAGEN_LOGO_MODELS`...). Un modelo que Google devuelve como 404/retirado se aparta solo y se avisa en el log. `npm run check:modelos` y el workflow semanal `modelos-ia.yml` (secreto `GEMINI_API_KEY`) lo contrastan con `models.list()`; el test `modelosIA.test.ts` prohíbe IDs sueltos y retirados.
 * **Única Fuente de Verdad:** **Supabase (PostgreSQL)**. Prohibición estricta de Google Sheets o almacenes no tipados.
 * **Estado y Sincronización:** Backend Express sincroniza estado (`server/state.ts` / `server/db.ts`) cargado desde Supabase (`loadStateFromSupabase`).
 * **Reglas Clave de Autenticación y Autorización:**
@@ -380,3 +381,27 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 * **Notas técnicas de auditorías:** Gmail OAuth (`state` con nonce), cola de agentes (`agent_jobs_queue`), guardado optimista (`src/utils/guardarConReversion.ts`), invitaciones de miembros y layout móvil.
 
 👉 *Detalles normativos y mitigaciones completas en [docs/referencia/RIESGOS_LEGALES.md](./docs/referencia/RIESGOS_LEGALES.md).*
+
+---
+
+## 🌿 9. Git y GitHub: cuándo y cómo usar cada concepto
+
+**Regla de oro:** un cambio, una rama, una PR, un propósito. `main` solo recibe PRs con el CI en verde, fusionadas con *squash*. Nunca se trabaja directo en `main`.
+
+| # | Concepto | Cuándo se usa | Cómo, en este proyecto |
+|---|---|---|---|
+| 01 | **Commit** | Cada paso con sentido, que compila y pasa los tests | `git add <rutas>` (no `-A` a ciegas) y mensaje convencional (`feat(x): …`, `fix(x): …`); lo exige commitlint. No mezclar temas en un commit |
+| 02 | **Branch** | Todo cambio que no sea trivial, para trabajar en paralelo sin tocar `main` | Los agentes trabajan en la rama que asigna la sesión. Si su PR ya se fusionó (squash), se reinicia desde `origin/main` (`git checkout -B <rama> origin/main`) |
+| 03 | **Merge** | Traer `main` a tu rama cuando hay conflicto o `main` avanzó | `git merge origin/main`. Las PRs las fusiona GitHub (squash), no se fusionan a mano |
+| 04 | **Rebase** | Solo en una rama propia que aún no se ha subido | Nunca sobre historia ya publicada: obligaría a un *force-push*, que está prohibido. Si la rama remota tiene commits ya fusionados con squash, se hace `git merge origin/main` sobre ella |
+| 05 | **Cherry-pick** | Llevar un commit concreto (una corrección) a otra rama sin el resto | `git cherry-pick <sha>`; se usa para recuperar un cambio tras reiniciar una rama |
+| 06 | **Stash** | Aparcar cambios sin commitear para cambiar de rama o actualizarla | `git stash` y después `git stash pop`; no dejar stashes olvidados |
+| 07 | **Tag** | Marcar una versión | No se crean a mano: los tags y las versiones los gestiona release-please (`release-please-config.json`) |
+| 08 | **Fork** | Proponer cambios a un repo ajeno | Este repo no usa forks: se trabaja con ramas del propio repositorio |
+| 09 | **Pull request** | Para que un cambio entre en `main` y pase el CI | Plantilla en `.github/pull_request_template.md`; no se fusiona hasta que `check` esté en verde. Preview automático en Railway por PR |
+| 10 | **PRs apiladas** | Un cambio depende de otro aún sin fusionar y una sola PR sería enorme | La segunda PR apunta a la rama de la primera; se fusionan en orden y la segunda pasa a `main` al fusionar la primera. Solo si hace falta: mejor PRs pequeñas e independientes |
+
+* **Antes de commitear:** `git status` y `git diff` para ver qué entra. **Antes de subir:** el hook de pre-push ejecuta typecheck, tests y docs (tarda unos 20 minutos): agrupar commits razonables en vez de subir uno a uno.
+* **Nunca:** `--force` ni `--no-verify`, reescribir historia compartida, ni dejar una rama con trabajo sin subir al terminar la sesión.
+* **`security/snyk`:** falla por cuota de la cuenta; se ignora y no se comenta.
+

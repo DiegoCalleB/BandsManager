@@ -26,6 +26,7 @@ Publicaciones de Instagram de la banda y cuál corresponde a cada pieza del ases
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_services_asesorInstagram|server/services/asesorInstagram.ts]] *(from #service)*
 - [[src_components_asesor_PorMedirCard|src/components/asesor/PorMedirCard.tsx]] *(from #frontend)*
+- [[src_utils_asesor_clicsPieza|src/utils/asesor/clicsPieza.ts]] *(from #service)*
 - [[src_utils_asesorApi|src/utils/asesorApi.ts]] *(from #service)*
 
 ---

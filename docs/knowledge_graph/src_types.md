@@ -70,6 +70,7 @@ _Sin dependencias salientes directas._
 - [[server_routes_tracking|server/routes/tracking.ts]] *(from #route)*
 - [[server_services_acordesCancion|server/services/acordesCancion.ts]] *(from #service)*
 - [[server_services_agentIntelligence|server/services/agentIntelligence.ts]] *(from #agent)*
+- [[server_services_analisisAcordesRapido|server/services/analisisAcordesRapido.ts]] *(from #service)*
 - [[server_services_chatLecturas|server/services/chatLecturas.ts]] *(from #service)*
 - [[server_services_chatPrompt|server/services/chatPrompt.ts]] *(from #service)*
 - [[server_services_letraCancion|server/services/letraCancion.ts]] *(from #service)*
@@ -542,6 +543,7 @@ _Sin dependencias salientes directas._
 - [[src_services_tiposApi|src/services/tiposApi.ts]] *(from #service)*
 - [[src_services_tiposRespuestasHerramientas|src/services/tiposRespuestasHerramientas.ts]] *(from #service)*
 - [[src_utils_accompanimentSynth|src/utils/accompanimentSynth.ts]] *(from #service)*
+- [[src_utils_acordeEnHermanos|src/utils/acordeEnHermanos.ts]] *(from #service)*
 - [[src_utils_agendaASetlist|src/utils/agendaASetlist.ts]] *(from #service)*
 - [[src_utils_agendaEnsayo|src/utils/agendaEnsayo.ts]] *(from #service)*
 - [[src_utils_ajusteEnBloque|src/utils/ajusteEnBloque.ts]] *(from #service)*
@@ -648,6 +650,7 @@ _Sin dependencias salientes directas._
 - `src/components/user_profile/hooks/__tests__/useProfileBands.behavior.test.ts`
 - `src/hooks/__tests__/useAuth.behavior.test.ts`
 - `src/hooks/__tests__/useStagePlayer.behavior.test.ts`
+- `src/utils/__tests__/acordeEnHermanos.test.ts`
 - `src/utils/__tests__/agendaASetlist.test.ts`
 - `src/utils/__tests__/audioCueDetector.test.ts`
 - `src/utils/__tests__/bookingUtils.test.ts`
@@ -672,6 +675,7 @@ _Sin dependencias salientes directas._
 - `src/utils/__tests__/midiExport.test.ts`
 - `src/utils/__tests__/pistasDeCancion.test.ts`
 - `src/utils/__tests__/pistasDeDisco.test.ts`
+- `src/utils/__tests__/ponerAcordeEnRango.test.ts`
 - `src/utils/__tests__/repertorioPdf.test.ts`
 - `src/utils/__tests__/separacionIris.test.ts`
 - `src/utils/__tests__/setlistCompatibility.test.ts`

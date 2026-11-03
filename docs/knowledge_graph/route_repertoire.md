@@ -27,6 +27,7 @@ Endpoints para canciones, compatibilidad armónica y exportación a setlist.
 - [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(Layer: #security, Domain: #system)*
 - [[server_routes_concert_to_album|server/routes/concert_to_album.ts]] *(Layer: #route, Domain: #system)*
 - [[server_services_acordesCancion|server/services/acordesCancion.ts]] *(Layer: #service, Domain: #system)*
+- [[server_services_analisisAcordesRapido|server/services/analisisAcordesRapido.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_colaLetras|server/services/colaLetras.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_services_letraCancion|server/services/letraCancion.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_services_profesorArmonia|server/services/profesorArmonia.ts]] *(Layer: #service, Domain: #system)*

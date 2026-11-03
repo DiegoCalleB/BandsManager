@@ -7,12 +7,14 @@ import { BarraSeguimientoEnsayo } from "../ensayos/BarraSeguimientoEnsayo";
 import { ShowIcon } from "../ui/ShowIcon";
 import { itemLabel } from "./performanceModel";
 import { useSetlistPerformance } from "./SetlistPerformanceContext";
+import { useFormatoTono } from "../../hooks/useNotacion";
 
 /**
  * Barra inferior: tono y tempo, navegación y siguiente tema.
  * @returns Sección de interfaz.
  */
 export function PerformanceFooter() {
+  const fmtTono = useFormatoTono();
   const { glareMode, seguimientoEnsayo, currentItem, isBlock, showScannedSheet, currentSong, setLiveTransposeOffset, transposedKey, liveTransposeOffset, effectiveTranspose, handlePrev, isFirst, allItems, setCurrentIndex, currentIndex, songs, handleNext, isLast, nextItem } = useSetlistPerformance();
   return (
     <>
@@ -65,7 +67,7 @@ export function PerformanceFooter() {
       </div>
       {effectiveTranspose !== 0 && (
       <span className="text-[var(--ink-2)] font-sans text-xs hidden sm:inline">
-        (original {currentSong?.tonalidad})
+        (original {fmtTono(currentSong?.tonalidad)})
       </span>
       )}
     </div>

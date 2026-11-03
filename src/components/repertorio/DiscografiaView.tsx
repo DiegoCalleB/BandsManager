@@ -167,7 +167,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
         ordenAlbum: t.index,
         speechTranscription: t.speechTranscription || "",
         cifradoTexto: t.lyricsWithChords || "",
-        tonalidad: t.tonalidad || "Mim",
+        tonalidad: t.tonalidad || "Em",
         bpm: t.bpm || 120,
         favorite: false,
         cueIn: t.cueIn,

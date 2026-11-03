@@ -19,6 +19,7 @@ import { INITIAL_SONGS, INITIAL_SETLISTS } from "../../src/db_seed.js";
 import { pistasDeIdeas, metaStemsDeIdeas } from "../../src/utils/irisTracks.js";
 import type { AnalisisAcordes, AudioTrack, SongAudioIdea, StemsMeta } from "../../src/types.js";
 import type { EntradaAtajo, EntradaSetlist, ErrorPostgrest, FilaSong, SongMapeada } from "./tiposRepertorio.js";
+import { normalizarTonalidad, TONALIDAD_POR_DEFECTO } from "../../src/utils/notacionAcordes.js";
 
 /**
  * Analiza y persiste la dinámica interna del audio de un tema — y de paso, BPM y tonalidad
@@ -91,9 +92,8 @@ export async function analizarYGuardarDinamicaCancion(
   const energiaDbPromedio = audioAnalizable
     ? calcularVolumenPromedioAudio(curva)
     : null;
-  // Independiente de la curva de energía (usa su propia extracción de PCM): un audio puede
-  // fallar el análisis de dinámica y aun así ser perfectamente decodificable para BPM/tonalidad,
-  // así que no se condiciona a `audioAnalizable`.
+  // Independiente de la curva de energía (usa su propia extracción de PCM): un audio puede fallar el análisis de
+  // dinámica y aun así ser decodificable para BPM/tonalidad, así que no se condiciona a `audioAnalizable`.
   const {
     bpm: bpmDetectado,
     tonalidad: tonalidadDetectada,
@@ -544,7 +544,7 @@ export function mapSongRecord(s: FilaSong): SongMapeada {
     duracion_segundos: Number(s.duracion_segundos ?? s.duracionSegundos ?? 210),
     duracionMinutos: Number(s.duracion_minutos ?? s.duracionMinutos ?? 3),
     duracion_minutos: Number(s.duracion_minutos ?? s.duracionMinutos ?? 3),
-    tonalidad: s.tonalidad || "Mim",
+    tonalidad: normalizarTonalidad(s.tonalidad) || TONALIDAD_POR_DEFECTO,
     bpm: Number(s.bpm || 120),
     bpmDetectadoEn: s.bpm_detectado_en || s.bpmDetectadoEn || undefined,
     bpm_detectado_en: s.bpm_detectado_en || s.bpmDetectadoEn || undefined,
@@ -841,7 +841,7 @@ export async function dbUpsertSong(
     duracion_minutos: Math.round(
       Number(song.duracionMinutos ?? song.duracion_minutos ?? 3),
     ),
-    tonalidad: song.tonalidad || "Mim",
+    tonalidad: normalizarTonalidad(song.tonalidad) || TONALIDAD_POR_DEFECTO,
     bpm: Number(song.bpm || 120),
     afinacion: song.afinacion || "Estándar E",
     album_disco: preferClearableString(song.albumDisco, song.album_disco) || song.album || "",

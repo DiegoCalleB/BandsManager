@@ -34,3 +34,17 @@ Eco es un murciélago rockero con guitarra. Es la cara y el nombre de los asiste
 
 - Poses recortadas de Eco en `public/ejercicio_youtube_crm/eco/` y `ejercicios/assets/youtube-crm/eco/`.
 - Las imágenes de Eco son arte conceptual generado con IA: antes de un uso comercial hay que revisar los derechos con un abogado y, idealmente, encargar la versión final a una persona ilustradora.
+
+## Piel de marca de los ejercicios
+
+Las páginas de los ejercicios (`public/ejercicio_youtube_crm*` y `ejercicios/`) tienen un cuarto tema, **Marca**, que es el que se ve por defecto. No cambia la aplicación, que sigue con Espectro (Claro, Oscuro y Clásico).
+
+| Token | Valor |
+|---|---|
+| `--bg` | `#0b0b0d` (negro) |
+| `--surface` / `--sunken` | `#15151a` / `#1f1f26` |
+| `--ink` / `--ink-2` / `--ink-3` | `#FFE08A` (crema) / `#CDB878` / `#9A8D68` |
+| `--acc` / `--acc-ink` | `#F5A300` (ámbar) / `#FFC21A` (dorado) |
+| `--on-acc` | `#140d00` |
+
+Lema: «Tu manager de bolsillo.». Las miniaturas de YouTube usan la misma paleta y una receta fija: la mitad izquierda en negro con 2 a 3 palabras en crema (una en ámbar) y contorno negro; la derecha, una ráfaga de luz ámbar con rayos y la cara de Eco enorme, a sangre, con la emoción del vídeo (su silueta oscura destaca sobre el fondo claro); abajo a la izquierda, un único objeto de la app que prueba la promesa. Se comprueban a 360 px de ancho antes de subirlas.

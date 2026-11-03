@@ -25,7 +25,7 @@ Exporta: SharePayload, shareViaWebShare, shareViaWhatsApp, shareViaEmail, copyTo
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_asesor_PiezaSheet|src/components/asesor/PiezaSheet.tsx]] *(from #frontend)*
+- [[src_components_asesor_BotonCopiar|src/components/asesor/BotonCopiar.tsx]] *(from #frontend)*
 - [[src_components_atril_AtrilModals|src/components/atril/AtrilModals.tsx]] *(from #frontend)*
 - [[src_components_calendar_PromocionConciertoModal|src/components/calendar/PromocionConciertoModal.tsx]] *(from #frontend)*
 - [[src_components_InvitarBandaCard|src/components/InvitarBandaCard.tsx]] *(from #frontend)*

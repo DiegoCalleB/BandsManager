@@ -6,6 +6,7 @@ import { formatSongTitle } from '../../utils/formatSongTitle';
 import { Play, Star, FileText, Users, Headphones, Edit3, Trash2, Share2, ExternalLink, MoreVertical, ArrowUp, ArrowDown, Volume2, Music, GripVertical, Sparkles } from 'lucide-react';
 import { hasIrisStems } from '../../utils/irisTracks';
 import { Button, IconButton, MenuItem } from '../ui';
+import { useFormatoTono } from "../../hooks/useNotacion";
 
 export interface SongCardRowProps {
   song: Song;
@@ -77,6 +78,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
   isDragging = false,
   isDragOver = false
 }) => {
+  const fmtTono = useFormatoTono();
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const popRef = useRef<HTMLDivElement>(null);
@@ -253,7 +255,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
               title={song.bpmDetectadoEn || song.tonalidadDetectadaEn ? 'Detectado automáticamente por Iris desde el audio' : undefined}
               className="px-2 py-0.5 rounded-[var(--r-pill)] text-xs font-medium bg-[var(--surface)] text-[var(--ink-2)]"
             >
-              {song.tonalidad || '—'}
+              {fmtTono(song.tonalidad) || '—'}
               {song.bpm ? ` • ${song.bpm} BPM` : ''}
               {song.bpmDetectadoEn || song.tonalidadDetectadaEn ? ' 🤖' : ''}
             </span>

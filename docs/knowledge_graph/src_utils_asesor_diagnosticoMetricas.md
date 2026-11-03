@@ -23,6 +23,7 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server_services_asesorPresencia|server/services/asesorPresencia.ts]] *(from #service)*
 - [[src_utils_asesor_agenda|src/utils/asesor/agenda.ts]] *(from #service)*
 - [[src_utils_asesor_chat|src/utils/asesor/chat.ts]] *(from #service)*
 - [[src_utils_asesor_metricasPorRed|src/utils/asesor/metricasPorRed.ts]] *(from #service)*

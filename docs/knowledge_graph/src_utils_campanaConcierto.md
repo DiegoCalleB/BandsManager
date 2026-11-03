@@ -26,12 +26,15 @@ _Sin dependencias salientes directas._
 - [[server_routes_campanaConcierto|server/routes/campanaConcierto.ts]] *(from #route)*
 - [[server_services_asesorInstagram|server/services/asesorInstagram.ts]] *(from #service)*
 - [[server_services_asesorMarketing|server/services/asesorMarketing.ts]] *(from #service)*
+- [[server_services_asesorPresencia|server/services/asesorPresencia.ts]] *(from #service)*
 - [[server_services_asesorRedes|server/services/asesorRedes.ts]] *(from #service)*
 - [[src_components_asesor_AgendaAsesor|src/components/asesor/AgendaAsesor.tsx]] *(from #frontend)*
+- [[src_components_asesor_EnlacesPanel|src/components/asesor/EnlacesPanel.tsx]] *(from #frontend)*
 - [[src_components_asesor_OtrasRedesCard|src/components/asesor/OtrasRedesCard.tsx]] *(from #frontend)*
 - [[src_components_asesor_PorMedirCard|src/components/asesor/PorMedirCard.tsx]] *(from #frontend)*
 - [[src_components_calendar_PromocionConciertoModal|src/components/calendar/PromocionConciertoModal.tsx]] *(from #frontend)*
 - [[src_utils_asesor_agenda|src/utils/asesor/agenda.ts]] *(from #service)*
+- [[src_utils_asesor_clicsPieza|src/utils/asesor/clicsPieza.ts]] *(from #service)*
 - [[src_utils_asesor_diagnostico|src/utils/asesor/diagnostico.ts]] *(from #service)*
 - [[src_utils_asesor_instagramMedios|src/utils/asesor/instagramMedios.ts]] *(from #service)*
 - [[src_utils_asesor_metricasPorRed|src/utils/asesor/metricasPorRed.ts]] *(from #service)*

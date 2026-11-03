@@ -6,10 +6,10 @@
  */
 import { describe, expect, it } from 'vitest';
 import path from 'node:path';
-import router, { ARCHIVO_EJERCICIO_YOUTUBE } from '../ejercicioYoutube';
+import router, { ARCHIVO_EJERCICIO_YOUTUBE, ARCHIVO_EJERCICIO_BRANDING, ARCHIVO_EJERCICIO_FACEBOOK } from '../ejercicioYoutube';
 
-function manejador() {
-  const capa = (router as any).stack.find((s: any) => s.route?.path === '/ejercicio_youtube_crm' && s.route.methods.get);
+function manejador(ruta = '/ejercicio_youtube_crm') {
+  const capa = (router as any).stack.find((s: any) => s.route?.path === ruta && s.route.methods.get);
   expect(capa).toBeDefined();
   return capa.route.stack[capa.route.stack.length - 1].handle;
 }
@@ -32,6 +32,28 @@ describe('página del ejercicio de YouTube', () => {
     let siguiente = 0;
     const res: any = { setHeader: () => {}, sendFile: (_f: string, cb: (e?: Error) => void) => cb(new Error('ENOENT')) };
     manejador()({}, res, () => siguiente++);
+    expect(siguiente).toBe(1);
+  });
+});
+
+describe.each([
+  ['/ejercicio_branding', ARCHIVO_EJERCICIO_BRANDING, 'ejercicio_branding.html'],
+  ['/ejercicio_facebook', ARCHIVO_EJERCICIO_FACEBOOK, 'ejercicio_facebook.html'],
+])('página %s', (ruta, archivo, nombre) => {
+  it('apunta a dist y se envía sin caché', () => {
+    expect(archivo()).toBe(path.join(process.cwd(), 'dist', nombre));
+    const cab: Record<string, string> = {};
+    let enviado = '';
+    const res: any = { setHeader: (k: string, v: string) => (cab[k] = v), sendFile: (f: string) => (enviado = f) };
+    manejador(ruta)({}, res, () => {});
+    expect(enviado).toBe(archivo());
+    expect(cab['Cache-Control']).toBe('no-store');
+  });
+
+  it('si no hay archivo, deja pasar a la SPA', () => {
+    let siguiente = 0;
+    const res: any = { setHeader: () => {}, sendFile: (_f: string, cb: (e?: Error) => void) => cb(new Error('ENOENT')) };
+    manejador(ruta)({}, res, () => siguiente++);
     expect(siguiente).toBe(1);
   });
 });

@@ -7,6 +7,7 @@
 
 import type { EmbedContentResponse } from "@google/genai";
 import { getAiClient } from "../ai.js";
+import { MODELOS_EMBEDDING, modelosAProbar, registrarFalloModelo } from "../utils/modelosGemini.js";
 import { getSupabase } from "../db/core.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
@@ -155,8 +156,14 @@ function generateDeterministicFallbackEmbedding(text: string): number[] {
   return vector;
 }
 
+/** Con `outputDimensionality` < 3072 Gemini no devuelve vectores normalizados: se normalizan para que el coseno sea comparable. */
+function normalizarL2(v: number[]): number[] {
+  const n = Math.sqrt(v.reduce((a, x) => a + x * x, 0)) || 1;
+  return v.map(x => x / n);
+}
+
 /**
- * Genera el embedding de 768 dimensiones usando Google Gemini text-embedding-004
+ * Genera el embedding de 768 dimensiones usando Google Gemini (ver MODELOS_EMBEDDING)
  * con fallback resiliente ante cuota/429.
  */
 export async function generateEmbedding(text: string): Promise<number[] | null> {
@@ -179,11 +186,11 @@ export async function generateEmbedding(text: string): Promise<number[] | null> 
     // Truncar para evitar sobrepasar límites de tokens de embedding
     const truncated = cleanText.substring(0, 2048);
 
-    // Intentar primero con text-embedding-004 y luego gemini-embedding-2-preview
+    // Modelos en modelosGemini.ts (text-embedding-004 está retirado): se prueba cada uno y se avisa de los fallos.
     if (process.env.DISABLE_GEMINI === "true" || process.env.PAUSE_AI_CALLS === "true") {
       return generateDeterministicFallbackEmbedding(cleanText);
     }
-    const modelsToTry = ["text-embedding-004"];
+    const modelsToTry = modelosAProbar(undefined, MODELOS_EMBEDDING);
     let values: number[] | null = null;
 
     for (const modelName of modelsToTry) {
@@ -199,11 +206,12 @@ export async function generateEmbedding(text: string): Promise<number[] | null> 
 
         const extracted = response?.embeddings?.[0]?.values || response?.embedding?.values;
         if (Array.isArray(extracted) && extracted.length > 0) {
-          values = extracted;
+          values = normalizarL2(extracted);
           break;
         }
-      } catch {
-        // Continue to fallback model or deterministic fallback
+      } catch (errCapturado) {
+        registrarFalloModelo(modelName, errCapturado);
+        console.warn(`[PitchVectorStore] Embedding con '${modelName}' falló: ${comoErrorCapturado(errCapturado).message}`);
       }
     }
 

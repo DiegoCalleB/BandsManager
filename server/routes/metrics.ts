@@ -875,7 +875,7 @@ Devuelve ÚNICAMENTE un JSON estrictamente válido con este esquema exacto:
 }`;
 
     const response = await generateContentWithFallback(ai, {
-      preferredModel: "gemini-3.7-flash",
+      preferredModel: GEMINI_MODEL,
       contents: [{ role: "user", parts: [{ text: prompt }] }],
       config: {
         responseMimeType: "application/json",

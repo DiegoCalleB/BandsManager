@@ -15,7 +15,7 @@ export type ResultadoAnalisis =
  * (instrumental de Iris → stems armónicos → mezcla) y con la red de seguridad de
  * `motivoAnalisisPocoFiable`. No toca la base de datos: quien llama decide si guarda.
  */
-export async function analizarAcordesDeCancion(song: Partial<Song>, alAvanzar?: (etapa: string, detalle: string) => void): Promise<ResultadoAnalisis> {
+export async function analizarAcordesDeCancion(song: Partial<Song>, alAvanzar?: (etapa: string, detalle: string) => void, opciones: { pulsoNeuronal?: boolean } = {}): Promise<ResultadoAnalisis> {
   const avisa = (etapa: string, detalle: string) => alAvanzar?.(etapa, detalle);
   avisa("audio", "Eligiendo el mejor audio: instrumental, stems o mezcla…");
   const niveles = elegirFuentesAudio(song);
@@ -52,8 +52,9 @@ export async function analizarAcordesDeCancion(song: Partial<Song>, alAvanzar?: 
   // cambia); si no está disponible, el detector clásico (tempo fijo, sin compases).
   avisa("pulso", "Escuchando el pulso y dónde empieza cada compás…");
   const bpmFicha = Number(song.bpm) || undefined;
+  // `pulsoNeuronal: false` = respuesta rápida (la red tarda ~20 s por tema): pulso clásico ahora, red en segundo plano.
   const pulso =
-    (await pulsoConRed(niveles, { bpmFicha, cambios: cambiosDeAcorde(detectado.segmentos) })) ??
+    (opciones.pulsoNeuronal === false ? null : await pulsoConRed(niveles, { bpmFicha, cambios: cambiosDeAcorde(detectado.segmentos) })) ??
     calcularPulso(pcm, SAMPLE_RATE, { bpmFicha });
   const pulsoUtil = pulso && pulso.confianza >= 0.35 ? pulso : null;
   // Con la red se sabe dónde cae cada «1»: los cambios se cuadran con el compás, no solo con el pulso.

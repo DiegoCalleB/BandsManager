@@ -27,6 +27,7 @@ Cliente de las rutas del Asesor de Marketing. Todas pasan por `apiFetch` (JWT + 
 - [[src_utils_asesor_metricasPorRed|src/utils/asesor/metricasPorRed.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_opciones|src/utils/asesor/opciones.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_pieza|src/utils/asesor/pieza.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_asesor_presencia|src/utils/asesor/presencia.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_resumen|src/utils/asesor/resumen.ts]] *(Layer: #service, Domain: #system)*
 
 ---
@@ -34,6 +35,7 @@ Cliente de las rutas del Asesor de Marketing. Todas pasan por `apiFetch` (JWT + 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_asesor_hooks_useAsesor|src/components/asesor/hooks/useAsesor.ts]] *(from #frontend)*
 - [[src_components_asesor_hooks_useChatAsesor|src/components/asesor/hooks/useChatAsesor.ts]] *(from #frontend)*
+- [[src_components_asesor_hooks_usePresencia|src/components/asesor/hooks/usePresencia.ts]] *(from #frontend)*
 - [[src_components_asesor_PorMedirCard|src/components/asesor/PorMedirCard.tsx]] *(from #frontend)*
 - [[src_components_asesor_TarjetaHoy|src/components/asesor/TarjetaHoy.tsx]] *(from #frontend)*
 

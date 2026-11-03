@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ClipboardCheck } from 'lucide-react';
 import { Button, EcoAvatar, EmptyState, Onda, SkeletonText, Tabs, type TabItem } from '../ui';
 import type { Modo } from '../../utils/asesor/diagnostico';
 import type { Tarjeta } from '../../utils/asesor/opciones';
@@ -9,6 +10,7 @@ import { FormEstrategia } from './FormEstrategia';
 import { PorMedirCard } from './PorMedirCard';
 import { OtrasRedesCard } from './OtrasRedesCard';
 import { ChatAsesor } from './ChatAsesor';
+import { PresenciaSheet } from './PresenciaSheet';
 import type { AccionChat } from '../../utils/asesor/chat';
 import { AgendaAsesor } from './AgendaAsesor';
 import { ResumenCard } from './ResumenCard';
@@ -43,6 +45,7 @@ const AsesorView: React.FC<Props> = ({ onNavigate, banda }) => {
   const [pestana, setPestana] = useState<Pestana>('hoy');
   const [abierta, setAbierta] = useState<Tarjeta | null>(null);
   const [chat, setChat] = useState(false);
+  const [presencia, setPresencia] = useState(false);
 
   if (a.cargando) {
     return <div data-modulo="reels" className="mx-auto max-w-2xl px-4 py-6"><SkeletonText lines={6} /></div>;
@@ -97,10 +100,14 @@ const AsesorView: React.FC<Props> = ({ onNavigate, banda }) => {
         </div>
       </header>
 
-      <div>
+      <div className="flex flex-wrap gap-2">
         <Button size="sm" variant="neutral" onClick={() => setChat(true)}>
           <EcoAvatar className="size-5" />
           Preguntar al asesor
+        </Button>
+        <Button size="sm" variant="neutral" onClick={() => setPresencia(true)}>
+          <ClipboardCheck className="size-4" aria-hidden />
+          Revisar presencia
         </Button>
       </div>
 
@@ -181,6 +188,8 @@ const AsesorView: React.FC<Props> = ({ onNavigate, banda }) => {
       {pestana === 'estrategia' && (
         <FormEstrategia inicial={estrategia} guardando={a.guardando} sugiriendo={a.sugiriendo} onGuardar={a.guardar} onProponer={a.proponer} />
       )}
+
+      {presencia && <PresenciaSheet onCerrar={() => setPresencia(false)} />}
 
       {chat && <ChatAsesor onCerrar={() => setChat(false)} onAccion={alAccionDelChat} />}
 

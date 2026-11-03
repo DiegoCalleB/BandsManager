@@ -31,7 +31,7 @@ export function TrackChordsPanel({ track }: TrackChordsPanelProps) {
               <Input
                 size="sm"
                 type="text"
-                value={track.tonalidad || "Mim"}
+                value={track.tonalidad || "Em"}
                 onChange={(e) =>
                   handleUpdateTrack(
                     track.index,
@@ -40,7 +40,7 @@ export function TrackChordsPanel({ track }: TrackChordsPanelProps) {
                   )
                 }
                 className="w-14 text-center"
-                placeholder="Mim"
+                placeholder="Em"
               />
               <span className="text-[var(--ink-2)] font-semibold text-xs">
                 BPM:

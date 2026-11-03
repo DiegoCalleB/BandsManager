@@ -38,7 +38,7 @@ export function AtrilToolbar() {
               {audioUrl ? (
                 <>
                   <IconButton
-                    label="Reiniciar desde el inicio (0:00)"
+                    label="Reiniciar desde el inicio (tecla R)"
                     size="icon-xs"
                     type="button"
                     onClick={handleRestartAudio}
@@ -94,8 +94,8 @@ export function AtrilToolbar() {
               <button
                 type="button"
                 onClick={() => setTranspose((prev) => prev - 1)}
-                className="px-2 py-0.5 rounded bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)] font-bold transition cursor-pointer"
-                title="Bajar 1 semitono"
+                className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)] font-bold transition cursor-pointer"
+                title="Bajar 1 semitono (tecla −)"
               >
                 -1
               </button>
@@ -107,8 +107,8 @@ export function AtrilToolbar() {
               <button
                 type="button"
                 onClick={() => setTranspose((prev) => prev + 1)}
-                className="px-2 py-0.5 rounded bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)] font-bold transition cursor-pointer"
-                title="Subir 1 semitono"
+                className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)] font-bold transition cursor-pointer"
+                title="Subir 1 semitono (tecla +)"
               >
                 +1
               </button>
@@ -117,7 +117,7 @@ export function AtrilToolbar() {
               )}
               {transpose !== 0 && (
                 <IconButton
-                  label="Restablecer tono original"
+                  label="Restablecer tono original (tecla 0)"
                   size="icon-xs"
                   type="button"
                   onClick={() => setTranspose(0)}

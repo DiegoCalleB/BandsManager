@@ -2,6 +2,7 @@
  * Burbuja de un mensaje del chat con su texto formateado, hora y acciones propuestas.
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
+import { useFormatoTono } from "../../hooks/useNotacion";
 import { CheckCircle, Download, PlayCircle, RefreshCw, Save, Sparkles, User } from "lucide-react";
 import { MelodicInstrument } from "../../types";
 import { Button, Select } from "../ui";
@@ -20,6 +21,7 @@ export interface ChatMessageBubbleProps {
  * @returns Sección de interfaz.
  */
 export function ChatMessageBubble({ msg }: ChatMessageBubbleProps) {
+  const fmtTono = useFormatoTono();
   const { parseMarkdown, handleConfirmAllActions, accompanimentAudio, songPicker, setSongPicker, handleSaveAccompanimentToSong, handleGenerateAccompanimentAudio, melodicIdeaAudio, handleDownloadMelodicIdeaMidi, handleSaveMelodicIdeaToSong, handleGenerateMelodicIdeaAudio, handleConfirmAction, handleDismissAction } = useChat();
   const isBot = msg.sender === 'bot';
   return (
@@ -106,7 +108,7 @@ export function ChatMessageBubble({ msg }: ChatMessageBubbleProps) {
                                 className={`text-micro font-sans px-2 py-1 rounded-[var(--r-s)] flex flex-wrap gap-x-2 gap-y-0.5 ${'bg-[var(--acc)]/10 text-[var(--ink)]'}`}
                               >
                                 <span>{acc.bpm} BPM</span>
-                                <span>· Tono {acc.keyName}</span>
+                                <span>· Tono {fmtTono(acc.keyName)}</span>
                                 <span>· {acc.drumPattern.toUpperCase()}</span>
                                 <span>· {acc.durationSecs}s</span>
                               </div>
@@ -219,7 +221,7 @@ export function ChatMessageBubble({ msg }: ChatMessageBubbleProps) {
                               >
                                 <span>{instrumentLabels[idea.instrument]}</span>
                                 <span>· {idea.bpm} BPM</span>
-                                <span>· Tono {idea.keyName}</span>
+                                <span>· Tono {fmtTono(idea.keyName)}</span>
                                 {idea.seccion && idea.seccion !== 'general' && <span>· {idea.seccion}</span>}
                                 <span>· {idea.durationSecs}s</span>
                               </div>

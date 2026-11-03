@@ -17,14 +17,37 @@ import { DetectedChordsPanel } from "./DetectedChordsPanel";
 
 
 import { useAtril } from "./AtrilContext";
+import { SALTO_SEGUNDOS,useAtajosAtril } from "./hooks/useAtajosAtril";
 
 /**
  * Vista del Atril: cabecera, barra de controles, cuerpo del cifrado o la estructura y modales.
  * @returns El modal del Atril.
  */
 export function AtrilView() {
-  const { pantallaCompleta, alternarPantallaCompleta, onClose, activeTab, acordeSonando, showChordDiagrams, sincronizado, acordeActivo, proximosAcordes, proximosIndices, setAudioCurrentTime, contextoAcordes, vistaAcordes, setVistaAcordes, nivelAcordes, setNivelAcordes, estiloArmonia, isPlayingAudio, audioUrl, handleToggleAudio, tiemposAcordes, analisisAcordes, audioRef, modoEscenario } = useAtril();
+  const { pantallaCompleta, alternarPantallaCompleta, onClose, activeTab, acordeSonando, showChordDiagrams, sincronizado, acordeActivo, proximosAcordes, proximosIndices, setAudioCurrentTime, contextoAcordes, vistaAcordes, setVistaAcordes, nivelAcordes, setNivelAcordes, estiloArmonia, isPlayingAudio, audioUrl, handleToggleAudio, tiemposAcordes, analisisAcordes, audioRef, modoEscenario, handleRestartAudio, setTranspose, setMasControles, setModoEscenario } = useAtril();
   const estadoActual = useAcordeActual(acordeSonando);
+
+  // Teclado para quien tiene las manos en la guitarra: solo con el cifrado a la vista.
+  useAtajosAtril((accion) => {
+    const saltar = (delta: number) => {
+      if (!audioRef.current) return;
+      const t = Math.max(0, audioRef.current.currentTime + delta);
+      audioRef.current.currentTime = t;
+      setAudioCurrentTime(t);
+    };
+    switch (accion) {
+      case "reproducir": if (audioUrl) handleToggleAudio(); break;
+      case "atras": saltar(-SALTO_SEGUNDOS); break;
+      case "adelante": saltar(SALTO_SEGUNDOS); break;
+      case "inicio": handleRestartAudio(); break;
+      case "tonoMenos": setTranspose((p) => p - 1); break;
+      case "tonoMas": setTranspose((p) => p + 1); break;
+      case "tonoOriginal": setTranspose(0); break;
+      case "controles": setMasControles((v) => !v); break;
+      case "escenario": setModoEscenario((v) => !v); break;
+      case "pantallaCompleta": alternarPantallaCompleta(); break;
+    }
+  }, activeTab === "chords");
   const proximos = sincronizado && acordeActivo >= 0 ? proximosAcordes : undefined;
 
   const irAlAcorde = (k: number) => {

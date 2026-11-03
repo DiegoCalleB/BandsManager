@@ -35,6 +35,7 @@ Datos del Asesor de Marketing: la estrategia de la banda (`band_estrategia_marke
 - [[server_routes_asesor|server/routes/asesor.ts]] *(from #route)*
 - [[server_services_asesorInstagram|server/services/asesorInstagram.ts]] *(from #service)*
 - [[server_services_asesorMarketing|server/services/asesorMarketing.ts]] *(from #service)*
+- [[server_services_asesorPresencia|server/services/asesorPresencia.ts]] *(from #service)*
 - [[server_services_asesorRedes|server/services/asesorRedes.ts]] *(from #service)*
 
 ---

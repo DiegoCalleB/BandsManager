@@ -31,6 +31,7 @@ Migración Concierto → Álbum: análisis y procesado de grabaciones en vivo (Y
 - [[server_utils_storage|server/utils/storage.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_youtubeSource|server/utils/youtubeSource.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_notacionAcordes|src/utils/notacionAcordes.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

@@ -1,9 +1,10 @@
 import { Song } from '../types';
+import { normalizarTonalidad } from './notacionAcordes';
 
 /** Valor con el que la app rellena `tonalidad` cuando nadie la ha tocado nunca (ver
  * server/db/repertoire.ts, dbUpsertSong/mapSongRecord). Si la mayoría del repertorio sigue en
  * este valor, no es un dato real — es que nadie ha rellenado la tonalidad todavía. */
-export const TONALIDAD_FALLBACK = 'mim';
+export const TONALIDAD_FALLBACK = 'em';
 
 export interface ParsedKey {
   /** Clase de altura de la tónica, 0 (Do/C) a 11 (Si/B). */
@@ -67,7 +68,8 @@ export function parseTonalidad(tonalidad?: string | null): ParsedKey | null {
 
 /** Normaliza a una clave comparable (para detectar el fallback exacto, no para armonía). */
 function normalizarParaComparar(tonalidad?: string | null): string {
-  return (tonalidad || '').trim().toLowerCase().replace(/\s+/g, '');
+  // «Mim» (valor antiguo) y «Em» (canónico) son el mismo fallback.
+  return normalizarTonalidad(tonalidad).toLowerCase().replace(/\s+/g, '');
 }
 
 /**

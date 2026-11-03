@@ -9,6 +9,7 @@ import { getSupabaseClient, getBucketName } from '../upload.js';
 import { getAiClient, TIMEOUT_IA_LARGO_MS, generateContentWithFallback, GEMINI_MODEL } from '../../ai.js';
 import { getSupabase } from '../../db/core.js';
 import { dbUpsertSong } from '../../db/repertoire.js';
+import { normalizarTextoAcordes } from "../../../src/utils/notacionAcordes.js";
 
 const router = express.Router();
 
@@ -85,7 +86,7 @@ async function extractStructureWithAI(
 
   const prompt = `You are an expert music analyst. Please analyze this song structure/chord sheet document and extract the following information in JSON format:
 
-1. **acordes**: The lyrics with EVERY chord wrapped in square brackets inline, right before the syllable where it's played — e.g. "[Sol]Que tiene tu [Re]veneno [Mim]...". For instrumental sections with no lyrics (intro, solo), put the chords on their own line separated by spaces, e.g. "[Intro]\\nMim  Do  Re  Mim". Mark section headers as their own bracketed line: [Intro], [Verso], [Estribillo], [Puente], [Solo], [Outro]. This bracket format is mandatory — do NOT write a bare chord name outside of brackets anywhere in this field, and never wrap a word that is not an actual chord in brackets.
+1. **acordes**: The lyrics with EVERY chord wrapped in square brackets inline, right before the syllable where it's played — e.g. "[G]Que tiene tu [D]veneno [Em]...". For instrumental sections with no lyrics (intro, solo), put the chords on their own line separated by spaces, e.g. "[Intro]\\nEm  C  D  Em". Mark section headers as their own bracketed line: [Intro], [Verso], [Estribillo], [Puente], [Solo], [Outro]. This bracket format is mandatory — do NOT write a bare chord name outside of brackets anywhere in this field, and never wrap a word that is not an actual chord in brackets.
 2. **estructura**: Main song structure (e.g., "Intro - Verso - Estribillo - Verso - Estribillo - Puente - Verso - Estribillo - Outro")
 3. **progresionClave**: The chord progression pattern (e.g., "Am - F - C - G")
 4. **cortesYClaves**: Key cuts/transitions and their timing if visible
@@ -93,10 +94,11 @@ async function extractStructureWithAI(
 6. **instrumentosClave**: Key instruments or sections mentioned (e.g., "Guitarra, Batería, Bajo")
 7. **notas**: Any additional notes or special instructions
 
+NOTATION RULE: write ALL chords and keys in American notation (C, Dm, Em, F#m, Bb, G7, Am7, C/G), never in Spanish solfège (Do, Re, Mi...). Spanish chord sheets must be converted: Mim → Em, Lam → Am, Sol → G, Fa#m → F#m.
 Respond ONLY with valid JSON, no markdown backticks or explanations. If a field is not visible or applicable, use null.
 
 Example response format:
-{"acordes":"[Intro]\\nMim  Do  Re  Mim\\n\\n[Estribillo]\\n[Sol]Que tiene tu [Re]veneno [Mim]...","estructura":"Intro - Verso - Estribillo","progresionClave":"Am - F - C - G","cortesYClaves":"Puente a los 2:15","capoTraste":"Capo 2","instrumentosClave":"Guitarra, Batería, Bajo","notas":"Solo de guitarra de 8 compases"}`;
+{"acordes":"[Intro]\\nEm  C  D  Em\\n\\n[Estribillo]\\n[G]Que tiene tu [D]veneno [Em]...","estructura":"Intro - Verso - Estribillo","progresionClave":"Am - F - C - G","cortesYClaves":"Puente a los 2:15","capoTraste":"Capo 2","instrumentosClave":"Guitarra, Batería, Bajo","notas":"Solo de guitarra de 8 compases"}`;
 
   try {
     const response = await generateContentWithFallback(aiClient, {
@@ -211,7 +213,7 @@ router.post(
 
       // Update cifradoTexto if we extracted acordes
       if (extracted.acordes) {
-        updatedSong.cifradoTexto = extracted.acordes;
+        updatedSong.cifradoTexto = normalizarTextoAcordes(extracted.acordes);
       }
 
       // Update guiaSustituto with extracted structure info
