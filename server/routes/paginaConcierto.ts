@@ -40,7 +40,7 @@ import pegatinasRouter from './pegatinas.js';
 import fansContadorRouter from './fans_contador.js';
 import paginasSeoRouter from './paginasSeo.js';
 import presentacionTfmRouter from './presentacionTfm.js';
-import ejercicioYoutubeRouter from './ejercicioYoutube.js';
+import masterMarketingDigitalRouter, { entradasMaster } from './masterMarketingDigital.js';
 export { startEmailsCicloVidaScheduler } from '../services/emailsCicloVida.js';
 
 const router = express.Router();
@@ -50,7 +50,7 @@ router.use(contactoEmpresasRouter); // consultas de empresas, planes B2B (/api/p
 router.use(pegatinasRouter); // regalo de pegatinas en la primera suscripción (/api/billing/pegatinas)
 router.use(paginasSeoRouter); // guías de SEO (/guides)
 router.use(presentacionTfmRouter); // atajos a la película del TFM (/presentacion_tfm, /netflix)
-router.use(ejercicioYoutubeRouter); // página del ejercicio de YouTube (/ejercicio_youtube_crm)
+router.use(masterMarketingDigitalRouter); // web estática del Máster de Marketing Digital (/master-marketing-digital)
 router.use(fansContadorRouter); // número de fans para la película del TFM (/api/public/fans/contador)
 
 function responderHtml(res: express.Response, status: number, html: string, cache: string) {
@@ -159,6 +159,7 @@ async function construirSitemap(base: string): Promise<string> {
     { loc: `${base}/`, alternativas },
     { loc: `${base}/en`, alternativas },
     ...entradasSeo(base, hoyIso(), await obtenerFestivales(), await obtenerSalasPublicas()),
+    ...entradasMaster(base),
   ];
   for (const c of filas as Array<FilaConcierto & { id: string; sala: string; fecha: string }>) {
     const nombre = nombres.get(String(c.band_id));

@@ -3,7 +3,7 @@
   "info": {
     "title": "BandManager.io API",
     "version": "3.1.0",
-    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (442) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
+    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (445) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
     "license": {
       "name": "AGPL-3.0-only",
       "identifier": "AGPL-3.0-only"
@@ -15673,16 +15673,28 @@
         "responses": {
           "200": {
             "description": "Respuesta correcta."
-          },
-          "429": {
-            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/ejercicioYoutube.ts:22",
-        "x-autenticacion": "ninguna",
-        "x-rate-limiters": [
-          "publicoRateLimiter"
-        ]
+        "x-source": "server/routes/masterMarketingDigital.ts:22",
+        "x-handler": "redirigir",
+        "x-autenticacion": "desconocida"
+      }
+    },
+    "/ejercicio_branding.html": {
+      "get": {
+        "tags": [
+          "paginaConcierto"
+        ],
+        "operationId": "getEjercicioBrandingHtml",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          }
+        },
+        "x-source": "server/routes/masterMarketingDigital.ts:23",
+        "x-handler": "redirigir",
+        "x-autenticacion": "desconocida"
       }
     },
     "/ejercicio_facebook": {
@@ -15695,16 +15707,28 @@
         "responses": {
           "200": {
             "description": "Respuesta correcta."
-          },
-          "429": {
-            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/ejercicioYoutube.ts:27",
-        "x-autenticacion": "ninguna",
-        "x-rate-limiters": [
-          "publicoRateLimiter"
-        ]
+        "x-source": "server/routes/masterMarketingDigital.ts:24",
+        "x-handler": "redirigir",
+        "x-autenticacion": "desconocida"
+      }
+    },
+    "/ejercicio_facebook.html": {
+      "get": {
+        "tags": [
+          "paginaConcierto"
+        ],
+        "operationId": "getEjercicioFacebookHtml",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          }
+        },
+        "x-source": "server/routes/masterMarketingDigital.ts:25",
+        "x-handler": "redirigir",
+        "x-autenticacion": "desconocida"
       }
     },
     "/ejercicio_youtube_crm": {
@@ -15713,20 +15737,33 @@
           "paginaConcierto"
         ],
         "operationId": "getEjercicioYoutubeCrm",
+        "description": "Comentario en el código: URL antigua → URL nueva. Las rutas son literales para que `npm run docs:api` las vea.",
         "security": [],
         "responses": {
           "200": {
             "description": "Respuesta correcta."
-          },
-          "429": {
-            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/ejercicioYoutube.ts:12",
-        "x-autenticacion": "ninguna",
-        "x-rate-limiters": [
-          "publicoRateLimiter"
-        ]
+        "x-source": "server/routes/masterMarketingDigital.ts:20",
+        "x-handler": "redirigir",
+        "x-autenticacion": "desconocida"
+      }
+    },
+    "/ejercicio_youtube_crm.html": {
+      "get": {
+        "tags": [
+          "paginaConcierto"
+        ],
+        "operationId": "getEjercicioYoutubeCrmHtml",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          }
+        },
+        "x-source": "server/routes/masterMarketingDigital.ts:21",
+        "x-handler": "redirigir",
+        "x-autenticacion": "desconocida"
       }
     },
     "/en/directories": {
@@ -16070,7 +16107,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginaConcierto.ts:212",
+        "x-source": "server/routes/paginaConcierto.ts:213",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -16371,7 +16408,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginaConcierto.ts:211",
+        "x-source": "server/routes/paginaConcierto.ts:212",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -16508,7 +16545,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/paginaConcierto.ts:189",
+        "x-source": "server/routes/paginaConcierto.ts:190",
         "x-autenticacion": "ninguna"
       }
     },
@@ -16647,7 +16684,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginaConcierto.ts:171",
+        "x-source": "server/routes/paginaConcierto.ts:172",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
