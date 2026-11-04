@@ -4,6 +4,14 @@ Las versiones siguen [SemVer](https://semver.org/lang/es/) y este archivo lo gen
 [release-please](https://github.com/googleapis/release-please) a partir de los Conventional Commits.
 Solo recoge lo que nota quien usa la app (novedades, correcciones y rendimiento); la documentación y las refactorizaciones se ven en el historial de git. No lo edites a mano: cada release añade su sección arriba. Las reglas están en [AGENTS.md §7](./AGENTS.md).
 
+## [3.3.0](https://github.com/DiegoCalleB/BandsManager/compare/bandmanager-v3.2.0...bandmanager-v3.3.0) (2026-11-04)
+
+
+### Novedades
+
+* **asesor:** especialista en anuncios y hoja de ruta del estreno ([#484](https://github.com/DiegoCalleB/BandsManager/issues/484)) ([d0d8f07](https://github.com/DiegoCalleB/BandsManager/commit/d0d8f072394b11e51dabd56596d7a35748cf9c47))
+* **asesor:** un bolo que es lo único a la vista se anuncia antes y con más peso ([#483](https://github.com/DiegoCalleB/BandsManager/issues/483)) ([7abab0e](https://github.com/DiegoCalleB/BandsManager/commit/7abab0e09e88e57dec2cadfdd8ffc889a3cc7e94))
+
 ## [3.2.0](https://github.com/DiegoCalleB/BandsManager/compare/bandmanager-v3.1.0...bandmanager-v3.2.0) (2026-11-04)
 
 
