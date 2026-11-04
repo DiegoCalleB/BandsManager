@@ -119,7 +119,7 @@ export function buildVenuePanelActions({ setIsRegeneratingPitch, setFeedbackSucc
         setContentRating(0);
         setFeedbackComment("");
         const modelLabel =
-          providerToUse === "deepseek" ? "DeepSeek V3" : "Gemini 3.7 Flash";
+          providerToUse === "deepseek" ? "DeepSeek V3" : "Gemini 3.8 Flash";
         if (feedbackScope === "global") {
           setFeedbackSuccessMsg(
             `¡Pitch reescrito con ${modelLabel}! Aprendizaje guardado en la memoria global.`,

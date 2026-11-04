@@ -240,7 +240,7 @@ REMINDER: the final audio must clearly and unmistakably be ${genreLabel}, matchi
         }
       }
 
-      // Secondary text guidance from Gemini 3.7 Flash for arrangement rationale
+      // Secondary text guidance from Gemini 3.8 Flash for arrangement rationale
       let aiExplanation = '';
       try {
         const expRes = await generateContentWithFallback(ai, {

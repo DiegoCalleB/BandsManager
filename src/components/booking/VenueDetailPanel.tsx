@@ -366,7 +366,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           setEditedPitch(text);
           onUpdateLead(selectedLead.id, { pitch_generado: text });
           const label =
-            providerName === "deepseek" ? "DeepSeek V3" : "Gemini 3.7 Flash";
+            providerName === "deepseek" ? "DeepSeek V3" : "Gemini 3.8 Flash";
           setFeedbackSuccessMsg(
             `¡Propuesta de ${label} seleccionada y aplicada a la sala!`,
           );

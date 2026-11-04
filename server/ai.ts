@@ -54,9 +54,11 @@ export function getDeepSeekKey(): string | null {
 
 export const AI_PRICING_TABLE: Record<string, { inputPer1M: number; outputPer1M: number; name: string }> = {
   gemini: {
-    name: "Gemini 3.7 Flash",
-    inputPer1M: 0.10, // $0.10 / 1M tokens
-    outputPer1M: 0.40  // $0.40 / 1M tokens
+    name: "Gemini 3.8 Flash",
+    // Precio introductorio publicado por Google (hasta fin de 2026). Revisar al cambiar el año:
+    // si sube, el ledger subestimaría el coste real.
+    inputPer1M: 0.75, // $0.75 / 1M tokens
+    outputPer1M: 3.75  // $3.75 / 1M tokens
   },
   deepseek: {
     name: "DeepSeek V3",
@@ -165,7 +167,7 @@ export function getAvailableAIProviders() {
     },
     {
       id: "gemini",
-      name: "Google Gemini 3.7 Flash",
+      name: "Google Gemini 3.8 Flash",
       shortName: "Gemini Flash",
       model: MODELO_TEXTO,
       tagline: "Ultra rápido y analítico",
@@ -175,9 +177,9 @@ export function getAvailableAIProviders() {
       tier: "ensayo",
       badge: "⚡ Instantáneo (Free Tier)",
       pricing: {
-        inputPer1MUsd: 0.10,
-        outputPer1MUsd: 0.40,
-        costPer1000Eur: "~0,18 €",
+        inputPer1MUsd: 0.75,
+        outputPer1MUsd: 3.75,
+        costPer1000Eur: "~1,56 €",
         rank: "Económico / Free Tier"
       }
     }
