@@ -9,6 +9,7 @@ import { loadState, saveState } from '../../state.js';
 import { dbGetUsers, dbUpsertUser, dbGetRegisteredBands, normalizePlan } from '../../db.js';
 import { buildAvailableBandsForUser } from './bandasDisponibles.js';
 import { copiarCamposDeBd } from './mezclaUsuarioBd.js';
+import { hidratarVinculosDeBd } from './vinculosDeBd.js';
 
 const router = express.Router();
 
@@ -118,6 +119,9 @@ router.get('/auth/me', async (req, res) => {
     }
   }
 
+  // Las bandas de la cuenta viven en `user_bands`: se traen antes de calcular el selector.
+  await hidratarVinculosDeBd(state, user.id);
+
   // Recalculate availableBands
   const availableBands = await buildAvailableBandsForUser(state, user);
 
@@ -169,6 +173,9 @@ router.post('/auth/switch-band', async (req, res) => {
   if (!band_id) {
     return res.status(400).json({ error: 'band_id es requerido' });
   }
+
+  // El acceso a una banda lo da `user_bands`: sin traerla, una banda vinculada solo ahí se rechazaba.
+  await hidratarVinculosDeBd(state, currentUser.id);
 
   const userEmail =
     currentUser.email?.toLowerCase() || currentUser.username.toLowerCase();

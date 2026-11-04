@@ -41,6 +41,7 @@ Forma del estado local de la aplicación (data.json / caché en memoria de serve
 - [[server_routes_users_rutasRecuperacion|server/routes/users/rutasRecuperacion.ts]] *(from #route)*
 - [[server_routes_users_rutasRegistro|server/routes/users/rutasRegistro.ts]] *(from #route)*
 - [[server_routes_users_rutasSesion|server/routes/users/rutasSesion.ts]] *(from #route)*
+- [[server_routes_users_vinculosDeBd|server/routes/users/vinculosDeBd.ts]] *(from #route)*
 - [[server_utils_templateOptimizer|server/utils/templateOptimizer.ts]] *(from #service)*
 - [[server_utils_tiposBandDna|server/utils/tiposBandDna.ts]] *(from #service)*
 

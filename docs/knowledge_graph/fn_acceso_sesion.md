@@ -47,6 +47,7 @@ Login (email o Google), sesión por cookie y multi-banda: de quién es cada peti
 - [[server_routes_users_rutasRegistro|server/routes/users/rutasRegistro.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_users_rutasSalidaBanda|server/routes/users/rutasSalidaBanda.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_users_rutasSesion|server/routes/users/rutasSesion.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_vinculosDeBd|server/routes/users/vinculosDeBd.ts]] *(Layer: #route, Domain: #system)*
 - [[src_components_LoginModal|src/components/LoginModal.tsx]] *(Layer: #frontend, Domain: #auth)*
 - [[src_hooks_useAuth|src/hooks/useAuth.ts]] *(Layer: #security, Domain: #auth)*
 - [[src_utils_googleAuth|src/utils/googleAuth.ts]] *(Layer: #security, Domain: #auth)*
