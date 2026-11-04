@@ -11,6 +11,8 @@ import type { User } from '../../../../../types';
 const createSetlist = vi.hoisted(() => vi.fn((_datos: unknown) => Promise.resolve({ success: true })));
 const createSong = vi.hoisted(() => vi.fn(() => Promise.resolve({ success: true })));
 vi.mock('../../../../../services/api', () => ({ api: { createSetlist, createSong } }));
+const apiFetch = vi.hoisted(() => vi.fn());
+vi.mock('../../../../../utils/api', () => ({ apiFetch }));
 
 import { useMusicSetlistStep } from '../useMusicSetlistStep';
 
@@ -42,5 +44,22 @@ describe('useMusicSetlistStep · handleGenerateSetlist', () => {
     ]);
     expect(datos.items.every((i) => !('type' in i))).toBe(true);
     expect(result.current.createdSetlistName).toBe('Setlist Debut (45 min)');
+  });
+});
+
+describe('useMusicSetlistStep · handleSearchSpotify', () => {
+  const params = {
+    bandName: 'Banda', currentUser: usuario, logoUrl: '', localBandName: 'Banda',
+    genre: 'rock', onSongsImported: vi.fn(), activeBandId: 'band-propia',
+  };
+
+  it('consulta artist-discography (parámetro query) y carga los álbumes reales', async () => {
+    const albums = [{ id: 'al1', name: 'Real', albumType: 'single', releaseYear: '2022', totalTracks: 1, coverUrl: '', spotifyUrl: '', tracks: [] }];
+    apiFetch.mockResolvedValueOnce({ success: true, discography: { artist: {}, albums } });
+    const { result } = renderHook(() => useMusicSetlistStep(params));
+    act(() => result.current.setSpotifyQuery('Majo Leiva'));
+    await act(async () => { await result.current.handleSearchSpotify(); });
+    expect(apiFetch).toHaveBeenCalledWith('/api/spotify/artist-discography?query=Majo%20Leiva');
+    expect(result.current.spotifyAlbums).toEqual(albums);
   });
 });

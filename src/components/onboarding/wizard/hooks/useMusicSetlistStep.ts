@@ -10,22 +10,9 @@ import { uploadFileToServer } from "../../../../utils/audioStorage";
 import { parseMmSsToSeconds } from "../../../../utils/repertorioUtils";
 import { ManualSongItem,SpotifyAlbum } from "../../types";
 
-/** Pista devuelta por la búsqueda de Spotify del servidor (nombres heredados mezclados). */
-interface SpotifySearchTrack {
-  id: string;
-  name?: string;
-  titulo?: string;
-  trackNumber?: number;
-  durationFormatted?: string;
-  previewUrl?: string | null;
-  spotifyUrl?: string;
-  albumCover?: string;
-}
-
-/** Respuesta de `/api/spotify/search`: álbumes o, si no hay, pistas sueltas. */
+/** Respuesta de `/api/spotify/artist-discography`: discografía del artista (nombre, URL o ID). */
 interface SpotifySearchResponse {
-  albums?: SpotifyAlbum[];
-  tracks?: SpotifySearchTrack[];
+  discography?: { albums?: SpotifyAlbum[] };
 }
 
 /** Dependencias que el componente contenedor inyecta al hook. */
@@ -94,31 +81,11 @@ export function useMusicSetlistStep({ bandName, currentUser, logoUrl, localBandN
     setIsSearchingSpotify(true);
     try {
       const res = await apiFetch<SpotifySearchResponse>(
-        `/api/spotify/search?query=${encodeURIComponent(spotifyQuery)}`,
+        `/api/spotify/artist-discography?query=${encodeURIComponent(spotifyQuery.trim())}`,
       );
-      if (res && res.albums) {
-        setSpotifyAlbums(res.albums);
-      } else if (res && res.tracks) {
-        setSpotifyAlbums([
-          {
-            id: "sp_tracks",
-            name: "Canciones encontradas",
-            albumType: "album",
-            releaseYear: "2025",
-            totalTracks: res.tracks.length,
-            coverUrl: res.tracks[0]?.albumCover || logoUrl || "",
-            spotifyUrl: "",
-            tracks: res.tracks.map((t: SpotifySearchTrack) => ({
-              id: t.id,
-              name: t.name || t.titulo,
-              trackNumber: t.trackNumber || 1,
-              durationFormatted: t.durationFormatted || "3:30",
-              previewUrl: t.previewUrl || null,
-              spotifyUrl: t.spotifyUrl || "",
-            })),
-          },
-        ]);
-      }
+      const albums = res?.discography?.albums;
+      if (albums && albums.length > 0) setSpotifyAlbums(albums);
+      else throw new Error("Spotify no devolvió álbumes");
     } catch (err) {
       console.warn("Spotify search fallback:", err);
       // Fallback album mock with realistic structure
