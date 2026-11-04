@@ -15,7 +15,10 @@ export type Modo = 'concierto' | 'lanzamiento' | 'rescate' | 'reactivar' | 'fond
 
 /** Ventanas de cada modo, en días. */
 export const VENTANA = {
+  /** Un bolo a menos de esto manda sobre todo: toca llenar la sala. */
   concierto: 21,
+  /** Un bolo entre `concierto` y esto ya toca anunciarlo, aunque un estreno cercano pasa por delante. */
+  conciertoLejano: 45,
   lanzamientoAntes: 30,
   lanzamientoDespues: 14,
   sinPublicar: 10,
@@ -27,6 +30,8 @@ export interface ConciertoParaAsesor {
   fecha: string;
   sala: string;
   ciudad: string;
+  /** Si el bolo ya tiene enlace de entradas. Sin dato, no se dice nada de entradas. */
+  tieneEntradas?: boolean;
 }
 
 export interface EntradaDiagnostico {
@@ -64,11 +69,11 @@ const enDias = (n: number) => (n === 0 ? 'hoy' : n === 1 ? 'mañana' : `en ${n} 
 export function diagnosticar({ hoy, conciertos, lanzamiento, ultimaPublicacion, rescate }: EntradaDiagnostico): Diagnostico {
   const proximo = conciertos
     .map((c) => ({ c, dias: diasEntre(hoy, c.fecha) }))
-    .filter(({ dias }) => Number.isFinite(dias) && dias >= 0 && dias <= VENTANA.concierto)
+    .filter(({ dias }) => Number.isFinite(dias) && dias >= 0 && dias <= VENTANA.conciertoLejano)
     .sort((a, b) => a.dias - b.dias)[0];
-  if (proximo) {
+  const donde = proximo ? [proximo.c.sala, proximo.c.ciudad].filter(Boolean).join(', ') : '';
+  if (proximo && proximo.dias <= VENTANA.concierto) {
     const { c, dias } = proximo;
-    const donde = [c.sala, c.ciudad].filter(Boolean).join(', ');
     return { modo: 'concierto', porque: `Tocáis ${enDias(dias)}${donde ? ` en ${donde}` : ''}: toca llenar la sala.`, concierto: c, dias };
   }
 
@@ -82,7 +87,13 @@ export function diagnosticar({ hoy, conciertos, lanzamiento, ultimaPublicacion, 
     }
   }
 
-  // Un bolo o un estreno mandan; si no hay ninguno y lo que publican no arranca, toca cambiar de rumbo.
+  // Un bolo todavía lejos (de 3 a 6 semanas) ya toca anunciarlo; pasa por detrás de un estreno inminente y por delante del resto.
+  if (proximo) {
+    const { c, dias } = proximo;
+    return { modo: 'concierto', porque: `Tocáis ${enDias(dias)}${donde ? ` en ${donde}` : ''}: ya toca anunciarlo y empezar a calentarlo.`, concierto: c, dias };
+  }
+
+  // Si no hay bolo ni estreno y lo que publican no arranca, toca cambiar de rumbo.
   if (rescate) {
     const porque = rescate.motivo === 'tres_semanas'
       ? 'Vuestro alcance lleva tres semanas bajando: toca probar algo distinto, no insistir.'

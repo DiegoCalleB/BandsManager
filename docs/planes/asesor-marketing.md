@@ -57,6 +57,7 @@ La función pura `diagnosticar(banda, hoy)` devuelve **un modo** y su porqué:
 | Si… | Modo | El asesor prioriza |
 |---|---|---|
 | Hay un bolo en ≤ 21 días | 🎫 Concierto | Campaña de hitos y QR de entradas |
+| Hay un bolo entre 22 y 45 días *(añadido: a 38 días el asesor decía «hacer comunidad» como si no hubiera bolo)* | 🎫 Concierto (lejano) | Anunciarlo con margen (cartel con fecha y sala), el adelanto del directo y el resto de comunidad; sin cuenta atrás todavía |
 | Hay un lanzamiento en ≤ 30 días o han pasado ≤ 14 días | 💿 Lanzamiento | Teasers, presave y "la historia de la canción" |
 | Llevan más de 10 días sin publicar | 🔁 Reactivar | 1 pieza fácil y de bajo esfuerzo |
 | Las métricas caen 3 semanas seguidas | 🚑 Rescate | Cambiar de formato y probar lo opuesto *(hecho: ver «Modo rescate»)* |
@@ -194,3 +195,10 @@ Primer paso de «el mejor asistente de marketing digital»: especialistas que re
 - [ ] Pendiente: especialistas de streaming (Spotify, presave, playlists), colaboraciones y prensa (reutilizando el Scout de booking), community manager y anuncios.
 - [ ] Pendiente: contrastar con apuntes del máster los criterios marcados «Criterio propio» (SEO, bios, CTR, enlace de la bio).
 - [ ] Pendiente: enlace por pieza (atribución exacta). Las stories permiten un enlace por pieza; en TikTok y YouTube Shorts no es fiable.
+
+## Un bolo lejano también cuenta
+
+- [x] **Corregido**: el modo concierto solo arrancaba a 21 días, así que una banda con un bolo a 38 días (caso real, Bakandeya: bolo el 12 de diciembre, visto el 4 de noviembre) recibía «hacer comunidad» y ninguna pista de que había que empezar a anunciarlo. Ahora, de 22 a 45 días, el diagnóstico es «Tocáis en 38 días en Revi Live, Madrid: ya toca anunciarlo y empezar a calentarlo» y lo primero que se recomienda es **«Anunciad el bolo»** (cartel con fecha y sala, con atajo a la cartelería). Si el bolo aún no tiene enlace de entradas, el aviso lo dice antes de publicar.
+- [x] No se llena de promoción: junto al anuncio y el adelanto del directo salen ideas de comunidad, y la cuenta atrás (stories) queda para las últimas tres semanas. A 21 días o menos nada cambia.
+- [x] Precedencia: un bolo a 21 días o menos manda sobre todo; un estreno inminente pasa por delante de un bolo lejano; y un bolo lejano pasa por delante del rescate y de «volver a publicar».
+- [ ] Pendiente: los 45 días y el «anunciad» a 38 días son criterio propio (se suele anunciar con 4 a 6 semanas); contrastar con apuntes del máster.

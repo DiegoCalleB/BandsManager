@@ -123,3 +123,43 @@ describe('ideas según las redes de la banda', () => {
   });
 });
 
+describe('un bolo lejano: anunciarlo sin llenar seis semanas de promoción', () => {
+  const lejano = (extra: Partial<{ tieneEntradas: boolean }> = {}) =>
+    diagnosticar({ ...base, hoy: '2026-11-04', conciertos: [{ ...bolo('b1', '2026-12-12'), ...extra }] });
+  const todas = (d: ReturnType<typeof lejano>, horasSemana: 1 | 3 | 6 = 6) => { const o = opcionesDeHoy(d, est({ horasSemana }), '2026-11-04'); return [...o.recomendadas, ...o.alternativas]; };
+
+  it('lo primero que se recomienda es anunciar el bolo, con atajo a la cartelería', () => {
+    const d = lejano({ tieneEntradas: true });
+    const [primera] = opcionesDeHoy(d, est({ horasSemana: 1 }), '2026-11-04').recomendadas;
+    expect(primera).toMatchObject({ id: 'bolo-savethedate', formato: 'post', atajo: { vista: 'carteleria', concertId: 'b1' } });
+    expect(primera.porque).toContain('Faltan 38 días');
+    expect(primera.idea).toContain('Con el enlace de entradas en la bio.');
+  });
+
+  it('si el bolo no tiene entradas, el aviso lo dice antes de publicar', () => {
+    expect(opcionesDeHoy(lejano({ tieneEntradas: false }), est({ horasSemana: 1 }), '2026-11-04').recomendadas[0].idea).toContain('Aún no tenéis enlace de entradas');
+    expect(opcionesDeHoy(lejano(), est({ horasSemana: 1 }), '2026-11-04').recomendadas[0].idea).toContain('Con el enlace de entradas en la bio.'); // sin dato, no se dice nada de entradas
+  });
+
+  it('no es todo promoción: junto al anuncio y al adelanto salen ideas de comunidad, y no la cuenta atrás', () => {
+    const ideas = todas(lejano());
+    expect(ideas.map((i) => i.id)).toEqual(expect.arrayContaining(['bolo-savethedate', 'bolo-teaser', 'fondo-pilar']));
+    expect(ideas.map((i) => i.id)).not.toContain('bolo-encuesta'); // la cuenta atrás es para las últimas semanas
+    expect(ideas.filter((i) => i.tipo === 'promocional').length).toBeLessThanOrEqual(2);
+  });
+
+  it('el servidor valida el anuncio como idea de hoy; a menos de 3 semanas ya no existe (entonces mandan los hitos)', () => {
+    const d = lejano();
+    expect(buscarTarjeta(d, est(), '2026-11-04', 'bolo-savethedate')).toMatchObject({ id: 'bolo-savethedate' });
+    const cerca = diagnosticar({ ...base, hoy: '2026-11-04', conciertos: [bolo('b1', '2026-11-14')] });
+    expect(buscarTarjeta(cerca, est(), '2026-11-04', 'bolo-savethedate')).toBeNull();
+    expect(buscarTarjeta(cerca, est(), '2026-11-04', 'bolo-encuesta')).not.toBeNull();
+  });
+
+  it('el adelanto del directo es el mismo de siempre, solo cambia lo que pesa', () => {
+    const lejos = todas(lejano()).find((i) => i.id === 'bolo-teaser')!;
+    const cerca = todas(diagnosticar({ ...base, hoy: '2026-11-04', conciertos: [bolo('b1', '2026-11-14')] })).find((i) => i.id === 'bolo-teaser')!;
+    expect({ ...lejos, esfuerzoMin: 0 }).toEqual({ ...cerca, esfuerzoMin: 0 });
+  });
+});
+
