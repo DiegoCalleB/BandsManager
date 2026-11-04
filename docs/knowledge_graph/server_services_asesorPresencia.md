@@ -29,6 +29,7 @@ Asesor de Marketing: la presencia de la banda. Reúne lo que BandManager ya sabe
 - [[server_utils_bandProfile|server/utils/bandProfile.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_enlacesCortos|server/utils/enlacesCortos.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_paginaConcierto|server/utils/paginaConcierto.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_asesor_anuncios|src/utils/asesor/anuncios.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_auditoria|src/utils/asesor/auditoria.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_clicsPieza|src/utils/asesor/clicsPieza.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asesor_diagnosticoMetricas|src/utils/asesor/diagnosticoMetricas.ts]] *(Layer: #service, Domain: #system)*

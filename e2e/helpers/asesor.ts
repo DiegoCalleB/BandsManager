@@ -82,6 +82,21 @@ export const PRESENCIA = {
     porRed: [{ red: 'instagram', url: 'https://bandmanager.io/r/abc2345', destino: 'epk', concertId: null, clics7: 12 }, { red: 'tiktok', url: null, destino: null, concertId: null, clics7: 0 }],
     clicsTrasPublicar: [{ fecha: '2026-10-24', tarjetaId: 'fondo-pilar', titulo: 'Tema de la semana: La furgo', formato: 'reel', total: 9, porCanal: { instagram: 9 }, completa: true }],
   },
+  anuncios: [
+    {
+      fecha: '2026-10-25', tarjetaId: 'fondo-pilar', titulo: 'Tema de la semana: La furgo', formato: 'reel', red: 'instagram', decision: 'impulsar',
+      motivo: 'A los vuestros les encanta (la guardan) pero no sale de vuestra gente: lo que le falta es alcance, y eso se puede pagar.',
+      plan: {
+        objetivo: 'entradas', objetivoTexto: 'Visitas al enlace (que lleven a las entradas)', zona: 'Leganés y unos 30 km alrededor', presupuestoDia: 5, dias: 5, total: 25,
+        publico: 'Gente de la zona: quienes escuchan rock y fans de Los Suaves, Leño.',
+        pasos: ['Abrid la publicación en vuestro perfil y pulsad «Promocionar».', 'Objetivo: Visitas al enlace (que lleven a las entradas).', 'Presupuesto: 5 € al día durante 5 días (25 € en total).', 'A las 48 h mirad los números y parad si no se mueven: no hace falta gastar el total.'],
+      },
+    },
+    {
+      fecha: '2026-10-24', tarjetaId: 'bolo-teaser', titulo: 'Un adelanto del directo', formato: 'reel', red: 'instagram', decision: 'no_gastar',
+      motivo: 'Llega lejos pero casi nadie la guarda: pagar solo traería más gente que pasa de largo. Mejorad el contenido primero.', plan: null,
+    },
+  ],
   instagram: { leido: false, seguidores: null, clicsSemanalesEstado: 'sin_datos' },
 };
 

@@ -32,6 +32,7 @@ _Sin dependencias salientes directas._
 - [[src_components_asesor_nombres|src/components/asesor/nombres.ts]] *(from #frontend)*
 - [[src_components_asesor_PiezaSheet|src/components/asesor/PiezaSheet.tsx]] *(from #frontend)*
 - [[src_utils_asesor_agenda|src/utils/asesor/agenda.ts]] *(from #service)*
+- [[src_utils_asesor_anuncios|src/utils/asesor/anuncios.ts]] *(from #service)*
 - [[src_utils_asesor_auditoria|src/utils/asesor/auditoria.ts]] *(from #service)*
 - [[src_utils_asesor_clicsPieza|src/utils/asesor/clicsPieza.ts]] *(from #service)*
 - [[src_utils_asesor_diagnostico|src/utils/asesor/diagnostico.ts]] *(from #service)*

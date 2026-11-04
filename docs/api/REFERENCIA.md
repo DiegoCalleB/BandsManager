@@ -33,13 +33,13 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `POST` | `/api/auth/activate-member` | Sesión opcional | loginRateLimiter |  | [`server/routes/users/rutasInvitacion.ts:73`](../../server/routes/users/rutasInvitacion.ts#L73) |
 | `POST` | `/api/auth/check-invitation` | Pública | loginRateLimiter |  | [`server/routes/users/rutasInvitacion.ts:17`](../../server/routes/users/rutasInvitacion.ts#L17) |
 | `POST` | `/api/auth/google` | Sesión (comprobada en el handler) | loginRateLimiter |  | [`server/routes/users/rutasGoogle.ts:20`](../../server/routes/users/rutasGoogle.ts#L20) |
-| `POST` | `/api/auth/login` | Sesión (comprobada en el handler) | loginRateLimiter | ★ | [`server/routes/users/rutasLogin.ts:16`](../../server/routes/users/rutasLogin.ts#L16) |
-| `POST` | `/api/auth/logout` | Sesión opcional | — |  | [`server/routes/users/rutasSesion.ts:301`](../../server/routes/users/rutasSesion.ts#L301) |
-| `GET` | `/api/auth/me` | Sesión (comprobada en el handler) | — |  | [`server/routes/users/rutasSesion.ts:15`](../../server/routes/users/rutasSesion.ts#L15) |
+| `POST` | `/api/auth/login` | Sesión (comprobada en el handler) | loginRateLimiter | ★ | [`server/routes/users/rutasLogin.ts:17`](../../server/routes/users/rutasLogin.ts#L17) |
+| `POST` | `/api/auth/logout` | Sesión opcional | — |  | [`server/routes/users/rutasSesion.ts:298`](../../server/routes/users/rutasSesion.ts#L298) |
+| `GET` | `/api/auth/me` | Sesión (comprobada en el handler) | — |  | [`server/routes/users/rutasSesion.ts:16`](../../server/routes/users/rutasSesion.ts#L16) |
 | `POST` | `/api/auth/register` | Sesión opcional | registroRateLimiter |  | [`server/routes/users/rutasRegistro.ts:20`](../../server/routes/users/rutasRegistro.ts#L20) |
 | `POST` | `/api/auth/reset-password/confirm` | Firma o secreto | loginRateLimiter |  | [`server/routes/users/rutasRecuperacion.ts:204`](../../server/routes/users/rutasRecuperacion.ts#L204) |
 | `POST` | `/api/auth/reset-password/request` | Pública | loginRateLimiter |  | [`server/routes/users/rutasRecuperacion.ts:17`](../../server/routes/users/rutasRecuperacion.ts#L17) |
-| `POST` | `/api/auth/switch-band` | Sesión (comprobada en el handler) | — |  | [`server/routes/users/rutasSesion.ts:137`](../../server/routes/users/rutasSesion.ts#L137) |
+| `POST` | `/api/auth/switch-band` | Sesión (comprobada en el handler) | — |  | [`server/routes/users/rutasSesion.ts:134`](../../server/routes/users/rutasSesion.ts#L134) |
 | `POST` | `/api/billing/webhook` | Firma o secreto | — |  | [`server/routes/billing.ts:987`](../../server/routes/billing.ts#L987) |
 | `GET` | `/api/calendar.ics` | Firma o secreto | — |  | [`server/routes/concerts.ts:429`](../../server/routes/concerts.ts#L429) |
 | `GET` | `/api/download-excel` | Sesión (comprobada en el handler) | — |  | [`server.ts:269`](../../server.ts#L269) |
@@ -710,13 +710,13 @@ Autenticación (login, registro, Google, invitaciones, cambio de banda) y gesti�
 | `POST` | `/api/auth/activate-member` | Sesión opcional | loginRateLimiter |  | [`server/routes/users/rutasInvitacion.ts:73`](../../server/routes/users/rutasInvitacion.ts#L73) |
 | `POST` | `/api/auth/check-invitation` | Pública | loginRateLimiter |  | [`server/routes/users/rutasInvitacion.ts:17`](../../server/routes/users/rutasInvitacion.ts#L17) |
 | `POST` | `/api/auth/google` | Sesión (comprobada en el handler) | loginRateLimiter |  | [`server/routes/users/rutasGoogle.ts:20`](../../server/routes/users/rutasGoogle.ts#L20) |
-| `POST` | `/api/auth/login` | Sesión (comprobada en el handler) | loginRateLimiter | ★ | [`server/routes/users/rutasLogin.ts:16`](../../server/routes/users/rutasLogin.ts#L16) |
-| `POST` | `/api/auth/logout` | Sesión opcional | — |  | [`server/routes/users/rutasSesion.ts:301`](../../server/routes/users/rutasSesion.ts#L301) |
-| `GET` | `/api/auth/me` | Sesión (comprobada en el handler) | — |  | [`server/routes/users/rutasSesion.ts:15`](../../server/routes/users/rutasSesion.ts#L15) |
+| `POST` | `/api/auth/login` | Sesión (comprobada en el handler) | loginRateLimiter | ★ | [`server/routes/users/rutasLogin.ts:17`](../../server/routes/users/rutasLogin.ts#L17) |
+| `POST` | `/api/auth/logout` | Sesión opcional | — |  | [`server/routes/users/rutasSesion.ts:298`](../../server/routes/users/rutasSesion.ts#L298) |
+| `GET` | `/api/auth/me` | Sesión (comprobada en el handler) | — |  | [`server/routes/users/rutasSesion.ts:16`](../../server/routes/users/rutasSesion.ts#L16) |
 | `POST` | `/api/auth/register` | Sesión opcional | registroRateLimiter |  | [`server/routes/users/rutasRegistro.ts:20`](../../server/routes/users/rutasRegistro.ts#L20) |
 | `POST` | `/api/auth/reset-password/confirm` | Firma o secreto | loginRateLimiter |  | [`server/routes/users/rutasRecuperacion.ts:204`](../../server/routes/users/rutasRecuperacion.ts#L204) |
 | `POST` | `/api/auth/reset-password/request` | Pública | loginRateLimiter |  | [`server/routes/users/rutasRecuperacion.ts:17`](../../server/routes/users/rutasRecuperacion.ts#L17) |
-| `POST` | `/api/auth/switch-band` | Sesión (comprobada en el handler) | — |  | [`server/routes/users/rutasSesion.ts:137`](../../server/routes/users/rutasSesion.ts#L137) |
+| `POST` | `/api/auth/switch-band` | Sesión (comprobada en el handler) | — |  | [`server/routes/users/rutasSesion.ts:134`](../../server/routes/users/rutasSesion.ts#L134) |
 | `POST` | `/api/auth/test-email` | Sesión | — |  | [`server/routes/users/rutasRecuperacion.ts:327`](../../server/routes/users/rutasRecuperacion.ts#L327) |
 | `POST` | `/api/bands/logo` | Sesión | — |  | [`server/routes/users/rutasBandas.ts:16`](../../server/routes/users/rutasBandas.ts#L16) |
 | `POST` | `/api/bands/upload-logo` | Sesión | — |  | [`server/routes/users/rutasBandas.ts:16`](../../server/routes/users/rutasBandas.ts#L16) |

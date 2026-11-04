@@ -8,6 +8,7 @@ import { diasEntre, planificarCampana, sumarDias } from '../campanaConcierto';
 import type { Veredicto } from './diagnosticoMetricas';
 import { lecturaRelativa, previasDe, type EstadoLectura, type ResultadoRed } from './metricasPorRed';
 import type { ConciertoParaAsesor } from './diagnostico';
+import { hitosLanzamiento } from './hitosLanzamiento';
 import type { Lanzamiento } from './estrategia';
 import type { ResultadoPieza } from './resumen';
 import { lecturaDe, tituloDe } from './resumen';
@@ -57,7 +58,13 @@ export function agendaDe({ hoy, conciertos, lanzamiento, historial, resultados, 
     // Los hitos de la campaña solo existen hacia delante: el pasado ya no se puede preparar.
     for (const h of planificarCampana(c.fecha, hoy)) poner(h.fecha, { tipo: 'hito', texto: `${h.titulo} del bolo${c.sala ? ` en ${c.sala}` : ''}`, objetivo: h.objetivo });
   }
-  if (lanzamiento && Number.isFinite(diasEntre(desde, lanzamiento.fecha))) poner(lanzamiento.fecha, { tipo: 'lanzamiento', texto: `Sale «${lanzamiento.titulo}»` });
+  if (lanzamiento && Number.isFinite(diasEntre(desde, lanzamiento.fecha))) {
+    poner(lanzamiento.fecha, { tipo: 'lanzamiento', texto: `Sale «${lanzamiento.titulo}»` });
+    // La hoja de ruta del estreno, con sus fechas. El día del estreno ya sale arriba como «Sale…».
+    for (const h of hitosLanzamiento(lanzamiento.fecha, hoy)) {
+      if (h.id !== 'estreno') poner(h.fecha, { tipo: 'hito', texto: `${h.titulo} · «${lanzamiento.titulo}»`, objetivo: h.objetivo });
+    }
+  }
 
   for (const a of historial) {
     if (a.accion !== 'hecho') continue;

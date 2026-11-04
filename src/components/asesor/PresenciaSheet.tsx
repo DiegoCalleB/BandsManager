@@ -5,14 +5,15 @@ import { Button, EmptyState, IconButton, SkeletonText, Tabs, type TabItem } from
 import { usePresencia } from './hooks/usePresencia';
 import { AuditoriaPanel } from './AuditoriaPanel';
 import { EnlacesPanel } from './EnlacesPanel';
+import { ImpulsarPanel } from './ImpulsarPanel';
 import { SeoPanel } from './SeoPanel';
 
-type Seccion = 'auditoria' | 'seo' | 'enlaces';
-const SECCIONES: TabItem<Seccion>[] = [{ id: 'auditoria', label: 'Auditoría' }, { id: 'seo', label: 'SEO' }, { id: 'enlaces', label: 'Enlaces y clics' }];
+type Seccion = 'auditoria' | 'seo' | 'enlaces' | 'impulsar';
+const SECCIONES: TabItem<Seccion>[] = [{ id: 'auditoria', label: 'Auditoría' }, { id: 'seo', label: 'SEO' }, { id: 'enlaces', label: 'Enlaces' }, { id: 'impulsar', label: 'Impulsar' }];
 
 /**
- * El equipo de especialistas revisando la presencia de la banda: auditoría 360, kit de SEO y enlaces
- * con seguimiento. Todo se calcula con lo que BandManager ya sabe (sin IA); lo que falta, se pide.
+ * El equipo de especialistas revisando la presencia de la banda: auditoría 360, kit de SEO, enlaces
+ * con seguimiento y qué piezas merece la pena impulsar con dinero. Todo se calcula con lo que BandManager ya sabe (sin IA); lo que falta, se pide.
  */
 export function PresenciaSheet({ onCerrar }: { onCerrar: () => void }) {
   const p = usePresencia();
@@ -42,6 +43,7 @@ export function PresenciaSheet({ onCerrar }: { onCerrar: () => void }) {
             )}
             {p.presencia && seccion === 'auditoria' && <AuditoriaPanel presencia={p.presencia} bios={p.bios} cargando={p.cargando} onBio={p.ponerBio} onRevisar={() => void p.revisarDeNuevo()} />}
             {p.presencia && seccion === 'seo' && <SeoPanel kit={p.presencia.kit} />}
+            {p.presencia && seccion === 'impulsar' && <ImpulsarPanel anuncios={p.presencia.anuncios} />}
             {p.presencia && seccion === 'enlaces' && <EnlacesPanel enlaces={p.presencia.enlaces} instagram={p.presencia.instagram} creando={p.creando} onCrear={(red) => void p.crearEnlaceDeRed(red)} />}
           </div>
         </div>

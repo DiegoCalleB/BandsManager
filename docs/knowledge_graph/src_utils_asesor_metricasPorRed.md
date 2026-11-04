@@ -35,11 +35,13 @@ Resultados de una pieza en TikTok y YouTube Shorts. Instagram tiene sus propios 
 - [[src_components_asesor_OtrasRedesCard|src/components/asesor/OtrasRedesCard.tsx]] *(from #frontend)*
 - [[src_components_asesor_PorMedirCard|src/components/asesor/PorMedirCard.tsx]] *(from #frontend)*
 - [[src_utils_asesor_agenda|src/utils/asesor/agenda.ts]] *(from #service)*
+- [[src_utils_asesor_anuncios|src/utils/asesor/anuncios.ts]] *(from #service)*
 - [[src_utils_asesorApi|src/utils/asesorApi.ts]] *(from #service)*
 
 ---
 
 ## 🧪 Tests que lo cubren
+- `src/utils/asesor/__tests__/anuncios.test.ts`
 - `src/utils/asesor/__tests__/metricasPorRed.test.ts`
 
 ---

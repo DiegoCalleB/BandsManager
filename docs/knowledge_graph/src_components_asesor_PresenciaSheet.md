@@ -20,6 +20,7 @@ Exporta: PresenciaSheet.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_asesor_AuditoriaPanel|src/components/asesor/AuditoriaPanel.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_asesor_EnlacesPanel|src/components/asesor/EnlacesPanel.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_asesor_ImpulsarPanel|src/components/asesor/ImpulsarPanel.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_asesor_SeoPanel|src/components/asesor/SeoPanel.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_asesor_hooks_usePresencia|src/components/asesor/hooks/usePresencia.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] *(Layer: #frontend, Domain: #system)*
