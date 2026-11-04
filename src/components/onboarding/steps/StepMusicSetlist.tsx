@@ -12,6 +12,7 @@ interface StepMusicSetlistProps {
   spotifyQuery: string;
   setSpotifyQuery: (q: string) => void;
   isSearchingSpotify: boolean;
+  spotifyError: string | null;
   spotifyAlbums: SpotifyAlbum[];
   selectedSpotifyTracks: Set<string>;
   onSearchSpotify: (e?: React.FormEvent) => void;
@@ -46,6 +47,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
   spotifyQuery,
   setSpotifyQuery,
   isSearchingSpotify,
+  spotifyError,
   spotifyAlbums,
   selectedSpotifyTracks,
   onSearchSpotify,
@@ -154,6 +156,15 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
               )}
             </Button>
           </form>
+
+          {spotifyError && (
+            <div role="alert" className="p-3 rounded-[var(--r-l)] bg-[var(--alert)]/15 text-[var(--ink)] text-xs font-sans space-y-2">
+              <p>{spotifyError}</p>
+              <Button variant="soft" type="button" onClick={() => setMusicSubTab("manual")}>
+                Añadir temas a mano
+              </Button>
+            </div>
+          )}
 
           {spotifyAlbums.length > 0 && (
             <div className="space-y-4 max-h-72 overflow-y-auto pr-1">

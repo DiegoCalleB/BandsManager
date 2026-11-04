@@ -62,4 +62,13 @@ describe('useMusicSetlistStep · handleSearchSpotify', () => {
     expect(apiFetch).toHaveBeenCalledWith('/api/spotify/artist-discography?query=Majo%20Leiva');
     expect(result.current.spotifyAlbums).toEqual(albums);
   });
+
+  it('si falla no inventa álbumes: deja la lista vacía y expone un error', async () => {
+    apiFetch.mockRejectedValueOnce(new Error('400'));
+    const { result } = renderHook(() => useMusicSetlistStep(params));
+    act(() => result.current.setSpotifyQuery('Nadie'));
+    await act(async () => { await result.current.handleSearchSpotify(); });
+    expect(result.current.spotifyAlbums).toEqual([]);
+    expect(result.current.spotifyError).toMatch(/No hemos encontrado/);
+  });
 });

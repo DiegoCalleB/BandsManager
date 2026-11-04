@@ -31,7 +31,7 @@ export interface MusicSetlistStepParams {
  * @param params Estado y callbacks del contenedor ({@link MusicSetlistStepParams}).
  * @returns Estado derivado y handlers expuestos al contenedor.
  */
-export function useMusicSetlistStep({ bandName, currentUser, logoUrl, localBandName, genre, onSongsImported, activeBandId }: MusicSetlistStepParams) {
+export function useMusicSetlistStep({ bandName, currentUser, genre, onSongsImported, activeBandId }: MusicSetlistStepParams) {
   // --- Step 6: Música & Setlist ---
   const [musicSubTab, setMusicSubTab] = useState<
     "spotify" | "upload" | "manual"
@@ -43,6 +43,7 @@ export function useMusicSetlistStep({ bandName, currentUser, logoUrl, localBandN
 
   const [isSearchingSpotify, setIsSearchingSpotify] = useState(false);
 
+  const [spotifyError, setSpotifyError] = useState<string | null>(null);
   const [spotifyAlbums, setSpotifyAlbums] = useState<SpotifyAlbum[]>([]);
 
   const [selectedSpotifyTracks, setSelectedSpotifyTracks] = useState<
@@ -79,6 +80,7 @@ export function useMusicSetlistStep({ bandName, currentUser, logoUrl, localBandN
     if (e) e.preventDefault();
     if (!spotifyQuery.trim()) return;
     setIsSearchingSpotify(true);
+    setSpotifyError(null);
     try {
       const res = await apiFetch<SpotifySearchResponse>(
         `/api/spotify/artist-discography?query=${encodeURIComponent(spotifyQuery.trim())}`,
@@ -87,55 +89,12 @@ export function useMusicSetlistStep({ bandName, currentUser, logoUrl, localBandN
       if (albums && albums.length > 0) setSpotifyAlbums(albums);
       else throw new Error("Spotify no devolvió álbumes");
     } catch (err) {
-      console.warn("Spotify search fallback:", err);
-      // Fallback album mock with realistic structure
-      setSpotifyAlbums([
-        {
-          id: "mock_alb_1",
-          name: `${localBandName || "Directo"} - EP Debut`,
-          albumType: "album",
-          releaseYear: "2025",
-          totalTracks: 4,
-          coverUrl:
-            logoUrl ||
-            "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400",
-          spotifyUrl: `https://open.spotify.com/artist/search`,
-          tracks: [
-            {
-              id: "tr_1",
-              name: "Canción 1 (Single Principal)",
-              trackNumber: 1,
-              durationFormatted: "3:24",
-              previewUrl: null,
-              spotifyUrl: "",
-            },
-            {
-              id: "tr_2",
-              name: "Noches en la Ciudad",
-              trackNumber: 2,
-              durationFormatted: "4:02",
-              previewUrl: null,
-              spotifyUrl: "",
-            },
-            {
-              id: "tr_3",
-              name: "Fuego en el Escenario",
-              trackNumber: 3,
-              durationFormatted: "3:45",
-              previewUrl: null,
-              spotifyUrl: "",
-            },
-            {
-              id: "tr_4",
-              name: "Último Baile",
-              trackNumber: 4,
-              durationFormatted: "3:12",
-              previewUrl: null,
-              spotifyUrl: "",
-            },
-          ],
-        },
-      ]);
+      // Nunca se inventan álbumes: un resultado falso acababa importado como repertorio real.
+      console.warn("Spotify search error:", err);
+      setSpotifyAlbums([]);
+      setSpotifyError(
+        "No hemos encontrado esa banda en Spotify. Prueba pegando la URL de su perfil o añade los temas a mano.",
+      );
     } finally {
       setIsSearchingSpotify(false);
     }
@@ -340,5 +299,5 @@ export function useMusicSetlistStep({ bandName, currentUser, logoUrl, localBandN
     }
   };
 
-  return { setSpotifyQuery, setSpotifyAlbums, setSelectedSpotifyTracks, setUploadedSongs, setManualSongs, setCreatedSetlistName, musicSubTab, setMusicSubTab, spotifyQuery, isSearchingSpotify, spotifyAlbums, selectedSpotifyTracks, handleSearchSpotify, handleToggleTrackSelection, handleSelectAllTracksInAlbum, handleImportSpotifyTracks, isImportingSpotify, uploadedSongs, isUploadingAudio, handleAudioFileUpload, manualSongs, newManualTitle, setNewManualTitle, newManualTonalidad, setNewManualTonalidad, newManualBpm, setNewManualBpm, newManualDuracion, setNewManualDuracion, handleAddManualSong, handleRemoveManualSong, handleBulkAddManualSongs, createdSetlistName, isCreatingSetlist, handleGenerateSetlist, totalImportedSongsCount };
+  return { setSpotifyQuery, setSpotifyAlbums, setSelectedSpotifyTracks, setUploadedSongs, setManualSongs, setCreatedSetlistName, musicSubTab, setMusicSubTab, spotifyQuery, isSearchingSpotify, spotifyError, spotifyAlbums, selectedSpotifyTracks, handleSearchSpotify, handleToggleTrackSelection, handleSelectAllTracksInAlbum, handleImportSpotifyTracks, isImportingSpotify, uploadedSongs, isUploadingAudio, handleAudioFileUpload, manualSongs, newManualTitle, setNewManualTitle, newManualTonalidad, setNewManualTonalidad, newManualBpm, setNewManualBpm, newManualDuracion, setNewManualDuracion, handleAddManualSong, handleRemoveManualSong, handleBulkAddManualSongs, createdSetlistName, isCreatingSetlist, handleGenerateSetlist, totalImportedSongsCount };
 }
