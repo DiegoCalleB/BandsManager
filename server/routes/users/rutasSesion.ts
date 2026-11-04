@@ -9,6 +9,7 @@ import { loadState, saveState } from '../../state.js';
 import { dbGetUsers, dbUpsertUser, dbGetRegisteredBands, normalizePlan } from '../../db.js';
 import { buildAvailableBandsForUser } from './bandasDisponibles.js';
 import { copiarCamposDeBd } from './mezclaUsuarioBd.js';
+import { hidratarVinculosDeBd } from './vinculosDeBd.js';
 
 const router = express.Router();
 
@@ -118,6 +119,9 @@ router.get('/auth/me', async (req, res) => {
     }
   }
 
+  // Las bandas de la cuenta viven en `user_bands`: se traen antes de calcular el selector.
+  await hidratarVinculosDeBd(state, user.id);
+
   // Recalculate availableBands
   const availableBands = await buildAvailableBandsForUser(state, user);
 
@@ -170,57 +174,41 @@ router.post('/auth/switch-band', async (req, res) => {
     return res.status(400).json({ error: 'band_id es requerido' });
   }
 
-  const userEmail =
-    currentUser.email?.toLowerCase() || currentUser.username.toLowerCase();
+  // El acceso a una banda lo da `user_bands`: sin traerla, una banda vinculada solo ahí se rechazaba.
+  await hidratarVinculosDeBd(state, currentUser.id);
+
   const cleanTargetBand = band_id.replace(/^(band|reg)-/, '');
 
-  // Check if they have access to this band (either via userBands, registeredBands or legacy duplicates)
+  // El acceso a una banda lo dan sus vínculos (`user_bands`) o ser su dueño registrado, por id.
+  // El email de contacto de una banda, o el de otra cuenta, no da acceso a nadie.
   if (!state.userBands) state.userBands = [];
   const hasAccessInUserBands = state.userBands.some(
     (ub) =>
-      (ub.user_id === currentUser!.id ||
-        (userEmail && ub.email?.toLowerCase() === userEmail)) &&
+      ub.user_id === currentUser!.id &&
       ub.band_id &&
       ub.band_id.replace(/^(band|reg)-/, '') === cleanTargetBand
   );
 
   const hasAccessInRegisteredBands = (state.registeredBands || []).some(
     (b) =>
-      (b.user_id === currentUser!.id || b.email?.toLowerCase() === userEmail) &&
+      b.user_id === currentUser!.id &&
       ((b.band_id &&
         b.band_id.replace(/^(band|reg)-/, '') === cleanTargetBand) ||
         (b.id && b.id.replace(/^(band|reg)-/, '') === cleanTargetBand))
   );
 
-  const legacyTargetUser = state.users.find(
-    (u) =>
-      u.band_id &&
-      u.band_id.replace(/^(band|reg)-/, '') === cleanTargetBand &&
-      ((u.email && u.email.toLowerCase() === userEmail) ||
-        u.username.toLowerCase() === userEmail)
-  );
-
   const isGlobalAdmin = currentUser.role === 'admin';
 
   // Ninguna banda es una excepción legítima aquí: cualquier cuenta autenticada podía
-  // cambiarse a una banda sin tener vínculo real vía userBands,
-  // registeredBands ni legacyTargetUser, con acceso de lectura/escritura completo a partir de
-  // ahí — y el band_id que quedaba asignado era el crudo del body, sin normalizar al prefijo
-  // canónico (ver bandInfo más abajo). Solo el admin global salta el chequeo de pertenencia,
-  // igual que con cualquier otra banda.
-  if (
-    !hasAccessInUserBands &&
-    !hasAccessInRegisteredBands &&
-    !legacyTargetUser &&
-    !isGlobalAdmin
-  ) {
+  // cambiarse a una banda sin tener vínculo real vía userBands o registeredBands, con acceso de
+  // lectura/escritura completo a partir de ahí — y el band_id que quedaba asignado era el crudo
+  // del body, sin normalizar al prefijo canónico (ver bandInfo más abajo). Solo el admin global
+  // salta el chequeo de pertenencia, igual que con cualquier otra banda.
+  if (!hasAccessInUserBands && !hasAccessInRegisteredBands && !isGlobalAdmin) {
     return res.status(404).json({ error: 'No tienes acceso a esta banda' });
   }
 
-  let targetUser = currentUser;
-  if (legacyTargetUser && !isGlobalAdmin) {
-    targetUser = legacyTargetUser;
-  }
+  const targetUser = currentUser;
 
   const bandInfo = buscarBandaRegistrada(state.registeredBands, band_id);
 
@@ -243,15 +231,10 @@ router.post('/auth/switch-band', async (req, res) => {
     targetUser.role = 'admin';
   }
 
-  // Sync band_id and plan on all user records matching email
+  // Sync band_id and plan on the user's own record (never on other accounts that share an email)
   if (state.users) {
     state.users.forEach((u) => {
-      if (
-        u.id === targetUser.id ||
-        (userEmail &&
-          (u.email?.toLowerCase() === userEmail ||
-            u.username?.toLowerCase() === userEmail))
-      ) {
+      if (u.id === targetUser.id) {
         u.band_id = canonicalBandId;
         u.bandName = resolvedName;
         u.plan = isGlobalAdmin ? 'cabeza_de_cartel' : resolvedPlan;

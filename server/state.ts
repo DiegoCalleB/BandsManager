@@ -261,33 +261,18 @@ export function ensureSeedBands(state: AppState): boolean {
           changed = true;
         }
       } else {
-        // Find matching registered bands for this user
-        const uEmail = u.email?.toLowerCase();
-        const matchingBands = state.registeredBands?.filter((b) =>
-          (uEmail && b.email?.toLowerCase() === uEmail) || b.nombre_banda === u.name || b.nombre_banda === u.bandName
-        ) || [];
-
-        // Ensure user_id is linked on matching registered bands
-        matchingBands.forEach((b) => {
-          if (!b.user_id || b.user_id.startsWith("user-17")) {
-            b.user_id = u.id;
-            changed = true;
+        // Solo se repara un band_id ROTO (vacío o con formato `user-…`). Una banda activa válida nunca se
+        // sustituye: antes, si no estaba entre los vínculos en memoria (una instancia recién arrancada los
+        // tiene vacíos), se cambiaba por la primera banda registrada con el mismo email o nombre, y
+        // `dbUpsertUser` lo guardaba en `users`. El email de contacto de una banda no decide la banda de nadie.
+        if (!u.band_id || u.band_id.startsWith('user-')) {
+          const propia = state.registeredBands?.find((b) => b.user_id === u.id && b.band_id);
+          if (propia) {
+            u.band_id = propia.band_id;
+            if (propia.nombre_banda) u.bandName = propia.nombre_banda;
+          } else {
+            u.band_id = `band-${slugify(u.bandName || u.name || u.id.replace('user-', ''))}`;
           }
-        });
-
-        const currentBandValid = matchingBands.some((b) => b.band_id === u.band_id) ||
-          state.userBands?.some((ub) => ub.user_id === u.id && ub.band_id === u.band_id);
-
-        if (!currentBandValid && matchingBands.length > 0) {
-          const nameMatchedBand = matchingBands.find((b) =>
-            b.nombre_banda && (b.nombre_banda.toLowerCase() === u.name?.toLowerCase() || b.nombre_banda.toLowerCase() === u.bandName?.toLowerCase())
-          );
-          const targetBandObj = nameMatchedBand || matchingBands[0];
-          u.band_id = targetBandObj.band_id;
-          if (targetBandObj.nombre_banda) u.bandName = targetBandObj.nombre_banda;
-          changed = true;
-        } else if (!u.band_id || u.band_id.startsWith('user-')) {
-          u.band_id = `band-${slugify(u.bandName || u.name || u.id.replace('user-', ''))}`;
           changed = true;
         }
       }
@@ -319,33 +304,22 @@ export function ensureSeedBands(state: AppState): boolean {
     });
   }
 
-  // Ensure all registered bands have leader associations in userBands
+  // Ensure all registered bands have a leader association in userBands: solo con su dueño registrado
+  // (user_id). El email de contacto de una banda no la vincula a ningún usuario.
   if (state.registeredBands && Array.isArray(state.registeredBands)) {
     state.registeredBands.forEach((rb) => {
-      if (!rb.band_id) return;
-      const rbEmail = (rb.email || "").toLowerCase();
-      const matchingUsers = (state.users || []).filter((u) =>
-        u.id === rb.user_id ||
-        (rbEmail && (u.email?.toLowerCase() === rbEmail || u.username?.toLowerCase() === rbEmail))
-      );
-
-      // If no user object matched yet, but rb has user_id, use that user_id
-      const userIdsToLink = new Set<string>(matchingUsers.map((u) => u.id));
-      if (rb.user_id) userIdsToLink.add(rb.user_id);
-
-      userIdsToLink.forEach((uid) => {
-        const hasUB = state.userBands.some((ub) => ub.user_id === uid && ub.band_id === rb.band_id);
-        if (!hasUB) {
-          state.userBands.push({
-            id: `ub-${uid}-${rb.band_id}`,
-            user_id: uid,
-            band_id: rb.band_id,
-            role: "leader",
-            createdAt: rb.fecha_registro || new Date().toISOString()
-          });
-          changed = true;
-        }
-      });
+      if (!rb.band_id || !rb.user_id) return;
+      const hasUB = state.userBands.some((ub) => ub.user_id === rb.user_id && ub.band_id === rb.band_id);
+      if (!hasUB) {
+        state.userBands.push({
+          id: `ub-${rb.user_id}-${rb.band_id}`,
+          user_id: rb.user_id,
+          band_id: rb.band_id,
+          role: "leader",
+          createdAt: rb.fecha_registro || new Date().toISOString()
+        });
+        changed = true;
+      }
     });
   }
 

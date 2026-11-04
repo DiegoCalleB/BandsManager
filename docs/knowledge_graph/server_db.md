@@ -99,6 +99,7 @@ Módulo sin exportaciones con nombre.
 - [[server_routes_users_rutasRegistro|server/routes/users/rutasRegistro.ts]] *(from #route)*
 - [[server_routes_users_rutasSalidaBanda|server/routes/users/rutasSalidaBanda.ts]] *(from #route)*
 - [[server_routes_users_rutasSesion|server/routes/users/rutasSesion.ts]] *(from #route)*
+- [[server_routes_users_vinculosDeBd|server/routes/users/vinculosDeBd.ts]] *(from #route)*
 - [[server_services_agentIntelligence|server/services/agentIntelligence.ts]] *(from #agent)*
 - [[server_services_asesorMarketing|server/services/asesorMarketing.ts]] *(from #service)*
 - [[server_services_asesorPresencia|server/services/asesorPresencia.ts]] *(from #service)*

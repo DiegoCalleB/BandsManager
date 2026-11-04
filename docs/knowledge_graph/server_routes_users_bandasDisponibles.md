@@ -36,6 +36,12 @@ Bandas que ve un usuario en el selector (propias, compartidas y registradas) y n
 - [[server_routes_users_rutasRegistro|server/routes/users/rutasRegistro.ts]] *(from #route)*
 - [[server_routes_users_rutasSalidaBanda|server/routes/users/rutasSalidaBanda.ts]] *(from #route)*
 - [[server_routes_users_rutasSesion|server/routes/users/rutasSesion.ts]] *(from #route)*
+- [[server_routes_users_vinculosDeBd|server/routes/users/vinculosDeBd.ts]] *(from #route)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/pertenenciaPorVinculos.test.ts`
 
 ---
 

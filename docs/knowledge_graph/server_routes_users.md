@@ -48,9 +48,11 @@ Cuentas, sesión y bandas de un usuario: alta, login (contraseña o Google), rec
 - `server/routes/__tests__/invitacionMiembros.test.ts`
 - `server/routes/__tests__/loginBdCaida.test.ts`
 - `server/routes/__tests__/mezclaUsuarioBd.test.ts`
+- `server/routes/__tests__/pertenenciaPorVinculos.test.ts`
 - `server/routes/__tests__/seguridadAutorizacion.test.ts`
 - `server/routes/__tests__/superficieUsersAiMusic.test.ts`
 - `server/routes/__tests__/usersCuentasSeguridad.test.ts`
+- `server/routes/__tests__/vinculosDeBd.test.ts`
 
 ---
 

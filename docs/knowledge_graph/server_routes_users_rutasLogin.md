@@ -24,6 +24,7 @@ Inicio de sesión con usuario o email y contraseña.
 - [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(Layer: #security, Domain: #system)*
 - [[server_routes_users_bandasDisponibles|server/routes/users/bandasDisponibles.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_users_mezclaUsuarioBd|server/routes/users/mezclaUsuarioBd.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_vinculosDeBd|server/routes/users/vinculosDeBd.ts]] *(Layer: #route, Domain: #system)*
 - [[server_stateTypes|server/stateTypes.ts]] *(Layer: #service, Domain: #system)*
 
 ---

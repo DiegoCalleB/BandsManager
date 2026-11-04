@@ -77,12 +77,6 @@ export async function buildAvailableBandsForUser(
     return '';
   };
 
-  const userEmail = (
-    targetUser.email ||
-    targetUser.username ||
-    ''
-  ).toLowerCase();
-
   const getPlanForBand = (bid: string, fallbackPlan?: string) => {
     if (!bid) return normalizePlan(fallbackPlan || 'ensayo');
     const cleanId = bid
@@ -118,19 +112,8 @@ export async function buildAvailableBandsForUser(
   // perteneciente a ninguna banda real.
   const mainClean = cleanBandId(targetUser.main_band_id || targetUser.band_id);
 
-  // 1. Bands from state.userBands
-  const userBandsList = state.userBands.filter(
-    (ub) =>
-      ub.user_id === targetUser.id ||
-      (state.users &&
-        state.users.some(
-          (u) =>
-            u.id === ub.user_id &&
-            userEmail &&
-            (u.email?.toLowerCase() === userEmail ||
-              u.username?.toLowerCase() === userEmail)
-        ))
-  );
+  // 1. Bandas de sus vínculos (`user_bands`): la pertenencia la da el vínculo, nunca el email.
+  const userBandsList = state.userBands.filter((ub) => ub.user_id === targetUser.id);
 
   userBandsList.forEach((ub) => {
     if (!ub.band_id) return;
@@ -185,11 +168,9 @@ export async function buildAvailableBandsForUser(
     });
   });
 
-  // 2. Bands from state.registeredBands
+  // 2. Bandas de las que es dueño registrado (por id): el email de contacto de una banda no la da ni la quita.
   const registeredBandsForUser = (state.registeredBands || []).filter(
-    (b) =>
-      b.user_id === targetUser.id ||
-      (b.email && b.email.toLowerCase() === userEmail)
+    (b) => b.user_id === targetUser.id
   );
   registeredBandsForUser.forEach((b) => {
     const bid = b.band_id || b.id;
@@ -213,35 +194,7 @@ export async function buildAvailableBandsForUser(
     });
   });
 
-  // 3. Bands from other accounts matching same email/username
-  (state.users || []).forEach((u) => {
-    if (!u.band_id) return;
-    if (
-      u.id === targetUser.id ||
-      (userEmail &&
-        (u.email?.toLowerCase() === userEmail ||
-          u.username?.toLowerCase() === userEmail))
-    ) {
-      const cleanId = u.band_id.replace(/^(band|reg)-/, '');
-      if (seenCleanBandIds.has(cleanId)) return;
-      seenCleanBandIds.add(cleanId);
-
-      const bName = u.bandName || u.name || 'Banda';
-
-      availableBands.push({
-        band_id: u.band_id,
-        bandName: bName,
-        nombre_banda: bName,
-        role: u.role || 'leader',
-        userId: targetUser.id,
-        plan: getPlanForBand(u.band_id, 'ensayo'),
-        logoUrl: getLogoForBand(u.band_id, bName),
-        is_main: cleanId === mainClean,
-      });
-    }
-  });
-
-  // 4. Current active band
+  // 3. Banda activa (una cuenta antigua puede no tener aún su fila en user_bands)
   const currentBid = targetUser.band_id || `band-${cleanBandId(undefined)}`;
   const cleanCurrent = cleanBandId(currentBid);
   if (!seenCleanBandIds.has(cleanCurrent)) {
@@ -260,7 +213,7 @@ export async function buildAvailableBandsForUser(
     });
   }
 
-  // 5. If user is platform superadmin / admin, grant access to ALL registered and stored bands
+  // 4. If user is platform superadmin / admin, grant access to ALL registered and stored bands
   if (targetUser.role === 'admin') {
     // Solo bandas registradas: state.bands son las bandas de contacto del CRM («Grupos»), no
     // proyectos a los que cambiarse.

@@ -10,6 +10,7 @@ import { dbGetUsers, esSupabaseNoConfigurado, normalizePlan } from '../../db.js'
 import { loginRateLimiter } from '../../middleware/rateLimiter.js';
 import { cleanBandId, buildAvailableBandsForUser } from './bandasDisponibles.js';
 import { copiarCamposDeBd } from './mezclaUsuarioBd.js';
+import { hidratarVinculosDeBd } from './vinculosDeBd.js';
 
 const router = express.Router();
 
@@ -97,6 +98,9 @@ router.post('/auth/login', loginRateLimiter, async (req, res) => {
       ? validUsers[0].band_order[0]
       : null) ||
     validUsers[0]?.band_id;
+
+  // Las bandas de cada cuenta viven en `user_bands`: se traen antes de decidir cuáles puede elegir.
+  await Promise.all(validUsers.map((u) => hidratarVinculosDeBd(state, u.id)));
 
   // SEGURIDAD: `band_id` viene del cuerpo. Solo se respeta si es una banda DE ESE USUARIO; antes
   // cualquiera con una cuenta propia podía iniciar sesión «dentro» de la banda de otro (y como su
