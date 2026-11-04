@@ -163,3 +163,39 @@ describe('un bolo lejano: anunciarlo sin llenar seis semanas de promoción', () 
   });
 });
 
+describe('un bolo lejano que es lo único a la vista: todo el empuje va a él', () => {
+  const hoy = '2026-11-04';
+  const solo = diagnosticar({ ...base, hoy, conciertos: [{ ...bolo('b1', '2026-12-12'), tieneEntradas: true }] });
+  // Con un estreno fechado antes del bolo (pero fuera de su ventana) el bolo ya no es lo único.
+  const conOtro = diagnosticar({ ...base, hoy, conciertos: [{ ...bolo('b1', '2026-12-12'), tieneEntradas: true }], lanzamiento: { titulo: 'Furgo', fecha: '2026-12-08' } }); // a 34 días: fuera de su ventana de 30, pero antes del bolo
+  const ids = (d: typeof solo, horasSemana: 1 | 3 | 6) => { const o = opcionesDeHoy(d, est({ horasSemana }), hoy); return o.recomendadas.map((t) => t.id); };
+
+  it('con poco tiempo, solo el anuncio; con más, el adelanto pasa por delante de la comunidad y se suma el setlist', () => {
+    expect(ids(solo, 1)).toEqual(['bolo-savethedate']);
+    expect(ids(solo, 3)).toEqual(['bolo-savethedate', 'bolo-teaser']);
+    expect(ids(solo, 6)).toEqual(['bolo-savethedate', 'bolo-teaser', 'bolo-setlist']);
+  });
+
+  it('si hay otro evento antes, el adelanto y el setlist no pasan por delante de la comunidad', () => {
+    expect(ids(conOtro, 3)).toEqual(['bolo-savethedate', 'fondo-pilar']);
+    const todas = [...opcionesDeHoy(conOtro, est({ horasSemana: 6 }), hoy).recomendadas, ...opcionesDeHoy(conOtro, est({ horasSemana: 6 }), hoy).alternativas];
+    expect(todas.map((t) => t.id)).not.toContain('bolo-setlist');
+  });
+
+  it('el anuncio dice que es lo único a la vista solo cuando lo es', () => {
+    expect(opcionesDeHoy(solo, est({ horasSemana: 1 }), hoy).recomendadas[0].porque).toContain('Es lo único que tenéis a la vista');
+    expect(opcionesDeHoy(conOtro, est({ horasSemana: 1 }), hoy).recomendadas[0].porque).not.toContain('lo único');
+  });
+
+  it('sigue habiendo comunidad entre las alternativas: no es solo promoción', () => {
+    const o = opcionesDeHoy(solo, est({ horasSemana: 1 }), hoy);
+    expect([...o.recomendadas, ...o.alternativas].some((t) => t.tipo === 'humano' || t.tipo === 'participativo')).toBe(true);
+  });
+
+  it('el servidor valida el setlist como idea de hoy en este caso, y a menos de 3 semanas sigue existiendo como antes', () => {
+    expect(buscarTarjeta(solo, est(), hoy, 'bolo-setlist')).toMatchObject({ id: 'bolo-setlist', formato: 'carrusel' });
+    const cerca = diagnosticar({ ...base, hoy, conciertos: [bolo('b1', '2026-11-14')] });
+    expect(buscarTarjeta(cerca, est(), hoy, 'bolo-setlist')).toMatchObject({ id: 'bolo-setlist' });
+  });
+});
+

@@ -202,3 +202,10 @@ Primer paso de «el mejor asistente de marketing digital»: especialistas que re
 - [x] No se llena de promoción: junto al anuncio y el adelanto del directo salen ideas de comunidad, y la cuenta atrás (stories) queda para las últimas tres semanas. A 21 días o menos nada cambia.
 - [x] Precedencia: un bolo a 21 días o menos manda sobre todo; un estreno inminente pasa por delante de un bolo lejano; y un bolo lejano pasa por delante del rescate y de «volver a publicar».
 - [ ] Pendiente: los 45 días y el «anunciad» a 38 días son criterio propio (se suele anunciar con 4 a 6 semanas); contrastar con apuntes del máster.
+
+## Un bolo lejano que es lo único a la vista
+
+- [x] **«Sin otro evento antes»**: si el bolo más cercano no tiene un estreno fechado antes de él (y, por ser el más cercano, ningún otro bolo público), es lo único que la banda tiene a la vista. Un estreno ya pasado o posterior al bolo no cuenta como otro evento antes.
+- [x] **Empieza antes**: en ese caso la ventana del anuncio pasa de 45 a **60 días** (con un estreno antes del bolo, sigue en 45). El diagnóstico lo dice: «es lo único que tenéis a la vista, así que ya toca anunciarlo y empezar a calentarlo».
+- [x] **Más peso a la promoción**: el adelanto del directo sube por delante de las ideas de comunidad y, con tiempo suficiente, se suma el carrusel «Lo que vais a escuchar». Con poco tiempo (1 hora a la semana) sigue siendo solo «Anunciad el bolo». La comunidad sigue entre las alternativas.
+- [ ] Pendiente: los 60 días y los pesos son criterio propio; contrastar con apuntes del máster.

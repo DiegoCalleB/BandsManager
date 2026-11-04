@@ -19,6 +19,8 @@ export const VENTANA = {
   concierto: 21,
   /** Un bolo entre `concierto` y esto ya toca anunciarlo, aunque un estreno cercano pasa por delante. */
   conciertoLejano: 45,
+  /** Lo mismo si el bolo es lo único que hay a la vista (ningún estreno fechado antes): se empieza antes. */
+  conciertoLejanoSolo: 60,
   lanzamientoAntes: 30,
   lanzamientoDespues: 14,
   sinPublicar: 10,
@@ -62,15 +64,21 @@ export interface Diagnostico {
   dias: number | null;
   /** Solo en modo rescate. */
   rescate?: Rescate;
+  /** Solo en un bolo lejano: es lo único que tienen a la vista (ningún estreno fechado antes de él). */
+  soloEnElHorizonte?: boolean;
 }
 
 const enDias = (n: number) => (n === 0 ? 'hoy' : n === 1 ? 'mañana' : `en ${n} días`);
 
 export function diagnosticar({ hoy, conciertos, lanzamiento, ultimaPublicacion, rescate }: EntradaDiagnostico): Diagnostico {
-  const proximo = conciertos
+  const candidatos = conciertos
     .map((c) => ({ c, dias: diasEntre(hoy, c.fecha) }))
-    .filter(({ dias }) => Number.isFinite(dias) && dias >= 0 && dias <= VENTANA.conciertoLejano)
-    .sort((a, b) => a.dias - b.dias)[0];
+    .filter(({ dias }) => Number.isFinite(dias) && dias >= 0 && dias <= VENTANA.conciertoLejanoSolo)
+    .sort((a, b) => a.dias - b.dias);
+  const masCercano = candidatos[0];
+  // «Lo único a la vista»: el bolo más cercano no tiene otro bolo antes (por ser el primero) ni un estreno fechado antes de él.
+  const solo = !!masCercano && !(lanzamiento && lanzamiento.fecha >= hoy && lanzamiento.fecha <= masCercano.c.fecha);
+  const proximo = masCercano && masCercano.dias <= (solo ? VENTANA.conciertoLejanoSolo : VENTANA.conciertoLejano) ? masCercano : undefined;
   const donde = proximo ? [proximo.c.sala, proximo.c.ciudad].filter(Boolean).join(', ') : '';
   if (proximo && proximo.dias <= VENTANA.concierto) {
     const { c, dias } = proximo;
@@ -87,10 +95,14 @@ export function diagnosticar({ hoy, conciertos, lanzamiento, ultimaPublicacion, 
     }
   }
 
-  // Un bolo todavía lejos (de 3 a 6 semanas) ya toca anunciarlo; pasa por detrás de un estreno inminente y por delante del resto.
+  // Un bolo todavía lejos (de 3 a 6-8 semanas) ya toca anunciarlo; pasa por detrás de un estreno inminente y por delante del resto.
   if (proximo) {
     const { c, dias } = proximo;
-    return { modo: 'concierto', porque: `Tocáis ${enDias(dias)}${donde ? ` en ${donde}` : ''}: ya toca anunciarlo y empezar a calentarlo.`, concierto: c, dias };
+    const lugar = donde ? ` en ${donde}` : '';
+    const porque = solo
+      ? `Tocáis ${enDias(dias)}${lugar}: es lo único que tenéis a la vista, así que ya toca anunciarlo y empezar a calentarlo.`
+      : `Tocáis ${enDias(dias)}${lugar}: ya toca anunciarlo y empezar a calentarlo.`;
+    return { modo: 'concierto', porque, concierto: c, dias, soloEnElHorizonte: solo };
   }
 
   // Si no hay bolo ni estreno y lo que publican no arranca, toca cambiar de rumbo.
