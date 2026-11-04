@@ -79,6 +79,13 @@ const teaserDelBolo = (e: EstrategiaMarketing, base: number): Idea => ({
   porque: 'Los reels llegan a gente que aún no os sigue: es la forma de llenar con caras nuevas.',
 });
 
+/** «Lo que vais a escuchar»: un carrusel que se guarda y vuelve a salir justo antes del bolo. */
+const setlistDelBolo = (base: number): Idea => ({
+  id: 'bolo-setlist', formato: 'carrusel', redes: IG, tipo: 'cultural', base, titulo: 'Lo que vais a escuchar',
+  idea: 'Cinco slides: una canción por slide con una frase de por qué está en el setlist, y la última con fecha y entradas.',
+  porque: 'Un carrusel se guarda, y lo guardado vuelve a salir justo antes del bolo.',
+});
+
 /**
  * Un bolo a más de tres semanas: ya toca anunciarlo (con margen para que se corra la voz), pero sin llenar
  * seis semanas de promoción. Primero el cartel, luego el adelanto, y el resto del plan sigue siendo de comunidad.
@@ -89,11 +96,14 @@ function ideasBoloLejano(d: Diagnostico, e: EstrategiaMarketing, hoy: string): I
   const entradas = c.tieneEntradas === false
     ? 'Aún no tenéis enlace de entradas: añadidlo en el calendario antes de publicar, o el anuncio no lleva a ninguna parte.'
     : 'Con el enlace de entradas en la bio.';
+  // Si es lo único que tienen a la vista, todo el empuje va a él: el adelanto pasa por delante de la comunidad y se suma el carrusel del setlist.
+  const solo = d.soloEnElHorizonte === true;
   return [
     { id: 'bolo-savethedate', formato: 'post', redes: IG, tipo: 'promocional', base: 9, atajo, titulo: 'Anunciad el bolo',
       idea: `El cartel con fecha y sala, para que apunten el día. ${entradas}`,
-      porque: `Faltan ${d.dias} días: anunciarlo con margen deja tiempo para que se corra la voz y se vendan entradas.` },
-    teaserDelBolo(e, 5),
+      porque: `Faltan ${d.dias} días: anunciarlo con margen deja tiempo para que se corra la voz y se vendan entradas.${solo ? ' Es lo único que tenéis a la vista: todo el empuje va a él.' : ''}` },
+    teaserDelBolo(e, solo ? 7 : 5),
+    ...(solo ? [setlistDelBolo(6)] : []),
     ...ideasFondo(e, hoy),
   ];
 }
@@ -108,9 +118,7 @@ function ideasConcierto(d: Diagnostico, e: EstrategiaMarketing, hoy: string): Id
     { id: 'bolo-encuesta', formato: 'stories', redes: IG, tipo: 'participativo', base: 5, atajo, titulo: 'Stories con cuenta atrás',
       idea: 'El cartel, un sticker de cuenta atrás y una encuesta: «¿qué canción no puede faltar?»',
       porque: 'Quien activa la cuenta atrás recibe aviso el día del bolo, y quien vota os verá antes.' },
-    { id: 'bolo-setlist', formato: 'carrusel', redes: IG, tipo: 'cultural', base: 4, titulo: 'Lo que vais a escuchar',
-      idea: 'Cinco slides: una canción por slide con una frase de por qué está en el setlist, y la última con fecha y entradas.',
-      porque: 'Un carrusel se guarda, y lo guardado vuelve a salir justo antes del bolo.' },
+    setlistDelBolo(4),
     storyDelDia,
   ];
   if (hito) {

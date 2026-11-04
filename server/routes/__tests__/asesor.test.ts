@@ -517,6 +517,8 @@ describe('el chat y la hoja de ruta del estreno', () => {
     expect(eventos.find((e: any) => e.tipo === 'hito' && e.texto === 'Primer teaser (reel de 10 segundos) · «Nuevo single»')).toBeTruthy();
     expect(eventos.find((e: any) => e.tipo === 'hito' && e.texto.startsWith('Stories con cuenta atrás'))).toBeTruthy();
     expect(eventos.filter((e: any) => e.tipo === 'lanzamiento')).toHaveLength(1);
+  });
+});
 
 describe('un bolo todavía lejano', () => {
   beforeEach(() => {
@@ -528,7 +530,7 @@ describe('un bolo todavía lejano', () => {
   it('a 38 días ya dice que hay que anunciarlo, en vez de «hacer comunidad»', async () => {
     fake.tablas.concerts = [bolo()];
     const { diagnostico, opciones } = (await llamar('get', '/asesor/hoy')).body;
-    expect(diagnostico).toMatchObject({ modo: 'concierto', dias: 38, porque: 'Tocáis en 38 días en Revi Live, Madrid: ya toca anunciarlo y empezar a calentarlo.' });
+    expect(diagnostico).toMatchObject({ modo: 'concierto', dias: 38, porque: 'Tocáis en 38 días en Revi Live, Madrid: es lo único que tenéis a la vista, así que ya toca anunciarlo y empezar a calentarlo.', soloEnElHorizonte: true });
     expect(opciones.recomendadas[0]).toMatchObject({ id: 'bolo-savethedate', atajo: { vista: 'carteleria', concertId: 'conc-1' } });
     expect(opciones.recomendadas[0].idea).toContain('Aún no tenéis enlace de entradas'); // el bolo no tiene entradas enlazadas
   });
@@ -547,8 +549,20 @@ describe('un bolo todavía lejano', () => {
     expect((await llamar('get', '/asesor/hoy')).body.diagnostico.modo).toBe('fondo');
   });
 
-  it('un bolo a más de 45 días no cambia el plan', async () => {
-    fake.tablas.concerts = [bolo({ fecha: '2026-12-31' })];
+  it('si es lo único a la vista, el anuncio llega a 60 días y con más tiempo se añade el setlist', async () => {
+    fake.tablas.concerts = [bolo({ fecha: '2027-01-02' })]; // 59 días
+    await llamar('put', '/asesor/estrategia', { body: { horasSemana: 6 } });
+    const { diagnostico, opciones } = (await llamar('get', '/asesor/hoy')).body;
+    expect(diagnostico).toMatchObject({ modo: 'concierto', dias: 59, soloEnElHorizonte: true });
+    expect(opciones.recomendadas.map((t: { id: string }) => t.id)).toEqual(['bolo-savethedate', 'bolo-teaser', 'bolo-setlist']);
+  });
+
+  it('con un estreno fechado antes del bolo, el límite sigue siendo 45 días; y a más de 60 no cambia nada', async () => {
+    await llamar('put', '/asesor/estrategia', { body: { lanzamiento: { titulo: 'Furgo', fecha: '2026-12-20' } } });
+    fake.tablas.concerts = [bolo({ fecha: '2026-12-30' })]; // 56 días, con un estreno antes
+    expect((await llamar('get', '/asesor/hoy')).body.diagnostico.modo).toBe('fondo');
+    await llamar('put', '/asesor/estrategia', { body: { lanzamiento: null } });
+    fake.tablas.concerts = [bolo({ fecha: '2027-01-20' })]; // 77 días
     expect((await llamar('get', '/asesor/hoy')).body.diagnostico.modo).toBe('fondo');
   });
 });
