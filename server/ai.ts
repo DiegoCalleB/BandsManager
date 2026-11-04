@@ -55,9 +55,7 @@ export function getDeepSeekKey(): string | null {
 export const AI_PRICING_TABLE: Record<string, { inputPer1M: number; outputPer1M: number; name: string }> = {
   gemini: {
     name: "Gemini 3.8 Flash",
-    // Precio introductorio publicado por Google (hasta fin de 2026). Revisar al cambiar el año:
-    // si sube, el ledger subestimaría el coste real.
-    inputPer1M: 0.75, // $0.75 / 1M tokens
+    inputPer1M: 0.75, // $0.75 / 1M tokens: precio introductorio de Google hasta fin de 2026, revisar en enero
     outputPer1M: 3.75  // $3.75 / 1M tokens
   },
   deepseek: {
