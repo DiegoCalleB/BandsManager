@@ -453,6 +453,9 @@ ${lead.pitch_generado ? `\n(Versión previa de referencia: "${sanitizeExternalTe
       });
       if (unifiedRes && unifiedRes.text) {
         newPitchText = unifiedRes.text.trim();
+        // generateUnifiedAI cae al generador local de plantillas (provider "local_agent") cuando
+        // Gemini y DeepSeek fallan: ese texto NO lo ha escrito la IA y el cliente debe saberlo.
+        isSimulated = unifiedRes.provider === "local_agent";
       }
     } catch (aiErrCapturado) {
       const aiErr = comoErrorCapturado(aiErrCapturado);
