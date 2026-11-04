@@ -517,6 +517,39 @@ describe('el chat y la hoja de ruta del estreno', () => {
     expect(eventos.find((e: any) => e.tipo === 'hito' && e.texto === 'Primer teaser (reel de 10 segundos) · «Nuevo single»')).toBeTruthy();
     expect(eventos.find((e: any) => e.tipo === 'hito' && e.texto.startsWith('Stories con cuenta atrás'))).toBeTruthy();
     expect(eventos.filter((e: any) => e.tipo === 'lanzamiento')).toHaveLength(1);
+
+describe('un bolo todavía lejano', () => {
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date('2026-11-04T10:00:00Z')); // el caso real: bolo el 12 de diciembre, 38 días
+  });
+  const bolo = (extra: Record<string, unknown> = {}) => ({ id: 'conc-1', band_id: 'band-a', fecha: '2026-12-12', sala: 'Revi Live', ciudad: 'Madrid', tipo: 'propio', is_posible: false, ...extra });
+
+  it('a 38 días ya dice que hay que anunciarlo, en vez de «hacer comunidad»', async () => {
+    fake.tablas.concerts = [bolo()];
+    const { diagnostico, opciones } = (await llamar('get', '/asesor/hoy')).body;
+    expect(diagnostico).toMatchObject({ modo: 'concierto', dias: 38, porque: 'Tocáis en 38 días en Revi Live, Madrid: ya toca anunciarlo y empezar a calentarlo.' });
+    expect(opciones.recomendadas[0]).toMatchObject({ id: 'bolo-savethedate', atajo: { vista: 'carteleria', concertId: 'conc-1' } });
+    expect(opciones.recomendadas[0].idea).toContain('Aún no tenéis enlace de entradas'); // el bolo no tiene entradas enlazadas
+  });
+
+  it('con entradas enlazadas lo dice distinto, y la idea se puede marcar como hecha', async () => {
+    fake.tablas.concerts = [bolo({ entradas_url: 'https://entradas.test/c1' })];
+    const { opciones } = (await llamar('get', '/asesor/hoy')).body;
+    expect(opciones.recomendadas[0].idea).toContain('Con el enlace de entradas en la bio.');
+    const res = await llamar('post', '/asesor/accion', { body: { tarjetaId: 'bolo-savethedate', accion: 'hecho' } });
+    expect(res.body).toEqual({ ok: true });
+    expect(fake.tablas.asesor_acciones[0]).toMatchObject({ tarjeta_id: 'bolo-savethedate', formato: 'post', accion: 'hecho' });
+  });
+
+  it('los bolos privados, sin confirmar o de otra banda siguen sin contar', async () => {
+    fake.tablas.concerts = [bolo({ tipo: 'privado' }), bolo({ id: 'x', is_posible: true }), bolo({ id: 'y', band_id: 'band-b' })];
+    expect((await llamar('get', '/asesor/hoy')).body.diagnostico.modo).toBe('fondo');
+  });
+
+  it('un bolo a más de 45 días no cambia el plan', async () => {
+    fake.tablas.concerts = [bolo({ fecha: '2026-12-31' })];
+    expect((await llamar('get', '/asesor/hoy')).body.diagnostico.modo).toBe('fondo');
   });
 });
 

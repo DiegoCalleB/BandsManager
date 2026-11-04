@@ -61,6 +61,7 @@ Exporta: GEMINI_MODEL, TIMEOUT_IA_MS, TIMEOUT_IA_LARGO_MS, getAiClient, getDeepS
 - [[server_services_imagenCartel|server/services/imagenCartel.ts]] *(from #service)*
 - [[server_services_juezCartel|server/services/juezCartel.ts]] *(from #service)*
 - [[server_services_multiSourceVenueDiscoveryService|server/services/multiSourceVenueDiscoveryService.ts]] *(from #service)*
+- [[server_services_ordenCartel|server/services/ordenCartel.ts]] *(from #service)*
 - [[server_services_pitchJudge|server/services/pitchJudge.ts]] *(from #service)*
 - [[server_services_pitchVectorStore|server/services/pitchVectorStore.ts]] *(from #service)*
 - [[server_services_publicCulturalEventsRadarService|server/services/publicCulturalEventsRadarService.ts]] *(from #service)*
@@ -81,7 +82,9 @@ Exporta: GEMINI_MODEL, TIMEOUT_IA_MS, TIMEOUT_IA_LARGO_MS, getAiClient, getDeepS
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/__tests__/aiPricing.test.ts`
 - `server/__tests__/ai_fallback.test.ts`
+- `server/services/__tests__/pitchEngineRegenerate.test.ts`
 - `server/utils/__tests__/enrichCoversWithoutAudio.test.ts`
 - `server/utils/__tests__/textoDeParteIA.test.ts`
 

@@ -7,7 +7,7 @@
  * nunca desaparece del todo (se queda en "otras ideas"), y los hitos de un bolo no se mueven.
  */
 import { diasEntre, planificarCampana } from '../campanaConcierto';
-import type { Diagnostico } from './diagnostico';
+import { VENTANA, type Diagnostico } from './diagnostico';
 import type { EstrategiaMarketing, HorasSemana } from './estrategia';
 import type { Formato, Red, TipoContenido } from './reglasFormato';
 import { FORMATO_OPUESTO } from './rescate';
@@ -72,14 +72,39 @@ const storyDelDia: Idea = {
   porque: 'Una story al día os mantiene arriba en la barra de quien ya os sigue.',
 };
 
+/** El adelanto del directo: sirve igual a tres semanas del bolo que a seis, solo cambia cuánto pesa. */
+const teaserDelBolo = (e: EstrategiaMarketing, base: number): Idea => ({
+  id: 'bolo-teaser', formato: 'reel', redes: AMBAS, tipo: 'promocional', base, titulo: 'Un adelanto del directo',
+  idea: `15 segundos de una canción que tocaréis, empezando por el estribillo. ${comoGrabar(e)}`,
+  porque: 'Los reels llegan a gente que aún no os sigue: es la forma de llenar con caras nuevas.',
+});
+
+/**
+ * Un bolo a más de tres semanas: ya toca anunciarlo (con margen para que se corra la voz), pero sin llenar
+ * seis semanas de promoción. Primero el cartel, luego el adelanto, y el resto del plan sigue siendo de comunidad.
+ */
+function ideasBoloLejano(d: Diagnostico, e: EstrategiaMarketing, hoy: string): Idea[] {
+  const c = d.concierto!;
+  const atajo = { vista: 'carteleria' as const, concertId: c.id };
+  const entradas = c.tieneEntradas === false
+    ? 'Aún no tenéis enlace de entradas: añadidlo en el calendario antes de publicar, o el anuncio no lleva a ninguna parte.'
+    : 'Con el enlace de entradas en la bio.';
+  return [
+    { id: 'bolo-savethedate', formato: 'post', redes: IG, tipo: 'promocional', base: 9, atajo, titulo: 'Anunciad el bolo',
+      idea: `El cartel con fecha y sala, para que apunten el día. ${entradas}`,
+      porque: `Faltan ${d.dias} días: anunciarlo con margen deja tiempo para que se corra la voz y se vendan entradas.` },
+    teaserDelBolo(e, 5),
+    ...ideasFondo(e, hoy),
+  ];
+}
+
 function ideasConcierto(d: Diagnostico, e: EstrategiaMarketing, hoy: string): Idea[] {
+  if ((d.dias ?? 0) > VENTANA.concierto) return ideasBoloLejano(d, e, hoy);
   const c = d.concierto!;
   const atajo = { vista: 'carteleria' as const, concertId: c.id };
   const hito = planificarCampana(c.fecha, hoy).find((h) => h.estado === 'hoy');
   const ideas: Idea[] = [
-    { id: 'bolo-teaser', formato: 'reel', redes: AMBAS, tipo: 'promocional', base: 6, titulo: 'Un adelanto del directo',
-      idea: `15 segundos de una canción que tocaréis, empezando por el estribillo. ${comoGrabar(e)}`,
-      porque: 'Los reels llegan a gente que aún no os sigue: es la forma de llenar con caras nuevas.' },
+    teaserDelBolo(e, 6),
     { id: 'bolo-encuesta', formato: 'stories', redes: IG, tipo: 'participativo', base: 5, atajo, titulo: 'Stories con cuenta atrás',
       idea: 'El cartel, un sticker de cuenta atrás y una encuesta: «¿qué canción no puede faltar?»',
       porque: 'Quien activa la cuenta atrás recibe aviso el día del bolo, y quien vota os verá antes.' },

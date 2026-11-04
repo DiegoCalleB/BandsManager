@@ -10,6 +10,7 @@ import { dbGetEpkConfig, dbGetRegisteredBandById } from '../db.js';
 import { dbGetConcerts } from '../db/concerts.js';
 import { dbAccionesDesde, dbResultadosRedDesde, dbGetEstrategiaMarketing, dbGuardarAccion, dbGuardarResultado, dbResultadosDesde, dbUltimaPublicacion } from '../db/asesorMarketing.js';
 import { esConciertoPublicable, hoyIso } from '../utils/paginaConcierto.js';
+import { urlHttpSegura } from '../utils/enlacesCortos.js';
 import { sanitizeExternalText } from '../utils/promptSafety.js';
 import { buildBandContextBlock, emptyBandProfile, loadBandProfile, type BandProfile } from '../utils/bandProfile.js';
 import { fechaCorta, sumarDias } from '../../src/utils/campanaConcierto.js';
@@ -77,7 +78,7 @@ async function contextoDeHoy(bandId: string, ahora: Date): Promise<Contexto | nu
   const estrategia = guardada ?? ESTRATEGIA_INICIAL;
   const publicables: ConciertoParaAsesor[] = conciertos
     .filter(esConciertoPublicable)
-    .map((c) => ({ id: String(c.id), fecha: String(c.fecha).slice(0, 10), sala: String(c.sala || ''), ciudad: String(c.ciudad || '') }));
+    .map((c) => ({ id: String(c.id), fecha: String(c.fecha).slice(0, 10), sala: String(c.sala || ''), ciudad: String(c.ciudad || ''), tieneEntradas: !!urlHttpSegura(c.entradas_url || c.entradasUrl) }));
   const diagnostico = diagnosticar({ hoy, conciertos: publicables, lanzamiento: estrategia.lanzamiento, ultimaPublicacion, rescate: detectarCaida(resultados, hoy) });
   return { hoy, diagnostico, conciertos: publicables, resultados, estrategia, tieneEstrategia: guardada !== null };
 }

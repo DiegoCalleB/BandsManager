@@ -14,7 +14,8 @@ import {
   analizarAudioConIris,
   detectarTonalidadDesdeAudio,
 } from "../utils/audioKey.js";
-
+import { medirBpmPreciso } from "../utils/bpmDeAudio.js";
+import { guardarCancion, variantesDeBanda } from "./guardarCancion.js";
 import { INITIAL_SONGS, INITIAL_SETLISTS } from "../../src/db_seed.js";
 import { pistasDeIdeas, metaStemsDeIdeas } from "../../src/utils/irisTracks.js";
 import type { AnalisisAcordes, AudioTrack, SongAudioIdea, StemsMeta } from "../../src/types.js";
@@ -95,7 +96,7 @@ export async function analizarYGuardarDinamicaCancion(
   // Independiente de la curva de energía (usa su propia extracción de PCM): un audio puede fallar el análisis de
   // dinámica y aun así ser decodificable para BPM/tonalidad, así que no se condiciona a `audioAnalizable`.
   const {
-    bpm: bpmDetectado,
+    bpm: bpmPorAtaques,
     tonalidad: tonalidadDetectada,
     onsetDensity,
   } = await analizarAudioConIris(audioUrl, { timeoutMs: 90_000 }).catch(
@@ -107,6 +108,8 @@ export async function analizarYGuardarDinamicaCancion(
       return { bpm: null, tonalidad: null, onsetDensity: null };
     },
   );
+  // El BPM sale de los pulsos de la red (~95 % de aciertos); sin ella, del detector por ataques (~55 %).
+  const bpmDetectado = (await medirBpmPreciso(audioUrl, { timeoutMs: 90_000, maxDuracionSeg: 360 }).catch(() => null)) ?? bpmPorAtaques;
   console.log(
     "[Repertorio] Análisis de audio de %s: dinámica=%s bpm=%s tonalidad=%s densidadOnsets=%s", songId, audioAnalizable ? "ok" : "no analizable", bpmDetectado ?? "-", tonalidadDetectada?.tonalidad ?? "-", onsetDensity?.toFixed(2) ?? "-",
   );
@@ -130,11 +133,10 @@ export async function analizarYGuardarDinamicaCancion(
     cambios.energia_variacion = variacion;
     cambios.energia_variacion_calculada_en = ahora;
   }
-  // Independiente de audioAnalizable: el BPM ya no sale de la curva de energía, así que puede
-  // detectarse aunque esa curva concreta haya fallado (y viceversa).
+  // Independiente de audioAnalizable: el BPM no sale de la curva de energía (puede detectarse aunque falle).
   if (bpmDetectado !== null) {
     cambios.energia_bpm_detectado = bpmDetectado; // sigue alimentando el recalibrado interno de energía
-    cambios.bpm = bpmDetectado;
+    cambios.bpm = Math.round(bpmDetectado); // songs.bpm es entero; energia_bpm_detectado conserva el decimal
     cambios.bpm_detectado_en = ahora;
   }
   if (onsetDensity !== null) {
@@ -145,9 +147,8 @@ export async function analizarYGuardarDinamicaCancion(
     cambios.tonalidad_detectada_en = ahora;
   }
 
-  // Si no hay NADA que guardar (ni dinámica ni BPM ni tonalidad), no tocar la fila: así una
-  // repesca manual sobre una canción sin análisis posible puede reintentarse más tarde en vez
-  // de quedar marcada como "analizada" con un 0 falso.
+  // Si no hay NADA que guardar (ni dinámica ni BPM ni tonalidad), no tocar la fila: la repesca podrá reintentarse
+  // más tarde en vez de quedar marcada como "analizada" con un 0 falso.
   if (Object.keys(cambios).length === 0) {
     return {
       variacion: 0,
@@ -187,7 +188,7 @@ export async function analizarYGuardarDinamicaCancion(
   return {
     variacion,
     audioAnalizable,
-    bpmDetectado,
+    bpmDetectado: bpmDetectado === null ? null : Math.round(bpmDetectado), // lo mismo que se guarda en songs.bpm (entero)
     tonalidadDetectada: tonalidadDetectada?.tonalidad ?? null,
   };
 }
@@ -724,6 +725,8 @@ export async function dbUpsertSong(
     id: string;
     band_id: string;
     audio_principal_url?: string;
+    bpm?: number;
+    tonalidad?: string;
     audio_ideas?: SongAudioIdea[] | string;
     notas_miembros?: FilaSong["notas_miembros"];
     notas_por_miembro?: FilaSong["notas_por_miembro"];
@@ -736,7 +739,7 @@ export async function dbUpsertSong(
     const { data } = await sb
       .from("songs")
       .select(
-        "id, band_id, audio_principal_url, audio_ideas, notas_miembros, notas_por_miembro, guia_sustituto",
+        "id, band_id, audio_principal_url, bpm, tonalidad, audio_ideas, notas_miembros, notas_por_miembro, guia_sustituto",
       )
       .eq("id", finalSongId)
       .maybeSingle();
@@ -805,10 +808,9 @@ export async function dbUpsertSong(
   }
 
   const nowIso = new Date().toISOString();
-  // El guardado de una canción es DELETE + INSERT: una columna que no esté en el payload se
-  // pierde. Si el cliente no trae el análisis de acordes, se rescata el que ya tenía la fila.
-  // La lectura es aparte y tolerante: si la migración aún no se ha ejecutado la columna no
-  // existe, la consulta falla y simplemente no hay nada que preservar.
+  // Si el cliente trae un análisis de acordes a medias (sin correcciones, p. ej.), se fusiona con el guardado.
+  // La lectura es aparte y tolerante: si la migración aún no se ha ejecutado la columna no existe, la
+  // consulta falla y simplemente no hay nada que preservar.
   let analisisAcordesFinal: AnalisisAcordes | undefined = song.analisisAcordes ?? song.analisis_acordes;
   if (existing && (analisisAcordesFinal === undefined || (analisisAcordesFinal && typeof analisisAcordesFinal === "object"))) {
     try {
@@ -843,6 +845,9 @@ export async function dbUpsertSong(
     ),
     tonalidad: normalizarTonalidad(song.tonalidad) || TONALIDAD_POR_DEFECTO,
     bpm: Number(song.bpm || 120),
+    // Un BPM o una tonalidad cambiados a mano dejan de ser «detectados automáticamente» (antes lo borraba, de rebote, el delete + insert).
+    ...(existing && Number(existing.bpm) !== Number(song.bpm || 120) ? { bpm_detectado_en: null } : {}),
+    ...(existing && normalizarTonalidad(existing.tonalidad) !== (normalizarTonalidad(song.tonalidad) || TONALIDAD_POR_DEFECTO) ? { tonalidad_detectada_en: null } : {}),
     afinacion: song.afinacion || "Estándar E",
     album_disco: preferClearableString(song.albumDisco, song.album_disco) || song.album || "",
     orden_album: song.ordenAlbum ?? song.orden_album ?? null,
@@ -943,60 +948,8 @@ export async function dbUpsertSong(
     updated_at: nowIso,
   };
 
-  // En PostgreSQL/Supabase, para asegurar que la actualización persista todas las columnas
-  // (incluyendo audio_ideas con pistas y stems aislados) sin que triggers de auditoría cancelen
-  // el UPDATE silenciosamente devolviendo OLD: si la fila ya existía, limpiamos y reinsertamos
-  // conservando exactamente el mismo id y created_at.
-  if (existing) {
-    try {
-      await sb.from("songs").delete().eq("id", payload.id);
-    } catch (err) { console.warn("[Repertorio] No se pudo borrar la fila previa del tema antes de reinsertar:", err); }
-  }
-
-  let { data, error } = await sb
-    .from("songs")
-    .insert(payload)
-    .select()
-    .single();
-  if (error && error.code === "23505") {
-    // Si por concurrencia la fila seguía existiendo, forzar delete y reinsertar
-    try {
-      await sb.from("songs").delete().eq("id", payload.id);
-    } catch (err) { console.warn("[Repertorio] No se pudo borrar la fila del tema tras el conflicto:", err); }
-    const retryIns = await sb.from("songs").insert(payload).select().single();
-    data = retryIns.data;
-    error = retryIns.error;
-  }
-  if (
-    error &&
-    error.message &&
-    (error.message.toLowerCase().includes("notas_miembros") ||
-      error.message.toLowerCase().includes("notas_por_miembro") ||
-      error.message.toLowerCase().includes("notas_repertorio") ||
-      error.message.toLowerCase().includes("energia_variacion"))
-  ) {
-    const fallbackPayload = { ...payload };
-    delete fallbackPayload.notas_miembros;
-    delete fallbackPayload.notas_por_miembro;
-    delete fallbackPayload.notas_repertorio;
-    delete fallbackPayload.energia_variacion;
-    delete fallbackPayload.energia_variacion_calculada_en;
-    try {
-      await sb.from("songs").delete().eq("id", fallbackPayload.id);
-    } catch (err) { console.warn("[Repertorio] No se pudo borrar la fila del tema antes del guardado reducido:", err); }
-    const retry = await sb
-      .from("songs")
-      .insert(fallbackPayload)
-      .select()
-      .single();
-    if (retry.error)
-      throw new Error(
-        `Supabase Error (insert song fallback): ${retry.error.message}`,
-      );
-    data = retry.data;
-  } else if (error) {
-    throw new Error(`Supabase Error (upsert song): ${error.message}`);
-  }
+  // Una sola escritura atómica, sin borrar nunca (ver guardarCancion.ts).
+  const data = await guardarCancion(sb, payload, variantesDeBanda(targetBandId, existing?.band_id));
 
   // Detección automática de dinámica interna (partes lentas/rápidas del tema): si el audio
   // principal es nuevo o ha cambiado, se analiza solo, sin que el usuario tenga que hacer nada.

@@ -23,6 +23,7 @@ Exporta: useEditorCartel, EditorCartel.
 - [[src_components_cartel_hooks_useEnlaceCartel|src/components/cartel/hooks/useEnlaceCartel.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_cartel_hooks_useHistorialCartel|src/components/cartel/hooks/useHistorialCartel.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_cartel_hooks_useIdeaCartel|src/components/cartel/hooks/useIdeaCartel.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_cartel_hooks_useOrdenCartel|src/components/cartel/hooks/useOrdenCartel.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_adn|src/utils/cartel/adn.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_ajustesFinos|src/utils/cartel/ajustesFinos.ts]] *(Layer: #service, Domain: #system)*

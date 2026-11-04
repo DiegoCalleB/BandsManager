@@ -34,6 +34,7 @@ Login (email o Google), sesión por cookie y multi-banda: de quién es cada peti
 - [[server_routes_users|server/routes/users.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_users_adminInicial|server/routes/users/adminInicial.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_users_bandasDisponibles|server/routes/users/bandasDisponibles.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_mezclaUsuarioBd|server/routes/users/mezclaUsuarioBd.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_users_permisosCuenta|server/routes/users/permisosCuenta.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_users_rutasBandas|server/routes/users/rutasBandas.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_users_rutasGoogle|server/routes/users/rutasGoogle.ts]] *(Layer: #route, Domain: #system)*

@@ -2,7 +2,7 @@
 
 > Generado automáticamente por `scripts/generate-openapi.mjs` a partir del código. No se edita a mano: ejecuta `npm run docs:api`.
 
-**439 rutas HTTP** (388 declaraciones de handler; el resto son alias) en 31 dominios. Contrato máquina-legible: [`openapi.json`](./openapi.json) (OpenAPI 3.1). Visor interactivo: [`index.html`](./index.html) (hay que abrirlo en un navegador; GitHub no lo renderiza). Decisión de diseño: [ADR 0012](../adr/0012-contrato-api-openapi-por-ast.md).
+**445 rutas HTTP** (394 declaraciones de handler; el resto son alias) en 31 dominios. Contrato máquina-legible: [`openapi.json`](./openapi.json) (OpenAPI 3.1). Visor interactivo: [`index.html`](./index.html) (hay que abrirlo en un navegador; GitHub no lo renderiza). Decisión de diseño: [ADR 0012](../adr/0012-contrato-api-openapi-por-ast.md).
 
 ## Cómo leerla
 
@@ -12,11 +12,12 @@
 
 | Acceso | Rutas |
 |---|---|
-| Sesión | 351 |
+| Sesión | 352 |
 | Sesión (comprobada en el handler) | 6 |
 | Sesión opcional | 3 |
 | Firma o secreto | 7 |
-| Pública | 72 |
+| Pública | 71 |
+| No determinado | 6 |
 
 ## Rutas sin sesión de middleware
 
@@ -32,13 +33,13 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `POST` | `/api/auth/activate-member` | Sesión opcional | loginRateLimiter |  | [`server/routes/users/rutasInvitacion.ts:73`](../../server/routes/users/rutasInvitacion.ts#L73) |
 | `POST` | `/api/auth/check-invitation` | Pública | loginRateLimiter |  | [`server/routes/users/rutasInvitacion.ts:17`](../../server/routes/users/rutasInvitacion.ts#L17) |
 | `POST` | `/api/auth/google` | Sesión (comprobada en el handler) | loginRateLimiter |  | [`server/routes/users/rutasGoogle.ts:20`](../../server/routes/users/rutasGoogle.ts#L20) |
-| `POST` | `/api/auth/login` | Sesión (comprobada en el handler) | loginRateLimiter | ★ | [`server/routes/users/rutasLogin.ts:16`](../../server/routes/users/rutasLogin.ts#L16) |
-| `POST` | `/api/auth/logout` | Sesión opcional | — |  | [`server/routes/users/rutasSesion.ts:301`](../../server/routes/users/rutasSesion.ts#L301) |
-| `GET` | `/api/auth/me` | Sesión (comprobada en el handler) | — |  | [`server/routes/users/rutasSesion.ts:15`](../../server/routes/users/rutasSesion.ts#L15) |
+| `POST` | `/api/auth/login` | Sesión (comprobada en el handler) | loginRateLimiter | ★ | [`server/routes/users/rutasLogin.ts:17`](../../server/routes/users/rutasLogin.ts#L17) |
+| `POST` | `/api/auth/logout` | Sesión opcional | — |  | [`server/routes/users/rutasSesion.ts:298`](../../server/routes/users/rutasSesion.ts#L298) |
+| `GET` | `/api/auth/me` | Sesión (comprobada en el handler) | — |  | [`server/routes/users/rutasSesion.ts:16`](../../server/routes/users/rutasSesion.ts#L16) |
 | `POST` | `/api/auth/register` | Sesión opcional | registroRateLimiter |  | [`server/routes/users/rutasRegistro.ts:20`](../../server/routes/users/rutasRegistro.ts#L20) |
 | `POST` | `/api/auth/reset-password/confirm` | Firma o secreto | loginRateLimiter |  | [`server/routes/users/rutasRecuperacion.ts:204`](../../server/routes/users/rutasRecuperacion.ts#L204) |
 | `POST` | `/api/auth/reset-password/request` | Pública | loginRateLimiter |  | [`server/routes/users/rutasRecuperacion.ts:17`](../../server/routes/users/rutasRecuperacion.ts#L17) |
-| `POST` | `/api/auth/switch-band` | Sesión (comprobada en el handler) | — |  | [`server/routes/users/rutasSesion.ts:137`](../../server/routes/users/rutasSesion.ts#L137) |
+| `POST` | `/api/auth/switch-band` | Sesión (comprobada en el handler) | — |  | [`server/routes/users/rutasSesion.ts:134`](../../server/routes/users/rutasSesion.ts#L134) |
 | `POST` | `/api/billing/webhook` | Firma o secreto | — |  | [`server/routes/billing.ts:987`](../../server/routes/billing.ts#L987) |
 | `GET` | `/api/calendar.ics` | Firma o secreto | — |  | [`server/routes/concerts.ts:429`](../../server/routes/concerts.ts#L429) |
 | `GET` | `/api/download-excel` | Sesión (comprobada en el handler) | — |  | [`server.ts:269`](../../server.ts#L269) |
@@ -78,7 +79,12 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `GET` | `/directories/venues/{comunidad}/{ciudad}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:90`](../../server/routes/paginasSeo.ts#L90) |
 | `GET` | `/directories/venues/{comunidad}/{ciudad}/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:91`](../../server/routes/paginasSeo.ts#L91) |
 | `GET` | `/e/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:73`](../../server/routes/paginaConcierto.ts#L73) |
-| `GET` | `/ejercicio_youtube_crm` | Pública | publicoRateLimiter |  | [`server/routes/ejercicioYoutube.ts:12`](../../server/routes/ejercicioYoutube.ts#L12) |
+| `GET` | `/ejercicio_branding` | No determinado | — |  | [`server/routes/masterMarketingDigital.ts:22`](../../server/routes/masterMarketingDigital.ts#L22) |
+| `GET` | `/ejercicio_branding.html` | No determinado | — |  | [`server/routes/masterMarketingDigital.ts:23`](../../server/routes/masterMarketingDigital.ts#L23) |
+| `GET` | `/ejercicio_facebook` | No determinado | — |  | [`server/routes/masterMarketingDigital.ts:24`](../../server/routes/masterMarketingDigital.ts#L24) |
+| `GET` | `/ejercicio_facebook.html` | No determinado | — |  | [`server/routes/masterMarketingDigital.ts:25`](../../server/routes/masterMarketingDigital.ts#L25) |
+| `GET` | `/ejercicio_youtube_crm` | No determinado | — |  | [`server/routes/masterMarketingDigital.ts:20`](../../server/routes/masterMarketingDigital.ts#L20) |
+| `GET` | `/ejercicio_youtube_crm.html` | No determinado | — |  | [`server/routes/masterMarketingDigital.ts:21`](../../server/routes/masterMarketingDigital.ts#L21) |
 | `GET` | `/en/directories` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:81`](../../server/routes/paginasSeo.ts#L81) |
 | `GET` | `/en/directories/festivals` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:84`](../../server/routes/paginasSeo.ts#L84) |
 | `GET` | `/en/directories/festivals/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:85`](../../server/routes/paginasSeo.ts#L85) |
@@ -90,7 +96,7 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `GET` | `/en/festivals/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:104`](../../server/routes/paginasSeo.ts#L104) |
 | `GET` | `/en/guides` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:64`](../../server/routes/paginasSeo.ts#L64) |
 | `GET` | `/en/guides/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:65`](../../server/routes/paginasSeo.ts#L65) |
-| `GET` | `/en/llms.txt` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:212`](../../server/routes/paginaConcierto.ts#L212) |
+| `GET` | `/en/llms.txt` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:213`](../../server/routes/paginaConcierto.ts#L213) |
 | `GET` | `/en/technical-rider-template` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:69`](../../server/routes/paginaConcierto.ts#L69) |
 | `GET` | `/festivales` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:101`](../../server/routes/paginasSeo.ts#L101) |
 | `GET` | `/festivales/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:102`](../../server/routes/paginasSeo.ts#L102) |
@@ -102,14 +108,14 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `GET` | `/listados` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:98`](../../server/routes/paginasSeo.ts#L98) |
 | `GET` | `/listados/festivales` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:99`](../../server/routes/paginasSeo.ts#L99) |
 | `GET` | `/listados/festivales/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:100`](../../server/routes/paginasSeo.ts#L100) |
-| `GET` | `/llms.txt` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:211`](../../server/routes/paginaConcierto.ts#L211) |
+| `GET` | `/llms.txt` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:212`](../../server/routes/paginaConcierto.ts#L212) |
 | `GET` | `/netflix` | Pública | publicoRateLimiter |  | [`server/routes/presentacionTfm.ts:25`](../../server/routes/presentacionTfm.ts#L25) |
 | `GET` | `/plantilla-rider-tecnico` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:68`](../../server/routes/paginaConcierto.ts#L68) |
 | `GET` | `/presentacion_tfm` | Pública | publicoRateLimiter |  | [`server/routes/presentacionTfm.ts:24`](../../server/routes/presentacionTfm.ts#L24) |
 | `GET` | `/privacy` | Pública | — |  | [`server.ts:182`](../../server.ts#L182) |
 | `GET` | `/r/{code}` | Pública | publicoRateLimiter |  | [`server/routes/enlacesCortos.ts:49`](../../server/routes/enlacesCortos.ts#L49) |
-| `GET` | `/robots.txt` | Pública | — |  | [`server/routes/paginaConcierto.ts:189`](../../server/routes/paginaConcierto.ts#L189) |
-| `GET` | `/sitemap.xml` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:171`](../../server/routes/paginaConcierto.ts#L171) |
+| `GET` | `/robots.txt` | Pública | — |  | [`server/routes/paginaConcierto.ts:190`](../../server/routes/paginaConcierto.ts#L190) |
+| `GET` | `/sitemap.xml` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:172`](../../server/routes/paginaConcierto.ts#L172) |
 | `GET` | `/technical-rider-template` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:64`](../../server/routes/paginaConcierto.ts#L64) |
 | `GET` | `/terms` | Pública | — |  | [`server.ts:224`](../../server.ts#L224) |
 
@@ -250,19 +256,20 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `POST` | `/api/asesor/presencia` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/asesor.ts:122`](../../server/routes/asesor.ts#L122) |
 | `POST` | `/api/asesor/resultado` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/asesor.ts:70`](../../server/routes/asesor.ts#L70) |
 | `POST` | `/api/campana-concierto/redactar` | Sesión | iaRateLimiter |  | [`server/routes/campanaConcierto.ts:108`](../../server/routes/campanaConcierto.ts#L108) |
-| `GET` | `/api/cartel/adn` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:426`](../../server/routes/cartelria.ts#L426) |
-| `PUT` | `/api/cartel/adn` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:437`](../../server/routes/cartelria.ts#L437) |
-| `POST` | `/api/cartel/brief` | Sesión | iaRateLimiter |  | [`server/routes/cartelria.ts:407`](../../server/routes/cartelria.ts#L407) |
-| `POST` | `/api/cartel/fondo` | Sesión | imagenRateLimiter |  | [`server/routes/cartelria.ts:122`](../../server/routes/cartelria.ts#L122) |
-| `POST` | `/api/cartel/idea` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:382`](../../server/routes/cartelria.ts#L382) |
-| `DELETE` | `/api/cartel/idea` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:397`](../../server/routes/cartelria.ts#L397) |
-| `POST` | `/api/cartel/referencias` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:453`](../../server/routes/cartelria.ts#L453) |
-| `POST` | `/api/cartel/retocar` | Sesión | imagenRateLimiter |  | [`server/routes/cartelria.ts:203`](../../server/routes/cartelria.ts#L203) |
-| `PUT` | `/api/cartel/{concertId}/config` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:266`](../../server/routes/cartelria.ts#L266) |
-| `POST` | `/api/cartel/{concertId}/foto` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:303`](../../server/routes/cartelria.ts#L303) |
-| `PUT` | `/api/cartel/{concertId}/imagen` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:281`](../../server/routes/cartelria.ts#L281) |
-| `POST` | `/api/cartel/{concertId}/logo` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:326`](../../server/routes/cartelria.ts#L326) |
-| `DELETE` | `/api/cartel/{concertId}/logo` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:360`](../../server/routes/cartelria.ts#L360) |
+| `GET` | `/api/cartel/adn` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:445`](../../server/routes/cartelria.ts#L445) |
+| `PUT` | `/api/cartel/adn` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:456`](../../server/routes/cartelria.ts#L456) |
+| `POST` | `/api/cartel/brief` | Sesión | iaRateLimiter |  | [`server/routes/cartelria.ts:408`](../../server/routes/cartelria.ts#L408) |
+| `POST` | `/api/cartel/fondo` | Sesión | imagenRateLimiter |  | [`server/routes/cartelria.ts:123`](../../server/routes/cartelria.ts#L123) |
+| `POST` | `/api/cartel/idea` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:383`](../../server/routes/cartelria.ts#L383) |
+| `DELETE` | `/api/cartel/idea` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:398`](../../server/routes/cartelria.ts#L398) |
+| `POST` | `/api/cartel/orden` | Sesión | iaRateLimiter |  | [`server/routes/cartelria.ts:425`](../../server/routes/cartelria.ts#L425) |
+| `POST` | `/api/cartel/referencias` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:472`](../../server/routes/cartelria.ts#L472) |
+| `POST` | `/api/cartel/retocar` | Sesión | imagenRateLimiter |  | [`server/routes/cartelria.ts:204`](../../server/routes/cartelria.ts#L204) |
+| `PUT` | `/api/cartel/{concertId}/config` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:267`](../../server/routes/cartelria.ts#L267) |
+| `POST` | `/api/cartel/{concertId}/foto` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:304`](../../server/routes/cartelria.ts#L304) |
+| `PUT` | `/api/cartel/{concertId}/imagen` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:282`](../../server/routes/cartelria.ts#L282) |
+| `POST` | `/api/cartel/{concertId}/logo` | Sesión | ficherosRateLimiter |  | [`server/routes/cartelria.ts:327`](../../server/routes/cartelria.ts#L327) |
+| `DELETE` | `/api/cartel/{concertId}/logo` | Sesión | apiAutenticadaRateLimiter |  | [`server/routes/cartelria.ts:361`](../../server/routes/cartelria.ts#L361) |
 
 ### chat
 
@@ -514,7 +521,12 @@ Salas, festivales y contactos del CRM de booking. Los agentes (Scout, Redactor, 
 | `GET` | `/directories/venues/{comunidad}/{ciudad}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:90`](../../server/routes/paginasSeo.ts#L90) |
 | `GET` | `/directories/venues/{comunidad}/{ciudad}/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:91`](../../server/routes/paginasSeo.ts#L91) |
 | `GET` | `/e/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:73`](../../server/routes/paginaConcierto.ts#L73) |
-| `GET` | `/ejercicio_youtube_crm` | Pública | publicoRateLimiter |  | [`server/routes/ejercicioYoutube.ts:12`](../../server/routes/ejercicioYoutube.ts#L12) |
+| `GET` | `/ejercicio_branding` | No determinado | — |  | [`server/routes/masterMarketingDigital.ts:22`](../../server/routes/masterMarketingDigital.ts#L22) |
+| `GET` | `/ejercicio_branding.html` | No determinado | — |  | [`server/routes/masterMarketingDigital.ts:23`](../../server/routes/masterMarketingDigital.ts#L23) |
+| `GET` | `/ejercicio_facebook` | No determinado | — |  | [`server/routes/masterMarketingDigital.ts:24`](../../server/routes/masterMarketingDigital.ts#L24) |
+| `GET` | `/ejercicio_facebook.html` | No determinado | — |  | [`server/routes/masterMarketingDigital.ts:25`](../../server/routes/masterMarketingDigital.ts#L25) |
+| `GET` | `/ejercicio_youtube_crm` | No determinado | — |  | [`server/routes/masterMarketingDigital.ts:20`](../../server/routes/masterMarketingDigital.ts#L20) |
+| `GET` | `/ejercicio_youtube_crm.html` | No determinado | — |  | [`server/routes/masterMarketingDigital.ts:21`](../../server/routes/masterMarketingDigital.ts#L21) |
 | `GET` | `/en/directories` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:81`](../../server/routes/paginasSeo.ts#L81) |
 | `GET` | `/en/directories/festivals` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:84`](../../server/routes/paginasSeo.ts#L84) |
 | `GET` | `/en/directories/festivals/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:85`](../../server/routes/paginasSeo.ts#L85) |
@@ -526,7 +538,7 @@ Salas, festivales y contactos del CRM de booking. Los agentes (Scout, Redactor, 
 | `GET` | `/en/festivals/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:104`](../../server/routes/paginasSeo.ts#L104) |
 | `GET` | `/en/guides` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:64`](../../server/routes/paginasSeo.ts#L64) |
 | `GET` | `/en/guides/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:65`](../../server/routes/paginasSeo.ts#L65) |
-| `GET` | `/en/llms.txt` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:212`](../../server/routes/paginaConcierto.ts#L212) |
+| `GET` | `/en/llms.txt` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:213`](../../server/routes/paginaConcierto.ts#L213) |
 | `GET` | `/en/technical-rider-template` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:69`](../../server/routes/paginaConcierto.ts#L69) |
 | `GET` | `/festivales` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:101`](../../server/routes/paginasSeo.ts#L101) |
 | `GET` | `/festivales/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:102`](../../server/routes/paginasSeo.ts#L102) |
@@ -537,12 +549,12 @@ Salas, festivales y contactos del CRM de booking. Los agentes (Scout, Redactor, 
 | `GET` | `/listados` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:98`](../../server/routes/paginasSeo.ts#L98) |
 | `GET` | `/listados/festivales` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:99`](../../server/routes/paginasSeo.ts#L99) |
 | `GET` | `/listados/festivales/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:100`](../../server/routes/paginasSeo.ts#L100) |
-| `GET` | `/llms.txt` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:211`](../../server/routes/paginaConcierto.ts#L211) |
+| `GET` | `/llms.txt` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:212`](../../server/routes/paginaConcierto.ts#L212) |
 | `GET` | `/netflix` | Pública | publicoRateLimiter |  | [`server/routes/presentacionTfm.ts:25`](../../server/routes/presentacionTfm.ts#L25) |
 | `GET` | `/plantilla-rider-tecnico` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:68`](../../server/routes/paginaConcierto.ts#L68) |
 | `GET` | `/presentacion_tfm` | Pública | publicoRateLimiter |  | [`server/routes/presentacionTfm.ts:24`](../../server/routes/presentacionTfm.ts#L24) |
-| `GET` | `/robots.txt` | Pública | — |  | [`server/routes/paginaConcierto.ts:189`](../../server/routes/paginaConcierto.ts#L189) |
-| `GET` | `/sitemap.xml` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:171`](../../server/routes/paginaConcierto.ts#L171) |
+| `GET` | `/robots.txt` | Pública | — |  | [`server/routes/paginaConcierto.ts:190`](../../server/routes/paginaConcierto.ts#L190) |
+| `GET` | `/sitemap.xml` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:172`](../../server/routes/paginaConcierto.ts#L172) |
 | `GET` | `/technical-rider-template` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:64`](../../server/routes/paginaConcierto.ts#L64) |
 
 ### posts
@@ -698,13 +710,13 @@ Autenticación (login, registro, Google, invitaciones, cambio de banda) y gesti�
 | `POST` | `/api/auth/activate-member` | Sesión opcional | loginRateLimiter |  | [`server/routes/users/rutasInvitacion.ts:73`](../../server/routes/users/rutasInvitacion.ts#L73) |
 | `POST` | `/api/auth/check-invitation` | Pública | loginRateLimiter |  | [`server/routes/users/rutasInvitacion.ts:17`](../../server/routes/users/rutasInvitacion.ts#L17) |
 | `POST` | `/api/auth/google` | Sesión (comprobada en el handler) | loginRateLimiter |  | [`server/routes/users/rutasGoogle.ts:20`](../../server/routes/users/rutasGoogle.ts#L20) |
-| `POST` | `/api/auth/login` | Sesión (comprobada en el handler) | loginRateLimiter | ★ | [`server/routes/users/rutasLogin.ts:16`](../../server/routes/users/rutasLogin.ts#L16) |
-| `POST` | `/api/auth/logout` | Sesión opcional | — |  | [`server/routes/users/rutasSesion.ts:301`](../../server/routes/users/rutasSesion.ts#L301) |
-| `GET` | `/api/auth/me` | Sesión (comprobada en el handler) | — |  | [`server/routes/users/rutasSesion.ts:15`](../../server/routes/users/rutasSesion.ts#L15) |
+| `POST` | `/api/auth/login` | Sesión (comprobada en el handler) | loginRateLimiter | ★ | [`server/routes/users/rutasLogin.ts:17`](../../server/routes/users/rutasLogin.ts#L17) |
+| `POST` | `/api/auth/logout` | Sesión opcional | — |  | [`server/routes/users/rutasSesion.ts:298`](../../server/routes/users/rutasSesion.ts#L298) |
+| `GET` | `/api/auth/me` | Sesión (comprobada en el handler) | — |  | [`server/routes/users/rutasSesion.ts:16`](../../server/routes/users/rutasSesion.ts#L16) |
 | `POST` | `/api/auth/register` | Sesión opcional | registroRateLimiter |  | [`server/routes/users/rutasRegistro.ts:20`](../../server/routes/users/rutasRegistro.ts#L20) |
 | `POST` | `/api/auth/reset-password/confirm` | Firma o secreto | loginRateLimiter |  | [`server/routes/users/rutasRecuperacion.ts:204`](../../server/routes/users/rutasRecuperacion.ts#L204) |
 | `POST` | `/api/auth/reset-password/request` | Pública | loginRateLimiter |  | [`server/routes/users/rutasRecuperacion.ts:17`](../../server/routes/users/rutasRecuperacion.ts#L17) |
-| `POST` | `/api/auth/switch-band` | Sesión (comprobada en el handler) | — |  | [`server/routes/users/rutasSesion.ts:137`](../../server/routes/users/rutasSesion.ts#L137) |
+| `POST` | `/api/auth/switch-band` | Sesión (comprobada en el handler) | — |  | [`server/routes/users/rutasSesion.ts:134`](../../server/routes/users/rutasSesion.ts#L134) |
 | `POST` | `/api/auth/test-email` | Sesión | — |  | [`server/routes/users/rutasRecuperacion.ts:327`](../../server/routes/users/rutasRecuperacion.ts#L327) |
 | `POST` | `/api/bands/logo` | Sesión | — |  | [`server/routes/users/rutasBandas.ts:16`](../../server/routes/users/rutasBandas.ts#L16) |
 | `POST` | `/api/bands/upload-logo` | Sesión | — |  | [`server/routes/users/rutasBandas.ts:16`](../../server/routes/users/rutasBandas.ts#L16) |

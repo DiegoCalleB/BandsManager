@@ -39,9 +39,12 @@ export function useArrastreCambio(onSoltar?: (origen: number, destino: number) =
     gesto.current = null;
     if (!g.vivo) return;
     setArrastre(null);
-    tapaClic.current = true;
-    window.setTimeout(() => { tapaClic.current = false; }, 0);
-    if (soltar && g.sobre !== g.origen) onSoltar?.(g.origen, g.sobre);
+    // Un toque algo lento (>250 ms) sin mover el dedo sigue siendo un toque: no se traga el clic.
+    if (g.sobre !== g.origen) {
+      tapaClic.current = true;
+      window.setTimeout(() => { tapaClic.current = false; }, 0);
+      if (soltar) onSoltar?.(g.origen, g.sobre);
+    }
   }, [onSoltar]);
 
   /** Manejadores de una casilla; sin `t0` (o sin onSoltar) no se arrastra. */

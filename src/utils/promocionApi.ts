@@ -67,6 +67,7 @@ export const atribuirReferido = (codigo: string) =>
   apiFetch<{ atribuido: boolean }>('/api/referidos/atribuir', { method: 'POST', body: JSON.stringify({ codigo }) });
 
 import type { EstiloCartel } from './cartel/estilos';
+import type { PlanOrden } from './cartel/ordenes';
 export type { EstiloCartel };
 
 export const generarFondoCartel = (datos: { concertId: string; estilo: EstiloCartel; instrucciones?: string; idea?: IdeaCartel; conBoceto?: boolean; encuadre?: 'ventana' | 'sangre'; conTexto?: boolean }) =>
@@ -77,6 +78,10 @@ const rutaCartel = (concertId: string, tramo: string) => `/api/cartel/${encodeUR
 /** Retoca un fondo de IA del historial del bolo con una instrucción: devuelve una versión nueva. */
 export const retocarFondoCartel = (datos: { concertId: string; url: string; instruccion: string; modo?: 'libre' | 'fiel' }) =>
   apiFetch<{ url: string; conTexto?: boolean; textoOk?: boolean }>('/api/cartel/retocar', { method: 'POST', body: JSON.stringify(datos) });
+
+/** «Pídele cambios al cartel»: una frase → un plan (acciones sobre las capas + un retoque de la ilustración). */
+export const ordenarCartel = (datos: { orden: string; huecosLibres: number[] }) =>
+  apiFetch<{ plan: PlanOrden }>('/api/cartel/orden', { method: 'POST', body: JSON.stringify(datos) });
 
 export const guardarConfigCartel = (concertId: string, config: CartelConfig) =>
   apiFetch<{ config: CartelConfig }>(rutaCartel(concertId, 'config'), { method: 'PUT', body: JSON.stringify(config) });

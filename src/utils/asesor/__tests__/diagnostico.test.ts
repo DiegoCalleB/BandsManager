@@ -13,8 +13,42 @@ describe('diagnosticar', () => {
     expect(d.porque).toContain('en 9 días');
   });
 
-  it('un bolo a más de 21 días no cuenta', () => {
+  it('un bolo a más de 6 semanas todavía no cuenta', () => {
     expect(diagnosticar({ ...base, conciertos: [bolo('a', '2026-12-31')] }).modo).toBe('fondo');
+  });
+
+  describe('un bolo lejano (de 3 a 6 semanas) ya toca anunciarlo', () => {
+    const lejano = (fecha: string) => ({ ...base, conciertos: [bolo('lejos', fecha)] });
+
+    it('hoy 4 de noviembre y bolo el 12 de diciembre (38 días): modo concierto, a anunciarlo y calentarlo', () => {
+      const d = diagnosticar({ ...base, hoy: '2026-11-04', conciertos: [bolo('b', '2026-12-12')] });
+      expect(d).toMatchObject({ modo: 'concierto', dias: 38 });
+      expect(d.concierto?.id).toBe('b');
+      expect(d.porque).toBe('Tocáis en 38 días en Sala El Sol, Madrid: ya toca anunciarlo y empezar a calentarlo.');
+    });
+
+    it('a 21 días o menos sigue siendo «llenar la sala»; el límite lejano son 45 días', () => {
+      expect(diagnosticar(lejano('2026-11-18')).porque).toContain('toca llenar la sala'); // 21 días
+      expect(diagnosticar(lejano('2026-11-19')).porque).toContain('ya toca anunciarlo'); // 22
+      expect(diagnosticar(lejano('2026-12-12')).modo).toBe('concierto'); // 45
+      expect(diagnosticar(lejano('2026-12-13')).modo).toBe('fondo'); // 46
+    });
+
+    it('un estreno inminente pasa por delante, pero un bolo cercano manda sobre el estreno', () => {
+      const estreno = { titulo: 'Furgo', fecha: '2026-11-07' };
+      expect(diagnosticar({ ...lejano('2026-12-05'), lanzamiento: estreno }).modo).toBe('lanzamiento');
+      expect(diagnosticar({ ...lejano('2026-11-10'), lanzamiento: estreno }).modo).toBe('concierto');
+    });
+
+    it('pasa por delante del rescate y de «volver a publicar»', () => {
+      const rescate = { motivo: 'tres_seguidas' as const, formatoFlojo: null, mejor: null };
+      expect(diagnosticar({ ...lejano('2026-12-05'), rescate }).modo).toBe('concierto');
+      expect(diagnosticar({ ...lejano('2026-12-05'), ultimaPublicacion: '2026-10-01' }).modo).toBe('concierto');
+    });
+
+    it('con varios bolos, el más cercano', () => {
+      expect(diagnosticar({ ...base, conciertos: [bolo('lejos', '2026-12-05'), bolo('antes', '2026-11-25')] }).concierto?.id).toBe('antes');
+    });
   });
 
   it('el bolo manda sobre el lanzamiento', () => {

@@ -110,7 +110,7 @@ De `server/ai.ts` (`AI_PRICING_TABLE`, `costEurFromTokens`), con `EUR_USD_RATE =
 | Proveedor | Input $/1M tok | Output $/1M tok | Coste de 1.000 pitches |
 |---|---|---|---|
 | DeepSeek V3 | 0,14 | 0,28 | **~0,14 €** |
-| Gemini Flash | 0,10 | 0,40 | **~0,18 €** |
+| Gemini 3.8 Flash | 0,75 | 3,75 | **~1,56 €** |
 
 Un pitch típico (≈2.000 tokens de entrada + 500 de salida) cuesta alrededor de **0,0004 €**.
 

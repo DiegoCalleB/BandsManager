@@ -9,6 +9,7 @@ import { loadState, saveState } from '../../state.js';
 import { dbGetUsers, esSupabaseNoConfigurado, normalizePlan } from '../../db.js';
 import { loginRateLimiter } from '../../middleware/rateLimiter.js';
 import { cleanBandId, buildAvailableBandsForUser } from './bandasDisponibles.js';
+import { copiarCamposDeBd } from './mezclaUsuarioBd.js';
 
 const router = express.Router();
 
@@ -39,11 +40,7 @@ router.post('/auth/login', loginRateLimiter, async (req, res) => {
         if (idx !== -1) {
           if (su.passwordHash) state.users[idx].passwordHash = su.passwordHash;
           if (su.salt) state.users[idx].salt = su.salt;
-          if (su.plan) state.users[idx].plan = normalizePlan(su.plan);
-          if (su.role) state.users[idx].role = su.role;
-          if (su.band_id) state.users[idx].band_id = su.band_id;
-          if (su.bandName) state.users[idx].bandName = su.bandName;
-          if (su.main_band_id) state.users[idx].main_band_id = su.main_band_id;
+          copiarCamposDeBd(state.users[idx], su);
           // Las preferencias de interfaz (disposición del dashboard...) viven también en Supabase:
           // tras un redeploy el estado local arranca vacío y, sin esto, /auth/me devolvía el
           // usuario sin ellas y el panel volvía al de por defecto. Lo local manda por clave.

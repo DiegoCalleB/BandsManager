@@ -30,6 +30,11 @@ Exporta: INITIAL_LEADS, INITIAL_REHEARSALS, INITIAL_CONCERTS, INITIAL_SOCIAL_POS
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/__tests__/semillaSinCuentasReales.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

@@ -171,7 +171,16 @@ function cargarSesion() {
  * Pulsos y compases de PCM mono a 22 050 Hz, o null si Beat This! no está disponible
  * (`BEAT_THIS=off`, sin red para bajar el modelo, binario nativo ausente…).
  */
-export async function detectarPulsoNeuronal(pcm: Float32Array): Promise<PulsoNeuronal | null> {
+export function detectarPulsoNeuronal(pcm: Float32Array): Promise<PulsoNeuronal | null> {
+  // De una en una: cada inferencia usa todos los núcleos y llega a ~950 MB de pico; dos a la vez (acordes + BPM de otra canción) los duplican.
+  const resultado = colaInferencia.then(() => detectarPulsoNeuronalSinCola(pcm));
+  colaInferencia = resultado.then(() => undefined, () => undefined);
+  return resultado;
+}
+
+let colaInferencia: Promise<void> = Promise.resolve();
+
+async function detectarPulsoNeuronalSinCola(pcm: Float32Array): Promise<PulsoNeuronal | null> {
   if (process.env.BEAT_THIS === "off" || pcm.length < SAMPLE_RATE_BEAT_THIS) return null;
   try {
     const { sesion, ort } = await cargarSesion();
