@@ -48,6 +48,7 @@ Aprendizaje del Redactor: ediciones humanas de pitches, ejemplos few-shot y refi
 
 ## 🧪 Tests que lo cubren
 - `server/db/__tests__/campaignToneDnaMerge.test.ts`
+- `server/services/__tests__/pitchEngineRegenerate.test.ts`
 
 ---
 
