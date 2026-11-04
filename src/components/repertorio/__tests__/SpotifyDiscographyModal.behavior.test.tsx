@@ -39,7 +39,9 @@ describe('SpotifyDiscographyModal', () => {
   beforeEach(() => {
     audios.length = 0;
     apiFetch.mockReset();
-    apiFetch.mockResolvedValue(discografia);
+    apiFetch.mockImplementation((url: string) =>
+      Promise.resolve(url.startsWith('/api/spotify/search') ? { success: true, artists: [{ id: 'a1', name: 'Los Test', followers: 5 }] } : discografia),
+    );
     vi.stubGlobal('Audio', AudioFalso);
   });
   afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
@@ -52,10 +54,30 @@ describe('SpotifyDiscographyModal', () => {
 
   it('al abrir busca con el nombre de la banda y rellena el campo', async () => {
     render(<SpotifyDiscographyModal {...props} isOpen bandName="Los Test" />);
-    expect(apiFetch).toHaveBeenCalledTimes(1);
-    expect(apiFetch.mock.calls[0][0]).toBe('/api/spotify/artist-discography?query=Los%20Test');
+    expect(apiFetch.mock.calls[0][0]).toBe('/api/spotify/search?q=Los%20Test');
     expect((screen.getByPlaceholderText(/Nombre de tu banda/) as HTMLInputElement).value).toBe('Los Test');
     await waitFor(() => expect(screen.getByText('Primero')).toBeTruthy());
+    expect(apiFetch.mock.calls[1][0]).toBe('/api/spotify/artist-discography?query=Los%20Test');
+  });
+
+  it('sin nombre exacto no carga el primero a ciegas: ofrece elegir candidato', async () => {
+    apiFetch.mockImplementation((url: string) =>
+      Promise.resolve(url.startsWith('/api/spotify/search')
+        ? { success: true, artists: [{ id: 'm1', name: 'Maleiva', followers: 9, genres: [] }, { id: 'm2', name: 'Majo Leiva ES', followers: 3, genres: [] }] }
+        : discografia),
+    );
+    render(<SpotifyDiscographyModal {...props} isOpen bandName="Majo Leiva" />);
+    await waitFor(() => expect(screen.getByText('Elige tu banda:')).toBeTruthy());
+    expect(apiFetch.mock.calls.some((c) => String(c[0]).includes('artist-discography'))).toBe(false);
+    fireEvent.click(screen.getByText('Majo Leiva ES'));
+    await waitFor(() => expect(screen.getByText('Primero')).toBeTruthy());
+    expect(apiFetch.mock.calls.at(-1)?.[0]).toBe('/api/spotify/artist-discography?query=Majo%20Leiva%20ES');
+  });
+
+  it('una URL de artista va directa a la discografía sin pasar por la búsqueda', async () => {
+    render(<SpotifyDiscographyModal {...props} isOpen bandName="https://open.spotify.com/intl-es/artist/4X0fToszstIO43wFWrqgSV?flow_ctx=x" />);
+    await waitFor(() => expect(screen.getByText('Primero')).toBeTruthy());
+    expect(apiFetch.mock.calls.every((c) => !String(c[0]).startsWith('/api/spotify/search'))).toBe(true);
   });
 
   it('al cerrar para el audio y al reabrir vuelve a buscar', async () => {
@@ -66,6 +88,6 @@ describe('SpotifyDiscographyModal', () => {
     rerender(<SpotifyDiscographyModal {...props} isOpen={false} bandName="Los Test" />);
     expect(audios[0].pause).toHaveBeenCalled();
     rerender(<SpotifyDiscographyModal {...props} isOpen bandName="Los Test" />);
-    expect(apiFetch).toHaveBeenCalledTimes(2);
+    expect(apiFetch.mock.calls.filter((c) => String(c[0]).startsWith('/api/spotify/search'))).toHaveLength(2);
   });
 });

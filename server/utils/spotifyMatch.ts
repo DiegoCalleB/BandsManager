@@ -53,6 +53,34 @@ export function elegirArtistaSpotify(
 export type EstadoSpotifyBanda = 'vacio' | 'valido' | 'invalido' | 'otro';
 
 /**
+ * Deduplica por ID y ordena los candidatos de una búsqueda: primero los de nombre idéntico a lo
+ * buscado (normalizado), luego los demás; dentro de cada grupo, por seguidores y popularidad.
+ * Spotify rankea por popularidad y mete homónimos difusos delante de artistas pequeños.
+ */
+export function ordenarCandidatosArtista<T extends CandidatoSpotify>(consulta: string, candidatos: T[]): T[] {
+  const buscado = normalizarNombreArtista(consulta);
+  const vistos = new Set<string>();
+  const unicos = (candidatos || []).filter((c) => {
+    if (!c?.id || vistos.has(c.id)) return false;
+    vistos.add(c.id);
+    return true;
+  });
+  const exacto = (c: T) => (buscado && normalizarNombreArtista(c.name || '') === buscado ? 1 : 0);
+  return unicos.sort(
+    (a, b) =>
+      exacto(b) - exacto(a) ||
+      (b.followers || 0) - (a.followers || 0) ||
+      (b.popularity || 0) - (a.popularity || 0),
+  );
+}
+
+/** ¿Hay en la lista algún candidato cuyo nombre sea idéntico a la consulta? */
+export function hayCoincidenciaExacta(consulta: string, candidatos: CandidatoSpotify[]): boolean {
+  const buscado = normalizarNombreArtista(consulta);
+  return !!buscado && (candidatos || []).some((c) => normalizarNombreArtista(c?.name || '') === buscado);
+}
+
+/**
  * Qué hay guardado en `spotify_youtube`: nada, un artista de Spotify con ID real, un enlace de
  * Spotify roto (ID inventado, búsqueda, perfil sin ID...) u otra cosa (YouTube, web) que no se toca.
  */

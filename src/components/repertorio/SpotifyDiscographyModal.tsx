@@ -9,6 +9,11 @@ import { ModalPortal } from "../common/ModalPortal";
 import type { SpotifyTrack, SpotifyAlbum, SpotifyArtist, RespuestaPreviewSpotify, RespuestaDiscografiaSpotify, RespuestaImportarDiscografia } from '../../services/tiposRespuestasHerramientas';
 import { comoErrorCapturado } from '../../utils/errorCapturado';
 
+type RespuestaBusquedaArtistasSpotify = { success?: boolean; artists?: SpotifyArtist[] };
+
+const normalizarNombre = (n: string) =>
+  (n || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+
 interface SpotifyDiscographyModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -35,6 +40,9 @@ export const SpotifyDiscographyModal: React.FC<
     null,
   );
   const [albums, setAlbums] = useState<SpotifyAlbum[]>([]);
+  // Candidatos de la búsqueda por nombre: Spotify rankea por popularidad y puede poner un
+  // homónimo difuso delante de una banda pequeña, así que se deja elegir.
+  const [candidatos, setCandidatos] = useState<SpotifyArtist[]>([]);
   const [selectedAlbumIds, setSelectedAlbumIds] = useState<
     Record<string, boolean>
   >({});
@@ -172,6 +180,46 @@ export const SpotifyDiscographyModal: React.FC<
       })
       .finally(() => setIsFetchingDiscography(false));
 
+  // URL/URI/ID de artista -> sin ambigüedad, directo a la discografía. Nombre -> primero candidatos:
+  // si alguno se llama exactamente igual se carga solo; si no, se muestra la lista para elegir.
+  const buscarYElegir = (q: string) => {
+    if (/spotify\.com\/(?:intl-[a-z-]+\/)?artist\/|^spotify:artist:|^[A-Za-z0-9]{22}$/i.test(q)) {
+      return ejecutarBusqueda(q).then(() => setCandidatos([]));
+    }
+    return apiFetch<RespuestaBusquedaArtistasSpotify>(
+      `/api/spotify/search?q=${encodeURIComponent(q)}`,
+    )
+      .then((data) => {
+        const lista = data?.artists || [];
+        const exacto = lista.find((a) => normalizarNombre(a.name) === normalizarNombre(q));
+        setCandidatos(lista.length > 1 || (lista.length === 1 && !exacto) ? lista : []);
+        if (lista.length === 0) {
+          setArtistProfile(null);
+          setAlbums([]);
+          setErrorMsg("No se ha encontrado ningún artista con ese nombre. Prueba con la URL de su perfil de Spotify.");
+          setIsFetchingDiscography(false);
+          return;
+        }
+        if (exacto) return elegirCandidato(exacto);
+        // Sin coincidencia exacta: que elija la persona, no se carga el primero a ciegas.
+        setArtistProfile(null);
+        setAlbums([]);
+        setIsFetchingDiscography(false);
+      })
+      .catch((errCapturado) => {
+        const err = comoErrorCapturado(errCapturado);
+        setErrorMsg(err.message || "Error al conectar con Spotify.");
+        setIsFetchingDiscography(false);
+      });
+  };
+
+  const elegirCandidato = (a: SpotifyArtist) => {
+    setErrorMsg(null);
+    setIsFetchingDiscography(true);
+    stopAudioPreview();
+    return ejecutarBusqueda(/^[A-Za-z0-9]{22}$/.test(a.id) ? a.id : a.name);
+  };
+
   const handleFetchDiscography = () => {
     const q = searchQuery.trim();
     if (!q) {
@@ -183,11 +231,11 @@ export const SpotifyDiscographyModal: React.FC<
     setErrorMsg(null);
     setIsFetchingDiscography(true);
     stopAudioPreview();
-    void ejecutarBusqueda(q);
+    void buscarYElegir(q);
   };
 
   const lanzarBusquedaInicial = useEffectEvent((q: string) => {
-    void ejecutarBusqueda(q);
+    void buscarYElegir(q);
   });
 
   // Abrir (o cambiar de banda) -> busca con bandName. Cerrar o cambiar -> la limpieza
@@ -366,6 +414,38 @@ export const SpotifyDiscographyModal: React.FC<
             <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--alert)]/15 text-[var(--ink)] text-xs font-sans flex items-center gap-2.5">
               <AlertCircle className="w-4 h-4 shrink-0 text-[var(--alert)]" />
               <span>{errorMsg}</span>
+            </div>
+          )}
+
+          {candidatos.length > 0 && (
+            <div className="space-y-2">
+              <p className="text-xs font-sans text-[var(--ink-2)]">
+                {artistProfile ? "¿No es esta banda? Otros resultados:" : "Elige tu banda:"}
+              </p>
+              <div className="flex flex-col gap-1.5 max-h-52 overflow-y-auto">
+                {candidatos.map((c) => (
+                  <button
+                    key={c.id}
+                    type="button"
+                    onClick={() => void elegirCandidato(c)}
+                    disabled={isFetchingDiscography}
+                    className="flex items-center gap-3 p-2.5 rounded-[var(--r-l)] bg-[var(--sunken)] hover:bg-[var(--surface)] text-left transition-ui disabled:opacity-50 cursor-pointer"
+                  >
+                    {c.imageUrl ? (
+                      <img src={c.imageUrl} alt="" className="w-9 h-9 rounded-full object-cover shrink-0" />
+                    ) : (
+                      <div className="w-9 h-9 rounded-full bg-[var(--surface)] shrink-0" />
+                    )}
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-sm font-extrabold font-sans text-[var(--ink)] truncate">{c.name}</span>
+                      <span className="block text-[11px] font-sans text-[var(--ink-2)] truncate">
+                        {(c.followers || 0).toLocaleString()} seguidores
+                        {c.genres?.length > 0 ? ` · ${c.genres.slice(0, 2).join(", ")}` : ""}
+                      </span>
+                    </span>
+                  </button>
+                ))}
+              </div>
             </div>
           )}
 

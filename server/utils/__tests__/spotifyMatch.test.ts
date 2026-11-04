@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest';
 import {
   elegirArtistaSpotify,
   estadoSpotifyBanda,
+  hayCoincidenciaExacta,
   normalizarNombreArtista,
+  ordenarCandidatosArtista,
   planificarSpotifyBanda,
 } from '../spotifyMatch.js';
 
@@ -97,5 +99,31 @@ describe('planificarSpotifyBanda', () => {
     });
     expect(planificarSpotifyBanda(roto, '', true)).toEqual({ accion: 'sin_sustituto' });
     expect(planificarSpotifyBanda(roto, 'https://open.spotify.com/artist/NUEVOID0000000000000A', false)).toEqual({ accion: 'mantener' });
+  });
+});
+
+describe('ordenarCandidatosArtista', () => {
+  const maleiva = { id: ID_A, name: 'Maleiva', followers: 9, popularity: 40 };
+  const majo = { id: ID_B, name: 'Majo Leiva', followers: 3, popularity: 5 };
+
+  it('pone primero el nombre exacto aunque tenga menos seguidores (caso Majo Leiva)', () => {
+    const orden = ordenarCandidatosArtista('majo leiva', [maleiva, majo]);
+    expect(orden.map((c) => c.id)).toEqual([ID_B, ID_A]);
+  });
+
+  it('deduplica por ID y descarta candidatos sin ID', () => {
+    const orden = ordenarCandidatosArtista('x', [maleiva, { ...maleiva }, { name: 'sin id' }]);
+    expect(orden).toHaveLength(1);
+  });
+
+  it('sin coincidencia exacta ordena por seguidores', () => {
+    expect(ordenarCandidatosArtista('otro', [majo, maleiva])[0].id).toBe(ID_A);
+  });
+});
+
+describe('hayCoincidenciaExacta', () => {
+  it('detecta nombre idéntico normalizado y no el difuso', () => {
+    expect(hayCoincidenciaExacta('MAJO leiva', [{ name: 'Majo Leiva' }])).toBe(true);
+    expect(hayCoincidenciaExacta('majo leiva', [{ name: 'Maleiva' }])).toBe(false);
   });
 });

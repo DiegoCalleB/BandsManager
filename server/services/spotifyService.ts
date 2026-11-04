@@ -2,7 +2,7 @@ import { dbGetSongs, dbUpsertSong, dbGetEpkConfig, dbUpsertEpkConfig } from "../
 import { Song, SongAudioIdea } from "../../src/types.js";
 import type { AlbumSpotifyApi, ArtistaDeezer, ArtistaItunes, ArtistaSpotifyApi, PistaDeezer, PistaItunes, PistaSpotifyApi } from "./tiposSpotify.js";
 import { cleanBandId } from "../utils.js";
-import { elegirArtistaSpotify } from "../utils/spotifyMatch.js";
+import { elegirArtistaSpotify, hayCoincidenciaExacta, ordenarCandidatosArtista } from "../utils/spotifyMatch.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 // Cached token for Spotify API
@@ -392,8 +392,22 @@ async function fetchDiscographyViaItunes(artistName: string): Promise<SpotifyArt
   }
 }
 
+function aResumenSpotify(a: ArtistaSpotifyApi): ArtistaResumen {
+  return {
+    id: a.id,
+    name: a.name,
+    genres: a.genres || [],
+    followers: a.followers?.total || 0,
+    popularity: a.popularity || 0,
+    imageUrl: a.images?.[0]?.url || a.images?.[1]?.url || "",
+    spotifyUrl: a.external_urls?.spotify || `https://open.spotify.com/artist/${a.id}`,
+    uri: a.uri
+  };
+}
+
 /**
  * Searches artists across Spotify official API, Deezer, and iTunes.
+ * Acepta también una URL/URI/ID de artista de Spotify (devuelve ese artista).
  */
 export async function searchSpotifyArtists(query: string) {
   if (!query || !query.trim()) return [];
@@ -403,8 +417,21 @@ export async function searchSpotifyArtists(query: string) {
   const token = await getSpotifyAccessToken();
   if (token) {
     try {
-      // Primero el filtro por artista (nombre exacto), con 20 resultados: con 8, el homónimo
-      // correcto se quedaba fuera del top y el enlace se daba por «no encontrado».
+      // C: URL, URI o ID pegado -> resolución directa e inequívoca por ID.
+      const analizado = extractSpotifyArtistId(cleanQ);
+      if (analizado.type === "id") {
+        const resId = await fetch(`https://api.spotify.com/v1/artists/${analizado.value}`, {
+          headers: { Authorization: `Bearer ${token}` },
+          signal: AbortSignal.timeout(6000)
+        });
+        if (resId.ok) return [aResumenSpotify(await resId.json())];
+        console.warn(`[SpotifyService] Artista ${analizado.value} respondió ${resId.status}`);
+        return [];
+      }
+
+      // A: se acumulan los resultados de ambas consultas (el filtro artist:"…" de Spotify no es
+      // exacto y devolvía homónimos difusos que cortaban la búsqueda) y se ordena por nombre exacto.
+      const acumulados: ArtistaResumen[] = [];
       const consultas = [`artist:"${cleanQ.replace(/"/g, "")}"`, cleanQ];
       for (const q of consultas) {
         const url = `https://api.spotify.com/v1/search?q=${encodeURIComponent(q)}&type=artist&limit=10`;
@@ -421,19 +448,11 @@ export async function searchSpotifyArtists(query: string) {
 
         const data = await res.json();
         const items: ArtistaSpotifyApi[] = data.artists?.items || [];
-        if (items.length > 0) {
-          return items.map((a): ArtistaResumen => ({
-            id: a.id,
-            name: a.name,
-            genres: a.genres || [],
-            followers: a.followers?.total || 0,
-            popularity: a.popularity || 0,
-            imageUrl: a.images?.[0]?.url || a.images?.[1]?.url || "",
-            spotifyUrl: a.external_urls?.spotify || `https://open.spotify.com/artist/${a.id}`,
-            uri: a.uri
-          }));
-        }
+        acumulados.push(...items.map(aResumenSpotify));
+        // Con una coincidencia exacta ya no hace falta la segunda consulta.
+        if (hayCoincidenciaExacta(cleanQ, acumulados)) break;
       }
+      if (acumulados.length > 0) return ordenarCandidatosArtista(cleanQ, acumulados);
     } catch (spErrCapturado) {
       const spErr = comoErrorCapturado(spErrCapturado);
       console.warn("[SpotifyService] Spotify API search error:", spErr?.message);
