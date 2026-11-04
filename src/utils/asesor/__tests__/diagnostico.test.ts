@@ -13,7 +13,7 @@ describe('diagnosticar', () => {
     expect(d.porque).toContain('en 9 días');
   });
 
-  it('un bolo a más de 6 semanas todavía no cuenta', () => {
+  it('un bolo a más de 60 días todavía no cuenta', () => {
     expect(diagnosticar({ ...base, conciertos: [bolo('a', '2026-12-31')] }).modo).toBe('fondo');
   });
 
@@ -24,14 +24,39 @@ describe('diagnosticar', () => {
       const d = diagnosticar({ ...base, hoy: '2026-11-04', conciertos: [bolo('b', '2026-12-12')] });
       expect(d).toMatchObject({ modo: 'concierto', dias: 38 });
       expect(d.concierto?.id).toBe('b');
-      expect(d.porque).toBe('Tocáis en 38 días en Sala El Sol, Madrid: ya toca anunciarlo y empezar a calentarlo.');
+      expect(d.porque).toBe('Tocáis en 38 días en Sala El Sol, Madrid: es lo único que tenéis a la vista, así que ya toca anunciarlo y empezar a calentarlo.');
+      expect(d.soloEnElHorizonte).toBe(true);
     });
 
-    it('a 21 días o menos sigue siendo «llenar la sala»; el límite lejano son 45 días', () => {
+    it('a 21 días o menos sigue siendo «llenar la sala»; lejos, ya toca anunciarlo', () => {
       expect(diagnosticar(lejano('2026-11-18')).porque).toContain('toca llenar la sala'); // 21 días
       expect(diagnosticar(lejano('2026-11-19')).porque).toContain('ya toca anunciarlo'); // 22
-      expect(diagnosticar(lejano('2026-12-12')).modo).toBe('concierto'); // 45
-      expect(diagnosticar(lejano('2026-12-13')).modo).toBe('fondo'); // 46
+      expect(diagnosticar(lejano('2026-11-18')).soloEnElHorizonte).toBeUndefined(); // cerca no hace falta decirlo
+    });
+
+    describe('si es lo único que tienen a la vista, se empieza antes (60 días)', () => {
+      it('sin otro evento antes, llega a 60 días y lo dice', () => {
+        expect(diagnosticar(lejano('2026-12-27'))).toMatchObject({ modo: 'concierto', dias: 60, soloEnElHorizonte: true }); // 60
+        expect(diagnosticar(lejano('2026-12-28')).modo).toBe('fondo'); // 61
+        expect(diagnosticar(lejano('2026-12-20')).porque).toContain('es lo único que tenéis a la vista');
+      });
+
+      it('con un estreno fechado antes del bolo no es lo único: el límite vuelve a 45 días y no se dice', () => {
+        const estreno = { titulo: 'Furgo', fecha: '2026-12-01' }; // más allá de su ventana de 30 días, pero antes del bolo
+        expect(diagnosticar({ ...lejano('2026-12-12'), lanzamiento: estreno })).toMatchObject({ modo: 'concierto', soloEnElHorizonte: false }); // 45
+        expect(diagnosticar({ ...lejano('2026-12-12'), lanzamiento: estreno }).porque).toBe('Tocáis en 45 días en Sala El Sol, Madrid: ya toca anunciarlo y empezar a calentarlo.');
+        expect(diagnosticar({ ...lejano('2026-12-13'), lanzamiento: estreno }).modo).toBe('fondo'); // 46
+      });
+
+      it('un estreno ya pasado, o posterior al bolo, no cuenta como otro evento antes', () => {
+        expect(diagnosticar({ ...lejano('2026-12-20'), lanzamiento: { titulo: 'Viejo', fecha: '2026-09-01' } }).soloEnElHorizonte).toBe(true);
+        expect(diagnosticar({ ...lejano('2026-12-20'), lanzamiento: { titulo: 'Después', fecha: '2027-02-01' } }).soloEnElHorizonte).toBe(true);
+      });
+
+      it('con varios bolos, manda el más cercano, y los demás no cuentan como «antes»', () => {
+        expect(diagnosticar({ ...base, conciertos: [bolo('lejos', '2026-12-20'), bolo('antes', '2026-12-05')] })).toMatchObject({ soloEnElHorizonte: true });
+        expect(diagnosticar({ ...base, conciertos: [bolo('lejos', '2026-12-20'), bolo('antes', '2026-12-05')] }).concierto?.id).toBe('antes');
+      });
     });
 
     it('un estreno inminente pasa por delante, pero un bolo cercano manda sobre el estreno', () => {
