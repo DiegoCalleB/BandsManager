@@ -82,7 +82,9 @@ Exporta: GEMINI_MODEL, TIMEOUT_IA_MS, TIMEOUT_IA_LARGO_MS, getAiClient, getDeepS
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/__tests__/aiPricing.test.ts`
 - `server/__tests__/ai_fallback.test.ts`
+- `server/services/__tests__/pitchEngineRegenerate.test.ts`
 - `server/utils/__tests__/enrichCoversWithoutAudio.test.ts`
 - `server/utils/__tests__/textoDeParteIA.test.ts`
 

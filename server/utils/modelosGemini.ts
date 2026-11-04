@@ -21,8 +21,13 @@ export const MODELOS_RETIRADOS = /gemini-(1\.|2\.0)|text-embedding-00|imagen-[23
 /** Compatibilidad con el test anterior. */
 export const MODELOS_GEMINI_RETIRADOS = MODELOS_RETIRADOS;
 
-/** Texto/visión: del preferido al último recurso. Override: `GEMINI_MODELS=a,b`. */
-export const FALLBACK_MODELS: string[] = lista(process.env.GEMINI_MODELS, ["gemini-3.7-flash", "gemini-3.8-flash", "gemini-2.5-flash"]);
+/**
+ * Texto/visión: del preferido al último recurso. Override: `GEMINI_MODELS=a,b`.
+ * Primero un ID fijo (comportamiento reproducible con los prompts del redactor); después el alias
+ * `gemini-flash-latest`, que Google mueve al Flash vigente y por tanto no se retira. gemini-3.7-flash
+ * está deprecado (redirige a 3.8) y gemini-2.5-flash devuelve 404, por eso ya no están.
+ */
+export const FALLBACK_MODELS: string[] = lista(process.env.GEMINI_MODELS, ["gemini-3.8-flash", "gemini-flash-latest"]);
 /** Modelo preferido por defecto de las rutas de texto. */
 export const MODELO_TEXTO = FALLBACK_MODELS[0];
 

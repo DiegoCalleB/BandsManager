@@ -33,6 +33,7 @@ Forma del estado local de la aplicación (data.json / caché en memoria de serve
 - [[server_routes_tiposBilling|server/routes/tiposBilling.ts]] *(from #route)*
 - [[server_routes_users_adminInicial|server/routes/users/adminInicial.ts]] *(from #route)*
 - [[server_routes_users_bandasDisponibles|server/routes/users/bandasDisponibles.ts]] *(from #route)*
+- [[server_routes_users_mezclaUsuarioBd|server/routes/users/mezclaUsuarioBd.ts]] *(from #route)*
 - [[server_routes_users_permisosCuenta|server/routes/users/permisosCuenta.ts]] *(from #route)*
 - [[server_routes_users_rutasGoogle|server/routes/users/rutasGoogle.ts]] *(from #route)*
 - [[server_routes_users_rutasLogin|server/routes/users/rutasLogin.ts]] *(from #route)*

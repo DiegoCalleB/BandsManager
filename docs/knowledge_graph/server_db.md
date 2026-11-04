@@ -87,6 +87,7 @@ Módulo sin exportaciones con nombre.
 - [[server_routes_users|server/routes/users.ts]] *(from #route)*
 - [[server_routes_users_adminInicial|server/routes/users/adminInicial.ts]] *(from #route)*
 - [[server_routes_users_bandasDisponibles|server/routes/users/bandasDisponibles.ts]] *(from #route)*
+- [[server_routes_users_mezclaUsuarioBd|server/routes/users/mezclaUsuarioBd.ts]] *(from #route)*
 - [[server_routes_users_rutasBandas|server/routes/users/rutasBandas.ts]] *(from #route)*
 - [[server_routes_users_rutasGoogle|server/routes/users/rutasGoogle.ts]] *(from #route)*
 - [[server_routes_users_rutasInvitacion|server/routes/users/rutasInvitacion.ts]] *(from #route)*
@@ -120,6 +121,7 @@ Módulo sin exportaciones con nombre.
 - `server/services/__tests__/agentEngine.test.ts`
 - `server/services/__tests__/agentEngineDirectSend.test.ts`
 - `server/services/__tests__/agentEngineSeguridad.test.ts`
+- `server/services/__tests__/pitchEngineRegenerate.test.ts`
 
 ---
 

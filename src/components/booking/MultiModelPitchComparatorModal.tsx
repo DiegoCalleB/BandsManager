@@ -284,7 +284,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                 </span>
                 {[
                   { id: "deepseek", name: "DeepSeek V3", icon: "🚀" },
-                  { id: "gemini", name: "Gemini 3.7 Flash", icon: "⚡" },
+                  { id: "gemini", name: "Gemini 3.8 Flash", icon: "⚡" },
                 ].map((prov) => {
                   const isSelected = selectedProviders.includes(prov.id);
                   return (
@@ -677,7 +677,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                     </tr>
                     <tr className="hover:bg-[var(--surface)]/40">
                       <td className="py-1.5 px-2 font-bold text-[var(--acc)] flex items-center gap-1">
-                        <span><ShowIcon inline emoji="⚡" /></span> Google Gemini 3.7 Flash
+                        <span><ShowIcon inline emoji="⚡" /></span> Google Gemini 3.8 Flash
                       </td>
                       <td className="py-1.5 px-2 font-sans text-[var(--ink-2)]">
                         0,10 $ (0,09 €)
@@ -692,7 +692,7 @@ export const MultiModelPitchComparatorModal: React.FC<
                         ~0,018 €
                       </td>
                       <td className="py-1.5 px-2 font-sans font-bold text-[var(--acc)]/70">
-                        ~0,18 € (o 0 € con Free Tier)
+                        ~1,56 € (o 0 € con Free Tier)
                       </td>
                     </tr>
                   </tbody>

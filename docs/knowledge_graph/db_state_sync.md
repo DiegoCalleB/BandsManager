@@ -113,6 +113,7 @@ Copia en memoria de alta velocidad sincronizada con Supabase al arranque.
 
 ## 🧪 Tests que lo cubren
 - `server/routes/__tests__/superficieUsersAiMusic.test.ts`
+- `server/services/__tests__/pitchEngineRegenerate.test.ts`
 
 ---
 
