@@ -33,9 +33,9 @@ const joseSemilla = () => ({
   instrument: 'Instrumento de ejemplo', avatarColor: 'azul', band_id: 'band-demo', main_band_id: 'band-demo', bandName: 'Banda Demo',
 });
 const joseReal = (extra: object = {}) => ({
-  id: 'user-jose', username: 'jose', name: 'Jose', email: 'josefilgue85@gmail.com', role: 'leader', plan: 'cabeza_de_cartel',
-  instrument: 'Percusión', avatarColor: 'var(--ok)', band_id: 'band-bakandeya', main_band_id: 'band-bakandeya', bandName: 'Bakandeya',
-  band_order: ['band-bakandeya', 'band-majo-leiva'], ...extra,
+  id: 'user-jose', username: 'jose', name: 'Jose', email: 'jose@correo-real.test', role: 'leader', plan: 'cabeza_de_cartel',
+  instrument: 'Percusión', avatarColor: 'var(--ok)', band_id: 'band-uno', main_band_id: 'band-uno', bandName: 'Banda Uno',
+  band_order: ['band-uno', 'band-dos'], ...extra,
 });
 
 beforeEach(() => {
@@ -43,8 +43,8 @@ beforeEach(() => {
   usuariosBd = [{ ...joseReal(), passwordHash: hash, salt }];
   estado = {
     users: [{ ...joseSemilla(), passwordHash: hash, salt }],
-    userBands: [{ id: 'ub-1', user_id: 'user-jose', band_id: 'band-bakandeya', role: 'leader' }],
-    registeredBands: [{ id: 'band-bakandeya', band_id: 'band-bakandeya', nombre_banda: 'Bakandeya', plan: 'de_gira', user_id: 'user-jose' }],
+    userBands: [{ id: 'ub-1', user_id: 'user-jose', band_id: 'band-uno', role: 'leader' }],
+    registeredBands: [{ id: 'band-uno', band_id: 'band-uno', nombre_banda: 'Banda Uno', plan: 'de_gira', user_id: 'user-jose' }],
     sessions: {},
   };
 });
@@ -54,9 +54,9 @@ describe('copiarCamposDeBd', () => {
     const memoria: any = joseSemilla();
     copiarCamposDeBd(memoria, joseReal() as any);
     expect(memoria).toMatchObject({
-      email: 'josefilgue85@gmail.com', name: 'Jose', instrument: 'Percusión', avatarColor: 'var(--ok)',
-      band_id: 'band-bakandeya', main_band_id: 'band-bakandeya', bandName: 'Bakandeya', plan: 'cabeza_de_cartel',
-      band_order: ['band-bakandeya', 'band-majo-leiva'],
+      email: 'jose@correo-real.test', name: 'Jose', instrument: 'Percusión', avatarColor: 'var(--ok)',
+      band_id: 'band-uno', main_band_id: 'band-uno', bandName: 'Banda Uno', plan: 'cabeza_de_cartel',
+      band_order: ['band-uno', 'band-dos'],
     });
   });
 
@@ -73,7 +73,7 @@ describe('el usuario que ve el cliente sale de Supabase, no de la semilla', () =
   it('POST /auth/login devuelve el email real y la banda principal real', async () => {
     const res = resFalso();
     await manejador(usersRouter, '/auth/login', 'post')({ body: { username: 'jose', password: 'clave-de-jose' }, headers: {}, query: {}, ip: '9.9.9.9' }, res, () => {});
-    expect(res.body.user.email).toBe('josefilgue85@gmail.com');
+    expect(res.body.user.email).toBe('jose@correo-real.test');
     expect(res.body.user.name).toBe('Jose');
     expect(res.body.availableBands.map((b: any) => b.band_id)).not.toContain('band-demo');
   });
@@ -82,6 +82,6 @@ describe('el usuario que ve el cliente sale de Supabase, no de la semilla', () =
     ACTIVE_SESSIONS['tok-jose'] = { userId: 'user-jose', createdAt: Date.now() };
     const res = resFalso();
     await manejador(usersRouter, '/auth/me', 'get')({ headers: { authorization: 'Bearer tok-jose' }, query: {} }, res, () => {});
-    expect(res.body.user.email).toBe('josefilgue85@gmail.com');
+    expect(res.body.user.email).toBe('jose@correo-real.test');
   });
 });
