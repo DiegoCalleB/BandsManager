@@ -8,6 +8,7 @@ import { ACTIVE_SESSIONS } from '../../auth.js';
 import { loadState, saveState } from '../../state.js';
 import { dbGetUsers, dbUpsertUser, dbGetRegisteredBands, normalizePlan } from '../../db.js';
 import { buildAvailableBandsForUser } from './bandasDisponibles.js';
+import { copiarCamposDeBd } from './mezclaUsuarioBd.js';
 
 const router = express.Router();
 
@@ -43,11 +44,7 @@ router.get('/auth/me', async (req, res) => {
               u.username.toLowerCase() === su.username?.toLowerCase())
         );
         if (idx !== -1) {
-          if (su.plan) state.users[idx].plan = normalizePlan(su.plan);
-          if (su.role) state.users[idx].role = su.role;
-          if (su.band_id) state.users[idx].band_id = su.band_id;
-          if (su.bandName) state.users[idx].bandName = su.bandName;
-          if (su.main_band_id) state.users[idx].main_band_id = su.main_band_id;
+          copiarCamposDeBd(state.users[idx], su);
         } else {
           state.users.push(su);
         }
