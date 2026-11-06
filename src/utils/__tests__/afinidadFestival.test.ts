@@ -24,6 +24,11 @@ describe('afinidadDeGenero', () => {
     expect(afin).toBeLessThan(exacto);
   });
 
+  it('«Música del mundo» y Folk puntúan como afines', () => {
+    expect(afinidadDeGenero(lead('W', 'Música del mundo'), banda).puntos).toBeGreaterThan(0);
+    expect(afinidadDeGenero(lead('F', 'Folk'), banda).puntos).toBeGreaterThan(0);
+  });
+
   it('un festival multigénero o sin género va después, no se descarta', () => {
     const r = afinidadDeGenero(lead('M', 'Multigénero'), banda);
     expect(r.puntos).toBeGreaterThan(0);

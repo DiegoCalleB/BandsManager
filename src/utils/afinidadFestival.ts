@@ -2,9 +2,9 @@ import type { Lead } from '../types';
 
 /** Familias de género: lo que la banda toca (exacto) y sus afines (menos puntos). */
 const FAMILIAS: Array<{ etiqueta: string; claves: string[]; afines: string[] }> = [
-  { etiqueta: 'Reggae', claves: ['reggae', 'roots', 'dancehall'], afines: ['dub', 'world', 'fusion', 'mestizaje'] },
+  { etiqueta: 'Reggae', claves: ['reggae', 'roots', 'dancehall'], afines: ['dub', 'world', 'mundo', 'fusion', 'mestizaje'] },
   { etiqueta: 'Ska', claves: ['ska', 'rocksteady'], afines: ['ska-punk', 'punk', 'dub', 'fusion', 'mestizaje'] },
-  { etiqueta: 'Balkan', claves: ['balkan', 'balcan', 'gypsy', 'gitano', 'brass'], afines: ['world', 'folk', 'fusion', 'mestizaje'] },
+  { etiqueta: 'Balkan', claves: ['balkan', 'balcan', 'gypsy', 'gitano', 'brass'], afines: ['world', 'mundo', 'folk', 'fusion', 'mestizaje'] },
   { etiqueta: 'Electro', claves: ['electro', 'electronic', 'dance', 'techno', 'house'], afines: ['dub', 'fusion', 'indie'] },
 ];
 const GENERICOS = ['multigenero', 'multi-genero', 'eclectico', 'variado', 'pop', 'rock', 'indie', 'musica'];
