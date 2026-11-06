@@ -301,13 +301,22 @@ export function enrichLeadWithTelemetry(l: FilaLead | null | undefined) {
 export async function dbGetLeads(bandId: string): Promise<FilaLead[]> {
   const sb = getSupabase();
   const cleanId = cleanBandId(bandId);
-  const { data, error } = await sb
-    .from('leads')
-    .select('*')
-    .eq('band_id', cleanId)
-    .order('nombre_sala', { ascending: true });
-
-  if (error) throw new Error(`Supabase Error (leads): ${error.message}`);
+  // Supabase corta cada petición a 1000 filas sin avisar: una banda con más leads perdía los del final (por orden
+  // alfabético) de la agenda. Se lee por páginas hasta que una venga incompleta.
+  const TAMANO_PAGINA = 1000;
+  const data: FilaLead[] = [];
+  for (let desde = 0; ; desde += TAMANO_PAGINA) {
+    const { data: pagina, error } = await sb
+      .from('leads')
+      .select('*')
+      .eq('band_id', cleanId)
+      .order('nombre_sala', { ascending: true })
+      .order('id', { ascending: true })
+      .range(desde, desde + TAMANO_PAGINA - 1);
+    if (error) throw new Error(`Supabase Error (leads): ${error.message}`);
+    data.push(...(pagina || []));
+    if ((pagina || []).length < TAMANO_PAGINA) break;
+  }
   // Validation layer: guarantee strict band_id isolation
   const validated = (data || []).filter(
     (l) => cleanBandId(l.band_id) === cleanId

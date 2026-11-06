@@ -56,6 +56,7 @@ Operaciones CRUD en Supabase PostgreSQL con scoping forzoso por bandId.
 - `server/audit/__tests__/supabaseReal.smoke.test.ts`
 - `server/db/__tests__/leads.test.ts`
 - `server/db/__tests__/leadsClearFields.test.ts`
+- `server/db/__tests__/leadsPaginacion.test.ts`
 
 ---
 
