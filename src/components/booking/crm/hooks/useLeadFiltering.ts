@@ -3,6 +3,7 @@
  * Extraído de BookingCRM.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
 import { useMemo } from "react";
+import { ordenarPorAfinidad } from "../../../../utils/afinidadFestival";
 import { BookingCampaign, Lead, LeadStatus, LeadType } from "../../../../types";
 import { isLeadNeedsFollowup } from "../../../../utils/bookingFollowup";
 import { normalizeStatus, normalizeType } from "../../../../utils/bookingUtils";
@@ -22,6 +23,8 @@ export interface LeadFilteringParams {
   selectedCityFilter: string;
   minCapacityFilter: number;
   routeAnchorCity: string;
+  /** Géneros de la banda: ordenan los festivales de una campaña de festivales por encaje. */
+  generosBanda?: string[];
 }
 
 /**
@@ -29,7 +32,9 @@ export interface LeadFilteringParams {
  * @param params Estado y callbacks del contenedor ({@link LeadFilteringParams}).
  * @returns Estado derivado y handlers expuestos al contenedor.
  */
-export function useLeadFiltering({ leads, sectionTab, filterByCampaign, activeCampaign, searchTerm, statusFilter, typeFilter, selectedCityFilter, minCapacityFilter, routeAnchorCity }: LeadFilteringParams) {
+const GENEROS_VACIOS: string[] = [];
+
+export function useLeadFiltering({ leads, sectionTab, filterByCampaign, activeCampaign, searchTerm, statusFilter, typeFilter, selectedCityFilter, minCapacityFilter, routeAnchorCity, generosBanda = GENEROS_VACIOS }: LeadFilteringParams) {
 
   // Filter leads by active section tab
   const sectionLeads = useMemo(() => {
@@ -50,7 +55,7 @@ export function useLeadFiltering({ leads, sectionTab, filterByCampaign, activeCa
 
   const filteredLeads = useMemo(() => {
     const seen = new Set<string>();
-    return sectionLeads.filter((lead, idx) => {
+    const filtrados = sectionLeads.filter((lead, idx) => {
       const leadKey = lead.id ? String(lead.id).trim() : `lead-${idx}`;
       if (seen.has(leadKey)) return false;
       seen.add(leadKey);
@@ -100,6 +105,8 @@ export function useLeadFiltering({ leads, sectionTab, filterByCampaign, activeCa
       const matchesRoute = !routeAnchorCity || areCitiesLogisticallyCompatible(routeAnchorCity, lead.ciudad || lead.region || '');
       return matchesSearch && matchesStatus && matchesType && matchesCity && matchesCapacity && matchesRoute;
     });
+    const porEncaje = filterByCampaign && activeCampaign?.alcance === 'festivales' && generosBanda.length > 0;
+    return porEncaje ? ordenarPorAfinidad(filtrados, generosBanda) : filtrados;
   }, [
     sectionLeads,
     searchTerm,
@@ -111,6 +118,7 @@ export function useLeadFiltering({ leads, sectionTab, filterByCampaign, activeCa
     filterByCampaign,
     activeCampaign,
     routeAnchorCity,
+    generosBanda,
   ]);
 
   return { sectionLeads, filteredLeads };

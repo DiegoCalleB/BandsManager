@@ -23,7 +23,7 @@ Exporta: Afinidad, afinidadDeGenero, ordenarPorAfinidad.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-_Sin llamadas entrantes indexadas._
+- [[src_components_booking_crm_hooks_useLeadFiltering|src/components/booking/crm/hooks/useLeadFiltering.ts]] *(from #frontend)*
 
 ---
 
