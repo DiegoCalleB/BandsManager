@@ -25,6 +25,7 @@ Validación y normalización de los recintos que devuelve la IA en el Agente Sco
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[agent_scout|Scout Discovery Agent]] *(from #agent)*
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
+- [[server_utils_emailConEvidencia|server/utils/emailConEvidencia.ts]] *(from #service)*
 
 ---
 

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { anotarProcedencia, camposPorConfirmar, camposRellenados, instantanea, olvidarProcedencia, procedenciaValida, CONFIANZA_POR_FUENTE } from '../procedenciaDatos.js';
+import { anotarProcedencia, camposPorConfirmar, camposRellenados, instantanea, olvidarProcedencia, procedenciaValida, CONFIANZA_POR_FUENTE, emailsSinComprobar, emailsEditadosAMano } from '../procedenciaDatos.js';
 
 const AHORA = new Date('2026-10-18T12:00:00Z');
 
@@ -96,5 +96,44 @@ describe('avisos de un dato', () => {
   it('volver a rellenar el campo borra el aviso anterior', () => {
     const mapa = anotarProcedencia(procedenciaValida(con({ tipo: 'dominio_inexistente', para: 'a@b.xyz' })), ['email_contacto'], 'web', AHORA);
     expect(mapa.email_contacto.aviso).toBeUndefined();
+  });
+});
+
+describe('emailsSinComprobar', () => {
+  const ahora = '2026-11-06T10:00:00.000Z';
+  it('señala los emails que aportó una IA o un buscador y no los de la web, Google Maps o el catálogo', () => {
+    const mapa = {
+      email_contacto: { fuente: 'ia', confianza: 'baja', en: ahora },
+      email_secundario: { fuente: 'web', confianza: 'alta', en: ahora },
+    };
+    expect(emailsSinComprobar(mapa)).toEqual(['email_contacto']);
+    expect(emailsSinComprobar({ email_contacto: { fuente: 'buscador', confianza: 'media', en: ahora } })).toEqual(['email_contacto']);
+    expect(emailsSinComprobar({ email_contacto: { fuente: 'places', confianza: 'alta', en: ahora }, email_secundario: { fuente: 'catalogo', confianza: 'media', en: ahora } })).toEqual([]);
+  });
+
+  it('sin procedencia (escrito a mano o un lead antiguo) no hay nada que señalar', () => {
+    expect(emailsSinComprobar(undefined)).toEqual([]);
+    expect(emailsSinComprobar({})).toEqual([]);
+  });
+});
+
+describe('emailsEditadosAMano', () => {
+  it('un email que la persona cambia deja de ser un dato de la IA: solo los cambiados', () => {
+    const existente = { email_contacto: 'ia@sala.es', email_secundario: 'otro@sala.es' };
+    expect(emailsEditadosAMano(existente, { email_contacto: 'real@sala.es', email_secundario: 'otro@sala.es' })).toEqual(['email_contacto']);
+  });
+
+  it('el mismo valor, o un campo que no viene en la edición, no cuenta', () => {
+    const existente = { email_contacto: 'ia@sala.es', email_secundario: '' };
+    expect(emailsEditadosAMano(existente, { email_contacto: ' ia@sala.es ' })).toEqual([]);
+    expect(emailsEditadosAMano(existente, { notas: 'x' })).toEqual([]);
+  });
+
+  it('vaciar el email también es editarlo', () => {
+    expect(emailsEditadosAMano({ email_contacto: 'ia@sala.es' }, { email_contacto: '' })).toEqual(['email_contacto']);
+  });
+
+  it('sin ficha previa, un email nuevo escrito a mano cuenta', () => {
+    expect(emailsEditadosAMano(null, { email_contacto: 'a@b.es' })).toEqual(['email_contacto']);
   });
 });

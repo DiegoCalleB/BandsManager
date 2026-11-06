@@ -130,6 +130,31 @@ describe('Enviador: destinatarios', () => {
   });
 });
 
+describe('Enviador: emails sin comprobar', () => {
+  const origen = (fuente: string) => ({ fuente, confianza: 'baja', en: '2026-11-06T10:00:00.000Z' });
+
+  it('un email que puso una IA o un buscador y nadie ha comprobado no sale: ni envío ni borrador', async () => {
+    montarSupabase({ leads: [{ ...leadBase, datos_fuentes: { email_contacto: origen('ia') } }] });
+    const r = await runEnviadorAgent({ bandId: 'band-test', triggerType: 'test' });
+    expect(enviarEmailMock).not.toHaveBeenCalled();
+    expect(crearBorradorMock).not.toHaveBeenCalled();
+    expect(r.results[0].status).toBe('error');
+    expect(r.results[0].error).toMatch(/sin comprobar/i);
+  });
+
+  it('con un secundario comprobado, solo sale ese: el dudoso se deja fuera', async () => {
+    montarSupabase({ leads: [{ ...leadBase, email_secundario: 'booking@example.com', datos_fuentes: { email_contacto: origen('buscador'), email_secundario: origen('web') } }] });
+    await runEnviadorAgent({ bandId: 'band-test', triggerType: 'test' });
+    expect(enviarEmailMock.mock.calls[0][1].to).toBe('booking@example.com');
+  });
+
+  it('un email de la web, de Google Maps o escrito a mano sale con normalidad', async () => {
+    montarSupabase({ leads: [{ ...leadBase, datos_fuentes: { email_contacto: origen('web') } }] });
+    await runEnviadorAgent({ bandId: 'band-test', triggerType: 'test' });
+    expect(enviarEmailMock).toHaveBeenCalledTimes(1);
+  });
+});
+
 describe('Enviador: sin envíos duplicados ni descontrolados', () => {
   it('dos ejecuciones a la vez sobre el mismo lead envían UN solo correo', async () => {
     montarSupabase();

@@ -14,7 +14,7 @@ import { instagramConocido } from "./utils/instagramConocido.js";
 import { camposDesdeCatalogo } from "./utils/camposDesdeCatalogo.js";
 import { anotarProcedencia, camposRellenados, instantanea, type CamposDeEnriquecimiento, type FuenteDato } from "./utils/procedenciaDatos.js";
 import { consultaCatalogo } from "./db/consultaCatalogoSupabase.js";
-import { avisarEmailsDudosos } from "./services/avisarEmailsDudosos.js";
+import { descartarEmailsSinEvidencia } from "./services/emailsSinEvidencia.js";
 import type { BandContact, Lead } from '../src/types.js';
 import type { DatosBandaIA, DatosLeadIA, FechasFestivalIA, LeadEliminadoPorCierre, RespuestaPlacesTextSearch } from './tiposAutoEnrichment.js';
 
@@ -37,7 +37,7 @@ function toIsoDateString(val?: string | null): string {
 /**
  * Scrapes a venue/contact website via direct HTTP fetch to extract emails, instagram, and phone numbers without spending Gemini tokens.
  */
-export async function extractFestivalDates(lead: Pick<Lead, 'nombre_sala' | 'ciudad'>): Promise<{ startDate?: string; endDate?: string; email?: string; telefono?: string; website?: string; instagram?: string; genero?: string; aforo?: number; region?: string; imagen_url?: string }> {
+export async function extractFestivalDates(lead: Pick<Lead, 'nombre_sala' | 'ciudad'>): Promise<{ startDate?: string; endDate?: string; telefono?: string; website?: string; instagram?: string; genero?: string; aforo?: number; region?: string; imagen_url?: string }> {
   if (!lead.nombre_sala) return {};
 
   const cleanCity = (lead.ciudad || '').slice(0, 200).replace(/\([^)]*\)/g, ' ').replace(/\s+/g, ' ').trim();
@@ -54,7 +54,6 @@ export async function extractFestivalDates(lead: Pick<Lead, 'nombre_sala' | 'ciu
       return {
         startDate: dates.start,
         endDate: dates.end,
-        email: localMatch.email,
         telefono: localMatch.telefono,
         website: localMatch.website,
         instagram: localMatch.instagram,
@@ -551,10 +550,6 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo numérico. No inv
       modified = true;
 
       // Enriquecer otros campos con datos del festival
-      if (festivalInfo.email && !lead.email_contacto) {
-        lead.email_contacto = festivalInfo.email;
-        modified = true;
-      }
       if (festivalInfo.telefono && !lead.telefono) {
         lead.telefono = festivalInfo.telefono;
         modified = true;
@@ -657,8 +652,10 @@ Devuelve ÚNICAMENTE el texto final redactado del email listo para ser revisado 
     if (campo in lead) Reflect.set(lead, campo, '');
   }
 
+  // Un email que aportó una IA o un buscador solo se queda si aparece en la web de la sala (ver emailsSinEvidencia.ts).
+  if ((await descartarEmailsSinEvidencia(lead)).length > 0) modified = true;
+
   if (modified) {
-    await avisarEmailsDudosos(lead); // un email de IA o buscador con dominio inexistente se guarda con un aviso
     console.log(`[AutoEnrich] Lead '%s' enriquecido y guardado con éxito.`, lead.nombre_sala);
     const savedEnriched = await dbUpsertLead(lead, userBandId, { permitirVaciar: respetarVacios.size > 0 });
     const state = loadState();

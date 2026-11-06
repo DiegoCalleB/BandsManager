@@ -155,6 +155,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 
 3. **Ciclo de Vida de los Agentes de Booking:**
    * **Scout:** Descubre y enriquece salas en Supabase, las marca como estado `nuevo`.
+   * **Emails: sin evidencia no entran.** Ningún email lo rellena una IA, un buscador ni una lista escrita a mano: solo vale si aparece escrito en una página de la propia sala y su dominio recibe correo (`server/utils/emailConEvidencia.ts`; la puerta es `server/services/emailsSinEvidencia.ts`). El Scout no toma emails de la IA, `spanishFestivalsDB.ts` no lleva ninguno, el chat solo acepta el que escribió el usuario y el Enviador no usa uno sin comprobar (`emailsSinComprobar`). Para revisar los ya guardados: `npm run auditar:emails` (informe CSV; `--apply` vacía los de IA o buscador que no se pueden comprobar).
    * **Redactor:** Genera propuesta personalizada por IA, marca sub-estado como `pendiente_aprobacion` (lead listo para revisión humana).
      * **Directrices de redacción del pitch (`server/utils/bandDna.ts`, `server/promptsManager.ts`):**
        - Estructura breve (<120 palabras), 2 párrafos concisos, cercana y humana sin clichés ni jerga corporativa.

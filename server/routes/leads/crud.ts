@@ -21,6 +21,7 @@ import { filterLeadsByActiveCampaign } from "../../utils/festivalDateFilter.js";
 import { searchFestivalByName, formatFestivalDates } from "../../utils/spanishFestivalsDB.js";
 import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 import { responderError } from '../../utils/errorHttp.js';
+import { emailsEditadosAMano, olvidarProcedencia } from "../../utils/procedenciaDatos.js";
 
 const router = express.Router();
 
@@ -166,6 +167,11 @@ router.put("/leads/:id", requireAuth, apiAutenticadaRateLimiter, async (req, res
 
     const merged = { ...(existing || {}), ...updatedFields, id };
 
+    // Un email que la persona corrige a mano deja de ser una suposición de la IA: sin esto, seguiría «sin comprobar» y el
+    // Enviador no lo usaría nunca.
+    const emailsEditados = emailsEditadosAMano(existing, updatedFields);
+    if (emailsEditados.length > 0) merged.datos_fuentes = olvidarProcedencia(merged.datos_fuentes, emailsEditados);
+
     // Regla del proyecto que hasta ahora no estaba en el código: un lead no puede entrar en la
     // cola de envío sin un email de contacto válido. Antes esto no se notaba porque el Scout
     // inventaba los emails que no conocía; ahora los huecos son reales y visibles. Salta aquí,
@@ -278,7 +284,6 @@ router.post("/leads", requireAuth, apiAutenticadaRateLimiter, async (req, res) =
           const dates = formatFestivalDates(localFestival);
           newLead.festival_start_date = dates.start;
           newLead.festival_end_date = dates.end;
-          if (localFestival.email && !newLead.email_contacto) newLead.email_contacto = localFestival.email;
           if (localFestival.instagram && !newLead.instagram) newLead.instagram = localFestival.instagram;
           if (localFestival.website && !newLead.website) newLead.website = localFestival.website;
           if (localFestival.aforo && (!newLead.aforo || newLead.aforo === 0)) newLead.aforo = localFestival.aforo;
@@ -291,7 +296,6 @@ router.post("/leads", requireAuth, apiAutenticadaRateLimiter, async (req, res) =
           if (festInfo && festInfo.startDate) {
             newLead.festival_start_date = festInfo.startDate;
             newLead.festival_end_date = festInfo.endDate || festInfo.startDate;
-            if (festInfo.email && !newLead.email_contacto) newLead.email_contacto = festInfo.email;
             if (festInfo.instagram && !newLead.instagram) newLead.instagram = festInfo.instagram;
             if (festInfo.website && !newLead.website) newLead.website = festInfo.website;
             if (festInfo.aforo && (!newLead.aforo || newLead.aforo === 0)) newLead.aforo = festInfo.aforo;

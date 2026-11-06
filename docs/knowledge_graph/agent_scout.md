@@ -25,7 +25,7 @@ Descubre y enriquece información de salas registrándolas en estado nuevo.
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_consultaCatalogoSupabase|server/db/consultaCatalogoSupabase.ts]] *(Layer: #db, Domain: #system)*
 - [[server_promptsManager|server/promptsManager.ts]] *(Layer: #service, Domain: #system)*
-- [[server_services_avisarEmailsDudosos|server/services/avisarEmailsDudosos.ts]] *(Layer: #service, Domain: #system)*
+- [[server_services_emailsSinEvidencia|server/services/emailsSinEvidencia.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_jinaReaderService|server/services/jinaReaderService.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_spotifyService|server/services/spotifyService.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_venueIntelligenceService|server/services/venueIntelligenceService.ts]] *(Layer: #service, Domain: #booking)*
