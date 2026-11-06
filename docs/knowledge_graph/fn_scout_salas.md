@@ -24,6 +24,7 @@ Descubrimiento de salas, eventos y contactos desde fuentes abiertas, mapas y red
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_consultaCatalogoSupabase|server/db/consultaCatalogoSupabase.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_enriquecimientoLead|server/db/enriquecimientoLead.ts]] *(Layer: #db, Domain: #booking)*
+- [[server_db_leerTodas|server/db/leerTodas.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_salasCatalogo|server/db/salasCatalogo.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_tiposAdn|server/db/tiposAdn.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_tolerantWrite|server/db/tolerantWrite.ts]] *(Layer: #db, Domain: #system)*

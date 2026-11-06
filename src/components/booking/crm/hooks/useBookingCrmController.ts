@@ -6,6 +6,7 @@ import { BookingCampaign, EPKConfig, Lead, LeadStatus } from "../../../../types"
 import { useCrmNavigation } from "./useCrmNavigation";
 import { useLeadActions } from "./useLeadActions";
 import { useLeadEditing } from "./useLeadEditing";
+import { useMemo } from "react";
 import { useLeadFiltering } from "./useLeadFiltering";
 import { useLeadFormsAndEnrichment } from "./useLeadFormsAndEnrichment";
 import { useLeadScraping } from "./useLeadScraping";
@@ -42,7 +43,8 @@ export function useBookingCrmController({ bandName, initialSection, onSectionCha
 
   const { newLeadData, setIsModalScraping, setModalScrapeStatus, setModalScrapeError, setModalScrapeSuccessMsg, setNewLeadData, setIsAddingLeadModalOpen, setActiveTab, setManualEmailBody, setManualEmailSubject, setManualEmailStatus, isEnrichingAddresses, handleEnrichAddresses, enrichStatusMsg, setEnrichStatusMsg, handleLeadLogoUpload, isUploadingLeadLogo, isSimulatingAvanzado, simulationRole, simulationScenario, simulationSenderName, simulationSubject, simulationCustomInstruction, simulationMessage, simulationGenerated, isGeneratingSimulation, PREDEFINED_SCENARIOS, setIsSimulatingAvanzado, handleRoleChange, handleScenarioChange, setSimulationSenderName, setSimulationSubject, setSimulationCustomInstruction, setSimulationMessage, handleGenerateSimulationEmail, handleCommitSimulation, isAddingLeadModalOpen, isModalScraping, modalScrapeStatus, modalScrapeError, modalScrapeSuccessMsg } = useLeadFormsAndEnrichment({ currentBandId, setEditedLeadInfo, selectedLead, setSelectedLead, onUpdateLead });
 
-  const { sectionLeads, filteredLeads } = useLeadFiltering({ leads, sectionTab, filterByCampaign, activeCampaign, searchTerm, statusFilter, typeFilter, selectedCityFilter, minCapacityFilter, routeAnchorCity });
+  const generosBanda = useMemo(() => (epkConfig?.genero || '').split(/[,/·]/).map((g) => g.trim()).filter(Boolean), [epkConfig?.genero]);
+  const { sectionLeads, filteredLeads } = useLeadFiltering({ leads, sectionTab, filterByCampaign, activeCampaign, searchTerm, statusFilter, typeFilter, selectedCityFilter, minCapacityFilter, routeAnchorCity, generosBanda });
 
   const { handleAddNewLeadSubmit, handleModalScrape } = useLeadScraping({ newLeadData, setIsModalScraping, setModalScrapeStatus, setModalScrapeError, setModalScrapeSuccessMsg, setNewLeadData, onUpdateLead, setSelectedLead, sectionTab, effectiveBandName, onAddLead, setIsAddingLeadModalOpen });
 

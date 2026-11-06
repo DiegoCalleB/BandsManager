@@ -32,6 +32,7 @@ Busca datos públicos de una sala (web, redes) para completar su ficha. Pasa por
 - [[server_services_apifyInstagramService|server/services/apifyInstagramService.ts]] *(Layer: #service, Domain: #social)*
 - [[server_services_bookingWindowService|server/services/bookingWindowService.ts]] *(Layer: #service, Domain: #booking)*
 - [[server_services_emailDeliverabilityService|server/services/emailDeliverabilityService.ts]] *(Layer: #service, Domain: #system)*
+- [[server_services_emailsSinEvidencia|server/services/emailsSinEvidencia.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_financialBreakEvenService|server/services/financialBreakEvenService.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_googlePlacesVenueService|server/services/googlePlacesVenueService.ts]] *(Layer: #service, Domain: #booking)*
 - [[server_services_jinaReaderService|server/services/jinaReaderService.ts]] *(Layer: #service, Domain: #system)*

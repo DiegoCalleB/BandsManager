@@ -33,12 +33,12 @@ describe('scrapeWebsiteForContact: entradas legítimas', () => {
     expect(opciones.maxRedirects).toBeLessThanOrEqual(3);
   });
 
-  it('descarta emails de dominios de ejemplo pero no los que solo los contienen como texto', async () => {
+  it('descarta emails de dominios de ejemplo y de otros dominios, y se queda con el de la sala', async () => {
     fetchSeguro.mockResolvedValueOnce(
-      respuesta('contacto: user@example.com, you@sub.sentry.io, example.com@sala-real.es')
+      respuesta('contacto: user@example.com, you@sub.sentry.io, info@sala-real.es')
     );
     const r = await scrapeWebsiteForContact('https://sala-real.es');
-    expect(r.email).toBe('example.com@sala-real.es');
+    expect(r.email).toBe('info@sala-real.es');
   });
 
   it('prueba las subpáginas cuando la guardia rechaza o la respuesta es un error', async () => {
@@ -48,5 +48,13 @@ describe('scrapeWebsiteForContact: entradas legítimas', () => {
     const r = await scrapeWebsiteForContact('https://sala.es');
     expect(r.email).toBe('hola@sala.es');
     expect(fetchSeguro.mock.calls[2][0]).toBe('https://sala.es/contactos');
+  });
+});
+
+describe('scrapeWebsiteForContact: solo emails que sirven para proponer un concierto', () => {
+  it('no apunta prensa, entradas ni dominios ajenos, aunque sea lo único de la web', async () => {
+    fetchSeguro.mockResolvedValue(respuesta('prensa@sala-real.es entradas@sala-real.es hola@feverup.com ana.lopez@sala-real.es'));
+    expect((await scrapeWebsiteForContact('https://sala-real.es')).email).toBeUndefined();
+    fetchSeguro.mockReset();
   });
 });

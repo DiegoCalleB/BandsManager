@@ -229,7 +229,7 @@ export const chatFunctionDeclarations: FunctionDeclaration[] = [
               description: "Categoría del lead ('sala' | 'festival' | 'ayuntamiento' | 'medio' | 'discoteca' | 'grupo' | 'agencia' | 'manager' | 'productora' | 'sello').",
               enum: ["sala", "festival", "ayuntamiento", "medio", "discoteca", "grupo", "agencia", "manager", "productora", "sello"]
             },
-            email_contacto: { type: Type.STRING, description: "Correo electrónico de booking o prensa." },
+            email_contacto: { type: Type.STRING, description: "Correo de booking o prensa SOLO si el usuario te lo ha escrito. NUNCA lo deduzcas ni lo inventes: si no lo sabes, no incluyas este campo." },
             telefono: { type: Type.STRING, description: "Teléfono de contacto." },
             website: { type: Type.STRING, description: "Sitio web oficial." },
             instagram: { type: Type.STRING, description: "Perfil de Instagram." },
@@ -258,7 +258,7 @@ export const chatFunctionDeclarations: FunctionDeclaration[] = [
           type: Type.OBJECT,
           description: "Campos modificados (ej: email_contacto, notas, estado, etc.).",
           properties: {
-            email_contacto: { type: Type.STRING },
+            email_contacto: { type: Type.STRING, description: "SOLO si el usuario te lo ha escrito. NUNCA lo deduzcas ni lo inventes." },
             telefono: { type: Type.STRING },
             instagram: { type: Type.STRING },
             notas: { type: Type.STRING },

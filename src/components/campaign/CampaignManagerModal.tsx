@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { BookingCampaign, PitchTemplateCategory } from "../../types";
+import { CampanaAlcanceFields } from "./CampanaAlcanceFields";
 import { HolidayDateWarning } from "../common/HolidayDateWarning";
 import { Target, Calendar, MapPin, Users, Plus, X, Check, Trash2, Edit3, Compass, ShieldCheck, Flame, Wand2, Building2, Tent, Disc3, Radio, Briefcase, Landmark } from "lucide-react";
 import { GenerateAllTemplatesModal } from "../booking/GenerateAllTemplatesModal";
@@ -76,7 +77,6 @@ export function CampaignManagerModal({
     color: "var(--acc)",
     isActive: true,
   });
-  const [newCityInput, setNewCityInput] = useState("");
   const [activePitchCategory, setActivePitchCategory] =
     useState<PitchTemplateCategory>("salas");
   const [isMultiTemplatesModalOpen, setIsMultiTemplatesModalOpen] =
@@ -168,6 +168,7 @@ export function CampaignManagerModal({
     setEditingCampaignId(camp.id);
     setFormData({
       name: camp.name,
+      alcance: camp.alcance || "salas",
       targetCities: [...(camp.targetCities || [])],
       minCapacity: camp.minCapacity || 0,
       maxCapacity: camp.maxCapacity || 0,
@@ -206,9 +207,11 @@ export function CampaignManagerModal({
     const payload = {
       id: editingCampaignId || undefined,
       name: formData.name.trim(),
-      targetCities: formData.targetCities || [],
-      minCapacity: Number(formData.minCapacity || 0),
-      maxCapacity: Number(formData.maxCapacity || 0),
+      alcance: formData.alcance === "festivales" ? ("festivales" as const) : ("salas" as const),
+      // En festivales no hay ciudad ni aforo: se guardan vacíos para que no filtren nada.
+      targetCities: formData.alcance === "festivales" ? [] : formData.targetCities || [],
+      minCapacity: formData.alcance === "festivales" ? 0 : Number(formData.minCapacity || 0),
+      maxCapacity: formData.alcance === "festivales" ? 0 : Number(formData.maxCapacity || 0),
       targetDates: dates,
       targetDatesText: formattedDatesText,
       notes: formData.notes || "",
@@ -236,25 +239,6 @@ export function CampaignManagerModal({
     const current = [...(formData.targetDates || [])];
     current.splice(index, 1);
     setFormData({ ...formData, targetDates: current });
-  };
-
-  const handleAddCity = () => {
-    if (!newCityInput.trim()) return;
-    const current = formData.targetCities || [];
-    if (!current.includes(newCityInput.trim())) {
-      setFormData({
-        ...formData,
-        targetCities: [...current, newCityInput.trim()],
-      });
-    }
-    setNewCityInput("");
-  };
-
-  const handleRemoveCity = (city: string) => {
-    setFormData({
-      ...formData,
-      targetCities: (formData.targetCities || []).filter((c) => c !== city),
-    });
   };
 
   const handlePitchTemplateChange = (
@@ -370,91 +354,7 @@ export function CampaignManagerModal({
                 </div>
               </div>
 
-              {/* Target Cities */}
-              <div>
-                <label className="block text-xs font-sans font-bold text-[var(--ink-2)] mb-1">
-                  Ciudades objetivo *
-                </label>
-                <div className="flex flex-wrap gap-1.5 mb-2">
-                  {formData.targetCities?.map((city) => (
-                    <span
-                      key={city}
-                      className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/20 text-[var(--ink)]"
-                    >
-                      <MapPin className="w-3 h-3 text-[var(--ink-2)]" />
-                      {city}
-                      <IconButton
-                        label="Cerrar"
-                        variant="danger"
-                        type="button"
-                        onClick={() => handleRemoveCity(city)}
-                        className="ml-1"
-                      >
-                        <X className="w-3 h-3" />
-                      </IconButton>
-                    </span>
-                  ))}
-                </div>
-                <div className="flex gap-2">
-                  <Input
-                    size="sm"
-                    type="text"
-                    value={newCityInput}
-                    onChange={(e) => setNewCityInput(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        handleAddCity();
-                      }
-                    }}
-                    placeholder="Añadir ciudad (ej. Barcelona) y pulsar Enter"
-                    className="flex-1"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleAddCity}
-                    className="px-3 py-1.5 bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink)] text-xs font-sans font-bold rounded-[var(--r-pill)]"
-                  >
-                    + Añadir
-                  </button>
-                </div>
-              </div>
-
-              {/* Capacity Range */}
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-sans font-bold text-[var(--ink-2)] mb-1">
-                    Aforo mínimo (pax)
-                  </label>
-                  <Input size="sm" aria-label="Aforo mínimo (pax)"
-                    type="number"
-                    value={formData.minCapacity || 0}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        minCapacity: parseInt(e.target.value) || 0,
-                      })
-                    }
-                    className="w-full"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-sans font-bold text-[var(--ink-2)] mb-1">
-                    Aforo Máximo (pax)
-                  </label>
-                  <Input size="sm" aria-label="Aforo Máximo (pax)"
-                    type="number"
-                    value={formData.maxCapacity || 0}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        maxCapacity: parseInt(e.target.value) || 0,
-                      })
-                    }
-                    className="w-full"
-                  />
-                </div>
-              </div>
+              <CampanaAlcanceFields formData={formData} setFormData={setFormData} />
 
               {/* Target Dates List & Quick Add */}
               <div>

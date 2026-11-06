@@ -1,5 +1,9 @@
 // Base de datos local de festivales españoles con fechas históricas
 // Se actualiza anualmente. Formato: nombre normalizado → {nombre oficial, fechas}
+//
+// SIN EMAILS, a propósito: los que había se escribieron a mano y casi todos eran `info@` + el dominio del festival,
+// es decir, deducidos y no leídos de ninguna parte. Un email solo entra en un lead si se comprueba en la web de la
+// propia sala (server/utils/emailConEvidencia.ts); lo vigila server/utils/__tests__/spanishFestivalsDB.test.ts.
 
 export interface FestivalEntry {
   nombre: string;
@@ -10,7 +14,6 @@ export interface FestivalEntry {
   dia_inicio: number; // 1-31
   mes_fin: number;
   dia_fin: number;
-  email?: string;
   telefono?: string;
   website?: string;
   instagram?: string;
@@ -30,7 +33,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "Valencia",
     mes_inicio: 7, dia_inicio: 15, mes_fin: 7, dia_fin: 22,
     website: "https://www.fiberfib.com/",
-    email: "info@fiberfib.com",
     telefono: "+34 964 30 17 78",
     instagram: "@fiberfib",
     genero: "Rock, Indie, Pop, Electrónica",
@@ -42,8 +44,7 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     ciudad: "Bilbao",
     region: "País Vasco",
     mes_inicio: 7, dia_inicio: 10, mes_fin: 7, dia_fin: 13,
-    website: "https://www.bbklive.net/",
-    email: "info@bbklive.net",
+    website: "https://bilbaobbklive.com/",
     instagram: "@bbklive",
     genero: "Rock, Pop, Indie",
     aforo: 15000
@@ -55,7 +56,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "Madrid",
     mes_inicio: 7, dia_inicio: 1, mes_fin: 7, dia_fin: 7,
     website: "https://www.madcoolfestival.es/",
-    email: "info@madcoolfestival.es",
     instagram: "@madcoolfestival",
     genero: "Rock, Pop, Indie, Electrónica",
     aforo: 25000
@@ -67,7 +67,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "Cataluña",
     mes_inicio: 6, dia_inicio: 1, mes_fin: 6, dia_fin: 10,
     website: "https://www.primaverasound.com/",
-    email: "info@primaverasound.com",
     instagram: "@primaverasound",
     genero: "Indie, Rock, Pop, Electrónica, Hip-hop",
     aforo: 20000
@@ -79,7 +78,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "Cataluña",
     mes_inicio: 6, dia_inicio: 13, mes_fin: 6, dia_fin: 15,
     website: "https://sonar.es/",
-    email: "info@sonar.es",
     instagram: "@sonarbcn",
     genero: "Electrónica, Techno, House, Experimental",
     aforo: 12000
@@ -91,7 +89,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "Cataluña",
     mes_inicio: 7, dia_inicio: 15, mes_fin: 7, dia_fin: 25,
     website: "https://www.cruilla.cat/",
-    email: "info@cruilla.cat",
     instagram: "@cruillabcn",
     genero: "Rock, Pop, Indie, Electrónica, Hip-hop",
     aforo: 18000
@@ -103,7 +100,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "Valencia",
     mes_inicio: 8, dia_inicio: 1, mes_fin: 8, dia_fin: 10,
     website: "https://www.arenalsound.com/",
-    email: "info@arenalsound.com",
     instagram: "@arenalsound",
     genero: "Rock, Indie, Pop, Electrónica",
     aforo: 25000
@@ -115,7 +111,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "Madrid",
     mes_inicio: 8, dia_inicio: 15, mes_fin: 8, dia_fin: 25,
     website: "https://www.tomavistas.es/",
-    email: "info@tomavistas.es",
     instagram: "@tomavistas",
     genero: "Indie, Rock, Pop",
     aforo: 12000
@@ -127,7 +122,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "País Vasco",
     mes_inicio: 8, dia_inicio: 1, mes_fin: 8, dia_fin: 20,
     website: "https://www.jazztalent.es/",
-    email: "info@jazztalent.es",
     genero: "Jazz, Blues, Soul",
     aforo: 5000
   },
@@ -139,7 +133,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "Madrid",
     mes_inicio: 6, dia_inicio: 1, mes_fin: 6, dia_fin: 10,
     website: "https://www.rockinrio.es/",
-    email: "info@rockinrio.es",
     instagram: "@rockinrio",
     genero: "Rock, Pop, Electrónica, Reggaeton",
     aforo: 80000
@@ -150,8 +143,7 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     ciudad: "Vitoria",
     region: "País Vasco",
     mes_inicio: 6, dia_inicio: 15, mes_fin: 6, dia_fin: 18,
-    website: "https://www.azkenafest.com/",
-    email: "info@azkenafest.com",
+    website: "https://www.azkenarockfestival.com/",
     instagram: "@azkenafest",
     genero: "Rock, Punk, Blues",
     aforo: 8000
@@ -162,7 +154,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "Andalucía",
     mes_inicio: 7, dia_inicio: 1, mes_fin: 7, dia_fin: 31,
     website: "https://www.guitarracordoba.com/",
-    email: "info@guitarracordoba.com",
     genero: "Guitarra, Flamenco, Clásica",
     aforo: 2000
   },
@@ -172,7 +163,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "Andalucía",
     mes_inicio: 7, dia_inicio: 1, mes_fin: 8, dia_fin: 31,
     website: "https://www.festivalneria.com/",
-    email: "info@festivalneria.com",
     genero: "Clásica, Ópera, Cámara",
     aforo: 3000
   },
@@ -183,7 +173,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "Castilla-La Mancha",
     mes_inicio: 7, dia_inicio: 5, mes_fin: 7, dia_fin: 6,
     website: "https://alternafestival.es",
-    email: "info@alternafestival.es",
     instagram: "@alternafestival",
     genero: "Rock, Punk, Ska, Rap, Metal, Mestizaje",
     aforo: 8000
@@ -195,7 +184,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "Comunidad Valenciana",
     mes_inicio: 8, dia_inicio: 14, mes_fin: 8, dia_fin: 16,
     website: "http://www.aupalumbreiras.com",
-    email: "info@aupalumbreiras.com",
     instagram: "@aupalumbreiras",
     genero: "Punk, Rock, Ska, Hardcore, Metal",
     aforo: 15000
@@ -207,7 +195,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "Comunidad Valenciana",
     mes_inicio: 8, dia_inicio: 7, mes_fin: 8, dia_fin: 10,
     website: "https://www.leyendasdelrockfestival.com",
-    email: "info@leyendasdelrockfestival.com",
     instagram: "@leyendasdelrock_oficial",
     genero: "Heavy Metal, Hard Rock, Power Metal, Folk Metal",
     aforo: 18000
@@ -219,7 +206,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "Andalucía",
     mes_inicio: 7, dia_inicio: 24, mes_fin: 7, dia_fin: 27,
     website: "https://www.cabodeplata.com",
-    email: "info@cabodeplata.com",
     instagram: "@cabodeplata",
     genero: "Reggae, Rap, Mestizaje, Rock, Fusion",
     aforo: 30000
@@ -231,7 +217,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "Galicia",
     mes_inicio: 5, dia_inicio: 30, mes_fin: 6, dia_fin: 1,
     website: "https://www.osondocamino.es",
-    email: "info@osondocamino.es",
     instagram: "@osondocamino",
     genero: "Rock, Pop, Indie, Electrónica",
     aforo: 40000
@@ -243,7 +228,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "Andalucía",
     mes_inicio: 8, dia_inicio: 21, mes_fin: 8, dia_fin: 24,
     website: "https://canelaparty.com",
-    email: "info@canelaparty.com",
     instagram: "@canelaparty",
     genero: "Indie, Rock, Punk, Pop",
     aforo: 10000
@@ -255,7 +239,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "Comunidad Valenciana",
     mes_inicio: 7, dia_inicio: 26, mes_fin: 7, dia_fin: 28,
     website: "https://lowfestival.es",
-    email: "info@lowfestival.es",
     instagram: "@lowfestival",
     genero: "Indie, Rock, Electrónica, Pop",
     aforo: 25000
@@ -267,7 +250,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "Castilla y León",
     mes_inicio: 6, dia_inicio: 6, mes_fin: 6, dia_fin: 9,
     website: "https://www.palenciasonora.com",
-    email: "info@palenciasonora.com",
     instagram: "@palenciasonora",
     genero: "Indie, Pop, Rock",
     aforo: 8000
@@ -279,7 +261,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "Comunidad de Madrid",
     mes_inicio: 1, dia_inicio: 9, mes_fin: 2, dia_fin: 8,
     website: "https://inverfest.com",
-    email: "info@inverfest.com",
     instagram: "@inverfest",
     genero: "Indie, Rock, Pop, Flamenco, Canción de Autor",
     aforo: 15000
@@ -291,7 +272,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "Comunidad de Madrid",
     mes_inicio: 6, dia_inicio: 4, mes_fin: 7, dia_fin: 31,
     website: "https://www.nochesdelbotanico.com",
-    email: "info@nochesdelbotanico.com",
     instagram: "@nochesbotanico",
     genero: "Jazz, Rock, Pop, Flamenco, Fusion",
     aforo: 4000
@@ -303,7 +283,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "Castilla y León",
     mes_inicio: 8, dia_inicio: 7, mes_fin: 8, dia_fin: 11,
     website: "https://sonorama-aranda.com",
-    email: "booking@sonorama-aranda.com",
     instagram: "@sonoramaribera",
     genero: "Indie, Pop, Rock, Rap",
     aforo: 30000
@@ -315,7 +294,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "Región de Murcia",
     mes_inicio: 5, dia_inicio: 3, mes_fin: 5, dia_fin: 4,
     website: "https://warmupfestival.es",
-    email: "info@warmupfestival.es",
     instagram: "@warmupfestival",
     genero: "Indie, Electrónica, Rock, Pop",
     aforo: 20000
@@ -327,7 +305,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "Comunidad Valenciana",
     mes_inicio: 3, dia_inicio: 28, mes_fin: 3, dia_fin: 30,
     website: "https://sansanfestival.com",
-    email: "info@sansanfestival.com",
     instagram: "@sansanfestival",
     genero: "Indie, Pop, Rock",
     aforo: 18000
@@ -339,7 +316,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "Andalucía",
     mes_inicio: 5, dia_inicio: 17, mes_fin: 5, dia_fin: 18,
     website: "https://interestelarsevilla.weebly.com",
-    email: "info@interestelarsevilla.com",
     instagram: "@interestelarsevilla",
     genero: "Indie, Pop, Rock",
     aforo: 20000
@@ -351,7 +327,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "Comunidad de Madrid",
     mes_inicio: 10, dia_inicio: 4, mes_fin: 10, dia_fin: 5,
     website: "https://piratafestival.com",
-    email: "info@piratafestival.com",
     instagram: "@piratafestival",
     genero: "Rock, Punk, Ska, Rap, Mestizaje",
     aforo: 15000
@@ -363,7 +338,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "Comunidad Valenciana",
     mes_inicio: 7, dia_inicio: 18, mes_fin: 7, dia_fin: 20,
     website: "https://piratafestival.com",
-    email: "booking@piratafestival.com",
     instagram: "@piratarockfestival",
     genero: "Rock, Punk, Ska, Mestizaje, Rap",
     aforo: 25000
@@ -375,7 +349,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "Castilla-La Mancha",
     mes_inicio: 4, dia_inicio: 28, mes_fin: 5, dia_fin: 1,
     website: "https://www.vina-rock.com",
-    email: "info@vina-rock.com",
     instagram: "@vinarockoficial",
     genero: "Rock, Punk, Ska, Rap, Mestizaje",
     aforo: 60000
@@ -387,7 +360,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "Galicia",
     mes_inicio: 6, dia_inicio: 26, mes_fin: 6, dia_fin: 29,
     website: "https://www.resurrectionfest.es",
-    email: "info@resurrectionfest.es",
     instagram: "@resurrectionfest",
     genero: "Metal, Hardcore, Punk, Rock",
     aforo: 30000
@@ -399,7 +371,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "Comunidad Valenciana",
     mes_inicio: 8, dia_inicio: 16, mes_fin: 8, dia_fin: 21,
     website: "https://rototomsunsplash.com",
-    email: "info@rototom.com",
     instagram: "@rototomsunsplash",
     genero: "Reggae, Dub, Ska, Dancehall",
     aforo: 30000
@@ -410,7 +381,6 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     region: "Andalucía",
     mes_inicio: 10, dia_inicio: 1, mes_fin: 10, dia_fin: 31,
     website: "https://www.flamencocordoba.com/",
-    email: "info@flamencocordoba.com",
     genero: "Flamenco",
     aforo: 2000
   }

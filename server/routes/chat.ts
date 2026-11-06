@@ -10,6 +10,7 @@ import { safeParseJson } from "../utils.js";
 import { getGlobalPitchFeedbackSummary } from "./leads.js";
 import { dbGetRegisteredBandById, dbGetEpkConfig, dbGetActiveCampaign, dbGetSongs, dbGetSetlists, dbGetTours, dbContarFans, dbGetPayments } from "../db.js";
 import { getTargetBandId, bandaDe } from "../utils/bandAccess.js";
+import { quitarEmailsNoEscritosPorElUsuario, textoEscritoPorElUsuario } from "../utils/emailsEnPropuestasDeChat.js";
 import { loadBandProfile, buildBandContextBlock, displayBandName, baseHashtags, emptyBandProfile } from "../utils/bandProfile.js";
 import { computeMusicalDna } from "../utils/musicalDna.js";
 import { sanearIdeasMelodicas } from "../utils/melodicIdeaValidator.js";
@@ -505,6 +506,16 @@ router.post("/chat", requireAuth, chatRateLimiter, async (req, res) => {
 
     // Las notas que compone la IA se validan y reparan antes de salir hacia el navegador
     parsed = sanearIdeasMelodicas(parsed);
+    // Un email en una propuesta solo vale si lo ha escrito el usuario: la IA «completa» fichas con info@dominio inventados.
+    const sinEmails = quitarEmailsNoEscritosPorElUsuario(parsed.proposedActions ?? [], textoEscritoPorElUsuario(message, chatHistory));
+    if (sinEmails.quitados > 0) {
+      console.warn(`[Chat] ${sinEmails.quitados} email(s) propuesto(s) por la IA y no escrito(s) por el usuario, quitado(s) de las acciones.`);
+      parsed = {
+        ...parsed,
+        text: `${parsed.text}\n\n_No he incluido ningún email en la propuesta porque no me lo has dado tú. Añádelo a mano cuando lo tengas comprobado._`,
+        proposedActions: sinEmails.acciones,
+      };
+    }
     res.json(parsed);
 
   } catch (errorCapturado) {

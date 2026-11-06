@@ -18,6 +18,7 @@ import { searchPublicCulturalOpportunities } from "../../services/publicCultural
 import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 import type { CandidatoCruzado, CandidatoScout, ContactoExtraido, LeadConocido, RespuestaBusquedaPlaces, RespuestaIA, RespuestaScoutIA } from "./tiposScout.js";
 import { responderError } from '../../utils/errorHttp.js';
+import { depurarContactosExtraidos } from '../../services/emailsSinEvidencia.js';
 
 const router = express.Router();
 
@@ -218,9 +219,7 @@ router.post(["/places-search", "/leads/places-search"], requireAuth, async (req,
               try {
                 const contactData = await enrichVenueDetailsWithSerper(place.nombre_sala, place.ciudad);
                 if (contactData) {
-                  if (contactData.email && !place.email_contacto) {
-                    place.email_contacto = contactData.email;
-                  }
+                  // Sin email del buscador aquí: puede ser de un directorio o de otra sala y esta lista se importa tal cual.
                   if (contactData.aforo && (!place.aforo || place.aforo === 0)) {
                     place.aforo = contactData.aforo;
                   }
@@ -934,6 +933,7 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con la estructura:
       allExtracted.push(...result);
     }
 
+    await depurarContactosExtraidos(allExtracted, places); // lo que dice la IA no es un hecho: cada email se comprueba en la web de SU sala
     return res.json({
       success: true,
       totalProcessed: places.length,

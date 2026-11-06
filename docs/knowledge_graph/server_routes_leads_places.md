@@ -24,6 +24,7 @@ Descubrimiento de salas/festivales: búsqueda en Places, campañas masivas, extr
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_leads_helpers|server/routes/leads/helpers.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_routes_leads_tiposScout|server/routes/leads/tiposScout.ts]] *(Layer: #route, Domain: #booking)*
+- [[server_services_emailsSinEvidencia|server/services/emailsSinEvidencia.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_multiSourceVenueDiscoveryService|server/services/multiSourceVenueDiscoveryService.ts]] *(Layer: #service, Domain: #booking)*
 - [[server_services_publicCulturalEventsRadarService|server/services/publicCulturalEventsRadarService.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_similarBandsVenueMatcherService|server/services/similarBandsVenueMatcherService.ts]] *(Layer: #service, Domain: #booking)*

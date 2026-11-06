@@ -5,6 +5,7 @@ import { escrituraTolerante } from './tolerantWrite.js';
 import { getSupabase, cleanBandId } from './core.js';
 import { ensureRegisteredBandExists } from './bands.js'; import { columnasDeEnriquecimiento } from './enriquecimientoLead.js';
 import type { InteractionLog, Lead } from '../../src/types.js';
+import { leerTodas } from './leerTodas.js';
 
 /**
  * Fila de `leads` tal como sale de Supabase: los campos de `Lead` más los que solo existen en la
@@ -301,13 +302,9 @@ export function enrichLeadWithTelemetry(l: FilaLead | null | undefined) {
 export async function dbGetLeads(bandId: string): Promise<FilaLead[]> {
   const sb = getSupabase();
   const cleanId = cleanBandId(bandId);
-  const { data, error } = await sb
-    .from('leads')
-    .select('*')
-    .eq('band_id', cleanId)
-    .order('nombre_sala', { ascending: true });
-
-  if (error) throw new Error(`Supabase Error (leads): ${error.message}`);
+  const data = await leerTodas<FilaLead>((desde, hasta) =>
+    sb.from('leads').select('*').eq('band_id', cleanId).order('nombre_sala', { ascending: true }).order('id', { ascending: true }).range(desde, hasta),
+  ).catch((e: Error) => { throw new Error(`Supabase Error (leads): ${e.message}`); });
   // Validation layer: guarantee strict band_id isolation
   const validated = (data || []).filter(
     (l) => cleanBandId(l.band_id) === cleanId

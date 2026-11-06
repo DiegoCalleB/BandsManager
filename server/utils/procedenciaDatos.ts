@@ -124,3 +124,26 @@ export function camposPorConfirmar(mapa: unknown): string[] {
     .filter(([, p]) => p.confianza === 'baja')
     .map(([campo]) => campo);
 }
+
+/**
+ * Campos de email cuyo valor aportó una IA o un buscador y nadie ha comprobado en la web de la sala: son suposiciones.
+ * Los de la web, Google Maps o el catálogo, y lo que escribe una persona (sin procedencia), no entran aquí.
+ */
+export function emailsSinComprobar(mapa: unknown): string[] {
+  const procedencia = procedenciaValida(mapa);
+  return ['email_contacto', 'email_secundario'].filter((campo) => {
+    const fuente = procedencia[campo]?.fuente;
+    return fuente === 'ia' || fuente === 'buscador';
+  });
+}
+
+/**
+ * Emails que la persona acaba de cambiar a mano respecto a la ficha guardada: dejan de ser un dato de una IA o un
+ * buscador y hay que olvidar su procedencia (ver `olvidarProcedencia`). Si no, un email corregido seguiría «sin comprobar».
+ */
+export function emailsEditadosAMano(existente: { email_contacto?: unknown; email_secundario?: unknown } | null | undefined, editados: Record<string, unknown>): string[] {
+  const texto = (v: unknown) => (typeof v === 'string' ? v.trim() : '');
+  return (['email_contacto', 'email_secundario'] as const).filter(
+    (campo) => typeof editados[campo] === 'string' && texto(editados[campo]) !== texto(existente?.[campo]),
+  );
+}
