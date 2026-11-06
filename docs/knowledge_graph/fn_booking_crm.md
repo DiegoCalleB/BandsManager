@@ -44,6 +44,7 @@ Embudo de salas y festivales: leads, enriquecimiento, pitch con IA, respuestas y
 - [[server_db_epk|server/db/epk.ts]] *(Layer: #db, Domain: #epk)*
 - [[server_db_exampleThreads|server/db/exampleThreads.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_fans|server/db/fans.ts]] *(Layer: #db, Domain: #social)*
+- [[server_db_leerTodas|server/db/leerTodas.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_pitchLearning|server/db/pitchLearning.ts]] *(Layer: #db, Domain: #booking)*
 - [[server_db_production|server/db/production.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_rehearsals|server/db/rehearsals.ts]] *(Layer: #db, Domain: #system)*

@@ -5,6 +5,7 @@ import { escrituraTolerante } from './tolerantWrite.js';
 import { getSupabase, cleanBandId } from './core.js';
 import { ensureRegisteredBandExists } from './bands.js'; import { columnasDeEnriquecimiento } from './enriquecimientoLead.js';
 import type { InteractionLog, Lead } from '../../src/types.js';
+import { leerTodas } from './leerTodas.js';
 
 /**
  * Fila de `leads` tal como sale de Supabase: los campos de `Lead` más los que solo existen en la
@@ -301,22 +302,9 @@ export function enrichLeadWithTelemetry(l: FilaLead | null | undefined) {
 export async function dbGetLeads(bandId: string): Promise<FilaLead[]> {
   const sb = getSupabase();
   const cleanId = cleanBandId(bandId);
-  // Supabase corta cada petición a 1000 filas sin avisar: una banda con más leads perdía los del final (por orden
-  // alfabético) de la agenda. Se lee por páginas hasta que una venga incompleta.
-  const TAMANO_PAGINA = 1000;
-  const data: FilaLead[] = [];
-  for (let desde = 0; ; desde += TAMANO_PAGINA) {
-    const { data: pagina, error } = await sb
-      .from('leads')
-      .select('*')
-      .eq('band_id', cleanId)
-      .order('nombre_sala', { ascending: true })
-      .order('id', { ascending: true })
-      .range(desde, desde + TAMANO_PAGINA - 1);
-    if (error) throw new Error(`Supabase Error (leads): ${error.message}`);
-    data.push(...(pagina || []));
-    if ((pagina || []).length < TAMANO_PAGINA) break;
-  }
+  const data = await leerTodas<FilaLead>((desde, hasta) =>
+    sb.from('leads').select('*').eq('band_id', cleanId).order('nombre_sala', { ascending: true }).order('id', { ascending: true }).range(desde, hasta),
+  ).catch((e: Error) => { throw new Error(`Supabase Error (leads): ${e.message}`); });
   // Validation layer: guarantee strict band_id isolation
   const validated = (data || []).filter(
     (l) => cleanBandId(l.band_id) === cleanId
