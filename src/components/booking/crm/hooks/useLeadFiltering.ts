@@ -6,7 +6,7 @@ import { useMemo } from "react";
 import { BookingCampaign, Lead, LeadStatus, LeadType } from "../../../../types";
 import { isLeadNeedsFollowup } from "../../../../utils/bookingFollowup";
 import { normalizeStatus, normalizeType } from "../../../../utils/bookingUtils";
-import { leadMatchesCampaignCapacity, leadMatchesCampaignCity, leadMatchesCampaignDates } from "../../../../utils/campaignMatch";
+import { leadMatchesCampaignCapacity, leadMatchesCampaignCity, leadMatchesCampaignDates, leadMatchesCampaignScope } from "../../../../utils/campaignMatch";
 import { areCitiesLogisticallyCompatible } from "../../../../utils/tourRouting";
 import { matchesGruposType, matchesMedioType } from "../leadTypeMatchers";
 
@@ -64,6 +64,7 @@ export function useLeadFiltering({ leads, sectionTab, filterByCampaign, activeCa
         // El filtrado por aforo, fechas y ciudad de campaña solo aplica a recintos y festivales (salas),
         // ya que los medios de comunicación y bandas no tienen aforo ni fechas de evento en campaña.
         if (
+          !leadMatchesCampaignScope(lead, activeCampaign) ||
           !leadMatchesCampaignCity(lead, activeCampaign) ||
           !leadMatchesCampaignCapacity(lead, activeCampaign) ||
           !leadMatchesCampaignDates(lead, activeCampaign)

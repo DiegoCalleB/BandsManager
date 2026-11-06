@@ -108,6 +108,7 @@ export function parseFlexibleDate(dateStr: string | null | undefined): Date | nu
 // resultado era que el contador prometía más salas de las que luego aparecían filtradas: no era
 // que el filtro fallara a veces, es que nunca fue el mismo filtro.
 export function leadMatchesCampaignCity(lead: Lead, campana: BookingCampaign): boolean {
+  if (campana.alcance === 'festivales') return true;
   const campaign: CampanaConAlias = campana;
   const targetCities = (campaign.targetCities || campaign.target_cities || [])
     .map((c) => c.toLowerCase().trim())
@@ -131,7 +132,13 @@ export function leadMatchesCampaignCity(lead: Lead, campana: BookingCampaign): b
   );
 }
 
+/** Campaña de festivales: solo pasan los festivales. Las demás campañas no filtran por tipo. */
+export function leadMatchesCampaignScope(lead: Lead, campana: BookingCampaign): boolean {
+  return campana.alcance !== 'festivales' || normalizeType(lead.tipo) === 'festival';
+}
+
 export function leadMatchesCampaignCapacity(lead: Lead, campana: BookingCampaign): boolean {
+  if (campana.alcance === 'festivales') return true;
   const campaign: CampanaConAlias = campana;
   const cap = Number(lead.aforo) || 0;
   const minCap = Number(campaign.minCapacity || campaign.min_capacity || 0);
@@ -191,6 +198,5 @@ export function leadMatchesCampaign(lead: Lead, campaign: BookingCampaign): bool
     !!lead.tipo && (String(lead.tipo).includes('medio') || String(lead.tipo).includes('prensa') || String(lead.tipo).includes('radio'));
   if (isMedio) return false;
   // Campaña de festivales: solo festivales, de cualquier ciudad y aforo (la ciudad o el aforo guardados no cuentan).
-  if (campaign.alcance === 'festivales') return normalizeType(lead.tipo) === 'festival' && leadMatchesCampaignDates(lead, campaign);
-  return leadMatchesCampaignCity(lead, campaign) && leadMatchesCampaignCapacity(lead, campaign) && leadMatchesCampaignDates(lead, campaign);
+  return leadMatchesCampaignScope(lead, campaign) && leadMatchesCampaignCity(lead, campaign) && leadMatchesCampaignCapacity(lead, campaign) && leadMatchesCampaignDates(lead, campaign);
 }

@@ -112,3 +112,17 @@ describe('campaña de festivales (sin ciudad ni aforo)', () => {
     expect(leadMatchesCampaign(baseLead({ tipo: 'festival', ciudad: 'Berlín', aforo: 20000 }), baseCampaign)).toBe(false);
   });
 });
+
+describe('matchers sueltos con campaña de festivales (los que usa el listado de Booking)', () => {
+  const bf: BookingCampaign = { id: 'bf', name: 'BF', alcance: 'festivales', targetCities: ['Madrid'], minCapacity: 300, maxCapacity: 500, targetDates: [], isActive: true };
+  it('ciudad y aforo no filtran', () => {
+    expect(leadMatchesCampaignCity(baseLead({ ciudad: 'Berlín' }), bf)).toBe(true);
+    expect(leadMatchesCampaignCapacity(baseLead({ aforo: 20000 }), bf)).toBe(true);
+  });
+  it('leadMatchesCampaignScope deja pasar solo festivales', async () => {
+    const { leadMatchesCampaignScope } = await import('../campaignMatch');
+    expect(leadMatchesCampaignScope(baseLead({ tipo: 'festival' }), bf)).toBe(true);
+    expect(leadMatchesCampaignScope(baseLead({ tipo: 'sala' }), bf)).toBe(false);
+    expect(leadMatchesCampaignScope(baseLead({ tipo: 'sala' }), baseCampaign)).toBe(true);
+  });
+});
