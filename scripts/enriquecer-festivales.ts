@@ -3,7 +3,7 @@
  * pide a una IA: cada dato sale escrito en una página del propio festival y se guarda con la página donde se leyó.
  *
  *   npx tsx scripts/enriquecer-festivales.ts --lista=festivales.txt [--salida=resultado.jsonl] [--paralelo=4]
- *   lista: id|Nombre|https://web-oficial/
+ *   lista: id|Nombre|https://web-oficial/[|Ciudad candidata: se confirma si aparece escrita en la web]
  *
  * Qué recoge (todo opcional): email de booking/contacto del dominio del festival (regla de evidencia de
  * `server/utils/emailsDeContacto.ts`), Instagram enlazado desde su web, teléfono (`tel:`), ciudad/dirección y fechas
@@ -39,6 +39,8 @@ const mismoSitio = (a: string, b: string) => {
 interface Hallazgo {
   email: string; rol: string; evidencia: string; instagram: string; telefono: string; ciudad: string;
   direccion: string; inicio: string; fin: string; formulario: string; convocatoria: string; paginas: number;
+  /** La ciudad candidata de la lista aparece escrita en alguna página de la web (si no, no se debe guardar). */
+  ciudadEnWeb: boolean;
 }
 
 /** Eventos/organizaciones JSON-LD de la página (ciudad, dirección y fechas de la edición). */
@@ -90,8 +92,8 @@ function pareceDelFestival(handle: string, nombre: string, web: string): boolean
   return (marca.length >= 4 && (h.includes(marca) || marca.includes(h))) || fichas.some((t) => h.includes(t));
 }
 
-async function enriquecer(page: Page, web: string, nombre: string): Promise<Hallazgo> {
-  const h: Hallazgo = { email: "", rol: "", evidencia: "", instagram: "", telefono: "", ciudad: "", direccion: "", inicio: "", fin: "", formulario: "", convocatoria: "", paginas: 0 };
+async function enriquecer(page: Page, web: string, nombre: string, ciudadCandidata = ""): Promise<Hallazgo> {
+  const h: Hallazgo = { email: "", rol: "", evidencia: "", instagram: "", telefono: "", ciudad: "", direccion: "", inicio: "", fin: "", formulario: "", convocatoria: "", paginas: 0, ciudadEnWeb: false };
   if (!(await abrir(page, web))) return h;
   const inicio = page.url();
   const cola = new Set<string>([inicio]);
@@ -113,6 +115,7 @@ async function enriquecer(page: Page, web: string, nombre: string): Promise<Hall
       jsonld: [...document.querySelectorAll('script[type="application/ld+json"]')].map((s) => s.textContent || ""),
       formulario: !!document.querySelector("form textarea"),
     }));
+    if (ciudadCandidata && plano(datos.texto).includes(plano(ciudadCandidata))) h.ciudadEnWeb = true;
     // El texto visible cubre emails escritos con JavaScript; el HTML, mailto, entidades y cfemail.
     for (const e of new Set([...emailsEnTexto(datos.html), ...emailsEnTexto(datos.texto)])) candidatos.push({ email: e, pagina: url });
     for (const { href, texto } of datos.enlaces) {
@@ -145,10 +148,10 @@ await Promise.all(
     const ctx = await navegador.newContext({ userAgent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124 Safari/537.36", locale: "es-ES" });
     const page = await ctx.newPage();
     while (i < lineas.length) {
-      const [id, nombre, web] = lineas[i++].split("|");
+      const [id, nombre, web, ciudad] = lineas[i++].split("|");
       let hallazgo: Partial<Hallazgo> = {};
       try {
-        hallazgo = await enriquecer(page, web, nombre);
+        hallazgo = await enriquecer(page, web, nombre, ciudad);
       } catch (err) {
         console.warn(`[enriquecer] ${nombre}:`, err instanceof Error ? err.message : err);
       }
