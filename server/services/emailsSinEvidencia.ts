@@ -32,7 +32,7 @@ export interface OpcionesDescarte {
 
 type LeadConEmails = Partial<Record<CampoEmail, string>> & CamposDeEnriquecimiento & { website?: string; notas?: string };
 
-async function leerPaginaSegura(url: string): Promise<string | null> {
+export async function leerPaginaSegura(url: string): Promise<string | null> {
   const res = await fetchUrlExternaSegura(url, {
     timeoutMs: 4000,
     maxBytes: 1_500_000,
