@@ -32,6 +32,7 @@ export interface BookingCampaign {
   id: string;
   band_id?: string;
   name: string;
+  alcance?: 'salas' | 'festivales'; // `festivales`: todos los festivales de España y Europa, sin ciudad ni aforo
   targetCities: string[];
   minCapacity: number;
   maxCapacity: number;
@@ -40,9 +41,8 @@ export interface BookingCampaign {
   campaignStartDate?: string; // YYYY-MM-DD: start date for filtering festival leads
   campaignEndDate?: string; // YYYY-MM-DD: end date for filtering festival leads
   notes?: string;
-  // Mensaje clave por caso de uso (salas/festivales/discotecas/...) que el Redactor prioriza
-  // sobre la plantilla general de esa categoría mientras la campaña esté activa. Las categorías
-  // sin entrada aquí siguen usando solo la plantilla general de su tipo.
+  // Mensaje clave por caso de uso (salas/festivales/...) que el Redactor prioriza sobre la plantilla
+  // general de esa categoría mientras la campaña esté activa; sin entrada, usa la general.
   customPitchTemplates?: Partial<Record<PitchTemplateCategory, string>>;
   isActive: boolean;
   /** Alias heredado de la API (snake_case) de `isActive`. */

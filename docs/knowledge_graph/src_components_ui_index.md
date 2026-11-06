@@ -195,6 +195,7 @@ BandManager UI Component Library
 - [[src_components_calendar_views_DayAgendaHeader|src/components/calendar/views/DayAgendaHeader.tsx]] *(from #frontend)*
 - [[src_components_calendar_views_PeriodNavigation|src/components/calendar/views/PeriodNavigation.tsx]] *(from #frontend)*
 - [[src_components_campaign_CampaignManagerModal|src/components/campaign/CampaignManagerModal.tsx]] *(from #frontend)*
+- [[src_components_campaign_CampanaAlcanceFields|src/components/campaign/CampanaAlcanceFields.tsx]] *(from #frontend)*
 - [[src_components_campaign_GlobalCampaignBar|src/components/campaign/GlobalCampaignBar.tsx]] *(from #frontend)*
 - [[src_components_cartel_AjustesCartel|src/components/cartel/AjustesCartel.tsx]] *(from #frontend)*
 - [[src_components_cartel_AjusteTexto|src/components/cartel/AjusteTexto.tsx]] *(from #frontend)*

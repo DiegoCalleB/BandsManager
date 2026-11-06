@@ -19,6 +19,7 @@ Exporta: parseFlexibleDate, leadMatchesCampaignCity, leadMatchesCampaignCapacity
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_bookingUtils|src/utils/bookingUtils.ts]] *(Layer: #service, Domain: #booking)*
 
 ---
 

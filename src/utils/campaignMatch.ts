@@ -1,4 +1,5 @@
 import { BookingCampaign, Lead } from '../types';
+import { normalizeType } from './bookingUtils';
 
 /**
  * Campaña tal como puede llegar: las filas de Supabase sin mapear traen los campos en snake_case,
@@ -189,5 +190,7 @@ export function leadMatchesCampaign(lead: Lead, campaign: BookingCampaign): bool
   const isMedio =
     !!lead.tipo && (String(lead.tipo).includes('medio') || String(lead.tipo).includes('prensa') || String(lead.tipo).includes('radio'));
   if (isMedio) return false;
+  // Campaña de festivales: solo festivales, de cualquier ciudad y aforo (la ciudad o el aforo guardados no cuentan).
+  if (campaign.alcance === 'festivales') return normalizeType(lead.tipo) === 'festival' && leadMatchesCampaignDates(lead, campaign);
   return leadMatchesCampaignCity(lead, campaign) && leadMatchesCampaignCapacity(lead, campaign) && leadMatchesCampaignDates(lead, campaign);
 }

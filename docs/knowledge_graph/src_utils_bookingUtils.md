@@ -35,6 +35,7 @@ Exporta: BookingMetrics, normalizeStatus, normalizeType, VENUE_ADDRESS_DATABASE,
 - [[src_components_booking_crm_VenueWorkspaceHost|src/components/booking/crm/VenueWorkspaceHost.tsx]] *(from #frontend)*
 - [[src_components_Dashboard|src/components/Dashboard.tsx]] *(from #frontend)*
 - [[src_hooks_useCityChips|src/hooks/useCityChips.ts]] *(from #hook)*
+- [[src_utils_campaignMatch|src/utils/campaignMatch.ts]] *(from #service)*
 - [[ui_booking_crm|Booking CRM Component]] *(from #frontend)*
 
 ---

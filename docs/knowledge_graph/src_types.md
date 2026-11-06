@@ -264,6 +264,7 @@ _Sin dependencias salientes directas._
 - [[src_components_calendar_useCalendarRoadbook|src/components/calendar/useCalendarRoadbook.ts]] *(from #frontend)*
 - [[src_components_calendar_views_CalendarOverlays|src/components/calendar/views/CalendarOverlays.tsx]] *(from #frontend)*
 - [[src_components_campaign_CampaignManagerModal|src/components/campaign/CampaignManagerModal.tsx]] *(from #frontend)*
+- [[src_components_campaign_CampanaAlcanceFields|src/components/campaign/CampanaAlcanceFields.tsx]] *(from #frontend)*
 - [[src_components_campaign_GlobalCampaignBar|src/components/campaign/GlobalCampaignBar.tsx]] *(from #frontend)*
 - [[src_components_cartel_CarteleriaView|src/components/cartel/CarteleriaView.tsx]] *(from #frontend)*
 - [[src_components_cartel_hooks_useEditorCartel|src/components/cartel/hooks/useEditorCartel.ts]] *(from #frontend)*
@@ -544,6 +545,7 @@ _Sin dependencias salientes directas._
 - [[src_services_tiposRespuestasHerramientas|src/services/tiposRespuestasHerramientas.ts]] *(from #service)*
 - [[src_utils_accompanimentSynth|src/utils/accompanimentSynth.ts]] *(from #service)*
 - [[src_utils_acordeEnHermanos|src/utils/acordeEnHermanos.ts]] *(from #service)*
+- [[src_utils_afinidadFestival|src/utils/afinidadFestival.ts]] *(from #service)*
 - [[src_utils_agendaASetlist|src/utils/agendaASetlist.ts]] *(from #service)*
 - [[src_utils_agendaEnsayo|src/utils/agendaEnsayo.ts]] *(from #service)*
 - [[src_utils_ajusteEnBloque|src/utils/ajusteEnBloque.ts]] *(from #service)*
@@ -651,6 +653,7 @@ _Sin dependencias salientes directas._
 - `src/hooks/__tests__/useAuth.behavior.test.ts`
 - `src/hooks/__tests__/useStagePlayer.behavior.test.ts`
 - `src/utils/__tests__/acordeEnHermanos.test.ts`
+- `src/utils/__tests__/afinidadFestival.test.ts`
 - `src/utils/__tests__/agendaASetlist.test.ts`
 - `src/utils/__tests__/audioCueDetector.test.ts`
 - `src/utils/__tests__/bookingUtils.test.ts`

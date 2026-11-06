@@ -40,6 +40,7 @@ Campañas de booking (`booking_campaigns`) y su normalización desde BD.
 ## 🧪 Tests que lo cubren
 - `server/db/__tests__/campaigns.test.ts`
 - `server/db/__tests__/campaignsIntegridad.test.ts`
+- `server/db/__tests__/campaniaAlcance.test.ts`
 
 ---
 
