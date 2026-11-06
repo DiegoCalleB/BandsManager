@@ -20,6 +20,7 @@
     "graph:sync": "tsx scripts/generate_obsidian_graph.ts",
     "spotify:bandas": "tsx scripts/arreglar-spotify-bandas.ts",
     "auditar:emails": "tsx scripts/auditar-emails.ts",
+    "descubrir:webs-festivales": "tsx scripts/descubrir-webs-festivales.ts",
     "descubrir:emails": "tsx scripts/descubrir-emails-festivales.ts",
     "probar:senales": "tsx scripts/probar-senales.ts",
     "cartel:muestras": "tsx scripts/muestras-cartel.ts",

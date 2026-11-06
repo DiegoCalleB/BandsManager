@@ -13,7 +13,7 @@ tags: ["service", "system", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: tieneEmailVerificado.
+Exporta: EstadoDelEmail, estadoDelEmail, tieneEmailVerificado.
 
 ---
 

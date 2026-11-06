@@ -5,13 +5,19 @@ interface LeadConEmail {
   datos_fuentes?: unknown;
 }
 
+export type EstadoDelEmail = 'verificado' | 'sin_procedencia' | 'sin_comprobar' | 'sin_email';
+
 /**
- * El email de contacto se puede usar en una campaña: lo escribió una persona o salió de la web, Places o el
- * catálogo, y no tiene aviso de dominio dudoso. Los de IA o buscador nunca cuentan (AGENTS.md §3, «sin evidencia no entran»).
+ * `verificado`: salió de la web de la sala, de Google Places o del catálogo y no tiene aviso de dominio dudoso.
+ * `sin_procedencia`: lo escribió una persona o es anterior al registro de procedencia; el Enviador lo trata como de la banda.
+ * `sin_comprobar`: lo puso una IA o un buscador, o tiene aviso de dominio dudoso; el Enviador no lo usa.
+ * Regla de AGENTS.md §3: sin evidencia no entran.
  */
-export function tieneEmailVerificado(lead: LeadConEmail): boolean {
-  if (!lead.email_contacto?.trim()) return false;
+export function estadoDelEmail(lead: LeadConEmail): EstadoDelEmail {
+  if (!lead.email_contacto?.trim()) return 'sin_email';
   const fuente = (lead.datos_fuentes as Record<string, { fuente?: string } | undefined> | undefined)?.email_contacto?.fuente;
-  if (fuente === 'ia' || fuente === 'buscador') return false;
-  return avisoDeEmail(lead) === null;
+  if (avisoDeEmail(lead) !== null || fuente === 'ia' || fuente === 'buscador') return 'sin_comprobar';
+  return fuente === 'web' || fuente === 'places' || fuente === 'catalogo' ? 'verificado' : 'sin_procedencia';
 }
+
+export const tieneEmailVerificado = (lead: LeadConEmail): boolean => estadoDelEmail(lead) === 'verificado';
