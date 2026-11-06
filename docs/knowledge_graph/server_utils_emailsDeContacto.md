@@ -23,7 +23,7 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-_Sin llamadas entrantes indexadas._
+- [[agent_scout|Scout Discovery Agent]] *(from #agent)*
 
 ---
 

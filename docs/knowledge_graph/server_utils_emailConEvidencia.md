@@ -24,6 +24,7 @@ Un email solo vale si hay evidencia de que es real: aparece literalmente en una 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[agent_scout|Scout Discovery Agent]] *(from #agent)*
 - [[server_services_emailsSinEvidencia|server/services/emailsSinEvidencia.ts]] *(from #service)*
 - [[server_utils_emailsEnPropuestasDeChat|server/utils/emailsEnPropuestasDeChat.ts]] *(from #service)*
 - [[server_utils_planAuditoriaEmails|server/utils/planAuditoriaEmails.ts]] *(from #service)*

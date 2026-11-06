@@ -3,13 +3,13 @@ import { rolDelEmail, elegirEmailDeContacto } from '../emailsDeContacto';
 
 describe('rolDelEmail', () => {
   it('reconoce los buzones de booking y programación', () => {
-    for (const e of ['booking@festival.es', 'bookings@festival.es', 'programacion@festival.es', 'programación@festival.es', 'artistas@festival.es', 'bandas@festival.es', 'talent@festival.es', 'musica@festival.es']) {
+    for (const e of ['booking@festival.es', 'bookings@festival.es', 'programacion@festival.es', 'programación@festival.es', 'artistas@festival.es', 'bandas@festival.es', 'talent@festival.es', 'musica@festival.es', 'eventos@festival.es', 'conciertos@festival.es']) {
       expect(rolDelEmail(e), e).toBe('booking');
     }
   });
 
   it('reconoce los generales', () => {
-    for (const e of ['info@festival.es', 'contacto@festival.es', 'contact@festival.es', 'hola@festival.es', 'organizacion@festival.es', 'produccion@festival.es']) {
+    for (const e of ['info@festival.es', 'contacto@festival.es', 'contact@festival.es', 'hola@festival.es', 'organizacion@festival.es', 'produccion@festival.es', 'direccion@festival.es']) {
       expect(rolDelEmail(e), e).toBe('contacto');
     }
   });
@@ -66,6 +66,19 @@ describe('elegirEmailDeContacto', () => {
 
   it('entiende los dominios como .com.es y los subdominios de la web', () => {
     expect(elegirEmailDeContacto([{ email: 'info@festival.com.es', pagina: 'https://www.festival.com.es/' }], 'https://tickets.festival.com.es/')).toMatchObject({ email: 'info@festival.com.es' });
+  });
+
+  it('acepta el dominio de la misma marca (madcoolfestival.es publica booking@madcool.es), pero no el de un tercero', () => {
+    const r = elegirEmailDeContacto(
+      [
+        { email: 'press@madcool.es', pagina: 'https://www.madcoolfestival.es/' },
+        { email: 'booking@madcool.es', pagina: 'https://www.madcoolfestival.es/contacto' },
+        { email: 'hola@feverup.com', pagina: 'https://www.madcoolfestival.es/' },
+      ],
+      'https://www.madcoolfestival.es/',
+    );
+    expect(r).toMatchObject({ email: 'booking@madcool.es', rol: 'booking' });
+    expect(elegirEmailDeContacto([{ email: 'info@ebfm.es', pagina: web }, { email: 'info@fest.es', pagina: web }], 'https://www.festival.es/')).toBeNull();
   });
 
   it('sin candidatos o sin web, nada', () => {

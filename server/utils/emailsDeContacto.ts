@@ -23,8 +23,8 @@ const PALABRAS_POR_ROL: Array<[Exclude<RolDeEmail, 'personal'>, string[]]> = [
   ['rrhh', ['rrhh', 'hr', 'empleo', 'trabajo', 'jobs', 'voluntarios', 'voluntariado', 'volunteers', 'cv', 'curriculum']],
   ['entradas', ['entradas', 'tickets', 'ticket', 'soporte', 'support', 'ventas', 'sales', 'atencion', 'cliente', 'clientes', 'abonos']],
   ['prensa', ['prensa', 'press', 'comunicacion', 'comunicación', 'media', 'marketing', 'publicidad', 'rrpp']],
-  ['booking', ['booking', 'bookings', 'programacion', 'artistas', 'artists', 'bandas', 'bands', 'talent', 'musica', 'contratacion']],
-  ['contacto', ['info', 'contacto', 'contact', 'hola', 'hello', 'organizacion', 'produccion', 'general', 'oficina', 'administracion']],
+  ['booking', ['booking', 'bookings', 'programacion', 'artistas', 'artists', 'bandas', 'bands', 'talent', 'musica', 'contratacion', 'eventos', 'conciertos', 'actuaciones', 'espectaculos', 'shows']],
+  ['contacto', ['info', 'contacto', 'contact', 'hola', 'hello', 'organizacion', 'produccion', 'general', 'oficina', 'administracion', 'direccion', 'gerencia', 'secretaria', 'reservas']],
 ];
 
 const sinTildes = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '');
@@ -49,6 +49,14 @@ export function dominioRegistrable(host: string): string {
   return labels.slice(-toma).join('.');
 }
 
+/** Mismo dominio, o la misma marca con otro sufijo o nombre largo (madcool.es ↔ madcoolfestival.es). */
+function mismaMarca(dominioEmail: string, dominioWeb: string): boolean {
+  const a = dominioRegistrable(dominioEmail);
+  if (a === dominioWeb) return true;
+  const [x, y] = [a.split('.')[0], dominioWeb.split('.')[0]].sort((m, n) => m.length - n.length);
+  return x.length >= 5 && y.startsWith(x);
+}
+
 function dominioDeWeb(website: string): string {
   try {
     return dominioRegistrable(new URL(/^https?:\/\//i.test(website) ? website : `https://${website}`).hostname);
@@ -64,7 +72,7 @@ export function elegirEmailDeContacto(candidatos: EmailEncontrado[], website: st
   let mejor: EmailElegido | null = null;
   for (const c of candidatos) {
     const email = c.email.trim().toLowerCase();
-    if (dominioRegistrable(email.split('@')[1] || '') !== dominio) continue;
+    if (!mismaMarca(email.split('@')[1] || '', dominio)) continue;
     const rol = rolDelEmail(email);
     if (rol !== 'booking' && rol !== 'contacto') continue;
     if (!mejor || (rol === 'booking' && mejor.rol === 'contacto')) mejor = { email, rol, evidencia: c.pagina };

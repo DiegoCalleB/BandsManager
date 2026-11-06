@@ -44,7 +44,7 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     ciudad: "Bilbao",
     region: "País Vasco",
     mes_inicio: 7, dia_inicio: 10, mes_fin: 7, dia_fin: 13,
-    website: "https://www.bbklive.net/",
+    website: "https://bilbaobbklive.com/",
     instagram: "@bbklive",
     genero: "Rock, Pop, Indie",
     aforo: 15000
@@ -143,7 +143,7 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     ciudad: "Vitoria",
     region: "País Vasco",
     mes_inicio: 6, dia_inicio: 15, mes_fin: 6, dia_fin: 18,
-    website: "https://www.azkenafest.com/",
+    website: "https://www.azkenarockfestival.com/",
     instagram: "@azkenafest",
     genero: "Rock, Punk, Blues",
     aforo: 8000

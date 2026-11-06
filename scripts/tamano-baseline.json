@@ -46,7 +46,7 @@
   "src/components/ensayos/ModoLocalEnVivoTab.tsx": 823,
   "src/components/epk/EPKFirmaQRBlock.tsx": 819,
   "src/components/epk/EPKPerfilBlock.tsx": 795,
-  "server/auto_enrichment.ts": 782,
+  "server/auto_enrichment.ts": 768,
   "server/db/leads.ts": 785,
   "src/components/dashboard/SocialAndFansGrowthChart.tsx": 785,
   "src/components/repertorio/SpotifyDiscographyModal.tsx": 777,

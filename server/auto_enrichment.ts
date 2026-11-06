@@ -2,7 +2,7 @@ import { getAiClient, generateContentWithFallback, type RespuestaIA } from "./ai
 import { dbUpsertLead, dbUpsertBandContact, dbDeleteLead } from "./db.js";
 import { loadState, saveState, getAutonomyConfigForBand } from "./state.js";
 import { fetchUrlExternaSegura } from "./utils/ssrfGuard.js";
-import { hostEnDominio, emailEnDominio } from "./utils/urlHost.js";
+import { hostEnDominio } from "./utils/urlHost.js";
 import { getBandDnaProfile, buildEnhancedPitchSystemPrompt, generateSmartDnaPitchFallback } from "./utils/bandDna.js";
 import { formatGlobalPitchFeedbackForPrompt } from "./promptsManager.js";
 import { limpiarCampoContacto } from "./utils/scoutLeads.js";
@@ -14,6 +14,8 @@ import { instagramConocido } from "./utils/instagramConocido.js";
 import { camposDesdeCatalogo } from "./utils/camposDesdeCatalogo.js";
 import { anotarProcedencia, camposRellenados, instantanea, type CamposDeEnriquecimiento, type FuenteDato } from "./utils/procedenciaDatos.js";
 import { consultaCatalogo } from "./db/consultaCatalogoSupabase.js";
+import { emailsEnTexto } from "./utils/emailConEvidencia.js";
+import { elegirEmailDeContacto, type EmailEncontrado } from "./utils/emailsDeContacto.js";
 import { descartarEmailsSinEvidencia } from "./services/emailsSinEvidencia.js";
 import type { BandContact, Lead } from '../src/types.js';
 import type { DatosBandaIA, DatosLeadIA, FechasFestivalIA, LeadEliminadoPorCierre, RespuestaPlacesTextSearch } from './tiposAutoEnrichment.js';
@@ -160,6 +162,7 @@ export async function scrapeWebsiteForContact(websiteUrl: string, nombreSala?: s
 
   const results: { email?: string; phone?: string; instagram?: string } = {};
   const candidatosInstagram: string[] = [];
+  const candidatosEmail: EmailEncontrado[] = [];
   const urlsToTry = [websiteUrl];
 
   try {
@@ -195,27 +198,8 @@ export async function scrapeWebsiteForContact(websiteUrl: string, nombreSala?: s
       if (res.statusCode < 200 || res.statusCode >= 300) continue;
       const html = res.text();
 
-      // 1. Extract email via mailto: or regex
-      if (!results.email) {
-        const mailtoMatch = html.match(/href=["']mailto:([a-zA-Z0-9._%+-]{1,64}@[a-zA-Z0-9.-]{1,255}\.[a-zA-Z]{2,24})["']/i);
-        if (mailtoMatch) {
-          results.email = mailtoMatch[1];
-        } else {
-          const emailMatches = html.match(/[a-zA-Z0-9._%+-]{1,64}@[a-zA-Z0-9.-]{1,255}\.[a-zA-Z]{2,24}/g);
-          if (emailMatches) {
-            const validEmails = emailMatches.filter(e => 
-              !e.endsWith(".png") && !e.endsWith(".jpg") && !e.endsWith(".webp") && !e.endsWith(".svg") && !e.endsWith(".js") && !e.endsWith(".css") &&
-              !emailEnDominio(e, "example.com", "domain.com", "schema.org", "sentry.io", "w3.org") && !e.includes("wordpress") && !e.includes("gravatar")
-            );
-            const priorityEmail = validEmails.find(e => /info|booking|contacto|programacion|prensa|sala/i.test(e));
-            if (priorityEmail) {
-              results.email = priorityEmail;
-            } else if (validEmails.length > 0) {
-              results.email = validEmails[0];
-            }
-          }
-        }
-      }
+      // 1. Emails: todos los escritos en la página; se elige al final el de booking o general del dominio de la sala
+      candidatosEmail.push(...emailsEnTexto(html).map((email) => ({ email, pagina: targetUrl })));
 
       // 2. Extract Instagram (todas las cuentas enlazadas; se elige al terminar)
       candidatosInstagram.push(...usuariosDeInstagram(html));
@@ -228,12 +212,14 @@ export async function scrapeWebsiteForContact(websiteUrl: string, nombreSala?: s
         }
       }
 
-      if (results.email) break; // Found main contact email, stop crawling subpages
+      if (elegirEmailDeContacto(candidatosEmail, websiteUrl)?.rol === "booking") break;
     } catch {
       // Ignore timeout or fetch error on subpage
     }
   }
 
+  const email = elegirEmailDeContacto(candidatosEmail, websiteUrl)?.email;
+  if (email) results.email = email;
   const instagram = elegirInstagram(candidatosInstagram, nombreSala);
   if (instagram) results.instagram = instagram;
   return results;
@@ -403,12 +389,12 @@ export async function autoEnrichLead<L extends object>(entrada: L, userBandId: s
       const { scrapeVenueWithJina } = await import("./services/jinaReaderService.js");
       const jinaData = await scrapeVenueWithJina(lead.website);
       if (jinaData && jinaData.success) {
-        if (jinaData.email_contacto && !lead.email_contacto) {
+        if (jinaData.email_contacto && !lead.email_contacto && elegirEmailDeContacto([{ email: jinaData.email_contacto, pagina: lead.website }], lead.website)) {
           lead.email_contacto = jinaData.email_contacto;
           modified = true;
           console.log(`[AutoEnrich Jina] ✓ Email extraído con Jina Reader: %s`, jinaData.email_contacto);
         }
-        if (jinaData.email_secundario && !lead.email_secundario) {
+        if (jinaData.email_secundario && !lead.email_secundario && elegirEmailDeContacto([{ email: jinaData.email_secundario, pagina: lead.website }], lead.website)) {
           lead.email_secundario = jinaData.email_secundario;
           modified = true;
         }
