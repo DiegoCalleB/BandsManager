@@ -7,7 +7,7 @@
 import { getSupabase, dbGetAutonomyConfig } from "../db.js";
 import { esEmailValido, ESTADOS_DE_ENVIO } from "../utils/email.js";
 import { aprobacionVigente } from "../utils/aprobacionLead.js";
-import { emailsSinComprobar } from "../utils/procedenciaDatos.js";
+import { emailsNoEnviables } from "../utils/procedenciaDatos.js";
 import { loadState } from "../state.js";
 import { enviarEmail, crearBorrador, EmailAgentError } from "./emailAgentClient.js";
 import { crearBorradorGmailApi, tieneGmailOAuthConectado, comprobarBorradorEnviadoConDetalle, buscarMensajeEnviadoA, enviarEmailGmailApi, obtenerEmailDeLaCuentaConectada } from "./gmailApiClient.js";
@@ -245,7 +245,8 @@ export async function runEnviadorAgent(opts: {
     // dos buzones). Los destinatarios exactos quedan en la nota del lead y en el borrador.
     // Un email que puso una IA o un buscador y nadie ha comprobado no es un destinatario: mandar un pitch a una dirección
     // inventada daña el remitente de la banda. Se confirma editándolo a mano (eso borra su procedencia) y aprobando de nuevo.
-    const sinComprobar = emailsSinComprobar(lead.datos_fuentes);
+    // Fiabilidad por debajo del umbral (IA, buscador, web caducada sin re-verificar): no es un destinatario.
+    const sinComprobar = emailsNoEnviables(lead);
     const destinatariosDelLead: Array<[string, unknown]> = [
       ["email_contacto", lead.email_contacto || lead.email],
       ["email_secundario", lead.email_secundario || lead.emailSecundario],
@@ -290,7 +291,7 @@ export async function runEnviadorAgent(opts: {
         id: lead.id,
         nombre_sala: lead.nombre_sala,
         status: "error",
-        error: "El email de contacto lo sugirió una IA o un buscador y está sin comprobar: no se ha enviado nada. Compruébalo en la web de la sala y escríbelo a mano en la ficha para poder enviarlo."
+        error: "El email de contacto está sin comprobar (lo sugirió una IA o un buscador, o hace más de 90 días que nadie lo ve en su web): no se ha enviado nada. Compruébalo en la web de la sala y escríbelo a mano en la ficha para poder enviarlo."
       });
       continue;
     }

@@ -18,7 +18,7 @@ Procedencia de los datos de un lead: de qué fuente salió cada campo enriquecid
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[src_utils_fiabilidadEmail|src/utils/fiabilidadEmail.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

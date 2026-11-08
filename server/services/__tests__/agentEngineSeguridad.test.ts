@@ -131,7 +131,7 @@ describe('Enviador: destinatarios', () => {
 });
 
 describe('Enviador: emails sin comprobar', () => {
-  const origen = (fuente: string) => ({ fuente, confianza: 'baja', en: '2026-11-06T10:00:00.000Z' });
+  const origen = (fuente: string, en = new Date().toISOString()) => ({ fuente, confianza: 'baja', en });
 
   it('un email que puso una IA o un buscador y nadie ha comprobado no sale: ni envío ni borrador', async () => {
     montarSupabase({ leads: [{ ...leadBase, datos_fuentes: { email_contacto: origen('ia') } }] });
@@ -146,6 +146,14 @@ describe('Enviador: emails sin comprobar', () => {
     montarSupabase({ leads: [{ ...leadBase, email_secundario: 'booking@example.com', datos_fuentes: { email_contacto: origen('buscador'), email_secundario: origen('web') } }] });
     await runEnviadorAgent({ bandId: 'band-test', triggerType: 'test' });
     expect(enviarEmailMock.mock.calls[0][1].to).toBe('booking@example.com');
+  });
+
+  it('un email de la web que nadie ha vuelto a comprobar en más de 90 días no sale', async () => {
+    const hace200dias = new Date(Date.now() - 200 * 86_400_000).toISOString();
+    montarSupabase({ leads: [{ ...leadBase, datos_fuentes: { email_contacto: origen('web', hace200dias) } }] });
+    const r = await runEnviadorAgent({ bandId: 'band-test', triggerType: 'test' });
+    expect(enviarEmailMock).not.toHaveBeenCalled();
+    expect(r.results[0].error).toMatch(/comprobar/i);
   });
 
   it('un email de la web, de Google Maps o escrito a mano sale con normalidad', async () => {

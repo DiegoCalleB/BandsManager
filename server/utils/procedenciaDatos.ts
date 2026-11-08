@@ -8,6 +8,8 @@
  * Solo se anotan los campos que el enriquecimiento ha rellenado; lo que escribe la banda a mano no lleva anotación.
  */
 
+import { fiabilidadDelEmail, sePuedeEnviar } from '../../src/utils/fiabilidadEmail.js';
+
 export type FuenteDato = 'places' | 'catalogo' | 'web' | 'buscador' | 'ia';
 export type ConfianzaDato = 'alta' | 'media' | 'baja';
 
@@ -26,6 +28,10 @@ export interface Procedencia {
   /** ISO 8601 del momento en que se rellenó. */
   en: string;
   aviso?: AvisoDato;
+  /** Última vez que el agente nocturno lo volvió a ver escrito en la web (ISO 8601). */
+  verificado_en?: string;
+  /** El festival o la sala respondió desde ese buzón. */
+  confirmado_por_respuesta?: boolean;
 }
 
 export type MapaProcedencia = Record<string, Procedencia>;
@@ -92,12 +98,16 @@ export function procedenciaValida(bruta: unknown): MapaProcedencia {
   const limpia: MapaProcedencia = {};
   for (const [campo, valor] of Object.entries(bruta as Record<string, unknown>)) {
     if (!CAMPOS.has(campo) || !valor || typeof valor !== 'object') continue;
-    const { fuente, en, aviso } = valor as { fuente?: unknown; en?: unknown; aviso?: { tipo?: unknown; para?: unknown } | null };
+    const { fuente, en, aviso, verificado_en, confirmado_por_respuesta } = valor as {
+      fuente?: unknown; en?: unknown; aviso?: { tipo?: unknown; para?: unknown } | null; verificado_en?: unknown; confirmado_por_respuesta?: unknown;
+    };
     if (typeof fuente !== 'string' || !FUENTES.has(fuente) || typeof en !== 'string' || Number.isNaN(Date.parse(en))) continue;
     limpia[campo] = { fuente: fuente as FuenteDato, confianza: CONFIANZA_POR_FUENTE[fuente as FuenteDato], en };
     if (aviso?.tipo === 'dominio_inexistente' && typeof aviso.para === 'string' && aviso.para.length > 0 && aviso.para.length <= 254) {
       limpia[campo].aviso = { tipo: 'dominio_inexistente', para: aviso.para };
     }
+    if (typeof verificado_en === 'string' && !Number.isNaN(Date.parse(verificado_en))) limpia[campo].verificado_en = verificado_en;
+    if (confirmado_por_respuesta === true) limpia[campo].confirmado_por_respuesta = true;
   }
   return limpia;
 }
@@ -146,4 +156,21 @@ export function emailsEditadosAMano(existente: { email_contacto?: unknown; email
   return (['email_contacto', 'email_secundario'] as const).filter(
     (campo) => typeof editados[campo] === 'string' && texto(editados[campo]) !== texto(existente?.[campo]),
   );
+}
+
+/**
+ * Campos de email a los que el Enviador no debe escribir porque su fiabilidad no llega al umbral
+ * (`src/utils/fiabilidadEmail.ts`): IA o buscador sin comprobar, web caducada sin re-verificar o dominio dudoso.
+ * Lo que escribe una persona (sin procedencia) sí se envía: la banda responde de ese dato.
+ */
+export function emailsNoEnviables(
+  lead: { email_contacto?: unknown; email_secundario?: unknown; datos_fuentes?: unknown },
+  ahora: Date = new Date(),
+): string[] {
+  const procedencia = procedenciaValida(lead.datos_fuentes);
+  return (['email_contacto', 'email_secundario'] as const).filter((campo) => {
+    const email = typeof lead[campo] === 'string' ? (lead[campo] as string) : '';
+    if (!email.trim()) return false;
+    return !sePuedeEnviar(fiabilidadDelEmail({ email, procedencia: procedencia[campo] }, ahora));
+  });
 }
