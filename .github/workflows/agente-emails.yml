@@ -1,0 +1,54 @@
+name: Agente de emails
+
+# Cada noche re-verifica en la web oficial los emails de los festivales menos recientes (scripts/agente-emails-nocturno.ts):
+# renueva la evidencia de los que siguen publicados, añade los que aparecen y marca los confirmados por respuesta.
+# Nunca borra ni inventa un email. Necesita los secretos SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY; sin ellos se salta.
+on:
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+    inputs:
+      limite:
+        description: 'Festivales por ejecución'
+        default: '120'
+      aplicar:
+        description: 'Escribir en la base de datos (si no, es un ensayo)'
+        type: boolean
+        default: true
+
+concurrency:
+  group: agente-emails
+  cancel-in-progress: false
+
+jobs:
+  emails:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Comprobar secretos
+        id: secretos
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        run: |
+          if [ -z "$SUPABASE_URL" ]; then echo "Sin SUPABASE_URL: se salta." >> "$GITHUB_STEP_SUMMARY"; echo "ok=false" >> "$GITHUB_OUTPUT"; else echo "ok=true" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/checkout@v7
+        if: steps.secretos.outputs.ok == 'true'
+      - uses: actions/setup-node@v7
+        if: steps.secretos.outputs.ok == 'true'
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+        if: steps.secretos.outputs.ok == 'true'
+      - run: npx playwright install --with-deps chromium
+        if: steps.secretos.outputs.ok == 'true'
+      - name: Re-verificar emails de festivales
+        if: steps.secretos.outputs.ok == 'true'
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          GOTO_MS: '30000'
+        run: |
+          APLICAR="--apply"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.aplicar }}" != "true" ]; then APLICAR=""; fi
+          npx tsx scripts/agente-emails-nocturno.ts --limite=${{ inputs.limite || '120' }} $APLICAR

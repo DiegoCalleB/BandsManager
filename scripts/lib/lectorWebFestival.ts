@@ -23,6 +23,8 @@ export interface Hallazgo {
   direccion: string; inicio: string; fin: string; formulario: string; convocatoria: string; paginas: number;
   /** La ciudad candidata de la lista aparece escrita en alguna página de la web (si no, no se debe guardar). */
   ciudadEnWeb: boolean;
+  /** Todos los emails vistos en las páginas del festival (para re-verificar el que ya está guardado). */
+  emailsVistos: string[];
 }
 
 /** Eventos/organizaciones JSON-LD de la página (ciudad, dirección y fechas de la edición). */
@@ -75,7 +77,7 @@ function pareceDelFestival(handle: string, nombre: string, web: string): boolean
 }
 
 export async function leerWebDeFestival(page: Page, web: string, nombre: string, ciudadCandidata = ""): Promise<Hallazgo> {
-  const h: Hallazgo = { email: "", rol: "", evidencia: "", instagram: "", telefono: "", ciudad: "", direccion: "", inicio: "", fin: "", formulario: "", convocatoria: "", paginas: 0, ciudadEnWeb: false };
+  const h: Hallazgo = { email: "", rol: "", evidencia: "", instagram: "", telefono: "", ciudad: "", direccion: "", inicio: "", fin: "", formulario: "", convocatoria: "", paginas: 0, ciudadEnWeb: false, emailsVistos: [] };
   if (!(await abrir(page, web))) return h;
   const inicio = page.url();
   const cola = new Set<string>([inicio]);
@@ -115,6 +117,7 @@ export async function leerWebDeFestival(page: Page, web: string, nombre: string,
     h.ciudad ||= ld.ciudad; h.direccion ||= ld.direccion; h.inicio ||= ld.inicio; h.fin ||= ld.fin;
     if (elegirEmailDeContacto(candidatos, inicio)?.rol === "booking") break;
   }
+  h.emailsVistos = [...new Set(candidatos.map((c) => c.email.trim().toLowerCase()))];
   const elegido = elegirEmailDeContacto(candidatos, inicio);
   if (elegido) { h.email = elegido.email; h.rol = elegido.rol; h.evidencia = elegido.evidencia; }
   h.instagram = [...instagram.entries()].sort((a, b) => b[1] - a[1]).map(([u]) => u).find((u) => pareceDelFestival(u, nombre, web)) ?? "";
