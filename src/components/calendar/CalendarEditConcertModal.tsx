@@ -191,6 +191,19 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
               </Select>
             </div>
 
+            <div>
+              <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">Link de compra de entradas</label>
+              <Input
+                size="sm"
+                type="url"
+                aria-label="Link de compra de entradas"
+                value={editDraft.entradasUrl || ''}
+                onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, entradasUrl: e.target.value } : prev))}
+                placeholder="https://www.ticketmaster.es/..."
+                className="w-full"
+              />
+            </div>
+
             <div className="flex items-center gap-2 py-1 px-2 rounded-[var(--r-m)] bg-[var(--acc)]/20 ">
               <input
                 type="checkbox"

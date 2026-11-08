@@ -64,6 +64,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
   const [concNotas] = useState('Concierto agendado desde el calendario');
   const [concIdioma] = useState('');
   const [concSetlistId, setConcSetlistId] = useState<string>('');
+  const [concEntradasUrl, setConcEntradasUrl] = useState('');
   const [concIsPosible, setConcIsPosible] = useState(false);
 
   // Al abrir el modal (o cambiar banda/miembros) se reinicia la convocatoria.
@@ -185,6 +186,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
       convocados_nombres: convocatoriaTipo === 'parcial' ? selectedMembers.map((m) => m.name) : undefined,
       idioma: concIdioma || undefined,
       setlistId: concSetlistId || undefined,
+      entradasUrl: concEntradasUrl.trim() || undefined,
     };
 
     if (onAddConcert) {
@@ -521,6 +523,19 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     className="w-full"
                   />
                 </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Link de compra de entradas</label>
+                <Input
+                  size="sm"
+                  type="url"
+                  aria-label="Link de compra de entradas"
+                  value={concEntradasUrl}
+                  onChange={(e) => setConcEntradasUrl(e.target.value)}
+                  placeholder="https://www.ticketmaster.es/..."
+                  className="w-full"
+                />
               </div>
 
               {availableSetlists.length > 0 && (
