@@ -6,6 +6,7 @@ import express from "express";
 import { SocialMetric } from "../../src/types.js";
 import { loadState, saveState, requireAuth, requireLeader, requireCronOrAuth } from "../state.js";
 import { dbGetSocialMetrics, dbUpsertSocialMetric, dbDeleteSocialMetric, dbGetRegisteredBandById, dbGetEpkConfig, dbUpsertEpkConfig, dbGetSocialContentItems, dbUpsertSocialContentItem } from "../db.js";
+import { verificarTokenInstagram, guardarConexionInstagram } from "../services/instagramConexion.js";
 import { getAiClient, generateContentWithFallback, GEMINI_MODEL } from "../ai.js";
 
 const router = express.Router();
@@ -98,7 +99,7 @@ router.post("/metrics/sync", requireAuth, async (req, res) => {
 
 import { executeSocialRadar, scrapeChannelMetrics } from "../services/socialRadarService.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
-import type { CuentaInstagramVerificada, DatosCapturaIA, InsightsInstagram, PaginaFacebook } from './tiposMetricas.js';
+import type { DatosCapturaIA, InsightsInstagram, PaginaFacebook } from './tiposMetricas.js';
 import { responderError } from '../utils/errorHttp.js';
 import { fusionarColeccionDeBanda } from '../utils/estadoPorBanda.js';
 
@@ -471,93 +472,16 @@ router.post("/metrics/instagram/connect", requireAuth, async (req, res) => {
 
     const cleanToken = accessToken.trim();
 
-    // 1. Try discovering Business Account with Insights first (Meta Graph API / Instagram Platform Insights)
-    let verifiedAccount: CuentaInstagramVerificada | null = null;
-    let authSource = "meta_platform_insights_api";
-
-    const fbRes = await fetch(
-      `https://graph.facebook.com/v19.0/me/accounts?fields=instagram_business_account{id,username,followers_count,media_count,name}&access_token=${cleanToken}`,
-      { signal: AbortSignal.timeout(8000) }
-    ).catch(() => null);
-
-    if (fbRes && fbRes.ok) {
-      const fbData = await fbRes.json();
-      const pageWithIg = fbData?.data?.find((p: PaginaFacebook) => p.instagram_business_account);
-      if (pageWithIg?.instagram_business_account) {
-        const igAcc = pageWithIg.instagram_business_account;
-        verifiedAccount = {
-          id: igAcc.id,
-          username: igAcc.username,
-          name: igAcc.name || igAcc.username,
-          followers_count: igAcc.followers_count !== undefined ? Number(igAcc.followers_count) : null,
-          media_count: igAcc.media_count !== undefined ? Number(igAcc.media_count) : null
-        };
-      }
-    }
-
-    // 2. Direct Instagram / Graph user fallback
-    if (!verifiedAccount) {
-      const igRes = await fetch(
-        `https://graph.instagram.com/v19.0/me?fields=id,username,followers_count,media_count,name&access_token=${cleanToken}`,
-        { signal: AbortSignal.timeout(8000) }
-      ).catch(() => null);
-
-      if (igRes && igRes.ok) {
-        const igData = await igRes.json();
-        authSource = "instagram_basic_api";
-        verifiedAccount = {
-          id: igData.id,
-          username: igData.username,
-          name: igData.name || igData.username,
-          followers_count: igData.followers_count !== undefined ? Number(igData.followers_count) : null,
-          media_count: igData.media_count !== undefined ? Number(igData.media_count) : null
-        };
-      }
-    }
-
-    if (!verifiedAccount) {
+    const verificada = await verificarTokenInstagram(cleanToken);
+    if (!verificada) {
       return res.status(400).json({
         success: false,
         docsUrl: "https://developers.facebook.com/documentation/instagram-platform/insights",
         error: "No se pudo validar el token con Meta Graph API. Asegúrate de que el token sea válido y cuente con los permisos de Insights ('instagram_manage_insights', 'instagram_basic', 'pages_read_engagement')."
       });
     }
-
-    // 3. Persist in Supabase under epk_configs
-    const epk = await dbGetEpkConfig(userBandId).catch(() => null) || {};
-    const updatedRedes = {
-      ...(epk.enlacesRedes || {}),
-      instagram_access_token: cleanToken,
-      instagram_account_id: verifiedAccount.id,
-      instagram_username: verifiedAccount.username,
-      instagram_verified_at: new Date().toISOString()
-    };
-
-    await dbUpsertEpkConfig(userBandId, {
-      ...epk,
-      enlacesRedes: updatedRedes
-    });
-
-    // 4. Update current social metric in Supabase if followers were returned
-    if (verifiedAccount.followers_count !== null) {
-      const today = new Date().toISOString().split("T")[0];
-      const existing = await dbGetSocialMetrics(userBandId).catch(() => []);
-      const currentToday: Partial<SocialMetric> = existing.find((m: SocialMetric) => m.fecha === today) || existing[0] || {};
-
-      const newEntry: SocialMetric = {
-        id: currentToday.id || `metric-${userBandId}-${today}`,
-        fecha: today,
-        instagram: verifiedAccount.followers_count,
-        tiktok: currentToday.tiktok || 0,
-        youtube: currentToday.youtube || 0,
-        spotify: currentToday.spotify || 0,
-        notas: `Instagram Platform Insights API Oficial (@${verifiedAccount.username})`,
-        instagram_followers: verifiedAccount.followers_count,
-        instagram_posts_count: verifiedAccount.media_count || currentToday.instagram_posts_count || 0
-      };
-
-      await dbUpsertSocialMetric(newEntry, userBandId).catch(() => null);
-    }
+    const { account: verifiedAccount, authSource } = verificada;
+    await guardarConexionInstagram(userBandId, cleanToken, verifiedAccount);
 
     res.json({
       success: true,

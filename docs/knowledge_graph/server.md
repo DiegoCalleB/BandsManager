@@ -42,6 +42,7 @@ Módulo sin exportaciones con nombre.
 - [[server_routes_enlacesCortos|server/routes/enlacesCortos.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(Layer: #route, Domain: #epk)*
 - [[server_routes_gmailOAuth|server/routes/gmailOAuth.ts]] *(Layer: #security, Domain: #auth)*
+- [[server_routes_instagramOAuth|server/routes/instagramOAuth.ts]] *(Layer: #security, Domain: #auth)*
 - [[server_routes_leads|server/routes/leads.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_routes_metrics|server/routes/metrics.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_paginaConcierto|server/routes/paginaConcierto.ts]] *(Layer: #route, Domain: #system)*

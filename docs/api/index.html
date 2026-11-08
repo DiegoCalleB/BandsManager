@@ -14,7 +14,7 @@
   "info": {
     "title": "BandManager.io API",
     "version": "3.2.0",
-    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (445) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
+    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (447) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
     "license": {
       "name": "AGPL-3.0-only",
       "identifier": "AGPL-3.0-only"
@@ -75,6 +75,9 @@
     },
     {
       "name": "gmailOAuth"
+    },
+    {
+      "name": "instagramOAuth"
     },
     {
       "name": "leads",
@@ -5832,7 +5835,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server.ts:269",
+        "x-source": "server.ts:271",
         "x-autenticacion": "handler",
         "x-comprobaciones-handler": [
           "getUserFromRequest"
@@ -6442,7 +6445,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/metrics.ts:730",
+        "x-source": "server/routes/metrics.ts:654",
         "x-autenticacion": "middleware"
       }
     },
@@ -6590,7 +6593,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/gmailOAuth.ts:144",
+        "x-source": "server/routes/gmailOAuth.ts:56",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "gmailOAuthRateLimiter"
@@ -6613,7 +6616,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/gmailOAuth.ts:184",
+        "x-source": "server/routes/gmailOAuth.ts:96",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "gmailOAuthRateLimiter"
@@ -6654,7 +6657,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/gmailOAuth.ts:298",
+        "x-source": "server/routes/gmailOAuth.ts:210",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "gmailOAuthRateLimiter"
@@ -6695,7 +6698,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/gmailOAuth.ts:285",
+        "x-source": "server/routes/gmailOAuth.ts:197",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "gmailOAuthRateLimiter"
@@ -6749,7 +6752,7 @@
             }
           }
         },
-        "x-source": "server.ts:168",
+        "x-source": "server.ts:170",
         "x-autenticacion": "ninguna",
         "summary": "Salud del servicio",
         "x-esquemas": "curado"
@@ -6823,6 +6826,70 @@
         },
         "x-source": "server/routes/leads/places.ts:951",
         "x-autenticacion": "middleware"
+      }
+    },
+    "/api/instagram-oauth/authorize-url": {
+      "get": {
+        "tags": [
+          "instagramOAuth"
+        ],
+        "operationId": "getApiInstagramOauthAuthorizeUrl",
+        "description": "Comentario en el código: GET /api/instagram-oauth/authorize-url",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BandIdActiva"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "cookieAuth": []
+          },
+          {
+            "authTokenHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "401": {
+            "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/instagramOAuth.ts:57",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "instagramOAuthRateLimiter"
+        ]
+      }
+    },
+    "/api/instagram-oauth/callback": {
+      "get": {
+        "tags": [
+          "instagramOAuth"
+        ],
+        "operationId": "getApiInstagramOauthCallback",
+        "description": "Comentario en el código: GET /api/instagram-oauth/callback (público a propósito - ver cabecera)",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/instagramOAuth.ts:95",
+        "x-autenticacion": "ninguna",
+        "x-rate-limiters": [
+          "instagramOAuthRateLimiter"
+        ]
       }
     },
     "/api/internal/agents/responder-hilo": {
@@ -9320,7 +9387,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/metrics.ts:14",
+        "x-source": "server/routes/metrics.ts:15",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -9353,7 +9420,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/metrics.ts:26",
+        "x-source": "server/routes/metrics.ts:27",
         "x-autenticacion": "middleware"
       }
     },
@@ -9388,7 +9455,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/metrics.ts:228",
+        "x-source": "server/routes/metrics.ts:229",
         "x-autenticacion": "middleware"
       }
     },
@@ -9423,7 +9490,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/metrics.ts:460",
+        "x-source": "server/routes/metrics.ts:461",
         "x-autenticacion": "middleware"
       }
     },
@@ -9458,7 +9525,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/metrics.ts:577",
+        "x-source": "server/routes/metrics.ts:501",
         "x-autenticacion": "middleware"
       }
     },
@@ -9493,7 +9560,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/metrics.ts:361",
+        "x-source": "server/routes/metrics.ts:362",
         "x-autenticacion": "middleware"
       }
     },
@@ -9528,7 +9595,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/metrics.ts:106",
+        "x-source": "server/routes/metrics.ts:107",
         "x-autenticacion": "middleware"
       }
     },
@@ -9563,7 +9630,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/metrics.ts:604",
+        "x-source": "server/routes/metrics.ts:528",
         "x-autenticacion": "middleware"
       }
     },
@@ -9598,7 +9665,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/metrics.ts:79",
+        "x-source": "server/routes/metrics.ts:80",
         "x-autenticacion": "middleware"
       }
     },
@@ -9641,7 +9708,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/metrics.ts:39",
+        "x-source": "server/routes/metrics.ts:40",
         "x-autenticacion": "middleware"
       },
       "delete": {
@@ -9685,7 +9752,7 @@
             "$ref": "#/components/responses/SoloLider"
           }
         },
-        "x-source": "server/routes/metrics.ts:58",
+        "x-source": "server/routes/metrics.ts:59",
         "x-autenticacion": "middleware",
         "x-requires-leader": true
       }
@@ -13015,7 +13082,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server.ts:511",
+        "x-source": "server.ts:513",
         "x-autenticacion": "handler",
         "x-comprobaciones-handler": [
           "getUserFromRequest"
@@ -16323,7 +16390,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server.ts:168",
+        "x-source": "server.ts:170",
         "x-autenticacion": "ninguna"
       }
     },
@@ -16508,7 +16575,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server.ts:182",
+        "x-source": "server.ts:184",
         "x-autenticacion": "ninguna"
       }
     },
@@ -16738,7 +16805,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server.ts:224",
+        "x-source": "server.ts:226",
         "x-autenticacion": "ninguna"
       }
     },

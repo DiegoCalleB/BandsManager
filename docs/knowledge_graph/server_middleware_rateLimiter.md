@@ -13,7 +13,7 @@ tags: ["security", "system", "auto"]
 > **Capa:** `#layer/security` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: _vaciarRateLimitStore, ipDelCliente, createRateLimiter, loginRateLimiter, registroRateLimiter, publicoRateLimiter, gmailOAuthRateLimiter, webhookRateLimiter.
+Exporta: _vaciarRateLimitStore, ipDelCliente, createRateLimiter, loginRateLimiter, registroRateLimiter, publicoRateLimiter, gmailOAuthRateLimiter, instagramOAuthRateLimiter.
 
 ---
 
@@ -46,6 +46,7 @@ Exporta: _vaciarRateLimitStore, ipDelCliente, createRateLimiter, loginRateLimite
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(from #route)*
 - [[server_routes_fans_contador|server/routes/fans_contador.ts]] *(from #route)*
 - [[server_routes_gmailOAuth|server/routes/gmailOAuth.ts]] *(from #security)*
+- [[server_routes_instagramOAuth|server/routes/instagramOAuth.ts]] *(from #security)*
 - [[server_routes_interesados|server/routes/interesados.ts]] *(from #route)*
 - [[server_routes_leads_placesPhoto|server/routes/leads/placesPhoto.ts]] *(from #route)*
 - [[server_routes_masterMarketingDigital|server/routes/masterMarketingDigital.ts]] *(from #route)*

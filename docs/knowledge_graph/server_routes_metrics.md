@@ -23,6 +23,7 @@ Métricas de la banda y de redes: CRUD, sincronización y métricas reales
 - [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_tiposMetricas|server/routes/tiposMetricas.ts]] *(Layer: #route, Domain: #system)*
+- [[server_services_instagramConexion|server/services/instagramConexion.ts]] *(Layer: #service, Domain: #social)*
 - [[server_services_socialRadarService|server/services/socialRadarService.ts]] *(Layer: #service, Domain: #social)*
 - [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_estadoPorBanda|server/utils/estadoPorBanda.ts]] *(Layer: #service, Domain: #system)*

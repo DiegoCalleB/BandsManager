@@ -73,6 +73,7 @@ _Sin dependencias salientes directas._
 - [[server_services_analisisAcordesRapido|server/services/analisisAcordesRapido.ts]] *(from #service)*
 - [[server_services_chatLecturas|server/services/chatLecturas.ts]] *(from #service)*
 - [[server_services_chatPrompt|server/services/chatPrompt.ts]] *(from #service)*
+- [[server_services_instagramConexion|server/services/instagramConexion.ts]] *(from #service)*
 - [[server_services_letraCancion|server/services/letraCancion.ts]] *(from #service)*
 - [[server_services_metricasReels|server/services/metricasReels.ts]] *(from #service)*
 - [[server_services_socialPublisher|server/services/socialPublisher.ts]] *(from #service)*

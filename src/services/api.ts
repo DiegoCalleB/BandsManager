@@ -775,6 +775,12 @@ export const api = {
     return request('/api/metrics/instagram/status');
   },
 
+  // OAuth de Meta: devuelve la URL de consentimiento para que el cliente navegue con
+  // window.location.href (ver server/routes/instagramOAuth.ts).
+  async getInstagramOAuthAuthorizeUrl(): Promise<{ url: string }> {
+    return request('/api/instagram-oauth/authorize-url');
+  },
+
   async connectInstagramToken(accessToken: string): Promise<{ success: boolean; message: string; account?: CuentaInstagram }> {
     return request('/api/metrics/instagram/connect', {
       method: 'POST',

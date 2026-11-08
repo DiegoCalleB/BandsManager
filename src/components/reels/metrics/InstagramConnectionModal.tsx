@@ -12,7 +12,7 @@ import { useMetrics } from "./MetricsContext";
  * @returns Sección de interfaz.
  */
 export function InstagramConnectionModal() {
-  const { showIgModal, setShowIgModal, igStatus, latestMetric, handleDisconnectIg, isConnectingIg, igModalMsg, igTokenInput, setIgTokenInput, handleConnectIgToken } = useMetrics();
+  const { showIgModal, setShowIgModal, igStatus, latestMetric, handleDisconnectIg, isConnectingIg, igModalMsg, igTokenInput, setIgTokenInput, handleConnectIgToken, handleConnectIgOAuth } = useMetrics();
   return (
     <>
       {showIgModal && (
@@ -187,11 +187,30 @@ export function InstagramConnectionModal() {
               </div>
             )}
 
-            {/* Token Input & Authorization */}
+            {/* Conexión en un clic con OAuth de Meta */}
+            <div className="space-y-2">
+              <button
+                onClick={handleConnectIgOAuth}
+                disabled={isConnectingIg}
+                className={`w-full px-4 py-3 rounded-[var(--r-pill)] font-sans text-sm font-bold flex items-center justify-center gap-2 transition-ui ${
+                  isConnectingIg
+                    ? "bg-[var(--surface)]/80 text-[var(--ink-2)] cursor-not-allowed"
+                    : "bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] cursor-pointer"
+                }`}
+              >
+                <Sparkles className="w-4 h-4" />
+                <span>{igStatus?.connected ? "Reconectar con Instagram" : "Conectar con Instagram"}</span>
+              </button>
+              <p className="text-micro font-sans text-[var(--ink-2)] text-center">
+                Te llevamos a Meta para dar permiso de lectura de métricas. No publicamos nada.
+              </p>
+            </div>
+
+            {/* Alternativa manual: pegar un token */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <label className="block text-xs font-sans font-bold text-[var(--ink-2)]">
-                  Vincular token de Instagram insights API
+                  O pega un token a mano (avanzado)
                 </label>
                 <span className="text-micro text-[var(--alert)] font-sans">
                   Permisos: instagram_manage_insights

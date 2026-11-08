@@ -12,6 +12,29 @@ export interface InstagramConnectionParams {
   onScanRealMetrics: () => Promise<void>;
 }
 
+const MOTIVOS_OAUTH: Record<string, string> = {
+  acceso_denegado: "Cancelaste el permiso en Instagram. Pulsa «Conectar con Instagram» para intentarlo de nuevo.",
+  estado_invalido_o_caducado: "El enlace de conexión caducó (dura 10 minutos). Vuelve a pulsar «Conectar con Instagram».",
+  empieza_y_termina_en_el_mismo_dominio: "Empieza y termina la conexión en el mismo dominio de la app (con tu sesión iniciada ahí).",
+  sin_cuenta_de_instagram_business: "Meta no devolvió ninguna cuenta de Instagram Business. La cuenta debe ser Business o Creator y estar enlazada a una página de Facebook.",
+  meta_rechazo_el_codigo: "Meta rechazó el código de autorización. Inténtalo de nuevo.",
+  meta_no_amplio_el_token: "Meta no emitió el token de larga duración. Inténtalo de nuevo.",
+  oauth_no_configurado_en_servidor: "El servidor no tiene configurado el OAuth de Instagram.",
+};
+
+/** El callback del servidor (server/routes/instagramOAuth.ts) vuelve con ?instagram_oauth=conectado|error&motivo=… */
+function retornoOAuthInicial(): { type: "success" | "error"; text: string } | null {
+  if (typeof window === "undefined") return null;
+  const params = new URLSearchParams(window.location.search);
+  const resultado = params.get("instagram_oauth");
+  if (!resultado) return null;
+  if (resultado === "conectado") {
+    return { type: "success", text: "¡Instagram conectado! Ya puedes leer tus métricas oficiales." };
+  }
+  const motivo = params.get("motivo") || "";
+  return { type: "error", text: MOTIVOS_OAUTH[motivo] || "No se pudo completar la conexión con Instagram." };
+}
+
 /**
  * Estado y conexión de la cuenta de Instagram con token.
  * @param params Estado y callbacks del contenedor ({@link InstagramConnectionParams}).
@@ -19,7 +42,9 @@ export interface InstagramConnectionParams {
  */
 export function useInstagramConnection({ loadContentItems, onScanRealMetrics }: InstagramConnectionParams) {
   // Instagram Meta Graph API & OAuth State
-  const [showIgModal, setShowIgModal] = useState(false);
+  // Si venimos del callback de Meta, el modal se abre solo con el resultado.
+  const [retornoOAuth] = useState(retornoOAuthInicial);
+  const [showIgModal, setShowIgModal] = useState(retornoOAuth !== null);
 
   const [igStatus, setIgStatus] = useState<InstagramStatus | null>(null);
 
@@ -32,7 +57,7 @@ export function useInstagramConnection({ loadContentItems, onScanRealMetrics }: 
   const [igModalMsg, setIgModalMsg] = useState<{
     type: "success" | "error";
     text: string;
-  } | null>(null);
+  } | null>(retornoOAuth);
 
   // Load Instagram Meta Graph API Connection Status
   const loadIgStatus = async () => {
@@ -55,9 +80,31 @@ export function useInstagramConnection({ loadContentItems, onScanRealMetrics }: 
     loadIgStatus();
   });
   useEffect(() => {
+    // Limpia la query del retorno para que un F5 no vuelva a abrir el modal.
+    if (retornoOAuth) {
+      const params = new URLSearchParams(window.location.search);
+      ["instagram_oauth", "motivo", "view"].forEach((k) => params.delete(k));
+      const query = params.toString();
+      window.history.replaceState({}, "", window.location.pathname + (query ? `?${query}` : ""));
+    }
     // eslint-disable-next-line react-hooks/set-state-in-effect -- consulta el estado de Instagram al montar la vista
     return alCambiarMontar();
-  }, []);
+  }, [retornoOAuth]);
+
+  const handleConnectIgOAuth = async () => {
+    try {
+      setIsConnectingIg(true);
+      setIgModalMsg(null);
+      const { url } = await api.getInstagramOAuthAuthorizeUrl();
+      window.location.href = url;
+    } catch (err) {
+      setIgModalMsg({
+        type: "error",
+        text: err?.message || "No se pudo iniciar la conexión con Instagram.",
+      });
+      setIsConnectingIg(false);
+    }
+  };
 
   const handleConnectIgToken = async () => {
     if (!igTokenInput.trim()) {
@@ -120,5 +167,5 @@ export function useInstagramConnection({ loadContentItems, onScanRealMetrics }: 
     }
   };
 
-  return { setIgModalMsg, setShowIgModal, igStatus, showIgModal, handleDisconnectIg, isConnectingIg, igModalMsg, igTokenInput, setIgTokenInput, handleConnectIgToken };
+  return { handleConnectIgOAuth, setIgModalMsg, setShowIgModal, igStatus, showIgModal, handleDisconnectIg, isConnectingIg, igModalMsg, igTokenInput, setIgTokenInput, handleConnectIgToken };
 }

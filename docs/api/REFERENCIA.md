@@ -2,7 +2,7 @@
 
 > Generado automáticamente por `scripts/generate-openapi.mjs` a partir del código. No se edita a mano: ejecuta `npm run docs:api`.
 
-**445 rutas HTTP** (394 declaraciones de handler; el resto son alias) en 31 dominios. Contrato máquina-legible: [`openapi.json`](./openapi.json) (OpenAPI 3.1). Visor interactivo: [`index.html`](./index.html) (hay que abrirlo en un navegador; GitHub no lo renderiza). Decisión de diseño: [ADR 0012](../adr/0012-contrato-api-openapi-por-ast.md).
+**447 rutas HTTP** (396 declaraciones de handler; el resto son alias) en 32 dominios. Contrato máquina-legible: [`openapi.json`](./openapi.json) (OpenAPI 3.1). Visor interactivo: [`index.html`](./index.html) (hay que abrirlo en un navegador; GitHub no lo renderiza). Decisión de diseño: [ADR 0012](../adr/0012-contrato-api-openapi-por-ast.md).
 
 ## Cómo leerla
 
@@ -12,11 +12,11 @@
 
 | Acceso | Rutas |
 |---|---|
-| Sesión | 352 |
+| Sesión | 353 |
 | Sesión (comprobada en el handler) | 6 |
 | Sesión opcional | 3 |
 | Firma o secreto | 7 |
-| Pública | 71 |
+| Pública | 72 |
 | No determinado | 6 |
 
 ## Rutas sin sesión de middleware
@@ -42,10 +42,11 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `POST` | `/api/auth/switch-band` | Sesión (comprobada en el handler) | — |  | [`server/routes/users/rutasSesion.ts:134`](../../server/routes/users/rutasSesion.ts#L134) |
 | `POST` | `/api/billing/webhook` | Firma o secreto | — |  | [`server/routes/billing.ts:987`](../../server/routes/billing.ts#L987) |
 | `GET` | `/api/calendar.ics` | Firma o secreto | — |  | [`server/routes/concerts.ts:429`](../../server/routes/concerts.ts#L429) |
-| `GET` | `/api/download-excel` | Sesión (comprobada en el handler) | — |  | [`server.ts:269`](../../server.ts#L269) |
+| `GET` | `/api/download-excel` | Sesión (comprobada en el handler) | — |  | [`server.ts:271`](../../server.ts#L271) |
 | `GET` | `/api/emails/baja` | Pública | publicoRateLimiter |  | [`server/routes/emailsCicloVida.ts:13`](../../server/routes/emailsCicloVida.ts#L13) |
-| `GET` | `/api/gmail-oauth/callback` | Pública | gmailOAuthRateLimiter |  | [`server/routes/gmailOAuth.ts:184`](../../server/routes/gmailOAuth.ts#L184) |
-| `GET` | `/api/health` | Pública | — | ★ | [`server.ts:168`](../../server.ts#L168) |
+| `GET` | `/api/gmail-oauth/callback` | Pública | gmailOAuthRateLimiter |  | [`server/routes/gmailOAuth.ts:96`](../../server/routes/gmailOAuth.ts#L96) |
+| `GET` | `/api/health` | Pública | — | ★ | [`server.ts:170`](../../server.ts#L170) |
+| `GET` | `/api/instagram-oauth/callback` | Pública | instagramOAuthRateLimiter |  | [`server/routes/instagramOAuth.ts:95`](../../server/routes/instagramOAuth.ts#L95) |
 | `GET` | `/api/places/photo` | Pública | fotoPlacesRateLimiter |  | [`server/routes/leads/placesPhoto.ts:12`](../../server/routes/leads/placesPhoto.ts#L12) |
 | `POST` | `/api/public/contacto-empresas` | Pública | publicoRateLimiter, consultaRateLimiter |  | [`server/routes/contactoEmpresas.ts:23`](../../server/routes/contactoEmpresas.ts#L23) |
 | `GET` | `/api/public/deals/{token}` | Pública | — |  | [`server/routes/deals.ts:227`](../../server/routes/deals.ts#L227) |
@@ -63,7 +64,7 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `POST` | `/api/public/track-click` | Pública | publicoRateLimiter |  | [`server/routes/epk_fans.ts:935`](../../server/routes/epk_fans.ts#L935) |
 | `GET` | `/api/r/{code}` | Pública | publicoRateLimiter |  | [`server/routes/enlacesCortos.ts:49`](../../server/routes/enlacesCortos.ts#L49) |
 | `GET` | `/api/spotify/status` | Pública | — |  | [`server/routes/spotify.ts:16`](../../server/routes/spotify.ts#L16) |
-| `GET` | `/api/state` | Sesión (comprobada en el handler) | — |  | [`server.ts:511`](../../server.ts#L511) |
+| `GET` | `/api/state` | Sesión (comprobada en el handler) | — |  | [`server.ts:513`](../../server.ts#L513) |
 | `POST` | `/api/stripe/webhook` | Firma o secreto | — |  | [`server/routes/billing.ts:988`](../../server/routes/billing.ts#L988) |
 | `GET` | `/api/tracking/click` | Pública | — |  | [`server/routes/tracking.ts:147`](../../server/routes/tracking.ts#L147) |
 | `POST` | `/api/tracking/interaction` | Pública | — |  | [`server/routes/tracking.ts:259`](../../server/routes/tracking.ts#L259) |
@@ -104,7 +105,7 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `GET` | `/guias/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:63`](../../server/routes/paginasSeo.ts#L63) |
 | `GET` | `/guides` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:59`](../../server/routes/paginasSeo.ts#L59) |
 | `GET` | `/guides/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:60`](../../server/routes/paginasSeo.ts#L60) |
-| `GET` | `/health` | Pública | — |  | [`server.ts:168`](../../server.ts#L168) |
+| `GET` | `/health` | Pública | — |  | [`server.ts:170`](../../server.ts#L170) |
 | `GET` | `/listados` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:98`](../../server/routes/paginasSeo.ts#L98) |
 | `GET` | `/listados/festivales` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:99`](../../server/routes/paginasSeo.ts#L99) |
 | `GET` | `/listados/festivales/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginasSeo.ts:100`](../../server/routes/paginasSeo.ts#L100) |
@@ -112,12 +113,12 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `GET` | `/netflix` | Pública | publicoRateLimiter |  | [`server/routes/presentacionTfm.ts:25`](../../server/routes/presentacionTfm.ts#L25) |
 | `GET` | `/plantilla-rider-tecnico` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:68`](../../server/routes/paginaConcierto.ts#L68) |
 | `GET` | `/presentacion_tfm` | Pública | publicoRateLimiter |  | [`server/routes/presentacionTfm.ts:24`](../../server/routes/presentacionTfm.ts#L24) |
-| `GET` | `/privacy` | Pública | — |  | [`server.ts:182`](../../server.ts#L182) |
+| `GET` | `/privacy` | Pública | — |  | [`server.ts:184`](../../server.ts#L184) |
 | `GET` | `/r/{code}` | Pública | publicoRateLimiter |  | [`server/routes/enlacesCortos.ts:49`](../../server/routes/enlacesCortos.ts#L49) |
 | `GET` | `/robots.txt` | Pública | — |  | [`server/routes/paginaConcierto.ts:190`](../../server/routes/paginaConcierto.ts#L190) |
 | `GET` | `/sitemap.xml` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:172`](../../server/routes/paginaConcierto.ts#L172) |
 | `GET` | `/technical-rider-template` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:64`](../../server/routes/paginaConcierto.ts#L64) |
-| `GET` | `/terms` | Pública | — |  | [`server.ts:224`](../../server.ts#L224) |
+| `GET` | `/terms` | Pública | — |  | [`server.ts:226`](../../server.ts#L226) |
 
 ## Operaciones con esquema documentado
 
@@ -378,10 +379,17 @@ EPK público de la banda y registro de fans con consentimiento RGPD.
 
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
-| `GET` | `/api/gmail-oauth/authorize-url` | Sesión | gmailOAuthRateLimiter |  | [`server/routes/gmailOAuth.ts:144`](../../server/routes/gmailOAuth.ts#L144) |
-| `GET` | `/api/gmail-oauth/callback` | Pública | gmailOAuthRateLimiter |  | [`server/routes/gmailOAuth.ts:184`](../../server/routes/gmailOAuth.ts#L184) |
-| `POST` | `/api/gmail-oauth/disconnect` | Sesión | gmailOAuthRateLimiter |  | [`server/routes/gmailOAuth.ts:298`](../../server/routes/gmailOAuth.ts#L298) |
-| `GET` | `/api/gmail-oauth/status` | Sesión | gmailOAuthRateLimiter |  | [`server/routes/gmailOAuth.ts:285`](../../server/routes/gmailOAuth.ts#L285) |
+| `GET` | `/api/gmail-oauth/authorize-url` | Sesión | gmailOAuthRateLimiter |  | [`server/routes/gmailOAuth.ts:56`](../../server/routes/gmailOAuth.ts#L56) |
+| `GET` | `/api/gmail-oauth/callback` | Pública | gmailOAuthRateLimiter |  | [`server/routes/gmailOAuth.ts:96`](../../server/routes/gmailOAuth.ts#L96) |
+| `POST` | `/api/gmail-oauth/disconnect` | Sesión | gmailOAuthRateLimiter |  | [`server/routes/gmailOAuth.ts:210`](../../server/routes/gmailOAuth.ts#L210) |
+| `GET` | `/api/gmail-oauth/status` | Sesión | gmailOAuthRateLimiter |  | [`server/routes/gmailOAuth.ts:197`](../../server/routes/gmailOAuth.ts#L197) |
+
+### instagramOAuth
+
+| Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
+|---|---|---|---|---|---|
+| `GET` | `/api/instagram-oauth/authorize-url` | Sesión | instagramOAuthRateLimiter |  | [`server/routes/instagramOAuth.ts:57`](../../server/routes/instagramOAuth.ts#L57) |
+| `GET` | `/api/instagram-oauth/callback` | Pública | instagramOAuthRateLimiter |  | [`server/routes/instagramOAuth.ts:95`](../../server/routes/instagramOAuth.ts#L95) |
 
 ### leads
 
@@ -487,18 +495,18 @@ Salas, festivales y contactos del CRM de booking. Los agentes (Scout, Redactor, 
 
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
-| `POST` | `/api/generate-growth-plan` | Sesión | — |  | [`server/routes/metrics.ts:730`](../../server/routes/metrics.ts#L730) |
-| `GET` | `/api/metrics` | Sesión | — |  | [`server/routes/metrics.ts:14`](../../server/routes/metrics.ts#L14) |
-| `POST` | `/api/metrics` | Sesión | — |  | [`server/routes/metrics.ts:26`](../../server/routes/metrics.ts#L26) |
-| `GET` | `/api/metrics/content-items` | Sesión | — |  | [`server/routes/metrics.ts:228`](../../server/routes/metrics.ts#L228) |
-| `POST` | `/api/metrics/instagram/connect` | Sesión | — |  | [`server/routes/metrics.ts:460`](../../server/routes/metrics.ts#L460) |
-| `POST` | `/api/metrics/instagram/disconnect` | Sesión | — |  | [`server/routes/metrics.ts:577`](../../server/routes/metrics.ts#L577) |
-| `GET` | `/api/metrics/instagram/status` | Sesión | — |  | [`server/routes/metrics.ts:361`](../../server/routes/metrics.ts#L361) |
-| `POST` | `/api/metrics/real` | Sesión | — |  | [`server/routes/metrics.ts:106`](../../server/routes/metrics.ts#L106) |
-| `POST` | `/api/metrics/scan-screenshot` | Sesión | — |  | [`server/routes/metrics.ts:604`](../../server/routes/metrics.ts#L604) |
-| `POST` | `/api/metrics/sync` | Sesión | — |  | [`server/routes/metrics.ts:79`](../../server/routes/metrics.ts#L79) |
-| `PUT` | `/api/metrics/{id}` | Sesión | — |  | [`server/routes/metrics.ts:39`](../../server/routes/metrics.ts#L39) |
-| `DELETE` | `/api/metrics/{id}` | Sesión + líder | — |  | [`server/routes/metrics.ts:58`](../../server/routes/metrics.ts#L58) |
+| `POST` | `/api/generate-growth-plan` | Sesión | — |  | [`server/routes/metrics.ts:654`](../../server/routes/metrics.ts#L654) |
+| `GET` | `/api/metrics` | Sesión | — |  | [`server/routes/metrics.ts:15`](../../server/routes/metrics.ts#L15) |
+| `POST` | `/api/metrics` | Sesión | — |  | [`server/routes/metrics.ts:27`](../../server/routes/metrics.ts#L27) |
+| `GET` | `/api/metrics/content-items` | Sesión | — |  | [`server/routes/metrics.ts:229`](../../server/routes/metrics.ts#L229) |
+| `POST` | `/api/metrics/instagram/connect` | Sesión | — |  | [`server/routes/metrics.ts:461`](../../server/routes/metrics.ts#L461) |
+| `POST` | `/api/metrics/instagram/disconnect` | Sesión | — |  | [`server/routes/metrics.ts:501`](../../server/routes/metrics.ts#L501) |
+| `GET` | `/api/metrics/instagram/status` | Sesión | — |  | [`server/routes/metrics.ts:362`](../../server/routes/metrics.ts#L362) |
+| `POST` | `/api/metrics/real` | Sesión | — |  | [`server/routes/metrics.ts:107`](../../server/routes/metrics.ts#L107) |
+| `POST` | `/api/metrics/scan-screenshot` | Sesión | — |  | [`server/routes/metrics.ts:528`](../../server/routes/metrics.ts#L528) |
+| `POST` | `/api/metrics/sync` | Sesión | — |  | [`server/routes/metrics.ts:80`](../../server/routes/metrics.ts#L80) |
+| `PUT` | `/api/metrics/{id}` | Sesión | — |  | [`server/routes/metrics.ts:40`](../../server/routes/metrics.ts#L40) |
+| `DELETE` | `/api/metrics/{id}` | Sesión + líder | — |  | [`server/routes/metrics.ts:59`](../../server/routes/metrics.ts#L59) |
 
 ### paginaConcierto
 
@@ -637,12 +645,12 @@ Salud del servicio, estado de la sesión y páginas legales servidas por server.
 
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
-| `GET` | `/api/download-excel` | Sesión (comprobada en el handler) | — |  | [`server.ts:269`](../../server.ts#L269) |
-| `GET` | `/api/health` | Pública | — | ★ | [`server.ts:168`](../../server.ts#L168) |
-| `GET` | `/api/state` | Sesión (comprobada en el handler) | — |  | [`server.ts:511`](../../server.ts#L511) |
-| `GET` | `/health` | Pública | — |  | [`server.ts:168`](../../server.ts#L168) |
-| `GET` | `/privacy` | Pública | — |  | [`server.ts:182`](../../server.ts#L182) |
-| `GET` | `/terms` | Pública | — |  | [`server.ts:224`](../../server.ts#L224) |
+| `GET` | `/api/download-excel` | Sesión (comprobada en el handler) | — |  | [`server.ts:271`](../../server.ts#L271) |
+| `GET` | `/api/health` | Pública | — | ★ | [`server.ts:170`](../../server.ts#L170) |
+| `GET` | `/api/state` | Sesión (comprobada en el handler) | — |  | [`server.ts:513`](../../server.ts#L513) |
+| `GET` | `/health` | Pública | — |  | [`server.ts:170`](../../server.ts#L170) |
+| `GET` | `/privacy` | Pública | — |  | [`server.ts:184`](../../server.ts#L184) |
+| `GET` | `/terms` | Pública | — |  | [`server.ts:226`](../../server.ts#L226) |
 
 ### songs
 
@@ -750,5 +758,5 @@ Autenticación (login, registro, Google, invitaciones, cambio de banda) y gesti�
 
 Omitidas a propósito:
 
-- GET /* (server.ts:595): fallback de la SPA, no es API
+- GET /* (server.ts:597): fallback de la SPA, no es API
 

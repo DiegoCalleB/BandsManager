@@ -152,6 +152,14 @@ export const gmailOAuthRateLimiter = createRateLimiter({
   mensaje: "Demasiadas peticiones seguidas. Espera un momento."
 });
 
+/** Flujo OAuth de Instagram (autorizar, callback): llegan a Meta/BD y el callback es público. */
+export const instagramOAuthRateLimiter = createRateLimiter({
+  nombre: "instagram-oauth",
+  windowMs: 60 * 1000,
+  maxRequests: 30,
+  mensaje: "Demasiadas peticiones seguidas. Espera un momento."
+});
+
 /** Webhooks de proveedores (firmados): tope holgado por IP, solo corta ráfagas anómalas antes de verificar la firma. */
 export const webhookRateLimiter = createRateLimiter({
   nombre: "webhook",

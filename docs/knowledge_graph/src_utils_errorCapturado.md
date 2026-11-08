@@ -74,6 +74,7 @@ Vista tipada de un valor capturado en un `catch`.
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(from #route)*
 - [[server_routes_fans_contador|server/routes/fans_contador.ts]] *(from #route)*
 - [[server_routes_gmailOAuth|server/routes/gmailOAuth.ts]] *(from #security)*
+- [[server_routes_instagramOAuth|server/routes/instagramOAuth.ts]] *(from #security)*
 - [[server_routes_leads_emailValidation|server/routes/leads/emailValidation.ts]] *(from #route)*
 - [[server_routes_leads_exampleThreads|server/routes/leads/exampleThreads.ts]] *(from #route)*
 - [[server_routes_leads_import|server/routes/leads/import.ts]] *(from #route)*

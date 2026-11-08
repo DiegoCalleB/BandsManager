@@ -25,6 +25,7 @@ _Sin dependencias salientes directas._
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_metricas_panel|Panel y métricas]] *(from #feature)*
 - [[server_routes_metrics|server/routes/metrics.ts]] *(from #route)*
+- [[server_services_instagramConexion|server/services/instagramConexion.ts]] *(from #service)*
 
 ---
 

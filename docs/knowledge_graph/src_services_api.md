@@ -30,6 +30,7 @@ Exporta: ApiError, getAuthHeaders, api.
 - [[server_routes_donations|server/routes/donations.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(Layer: #route, Domain: #epk)*
 - [[server_routes_gmailOAuth|server/routes/gmailOAuth.ts]] *(Layer: #security, Domain: #auth)*
+- [[server_routes_instagramOAuth|server/routes/instagramOAuth.ts]] *(Layer: #security, Domain: #auth)*
 - [[server_routes_metrics|server/routes/metrics.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_posts|server/routes/posts.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_tours|server/routes/tours.ts]] *(Layer: #route, Domain: #system)*

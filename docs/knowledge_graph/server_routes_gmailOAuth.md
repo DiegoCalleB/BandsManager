@@ -26,6 +26,7 @@ OAuth "offline" de Gmail por banda: una banda conecta su cuenta UNA vez y el bac
 - [[server_services_gmailApiClient|server/services/gmailApiClient.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_gmailConexion|server/services/gmailConexion.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_oauthEstado|server/utils/oauthEstado.ts]] *(Layer: #security, Domain: #auth)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
