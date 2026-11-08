@@ -65,6 +65,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
   const [concIdioma] = useState('');
   const [concSetlistId, setConcSetlistId] = useState<string>('');
   const [concEntradasUrl, setConcEntradasUrl] = useState('');
+  const [concEntradasLugar, setConcEntradasLugar] = useState('');
   const [concIsPosible, setConcIsPosible] = useState(false);
 
   // Al abrir el modal (o cambiar banda/miembros) se reinicia la convocatoria.
@@ -187,6 +188,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
       idioma: concIdioma || undefined,
       setlistId: concSetlistId || undefined,
       entradasUrl: concEntradasUrl.trim() || undefined,
+      entradasLugarFisico: concEntradasLugar.trim() || undefined,
     };
 
     if (onAddConcert) {
@@ -534,6 +536,19 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                   value={concEntradasUrl}
                   onChange={(e) => setConcEntradasUrl(e.target.value)}
                   placeholder="https://www.ticketmaster.es/..."
+                  className="w-full"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-mono text-[var(--ink-2)] mb-1">Entradas en taquilla / punto físico</label>
+                <Input
+                  size="sm"
+                  type="text"
+                  aria-label="Entradas en taquilla / punto físico"
+                  value={concEntradasLugar}
+                  onChange={(e) => setConcEntradasLugar(e.target.value)}
+                  placeholder="ej. Taquilla de la sala, Fnac Callao"
                   className="w-full"
                 />
               </div>

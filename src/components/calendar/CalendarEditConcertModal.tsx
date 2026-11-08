@@ -204,6 +204,19 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
               />
             </div>
 
+            <div>
+              <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">Entradas en taquilla / punto físico</label>
+              <Input
+                size="sm"
+                type="text"
+                aria-label="Entradas en taquilla / punto físico"
+                value={editDraft.entradasLugarFisico || ''}
+                onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, entradasLugarFisico: e.target.value } : prev))}
+                placeholder="ej. Taquilla de la sala, Fnac Callao"
+                className="w-full"
+              />
+            </div>
+
             <div className="flex items-center gap-2 py-1 px-2 rounded-[var(--r-m)] bg-[var(--acc)]/20 ">
               <input
                 type="checkbox"
