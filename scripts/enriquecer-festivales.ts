@@ -9,7 +9,7 @@
  * `server/utils/emailsDeContacto.ts`), Instagram enlazado desde su web, teléfono (`tel:`), ciudad/dirección y fechas
  * de la edición (JSON-LD `Event`), formulario de contacto y página de convocatoria para bandas.
  * Solo lectura: escribe un JSONL; la carga en base de datos es un paso aparte y revisable.
- * Navegador: `PW_CHROMIUM` (por defecto `/opt/pw-browsers/chromium` si existe).
+ * `GOTO_MS`: tiempo máximo por página (por defecto 20000). Navegador: `PW_CHROMIUM` (por defecto `/opt/pw-browsers/chromium` si existe).
  */
 import { existsSync, readFileSync, appendFileSync } from "node:fs";
 import { chromium, type Page } from "playwright";
@@ -74,7 +74,7 @@ function leerJsonLd(bloques: string[]): { ciudad: string; direccion: string; ini
 
 async function abrir(page: Page, url: string): Promise<boolean> {
   try {
-    await page.goto(url, { timeout: 20000, waitUntil: "domcontentloaded" });
+    await page.goto(url, { timeout: Number(process.env.GOTO_MS) || 20000, waitUntil: "domcontentloaded" });
     await page.waitForTimeout(1200);
     return true;
   } catch {
