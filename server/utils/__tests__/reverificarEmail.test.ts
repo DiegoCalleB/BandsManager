@@ -75,4 +75,23 @@ describe('decidirReverificacion', () => {
     const r = decidirReverificacion(base, lectura({ inicio: '2025-07-01', fin: '2025-07-03' }), { ahora: AHORA });
     expect(r.cambios.festival_start_date).toBeUndefined();
   });
+
+  it('sustituye las fechas de una edición pasada por la nueva cuando el festival la publica', () => {
+    const lead = { ...base, festival_start_date: '2026-07-03', festival_end_date: '2026-07-05' };
+    const r = decidirReverificacion(lead, lectura({ inicio: '2027-07-02', fin: '2027-07-04' }), { ahora: AHORA });
+    expect(r.cambios.festival_start_date).toBe('2027-07-02');
+    expect(r.cambios.festival_end_date).toBe('2027-07-04');
+  });
+
+  it('no pisa unas fechas futuras ya guardadas', () => {
+    const lead = { ...base, festival_start_date: '2027-04-29', festival_end_date: '2027-05-01' };
+    const r = decidirReverificacion(lead, lectura({ inicio: '2027-05-06', fin: '2027-05-08' }), { ahora: AHORA });
+    expect(r.cambios.festival_start_date).toBeUndefined();
+  });
+
+  it('si la web solo trae una edición pasada, deja las fechas como están', () => {
+    const lead = { ...base, festival_start_date: '2026-07-03', festival_end_date: '2026-07-05' };
+    const r = decidirReverificacion(lead, lectura({ inicio: '2025-07-04', fin: '2025-07-06' }), { ahora: AHORA });
+    expect(r.cambios.festival_start_date).toBeUndefined();
+  });
 });

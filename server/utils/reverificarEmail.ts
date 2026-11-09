@@ -88,7 +88,9 @@ export function decidirReverificacion(
   if (!lead.instagram && leido.instagram) cambios.instagram = `@${leido.instagram.replace(/^@/, '')}`;
   if (!lead.telefono && leido.telefono) cambios.telefono = leido.telefono;
   const hoy = iso.slice(0, 10);
-  if (!lead.festival_start_date && leido.inicio && leido.inicio >= hoy) {
+  // Fechas: se rellenan si faltan o si las guardadas son de una edición ya pasada y la web publica una nueva (futura).
+  const fechaPasada = !!lead.festival_start_date && (lead.festival_end_date || lead.festival_start_date) < hoy;
+  if ((!lead.festival_start_date || fechaPasada) && leido.inicio && leido.inicio >= hoy) {
     cambios.festival_start_date = leido.inicio;
     cambios.festival_end_date = leido.fin && leido.fin >= leido.inicio ? leido.fin : leido.inicio;
   }
