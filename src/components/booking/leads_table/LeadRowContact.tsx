@@ -7,6 +7,7 @@ import { getEmailStatus,isBouncedLead } from "../../../hooks/useEmailValidation"
 import { Lead } from "../../../types";
 import { avisoDeEmail } from "../../../utils/avisoDeEmail";
 import { formularioDeContacto } from "../../../utils/contactoPorFormulario";
+import { estadoDeContacto, ETIQUETA_CONTACTO } from "../../../utils/estadoDeContacto";
 import { useLeadsTable } from "./LeadsTableContext";
 
 /** Datos propios de cada instancia (el resto sale del contexto del flujo). */
@@ -91,6 +92,21 @@ export function LeadRowContact({ lead, hasMovil, hasFijo, rawMovil, rawFijo }: L
           Sin email
         </span>
       )}
+      {lead.email_contacto || lead.email_secundario ? (() => {
+        const c = estadoDeContacto(lead);
+        return (
+          <span
+            title={c.motivo}
+            className={`mt-0.5 w-fit rounded-[var(--r-pill)] px-1.5 text-micro font-semibold ${
+              c.estado === "enviable"
+                ? "bg-[var(--ok-soft)] text-[var(--ok)]"
+                : "bg-[var(--alert-soft)] text-[var(--alert)]"
+            }`}
+          >
+            {ETIQUETA_CONTACTO[c.estado]}
+          </span>
+        );
+      })() : null}
       {(hasMovil || hasFijo || lead.instagram) && (
         <div className="flex items-center gap-1.5 mt-0.5 text-micro">
           {hasMovil ? (

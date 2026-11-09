@@ -24,6 +24,7 @@ Leads visibles de la sección activa tras aplicar campaña, ciudad, tipo, estado
 - [[src_utils_bookingFollowup|src/utils/bookingFollowup.ts]] *(Layer: #service, Domain: #booking)*
 - [[src_utils_bookingUtils|src/utils/bookingUtils.ts]] *(Layer: #service, Domain: #booking)*
 - [[src_utils_campaignMatch|src/utils/campaignMatch.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_estadoDeContacto|src/utils/estadoDeContacto.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_tourRouting|src/utils/tourRouting.ts]] *(Layer: #service, Domain: #system)*
 
 ---

@@ -23,7 +23,7 @@ Exporta: EstadoDelEmail, estadoDelEmail, tieneEmailVerificado.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_campaign_GlobalCampaignBar|src/components/campaign/GlobalCampaignBar.tsx]] *(from #frontend)*
+_Sin llamadas entrantes indexadas._
 
 ---
 

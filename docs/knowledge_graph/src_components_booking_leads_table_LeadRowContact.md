@@ -23,6 +23,7 @@ Celda de contacto directo de la fila: email, teléfonos e Instagram.
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_avisoDeEmail|src/utils/avisoDeEmail.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_contactoPorFormulario|src/utils/contactoPorFormulario.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_estadoDeContacto|src/utils/estadoDeContacto.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

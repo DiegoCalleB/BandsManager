@@ -6,6 +6,7 @@ import { ChevronDown, Filter, LayoutGrid, List, Map as MapIcon, Search, Target, 
 import { normalizeType } from "../../../utils/bookingUtils";
 import { Button, IconButton, Input } from "../../ui";
 import { useBookingCrm } from "./BookingCrmContext";
+import { FiltroContactoChips } from "./FiltroContactoChips";
 
 /**
  * Búsqueda, tipo, filtros, campaña y conmutador de vista (lista/mapa).
@@ -200,6 +201,7 @@ export function SearchAndViewRow() {
             </Button>
           </div>
         </div>
+        <FiltroContactoChips />
       </div>
     </>
   );

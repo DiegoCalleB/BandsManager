@@ -26,6 +26,7 @@ _Sin dependencias salientes directas._
 - [[agent_enviador|Enviador Agent (Dispatcher)]] *(from #agent)*
 - [[src_components_booking_leads_table_LeadRowContact|src/components/booking/leads_table/LeadRowContact.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_modal_VenueProfileColumn|src/components/booking/venue_modal/VenueProfileColumn.tsx]] *(from #frontend)*
+- [[src_utils_estadoDeContacto|src/utils/estadoDeContacto.ts]] *(from #service)*
 
 ---
 

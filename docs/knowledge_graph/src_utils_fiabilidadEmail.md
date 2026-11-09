@@ -24,6 +24,7 @@ _Sin dependencias salientes directas._
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_utils_procedenciaDatos|server/utils/procedenciaDatos.ts]] *(from #service)*
+- [[src_utils_estadoDeContacto|src/utils/estadoDeContacto.ts]] *(from #service)*
 
 ---
 

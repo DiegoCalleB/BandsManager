@@ -105,6 +105,7 @@ BandManager UI Component Library
 - [[src_components_booking_ChangeLeadImageModal|src/components/booking/ChangeLeadImageModal.tsx]] *(from #frontend)*
 - [[src_components_booking_crm_ActiveFiltersBar|src/components/booking/crm/ActiveFiltersBar.tsx]] *(from #frontend)*
 - [[src_components_booking_crm_EnrichBanner|src/components/booking/crm/EnrichBanner.tsx]] *(from #frontend)*
+- [[src_components_booking_crm_FiltroContactoChips|src/components/booking/crm/FiltroContactoChips.tsx]] *(from #frontend)*
 - [[src_components_booking_crm_HeaderTitleAndActions|src/components/booking/crm/HeaderTitleAndActions.tsx]] *(from #frontend)*
 - [[src_components_booking_crm_MobileToolsPanel|src/components/booking/crm/MobileToolsPanel.tsx]] *(from #frontend)*
 - [[src_components_booking_crm_SearchAndViewRow|src/components/booking/crm/SearchAndViewRow.tsx]] *(from #frontend)*

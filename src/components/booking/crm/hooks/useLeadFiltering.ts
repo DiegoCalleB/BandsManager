@@ -8,6 +8,7 @@ import { BookingCampaign, Lead, LeadStatus, LeadType } from "../../../../types";
 import { isLeadNeedsFollowup } from "../../../../utils/bookingFollowup";
 import { normalizeStatus, normalizeType } from "../../../../utils/bookingUtils";
 import { leadMatchesCampaignCapacity, leadMatchesCampaignCity, leadMatchesCampaignDates, leadMatchesCampaignScope } from "../../../../utils/campaignMatch";
+import { estadoDeContacto, type FiltroContacto } from "../../../../utils/estadoDeContacto";
 import { areCitiesLogisticallyCompatible } from "../../../../utils/tourRouting";
 import { matchesGruposType, matchesMedioType } from "../leadTypeMatchers";
 
@@ -25,6 +26,8 @@ export interface LeadFilteringParams {
   routeAnchorCity: string;
   /** Géneros de la banda: ordenan los festivales de una campaña de festivales por encaje. */
   generosBanda?: string[];
+  /** Filtra por si se puede escribir al lead y por dónde (`estadoDeContacto`). */
+  contactoFilter?: FiltroContacto;
 }
 
 /**
@@ -34,7 +37,7 @@ export interface LeadFilteringParams {
  */
 const GENEROS_VACIOS: string[] = [];
 
-export function useLeadFiltering({ leads, sectionTab, filterByCampaign, activeCampaign, searchTerm, statusFilter, typeFilter, selectedCityFilter, minCapacityFilter, routeAnchorCity, generosBanda = GENEROS_VACIOS }: LeadFilteringParams) {
+export function useLeadFiltering({ leads, sectionTab, filterByCampaign, activeCampaign, searchTerm, statusFilter, typeFilter, selectedCityFilter, minCapacityFilter, routeAnchorCity, generosBanda = GENEROS_VACIOS, contactoFilter = "todos" }: LeadFilteringParams) {
 
   // Filter leads by active section tab
   const sectionLeads = useMemo(() => {
@@ -97,13 +100,14 @@ export function useLeadFiltering({ leads, sectionTab, filterByCampaign, activeCa
             : sectionTab === 'grupos'
               ? matchesGruposType(lead, typeFilter)
               : normalizeType(lead.tipo) === typeFilter;
+      const matchesContacto = contactoFilter === 'todos' || estadoDeContacto(lead).estado === contactoFilter;
       const matchesCity =
         !selectedCityFilter ||
         (lead.ciudad || '').toLowerCase().includes(selectedCityFilter.toLowerCase()) ||
         (lead.region || '').toLowerCase().includes(selectedCityFilter.toLowerCase());
       const matchesCapacity = !minCapacityFilter || (lead.aforo || 0) >= minCapacityFilter;
       const matchesRoute = !routeAnchorCity || areCitiesLogisticallyCompatible(routeAnchorCity, lead.ciudad || lead.region || '');
-      return matchesSearch && matchesStatus && matchesType && matchesCity && matchesCapacity && matchesRoute;
+      return matchesSearch && matchesStatus && matchesType && matchesContacto && matchesCity && matchesCapacity && matchesRoute;
     });
     const porEncaje = filterByCampaign && activeCampaign?.alcance === 'festivales' && generosBanda.length > 0;
     return porEncaje ? ordenarPorAfinidad(filtrados, generosBanda) : filtrados;
@@ -112,6 +116,7 @@ export function useLeadFiltering({ leads, sectionTab, filterByCampaign, activeCa
     searchTerm,
     statusFilter,
     typeFilter,
+    contactoFilter,
     selectedCityFilter,
     minCapacityFilter,
     sectionTab,

@@ -30,6 +30,7 @@ Exporta: VenueTitleBarProps, VenueTitleBar.
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_festivalDateFormat|src/utils/festivalDateFormat.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_fiabilidadFechaFestival|src/utils/fiabilidadFechaFestival.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_leadReliability|src/utils/leadReliability.ts]] *(Layer: #service, Domain: #booking)*
 
 ---
