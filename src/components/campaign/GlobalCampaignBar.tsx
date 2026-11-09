@@ -5,6 +5,7 @@ import { contarPorContacto } from "../../utils/estadoDeContacto";
 import { Calendar, MapPin, Users, X, Settings2, Building2, ChevronDown, ChevronUp, Flame } from "lucide-react";
 import { ShowIcon } from '../ui/ShowIcon';
 import { IconButton } from '../ui';
+import { PrepararEmailsBoton } from './PrepararEmailsBoton';
 import type { NavigationOptions } from '../Dashboard';
 
 interface GlobalCampaignBarProps {
@@ -14,6 +15,8 @@ interface GlobalCampaignBarProps {
   onDeactivate: () => void;
   onNavigate: (view: string, options?: NavigationOptions & { campaignFilter?: string; campaignCities?: string[] }) => void;
   currentView: string;
+  /** Recarga los datos de la app (tras preparar los emails). */
+  onActualizar?: () => void;
 }
 
 export function GlobalCampaignBar({
@@ -23,6 +26,7 @@ export function GlobalCampaignBar({
   onDeactivate,
   onNavigate,
   currentView,
+  onActualizar,
 }: GlobalCampaignBarProps) {
   const [isMobileExpanded, setIsMobileExpanded] = useState(false);
 
@@ -125,6 +129,8 @@ export function GlobalCampaignBar({
               {campaign.alcance === "festivales" ? ` · ${contacto.enviable} enviables` : ""})
             </span>
           </button>
+
+          {campaign.alcance === "festivales" && <PrepararEmailsBoton campaignId={campaign.id} onListo={onActualizar} />}
 
           {/* Quick Calendar button */}
           <button

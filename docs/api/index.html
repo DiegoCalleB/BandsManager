@@ -14,7 +14,7 @@
   "info": {
     "title": "BandManager.io API",
     "version": "3.2.0",
-    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (445) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
+    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (446) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
     "license": {
       "name": "AGPL-3.0-only",
       "identifier": "AGPL-3.0-only"
@@ -700,7 +700,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/crud.ts:27",
+        "x-source": "server/routes/leads/crud.ts:29",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -3431,7 +3431,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:412",
+        "x-source": "server/routes/leads/places.ts:411",
         "x-autenticacion": "middleware"
       }
     },
@@ -3469,7 +3469,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/campaigns.ts:23",
+        "x-source": "server/routes/campaigns.ts:24",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -3508,7 +3508,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/campaigns.ts:36",
+        "x-source": "server/routes/campaigns.ts:37",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -3549,7 +3549,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/campaigns.ts:94",
+        "x-source": "server/routes/campaigns.ts:95",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -3598,7 +3598,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/campaigns.ts:60",
+        "x-source": "server/routes/campaigns.ts:61",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -3645,7 +3645,56 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/campaigns.ts:80",
+        "x-source": "server/routes/campaigns.ts:81",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "apiAutenticadaRateLimiter"
+        ]
+      }
+    },
+    "/api/campaigns/{id}/preparar-emails": {
+      "post": {
+        "tags": [
+          "campaigns"
+        ],
+        "operationId": "postApiCampaignsIdPrepararEmails",
+        "description": "Comentario en el código: POST /api/campaigns/:id/preparar-emails Rellena la plantilla de una campaña de festivales con los datos de cada festival y guarda el texto como pitch del lead. No cambia estados ni envía nada: cada envío sigue necesitando la aprobación de una persona.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/BandIdActiva"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "cookieAuth": []
+          },
+          {
+            "authTokenHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "401": {
+            "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/campaigns.ts:153",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -3694,7 +3743,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/campaigns.ts:119",
+        "x-source": "server/routes/campaigns.ts:120",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -3743,7 +3792,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/campaigns.ts:151",
+        "x-source": "server/routes/campaigns.ts:168",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -4766,7 +4815,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/chat.ts:31",
+        "x-source": "server/routes/chat.ts:32",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "chatRateLimiter"
@@ -6214,7 +6263,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:818",
+        "x-source": "server/routes/leads/places.ts:817",
         "x-autenticacion": "middleware"
       }
     },
@@ -6979,7 +7028,7 @@
             }
           }
         },
-        "x-source": "server/routes/leads/crud.ts:44",
+        "x-source": "server/routes/leads/crud.ts:46",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -7058,7 +7107,7 @@
             }
           }
         },
-        "x-source": "server/routes/leads/crud.ts:217",
+        "x-source": "server/routes/leads/crud.ts:234",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -7227,7 +7276,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/crud.ts:353",
+        "x-source": "server/routes/leads/crud.ts:368",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -7265,7 +7314,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:412",
+        "x-source": "server/routes/leads/places.ts:411",
         "x-autenticacion": "middleware"
       }
     },
@@ -7464,7 +7513,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:818",
+        "x-source": "server/routes/leads/places.ts:817",
         "x-autenticacion": "middleware"
       }
     },
@@ -7568,7 +7617,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:39",
+        "x-source": "server/routes/leads/places.ts:40",
         "x-autenticacion": "middleware"
       }
     },
@@ -7641,7 +7690,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/crud.ts:39",
+        "x-source": "server/routes/leads/crud.ts:41",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -7793,7 +7842,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/crud.ts:105",
+        "x-source": "server/routes/leads/crud.ts:107",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -7889,7 +7938,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/crud.ts:140",
+        "x-source": "server/routes/leads/crud.ts:142",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -7961,7 +8010,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/crud.ts:379",
+        "x-source": "server/routes/leads/crud.ts:394",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -8824,7 +8873,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/crud.ts:126",
+        "x-source": "server/routes/leads/crud.ts:128",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -9987,7 +10036,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:39",
+        "x-source": "server/routes/leads/places.ts:40",
         "x-autenticacion": "middleware"
       }
     },
@@ -14647,7 +14696,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/chat.ts:522",
+        "x-source": "server/routes/chat.ts:533",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"

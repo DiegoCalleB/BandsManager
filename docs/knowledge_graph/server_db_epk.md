@@ -39,6 +39,7 @@ Configuración del EPK de la banda (`epk_configs`) y mapa de logos.
 - [[server_db_sync|server/db/sync.ts]] *(from #db)*
 - [[server_services_credencialesInstagram|server/services/credencialesInstagram.ts]] *(from #service)*
 - [[server_services_perfilPublicoBanda|server/services/perfilPublicoBanda.ts]] *(from #service)*
+- [[server_services_prepararEmailsCampana|server/services/prepararEmailsCampana.ts]] *(from #service)*
 
 ---
 

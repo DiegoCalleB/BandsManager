@@ -81,21 +81,21 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 
 ## 🤖 Mapa automático (generado desde los imports reales)
 
-1978 nodos: 53 agent · 58 db · 12 external · 14 feature · 1021 frontend · 44 hook · 99 route · 85 schema · 12 security · 580 service.
+1982 nodos: 53 agent · 58 db · 12 external · 14 feature · 1022 frontend · 44 hook · 99 route · 85 schema · 12 security · 583 service.
 No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el test `grafoConocimiento` falla si queda desfasado.
 
 ### 🔥 Los 20 ficheros más importados
-- [[src_types|src/types.ts]] — 585 ficheros dependen de él
+- [[src_types|src/types.ts]] — 586 ficheros dependen de él
 - [[src_components_ui_index|src/components/ui/index.ts]] — 391 ficheros dependen de él
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] — 180 ficheros dependen de él
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] — 176 ficheros dependen de él
-- [[src_utils_api|src/utils/api.ts]] — 96 ficheros dependen de él
+- [[src_utils_api|src/utils/api.ts]] — 97 ficheros dependen de él
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] — 83 ficheros dependen de él
 - [[db_state_sync|In-Memory State & Supabase Sync]] — 75 ficheros dependen de él
-- [[tabla_registered_bands|tabla registered_bands]] — 73 ficheros dependen de él
+- [[tabla_registered_bands|tabla registered_bands]] — 74 ficheros dependen de él
 - [[server_db_core|server/db/core.ts]] — 70 ficheros dependen de él
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] — 65 ficheros dependen de él
-- [[server_db|server/db.ts]] — 57 ficheros dependen de él
+- [[server_db|server/db.ts]] — 58 ficheros dependen de él
 - [[server_ai|server/ai.ts]] — 50 ficheros dependen de él
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] — 49 ficheros dependen de él
 - [[src_services_api|src/services/api.ts]] — 45 ficheros dependen de él
@@ -104,7 +104,7 @@ No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el t
 - [[server_db_bands|server/db/bands.ts]] — 37 ficheros dependen de él
 - [[ext_ffmpeg|FFmpeg]] — 34 ficheros dependen de él
 - [[server_routes_bands|server/routes/bands.ts]] — 34 ficheros dependen de él
-- [[src_utils_errorMessage|src/utils/errorMessage.ts]] — 33 ficheros dependen de él
+- [[src_utils_errorMessage|src/utils/errorMessage.ts]] — 34 ficheros dependen de él
 
 ---
 

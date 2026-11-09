@@ -28,6 +28,7 @@ export function AppMainContent() {
                 onDeactivate={() => handleSetActiveCampaign(null)}
                 onNavigate={handleNavigate}
                 currentView={currentView}
+                onActualizar={() => fetchState()}
               />
             )}
 

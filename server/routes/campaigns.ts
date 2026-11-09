@@ -13,6 +13,7 @@ import {
   dbRecordCampaignPitchTraining,
   trainCampaignToneDnaManually
 } from "../db.js";
+import { prepararEmailsDeCampana } from "../services/prepararEmailsCampana.js";
 import { syncActiveCampaignsRadar } from "../services/campaignRadarScheduler.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 import { responderError } from '../utils/errorHttp.js';
@@ -143,6 +144,22 @@ router.post("/campaigns/:id/record-training", requireAuth, apiAutenticadaRateLim
     const error = comoErrorCapturado(errorCapturado);
     console.error(`Error in POST /api/campaigns/%s/record-training:`, req.params.id, error);
     responderError(res, error, "Error al registrar entrenamiento de campaña");
+  }
+});
+
+// POST /api/campaigns/:id/preparar-emails
+// Rellena la plantilla de una campaña de festivales con los datos de cada festival y guarda el texto como pitch del lead.
+// No cambia estados ni envía nada: cada envío sigue necesitando la aprobación de una persona.
+router.post("/campaigns/:id/preparar-emails", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
+  try {
+    const userBandId = getTargetBandId(req);
+    const resultado = await prepararEmailsDeCampana(userBandId, req.params.id);
+    if (!resultado) return res.status(404).json({ success: false, error: "Campaña no encontrada." });
+    res.json({ success: true, ...resultado });
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
+    console.error("Error in POST /api/campaigns/:id/preparar-emails:", error);
+    responderError(res, error, "Error al preparar los emails de la campaña");
   }
 });
 
