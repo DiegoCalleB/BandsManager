@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { BookingCampaign, PitchTemplateCategory } from "../../types";
 import { CampanaAlcanceFields } from "./CampanaAlcanceFields";
-import { HolidayDateWarning } from "../common/HolidayDateWarning";
+import { CampanaFechasFields } from "./CampanaFechasFields"; import { textoDeRango } from "../../utils/textoDeRango";
 import { Target, Calendar, MapPin, Users, Plus, X, Check, Trash2, Edit3, Compass, ShieldCheck, Flame, Wand2, Building2, Tent, Disc3, Radio, Briefcase, Landmark } from "lucide-react";
 import { GenerateAllTemplatesModal } from "../booking/GenerateAllTemplatesModal";
 import { apiFetch } from "../../utils/api";
@@ -174,6 +174,8 @@ export function CampaignManagerModal({
       maxCapacity: camp.maxCapacity || 0,
       targetDates: [...(camp.targetDates || [])],
       targetDatesText: camp.targetDatesText || "",
+      campaignStartDate: camp.campaignStartDate || "",
+      campaignEndDate: camp.campaignEndDate || "",
       notes: camp.notes || "",
       customPitchTemplates: { ...(camp.customPitchTemplates || {}) },
       color: camp.color || "var(--acc)",
@@ -212,8 +214,11 @@ export function CampaignManagerModal({
       targetCities: formData.alcance === "festivales" ? [] : formData.targetCities || [],
       minCapacity: formData.alcance === "festivales" ? 0 : Number(formData.minCapacity || 0),
       maxCapacity: formData.alcance === "festivales" ? 0 : Number(formData.maxCapacity || 0),
-      targetDates: dates,
-      targetDatesText: formattedDatesText,
+      // En festivales no hay fechas sueltas: solo una ventana opcional «desde – hasta» para filtrar por época del año.
+      targetDates: formData.alcance === "festivales" ? [] : dates,
+      targetDatesText: formData.alcance === "festivales" ? textoDeRango(formData.campaignStartDate, formData.campaignEndDate) : formattedDatesText,
+      campaignStartDate: formData.alcance === "festivales" ? formData.campaignStartDate || "" : "",
+      campaignEndDate: formData.alcance === "festivales" ? formData.campaignEndDate || "" : "",
       notes: formData.notes || "",
       customPitchTemplates: formData.customPitchTemplates || {},
       color: formData.color || "var(--acc)",
@@ -224,21 +229,6 @@ export function CampaignManagerModal({
 
     setIsEditing(false);
     setEditingCampaignId(null);
-  };
-
-  const handleAddDate = (newDate: string) => {
-    if (!newDate) return;
-    const current = formData.targetDates || [];
-    if (!current.includes(newDate)) {
-      const next = [...current, newDate].sort();
-      setFormData({ ...formData, targetDates: next });
-    }
-  };
-
-  const handleRemoveDate = (index: number) => {
-    const current = [...(formData.targetDates || [])];
-    current.splice(index, 1);
-    setFormData({ ...formData, targetDates: current });
   };
 
   const handlePitchTemplateChange = (
@@ -356,69 +346,7 @@ export function CampaignManagerModal({
 
               <CampanaAlcanceFields formData={formData} setFormData={setFormData} />
 
-              {/* Target Dates List & Quick Add */}
-              <div>
-                <label className="block text-xs font-sans font-bold text-[var(--ink-2)] mb-1">
-                  Fechas Objetivo (se marcarán en Calendario y pitches IA) *
-                </label>
-                <div className="space-y-2 mb-2.5">
-                  <div className="flex flex-wrap gap-2">
-                    {formData.targetDates?.map((date, idx) => (
-                      <div
-                        key={idx}
-                        className="flex flex-col gap-1 bg-[var(--sunken)] px-2.5 py-1.5 rounded-[var(--r-m)] text-[var(--ink)]"
-                      >
-                        <div className="flex items-center gap-1.5">
-                          <Calendar className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
-                          <input data-raw
-                            type="date"
-                            value={date}
-                            onChange={(e) => {
-                              if (!e.target.value) return;
-                              const next = [...(formData.targetDates || [])];
-                              next[idx] = e.target.value;
-                              next.sort();
-                              setFormData({ ...formData, targetDates: next });
-                            }}
-                            className="bg-transparent text-xs font-sans font-bold text-[var(--ink)] p-0 focus:ring-0 cursor-pointer"
-                          />
-                          <IconButton
-                            label="Eliminar fecha"
-                            variant="danger"
-                            type="button"
-                            onClick={() => handleRemoveDate(idx)}
-                            className="ml-1"
-                          >
-                            <X className="w-3.5 h-3.5" />
-                          </IconButton>
-                        </div>
-                        <HolidayDateWarning date={date} compact />
-                      </div>
-                    ))}
-
-                    <div className="flex items-center gap-1.5 bg-[var(--hair)]/10 hover:bg-[var(--hair)]/20 rounded-[var(--r-m)] px-2.5 py-1 text-[var(--ink-2)]">
-                      <Plus className="w-3.5 h-3.5" />
-                      <span className="text-xs font-sans font-bold">
-                        Añadir Fecha:
-                      </span>
-                      <input data-raw aria-label="Fechas objetivo (se marcarán en calendario y pitches IA)"
-                        type="date"
-                        onChange={(e) => {
-                          handleAddDate(e.target.value);
-                          e.target.value = "";
-                        }}
-                        className="bg-transparent text-xs font-sans text-[var(--acc-ink)] p-0 focus:ring-0 cursor-pointer"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <p className="text-xs text-[var(--ink-2)] italic">
-                  <ShowIcon inline emoji="💡" />Consejo: Las fechas añadidas aparecerán destacadas con
-                  badge de campaña en el Calendario y serán propuestas
-                  automáticamente por los agentes de IA al redactar pitches a
-                  salas.
-                </p>
-              </div>
+              <CampanaFechasFields formData={formData} setFormData={setFormData} />
 
               {/* Notes / Co-booking details */}
               <div>

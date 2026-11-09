@@ -33,7 +33,7 @@
   "src/components/booking/venue_modal/VenueEmailThread.tsx": 930,
   "src/components/repertorio/EnergyChart.tsx": 915,
   "server/routes/metrics.ts": 904,
-  "src/components/campaign/CampaignManagerModal.tsx": 801,
+  "src/components/campaign/CampaignManagerModal.tsx": 729,
   "src/components/calendar/CalendarViewsContainer.tsx": 892,
   "src/components/reels/ViralGrowthStudio.tsx": 891,
   "scripts/generate_obsidian_graph.ts": 883,
