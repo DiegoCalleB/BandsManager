@@ -56,8 +56,19 @@ function leerJsonLd(bloques: string[]): { ciudad: string; direccion: string; ini
   return r;
 }
 
+/** Tipos de recurso que no hacen falta para leer texto: cargarlos satura los túneles del proxy y hace fallar páginas enteras. */
+const RECURSOS_INNECESARIOS = new Set(["image", "media", "font"]);
+const aligeradas = new WeakSet<Page>();
+
+async function aligerar(page: Page): Promise<void> {
+  if (aligeradas.has(page)) return;
+  aligeradas.add(page);
+  await page.route("**/*", (ruta) => (RECURSOS_INNECESARIOS.has(ruta.request().resourceType()) ? ruta.abort() : ruta.continue()));
+}
+
 async function abrir(page: Page, url: string): Promise<boolean> {
   try {
+    await aligerar(page);
     await page.goto(url, { timeout: Number(process.env.GOTO_MS) || 20000, waitUntil: "domcontentloaded" });
     await page.waitForTimeout(1200);
     return true;
