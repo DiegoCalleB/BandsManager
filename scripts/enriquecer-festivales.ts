@@ -30,19 +30,20 @@ const navegador = await chromium.launch(ejecutable ? { executablePath: ejecutabl
 let i = 0;
 await Promise.all(
   Array.from({ length: PARALELO }, async () => {
-    const ctx = await navegador.newContext({ userAgent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124 Safari/537.36", locale: "es-ES" });
-    const page = await ctx.newPage();
     while (i < lineas.length) {
       const [id, nombre, web, ciudad] = lineas[i++].split("|");
       let hallazgo: Partial<Hallazgo> = {};
+      // Un contexto nuevo por festival: si el proxy rechaza un host, la página queda inservible y contaminaría a los siguientes.
+      const ctx = await navegador.newContext({ userAgent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124 Safari/537.36", locale: "es-ES" });
       try {
-        hallazgo = await leerWebDeFestival(page, web, nombre, ciudad);
+        hallazgo = await leerWebDeFestival(await ctx.newPage(), web, nombre, ciudad);
       } catch (err) {
         console.warn(`[enriquecer] ${nombre}:`, err instanceof Error ? err.message : err);
+      } finally {
+        await ctx.close();
       }
       appendFileSync(SALIDA, JSON.stringify({ id, nombre, web, ...hallazgo }) + "\n");
     }
-    await ctx.close();
   }),
 );
 await navegador.close();

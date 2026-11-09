@@ -93,12 +93,12 @@ const sumar = (banda: string, clave: ResultadoReverificacion | "escritos" | "err
 let i = 0;
 await Promise.all(
   Array.from({ length: PARALELO }, async () => {
-    const ctx = await navegador.newContext({ userAgent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124 Safari/537.36", locale: "es-ES" });
-    const page = await ctx.newPage();
     while (i < cola.length) {
       const f = cola[i++];
+      // Contexto nuevo por festival: un host rechazado por el proxy deja la página inservible para los siguientes.
+      const ctx = await navegador.newContext({ userAgent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124 Safari/537.36", locale: "es-ES" });
       try {
-        const leido = await leerWebDeFestival(page, f.website, f.nombre_sala);
+        const leido = await leerWebDeFestival(await ctx.newPage(), f.website, f.nombre_sala);
         const email = (f.email_contacto || leido.email || "").trim().toLowerCase();
         const [mx, respondio] = await Promise.all([email ? tieneMx(email) : Promise.resolve(undefined), respondioDesde(f.id, email)]);
         const { resultado, cambios } = decidirReverificacion(f, leido, { mx, respondio });
@@ -111,9 +111,10 @@ await Promise.all(
       } catch (err) {
         sumar(f.band_id, "errores");
         console.warn(`[agente-emails] ${f.nombre_sala}:`, err instanceof Error ? err.message : err);
+      } finally {
+        await ctx.close();
       }
     }
-    await ctx.close();
   }),
 );
 await navegador.close();
