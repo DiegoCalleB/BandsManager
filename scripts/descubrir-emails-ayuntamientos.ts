@@ -15,7 +15,7 @@ import { elegirEmailDeAyuntamiento, rolDeEmailMunicipal, type EmailEncontrado } 
 const arg = (n: string) => process.argv.find((a) => a.startsWith(`--${n}=`))?.slice(n.length + 3);
 const LISTA = arg("lista");
 const SALIDA = arg("salida") || "ayuntamientos.jsonl";
-const PARALELO = Number(arg("paralelo")) || 40;
+const PARALELO = Number(arg("paralelo")) || 10;
 if (!LISTA) {
   console.error("Falta --lista=<fichero>");
   process.exit(1);
@@ -35,11 +35,15 @@ let i = 0;
 await Promise.all(
   Array.from({ length: PARALELO }, async () => {
     while (i < lineas.length) {
-      const [id, nombre, web, prov] = lineas[i++].split("|");
+      const [id, nombre, webLista, prov] = lineas[i++].split("|");
+      // El proxy de salida solo cubre https: una web en http:// no resuelve y parecería caída.
+      const web = webLista.replace(/^http:\/\//i, "https://");
       const candidatos: EmailEncontrado[] = [];
       let paginas = 0;
       for (const pagina of [...paginasDondeBuscar(web), new URL("/cultura", web).href, new URL("/festejos", web).href]) {
-        const html = await leer(pagina);
+        let html = await leer(pagina);
+        // El proxy de salida pierde alguna conexión bajo carga: un solo reintento antes de dar el sitio por caído.
+        if (!html && paginas === 0) html = await leer(pagina);
         // Si ni la primera página responde, el sitio está caído o bloquea: no se gastan 6 esperas más.
         if (!html && paginas === 0) break;
         if (!html) continue;
