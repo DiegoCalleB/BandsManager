@@ -36,7 +36,7 @@ Buenas gente de {festival},
 
 {linea_publico} Os escribimos porque estamos cuadrando la ruta de la próxima edición.{frase_edicion}
 
-{banda} es {estilo_banda} pensado para poner el recinto a saltar desde el primer minuto. Es Black Friday: durante estos días mantenemos nuestro caché actual de 2026 y, con el disco de 2027, subirá.
+{banda} es {estilo_banda} {remate}. Es Black Friday: durante estos días mantenemos nuestro caché actual de 2026 y, con el disco de 2027, subirá.
 
 Podéis ver la respuesta del público en el vídeo del dossier web al pie de la firma, donde tenéis también toda la información.
 
@@ -50,13 +50,27 @@ Hi {festival} team,
 
 {linea_publico} We're lining up next edition's route.{frase_edicion}
 
-{banda} brings {estilo_banda}, built to get the whole site jumping from the first minute. It's Black Friday: for these few days we're keeping our current 2026 fee, and it goes up with the 2027 album.
+{banda} brings {estilo_banda}, {remate}. It's Black Friday: for these few days we're keeping our current 2026 fee, and it goes up with the 2027 album.
 
 You can see how the crowd reacts in the video of the dossier at the bottom of the signature, where you'll also find all the info.
 
 If your line-up isn't closed yet, it would be a real pleasure to be part of it. We're sure you're putting together something great!
 
 Cheers!`;
+
+export type FamiliaFestival = 'electro' | 'reggae' | 'cana' | 'raices' | 'defecto';
+
+/** Cómo se presenta la banda a una familia de festivales: su estilo y la frase que lo remata, en cada idioma. */
+export interface EstiloDeBanda {
+  es: string;
+  en: string;
+  remate_es: string;
+  remate_en: string;
+}
+export type EstilosPorFamilia = Partial<Record<FamiliaFestival, EstiloDeBanda>>;
+
+const REMATE_ES = 'pensado para poner el recinto a saltar desde el primer minuto';
+const REMATE_EN = 'built to get the whole site jumping from the first minute';
 
 const sinTildes = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
@@ -85,6 +99,22 @@ const ESTILOS: Array<[RegExp, string, string, boolean]> = [
   [/artes de calle/, 'las artes de calle', 'street arts', false],
   [/callejera|busk/, 'la música de calle', 'street music', false],
 ];
+
+/** Familia de un festival según su género: manda el primer género de la lista que encaje (indie y pop no deciden). */
+const FAMILIAS: Array<[RegExp, FamiliaFestival]> = [
+  [/electr/, 'electro'],
+  [/reggae|\bdub\b/, 'reggae'],
+  [/punk|rock|\bska\b|mestiz|fusion|hip|\brap\b/, 'cana'],
+  [/balkan|balcan|folk|mundo|world|artes de calle|callejera|busk/, 'raices'],
+];
+
+export function familiaDeFestival(genero?: string | null): FamiliaFestival {
+  for (const token of sinTildes(genero ?? '').split(/[,/·|]/).map((t) => t.trim()).filter(Boolean)) {
+    const hallada = FAMILIAS.find(([re]) => re.test(token));
+    if (hallada) return hallada[1];
+  }
+  return 'defecto';
+}
 
 const MESES_ES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 const MESES_EN = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -195,6 +225,8 @@ export interface OpcionesPitchFestival {
   /** Cómo se define la banda («electrónica y ska»); sale del género de su EPK. */
   estiloBanda?: string;
   ahora?: Date;
+  /** Cómo se presenta la banda a cada familia de festivales (guardado en la campaña); sin él, se usa `estiloBanda`. */
+  estilosBanda?: EstilosPorFamilia;
   /** Plantillas guardadas en la campaña; si faltan, se usan las de por defecto. */
   plantillas?: { es?: string | null; en?: string | null };
 }
@@ -207,12 +239,14 @@ function estiloDeLaBanda(texto: string | undefined, idioma: Idioma): string {
   return (texto ?? '').trim() || 'directo festivo';
 }
 
-export function redactarPitchFestival(lead: LeadParaPlantilla, { banda, estiloBanda, ahora = new Date(), plantillas }: OpcionesPitchFestival): string {
+export function redactarPitchFestival(lead: LeadParaPlantilla, { banda, estiloBanda, estilosBanda, ahora = new Date(), plantillas }: OpcionesPitchFestival): string {
   const d = datosDePlantilla(lead, ahora);
+  const presentacion = estilosBanda?.[familiaDeFestival(lead.genero)] ?? estilosBanda?.defecto;
   const plantilla = d.idioma === 'en' ? plantillas?.en || PLANTILLA_FESTIVAL_EN : plantillas?.es || PLANTILLA_FESTIVAL_ES;
   return rellenarPlantilla(plantilla, {
     banda,
-    estilo_banda: estiloDeLaBanda(estiloBanda, d.idioma),
+    estilo_banda: presentacion ? (d.idioma === 'en' ? presentacion.en : presentacion.es) : estiloDeLaBanda(estiloBanda, d.idioma),
+    remate: presentacion ? (d.idioma === 'en' ? presentacion.remate_en : presentacion.remate_es) : d.idioma === 'en' ? REMATE_EN : REMATE_ES,
     festival: d.festival,
     ciudad: d.ciudad,
     linea_publico: d.lineaPublico,

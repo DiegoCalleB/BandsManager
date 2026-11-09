@@ -43,7 +43,7 @@ export interface BookingCampaign {
   notes?: string;
   // Mensaje clave por caso de uso (salas/festivales/...) que el Redactor prioriza sobre la plantilla
   // general de esa categoría mientras la campaña esté activa; sin entrada, usa la general.
-  customPitchTemplates?: Partial<Record<PitchTemplateCategory | 'festivales_email_es' | 'festivales_email_en', string>>;
+  customPitchTemplates?: Partial<Record<PitchTemplateCategory | 'festivales_email_es' | 'festivales_email_en' | 'festivales_email_estilos', string>>;
   isActive: boolean;
   /** Alias heredado de la API (snake_case) de `isActive`. */
   is_active?: boolean;

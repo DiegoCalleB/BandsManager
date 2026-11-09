@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { datosDePlantilla, redactarPitchFestival, rellenarPlantilla } from '../plantillaFestival';
+import { datosDePlantilla, familiaDeFestival, redactarPitchFestival, rellenarPlantilla } from '../plantillaFestival';
 
 const ahora = new Date('2026-11-09T10:00:00Z');
 const BANDA = 'Los Ejemplos';
@@ -90,5 +90,31 @@ describe('redactarPitchFestival', () => {
 
   it('rellenarPlantilla sustituye todos los huecos', () => {
     expect(rellenarPlantilla('Hola {festival} y {festival}', { festival: 'X' } as never)).toBe('Hola X y X');
+  });
+});
+
+describe('énfasis según el tipo de festival', () => {
+  const estilosBanda = {
+    electro: { es: 'electro con alma', en: 'electro soul', remate_es: 'a bailar', remate_en: 'to dance' },
+    reggae: { es: 'reggae con pulso', en: 'reggae pulse', remate_es: 'a moverse', remate_en: 'to move' },
+    defecto: { es: 'mezcla', en: 'mix', remate_es: 'a saltar', remate_en: 'to jump' },
+  };
+  it('clasifica por el primer género que decide; indie y pop no deciden', () => {
+    expect(familiaDeFestival('Indie, Electrónica')).toBe('electro');
+    expect(familiaDeFestival('Rock, Reggae')).toBe('cana');
+    expect(familiaDeFestival('Dub')).toBe('reggae');
+    expect(familiaDeFestival('Folk, Música del mundo')).toBe('raices');
+    expect(familiaDeFestival('Pop')).toBe('defecto');
+    expect(familiaDeFestival(null)).toBe('defecto');
+  });
+  it('cada familia presenta a la banda a su manera y cae en defecto si falta', () => {
+    const base = { nombre_sala: 'X Fest', ciudad: 'Madrid', region: 'ES' };
+    const plantillas = { es: '{banda} es {estilo_banda} {remate}.' };
+    const e = redactarPitchFestival({ ...base, genero: 'Electrónica' }, { banda: 'Los Ejemplos', estilosBanda, plantillas });
+    const r = redactarPitchFestival({ ...base, genero: 'Reggae' }, { banda: 'Los Ejemplos', estilosBanda, plantillas });
+    const c = redactarPitchFestival({ ...base, genero: 'Rock' }, { banda: 'Los Ejemplos', estilosBanda, plantillas });
+    expect(e).toBe('Los Ejemplos es electro con alma a bailar.');
+    expect(r).toBe('Los Ejemplos es reggae con pulso a moverse.');
+    expect(c).toBe('Los Ejemplos es mezcla a saltar.');
   });
 });

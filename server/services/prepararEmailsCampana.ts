@@ -9,7 +9,7 @@
 import type { BookingCampaign, Lead } from '../../src/types.js';
 import { leadMatchesCampaign } from '../../src/utils/campaignMatch.js';
 import { normalizeType } from '../../src/utils/bookingUtils.js';
-import { redactarPitchFestival } from '../../src/utils/plantillaFestival.js';
+import { redactarPitchFestival, type EstilosPorFamilia } from '../../src/utils/plantillaFestival.js';
 
 export interface PlanDePitches {
   escribir: Array<{ id: string; pitch: string }>;
@@ -25,6 +25,13 @@ export function planDePitches(leads: Lead[], campana: BookingCampaign, { banda, 
   const plan: PlanDePitches = { escribir: [], enCurso: 0, conPitchPropio: 0, reemplazados: 0 };
   if (campana.alcance !== 'festivales') return plan;
   const plantillas = { es: campana.customPitchTemplates?.festivales_email_es, en: campana.customPitchTemplates?.festivales_email_en };
+  const estilosBanda = (() => {
+    try {
+      return JSON.parse(campana.customPitchTemplates?.festivales_email_estilos ?? 'null') as EstilosPorFamilia | null;
+    } catch {
+      return null;
+    }
+  })();
   for (const lead of leads) {
     if (normalizeType(lead.tipo) !== 'festival' || lead.estado === 'no_interesado' || !leadMatchesCampaign(lead, campana)) continue;
     if (lead.estado !== 'nuevo') {
@@ -39,7 +46,7 @@ export function planDePitches(leads: Lead[], campana: BookingCampaign, { banda, 
       }
       plan.reemplazados++;
     }
-    plan.escribir.push({ id: lead.id, pitch: redactarPitchFestival(lead, { banda, estiloBanda, ahora, plantillas }) });
+    plan.escribir.push({ id: lead.id, pitch: redactarPitchFestival(lead, { banda, estiloBanda, estilosBanda: estilosBanda ?? undefined, ahora, plantillas }) });
   }
   return plan;
 }
