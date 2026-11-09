@@ -34,6 +34,7 @@ tags: ["service", "system", "auto"]
 ---
 
 ## 🧪 Tests que lo cubren
+- `src/utils/__tests__/confirmarEmail.test.ts`
 - `src/utils/__tests__/estadoDeContacto.test.ts`
 
 ---

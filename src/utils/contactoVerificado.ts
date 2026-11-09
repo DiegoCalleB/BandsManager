@@ -17,7 +17,7 @@ export function estadoDelEmail(lead: LeadConEmail): EstadoDelEmail {
   if (!lead.email_contacto?.trim()) return 'sin_email';
   const fuente = (lead.datos_fuentes as Record<string, { fuente?: string } | undefined> | undefined)?.email_contacto?.fuente;
   if (avisoDeEmail(lead) !== null || fuente === 'ia' || fuente === 'buscador') return 'sin_comprobar';
-  return fuente === 'web' || fuente === 'places' || fuente === 'catalogo' ? 'verificado' : 'sin_procedencia';
+  return fuente === 'web' || fuente === 'places' || fuente === 'catalogo' || fuente === 'persona' ? 'verificado' : 'sin_procedencia';
 }
 
 export const tieneEmailVerificado = (lead: LeadConEmail): boolean => estadoDelEmail(lead) === 'verificado';

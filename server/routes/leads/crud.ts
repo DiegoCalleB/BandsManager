@@ -21,6 +21,7 @@ import { filterLeadsByActiveCampaign } from "../../utils/festivalDateFilter.js";
 import { searchFestivalByName, formatFestivalDates } from "../../utils/spanishFestivalsDB.js";
 import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 import { responderError } from '../../utils/errorHttp.js';
+import { campoConfirmable, confirmarEmailPorPersona } from "../../../src/utils/confirmarEmail.js";
 import { emailsEditadosAMano, olvidarProcedencia } from "../../utils/procedenciaDatos.js";
 
 const router = express.Router();
@@ -143,7 +144,7 @@ router.put("/leads/:id", requireAuth, apiAutenticadaRateLimiter, async (req, res
     const userBandId = getTargetBandId(req);
     const { id } = req.params;
     // `expectedStatus` es una condición de la petición, no un campo del lead: no debe guardarse.
-    const { expectedStatus, aprobado_por: _a, aprobado_at: _b, pitch_aprobado_hash: _c, ...updatedFields } = req.body || {};
+    const { expectedStatus, confirmarEmail, aprobado_por: _a, aprobado_at: _b, pitch_aprobado_hash: _c, ...updatedFields } = req.body || {};
 
     // Aprobar pone un correo real en la cola de envío: solo la dirección de la banda, igual que
     // lanzar agentes. El resto de ediciones de una sala siguen abiertas a todos los miembros.
@@ -166,6 +167,16 @@ router.put("/leads/:id", requireAuth, apiAutenticadaRateLimiter, async (req, res
     }
 
     const merged = { ...(existing || {}), ...updatedFields, id };
+
+    // «Confirmar email»: una persona de la banda responde de un email caducado. La procedencia la fija el servidor
+    // (el cliente solo dice qué campo) y solo vale para lo que de verdad está en «Revisar».
+    if (confirmarEmail !== undefined) {
+      const conFuentes = existing as (typeof existing & { datos_fuentes?: unknown }) | null | undefined;
+      if (!conFuentes || campoConfirmable(conFuentes) !== confirmarEmail) {
+        return res.status(400).json({ error: "Ese email no se puede confirmar con un clic: corrígelo a mano.", codigo: "email_no_confirmable" });
+      }
+      merged.datos_fuentes = confirmarEmailPorPersona(conFuentes.datos_fuentes, confirmarEmail) as typeof merged.datos_fuentes;
+    }
 
     // Un email que la persona corrige a mano deja de ser una suposición de la IA: sin esto, seguiría «sin comprobar» y el
     // Enviador no lo usaría nunca.

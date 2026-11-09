@@ -58,6 +58,13 @@ export function fiabilidadDelEmail(dato: EmailConEvidencia, ahora: Date = new Da
         ? { puntos: 90, nivel: 'publicado', motivo: 'Publicado en la web del festival y comprobado hace poco.' }
         : { puntos: 50, nivel: 'caducado', motivo: `Se leyó en su web hace más de ${DIAS_VIGENCIA_WEB} días; hay que volver a comprobarlo.` };
     }
+    case 'persona': {
+      const visto = Date.parse(p.verificado_en || p.en || '');
+      const dias = Number.isNaN(visto) ? Infinity : (ahora.getTime() - visto) / DIA_MS;
+      return dias <= DIAS_VIGENCIA_WEB
+        ? { puntos: 85, nivel: 'banda', motivo: 'Una persona de la banda lo ha confirmado hace poco.' }
+        : { puntos: 50, nivel: 'caducado', motivo: `Se confirmó hace más de ${DIAS_VIGENCIA_WEB} días; hay que volver a comprobarlo.` };
+    }
     case 'catalogo':
       return { puntos: 75, nivel: 'institucional', motivo: 'Sale de una ficha oficial o del catálogo, no de la web del festival.' };
     default:

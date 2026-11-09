@@ -10,7 +10,7 @@
 
 import { fiabilidadDelEmail, sePuedeEnviar } from '../../src/utils/fiabilidadEmail.js';
 
-export type FuenteDato = 'places' | 'catalogo' | 'web' | 'buscador' | 'ia';
+export type FuenteDato = 'places' | 'catalogo' | 'web' | 'buscador' | 'ia' | 'persona';
 export type ConfianzaDato = 'alta' | 'media' | 'baja';
 
 /**
@@ -50,6 +50,7 @@ export const CONFIANZA_POR_FUENTE: Record<FuenteDato, ConfianzaDato> = {
   catalogo: 'media',
   buscador: 'media',
   ia: 'baja',
+  persona: 'alta',
 };
 
 /** Los campos del lead que el enriquecimiento puede rellenar y de los que se guarda procedencia. */

@@ -8,6 +8,7 @@ import { Lead } from "../../../types";
 import { avisoDeEmail } from "../../../utils/avisoDeEmail";
 import { formularioDeContacto } from "../../../utils/contactoPorFormulario";
 import { estadoDeContacto, ETIQUETA_CONTACTO } from "../../../utils/estadoDeContacto";
+import { BotonConfirmarEmail } from "./BotonConfirmarEmail";
 import { useLeadsTable } from "./LeadsTableContext";
 
 /** Datos propios de cada instancia (el resto sale del contexto del flujo). */
@@ -107,6 +108,7 @@ export function LeadRowContact({ lead, hasMovil, hasFijo, rawMovil, rawFijo }: L
           </span>
         );
       })() : null}
+      <BotonConfirmarEmail lead={lead} />
       {(hasMovil || hasFijo || lead.instagram) && (
         <div className="flex items-center gap-1.5 mt-0.5 text-micro">
           {hasMovil ? (

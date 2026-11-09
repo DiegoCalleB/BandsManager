@@ -18,6 +18,7 @@ Celda de contacto directo de la fila: email, teléfonos e Instagram.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_booking_leads_table_BotonConfirmarEmail|src/components/booking/leads_table/BotonConfirmarEmail.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_leads_table_LeadsTableContext|src/components/booking/leads_table/LeadsTableContext.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_hooks_useEmailValidation|src/hooks/useEmailValidation.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*

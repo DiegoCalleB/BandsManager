@@ -174,6 +174,7 @@ _Sin dependencias salientes directas._
 - [[src_components_booking_LeadDuplicatesModal|src/components/booking/LeadDuplicatesModal.tsx]] *(from #frontend)*
 - [[src_components_booking_leadHealth|src/components/booking/leadHealth.ts]] *(from #frontend)*
 - [[src_components_booking_LeadHealthBadge|src/components/booking/LeadHealthBadge.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_BotonConfirmarEmail|src/components/booking/leads_table/BotonConfirmarEmail.tsx]] *(from #frontend)*
 - [[src_components_booking_leads_table_hooks_useLeadsBatchDateScan|src/components/booking/leads_table/hooks/useLeadsBatchDateScan.ts]] *(from #frontend)*
 - [[src_components_booking_leads_table_hooks_useLeadsTableController|src/components/booking/leads_table/hooks/useLeadsTableController.ts]] *(from #frontend)*
 - [[src_components_booking_leads_table_LeadCampaignDates|src/components/booking/leads_table/LeadCampaignDates.tsx]] *(from #frontend)*

@@ -24,11 +24,13 @@ _Sin dependencias salientes directas._
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_utils_procedenciaDatos|server/utils/procedenciaDatos.ts]] *(from #service)*
+- [[src_utils_confirmarEmail|src/utils/confirmarEmail.ts]] *(from #service)*
 - [[src_utils_estadoDeContacto|src/utils/estadoDeContacto.ts]] *(from #service)*
 
 ---
 
 ## 🧪 Tests que lo cubren
+- `src/utils/__tests__/confirmarEmail.test.ts`
 - `src/utils/__tests__/fiabilidadEmail.test.ts`
 
 ---
