@@ -33,7 +33,7 @@ import { findLocalBandPartners } from "../../services/localBandPartnersService.j
 import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 import type { ContactoConConfianzaIA, FichaSalaIA, LugarNominatim, RespuestaBusquedaPlaces, RespuestaIA } from './tiposScout.js';
 import { responderError } from '../../utils/errorHttp.js';
-
+import { depurarEmailEnFichaIA } from '../../services/emailsSinEvidencia.js';
 const router = express.Router();
 
 // Helper to verify string relevance between searched venue name and found venue name
@@ -599,8 +599,8 @@ Devuelve strictly un objeto JSON con esta estructura exacta:
       } else {
         parsedData.imagen_url = { valor: cleanImg, confianza: cleanImg ? "alta" : "baja", fuente: "Logo resolution engine" };
       }
+      await depurarEmailEnFichaIA(parsedData, typeof webVal === 'string' ? webVal : undefined); // un email de la IA solo se ofrece si está en la web de la sala
     }
-
     return res.json({
       success: true,
       simulated: false,

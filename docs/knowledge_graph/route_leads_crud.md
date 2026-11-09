@@ -33,9 +33,11 @@ Endpoints REST para creación, actualización y filtrado de salas por banda.
 - [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_festivalDateFilter|server/utils/festivalDateFilter.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_planLimits|server/utils/planLimits.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_procedenciaDatos|server/utils/procedenciaDatos.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_spanishFestivalsDB|server/utils/spanishFestivalsDB.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_urlHost|server/utils/urlHost.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_confirmarEmail|src/utils/confirmarEmail.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---

@@ -18,10 +18,13 @@ Celda de contacto directo de la fila: email, teléfonos e Instagram.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_booking_leads_table_BotonConfirmarEmail|src/components/booking/leads_table/BotonConfirmarEmail.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_leads_table_LeadsTableContext|src/components/booking/leads_table/LeadsTableContext.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_hooks_useEmailValidation|src/hooks/useEmailValidation.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_avisoDeEmail|src/utils/avisoDeEmail.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_contactoPorFormulario|src/utils/contactoPorFormulario.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_estadoDeContacto|src/utils/estadoDeContacto.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
@@ -32,6 +35,7 @@ Celda de contacto directo de la fila: email, teléfonos e Instagram.
 
 ## 🧪 Tests que lo cubren
 - `src/components/booking/leads_table/__tests__/LeadRowContact.aviso.test.tsx`
+- `src/components/booking/leads_table/__tests__/LeadRowContact.formulario.test.tsx`
 
 ---
 

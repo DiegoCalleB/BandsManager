@@ -785,7 +785,7 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
           aforo: raw.aforo || 0,
           genero: raw.genero || generoBanda,
           tipo: raw.tipo || tipo,
-          email_contacto: raw.email_contacto || '',
+          email_contacto: '', // la IA no aporta emails: el enriquecimiento los busca escritos en la web de la sala
           telefono: raw.telefono || '',
           instagram: raw.instagram || '',
           website: raw.website || '',

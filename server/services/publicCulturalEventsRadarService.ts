@@ -66,7 +66,8 @@ export async function searchPublicCulturalOpportunities(params: {
           comunidad_autonoma: oe.comunidad_autonoma,
           evento_o_ciclo: oe.titulo,
           tecnico_cultura_contacto: `Programación ${oe.tipo_espacio}`,
-          email_contacto: "cultura@madrid.es",
+          // Sin email: el de «cultura@madrid.es» estaba escrito a mano y no salía de los datos abiertos de Madrid.
+          email_contacto: "",
           telefono_oficial: "+34 915 298 210",
           presupuesto_estimado_categoria: "Caché Directo (3k-10k€)",
           ventana_presentacion_dossier: "Programación Trimestral Continua",
@@ -101,8 +102,6 @@ Devuelve un JSON estricto con esta estructura exacta:
       "comunidad_autonoma": "Comunidad",
       "evento_o_ciclo": "Nombre del Ciclo o Fiestas (ej. Verano Cultural / Noches al Aire Libre)",
       "tecnico_cultura_contacto": "Técnico de Cultura / Programación",
-      "email_contacto": "cultura@ayuntamiento.es",
-      "telefono_oficial": "+34 949...",
       "presupuesto_estimado_categoria": "Caché Directo (3k-10k€)",
       "ventana_presentacion_dossier": "Enero - Abril",
       "requisitos_contratacion": "Facturación electrónica (FACe) y alta en SS/IAE",
@@ -112,7 +111,7 @@ Devuelve un JSON estricto con esta estructura exacta:
   ]
 }
 
-Devuelve máximo ${limit} entidades públicas y programas culturales REALES.`;
+Devuelve máximo ${limit} entidades públicas y programas culturales REALES. NO incluyas emails ni teléfonos: no tienes acceso a una fuente donde comprobarlos y no se aceptan.`;
 
       const aiRes = await generateContentWithFallback(client, {
         contents: prompt,
@@ -133,13 +132,14 @@ Devuelve máximo ${limit} entidades públicas y programas culturales REALES.`;
               comunidad_autonoma: item.comunidad_autonoma || "España",
               evento_o_ciclo: item.evento_o_ciclo || "Programación Cultural Municipal",
               tecnico_cultura_contacto: item.tecnico_cultura_contacto || "Concejalía de Cultura",
-              email_contacto: item.email_contacto || "",
-              telefono_oficial: item.telefono_oficial || "",
+              // Sin email ni teléfono: la IA no busca en internet aquí, así que lo que dijera sería inventado.
+              email_contacto: "",
+              telefono_oficial: "",
               presupuesto_estimado_categoria: item.presupuesto_estimado_categoria || "Caché Directo (3k-10k€)",
               ventana_presentacion_dossier: item.ventana_presentacion_dossier || "Enero - Mayo",
               requisitos_contratacion: item.requisitos_contratacion || "Facturación electrónica (FACe)",
               fuente: "Radar Cultural IA",
-              fiabilidad: "alta"
+              fiabilidad: "media" // sugerencia de una IA sin fuente: nunca «alta»
             });
           }
         });

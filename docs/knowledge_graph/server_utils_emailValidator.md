@@ -26,6 +26,8 @@ Validación de emails con dos niveles:
 - [[server_routes_leads_emailValidation|server/routes/leads/emailValidation.ts]] *(from #route)*
 - [[server_routes_leads_templates|server/routes/leads/templates.ts]] *(from #route)*
 - [[server_services_avisarEmailsDudosos|server/services/avisarEmailsDudosos.ts]] *(from #service)*
+- [[server_services_emailsSinEvidencia|server/services/emailsSinEvidencia.ts]] *(from #service)*
+- [[server_utils_emailConEvidencia|server/utils/emailConEvidencia.ts]] *(from #service)*
 - [[server_utils_salaCatalogo|server/utils/salaCatalogo.ts]] *(from #service)*
 
 ---

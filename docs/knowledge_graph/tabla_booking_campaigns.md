@@ -13,7 +13,7 @@ tags: ["schema", "tabla", "auto"]
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/booking`
 
 ## 📖 Descripción
-Tabla de Supabase `booking_campaigns` (2 columnas).
+Tabla de Supabase `booking_campaigns` (3 columnas).
 
 ---
 
@@ -34,8 +34,9 @@ _Sin dependencias salientes directas._
 ## 🗄️ Columnas
 - `custom_pitch_templates`
 - `campaign_tone_rules`
+- `alcance`
 
-**Definida en:** `supabase/migration_campaign_pitch_template.sql`, `supabase/migration_campaign_tone_rules.sql`
+**Definida en:** `supabase/migration_campaign_pitch_template.sql`, `supabase/migration_campaign_tone_rules.sql`, `supabase/migrations/20261127_campana_alcance.sql`
 
 ---
 

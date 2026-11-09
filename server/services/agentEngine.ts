@@ -7,6 +7,8 @@
 import { getSupabase, dbGetAutonomyConfig } from "../db.js";
 import { esEmailValido, ESTADOS_DE_ENVIO } from "../utils/email.js";
 import { aprobacionVigente } from "../utils/aprobacionLead.js";
+import { emailsNoEnviables } from "../utils/procedenciaDatos.js";
+import { formularioDeContacto } from "../../src/utils/contactoPorFormulario.js";
 import { loadState } from "../state.js";
 import { enviarEmail, crearBorrador, EmailAgentError } from "./emailAgentClient.js";
 import { crearBorradorGmailApi, tieneGmailOAuthConectado, comprobarBorradorEnviadoConDetalle, buscarMensajeEnviadoA, enviarEmailGmailApi, obtenerEmailDeLaCuentaConectada } from "./gmailApiClient.js";
@@ -242,7 +244,17 @@ export async function runEnviadorAgent(opts: {
     try {
     // El correo sale al contacto principal y, si lo hay, al secundario (es una función: salas con
     // dos buzones). Los destinatarios exactos quedan en la nota del lead y en el borrador.
-    const rawEmails = [lead.email_contacto || lead.email, lead.email_secundario || lead.emailSecundario]
+    // Un email que puso una IA o un buscador y nadie ha comprobado no es un destinatario: mandar un pitch a una dirección
+    // inventada daña el remitente de la banda. Se confirma editándolo a mano (eso borra su procedencia) y aprobando de nuevo.
+    // Fiabilidad por debajo del umbral (IA, buscador, web caducada sin re-verificar): no es un destinatario.
+    const sinComprobar = emailsNoEnviables(lead);
+    const destinatariosDelLead: Array<[string, unknown]> = [
+      ["email_contacto", lead.email_contacto || lead.email],
+      ["email_secundario", lead.email_secundario || lead.emailSecundario],
+    ];
+    const rawEmails = destinatariosDelLead
+      .filter(([campo]) => !sinComprobar.includes(campo))
+      .map(([, valor]) => valor)
       .filter(Boolean)
       .flatMap(e => String(e).split(/[,;]/))
       .map(e => e.trim())
@@ -275,6 +287,15 @@ export async function runEnviadorAgent(opts: {
     }
 
     // Última línea de defensa.
+    if (rawEmails.length === 0 && sinComprobar.length > 0) {
+      results.push({
+        id: lead.id,
+        nombre_sala: lead.nombre_sala,
+        status: "error",
+        error: "El email de contacto está sin comprobar (lo sugirió una IA o un buscador, o hace más de 90 días que nadie lo ve en su web): no se ha enviado nada. Compruébalo en la web de la sala y escríbelo a mano en la ficha para poder enviarlo."
+      });
+      continue;
+    }
     if (rawEmails.length === 0) {
       results.push({
         id: lead.id,
@@ -282,7 +303,9 @@ export async function runEnviadorAgent(opts: {
         status: "error",
         error: emailContacto
           ? `El email de contacto no es válido ("${emailContacto}"). No se ha enviado nada.`
-          : "El lead no tiene email de contacto. No se ha enviado nada."
+          : formularioDeContacto(lead)
+            ? `Esta sala no publica email: solo admite contacto por su formulario web (${formularioDeContacto(lead)}). No se ha enviado nada; escríbeles desde ahí.`
+            : "El lead no tiene email de contacto. No se ha enviado nada."
       });
       continue;
     }

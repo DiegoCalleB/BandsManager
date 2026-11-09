@@ -10,6 +10,8 @@ export interface DbCampaign {
   id: string;
   band_id: string;
   name: string;
+  /** `festivales` = campaña a todos los festivales (sin ciudad ni aforo); `salas` por defecto. */
+  alcance?: 'salas' | 'festivales';
   target_cities: string[];
   min_capacity: number;
   max_capacity: number;
@@ -151,6 +153,7 @@ export function normalizeCampaignFromDb(c: FilaCampania) {
     id: String(c.id),
     band_id: bandaDe(c),
     name: c.name || "Campaña de Booking",
+    alcance: (c.alcance === 'festivales' ? 'festivales' : 'salas') as 'salas' | 'festivales',
     targetCities,
     minCapacity: Number(c.min_capacity ?? c.minCapacity ?? 0),
     maxCapacity: Number(c.max_capacity ?? c.maxCapacity ?? 0),
@@ -217,6 +220,7 @@ export async function dbUpsertCampaign(campaign: EntradaCampania, bandId: string
     id: String(campaign.id || Date.now().toString()),
     band_id: targetBandId,
     name: campaign.name || "Nueva Campaña",
+    alcance: campaign.alcance === 'festivales' ? 'festivales' : 'salas',
     target_cities: Array.isArray(campaign.targetCities) ? campaign.targetCities : [],
     min_capacity: Number(campaign.minCapacity || 0),
     max_capacity: Number(campaign.maxCapacity || 0),

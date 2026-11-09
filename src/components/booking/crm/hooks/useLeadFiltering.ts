@@ -3,10 +3,12 @@
  * Extraído de BookingCRM.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
 import { useMemo } from "react";
+import { ordenarPorAfinidad } from "../../../../utils/afinidadFestival";
 import { BookingCampaign, Lead, LeadStatus, LeadType } from "../../../../types";
 import { isLeadNeedsFollowup } from "../../../../utils/bookingFollowup";
 import { normalizeStatus, normalizeType } from "../../../../utils/bookingUtils";
-import { leadMatchesCampaignCapacity, leadMatchesCampaignCity, leadMatchesCampaignDates } from "../../../../utils/campaignMatch";
+import { leadMatchesCampaignCapacity, leadMatchesCampaignCity, leadMatchesCampaignDates, leadMatchesCampaignScope } from "../../../../utils/campaignMatch";
+import { estadoDeContacto, type FiltroContacto } from "../../../../utils/estadoDeContacto";
 import { areCitiesLogisticallyCompatible } from "../../../../utils/tourRouting";
 import { matchesGruposType, matchesMedioType } from "../leadTypeMatchers";
 
@@ -22,6 +24,10 @@ export interface LeadFilteringParams {
   selectedCityFilter: string;
   minCapacityFilter: number;
   routeAnchorCity: string;
+  /** Géneros de la banda: ordenan los festivales de una campaña de festivales por encaje. */
+  generosBanda?: string[];
+  /** Filtra por si se puede escribir al lead y por dónde (`estadoDeContacto`). */
+  contactoFilter?: FiltroContacto;
 }
 
 /**
@@ -29,7 +35,9 @@ export interface LeadFilteringParams {
  * @param params Estado y callbacks del contenedor ({@link LeadFilteringParams}).
  * @returns Estado derivado y handlers expuestos al contenedor.
  */
-export function useLeadFiltering({ leads, sectionTab, filterByCampaign, activeCampaign, searchTerm, statusFilter, typeFilter, selectedCityFilter, minCapacityFilter, routeAnchorCity }: LeadFilteringParams) {
+const GENEROS_VACIOS: string[] = [];
+
+export function useLeadFiltering({ leads, sectionTab, filterByCampaign, activeCampaign, searchTerm, statusFilter, typeFilter, selectedCityFilter, minCapacityFilter, routeAnchorCity, generosBanda = GENEROS_VACIOS, contactoFilter = "todos" }: LeadFilteringParams) {
 
   // Filter leads by active section tab
   const sectionLeads = useMemo(() => {
@@ -50,7 +58,7 @@ export function useLeadFiltering({ leads, sectionTab, filterByCampaign, activeCa
 
   const filteredLeads = useMemo(() => {
     const seen = new Set<string>();
-    return sectionLeads.filter((lead, idx) => {
+    const filtrados = sectionLeads.filter((lead, idx) => {
       const leadKey = lead.id ? String(lead.id).trim() : `lead-${idx}`;
       if (seen.has(leadKey)) return false;
       seen.add(leadKey);
@@ -64,6 +72,7 @@ export function useLeadFiltering({ leads, sectionTab, filterByCampaign, activeCa
         // El filtrado por aforo, fechas y ciudad de campaña solo aplica a recintos y festivales (salas),
         // ya que los medios de comunicación y bandas no tienen aforo ni fechas de evento en campaña.
         if (
+          !leadMatchesCampaignScope(lead, activeCampaign) ||
           !leadMatchesCampaignCity(lead, activeCampaign) ||
           !leadMatchesCampaignCapacity(lead, activeCampaign) ||
           !leadMatchesCampaignDates(lead, activeCampaign)
@@ -91,25 +100,30 @@ export function useLeadFiltering({ leads, sectionTab, filterByCampaign, activeCa
             : sectionTab === 'grupos'
               ? matchesGruposType(lead, typeFilter)
               : normalizeType(lead.tipo) === typeFilter;
+      const matchesContacto = contactoFilter === 'todos' || estadoDeContacto(lead).estado === contactoFilter;
       const matchesCity =
         !selectedCityFilter ||
         (lead.ciudad || '').toLowerCase().includes(selectedCityFilter.toLowerCase()) ||
         (lead.region || '').toLowerCase().includes(selectedCityFilter.toLowerCase());
       const matchesCapacity = !minCapacityFilter || (lead.aforo || 0) >= minCapacityFilter;
       const matchesRoute = !routeAnchorCity || areCitiesLogisticallyCompatible(routeAnchorCity, lead.ciudad || lead.region || '');
-      return matchesSearch && matchesStatus && matchesType && matchesCity && matchesCapacity && matchesRoute;
+      return matchesSearch && matchesStatus && matchesType && matchesContacto && matchesCity && matchesCapacity && matchesRoute;
     });
+    const porEncaje = filterByCampaign && activeCampaign?.alcance === 'festivales' && generosBanda.length > 0;
+    return porEncaje ? ordenarPorAfinidad(filtrados, generosBanda) : filtrados;
   }, [
     sectionLeads,
     searchTerm,
     statusFilter,
     typeFilter,
+    contactoFilter,
     selectedCityFilter,
     minCapacityFilter,
     sectionTab,
     filterByCampaign,
     activeCampaign,
     routeAnchorCity,
+    generosBanda,
   ]);
 
   return { sectionLeads, filteredLeads };

@@ -32,6 +32,7 @@ Chatbot de la app (`/chat`) y generación de copys para Reels (`/write-reels-cop
 - [[server_utils|server/utils.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_bandProfile|server/utils/bandProfile.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_conversacionChat|server/utils/conversacionChat.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_emailsEnPropuestasDeChat|server/utils/emailsEnPropuestasDeChat.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_melodicIdeaValidator|server/utils/melodicIdeaValidator.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_musicalDna|server/utils/musicalDna.ts]] *(Layer: #service, Domain: #system)*

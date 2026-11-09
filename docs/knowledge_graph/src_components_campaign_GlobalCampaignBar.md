@@ -23,6 +23,7 @@ Exporta: GlobalCampaignBar.
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_campaignMatch|src/utils/campaignMatch.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_estadoDeContacto|src/utils/estadoDeContacto.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

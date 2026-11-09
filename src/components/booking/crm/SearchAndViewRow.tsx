@@ -6,6 +6,7 @@ import { ChevronDown, Filter, LayoutGrid, List, Map as MapIcon, Search, Target, 
 import { normalizeType } from "../../../utils/bookingUtils";
 import { Button, IconButton, Input } from "../../ui";
 import { useBookingCrm } from "./BookingCrmContext";
+import { FiltroContactoChips } from "./FiltroContactoChips";
 
 /**
  * Búsqueda, tipo, filtros, campaña y conmutador de vista (lista/mapa).
@@ -51,14 +52,14 @@ export function SearchAndViewRow() {
             )}
           </div>
 
-          {/* Tipo Dropdown Selector — Solo en PC */}
-          <div className="hidden sm:block relative shrink-0">
+          {/* Tipo Dropdown Selector — también en móvil (se prospectan festivales desde el móvil) */}
+          <div className="relative shrink-0 max-w-[7.75rem] sm:max-w-none">
             <select data-raw
               id="crm-type-filter-select"
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value as typeof typeFilter)}
               aria-label="Filtrar por tipo"
-              className={`px-3 py-2 pr-7 rounded-[var(--r-m)] text-xs font-semibold font-sans transition-colors cursor-pointer appearance-none ${
+              className={`w-full truncate px-3 py-2 pr-7 rounded-[var(--r-m)] text-xs font-semibold font-sans transition-colors cursor-pointer appearance-none ${
                 typeFilter !== 'todos'
                   ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold'
                   : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
@@ -200,6 +201,7 @@ export function SearchAndViewRow() {
             </Button>
           </div>
         </div>
+        <FiltroContactoChips />
       </div>
     </>
   );

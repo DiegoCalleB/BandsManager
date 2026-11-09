@@ -24,7 +24,7 @@ Un email que ha aportado una IA o un buscador no es un hecho: se comprueba que s
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[agent_scout|Scout Discovery Agent]] *(from #agent)*
+_Sin llamadas entrantes indexadas._
 
 ---
 

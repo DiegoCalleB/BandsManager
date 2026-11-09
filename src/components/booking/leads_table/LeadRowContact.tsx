@@ -2,10 +2,13 @@
  * Celda de contacto directo de la fila: email, teléfonos e Instagram.
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
-import { AlertCircle,AlertTriangle,Instagram,Phone,Smartphone } from "lucide-react";
+import { AlertCircle,AlertTriangle,ExternalLink,Instagram,Phone,Smartphone } from "lucide-react";
 import { getEmailStatus,isBouncedLead } from "../../../hooks/useEmailValidation";
 import { Lead } from "../../../types";
 import { avisoDeEmail } from "../../../utils/avisoDeEmail";
+import { formularioDeContacto } from "../../../utils/contactoPorFormulario";
+import { estadoDeContacto, ETIQUETA_CONTACTO } from "../../../utils/estadoDeContacto";
+import { BotonConfirmarEmail } from "./BotonConfirmarEmail";
 import { useLeadsTable } from "./LeadsTableContext";
 
 /** Datos propios de cada instancia (el resto sale del contexto del flujo). */
@@ -73,11 +76,39 @@ export function LeadRowContact({ lead, hasMovil, hasFijo, rawMovil, rawFijo }: L
             );
           })()}
         </div>
+      ) : formularioDeContacto(lead) ? (
+        <a
+          href={formularioDeContacto(lead) ?? undefined}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          className="inline-flex items-center gap-0.5 text-micro font-medium text-[var(--acc-ink)] hover:underline"
+          title="Esta sala no publica email: se contacta con su formulario web"
+        >
+          <ExternalLink className="w-2.5 h-2.5 shrink-0" aria-hidden />
+          Formulario
+        </a>
       ) : (
         <span className="text-[var(--ink-3)] italic text-micro">
           Sin email
         </span>
       )}
+      {lead.email_contacto || lead.email_secundario ? (() => {
+        const c = estadoDeContacto(lead);
+        return (
+          <span
+            title={c.motivo}
+            className={`mt-0.5 w-fit rounded-[var(--r-pill)] px-1.5 text-micro font-semibold ${
+              c.estado === "enviable"
+                ? "bg-[var(--ok-soft)] text-[var(--ok)]"
+                : "bg-[var(--alert-soft)] text-[var(--alert)]"
+            }`}
+          >
+            {ETIQUETA_CONTACTO[c.estado]}
+          </span>
+        );
+      })() : null}
+      <BotonConfirmarEmail lead={lead} />
       {(hasMovil || hasFijo || lead.instagram) && (
         <div className="flex items-center gap-1.5 mt-0.5 text-micro">
           {hasMovil ? (

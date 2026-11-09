@@ -18,14 +18,18 @@ Procedencia de los datos de un lead: de qué fuente salió cada campo enriquecid
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[src_utils_fiabilidadEmail|src/utils/fiabilidadEmail.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[agent_enviador|Enviador Agent (Dispatcher)]] *(from #agent)*
 - [[agent_scout|Scout Discovery Agent]] *(from #agent)*
+- [[route_leads_crud|Leads CRUD Route]] *(from #route)*
 - [[server_db_enriquecimientoLead|server/db/enriquecimientoLead.ts]] *(from #db)*
 - [[server_services_avisarEmailsDudosos|server/services/avisarEmailsDudosos.ts]] *(from #service)*
+- [[server_services_emailsSinEvidencia|server/services/emailsSinEvidencia.ts]] *(from #service)*
+- [[server_utils_planAuditoriaEmails|server/utils/planAuditoriaEmails.ts]] *(from #service)*
 
 ---
 

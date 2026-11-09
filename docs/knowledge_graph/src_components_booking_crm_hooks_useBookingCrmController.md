@@ -26,6 +26,7 @@ Compone los hooks del CRM de booking (navegación, selección, edición, formula
 - [[src_components_booking_crm_hooks_useLeadScraping|src/components/booking/crm/hooks/useLeadScraping.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_crm_hooks_useLeadSelectionAndTemplates|src/components/booking/crm/hooks/useLeadSelectionAndTemplates.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_estadoDeContacto|src/utils/estadoDeContacto.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

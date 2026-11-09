@@ -47,3 +47,9 @@ presentacion/audio/musica/giro.*
 # planos de sincronía de labios generados (tools/lipsync_preparar.py)
 presentacion/lipsync/
 tmp/
+
+# Informes de la auditoría de emails (llevan emails reales): no se suben.
+auditoria-emails-*
+descubrimiento-emails-*
+descubrimiento-festivales*
+enriquecimiento-festivales*

@@ -12,11 +12,10 @@ const dominioExiste = vi.hoisted(() => vi.fn(async (_email: string) => true));
 vi.mock('../utils/emailValidator.js', () => ({ isValidEmailCached: dominioExiste, isValidEmailSyntax: () => true }));
 vi.mock('../ai.js', () => ({ getAiClient: () => null, generateContentWithFallback: vi.fn() }));
 vi.mock('../services/jinaReaderService.js', () => ({ scrapeVenueWithJina: async () => ({ success: false }) }));
+const paginaWeb = vi.hoisted(() => vi.fn(async (_url: string, _o?: unknown): Promise<any> => ({ statusCode: 404, text: () => '' })));
 vi.mock('../utils/ssrfGuard.js', async (importarOriginal) => ({
   ...(await importarOriginal<typeof import('../utils/ssrfGuard.js')>()),
-  fetchUrlExternaSegura: async () => {
-    throw new Error('sin red en tests');
-  },
+  fetchUrlExternaSegura: paginaWeb,
 }));
 
 const buscar = vi.hoisted(() => vi.fn());
@@ -57,6 +56,8 @@ beforeEach(() => {
   serper.mockReset();
   dominioExiste.mockReset();
   dominioExiste.mockResolvedValue(true);
+  paginaWeb.mockReset();
+  paginaWeb.mockRejectedValue(new Error('sin red en tests'));
   vi.stubGlobal('fetch', vi.fn(async () => { throw new Error('sin red en tests'); }));
 });
 afterEach(() => {
@@ -127,26 +128,42 @@ describe('autoEnrichLead: Google Maps', () => {
   });
 });
 
-describe('autoEnrichLead: los emails de un buscador se comprueban y, si dudan, llevan un aviso', () => {
-  const conBuscador = (email: string) => {
+describe('autoEnrichLead: el email de un buscador solo se queda si aparece escrito en la web de la sala', () => {
+  const conBuscador = (email: string, website?: string) => {
     process.env.SERPER_API_KEY = 'clave-de-prueba';
     buscar.mockResolvedValue(null);
-    serper.mockResolvedValue({ email });
+    serper.mockResolvedValue({ email, website });
   };
 
-  it('guarda el email cuyo dominio no existe, con un aviso ligado a ese email', async () => {
+  it('descarta el email cuyo dominio no existe, y deja una nota que no lo repite', async () => {
     conBuscador('booking@dominio-inventado.xyz');
     dominioExiste.mockResolvedValue(false);
     const r: any = await autoEnrichLead(hueco(), 'band-x');
-    expect(r.email_contacto).toBe('booking@dominio-inventado.xyz');
-    expect(r.datos_fuentes.email_contacto.aviso).toEqual({ tipo: 'dominio_inexistente', para: 'booking@dominio-inventado.xyz' });
+    expect(r.email_contacto).toBe('');
+    expect(r.datos_fuentes?.email_contacto).toBeUndefined();
+    expect(r.notas).toMatch(/descartado/i);
+    expect(r.notas).not.toContain('dominio-inventado');
   });
 
-  it('conserva el email si el dominio existe y lo anota como del buscador', async () => {
+  it('descarta el email aunque su dominio exista, si no aparece escrito en la web de la sala', async () => {
+    conBuscador('booking@alfa.es', 'https://alfa.es/');
+    paginaWeb.mockResolvedValue({ statusCode: 200, text: () => '<html>Solo un formulario de contacto</html>' });
+    const r: any = await autoEnrichLead(hueco(), 'band-x');
+    expect(r.email_contacto).toBe('');
+  });
+
+  it('descarta el email si la sala no tiene web donde comprobarlo', async () => {
     conBuscador('booking@alfa.es');
     const r: any = await autoEnrichLead(hueco(), 'band-x');
+    expect(r.email_contacto).toBe('');
+  });
+
+  it('conserva el email si aparece escrito en la web de la sala, y pasa a constar como dato de la web', async () => {
+    conBuscador('booking@alfa.es', 'https://alfa.es/');
+    paginaWeb.mockResolvedValue({ statusCode: 200, text: () => '<a href="mailto:booking@alfa.es">Programación</a>' });
+    const r: any = await autoEnrichLead(hueco(), 'band-x');
     expect(r.email_contacto).toBe('booking@alfa.es');
-    expect(r.datos_fuentes.email_contacto).toMatchObject({ fuente: 'buscador', confianza: 'media' });
+    expect(r.datos_fuentes.email_contacto).toMatchObject({ fuente: 'web', confianza: 'alta' });
     expect(r.datos_fuentes.email_contacto.aviso).toBeUndefined();
   });
 

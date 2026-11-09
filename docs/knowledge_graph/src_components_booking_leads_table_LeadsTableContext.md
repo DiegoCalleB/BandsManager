@@ -24,6 +24,7 @@ Contexto de la tabla de leads: reparte el estado del controlador y las props a l
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_booking_leads_table_BotonConfirmarEmail|src/components/booking/leads_table/BotonConfirmarEmail.tsx]] *(from #frontend)*
 - [[src_components_booking_leads_table_LeadCampaignDates|src/components/booking/leads_table/LeadCampaignDates.tsx]] *(from #frontend)*
 - [[src_components_booking_leads_table_LeadCardActions|src/components/booking/leads_table/LeadCardActions.tsx]] *(from #frontend)*
 - [[src_components_booking_leads_table_LeadCardHeader|src/components/booking/leads_table/LeadCardHeader.tsx]] *(from #frontend)*

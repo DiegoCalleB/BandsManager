@@ -19,6 +19,7 @@ Búsqueda, tipo, filtros, campaña y conmutador de vista (lista/mapa).
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_booking_crm_BookingCrmContext|src/components/booking/crm/BookingCrmContext.ts]] *(Layer: #frontend, Domain: #booking)*
+- [[src_components_booking_crm_FiltroContactoChips|src/components/booking/crm/FiltroContactoChips.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_utils_bookingUtils|src/utils/bookingUtils.ts]] *(Layer: #service, Domain: #booking)*
 

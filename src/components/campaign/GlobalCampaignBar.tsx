@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { BookingCampaign, Lead } from "../../types";
 import { leadMatchesCampaign } from "../../utils/campaignMatch";
+import { contarPorContacto } from "../../utils/estadoDeContacto";
 import { Calendar, MapPin, Users, X, Settings2, Building2, ChevronDown, ChevronUp, Flame } from "lucide-react";
 import { ShowIcon } from '../ui/ShowIcon';
 import { IconButton } from '../ui';
@@ -31,6 +32,9 @@ export function GlobalCampaignBar({
   const matchingLeads = allLeads.filter((l) =>
     leadMatchesCampaign(l, campaign),
   );
+
+  const contacto = contarPorContacto(matchingLeads);
+  const porRevisar = contacto.revisar + contacto.no_enviable;
 
   const firstTargetDate = campaign.targetDates?.[0];
 
@@ -113,10 +117,13 @@ export function GlobalCampaignBar({
                 ? "bg-[var(--sunken)] text-[var(--ink)] border border-[var(--hair)]"
                 : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] border border-[var(--hair)] hover:bg-[var(--sunken)]"
             }`}
-            title="Ver salas objetivo de esta campaña en Booking CRM"
+            title={campaign.alcance === "festivales" ? `${contacto.enviable} se pueden enviar ya, ${porRevisar} tienen email por revisar (no se usa), ${contacto.formulario} solo admiten formulario, ${contacto.redes} Instagram o teléfono y ${contacto.sin_via} sin contacto` : "Ver salas objetivo de esta campaña en Booking CRM"}
           >
             <Building2 className="w-3 h-3 text-[var(--acc)] shrink-0" />
-            <span>Salas ({matchingLeads.length})</span>
+            <span>
+              {campaign.alcance === "festivales" ? "Festivales" : "Salas"} ({matchingLeads.length}
+              {campaign.alcance === "festivales" ? ` · ${contacto.enviable} enviables` : ""})
+            </span>
           </button>
 
           {/* Quick Calendar button */}

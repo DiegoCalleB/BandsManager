@@ -13,12 +13,13 @@ tags: ["service", "system", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: parseFlexibleDate, leadMatchesCampaignCity, leadMatchesCampaignCapacity, leadMatchesCampaignDates, leadMatchesCampaign.
+Exporta: parseFlexibleDate, leadMatchesCampaignCity, leadMatchesCampaignScope, leadMatchesCampaignCapacity, leadMatchesCampaignDates, leadMatchesCampaign.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_bookingUtils|src/utils/bookingUtils.ts]] *(Layer: #service, Domain: #booking)*
 
 ---
 

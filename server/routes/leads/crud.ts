@@ -21,6 +21,8 @@ import { filterLeadsByActiveCampaign } from "../../utils/festivalDateFilter.js";
 import { searchFestivalByName, formatFestivalDates } from "../../utils/spanishFestivalsDB.js";
 import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 import { responderError } from '../../utils/errorHttp.js';
+import { campoConfirmable, confirmarEmailPorPersona } from "../../../src/utils/confirmarEmail.js";
+import { emailsEditadosAMano, olvidarProcedencia } from "../../utils/procedenciaDatos.js";
 
 const router = express.Router();
 
@@ -142,7 +144,7 @@ router.put("/leads/:id", requireAuth, apiAutenticadaRateLimiter, async (req, res
     const userBandId = getTargetBandId(req);
     const { id } = req.params;
     // `expectedStatus` es una condición de la petición, no un campo del lead: no debe guardarse.
-    const { expectedStatus, aprobado_por: _a, aprobado_at: _b, pitch_aprobado_hash: _c, ...updatedFields } = req.body || {};
+    const { expectedStatus, confirmarEmail, aprobado_por: _a, aprobado_at: _b, pitch_aprobado_hash: _c, ...updatedFields } = req.body || {};
 
     // Aprobar pone un correo real en la cola de envío: solo la dirección de la banda, igual que
     // lanzar agentes. El resto de ediciones de una sala siguen abiertas a todos los miembros.
@@ -165,6 +167,21 @@ router.put("/leads/:id", requireAuth, apiAutenticadaRateLimiter, async (req, res
     }
 
     const merged = { ...(existing || {}), ...updatedFields, id };
+
+    // «Confirmar email»: una persona de la banda responde de un email caducado. La procedencia la fija el servidor
+    // (el cliente solo dice qué campo) y solo vale para lo que de verdad está en «Revisar».
+    if (confirmarEmail !== undefined) {
+      const conFuentes = existing as (typeof existing & { datos_fuentes?: unknown }) | null | undefined;
+      if (!conFuentes || campoConfirmable(conFuentes) !== confirmarEmail) {
+        return res.status(400).json({ error: "Ese email no se puede confirmar con un clic: corrígelo a mano.", codigo: "email_no_confirmable" });
+      }
+      merged.datos_fuentes = confirmarEmailPorPersona(conFuentes.datos_fuentes, confirmarEmail) as typeof merged.datos_fuentes;
+    }
+
+    // Un email que la persona corrige a mano deja de ser una suposición de la IA: sin esto, seguiría «sin comprobar» y el
+    // Enviador no lo usaría nunca.
+    const emailsEditados = emailsEditadosAMano(existing, updatedFields);
+    if (emailsEditados.length > 0) merged.datos_fuentes = olvidarProcedencia(merged.datos_fuentes, emailsEditados);
 
     // Regla del proyecto que hasta ahora no estaba en el código: un lead no puede entrar en la
     // cola de envío sin un email de contacto válido. Antes esto no se notaba porque el Scout
@@ -278,7 +295,6 @@ router.post("/leads", requireAuth, apiAutenticadaRateLimiter, async (req, res) =
           const dates = formatFestivalDates(localFestival);
           newLead.festival_start_date = dates.start;
           newLead.festival_end_date = dates.end;
-          if (localFestival.email && !newLead.email_contacto) newLead.email_contacto = localFestival.email;
           if (localFestival.instagram && !newLead.instagram) newLead.instagram = localFestival.instagram;
           if (localFestival.website && !newLead.website) newLead.website = localFestival.website;
           if (localFestival.aforo && (!newLead.aforo || newLead.aforo === 0)) newLead.aforo = localFestival.aforo;
@@ -291,7 +307,6 @@ router.post("/leads", requireAuth, apiAutenticadaRateLimiter, async (req, res) =
           if (festInfo && festInfo.startDate) {
             newLead.festival_start_date = festInfo.startDate;
             newLead.festival_end_date = festInfo.endDate || festInfo.startDate;
-            if (festInfo.email && !newLead.email_contacto) newLead.email_contacto = festInfo.email;
             if (festInfo.instagram && !newLead.instagram) newLead.instagram = festInfo.instagram;
             if (festInfo.website && !newLead.website) newLead.website = festInfo.website;
             if (festInfo.aforo && (!newLead.aforo || newLead.aforo === 0)) newLead.aforo = festInfo.aforo;

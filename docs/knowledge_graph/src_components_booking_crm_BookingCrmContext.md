@@ -30,6 +30,7 @@ Contexto del CRM de booking: reparte estado y acciones del controlador a las vis
 - [[src_components_booking_crm_CrmModalsHost|src/components/booking/crm/CrmModalsHost.tsx]] *(from #frontend)*
 - [[src_components_booking_crm_EnrichBanner|src/components/booking/crm/EnrichBanner.tsx]] *(from #frontend)*
 - [[src_components_booking_crm_FiltersPanelSection|src/components/booking/crm/FiltersPanelSection.tsx]] *(from #frontend)*
+- [[src_components_booking_crm_FiltroContactoChips|src/components/booking/crm/FiltroContactoChips.tsx]] *(from #frontend)*
 - [[src_components_booking_crm_HeaderTitleAndActions|src/components/booking/crm/HeaderTitleAndActions.tsx]] *(from #frontend)*
 - [[src_components_booking_crm_ListOrMapArea|src/components/booking/crm/ListOrMapArea.tsx]] *(from #frontend)*
 - [[src_components_booking_crm_MobileCreateFab|src/components/booking/crm/MobileCreateFab.tsx]] *(from #frontend)*

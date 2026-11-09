@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { anotarProcedencia, camposPorConfirmar, camposRellenados, instantanea, olvidarProcedencia, procedenciaValida, CONFIANZA_POR_FUENTE } from '../procedenciaDatos.js';
+import { anotarProcedencia, camposPorConfirmar, camposRellenados, instantanea, olvidarProcedencia, procedenciaValida, CONFIANZA_POR_FUENTE, emailsSinComprobar, emailsEditadosAMano, emailsNoEnviables } from '../procedenciaDatos.js';
 
 const AHORA = new Date('2026-10-18T12:00:00Z');
 
@@ -96,5 +96,75 @@ describe('avisos de un dato', () => {
   it('volver a rellenar el campo borra el aviso anterior', () => {
     const mapa = anotarProcedencia(procedenciaValida(con({ tipo: 'dominio_inexistente', para: 'a@b.xyz' })), ['email_contacto'], 'web', AHORA);
     expect(mapa.email_contacto.aviso).toBeUndefined();
+  });
+});
+
+describe('emailsSinComprobar', () => {
+  const ahora = '2026-11-06T10:00:00.000Z';
+  it('señala los emails que aportó una IA o un buscador y no los de la web, Google Maps o el catálogo', () => {
+    const mapa = {
+      email_contacto: { fuente: 'ia', confianza: 'baja', en: ahora },
+      email_secundario: { fuente: 'web', confianza: 'alta', en: ahora },
+    };
+    expect(emailsSinComprobar(mapa)).toEqual(['email_contacto']);
+    expect(emailsSinComprobar({ email_contacto: { fuente: 'buscador', confianza: 'media', en: ahora } })).toEqual(['email_contacto']);
+    expect(emailsSinComprobar({ email_contacto: { fuente: 'places', confianza: 'alta', en: ahora }, email_secundario: { fuente: 'catalogo', confianza: 'media', en: ahora } })).toEqual([]);
+  });
+
+  it('sin procedencia (escrito a mano o un lead antiguo) no hay nada que señalar', () => {
+    expect(emailsSinComprobar(undefined)).toEqual([]);
+    expect(emailsSinComprobar({})).toEqual([]);
+  });
+});
+
+describe('emailsEditadosAMano', () => {
+  it('un email que la persona cambia deja de ser un dato de la IA: solo los cambiados', () => {
+    const existente = { email_contacto: 'ia@sala.es', email_secundario: 'otro@sala.es' };
+    expect(emailsEditadosAMano(existente, { email_contacto: 'real@sala.es', email_secundario: 'otro@sala.es' })).toEqual(['email_contacto']);
+  });
+
+  it('el mismo valor, o un campo que no viene en la edición, no cuenta', () => {
+    const existente = { email_contacto: 'ia@sala.es', email_secundario: '' };
+    expect(emailsEditadosAMano(existente, { email_contacto: ' ia@sala.es ' })).toEqual([]);
+    expect(emailsEditadosAMano(existente, { notas: 'x' })).toEqual([]);
+  });
+
+  it('vaciar el email también es editarlo', () => {
+    expect(emailsEditadosAMano({ email_contacto: 'ia@sala.es' }, { email_contacto: '' })).toEqual(['email_contacto']);
+  });
+
+  it('sin ficha previa, un email nuevo escrito a mano cuenta', () => {
+    expect(emailsEditadosAMano(null, { email_contacto: 'a@b.es' })).toEqual(['email_contacto']);
+  });
+});
+
+describe('procedenciaValida conserva la re-verificación del agente', () => {
+  it('guarda verificado_en y confirmado_por_respuesta si son válidos', () => {
+    const m = procedenciaValida({ email_contacto: { fuente: 'web', en: AHORA.toISOString(), verificado_en: AHORA.toISOString(), confirmado_por_respuesta: true } });
+    expect(m.email_contacto.verificado_en).toBe(AHORA.toISOString());
+    expect(m.email_contacto.confirmado_por_respuesta).toBe(true);
+  });
+  it('descarta valores que no son fecha o booleano', () => {
+    const m = procedenciaValida({ email_contacto: { fuente: 'web', en: AHORA.toISOString(), verificado_en: 'ayer', confirmado_por_respuesta: 'sí' } });
+    expect(m.email_contacto.verificado_en).toBeUndefined();
+    expect(m.email_contacto.confirmado_por_respuesta).toBeUndefined();
+  });
+});
+
+describe('emailsNoEnviables', () => {
+  const dias = (n: number) => new Date(AHORA.getTime() - n * 86_400_000).toISOString();
+  it('deja fuera IA, buscador y web caducada; deja pasar web reciente y lo escrito a mano', () => {
+    const lead = {
+      email_contacto: 'info@a.es',
+      email_secundario: 'booking@a.es',
+      datos_fuentes: { email_contacto: { fuente: 'web', en: dias(200) }, email_secundario: { fuente: 'web', en: dias(5) } },
+    };
+    expect(emailsNoEnviables(lead, AHORA)).toEqual(['email_contacto']);
+    expect(emailsNoEnviables({ email_contacto: 'pepe@a.es', datos_fuentes: {} }, AHORA)).toEqual([]);
+    expect(emailsNoEnviables({ email_contacto: 'x@a.es', datos_fuentes: { email_contacto: { fuente: 'ia', en: dias(1) } } }, AHORA)).toEqual(['email_contacto']);
+  });
+  it('una web caducada vuelve a valer cuando el agente la re-verifica', () => {
+    const lead = { email_contacto: 'info@a.es', datos_fuentes: { email_contacto: { fuente: 'web', en: dias(300), verificado_en: dias(2) } } };
+    expect(emailsNoEnviables(lead, AHORA)).toEqual([]);
   });
 });

@@ -174,6 +174,7 @@ _Sin dependencias salientes directas._
 - [[src_components_booking_LeadDuplicatesModal|src/components/booking/LeadDuplicatesModal.tsx]] *(from #frontend)*
 - [[src_components_booking_leadHealth|src/components/booking/leadHealth.ts]] *(from #frontend)*
 - [[src_components_booking_LeadHealthBadge|src/components/booking/LeadHealthBadge.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_BotonConfirmarEmail|src/components/booking/leads_table/BotonConfirmarEmail.tsx]] *(from #frontend)*
 - [[src_components_booking_leads_table_hooks_useLeadsBatchDateScan|src/components/booking/leads_table/hooks/useLeadsBatchDateScan.ts]] *(from #frontend)*
 - [[src_components_booking_leads_table_hooks_useLeadsTableController|src/components/booking/leads_table/hooks/useLeadsTableController.ts]] *(from #frontend)*
 - [[src_components_booking_leads_table_LeadCampaignDates|src/components/booking/leads_table/LeadCampaignDates.tsx]] *(from #frontend)*
@@ -264,6 +265,7 @@ _Sin dependencias salientes directas._
 - [[src_components_calendar_useCalendarRoadbook|src/components/calendar/useCalendarRoadbook.ts]] *(from #frontend)*
 - [[src_components_calendar_views_CalendarOverlays|src/components/calendar/views/CalendarOverlays.tsx]] *(from #frontend)*
 - [[src_components_campaign_CampaignManagerModal|src/components/campaign/CampaignManagerModal.tsx]] *(from #frontend)*
+- [[src_components_campaign_CampanaAlcanceFields|src/components/campaign/CampanaAlcanceFields.tsx]] *(from #frontend)*
 - [[src_components_campaign_GlobalCampaignBar|src/components/campaign/GlobalCampaignBar.tsx]] *(from #frontend)*
 - [[src_components_cartel_CarteleriaView|src/components/cartel/CarteleriaView.tsx]] *(from #frontend)*
 - [[src_components_cartel_hooks_useEditorCartel|src/components/cartel/hooks/useEditorCartel.ts]] *(from #frontend)*
@@ -544,6 +546,7 @@ _Sin dependencias salientes directas._
 - [[src_services_tiposRespuestasHerramientas|src/services/tiposRespuestasHerramientas.ts]] *(from #service)*
 - [[src_utils_accompanimentSynth|src/utils/accompanimentSynth.ts]] *(from #service)*
 - [[src_utils_acordeEnHermanos|src/utils/acordeEnHermanos.ts]] *(from #service)*
+- [[src_utils_afinidadFestival|src/utils/afinidadFestival.ts]] *(from #service)*
 - [[src_utils_agendaASetlist|src/utils/agendaASetlist.ts]] *(from #service)*
 - [[src_utils_agendaEnsayo|src/utils/agendaEnsayo.ts]] *(from #service)*
 - [[src_utils_ajusteEnBloque|src/utils/ajusteEnBloque.ts]] *(from #service)*
@@ -627,7 +630,9 @@ _Sin dependencias salientes directas._
 - `src/components/booking/__tests__/ReinicioPorLead.behavior.test.tsx`
 - `src/components/booking/__tests__/VenueEmailThread.behavior.test.tsx`
 - `src/components/booking/crm/__tests__/leadTypeMatchers.test.ts`
+- `src/components/booking/crm/hooks/__tests__/useLeadFiltering.festivales.test.ts`
 - `src/components/booking/leads_table/__tests__/LeadRowContact.aviso.test.tsx`
+- `src/components/booking/leads_table/__tests__/LeadRowContact.formulario.test.tsx`
 - `src/components/booking/leads_table/__tests__/leadsTableContracts.test.ts`
 - `src/components/booking/leads_table/hooks/__tests__/useLeadsBatchDateScan.behavior.test.ts`
 - `src/components/booking/venue_panel/__tests__/VenuePitchComposer.aviso.test.tsx`
@@ -651,6 +656,7 @@ _Sin dependencias salientes directas._
 - `src/hooks/__tests__/useAuth.behavior.test.ts`
 - `src/hooks/__tests__/useStagePlayer.behavior.test.ts`
 - `src/utils/__tests__/acordeEnHermanos.test.ts`
+- `src/utils/__tests__/afinidadFestival.test.ts`
 - `src/utils/__tests__/agendaASetlist.test.ts`
 - `src/utils/__tests__/audioCueDetector.test.ts`
 - `src/utils/__tests__/bookingUtils.test.ts`
