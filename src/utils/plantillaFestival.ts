@@ -34,13 +34,13 @@ export const PLANTILLA_FESTIVAL_ES = `Asunto: Black Friday: {banda} al caché de
 
 Buenas gente de {festival},
 
-{linea_publico} Os escribimos porque estamos cuadrando la ruta de la próxima edición y nos encantaría encajar en vuestro cartel.{frase_edicion}
+{linea_publico} Os escribimos porque estamos cuadrando la ruta de la próxima edición.{frase_edicion}
 
-{banda} es una propuesta de {estilo_banda} pensada para poner el recinto a saltar desde el primer minuto. Es Black Friday: durante estos días mantenemos nuestro caché actual de 2026 y, con el disco de 2027, subirá. Nos movemos con total agilidad logística y nos adaptamos a lo que necesitéis.
+{banda} es {estilo_banda} pensado para poner el recinto a saltar desde el primer minuto. Es Black Friday: durante estos días mantenemos nuestro caché actual de 2026 y, con el disco de 2027, subirá. Nos movemos con total agilidad logística y nos adaptamos a lo que necesitéis.
 
 Podéis ver la respuesta del público en el vídeo del dossier web al pie de la firma, donde tenéis también toda la información.
 
-¿Mantenéis abierto el proceso de selección de propuestas para la próxima edición?
+Si aún no tenéis cerrado el cartel, sería un auténtico placer poder formar parte de él. ¡Seguro que lo estáis montando de lujo!
 
 ¡Un abrazo!`;
 
@@ -48,13 +48,13 @@ export const PLANTILLA_FESTIVAL_EN = `Asunto: Black Friday: {banda} at our 2026 
 
 Hi {festival} team,
 
-{linea_publico} We're lining up next edition's route and we'd love to fit into your line-up.{frase_edicion}
+{linea_publico} We're lining up next edition's route.{frase_edicion}
 
 {banda} brings {estilo_banda}, built to get the whole site jumping from the first minute. It's Black Friday: for these few days we're keeping our current 2026 fee, and it goes up with the 2027 album. We travel light and easy, and we adapt to whatever you need.
 
 You can see how the crowd reacts in the video of the dossier at the bottom of the signature, where you'll also find all the info.
 
-Are you still open to proposals for the next edition?
+If your line-up isn't closed yet, it would be a real pleasure to be part of it. We're sure you're putting together something great!
 
 Cheers!`;
 

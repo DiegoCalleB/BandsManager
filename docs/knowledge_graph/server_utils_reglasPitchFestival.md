@@ -18,7 +18,6 @@ Comprueba un email de campaña contra las reglas de escritura que ya tiene el pr
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[sec_prompt_safety|Prompt Injection Sanitizer]] *(Layer: #security, Domain: #system)*
 - [[server_utils_promptGuidelines|server/utils/promptGuidelines.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_asuntoDelPitch|src/utils/asuntoDelPitch.ts]] *(Layer: #service, Domain: #booking)*
 
