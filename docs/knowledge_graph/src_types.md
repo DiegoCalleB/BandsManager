@@ -631,6 +631,7 @@ _Sin dependencias salientes directas._
 - `src/components/booking/crm/__tests__/leadTypeMatchers.test.ts`
 - `src/components/booking/crm/hooks/__tests__/useLeadFiltering.festivales.test.ts`
 - `src/components/booking/leads_table/__tests__/LeadRowContact.aviso.test.tsx`
+- `src/components/booking/leads_table/__tests__/LeadRowContact.formulario.test.tsx`
 - `src/components/booking/leads_table/__tests__/leadsTableContracts.test.ts`
 - `src/components/booking/leads_table/hooks/__tests__/useLeadsBatchDateScan.behavior.test.ts`
 - `src/components/booking/venue_panel/__tests__/VenuePitchComposer.aviso.test.tsx`

@@ -22,6 +22,7 @@ Celda de contacto directo de la fila: email, teléfonos e Instagram.
 - [[src_hooks_useEmailValidation|src/hooks/useEmailValidation.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_avisoDeEmail|src/utils/avisoDeEmail.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_contactoPorFormulario|src/utils/contactoPorFormulario.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
@@ -32,6 +33,7 @@ Celda de contacto directo de la fila: email, teléfonos e Instagram.
 
 ## 🧪 Tests que lo cubren
 - `src/components/booking/leads_table/__tests__/LeadRowContact.aviso.test.tsx`
+- `src/components/booking/leads_table/__tests__/LeadRowContact.formulario.test.tsx`
 
 ---
 

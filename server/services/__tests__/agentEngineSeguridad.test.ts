@@ -130,6 +130,16 @@ describe('Enviador: destinatarios', () => {
   });
 });
 
+describe('Enviador: contacto solo por formulario', () => {
+  it('un lead sin email pero con formulario dice que se contacta por el formulario, con su enlace', async () => {
+    montarSupabase({ leads: [{ ...leadBase, email_contacto: '', notas: 'Formulario de contacto: https://piratafestival.com/es/contacto/formulario' }] });
+    const r = await runEnviadorAgent({ bandId: 'band-test', triggerType: 'test' });
+    expect(enviarEmailMock).not.toHaveBeenCalled();
+    expect(r.results[0].error).toMatch(/formulario/i);
+    expect(r.results[0].error).toContain('https://piratafestival.com/es/contacto/formulario');
+  });
+});
+
 describe('Enviador: emails sin comprobar', () => {
   const origen = (fuente: string, en = new Date().toISOString()) => ({ fuente, confianza: 'baja', en });
 

@@ -6,6 +6,7 @@ import { Button, Input, Textarea } from '../../ui';
 import { apiFetch } from '../../../utils/api';
 import type { RespuestaEnriquecerLead } from '../tiposRespuestasApi';
 import { comoErrorCapturado } from '../../../utils/errorCapturado';
+import { formularioDeContacto } from '../../../utils/contactoPorFormulario';
 import { avisoDeEmail } from '../../../utils/avisoDeEmail';
 
 /** Lead con la fecha de evento que guardaban versiones antiguas del CRM. */
@@ -406,6 +407,17 @@ export const VenueProfileColumn: React.FC<VenueProfileColumnProps> = ({
                   title={lead.email_contacto}
                 >
                   {lead.email_contacto}
+                </a>
+              ) : formularioDeContacto(lead) ? (
+                <a
+                  href={formularioDeContacto(lead) ?? undefined}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 rounded-[var(--r-pill)] bg-[var(--acc-soft)] px-2.5 py-1 text-xs font-medium text-[var(--acc-ink)] hover:underline"
+                  title="Esta sala no publica email: se contacta con su formulario web"
+                >
+                  Abrir formulario de contacto
+                  <ExternalLink className="h-3 w-3 shrink-0" aria-hidden />
                 </a>
               ) : (
                 <span className="text-[var(--ink-2)] italic opacity-60">Sin email</span>

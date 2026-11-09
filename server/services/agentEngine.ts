@@ -8,6 +8,7 @@ import { getSupabase, dbGetAutonomyConfig } from "../db.js";
 import { esEmailValido, ESTADOS_DE_ENVIO } from "../utils/email.js";
 import { aprobacionVigente } from "../utils/aprobacionLead.js";
 import { emailsNoEnviables } from "../utils/procedenciaDatos.js";
+import { formularioDeContacto } from "../../src/utils/contactoPorFormulario.js";
 import { loadState } from "../state.js";
 import { enviarEmail, crearBorrador, EmailAgentError } from "./emailAgentClient.js";
 import { crearBorradorGmailApi, tieneGmailOAuthConectado, comprobarBorradorEnviadoConDetalle, buscarMensajeEnviadoA, enviarEmailGmailApi, obtenerEmailDeLaCuentaConectada } from "./gmailApiClient.js";
@@ -302,7 +303,9 @@ export async function runEnviadorAgent(opts: {
         status: "error",
         error: emailContacto
           ? `El email de contacto no es válido ("${emailContacto}"). No se ha enviado nada.`
-          : "El lead no tiene email de contacto. No se ha enviado nada."
+          : formularioDeContacto(lead)
+            ? `Esta sala no publica email: solo admite contacto por su formulario web (${formularioDeContacto(lead)}). No se ha enviado nada; escríbeles desde ahí.`
+            : "El lead no tiene email de contacto. No se ha enviado nada."
       });
       continue;
     }
