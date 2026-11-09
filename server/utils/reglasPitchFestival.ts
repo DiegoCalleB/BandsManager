@@ -1,13 +1,14 @@
 /**
  * Comprueba un email de campaña contra las reglas de escritura que ya tiene el proyecto: la lista negra de muletillas de IA y
- * aperturas (`promptGuidelines`), lo que prohíben el ADN de la banda y la campaña (`terminos_a_evitar`), el rango de palabras
- * recomendado para festivales, los guiones largos, los enlaces sueltos en el cuerpo (el dossier va en la firma) y los huecos
+ * aperturas (`promptGuidelines`), lo que prohíben el ADN de la banda y la campaña (`terminos_a_evitar`), los límites de longitud de
+ * `auditPitchQuality`, los guiones largos, los enlaces sueltos en el cuerpo (el dossier va en la firma) y los huecos
  * de la plantilla sin rellenar. Devuelve los motivos; vacío = cumple todo. No cambia el texto.
  */
 import { BANNED_AI_WORDS, BANNED_OPENINGS } from './promptGuidelines.js';
-import { getRecommendedWordRange } from './promptSafety.js';
 import { separarAsunto } from '../../src/utils/asuntoDelPitch.js';
 
+const MIN_PALABRAS = 40;
+const MAX_PALABRAS = 210;
 const escapar = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const contiene = (texto: string, termino: string) => new RegExp(`(?<![\\p{L}\\p{N}])${escapar(termino.trim())}(?![\\p{L}\\p{N}])`, 'iu').test(texto);
 
@@ -29,9 +30,9 @@ export function revisarReglasDelPitch(pitch: string, terminosAEvitar: readonly s
   if (/https?:\/\//i.test(cuerpo)) motivos.push('enlace suelto en el cuerpo (el dossier va en la firma)');
   if (/\{[a-z_]+\}/.test(todo)) motivos.push('hueco de la plantilla sin rellenar');
 
+  // Mismos límites que `auditPitchQuality`: por debajo de 40 es demasiado corto y por encima de 210 demasiado largo.
   const palabras = cuerpo.split(/\s+/).filter(Boolean).length;
-  const { min, max } = getRecommendedWordRange('festival');
-  if (palabras < min || palabras > max) motivos.push(`${palabras} palabras (recomendado ${min}-${max})`);
+  if (palabras < MIN_PALABRAS || palabras > MAX_PALABRAS) motivos.push(`${palabras} palabras (aceptable ${MIN_PALABRAS}-${MAX_PALABRAS})`);
 
   return motivos;
 }

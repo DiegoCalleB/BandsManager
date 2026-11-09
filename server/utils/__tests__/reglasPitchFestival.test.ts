@@ -28,6 +28,12 @@ describe('revisarReglasDelPitch', () => {
     expect(revisarReglasDelPitch('Asunto: X\n\nCorto.', []).join(' ')).toMatch(/palabras/);
   });
 
+  it('un texto algo largo pero dentro del límite de la auditoría del proyecto se acepta', () => {
+    const largo = `Asunto: X\n\n${'palabra '.repeat(160)}`;
+    expect(revisarReglasDelPitch(largo, [])).toEqual([]);
+    expect(revisarReglasDelPitch(`Asunto: X\n\n${'palabra '.repeat(230)}`, []).join(' ')).toMatch(/230 palabras/);
+  });
+
   it('el asunto no cuenta como palabras del cuerpo y las plantillas por defecto cumplen el rango', () => {
     for (const plantilla of [PLANTILLA_FESTIVAL_ES, PLANTILLA_FESTIVAL_EN]) {
       const t = plantilla.replace(/\{banda\}/g, 'Los Ejemplos').replace('{estilo_banda}', 'electrónica y ska').replace(/\{festival\}/g, 'Fumega Fest').replace('{linea_publico}', 'Conocemos de sobra el pulso y la caña que pide vuestro público entre el rock.').replace('{frase_edicion}', ' Nos apetece mucho pasar por Betanzos.');
