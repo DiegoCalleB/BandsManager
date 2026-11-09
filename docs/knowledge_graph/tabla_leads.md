@@ -31,6 +31,7 @@ Tabla de Supabase `leads` (69 columnas).
 - [[fn_acceso_sesion|Acceso y sesión]] *(from #feature)*
 - [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
 - [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
 - [[fn_fans_epk|Fans y EPK]] *(from #feature)*
 - [[fn_scout_salas|Búsqueda de salas y festivales]] *(from #feature)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
@@ -41,6 +42,7 @@ Tabla de Supabase `leads` (69 columnas).
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(from #route)*
 - [[server_routes_tracking|server/routes/tracking.ts]] *(from #route)*
+- [[server_services_prepararEmailsCampana|server/services/prepararEmailsCampana.ts]] *(from #service)*
 - [[server_utils_redactorAlcance|server/utils/redactorAlcance.ts]] *(from #service)*
 - [[tabla_concert_deals|tabla concert_deals]] *(from #schema)*
 - [[tabla_lead_messages|tabla lead_messages]] *(from #schema)*

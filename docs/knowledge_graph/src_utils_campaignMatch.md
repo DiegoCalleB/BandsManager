@@ -24,6 +24,7 @@ Exporta: parseFlexibleDate, leadMatchesCampaignCity, leadMatchesCampaignScope, l
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server_services_prepararEmailsCampana|server/services/prepararEmailsCampana.ts]] *(from #service)*
 - [[src_components_booking_crm_hooks_useLeadFiltering|src/components/booking/crm/hooks/useLeadFiltering.ts]] *(from #frontend)*
 - [[src_components_campaign_GlobalCampaignBar|src/components/campaign/GlobalCampaignBar.tsx]] *(from #frontend)*
 

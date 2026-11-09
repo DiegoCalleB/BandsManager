@@ -24,6 +24,7 @@ Exporta: BookingMetrics, normalizeStatus, normalizeType, VENUE_ADDRESS_DATABASE,
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[hook_booking_pipeline|useBookingPipeline Hook]] *(from #hook)*
+- [[server_services_prepararEmailsCampana|server/services/prepararEmailsCampana.ts]] *(from #service)*
 - [[src_components_booking_crm_FiltersPanelSection|src/components/booking/crm/FiltersPanelSection.tsx]] *(from #frontend)*
 - [[src_components_booking_crm_hooks_useLeadActions|src/components/booking/crm/hooks/useLeadActions.ts]] *(from #frontend)*
 - [[src_components_booking_crm_hooks_useLeadFiltering|src/components/booking/crm/hooks/useLeadFiltering.ts]] *(from #frontend)*

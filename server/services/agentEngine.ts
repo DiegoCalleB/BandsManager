@@ -8,6 +8,7 @@ import { getSupabase, dbGetAutonomyConfig } from "../db.js";
 import { esEmailValido, ESTADOS_DE_ENVIO } from "../utils/email.js";
 import { aprobacionVigente } from "../utils/aprobacionLead.js";
 import { emailsNoEnviables } from "../utils/procedenciaDatos.js";
+import { separarAsunto } from "../../src/utils/asuntoDelPitch.js";
 import { formularioDeContacto } from "../../src/utils/contactoPorFormulario.js";
 import { loadState } from "../state.js";
 import { enviarEmail, crearBorrador, EmailAgentError } from "./emailAgentClient.js";
@@ -262,8 +263,10 @@ export async function runEnviadorAgent(opts: {
       .filter((e, i, todos) => todos.findIndex((x) => x.toLowerCase() === e.toLowerCase()) === i);
 
     const emailContacto = rawEmails.length > 0 ? rawEmails.join(", ") : (lead.email_contacto || lead.email);
+    // El asunto puede ir en la primera línea del pitch («Asunto: …», campañas con plantilla): se usa y no entra en el cuerpo.
+    const { asunto: asuntoDelPitch, cuerpo: cuerpoAprobado } = separarAsunto(textoAprobado);
     const { html: emailHtml, text: emailText, cleanPitch } = buildServerEmailHtml({
-      pitchText: textoAprobado,
+      pitchText: cuerpoAprobado,
       bandName,
       bandId: opts.bandId,
       epkConfig,
@@ -285,6 +288,7 @@ export async function runEnviadorAgent(opts: {
     } catch {
       // Fallback silencioso si falla la resolución de ADN
     }
+    if (asuntoDelPitch && !isRespuesta) asunto = asuntoDelPitch;
 
     // Última línea de defensa.
     if (rawEmails.length === 0 && sinComprobar.length > 0) {
