@@ -149,7 +149,7 @@ export function leadMatchesCampaignCapacity(lead: Lead, campana: BookingCampaign
   return cap >= minCap && cap <= maxCap;
 }
 
-export function leadMatchesCampaignDates(leadRecibido: Lead, campana: BookingCampaign): boolean {
+export function leadMatchesCampaignDates(leadRecibido: Lead, campana: BookingCampaign, ahora: Date = new Date()): boolean {
   const lead: LeadConFechasFestival = leadRecibido;
   const campaign: CampanaConAlias = campana;
   const startDateStr = lead.festival_start_date || lead.festivalStartDate;
@@ -190,7 +190,18 @@ export function leadMatchesCampaignDates(leadRecibido: Lead, campana: BookingCam
   if (!campStart || !campEnd) return true;
 
   // Comprobar si el evento del festival se solapa con el rango de fechas de la campaña activa
-  return !(eventEnd.getTime() < campStart.getTime() || campEnd.getTime() < eventStart.getTime());
+  const solapa = (ini: Date, fin: Date) => !(fin.getTime() < campStart.getTime() || campEnd.getTime() < ini.getTime());
+  if (solapa(eventStart, eventEnd)) return true;
+
+  // La fecha guardada es de una edición ya pasada: los festivales se repiten por las mismas fechas cada año, así que se
+  // compara su época del año proyectada sobre los años de la campaña (un festival de julio de 2026 cuenta para el verano de 2027).
+  if (eventEnd.getTime() < ahora.getTime()) {
+    for (let anio = campStart.getFullYear() - 1; anio <= campEnd.getFullYear(); anio++) {
+      const desplazar = (d: Date) => new Date(d.getFullYear() + (anio - eventStart.getFullYear()), d.getMonth(), d.getDate());
+      if (solapa(desplazar(eventStart), desplazar(eventEnd))) return true;
+    }
+  }
+  return false;
 }
 
 export function leadMatchesCampaign(lead: Lead, campaign: BookingCampaign): boolean {

@@ -22,12 +22,13 @@ Exporta: CampaignManagerModal.
 - [[src_components_Dashboard|src/components/Dashboard.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_booking_GenerateAllTemplatesModal|src/components/booking/GenerateAllTemplatesModal.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_campaign_CampanaAlcanceFields|src/components/campaign/CampanaAlcanceFields.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_common_HolidayDateWarning|src/components/common/HolidayDateWarning.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_campaign_CampanaFechasFields|src/components/campaign/CampanaFechasFields.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_textoDeRango|src/utils/textoDeRango.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
