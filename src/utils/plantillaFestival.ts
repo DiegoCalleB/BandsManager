@@ -36,7 +36,7 @@ Buenas gente de {festival},
 
 {linea_publico} Os escribimos porque estamos cuadrando la ruta de la próxima edición.{frase_edicion}
 
-{banda} es {estilo_banda} pensado para poner el recinto a saltar desde el primer minuto. Es Black Friday: durante estos días mantenemos nuestro caché actual de 2026 y, con el disco de 2027, subirá. Nos movemos con total agilidad logística y nos adaptamos a lo que necesitéis.
+{banda} es {estilo_banda} pensado para poner el recinto a saltar desde el primer minuto. Es Black Friday: durante estos días mantenemos nuestro caché actual de 2026 y, con el disco de 2027, subirá.
 
 Podéis ver la respuesta del público en el vídeo del dossier web al pie de la firma, donde tenéis también toda la información.
 
@@ -50,7 +50,7 @@ Hi {festival} team,
 
 {linea_publico} We're lining up next edition's route.{frase_edicion}
 
-{banda} brings {estilo_banda}, built to get the whole site jumping from the first minute. It's Black Friday: for these few days we're keeping our current 2026 fee, and it goes up with the 2027 album. We travel light and easy, and we adapt to whatever you need.
+{banda} brings {estilo_banda}, built to get the whole site jumping from the first minute. It's Black Friday: for these few days we're keeping our current 2026 fee, and it goes up with the 2027 album.
 
 You can see how the crowd reacts in the video of the dossier at the bottom of the signature, where you'll also find all the info.
 
