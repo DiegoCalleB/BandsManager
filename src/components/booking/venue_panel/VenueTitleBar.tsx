@@ -7,6 +7,7 @@ import type { BookingCampaign } from "../../../types";
 import { Edit3,Trash2,X } from "lucide-react";
 import { Dispatch,SetStateAction } from "react";
 import { Concert,Lead,LeadStatus } from "../../../types";
+import { fiabilidadFechaFestival } from "../../../utils/fiabilidadFechaFestival";
 import { formatFestivalDateRange } from "../../../utils/festivalDateFormat";
 import { isLeadVerificado } from "../../../utils/leadReliability";
 import { FavoriteButton } from "../../common/FavoriteButton";
@@ -131,6 +132,22 @@ export function VenueTitleBar({ selectedLead, onFilterByRouteCity, onClose, onUp
                           selectedLead.festival_end_date,
                         )}
                       </span>
+                      {(() => {
+                        const f = fiabilidadFechaFestival(selectedLead);
+                        const estimada = f.nivel === "estimada";
+                        return (
+                          <span
+                            title={f.motivo}
+                            className={`rounded-[var(--r-pill)] px-2 py-0.5 text-micro font-semibold ${
+                              estimada
+                                ? "bg-[var(--alert-soft)] text-[var(--alert)]"
+                                : "bg-[var(--ok-soft)] text-[var(--ok)]"
+                            }`}
+                          >
+                            {estimada ? `Estimada · ed. ${f.edicion} · revisar` : `Edición ${f.edicion}`}
+                          </span>
+                        );
+                      })()}
                     </p>
                     <HolidayDateWarning
                       date={selectedLead.festival_start_date}
