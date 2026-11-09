@@ -32,7 +32,7 @@ const EXTRA: Record<string, string[]> = EXTRA_F
   : {};
 const lines = readFileSync(LISTA, "utf8").trim().split("\n");
 const pool = async (items: string[], n: number, f: (s: string) => Promise<void>) => { let i = 0; await Promise.all(Array.from({ length: n }, async () => { while (i < items.length) await f(items[i++]); })); };
-await pool(lines, 24, async (ln) => {
+await pool(lines, Number(process.env.CONC) || 6, async (ln) => {
   const [id, nombre] = ln.split("|");
   const toks = plano(nombre).split(/[^a-z0-9]+/).filter((t) => t && !STOP.has(t));
   const ex = (EXTRA[id] || []).flatMap((d) => [`https://www.${d}/`, `https://${d}/`]);
