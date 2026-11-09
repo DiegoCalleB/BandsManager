@@ -27,6 +27,16 @@ describe('planDePitches', () => {
     expect(plan.conPitchPropio).toBe(1);
   });
 
+  it('con sobrescribir también sustituye el texto anterior de los leads nuevos, pero nunca los que están en curso', () => {
+    const plan = planDePitches(
+      [fest({ id: 'a', pitch_generado: 'Texto antiguo de la IA' }), fest({ id: 'b', nombre_sala: 'B', estado: 'pendiente_aprobacion', pitch_generado: 'En curso' })] as never[],
+      campana as never,
+      { banda: 'Los Ejemplos', ahora, sobrescribir: true },
+    );
+    expect(plan.escribir.map((p) => p.id)).toEqual(['a']);
+    expect(plan).toMatchObject({ reemplazados: 1, conPitchPropio: 0, enCurso: 1 });
+  });
+
   it('usa las plantillas guardadas en la campaña si las hay', () => {
     const plan = planDePitches([fest({})] as never[], { ...campana, customPitchTemplates: { festivales_email_es: 'Asunto: X {festival}\n\nHola {festival}' } } as never, { banda: 'Los Ejemplos', ahora });
     expect(plan.escribir[0].pitch).toBe('Asunto: X Fumega Fest\n\nHola Fumega Fest');
