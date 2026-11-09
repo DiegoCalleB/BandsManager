@@ -13,6 +13,8 @@ interface RespuestaPreparar {
   enCurso: number;
   conPitchPropio: number;
   reemplazados: number;
+  conAvisos: number;
+  avisos: Array<{ nombre: string; motivos: string[] }>;
 }
 
 const CLASES = "flex shrink-0 cursor-pointer items-center gap-1 whitespace-nowrap rounded-[var(--r-pill)] px-2 py-1 text-micro font-bold disabled:opacity-60 sm:px-2.5";
@@ -21,6 +23,7 @@ export function PrepararEmailsBoton({ campaignId, onListo }: { campaignId: strin
   const [estado, setEstado] = useState<"reposo" | "trabajando" | "hecho" | "error">("reposo");
   const [mensaje, setMensaje] = useState("");
   const [anteriores, setAnteriores] = useState(0);
+  const [detalle, setDetalle] = useState("");
 
   const lanzar = async (sobrescribir: boolean) => {
     setEstado("trabajando");
@@ -29,7 +32,8 @@ export function PrepararEmailsBoton({ campaignId, onListo }: { campaignId: strin
         method: "POST",
         body: JSON.stringify({ sobrescribir }),
       });
-      const resto = [r.reemplazados ? `${r.reemplazados} reemplazados` : "", r.enCurso ? `${r.enCurso} ya en curso` : ""].filter(Boolean).join(" · ");
+      const resto = [r.reemplazados ? `${r.reemplazados} reemplazados` : "", r.enCurso ? `${r.enCurso} ya en curso` : "", r.conAvisos ? `${r.conAvisos} NO escritos por incumplir las reglas` : ""].filter(Boolean).join(" · ");
+      setDetalle(r.avisos.map((a) => `${a.nombre}: ${a.motivos.join("; ")}`).join("\n"));
       setMensaje(`${r.preparados} emails listos para revisar${resto ? ` (${resto})` : ""}`);
       setAnteriores(r.conPitchPropio);
       setEstado("hecho");
@@ -50,7 +54,7 @@ export function PrepararEmailsBoton({ campaignId, onListo }: { campaignId: strin
         type="button"
         onClick={() => void lanzar(false)}
         disabled={estado === "trabajando"}
-        title={mensaje || "Escribe el email de cada festival con sus datos. No envía nada: tú apruebas antes."}
+        title={[mensaje || "Escribe el email de cada festival con sus datos y lo comprueba contra las reglas de escritura. No envía nada: tú apruebas antes.", detalle].filter(Boolean).join("\n\n")}
         className={`${CLASES} bg-[var(--acc-soft)] text-[var(--acc-ink)] hover:bg-[var(--sunken)]`}
       >
         <Mail className="h-3 w-3 shrink-0" aria-hidden />

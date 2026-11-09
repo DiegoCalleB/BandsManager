@@ -107,6 +107,7 @@ Copia en memoria de alta velocidad sincronizada con Supabase al arranque.
 - [[server_services_asesorPresencia|server/services/asesorPresencia.ts]] *(from #service)*
 - [[server_services_chatPrompt|server/services/chatPrompt.ts]] *(from #service)*
 - [[server_services_perfilDeLaPeticion|server/services/perfilDeLaPeticion.ts]] *(from #service)*
+- [[server_services_prepararEmailsCampana|server/services/prepararEmailsCampana.ts]] *(from #service)*
 - [[service_pitch_engine|Pitch Engine & Multi-Model Routing]] *(from #service)*
 
 ---

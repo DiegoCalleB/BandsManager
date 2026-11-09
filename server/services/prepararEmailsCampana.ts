@@ -49,6 +49,9 @@ export interface ResultadoPreparar {
   enCurso: number;
   conPitchPropio: number;
   reemplazados: number;
+  /** Emails que incumplen alguna regla de escritura: no se escriben. Se listan los primeros con sus motivos. */
+  conAvisos: number;
+  avisos: Array<{ nombre: string; motivos: string[] }>;
 }
 
 /** Aplica la plantilla de la campaña a los festivales de la banda y guarda los textos. `bandId` lo resuelve la ruta de la sesión. */
@@ -62,13 +65,32 @@ export async function prepararEmailsDeCampana(bandId: string, campaignId: string
   const epk = await dbGetEpkConfig(bandId).catch(() => null);
   const plan = planDePitches((await dbGetLeads(bandId)) as unknown as Lead[], campana as unknown as BookingCampaign, { banda: banda?.nombre_banda || 'Tu banda', estiloBanda: String(epk?.genero ?? '').trim() || undefined, sobrescribir });
 
+  // Reglas de escritura del proyecto: lo que prohíben la campaña y el ADN de la banda, más las globales (muletillas de IA, longitud…).
+  const [{ loadState }, { getBandDnaProfile }, { revisarReglasDelPitch }] = await Promise.all([import('../state.js'), import('../utils/bandDna.js'), import('../utils/reglasPitchFestival.js')]);
+  const reglasCampana = typeof campana.campaignToneRules === 'object' && campana.campaignToneRules ? campana.campaignToneRules : null;
+  const delAdn: string[] = (() => {
+    try {
+      return getBandDnaProfile(loadState(), bandId, { tipo: 'festival' } as never).terminosAEvitar ?? [];
+    } catch {
+      return [];
+    }
+  })();
+  const terminos = [...(reglasCampana?.terminos_a_evitar ?? []), ...delAdn];
+  const nombres = new Map((await dbGetLeads(bandId)).map((l) => [l.id, l.nombre_sala as string]));
+  const avisos: ResultadoPreparar['avisos'] = [];
+  const limpios = plan.escribir.filter(({ id, pitch }) => {
+    const motivos = revisarReglasDelPitch(pitch, terminos);
+    if (motivos.length) avisos.push({ nombre: nombres.get(id) ?? id, motivos });
+    return motivos.length === 0;
+  });
+
   let preparados = 0;
-  for (let i = 0; i < plan.escribir.length; i += 25) {
-    const lote = plan.escribir.slice(i, i + 25);
+  for (let i = 0; i < limpios.length; i += 25) {
+    const lote = limpios.slice(i, i + 25);
     const resultados = await Promise.all(
       lote.map(({ id, pitch }) => sb.from('leads').update({ pitch_generado: pitch }).eq('id', id).eq('band_id', bandId).eq('estado', 'nuevo')),
     );
     preparados += resultados.filter((r) => !r.error).length;
   }
-  return { preparados, enCurso: plan.enCurso, conPitchPropio: plan.conPitchPropio, reemplazados: plan.reemplazados };
+  return { preparados, enCurso: plan.enCurso, conPitchPropio: plan.conPitchPropio, reemplazados: plan.reemplazados, conAvisos: avisos.length, avisos: avisos.slice(0, 8) };
 }

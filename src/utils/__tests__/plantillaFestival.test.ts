@@ -76,6 +76,12 @@ describe('redactarPitchFestival', () => {
     expect(t).toContain('15–19 July 2027');
   });
 
+  it('en inglés traduce el estilo de la banda y no deja español en la frase', () => {
+    const t = redactarPitchFestival({ nombre_sala: 'Deichbrand', ciudad: 'Cuxhaven (Alemania)' }, { banda: BANDA, estiloBanda: 'electrónica-fusión y balkan-ska festiva y bailable', ahora });
+    expect(t).toContain('Los Ejemplos brings electronic music, fusion, balkan music and ska');
+    expect(t).not.toContain('electrónica');
+  });
+
   it('no deja ningún hueco sin rellenar ni lleva firma ni enlace', () => {
     const t = redactarPitchFestival({ nombre_sala: 'Fumega Fest', ciudad: 'Betanzos', genero: 'Rock' }, { banda: BANDA, ahora });
     expect(t).not.toMatch(/\{[a-z_]+\}/);

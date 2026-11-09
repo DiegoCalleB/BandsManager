@@ -26,6 +26,7 @@ _Sin dependencias salientes directas._
 - [[server_promptsManager|server/promptsManager.ts]] *(from #service)*
 - [[server_utils_auditoriaCopyReel|server/utils/auditoriaCopyReel.ts]] *(from #service)*
 - [[server_utils_bandDna|server/utils/bandDna.ts]] *(from #service)*
+- [[server_utils_reglasPitchFestival|server/utils/reglasPitchFestival.ts]] *(from #service)*
 
 ---
 

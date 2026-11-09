@@ -34,13 +34,13 @@ export const PLANTILLA_FESTIVAL_ES = `Asunto: Black Friday: {banda} al caché de
 
 Buenas gente de {festival},
 
-{linea_publico} Os escribo porque ya estamos moviendo la ruta de la próxima temporada y nos encantaría encajar en vuestro cartel.{frase_edicion}
+{linea_publico} Os escribimos porque estamos cuadrando la ruta de la próxima edición y nos encantaría encajar en vuestro cartel.{frase_edicion}
 
-{banda} es una propuesta de {estilo_banda} pensada para poner el recinto a saltar desde el primer minuto. Es Black Friday y, durante estos días, mantenemos el caché actual de 2026. Con el disco de 2027, subirá.
+{banda} es una propuesta de {estilo_banda} pensada para poner el recinto a saltar desde el primer minuto. Es Black Friday: durante estos días mantenemos nuestro caché actual de 2026 y, con el disco de 2027, subirá. Nos movemos con total agilidad logística y nos adaptamos a lo que necesitéis.
 
-En la firma tenéis nuestro dossier con vídeos y toda la información, para que veáis la respuesta del público.
+Podéis ver la respuesta del público en el vídeo del dossier web al pie de la firma, donde tenéis también toda la información.
 
-¿Tenéis abierto el proceso de selección para sumar propuestas a la próxima edición?
+¿Mantenéis abierto el proceso de selección de propuestas para la próxima edición?
 
 ¡Un abrazo!`;
 
@@ -48,11 +48,11 @@ export const PLANTILLA_FESTIVAL_EN = `Asunto: Black Friday: {banda} at our 2026 
 
 Hi {festival} team,
 
-{linea_publico} We're already putting together next season's route and we'd love to fit into your line-up.{frase_edicion}
+{linea_publico} We're lining up next edition's route and we'd love to fit into your line-up.{frase_edicion}
 
-{banda} is a {estilo_banda} act built to get the whole site jumping from the first minute. It's Black Friday and, for these few days, we're keeping our current 2026 fee. It goes up with the 2027 album.
+{banda} brings {estilo_banda}, built to get the whole site jumping from the first minute. It's Black Friday: for these few days we're keeping our current 2026 fee, and it goes up with the 2027 album. We travel light and easy, and we adapt to whatever you need.
 
-You'll find our dossier with videos and all the info in the signature, so you can see how the crowd reacts.
+You can see how the crowd reacts in the video of the dossier at the bottom of the signature, where you'll also find all the info.
 
 Are you still open to proposals for the next edition?
 
@@ -199,12 +199,20 @@ export interface OpcionesPitchFestival {
   plantillas?: { es?: string | null; en?: string | null };
 }
 
+/** El estilo de la banda (texto libre del EPK) en el idioma del email: los géneros que reconoce, o «live music». */
+function estiloDeLaBanda(texto: string | undefined, idioma: Idioma): string {
+  const t = sinTildes(texto ?? '');
+  const hallados = ESTILOS.map(([re, es, en]) => ({ pos: t.search(re), es, en })).filter((e) => e.pos >= 0).sort((a, b) => a.pos - b.pos);
+  if (idioma === 'en') return hallados.length ? enLista(hallados.slice(0, 4).map((e) => e.en), 'and') : 'live music';
+  return (texto ?? '').trim() || 'directo festivo';
+}
+
 export function redactarPitchFestival(lead: LeadParaPlantilla, { banda, estiloBanda, ahora = new Date(), plantillas }: OpcionesPitchFestival): string {
   const d = datosDePlantilla(lead, ahora);
   const plantilla = d.idioma === 'en' ? plantillas?.en || PLANTILLA_FESTIVAL_EN : plantillas?.es || PLANTILLA_FESTIVAL_ES;
   return rellenarPlantilla(plantilla, {
     banda,
-    estilo_banda: estiloBanda || 'directo festivo',
+    estilo_banda: estiloDeLaBanda(estiloBanda, d.idioma),
     festival: d.festival,
     ciudad: d.ciudad,
     linea_publico: d.lineaPublico,

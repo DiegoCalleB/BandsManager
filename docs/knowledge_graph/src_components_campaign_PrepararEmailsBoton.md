@@ -25,6 +25,7 @@ tags: ["frontend", "system", "auto"]
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_campaign_CampanaFechasFields|src/components/campaign/CampanaFechasFields.tsx]] *(from #frontend)*
 - [[src_components_campaign_GlobalCampaignBar|src/components/campaign/GlobalCampaignBar.tsx]] *(from #frontend)*
 
 ---

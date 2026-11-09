@@ -18,8 +18,11 @@ Prepara los emails de una campaña de festivales: rellena la plantilla de la cam
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[db_state_sync|In-Memory State & Supabase Sync]] *(Layer: #db, Domain: #system)*
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_epk|server/db/epk.ts]] *(Layer: #db, Domain: #epk)*
+- [[server_utils_bandDna|server/utils/bandDna.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_reglasPitchFestival|server/utils/reglasPitchFestival.ts]] *(Layer: #service, Domain: #booking)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_bookingUtils|src/utils/bookingUtils.ts]] *(Layer: #service, Domain: #booking)*
 - [[src_utils_campaignMatch|src/utils/campaignMatch.ts]] *(Layer: #service, Domain: #system)*

@@ -18,6 +18,7 @@ Exporta: CampanaFechasFields.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_campaign_PrepararEmailsBoton|src/components/campaign/PrepararEmailsBoton.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_common_HolidayDateWarning|src/components/common/HolidayDateWarning.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
