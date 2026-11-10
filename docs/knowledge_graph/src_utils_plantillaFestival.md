@@ -28,6 +28,7 @@ _Sin dependencias salientes directas._
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/utils/__tests__/reglasPitchFestival.test.ts`
 - `src/utils/__tests__/plantillaFestival.test.ts`
 
 ---

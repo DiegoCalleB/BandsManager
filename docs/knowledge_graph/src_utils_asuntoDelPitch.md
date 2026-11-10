@@ -24,6 +24,7 @@ _Sin dependencias salientes directas._
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[agent_enviador|Enviador Agent (Dispatcher)]] *(from #agent)*
+- [[server_utils_reglasPitchFestival|server/utils/reglasPitchFestival.ts]] *(from #service)*
 
 ---
 

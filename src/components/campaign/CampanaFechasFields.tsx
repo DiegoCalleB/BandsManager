@@ -3,17 +3,20 @@ import type { BookingCampaign } from "../../types";
 import { HolidayDateWarning } from "../common/HolidayDateWarning";
 import { ShowIcon } from "../ui/ShowIcon";
 import { IconButton } from "../ui";
+import { PrepararEmailsBoton } from "./PrepararEmailsBoton";
 
 interface Props {
   formData: Partial<BookingCampaign>;
   setFormData: (datos: Partial<BookingCampaign>) => void;
+  /** Id de la campaña que se está editando (si ya existe): permite regenerar sus emails desde aquí. */
+  campaignId?: string | null;
 }
 
 /**
  * Fechas de la campaña. En salas: fechas concretas (se marcan en el Calendario y las usan los pitches). En festivales:
  * una ventana opcional «desde – hasta» que solo filtra por época del año; los festivales sin fecha conocida entran siempre.
  */
-export function CampanaFechasFields({ formData, setFormData }: Props) {
+export function CampanaFechasFields({ formData, setFormData, campaignId }: Props) {
   if (formData.alcance === "festivales") {
     const desde = formData.campaignStartDate || "";
     const hasta = formData.campaignEndDate || "";
@@ -30,6 +33,12 @@ export function CampanaFechasFields({ formData, setFormData }: Props) {
             <input data-raw type="date" value={hasta} min={desde || undefined} onChange={(e) => setFormData({ ...formData, campaignEndDate: e.target.value })} className="mt-1 w-full rounded-[var(--r-s)] bg-[var(--sunken)] px-3 py-2 text-xs font-sans text-[var(--ink)]" />
           </label>
         </div>
+        {campaignId && (
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <PrepararEmailsBoton campaignId={campaignId} />
+            <span className="text-xs text-[var(--ink-2)]">Regenera el email de cada festival con la plantilla y las reglas de la campaña.</span>
+          </div>
+        )}
         <p className="mt-1.5 text-xs text-[var(--ink-2)] italic">
           <ShowIcon inline emoji="💡" />Solo salen los festivales que caen en esa época. Se compara por época del año: uno que se celebró en julio de 2026 cuenta para un verano de 2027. Los festivales sin fecha conocida entran siempre. Déjalo vacío para no filtrar.
         </p>

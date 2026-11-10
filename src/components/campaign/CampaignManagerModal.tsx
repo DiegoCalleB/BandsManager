@@ -346,7 +346,7 @@ export function CampaignManagerModal({
 
               <CampanaAlcanceFields formData={formData} setFormData={setFormData} />
 
-              <CampanaFechasFields formData={formData} setFormData={setFormData} />
+              <CampanaFechasFields formData={formData} setFormData={setFormData} campaignId={editingCampaignId} />
 
               {/* Notes / Co-booking details */}
               <div>

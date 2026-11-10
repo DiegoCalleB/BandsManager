@@ -153,7 +153,7 @@ router.post("/campaigns/:id/record-training", requireAuth, apiAutenticadaRateLim
 router.post("/campaigns/:id/preparar-emails", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
-    const resultado = await prepararEmailsDeCampana(userBandId, req.params.id);
+    const resultado = await prepararEmailsDeCampana(userBandId, req.params.id, { sobrescribir: req.body?.sobrescribir === true });
     if (!resultado) return res.status(404).json({ success: false, error: "Campaña no encontrada." });
     res.json({ success: true, ...resultado });
   } catch (errorCapturado) {

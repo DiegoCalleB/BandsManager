@@ -37,6 +37,7 @@ Exporta: BandDnaProfile, isCampaignActive, resolveMinCacheByType, getBandDnaProf
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
 - [[server_routes_leads_places|server/routes/leads/places.ts]] *(from #route)*
 - [[server_routes_leads_templates|server/routes/leads/templates.ts]] *(from #route)*
+- [[server_services_prepararEmailsCampana|server/services/prepararEmailsCampana.ts]] *(from #service)*
 - [[service_pitch_engine|Pitch Engine & Multi-Model Routing]] *(from #service)*
 
 ---
