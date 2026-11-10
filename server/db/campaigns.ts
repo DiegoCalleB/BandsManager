@@ -220,7 +220,8 @@ export async function dbUpsertCampaign(campaign: EntradaCampania, bandId: string
     id: String(campaign.id || Date.now().toString()),
     band_id: targetBandId,
     name: campaign.name || "Nueva Campaña",
-    alcance: campaign.alcance === 'festivales' ? 'festivales' : 'salas',
+    // Sin alcance en la petición no se toca el guardado (undefined no se escribe en el upsert).
+    alcance: campaign.alcance === undefined ? undefined : campaign.alcance === 'festivales' ? 'festivales' : 'salas',
     target_cities: Array.isArray(campaign.targetCities) ? campaign.targetCities : [],
     min_capacity: Number(campaign.minCapacity || 0),
     max_capacity: Number(campaign.maxCapacity || 0),
