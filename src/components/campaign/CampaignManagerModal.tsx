@@ -222,7 +222,7 @@ export function CampaignManagerModal({
       notes: formData.notes || "",
       customPitchTemplates: formData.customPitchTemplates || {},
       color: formData.color || "var(--acc)",
-      isActive: formData.isActive ?? true,
+      isActive: editingCampaignId ? activeCampaign?.id === editingCampaignId : (formData.isActive ?? true),
     };
 
     await onSaveCampaign(payload);

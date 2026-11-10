@@ -35,7 +35,7 @@ export interface DbCampaign {
     terminos_a_evitar?: string[];
     actualizado?: string;
   };
-  is_active: boolean;
+  is_active?: boolean;
   color?: string;
   created_at?: string;
 }
@@ -238,7 +238,8 @@ export async function dbUpsertCampaign(campaign: EntradaCampania, bandId: string
     campaign_tone_rules: (campaign.campaignToneRules && typeof campaign.campaignToneRules === "object")
       ? campaign.campaignToneRules
       : undefined,
-    is_active: Boolean(campaign.isActive),
+    // Sin `isActive` explícito no se toca: un guardado parcial no debe desactivar la campaña.
+    is_active: typeof campaign.isActive === 'boolean' ? campaign.isActive : undefined,
     color: campaign.color || "#8b5cf6"
   };
 
@@ -246,9 +247,14 @@ export async function dbUpsertCampaign(campaign: EntradaCampania, bandId: string
   // comprobación, mandar el id de una campaña AJENA la reasignaba a esta banda con el contenido
   // que se enviara. Si el id ya existe en otra banda, se genera uno nuevo.
   try {
-    const { data: existente } = await sb.from("campaigns").select("band_id").eq("id", payload.id).maybeSingle();
+    const { data: existente } = await sb.from("campaigns").select("band_id, custom_pitch_templates").eq("id", payload.id).maybeSingle();
     if (existente && cleanBandId(existente.band_id) !== targetBandId) {
       payload.id = `${payload.id}-${targetBandId}-${Date.now()}`;
+    } else if (existente?.custom_pitch_templates) {
+      // Las plantillas de email de festivales no se editan desde el formulario: una copia vieja del navegador no debe pisarlas.
+      for (const [clave, valor] of Object.entries(existente.custom_pitch_templates as Record<string, string>)) {
+        if (clave.startsWith('festivales_email_')) (payload.custom_pitch_templates as Record<string, string>)[clave] = valor;
+      }
     }
   } catch {
     // Tabla ausente: se seguirá con el fallback de abajo.
