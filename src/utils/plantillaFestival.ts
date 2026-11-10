@@ -36,7 +36,7 @@ Buenas gente de {festival},
 
 {linea_publico} Os escribimos porque estamos cuadrando la ruta de la próxima edición.{frase_edicion}
 
-{banda} es {estilo_banda} {remate}. Es Black Friday: durante estos días mantenemos nuestro caché actual de 2026 y, con el disco de 2027, subirá.
+{banda} es {estilo_banda}, {remate}. Es Black Friday: durante estos días mantenemos nuestro caché actual de 2026 y, con el disco de 2027, subirá.
 
 Podéis ver la respuesta del público en el vídeo del dossier web al pie de la firma, donde tenéis también toda la información.
 

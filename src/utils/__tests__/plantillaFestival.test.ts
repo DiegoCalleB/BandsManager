@@ -109,12 +109,12 @@ describe('énfasis según el tipo de festival', () => {
   });
   it('cada familia presenta a la banda a su manera y cae en defecto si falta', () => {
     const base = { nombre_sala: 'X Fest', ciudad: 'Madrid', region: 'ES' };
-    const plantillas = { es: '{banda} es {estilo_banda} {remate}.' };
+    const plantillas = { es: '{banda} es {estilo_banda}, {remate}.' };
     const e = redactarPitchFestival({ ...base, genero: 'Electrónica' }, { banda: 'Los Ejemplos', estilosBanda, plantillas });
     const r = redactarPitchFestival({ ...base, genero: 'Reggae' }, { banda: 'Los Ejemplos', estilosBanda, plantillas });
     const c = redactarPitchFestival({ ...base, genero: 'Rock' }, { banda: 'Los Ejemplos', estilosBanda, plantillas });
-    expect(e).toBe('Los Ejemplos es electro con alma a bailar.');
-    expect(r).toBe('Los Ejemplos es reggae con pulso a moverse.');
-    expect(c).toBe('Los Ejemplos es mezcla a saltar.');
+    expect(e).toBe('Los Ejemplos es electro con alma, a bailar.');
+    expect(r).toBe('Los Ejemplos es reggae con pulso, a moverse.');
+    expect(c).toBe('Los Ejemplos es mezcla, a saltar.');
   });
 });
