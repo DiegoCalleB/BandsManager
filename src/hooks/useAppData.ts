@@ -495,6 +495,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
 
     const campaignId = campaignData.id || `camp-${Date.now()}`;
     const fullCampaign: BookingCampaign = {
+      ...campaignData, // conserva alcance y ventana desde–hasta (antes se perdían y la campaña volvía a «salas»)
       id: campaignId,
       band_id: campaignData.band_id || bandId || '',
       name: campaignData.name || 'Nueva Campaña',
@@ -506,8 +507,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
       notes: campaignData.notes || '',
       customPitchTemplates: campaignData.customPitchTemplates || {},
       isActive: Boolean(campaignData.isActive),
-      color: campaignData.color || 'var(--acc)',
-      created_at: campaignData.created_at || new Date().toISOString(),
+      color: campaignData.color || 'var(--acc)', created_at: campaignData.created_at || new Date().toISOString(),
     };
 
     setCampaigns((prev) => {
