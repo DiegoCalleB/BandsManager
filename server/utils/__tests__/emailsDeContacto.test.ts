@@ -85,4 +85,22 @@ describe('elegirEmailDeContacto', () => {
     expect(elegirEmailDeContacto([], web)).toBeNull();
     expect(elegirEmailDeContacto([{ email: 'info@festival.es', pagina: web }], '')).toBeNull();
   });
+
+  it('reconoce booking escrito junto o en otros idiomas', () => {
+    for (const e of ['bandbooking@fest.de', 'comeandplay@fest.de', 'bewerbung@fest.de', 'programmation@fest.fr', 'programmazione@fest.it', 'candidatures@fest.fr', 'artistes@fest.fr'])
+      expect(rolDelEmail(e), e).toBe('booking');
+  });
+
+  it('reconoce los generales en otros idiomas y el buzón con el nombre del festival', () => {
+    for (const e of ['kontakt@fest.de', 'informace@fest.cz', 'biuro@fest.pl', 'accueil@fest.fr', 'bonjour@fest.fr', 'mail@fest.de', 'festival@fest.fr', 'office@fest.at', 'contatti@fest.it'])
+      expect(rolDelEmail(e), e).toBe('contacto');
+    expect(rolDelEmail('marsatac@marsatac.com')).toBe('contacto');
+    expect(rolDelEmail('marion.pace@ephelide.net')).toBe('personal');
+  });
+
+  it('un booking dentro de otra palabra no vence a las exclusiones', () => {
+    expect(rolDelEmail('booking.tickets@fest.de')).toBe('entradas');
+    expect(rolDelEmail('aurelie@artrock.org')).toBe('personal');
+  });
 });
+

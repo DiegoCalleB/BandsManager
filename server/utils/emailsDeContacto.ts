@@ -23,8 +23,8 @@ const PALABRAS_POR_ROL: Array<[Exclude<RolDeEmail, 'personal'>, string[]]> = [
   ['rrhh', ['rrhh', 'hr', 'empleo', 'trabajo', 'jobs', 'voluntarios', 'voluntariado', 'volunteers', 'cv', 'curriculum']],
   ['entradas', ['entradas', 'tickets', 'ticket', 'soporte', 'support', 'ventas', 'sales', 'atencion', 'cliente', 'clientes', 'abonos']],
   ['prensa', ['prensa', 'press', 'comunicacion', 'comunicación', 'media', 'marketing', 'publicidad', 'rrpp']],
-  ['booking', ['booking', 'bookings', 'programacion', 'artistas', 'artists', 'bandas', 'bands', 'talent', 'musica', 'contratacion', 'eventos', 'conciertos', 'actuaciones', 'espectaculos', 'shows']],
-  ['contacto', ['info', 'contacto', 'contact', 'hola', 'hello', 'organizacion', 'produccion', 'general', 'oficina', 'administracion', 'direccion', 'gerencia', 'secretaria', 'reservas']],
+  ['booking', ['booking', 'bookings', 'programacion', 'artistas', 'artists', 'bandas', 'bands', 'talent', 'musica', 'contratacion', 'eventos', 'conciertos', 'actuaciones', 'espectaculos', 'shows', 'comeandplay', 'bewerbung', 'bewerbungen', 'programmation', 'programmazione', 'programacao', 'candidature', 'candidatures', 'artistes', 'artisti', 'kuenstler']],
+  ['contacto', ['info', 'contacto', 'contact', 'hola', 'hello', 'organizacion', 'produccion', 'general', 'oficina', 'administracion', 'direccion', 'gerencia', 'secretaria', 'reservas', 'kontakt', 'informace', 'informacion', 'informazioni', 'biuro', 'accueil', 'bonjour', 'mail', 'festival', 'office', 'contatti', 'contato']],
 ];
 
 const sinTildes = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '');
@@ -35,6 +35,9 @@ export function rolDelEmail(email: string): RolDeEmail {
   for (const [rol, palabras] of PALABRAS_POR_ROL) {
     if (tokens.some((t) => palabras.includes(sinTildes(t)))) return rol;
   }
+  // «bandbooking@», o el buzón con el nombre del propio festival («marsatac@marsatac.com»).
+  if (tokens.some((t) => t.includes('booking'))) return 'booking';
+  if (local === (email.trim().toLowerCase().split('@')[1] || '').split('.')[0]) return 'contacto';
   return 'personal';
 }
 
