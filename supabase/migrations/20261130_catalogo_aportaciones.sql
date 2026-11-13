@@ -6,7 +6,8 @@
 
 CREATE TABLE IF NOT EXISTS public.catalogo_aportaciones (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  tipo TEXT NOT NULL CHECK (tipo IN ('festival', 'sala')),
+  -- Sin CHECK de valores, como el resto del esquema: la lista blanca (tipo, campo, estado) vive en server/utils/aportaciones.ts.
+  tipo TEXT NOT NULL,
   ficha_id TEXT NOT NULL,
   campo TEXT NOT NULL,
   valor TEXT NOT NULL CHECK (char_length(valor) BETWEEN 1 AND 300),
@@ -14,7 +15,7 @@ CREATE TABLE IF NOT EXISTS public.catalogo_aportaciones (
   comentario TEXT CHECK (comentario IS NULL OR char_length(comentario) <= 1000),
   contacto TEXT CHECK (contacto IS NULL OR char_length(contacto) <= 200),
   idioma TEXT NOT NULL DEFAULT 'es',
-  estado TEXT NOT NULL DEFAULT 'pendiente' CHECK (estado IN ('pendiente', 'aplicada', 'descartada')),
+  estado TEXT NOT NULL DEFAULT 'pendiente',
   revisada_en TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
