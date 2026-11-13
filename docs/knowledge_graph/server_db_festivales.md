@@ -21,6 +21,7 @@ Directorio de festivales: lectura de las tres tablas (`catalogo_festivales`, `ca
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
 - [[server_utils_seo_festivales_mapeo|server/utils/seo/festivales/mapeo.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_festivales_tipos|server/utils/seo/festivales/tipos.ts]] *(Layer: #service, Domain: #system)*
+- [[tabla_catalogo_salas|tabla catalogo_salas]] *(Layer: #schema, Domain: #system)*
 
 ---
 

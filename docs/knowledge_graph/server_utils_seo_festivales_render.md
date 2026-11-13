@@ -18,10 +18,12 @@ Directorio público de festivales (`/festivales`, `/en/festivals`): HTML complet
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[server_routes_aportaciones|server/routes/aportaciones.ts]] *(Layer: #route, Domain: #system)*
 - [[server_utils_html|server/utils/html.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_cabeza|server/utils/seo/cabeza.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_estilos|server/utils/seo/estilos.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_festivales_datos|server/utils/seo/festivales/datos.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_seo_festivales_paises|server/utils/seo/festivales/paises.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_festivales_textos|server/utils/seo/festivales/textos.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_festivales_tipos|server/utils/seo/festivales/tipos.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_festivales_vigencia|server/utils/seo/festivales/vigencia.ts]] *(Layer: #service, Domain: #system)*

@@ -22,6 +22,7 @@ Captación de fans, landing pública y dossier de prensa (EPK).
 - [[db_payments|Pagos y suscripciones (Stripe)]] *(Layer: #db, Domain: #finances)*
 - [[db_repertoire|Repertoire DB Handlers]] *(Layer: #db, Domain: #repertoire)*
 - [[ext_resend|Resend]] *(Layer: #external, Domain: #system)*
+- [[server_db_aportaciones|server/db/aportaciones.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_autonomy|server/db/autonomy.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_campaigns|server/db/campaigns.ts]] *(Layer: #db, Domain: #system)*
@@ -41,6 +42,7 @@ Captación de fans, landing pública y dossier de prensa (EPK).
 - [[server_db_tolerantWrite|server/db/tolerantWrite.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_tours|server/db/tours.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_users|server/db/users.ts]] *(Layer: #db, Domain: #system)*
+- [[server_routes_aportaciones|server/routes/aportaciones.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_contactoEmpresas|server/routes/contactoEmpresas.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(Layer: #route, Domain: #epk)*

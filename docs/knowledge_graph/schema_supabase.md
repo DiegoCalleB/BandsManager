@@ -40,6 +40,7 @@ Esquema relacional de tablas, índices pgvector, funciones y políticas RLS.
 - [[tabla_calendar_conflict_notifications|tabla calendar_conflict_notifications]] *(Layer: #schema, Domain: #system)*
 - [[tabla_campaign_pitch_training|tabla campaign_pitch_training]] *(Layer: #schema, Domain: #booking)*
 - [[tabla_campaigns|tabla campaigns]] *(Layer: #schema, Domain: #system)*
+- [[tabla_catalogo_aportaciones|tabla catalogo_aportaciones]] *(Layer: #schema, Domain: #system)*
 - [[tabla_catalogo_festival_convocatorias|tabla catalogo_festival_convocatorias]] *(Layer: #schema, Domain: #system)*
 - [[tabla_catalogo_festival_ediciones|tabla catalogo_festival_ediciones]] *(Layer: #schema, Domain: #system)*
 - [[tabla_catalogo_festivales|tabla catalogo_festivales]] *(Layer: #schema, Domain: #system)*
