@@ -66,10 +66,10 @@ describe('salasDeOsm', () => {
 
 describe('consultaOverpassSalas', () => {
   const q = consultaOverpassSalas('ES-MD');
-  it('pide salas de música en directo y locales de conciertos; discotecas, teatros, bares, pubs y cafés solo si declaran música en directo; nunca restaurantes', () => {
+  it('pide salas, locales de conciertos y todos los teatros, discotecas y centros culturales; bares, pubs y cafés solo si declaran música en directo; nunca restaurantes', () => {
     expect(q).toContain('"amenity"="music_venue"');
     expect(q).toContain('"amenity"="concert_hall"');
-    expect(q).toContain('"amenity"~"^(nightclub|theatre|arts_centre)$"]["live_music"="yes"');
+    expect(q).toContain('"amenity"~"^(nightclub|theatre|arts_centre)$"](area.r)');
     expect(q).toContain('"amenity"~"^(bar|pub|cafe)$"]["live_music"="yes"');
     expect(q).not.toMatch(/"amenity"="(bar|pub|cafe)"/);
     expect(q).not.toContain('restaurant');
@@ -167,5 +167,15 @@ describe('salaDesdeOsm: recintos masivos', () => {
   it('no recoge un pabellón de estadio', () => {
     expect(salaDesdeOsm({ type: 'node', id: 1, tags: { amenity: 'concert_hall', name: 'Movistar Arena', 'addr:city': 'Madrid', capacity: '17000' } })).toBeNull();
     expect(salaDesdeOsm({ type: 'node', id: 2, tags: { amenity: 'concert_hall', name: 'Sala Pequeña', 'addr:city': 'Madrid', capacity: '300' } })).not.toBeNull();
+  });
+});
+
+describe('tipo de recinto según OSM', () => {
+  it('teatros, discotecas y centros culturales tienen su propio tipo', () => {
+    const tipo = (amenity: string) => salaDesdeOsm({ type: 'node', id: 2, tags: { amenity, name: 'Recinto Uno', 'addr:city': 'Lugo' } })?.tipo;
+    expect(tipo('theatre')).toBe('teatro');
+    expect(tipo('nightclub')).toBe('discoteca');
+    expect(tipo('arts_centre')).toBe('centro_cultural');
+    expect(tipo('music_venue')).toBe('sala');
   });
 });

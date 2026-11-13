@@ -23,6 +23,8 @@ const TIPOS = [
   { valor: '', texto: 'Todos los tipos' },
   { valor: 'sala', texto: 'Salas' },
   { valor: 'festival', texto: 'Festivales' },
+  { valor: 'teatro', texto: 'Teatros' },
+  { valor: 'centro_cultural', texto: 'Centros culturales' },
   { valor: 'discoteca', texto: 'Discotecas' },
   { valor: 'bar', texto: 'Bares con directo' },
   { valor: 'ayuntamiento', texto: 'Ayuntamientos' },

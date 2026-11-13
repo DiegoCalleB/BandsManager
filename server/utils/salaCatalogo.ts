@@ -79,6 +79,9 @@ const LOCALES_DE_ROL = new Set([
   'info', 'contacto', 'contact', 'booking', 'bookings', 'programacion', 'produccion', 'prensa', 'press', 'sala',
   'administracion', 'eventos', 'events', 'management', 'hola', 'hello', 'conciertos', 'comunicacion', 'artistas',
   'direccion', 'teatro', 'club', 'oficina', 'reservas', 'gestion', 'cultura', 'musica',
+  // Mismos buzones en otros idiomas y escritos juntos (la regla de festivales ya los reconoce, server/utils/emailsDeContacto.ts).
+  'bandbooking', 'programmation', 'programmazione', 'kontakt', 'biuro', 'accueil', 'bonjour', 'office', 'contatti', 'contato',
+  'informacion', 'informazioni', 'festival', 'mail', 'auditorio', 'casadecultura', 'taquilla', 'secretaria',
 ]);
 
 /** Emails de relleno que los scrapers y las plantillas dejan en los leads («contact@example.com»). */
@@ -91,7 +94,7 @@ const DOMINIOS_PERSONALES = new Set([
 ]);
 
 /** Solo los recintos donde se puede tocar. Medios, agencias, productoras o bandas amigas no son salas, y las bandas son datos de otras bandas. */
-const TIPOS_CATALOGABLES = new Set(['sala', 'festival', 'ayuntamiento', 'discoteca', 'bar']);
+const TIPOS_CATALOGABLES = new Set(['sala', 'festival', 'ayuntamiento', 'discoteca', 'bar', 'teatro', 'centro_cultural']);
 
 /**
  * Recintos para artistas de estadio y pabellón: no son un sitio donde pueda tocar una banda que busca salas, así que no
