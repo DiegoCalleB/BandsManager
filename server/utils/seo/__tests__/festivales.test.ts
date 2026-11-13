@@ -131,3 +131,14 @@ describe('directorio con varios países', () => {
     expect(renderizarIndiceFestivales(BASE, 'es', HOY, [ficha(1), de])).not.toContain('<div id="otras-ciudades">');
   });
 });
+
+describe('aportaciones del público', () => {
+  it('cada ficha invita a aportar lo que falta, con campo trampa y sin publicar nada solo', () => {
+    const html = renderizarFestival(FESTIVALES[0], BASE, 'es', HOY);
+    expect(html).toContain('id="form-aportar"');
+    expect(html).toContain(`name="ficha_id" value="${FESTIVALES[0].slug}"`);
+    expect(html).toContain('class="trampa"');
+    expect(html).toContain("fetch('/api/public/aportaciones'");
+    expect(renderizarFestival(FESTIVALES[0], BASE, 'en', HOY)).toContain('Know something we don');
+  });
+});

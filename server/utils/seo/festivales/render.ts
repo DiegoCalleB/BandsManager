@@ -147,6 +147,7 @@ ${barraHtml(base, idioma, RUTAS[idioma === 'es' ? 'en' : 'es'].festival(f.slug),
 ${f.convocatoria ? `<section class="seccion"><h2>${escapeHtml(t.convocatoria)}</h2><p>${escapeHtml(f.convocatoria.resumen[idioma])}</p>${requisitosHtml(f, idioma)}<div class="acciones"><a class="boton suave" rel="noopener" href="${escapeHtml(f.convocatoria.url)}">${escapeHtml(t.verBases)}</a></div></section>` : ''}
 <p class="aviso"><strong>${escapeHtml(t.consejo)}.</strong> ${escapeHtml(t.consejoTexto)}${guiaSlug ? ` <a href="${escapeHtml(base)}${escapeHtml(rutas.guia(guiaSlug))}">${escapeHtml(t.guia)}</a>.` : ''}</p>
 <p class="lectura">${escapeHtml(t.fuente)}: <a rel="noopener" href="${escapeHtml(f.fuente)}">${escapeHtml(new URL(f.fuente).hostname)}</a>${f.web ? ` · <a rel="noopener" href="${escapeHtml(f.web)}">${escapeHtml(t.web)}</a>` : ''}</p>
+${aportarHtml(f, idioma)}
 <div class="cta">
 <h2>${escapeHtml(t.ctaTitulo)}</h2>
 <p>${escapeHtml(t.ctaTexto)}</p>
@@ -156,6 +157,25 @@ ${f.convocatoria ? `<section class="seccion"><h2>${escapeHtml(t.convocatoria)}</
 </main>
 </body>
 </html>`;
+}
+
+/** «¿Sabes algo que no sabemos?»: la aportación se guarda pendiente de revisión, nunca se publica sola. */
+function aportarHtml(f: Festival, idioma: IdiomaSeo): string {
+  const t = TEXTOS_FESTIVALES[idioma];
+  const campos = Object.entries(t.aportarCampos).map(([v, txt]) => `<option value="${v}">${escapeHtml(txt)}</option>`).join('');
+  return `<section class="seccion" id="aportar"><h2>${escapeHtml(t.aportarTitulo)}</h2><p>${escapeHtml(t.aportarIntro)}</p>
+<form class="filtros" id="form-aportar" onsubmit="return false">
+<input type="hidden" name="ficha_id" value="${escapeHtml(f.slug)}">
+<label>${escapeHtml(t.aportarCampo)}<select name="campo" required>${campos}</select></label>
+<label>${escapeHtml(t.aportarValor)}<input type="text" name="valor" maxlength="300"></label>
+<label>${escapeHtml(t.aportarFuente)}<input type="url" name="fuente" maxlength="500" placeholder="https://"></label>
+<label>${escapeHtml(t.aportarContacto)}<input type="email" name="contacto" maxlength="200"></label>
+<label class="trampa" aria-hidden="true">Web<input type="text" name="web" tabindex="-1" autocomplete="off"></label>
+<button class="boton" type="submit">${escapeHtml(t.aportarEnviar)}</button>
+<p class="lectura" data-estado aria-live="polite">${escapeHtml(t.aportarAviso)}</p>
+</form>
+<script>(function(){var f=document.getElementById('form-aportar');if(!f)return;var e=f.querySelector('[data-estado]'),b=f.querySelector('button');f.addEventListener('submit',function(){var d={tipo:'festival',idioma:'${idioma}'};new FormData(f).forEach(function(v,k){d[k]=v});b.disabled=true;fetch('/api/public/aportaciones',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)}).then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j}})}).then(function(x){if(x.ok){e.textContent=${JSON.stringify(t.aportarGracias)};f.reset()}else{e.textContent=x.j.error||${JSON.stringify(t.aportarError)};b.disabled=false}}).catch(function(){e.textContent=${JSON.stringify(t.aportarError)};b.disabled=false})})})();</script>
+</section>`;
 }
 
 export function renderizarFestivalNoEncontrado(base: string, idioma: IdiomaSeo): string {

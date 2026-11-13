@@ -97,4 +97,8 @@ table.tabla tbody tr:nth-child(even) td{background:var(--bg)}
 .filtros label.casilla input{width:22px;height:22px;accent-color:var(--acc)}
 .filtros .lectura,.filtros label:has(input[type=search]),.filtros label.casilla{grid-column:1/-1}
 .filtros .lectura{margin:0}
+#form-aportar{grid-template-columns:repeat(auto-fit,minmax(14rem,1fr))}
+.filtros .trampa{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.filtros input[type=text],.filtros input[type=url],.filtros input[type=email]{width:100%;min-height:44px;padding:0 .8rem;border:0;border-radius:12px;background:var(--bg);color:var(--ink);font:inherit;font-size:16px}
+.filtros .boton{grid-column:1/-1;justify-self:start}
 `;
