@@ -3,8 +3,8 @@ import type { IdiomaSeo } from '../rutas.js';
 import type { EstiloFestival } from './tipos.js';
 
 export const ESTILOS: Record<IdiomaSeo, Record<EstiloFestival, string>> = {
-  es: { rock: 'Rock', indie: 'Indie', pop: 'Pop', metal: 'Metal', punk: 'Punk', electronica: 'Electrónica', folk: 'Folk', jazz: 'Jazz', blues: 'Blues', flamenco: 'Flamenco', urbano: 'Urbano', reggaeton: 'Reggaeton y latino', reggae: 'Reggae y ska', mundo: 'Músicas del mundo', clasica: 'Clásica', antigua: 'Música antigua', experimental: 'Experimental', emergente: 'Bandas emergentes' },
-  en: { rock: 'Rock', indie: 'Indie', pop: 'Pop', metal: 'Metal', punk: 'Punk', electronica: 'Electronic', folk: 'Folk', jazz: 'Jazz', blues: 'Blues', flamenco: 'Flamenco', urbano: 'Urban', reggaeton: 'Reggaeton and Latin', reggae: 'Reggae and ska', mundo: 'World music', clasica: 'Classical', antigua: 'Early music', experimental: 'Experimental', emergente: 'Emerging bands' },
+  es: { rock: 'Rock', indie: 'Indie', pop: 'Pop', metal: 'Metal', punk: 'Punk', electronica: 'Electrónica', folk: 'Folk', jazz: 'Jazz', blues: 'Blues', flamenco: 'Flamenco', urbano: 'Urbano', reggaeton: 'Reggaeton y latino', reggae: 'Reggae y ska', mundo: 'Músicas del mundo', clasica: 'Clásica', antigua: 'Música antigua', experimental: 'Experimental', emergente: 'Bandas emergentes', multigenero: 'Multigénero' },
+  en: { rock: 'Rock', indie: 'Indie', pop: 'Pop', metal: 'Metal', punk: 'Punk', electronica: 'Electronic', folk: 'Folk', jazz: 'Jazz', blues: 'Blues', flamenco: 'Flamenco', urbano: 'Urban', reggaeton: 'Reggaeton and Latin', reggae: 'Reggae and ska', mundo: 'World music', clasica: 'Classical', antigua: 'Early music', experimental: 'Experimental', emergente: 'Emerging bands', multigenero: 'Multi-genre' },
 };
 
 export const TEXTOS_FESTIVALES = {

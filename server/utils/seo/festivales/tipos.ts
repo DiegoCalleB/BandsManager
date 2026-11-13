@@ -4,7 +4,7 @@
  */
 export type EstiloFestival =
   | 'rock' | 'indie' | 'pop' | 'metal' | 'punk' | 'electronica' | 'folk' | 'jazz' | 'blues' | 'flamenco'
-  | 'urbano' | 'reggaeton' | 'reggae' | 'mundo' | 'clasica' | 'antigua' | 'experimental' | 'emergente';
+  | 'urbano' | 'reggaeton' | 'reggae' | 'mundo' | 'clasica' | 'antigua' | 'experimental' | 'emergente' | 'multigenero';
 
 /** `desconocido` no es `no`: un filtro por «admite independientes» solo devuelve lo que está comprobado. */
 export type Tri = 'si' | 'no' | 'desconocido';

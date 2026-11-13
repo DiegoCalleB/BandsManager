@@ -44,7 +44,7 @@ export interface FilaConvocatoria {
 
 export const ESTILOS_VALIDOS = new Set<string>([
   'rock', 'indie', 'pop', 'metal', 'punk', 'electronica', 'folk', 'jazz', 'blues', 'flamenco',
-  'urbano', 'reggaeton', 'reggae', 'mundo', 'clasica', 'antigua', 'experimental', 'emergente',
+  'urbano', 'reggaeton', 'reggae', 'mundo', 'clasica', 'antigua', 'experimental', 'emergente', 'multigenero',
 ]);
 
 const RESUMEN_POR_DEFECTO = {
