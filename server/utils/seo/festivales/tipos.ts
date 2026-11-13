@@ -22,9 +22,10 @@ export interface Festival {
   slug: string;
   nombre: string;
   ciudad: string;
+  /** Provincia o región; fuera de España puede ir vacía. */
   provincia: string;
-  /** Código ISO 3166-1 alfa-2. */
-  pais: 'ES';
+  /** Código ISO 3166-1 alfa-2 (el catálogo guarda «UK» para el Reino Unido). */
+  pais: string;
   estilos: EstiloFestival[];
   /** Web oficial. Si no se ha podido comprobar, se omite en lugar de suponerla. */
   web?: string;

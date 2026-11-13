@@ -1,4 +1,5 @@
 /** De las filas de Supabase (`catalogo_festivales`, `catalogo_festival_ediciones`, `catalogo_festival_convocatorias`) a la ficha pública. Puro y probado. */
+import { nombrePais } from './paises.js';
 import type { EstiloFestival, Festival, Tri } from './tipos.js';
 
 export interface FilaFestival {
@@ -6,6 +7,7 @@ export interface FilaFestival {
   nombre: string;
   ciudad: string | null;
   provincia: string | null;
+  comunidad?: string | null;
   pais: string;
   generos: string[];
   web: string | null;
@@ -69,7 +71,10 @@ function convocatoriaRelevante(cs: FilaConvocatoria[], hoy: string): FilaConvoca
  * no sale nunca, ni aunque tenga más datos.
  */
 export function festivalDeFilas(f: FilaFestival, ediciones: FilaEdicion[], convocatorias: FilaConvocatoria[], hoy: string): Festival | null {
-  if (f.estado_revision === 'candidata' || !f.fuente || !f.verificado_en || !f.ciudad || !f.provincia) return null;
+  const pais = (f.pais || 'ES').toUpperCase();
+  // En España la provincia es obligatoria (el lugar se lee «Ciudad (Provincia)»); fuera, basta con el país.
+  const provincia = f.provincia || f.comunidad || (pais === 'ES' ? '' : nombrePais(pais, 'es'));
+  if (f.estado_revision === 'candidata' || !f.fuente || !f.verificado_en || !f.ciudad || !provincia) return null;
   const estilos = f.generos.filter((g): g is EstiloFestival => ESTILOS_VALIDOS.has(g));
   if (!estilos.length) return null;
   const ed = proximaEdicion(ediciones, hoy);
@@ -78,13 +83,13 @@ export function festivalDeFilas(f: FilaFestival, ediciones: FilaEdicion[], convo
     slug: f.id,
     nombre: f.nombre,
     ciudad: f.ciudad,
-    provincia: f.provincia,
-    pais: 'ES',
+    provincia,
+    pais,
     estilos,
     ...(f.web ? { web: f.web } : {}),
     fuente: f.fuente,
     verificadoEn: f.verificado_en,
-    descripcion: { es: f.descripcion_es ?? `${f.nombre}, en ${f.ciudad}.`, en: f.descripcion_en ?? `${f.nombre}, in ${f.ciudad}, Spain.` },
+    descripcion: { es: f.descripcion_es ?? `${f.nombre}, en ${f.ciudad} (${nombrePais(pais, 'es')}).`, en: f.descripcion_en ?? `${f.nombre}, in ${f.ciudad}, ${nombrePais(pais, 'en')}.` },
     ...(ed?.inicio && ed.fin ? { edicion: { inicio: ed.inicio, fin: ed.fin } } : {}),
     ...(c
       ? {

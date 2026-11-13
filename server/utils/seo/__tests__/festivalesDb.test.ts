@@ -113,3 +113,16 @@ describe('carga desde la lista de trabajo', () => {
     expect(vina.edicion).toBeUndefined();
   });
 });
+
+describe('festivales de fuera de España', () => {
+  it('conserva el país y no exige provincia fuera de España', () => {
+    const f = festivalDeFilas(fila({ ciudad: 'Mülheim', provincia: null, pais: 'DE' }), [], [], HOY);
+    expect(f?.pais).toBe('DE');
+    expect(f?.provincia).toBe('Alemania');
+    expect(f?.descripcion.en).toBe('Festival Uno, in Mülheim, Germany.');
+  });
+  it('en España la provincia sigue siendo obligatoria, pero vale la comunidad', () => {
+    expect(festivalDeFilas(fila({ provincia: null }), [], [], HOY)).toBeNull();
+    expect(festivalDeFilas(fila({ provincia: null, comunidad: 'Castilla y León' }), [], [], HOY)?.provincia).toBe('Castilla y León');
+  });
+});

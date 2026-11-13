@@ -90,4 +90,11 @@ table.tabla tbody tr:nth-child(even) td{background:var(--bg)}
 .calc .campos:has(.casilla){grid-template-columns:1fr}
 .calc label.casilla{display:flex;align-items:center;gap:.7rem;padding:.55rem .7rem;border-radius:12px;background:var(--bg);color:var(--ink);font-size:15px;cursor:pointer}
 .calc label.casilla input{width:22px;min-height:22px;height:22px;flex:none;accent-color:var(--acc)}
+.filtros{display:grid;gap:.7rem;grid-template-columns:repeat(auto-fit,minmax(8.5rem,1fr));background:var(--surface);border-radius:24px;padding:1rem;margin:1rem 0}
+.filtros label{display:grid;gap:.3rem;font-size:14px;color:var(--ink-2)}
+.filtros input[type=search],.filtros select{width:100%;min-height:44px;padding:0 .8rem;border:0;border-radius:12px;background:var(--bg);color:var(--ink);font:inherit;font-size:16px}
+.filtros label.casilla{display:flex;align-items:center;gap:.6rem;align-self:end;min-height:44px;padding:0 .7rem;border-radius:12px;background:var(--bg);color:var(--ink);cursor:pointer}
+.filtros label.casilla input{width:22px;height:22px;accent-color:var(--acc)}
+.filtros .lectura,.filtros label:has(input[type=search]),.filtros label.casilla{grid-column:1/-1}
+.filtros .lectura{margin:0}
 `;

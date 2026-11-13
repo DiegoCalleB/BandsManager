@@ -102,3 +102,24 @@ describe('rutas y portada de listados', () => {
     expect(html).toContain('href="https://bandmanager.io/directories"');
   });
 });
+
+describe('directorio con varios países', () => {
+  const de = ficha(90, { pais: 'DE', ciudad: 'Mülheim', provincia: 'Alemania', estilos: ['reggae'], edicion: { inicio: '2027-07-03', fin: '2027-07-05' } });
+  const uk = ficha(91, { pais: 'UK', ciudad: 'Pilton', provincia: 'Somerset', estilos: ['rock'] });
+  it('el índice ofrece filtrar por país, estilo y mes, solo con lo que hay', () => {
+    const html = renderizarIndiceFestivales(BASE, 'es', HOY, [ficha(1), de, uk]);
+    expect(html).toContain('id="filtros-festivales"');
+    expect(html).toContain('<option value="DE">Alemania (1)</option>');
+    expect(html).toContain('<option value="UK">Reino Unido (1)</option>');
+    expect(html).toContain('<option value="7">julio</option>');
+    expect(html).toContain('data-pais="DE" data-estilos="reggae" data-mes="7"');
+    expect(html).toContain('Mülheim (Alemania)');
+    expect(html).toContain('Pilton, Somerset (Reino Unido)');
+  });
+  it('con un solo país no muestra el filtro de país', () => {
+    expect(renderizarIndiceFestivales(BASE, 'es', HOY, [ficha(1), ficha(2)])).not.toContain('name="pais"');
+  });
+  it('la ficha de fuera usa el código ISO en los datos estructurados', () => {
+    expect(renderizarFestival({ ...uk, edicion: { inicio: '2027-06-23', fin: '2027-06-27' } }, BASE, 'en', HOY, [uk])).toContain('"addressCountry":"GB"');
+  });
+});

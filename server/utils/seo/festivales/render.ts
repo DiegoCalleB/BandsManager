@@ -6,6 +6,7 @@ import { slugEquivalente } from '../indice.js';
 import { RUTAS, alternativasPar, registroUrl, type IdiomaSeo } from '../rutas.js';
 import { TEXTOS, fechaLegible } from '../textos.js';
 import { FESTIVALES } from './datos.js';
+import { codigoIso, nombrePais } from './paises.js';
 import { ESTILOS, TEXTOS_FESTIVALES } from './textos.js';
 import type { Festival, Tri } from './tipos.js';
 import { convocatoriaAbierta, fichaIndexable, festivalesVigentes, indexable } from './vigencia.js';
@@ -13,7 +14,12 @@ import { convocatoriaAbierta, fichaIndexable, festivalesVigentes, indexable } fr
 const NOINDEX = 'noindex,follow';
 const SLUG_GUIA_FESTIVAL = 'presentar-banda-festival';
 
-const lugar = (f: Festival) => `${f.ciudad} (${f.provincia})`;
+/** «Ciudad (Provincia)» en España; fuera, «Ciudad (País)» o «Ciudad, Región (País)». */
+export function lugar(f: Festival, idioma: IdiomaSeo = 'es'): string {
+  if (f.pais.toUpperCase() === 'ES') return `${f.ciudad} (${f.provincia})`;
+  const pais = nombrePais(f.pais, idioma);
+  return f.provincia && f.provincia !== nombrePais(f.pais, 'es') && f.provincia !== pais ? `${f.ciudad}, ${f.provincia} (${pais})` : `${f.ciudad} (${pais})`;
+}
 const rangoEdicion = (f: Festival, idioma: IdiomaSeo): string => (f.edicion ? `${fechaLegible(idioma, f.edicion.inicio)} – ${fechaLegible(idioma, f.edicion.fin)}` : '');
 
 function estadoConvocatoria(f: Festival, hoy: string, idioma: IdiomaSeo): string {
@@ -38,8 +44,32 @@ function requisitosHtml(f: Festival, idioma: IdiomaSeo): string {
   return `<div class="scroll"><table class="tabla"><caption>${escapeHtml(t.requisitos)}</caption><tbody>${filas.map(([k, v]) => `<tr><th scope="row">${escapeHtml(k)}</th><td>${escapeHtml(v)}</td></tr>`).join('')}</tbody></table></div>`;
 }
 
+const mesDe = (f: Festival): string => (f.edicion ? String(Number(f.edicion.inicio.slice(5, 7))) : '');
+
+/** Cada tarjeta lleva sus datos de filtro (país, estilos, mes, convocatoria) para filtrar en el navegador sin recargar. */
 const tarjeta = (f: Festival, base: string, idioma: IdiomaSeo, hoy: string) =>
-  `<li><a href="${escapeHtml(base)}${escapeHtml(RUTAS[idioma].festival(f.slug))}">${escapeHtml(f.nombre)}<small>${escapeHtml(`${lugar(f)} · ${estadoConvocatoria(f, hoy, idioma)}`)}</small></a></li>`;
+  `<li data-pais="${escapeHtml(f.pais.toUpperCase())}" data-estilos="${escapeHtml(f.estilos.join(' '))}" data-mes="${mesDe(f)}" data-abierta="${convocatoriaAbierta(f, hoy) ? 1 : 0}" data-nombre="${escapeHtml(`${f.nombre} ${f.ciudad}`.toLowerCase())}"><a href="${escapeHtml(base)}${escapeHtml(RUTAS[idioma].festival(f.slug))}">${escapeHtml(f.nombre)}<small>${escapeHtml(`${lugar(f, idioma)} · ${estadoConvocatoria(f, hoy, idioma)}`)}</small></a></li>`;
+
+const opcion = (valor: string, texto: string) => `<option value="${escapeHtml(valor)}">${escapeHtml(texto)}</option>`;
+
+/** Barra de filtros: solo ofrece los países, estilos y meses que tienen algún festival (un filtro vacío espanta). */
+function filtrosHtml(vigentes: Festival[], idioma: IdiomaSeo): string {
+  const t = TEXTOS_FESTIVALES[idioma];
+  const cuenta = (claves: string[]) => claves.reduce((m, k) => m.set(k, (m.get(k) ?? 0) + 1), new Map<string, number>());
+  const paises = [...cuenta(vigentes.map((f) => f.pais.toUpperCase()))].sort((a, b) => b[1] - a[1]);
+  const estilos = [...cuenta(vigentes.flatMap((f) => f.estilos))].sort((a, b) => b[1] - a[1]);
+  const meses = [...new Set(vigentes.map(mesDe).filter(Boolean))].map(Number).sort((a, b) => a - b);
+  const nombreMes = (m: number) => new Date(Date.UTC(2027, m - 1, 1)).toLocaleDateString(idioma, { month: 'long', timeZone: 'UTC' });
+  return `<form class="filtros" id="filtros-festivales" role="search" onsubmit="return false">
+<label>${escapeHtml(t.filtroBuscar)}<input type="search" name="q" autocomplete="off"></label>
+${paises.length > 1 ? `<label>${escapeHtml(t.filtroPais)}<select name="pais">${opcion('', t.filtroTodos)}${paises.map(([p, n]) => opcion(p, `${nombrePais(p, idioma)} (${n})`)).join('')}</select></label>` : ''}
+<label>${escapeHtml(t.filtroEstilo)}<select name="estilo">${opcion('', t.filtroTodos)}${estilos.map(([e, n]) => opcion(e, `${ESTILOS[idioma][e as keyof (typeof ESTILOS)['es']]} (${n})`)).join('')}</select></label>
+${meses.length ? `<label>${escapeHtml(t.filtroMes)}<select name="mes">${opcion('', t.filtroTodos)}${meses.map((m) => opcion(String(m), nombreMes(m))).join('')}</select></label>` : ''}
+<label class="casilla"><input type="checkbox" name="abierta"> ${escapeHtml(t.filtroAbierta)}</label>
+<p class="lectura" aria-live="polite"><span data-total>${vigentes.length}</span> ${escapeHtml(t.filtroResultados)}</p>
+</form>
+<script>(function(){var f=document.getElementById('filtros-festivales');if(!f)return;var n=f.querySelector('[data-total]');function run(){var l=document.querySelectorAll('#lista-festivales li'),q=(f.q.value||'').toLowerCase().trim(),p=f.pais?f.pais.value:'',e=f.estilo.value,m=f.mes?f.mes.value:'',a=f.abierta.checked,c=0;l.forEach(function(li){var d=li.dataset,ok=(!q||d.nombre.indexOf(q)>=0)&&(!p||d.pais===p)&&(!e||(' '+d.estilos+' ').indexOf(' '+e+' ')>=0)&&(!m||d.mes===m)&&(!a||d.abierta==='1');li.hidden=!ok;if(ok)c++});n.textContent=c}f.addEventListener('input',run);f.addEventListener('change',run)})();</script>`;
+}
 
 export function renderizarIndiceFestivales(base: string, idioma: IdiomaSeo, hoy: string, todos: readonly Festival[] = FESTIVALES): string {
   const t = TEXTOS_FESTIVALES[idioma];
@@ -65,7 +95,8 @@ ${barraHtml(base, idioma, RUTAS[idioma === 'es' ? 'en' : 'es'].festivales, 'fest
 ${abiertas.length ? `<ul class="rel">${abiertas.map((f) => tarjeta(f, base, idioma, hoy)).join('')}</ul>` : `<p>${escapeHtml(t.sinAbiertas)}</p>`}
 </section>
 <section class="seccion"><h2>${escapeHtml(t.todos)}</h2>
-<ul class="rel">${vigentes.map((f) => tarjeta(f, base, idioma, hoy)).join('')}</ul>
+${filtrosHtml(vigentes, idioma)}
+<ul class="rel" id="lista-festivales">${vigentes.map((f) => tarjeta(f, base, idioma, hoy)).join('')}</ul>
 </section>
 <section class="seccion"><h2>${escapeHtml(t.metodo)}</h2><p>${escapeHtml(t.metodoTexto)}</p></section>
 <p class="pie"><a href="${escapeHtml(base)}${rutas.landing}">BandManager.io</a> · <a href="${escapeHtml(base)}${rutas.guias}">${escapeHtml(TEXTOS[idioma].guias)}</a> · ${escapeHtml(TEXTOS[idioma].lema)}</p>
@@ -80,14 +111,14 @@ export function renderizarFestival(f: Festival, base: string, idioma: IdiomaSeo,
   const ruta = rutas.festival(f.slug);
   const guiaSlug = idioma === 'es' ? SLUG_GUIA_FESTIVAL : slugEquivalente(SLUG_GUIA_FESTIVAL, 'es');
   const filas: Array<[string, string]> = [
-    [t.dondeEsta, lugar(f)],
+    [t.dondeEsta, lugar(f, idioma)],
     [t.estilo, f.estilos.map((e) => ESTILOS[idioma][e]).join(', ')],
     ...(f.edicion ? ([[t.edicion, rangoEdicion(f, idioma)]] as Array<[string, string]>) : []),
     [t.convocatoria, estadoConvocatoria(f, hoy, idioma)],
     [t.verificado, fechaLegible(idioma, f.verificadoEn)],
   ];
   const evento = f.edicion
-    ? { '@type': 'Festival', name: f.nombre, startDate: f.edicion.inicio, endDate: f.edicion.fin, ...(f.web ? { url: f.web } : {}), location: { '@type': 'Place', name: f.ciudad, address: { '@type': 'PostalAddress', addressLocality: f.ciudad, addressRegion: f.provincia, addressCountry: f.pais } } }
+    ? { '@type': 'Festival', name: f.nombre, startDate: f.edicion.inicio, endDate: f.edicion.fin, ...(f.web ? { url: f.web } : {}), location: { '@type': 'Place', name: f.ciudad, address: { '@type': 'PostalAddress', addressLocality: f.ciudad, ...(f.provincia ? { addressRegion: f.provincia } : {}), addressCountry: codigoIso(f.pais) } } }
     : { '@type': 'WebPage', name: f.nombre, url: `${base}${ruta}`, inLanguage: idioma };
   const jsonLd = {
     '@context': 'https://schema.org',
