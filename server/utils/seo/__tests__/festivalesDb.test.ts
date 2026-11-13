@@ -18,7 +18,7 @@ describe('mapeo de filas a ficha pública', () => {
     expect(festivalDeFilas(fila({ estado_revision: 'candidata' }), [edicion()], [conv()], HOY)).toBeNull();
   });
   it('sin fuente, sin fecha de comprobación, sin lugar o sin estilos válidos no se publica', () => {
-    for (const extra of [{ fuente: null }, { verificado_en: null }, { ciudad: null }, { provincia: null }, { generos: [] }, { generos: ['inventado'] }]) {
+    for (const extra of [{ fuente: null }, { verificado_en: null }, { generos: [] }, { generos: ['inventado'] }]) {
       expect(festivalDeFilas(fila(extra), [], [], HOY)).toBeNull();
     }
   });
@@ -121,8 +121,13 @@ describe('festivales de fuera de España', () => {
     expect(f?.provincia).toBe('Alemania');
     expect(f?.descripcion.en).toBe('Festival Uno, in Mülheim, Germany.');
   });
-  it('en España la provincia sigue siendo obligatoria, pero vale la comunidad', () => {
-    expect(festivalDeFilas(fila({ provincia: null }), [], [], HOY)).toBeNull();
+  it('sin provincia vale la comunidad y, sin ella, el país', () => {
     expect(festivalDeFilas(fila({ provincia: null, comunidad: 'Castilla y León' }), [], [], HOY)?.provincia).toBe('Castilla y León');
+    expect(festivalDeFilas(fila({ provincia: null }), [], [], HOY)?.provincia).toBe('España');
+  });
+  it('sin ciudad se publica igual, con la ciudad sin especificar y sin inventarla', () => {
+    const f = festivalDeFilas(fila({ ciudad: null, provincia: null }), [], [], HOY);
+    expect(f?.ciudad).toBe('');
+    expect(f?.descripcion.es).toBe('Festival Uno, festival en España.');
   });
 });

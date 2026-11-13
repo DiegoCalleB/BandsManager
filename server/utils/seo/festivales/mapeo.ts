@@ -72,9 +72,9 @@ function convocatoriaRelevante(cs: FilaConvocatoria[], hoy: string): FilaConvoca
  */
 export function festivalDeFilas(f: FilaFestival, ediciones: FilaEdicion[], convocatorias: FilaConvocatoria[], hoy: string): Festival | null {
   const pais = (f.pais || 'ES').toUpperCase();
-  // En España la provincia es obligatoria (el lugar se lee «Ciudad (Provincia)»); fuera, basta con el país.
-  const provincia = f.provincia || f.comunidad || (pais === 'ES' ? '' : nombrePais(pais, 'es'));
-  if (f.estado_revision === 'candidata' || !f.fuente || !f.verificado_en || !f.ciudad || !provincia) return null;
+  // Sin provincia ni comunidad, el lugar se lee con el país; sin ciudad, la ficha sale en «Otras ciudades» (no se inventa).
+  const provincia = f.provincia || f.comunidad || nombrePais(pais, 'es');
+  if (f.estado_revision === 'candidata' || !f.fuente || !f.verificado_en) return null;
   const estilos = f.generos.filter((g): g is EstiloFestival => ESTILOS_VALIDOS.has(g));
   if (!estilos.length) return null;
   const ed = proximaEdicion(ediciones, hoy);
@@ -82,14 +82,17 @@ export function festivalDeFilas(f: FilaFestival, ediciones: FilaEdicion[], convo
   return {
     slug: f.id,
     nombre: f.nombre,
-    ciudad: f.ciudad,
+    ciudad: f.ciudad ?? '',
     provincia,
     pais,
     estilos,
     ...(f.web ? { web: f.web } : {}),
     fuente: f.fuente,
     verificadoEn: f.verificado_en,
-    descripcion: { es: f.descripcion_es ?? `${f.nombre}, en ${f.ciudad} (${nombrePais(pais, 'es')}).`, en: f.descripcion_en ?? `${f.nombre}, in ${f.ciudad}, ${nombrePais(pais, 'en')}.` },
+    descripcion: {
+      es: f.descripcion_es ?? (f.ciudad ? `${f.nombre}, en ${f.ciudad} (${nombrePais(pais, 'es')}).` : `${f.nombre}, festival en ${nombrePais(pais, 'es')}.`),
+      en: f.descripcion_en ?? (f.ciudad ? `${f.nombre}, in ${f.ciudad}, ${nombrePais(pais, 'en')}.` : `${f.nombre}, a festival in ${nombrePais(pais, 'en')}.`),
+    },
     ...(ed?.inicio && ed.fin ? { edicion: { inicio: ed.inicio, fin: ed.fin } } : {}),
     ...(c
       ? {

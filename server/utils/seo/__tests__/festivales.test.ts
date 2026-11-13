@@ -122,4 +122,12 @@ describe('directorio con varios países', () => {
   it('la ficha de fuera usa el código ISO en los datos estructurados', () => {
     expect(renderizarFestival({ ...uk, edicion: { inicio: '2027-06-23', fin: '2027-06-27' } }, BASE, 'en', HOY, [uk])).toContain('"addressCountry":"GB"');
   });
+  it('los festivales sin ciudad salen aparte, en «Ciudad sin especificar», y también se filtran', () => {
+    const sin = ficha(92, { pais: 'FR', ciudad: '', provincia: 'Francia', estilos: ['rock'] });
+    const html = renderizarIndiceFestivales(BASE, 'es', HOY, [ficha(1), de, sin]);
+    expect(html).toContain('<div id="otras-ciudades"><h3>Ciudad sin especificar</h3>');
+    expect(html).toContain('Ciudad sin especificar (Francia)');
+    expect(html.lastIndexOf('Festival 92')).toBeGreaterThan(html.indexOf('<div id="otras-ciudades">'));
+    expect(renderizarIndiceFestivales(BASE, 'es', HOY, [ficha(1), de])).not.toContain('<div id="otras-ciudades">');
+  });
 });

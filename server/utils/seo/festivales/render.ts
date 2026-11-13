@@ -16,8 +16,9 @@ const SLUG_GUIA_FESTIVAL = 'presentar-banda-festival';
 
 /** «Ciudad (Provincia)» en España; fuera, «Ciudad (País)» o «Ciudad, Región (País)». */
 export function lugar(f: Festival, idioma: IdiomaSeo = 'es'): string {
-  if (f.pais.toUpperCase() === 'ES') return `${f.ciudad} (${f.provincia})`;
   const pais = nombrePais(f.pais, idioma);
+  if (!f.ciudad) return `${TEXTOS_FESTIVALES[idioma].ciudadPorConfirmar} (${f.pais.toUpperCase() === 'ES' && f.provincia !== nombrePais(f.pais, 'es') ? f.provincia : pais})`;
+  if (f.pais.toUpperCase() === 'ES') return `${f.ciudad} (${f.provincia})`;
   return f.provincia && f.provincia !== nombrePais(f.pais, 'es') && f.provincia !== pais ? `${f.ciudad}, ${f.provincia} (${pais})` : `${f.ciudad} (${pais})`;
 }
 const rangoEdicion = (f: Festival, idioma: IdiomaSeo): string => (f.edicion ? `${fechaLegible(idioma, f.edicion.inicio)} – ${fechaLegible(idioma, f.edicion.fin)}` : '');
@@ -68,7 +69,7 @@ ${meses.length ? `<label>${escapeHtml(t.filtroMes)}<select name="mes">${opcion('
 <label class="casilla"><input type="checkbox" name="abierta"> ${escapeHtml(t.filtroAbierta)}</label>
 <p class="lectura" aria-live="polite"><span data-total>${vigentes.length}</span> ${escapeHtml(t.filtroResultados)}</p>
 </form>
-<script>(function(){var f=document.getElementById('filtros-festivales');if(!f)return;var n=f.querySelector('[data-total]');function run(){var l=document.querySelectorAll('#lista-festivales li'),q=(f.q.value||'').toLowerCase().trim(),p=f.pais?f.pais.value:'',e=f.estilo.value,m=f.mes?f.mes.value:'',a=f.abierta.checked,c=0;l.forEach(function(li){var d=li.dataset,ok=(!q||d.nombre.indexOf(q)>=0)&&(!p||d.pais===p)&&(!e||(' '+d.estilos+' ').indexOf(' '+e+' ')>=0)&&(!m||d.mes===m)&&(!a||d.abierta==='1');li.hidden=!ok;if(ok)c++});n.textContent=c}f.addEventListener('input',run);f.addEventListener('change',run)})();</script>`;
+<script>(function(){var f=document.getElementById('filtros-festivales');if(!f)return;var n=f.querySelector('[data-total]');function run(){var l=document.querySelectorAll('.lista-festivales li'),q=(f.q.value||'').toLowerCase().trim(),p=f.pais?f.pais.value:'',e=f.estilo.value,m=f.mes?f.mes.value:'',a=f.abierta.checked,c=0;l.forEach(function(li){var d=li.dataset,ok=(!q||d.nombre.indexOf(q)>=0)&&(!p||d.pais===p)&&(!e||(' '+d.estilos+' ').indexOf(' '+e+' ')>=0)&&(!m||d.mes===m)&&(!a||d.abierta==='1');li.hidden=!ok;if(ok)c++});n.textContent=c;var o=document.getElementById('otras-ciudades');if(o)o.hidden=!o.querySelector('li:not([hidden])')}f.addEventListener('input',run);f.addEventListener('change',run)})();</script>`;
 }
 
 export function renderizarIndiceFestivales(base: string, idioma: IdiomaSeo, hoy: string, todos: readonly Festival[] = FESTIVALES): string {
@@ -96,7 +97,8 @@ ${abiertas.length ? `<ul class="rel">${abiertas.map((f) => tarjeta(f, base, idio
 </section>
 <section class="seccion"><h2>${escapeHtml(t.todos)}</h2>
 ${filtrosHtml(vigentes, idioma)}
-<ul class="rel" id="lista-festivales">${vigentes.map((f) => tarjeta(f, base, idioma, hoy)).join('')}</ul>
+<ul class="rel lista-festivales" id="lista-festivales">${vigentes.filter((f) => f.ciudad).map((f) => tarjeta(f, base, idioma, hoy)).join('')}</ul>
+${vigentes.some((f) => !f.ciudad) ? `<div id="otras-ciudades"><h3>${escapeHtml(t.otrasCiudades)}</h3><p class="lectura">${escapeHtml(t.otrasCiudadesTexto)}</p><ul class="rel lista-festivales">${vigentes.filter((f) => !f.ciudad).map((f) => tarjeta(f, base, idioma, hoy)).join('')}</ul></div>` : ''}
 </section>
 <section class="seccion"><h2>${escapeHtml(t.metodo)}</h2><p>${escapeHtml(t.metodoTexto)}</p></section>
 <p class="pie"><a href="${escapeHtml(base)}${rutas.landing}">BandManager.io</a> · <a href="${escapeHtml(base)}${rutas.guias}">${escapeHtml(TEXTOS[idioma].guias)}</a> · ${escapeHtml(TEXTOS[idioma].lema)}</p>
@@ -118,7 +120,7 @@ export function renderizarFestival(f: Festival, base: string, idioma: IdiomaSeo,
     [t.verificado, fechaLegible(idioma, f.verificadoEn)],
   ];
   const evento = f.edicion
-    ? { '@type': 'Festival', name: f.nombre, startDate: f.edicion.inicio, endDate: f.edicion.fin, ...(f.web ? { url: f.web } : {}), location: { '@type': 'Place', name: f.ciudad, address: { '@type': 'PostalAddress', addressLocality: f.ciudad, ...(f.provincia ? { addressRegion: f.provincia } : {}), addressCountry: codigoIso(f.pais) } } }
+    ? { '@type': 'Festival', name: f.nombre, startDate: f.edicion.inicio, endDate: f.edicion.fin, ...(f.web ? { url: f.web } : {}), location: { '@type': 'Place', name: f.ciudad || nombrePais(f.pais, idioma), address: { '@type': 'PostalAddress', ...(f.ciudad ? { addressLocality: f.ciudad } : {}), ...(f.provincia ? { addressRegion: f.provincia } : {}), addressCountry: codigoIso(f.pais) } } }
     : { '@type': 'WebPage', name: f.nombre, url: `${base}${ruta}`, inLanguage: idioma };
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -133,7 +135,7 @@ export function renderizarFestival(f: Festival, base: string, idioma: IdiomaSeo,
     ],
   };
   const descripcion = `${f.descripcion[idioma]} ${f.convocatoria ? estadoConvocatoria(f, hoy, idioma) : ''}`.trim().slice(0, 160);
-  return `${cabezaHtml({ base, idioma, ruta, titulo: t.tituloFicha(f.nombre, f.ciudad).slice(0, 70), descripcion, jsonLd, tipoOg: 'website', alternativas: alternativasPar(base, RUTAS.es.festival(f.slug), RUTAS.en.festival(f.slug)), robots: fichaIndexable(f, todos, hoy) ? undefined : NOINDEX })}
+  return `${cabezaHtml({ base, idioma, ruta, titulo: t.tituloFicha(f.nombre, f.ciudad || nombrePais(f.pais, idioma)).slice(0, 70), descripcion, jsonLd, tipoOg: 'website', alternativas: alternativasPar(base, RUTAS.es.festival(f.slug), RUTAS.en.festival(f.slug)), robots: fichaIndexable(f, todos, hoy) ? undefined : NOINDEX })}
 <body>
 <main>
 ${barraHtml(base, idioma, RUTAS[idioma === 'es' ? 'en' : 'es'].festival(f.slug), f.slug)}
