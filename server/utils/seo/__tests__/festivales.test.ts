@@ -142,3 +142,17 @@ describe('aportaciones del público', () => {
     expect(renderizarFestival(FESTIVALES[0], BASE, 'en', HOY)).toContain('Know something we don');
   });
 });
+
+describe('contacto en BandManager', () => {
+  it('la ficha marca qué contacto tenemos con sí/no, sin enseñar nunca el dato', () => {
+    const html = renderizarFestival({ ...FESTIVALES[0], enBandManager: { email: true, telefono: false, instagram: true } }, BASE, 'es', HOY);
+    expect(html).toContain('<li class="si"><span aria-hidden="true">✓</span> Email');
+    expect(html).toContain('<li class="no"><span aria-hidden="true">–</span> Teléfono');
+    expect(html).not.toContain('mailto:');
+    expect(html).toContain('Los ves completos al añadir el festival');
+  });
+  it('el listado avisa de los festivales con email, y sin datos invita a aportarlos', () => {
+    expect(renderizarIndiceFestivales(BASE, 'es', HOY, [ficha(1, { enBandManager: { email: true, telefono: false, instagram: false } })])).toContain('<span class="chk">✓ email</span>');
+    expect(renderizarFestival(FESTIVALES[0], BASE, 'es', HOY)).toContain('Aún no tenemos su contacto');
+  });
+});

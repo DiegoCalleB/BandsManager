@@ -14,6 +14,7 @@ export interface FilaFestival {
   descripcion_es: string | null;
   descripcion_en: string | null;
   estado_revision: 'candidata' | 'minima' | 'completa';
+  sala_id?: string | null;
   fuente: string | null;
   verificado_en: string | null;
 }
@@ -70,7 +71,10 @@ function convocatoriaRelevante(cs: FilaConvocatoria[], hoy: string): FilaConvoca
  * Ficha pública, o `null` si no es publicable: una candidata (solo el nombre) o una sin fuente o fecha de comprobación
  * no sale nunca, ni aunque tenga más datos.
  */
-export function festivalDeFilas(f: FilaFestival, ediciones: FilaEdicion[], convocatorias: FilaConvocatoria[], hoy: string): Festival | null {
+/** Qué contacto tiene el catálogo de cada ficha (por `sala_id`): solo booleanos, el dato no sale nunca del servidor. */
+export type ContactosDisponibles = Map<string, { email: boolean; telefono: boolean; instagram: boolean }>;
+
+export function festivalDeFilas(f: FilaFestival, ediciones: FilaEdicion[], convocatorias: FilaConvocatoria[], hoy: string, contactos?: ContactosDisponibles): Festival | null {
   const pais = (f.pais || 'ES').toUpperCase();
   // Sin provincia ni comunidad, el lugar se lee con el país; sin ciudad, la ficha sale en «Otras ciudades» (no se inventa).
   const provincia = f.provincia || f.comunidad || nombrePais(pais, 'es');
@@ -87,6 +91,7 @@ export function festivalDeFilas(f: FilaFestival, ediciones: FilaEdicion[], convo
     pais,
     estilos,
     ...(f.web ? { web: f.web } : {}),
+    ...(f.sala_id && contactos?.get(f.sala_id) ? { enBandManager: contactos.get(f.sala_id) } : {}),
     fuente: f.fuente,
     verificadoEn: f.verificado_en,
     descripcion: {
@@ -116,7 +121,7 @@ export function festivalDeFilas(f: FilaFestival, ediciones: FilaEdicion[], convo
 }
 
 /** Agrupa las filas sueltas por festival y devuelve solo las fichas publicables. */
-export function festivalesDeFilas(festivales: FilaFestival[], ediciones: FilaEdicion[], convocatorias: FilaConvocatoria[], hoy: string): Festival[] {
+export function festivalesDeFilas(festivales: FilaFestival[], ediciones: FilaEdicion[], convocatorias: FilaConvocatoria[], hoy: string, contactos?: ContactosDisponibles): Festival[] {
   const por = <T extends { festival_id: string }>(filas: T[]) => {
     const m = new Map<string, T[]>();
     for (const x of filas) m.set(x.festival_id, [...(m.get(x.festival_id) ?? []), x]);
@@ -124,5 +129,5 @@ export function festivalesDeFilas(festivales: FilaFestival[], ediciones: FilaEdi
   };
   const eds = por(ediciones);
   const cs = por(convocatorias);
-  return festivales.flatMap((f) => festivalDeFilas(f, eds.get(f.id) ?? [], cs.get(f.id) ?? [], hoy) ?? []);
+  return festivales.flatMap((f) => festivalDeFilas(f, eds.get(f.id) ?? [], cs.get(f.id) ?? [], hoy, contactos) ?? []);
 }

@@ -131,3 +131,11 @@ describe('festivales de fuera de España', () => {
     expect(f?.descripcion.es).toBe('Festival Uno, festival en España.');
   });
 });
+
+describe('contacto disponible', () => {
+  it('pasa solo los booleanos del contacto de la sala enlazada', () => {
+    const contactos = new Map([['sala-1', { email: true, telefono: false, instagram: true }]]);
+    expect(festivalDeFilas(fila({ sala_id: 'sala-1' }), [], [], HOY, contactos)?.enBandManager).toEqual({ email: true, telefono: false, instagram: true });
+    expect(festivalDeFilas(fila({ sala_id: null }), [], [], HOY, contactos)?.enBandManager).toBeUndefined();
+  });
+});

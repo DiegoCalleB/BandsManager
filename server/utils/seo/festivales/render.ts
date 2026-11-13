@@ -49,7 +49,7 @@ const mesDe = (f: Festival): string => (f.edicion ? String(Number(f.edicion.inic
 
 /** Cada tarjeta lleva sus datos de filtro (país, estilos, mes, convocatoria) para filtrar en el navegador sin recargar. */
 const tarjeta = (f: Festival, base: string, idioma: IdiomaSeo, hoy: string) =>
-  `<li data-pais="${escapeHtml(f.pais.toUpperCase())}" data-estilos="${escapeHtml(f.estilos.join(' '))}" data-mes="${mesDe(f)}" data-abierta="${convocatoriaAbierta(f, hoy) ? 1 : 0}" data-nombre="${escapeHtml(`${f.nombre} ${f.ciudad}`.toLowerCase())}"><a href="${escapeHtml(base)}${escapeHtml(RUTAS[idioma].festival(f.slug))}">${escapeHtml(f.nombre)}<small>${escapeHtml(`${lugar(f, idioma)} · ${estadoConvocatoria(f, hoy, idioma)}`)}</small></a></li>`;
+  `<li data-pais="${escapeHtml(f.pais.toUpperCase())}" data-estilos="${escapeHtml(f.estilos.join(' '))}" data-mes="${mesDe(f)}" data-abierta="${convocatoriaAbierta(f, hoy) ? 1 : 0}" data-nombre="${escapeHtml(`${f.nombre} ${f.ciudad}`.toLowerCase())}"><a href="${escapeHtml(base)}${escapeHtml(RUTAS[idioma].festival(f.slug))}">${escapeHtml(f.nombre)}<small>${escapeHtml(`${lugar(f, idioma)} · ${estadoConvocatoria(f, hoy, idioma)}`)}${f.enBandManager?.email ? ` · <span class="chk">✓ ${escapeHtml(TEXTOS_FESTIVALES[idioma].chkEmailCorto)}</span>` : ''}</small></a></li>`;
 
 const opcion = (valor: string, texto: string) => `<option value="${escapeHtml(valor)}">${escapeHtml(texto)}</option>`;
 
@@ -147,6 +147,7 @@ ${barraHtml(base, idioma, RUTAS[idioma === 'es' ? 'en' : 'es'].festival(f.slug),
 ${f.convocatoria ? `<section class="seccion"><h2>${escapeHtml(t.convocatoria)}</h2><p>${escapeHtml(f.convocatoria.resumen[idioma])}</p>${requisitosHtml(f, idioma)}<div class="acciones"><a class="boton suave" rel="noopener" href="${escapeHtml(f.convocatoria.url)}">${escapeHtml(t.verBases)}</a></div></section>` : ''}
 <p class="aviso"><strong>${escapeHtml(t.consejo)}.</strong> ${escapeHtml(t.consejoTexto)}${guiaSlug ? ` <a href="${escapeHtml(base)}${escapeHtml(rutas.guia(guiaSlug))}">${escapeHtml(t.guia)}</a>.` : ''}</p>
 <p class="lectura">${escapeHtml(t.fuente)}: <a rel="noopener" href="${escapeHtml(f.fuente)}">${escapeHtml(new URL(f.fuente).hostname)}</a>${f.web ? ` · <a rel="noopener" href="${escapeHtml(f.web)}">${escapeHtml(t.web)}</a>` : ''}</p>
+${contactoHtml(f, base, idioma)}
 ${aportarHtml(f, idioma)}
 <div class="cta">
 <h2>${escapeHtml(t.ctaTitulo)}</h2>
@@ -157,6 +158,18 @@ ${aportarHtml(f, idioma)}
 </main>
 </body>
 </html>`;
+}
+
+/** Qué contacto tiene BandManager de este festival: marcas de sí/no, nunca el dato (se da al añadirlo en la app). */
+function contactoHtml(f: Festival, base: string, idioma: IdiomaSeo): string {
+  const t = TEXTOS_FESTIVALES[idioma];
+  const c = f.enBandManager ?? { email: false, telefono: false, instagram: false };
+  const items: Array<[string, boolean]> = [[t.chkEmail, c.email], [t.chkTelefono, c.telefono], [t.chkInstagram, c.instagram], [t.chkWeb, !!f.web]];
+  const alguno = c.email || c.telefono || c.instagram;
+  return `<section class="seccion" id="contacto"><h2>${escapeHtml(t.chkTitulo)}</h2>
+<ul class="checks">${items.map(([txt, si]) => `<li class="${si ? 'si' : 'no'}"><span aria-hidden="true">${si ? '✓' : '–'}</span> ${escapeHtml(txt)}<span class="sr">: ${escapeHtml(si ? t.si : t.no)}</span></li>`).join('')}</ul>
+<p class="lectura">${escapeHtml(alguno ? t.chkConDatos : t.chkSinDatos)}${alguno ? ` <a href="${escapeHtml(registroUrl(base, idioma, 'festival', f.slug))}">${escapeHtml(t.ctaBoton)}</a>.` : ''}</p>
+</section>`;
 }
 
 /** «¿Sabes algo que no sabemos?»: la aportación se guarda pendiente de revisión, nunca se publica sola. */

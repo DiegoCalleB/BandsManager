@@ -35,6 +35,8 @@ export interface Festival {
   verificadoEn: string;
   /** Qué es, en una frase y solo con hechos comprobados. */
   descripcion: { es: string; en: string };
+  /** Qué datos de contacto tiene BandManager de este festival. Solo si los tiene, nunca el dato: se da al añadirlo en la app. */
+  enBandManager?: { email: boolean; telefono: boolean; instagram: boolean };
   /** Próxima edición, si está confirmada. */
   edicion?: { inicio: string; fin: string };
   /** Convocatoria para bandas, si la hay. Sin `cierre` solo se enlaza la fuente: no se inventa un plazo. */
