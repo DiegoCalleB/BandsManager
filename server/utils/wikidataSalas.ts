@@ -16,17 +16,25 @@ const CLASES = { festival: ['wd:Q868557'], sala: ['wd:Q8719053', 'wd:Q1060829'] 
 
 export type TipoWikidata = keyof typeof CLASES;
 
+/**
+ * Las salas usan sus clases directas (sin `P279*`): recorrer todas las subclases de «sala de conciertos» hacía que el
+ * servicio respondiera 504 cada noche. Los festivales sí recorren subclases: son pocos y la consulta responde en segundos.
+ */
+const TIPO_DE_ITEM = (tipo: TipoWikidata) => (tipo === 'festival' ? 'wdt:P31/wdt:P279*' : 'wdt:P31');
+
 export const consultaWikidata = (tipo: TipoWikidata): string => `SELECT ?item ?itemLabel ?web ?ciudadLabel ?ccaaLabel ?coord ?aforo WHERE {
   VALUES ?clase { ${CLASES[tipo].join(' ')} }
-  ?item wdt:P31/wdt:P279* ?clase ;
+  ?item ${TIPO_DE_ITEM(tipo)} ?clase ;
         wdt:P17 wd:Q29 .
   FILTER NOT EXISTS { ?item wdt:P576 [] }
   FILTER NOT EXISTS { ?item wdt:P3999 [] }
   FILTER NOT EXISTS { ?item wdt:P582 [] }
   OPTIONAL { ?item wdt:P856 ?web }
+  # Un solo salto hacia arriba (municipio → su entidad superior): el camino transitivo hasta la comunidad hacía que
+  # el servicio respondiera 504 todas las noches.
   OPTIONAL {
     ?item wdt:P131 ?ciudad .
-    OPTIONAL { ?ciudad wdt:P131* ?ccaa . ?ccaa wdt:P31 wd:Q10742 . }
+    OPTIONAL { ?ciudad wdt:P131 ?ccaa . }
   }
   OPTIONAL { ?item wdt:P625 ?coord }
   OPTIONAL { ?item wdt:P1083 ?aforo }

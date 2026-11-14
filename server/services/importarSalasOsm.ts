@@ -97,7 +97,8 @@ export async function importarSalasDeOsm(p: { puerto: PuertoImportacion; descarg
 }
 
 /** Servidores públicos de Overpass: si uno está saturado o no responde, se prueba el siguiente. */
-export const SERVIDORES_OVERPASS = ['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter', 'https://overpass.private.coffee/api/interpreter'];
+// El espejo de maps.mail.ru va primero: es el que responde cuando los demás dan 502 o se quedan sin tiempo (noviembre 2026).
+export const SERVIDORES_OVERPASS = ['https://maps.mail.ru/osm/tools/overpass/api/interpreter', 'https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter', 'https://overpass.private.coffee/api/interpreter'];
 
 /** Motivo legible de un fallo de red: undici solo dice «fetch failed» y deja la causa real en `cause`. */
 export function motivoDeRed(e: unknown): string {

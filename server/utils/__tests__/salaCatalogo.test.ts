@@ -405,3 +405,10 @@ describe('senalesDeLeads: solo cuentan las interacciones reales', () => {
     expect(s).toMatchObject({ bandasConRespuesta: 1, bandasConEntrega: 1, rebotes: 1 });
   });
 });
+
+describe('emailDeRol en otros idiomas', () => {
+  it('acepta buzones de rol de otros idiomas y escritos juntos, y sigue rechazando personas', () => {
+    for (const e of ['kontakt@sala.de', 'biuro@klub.pl', 'accueil@theatre.fr', 'programmation@salle.fr', 'bandbooking@club.de', 'taquilla@teatro.es']) expect(emailDeRol(e), e).toBe(e);
+    expect(emailDeRol('juan.perez@sala.es')).toBeNull();
+  });
+});

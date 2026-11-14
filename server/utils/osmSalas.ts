@@ -30,14 +30,25 @@ export const REGIONES_OSM = ['ES-AN', 'ES-AR', 'ES-AS', 'ES-CB', 'ES-CE', 'ES-CL
 
 /**
  * Consulta Overpass de las salas de música en directo y los locales de conciertos de una comunidad (código ISO 3166-2,
- * por ejemplo `ES-MD`). Discotecas, teatros y centros de arte solo si declaran música en directo; sin bares ni cafés: meten
- * mucho ruido y a una banda le sirven poco. Trae también las
+ * por ejemplo `ES-MD`), más todos los teatros, discotecas y centros culturales (programan directo aunque OSM no lo diga);
+ * bares y cafés solo si declaran música en directo: meten mucho ruido y a una banda le sirven poco. Trae también las
  * ciudades, pueblos y aldeas de la comunidad: muchas salas no llevan `addr:city` y su ciudad se saca del núcleo más cercano.
  */
 const FILTROS_SALAS = `  nwr["amenity"="music_venue"](area.r);
   nwr["amenity"="concert_hall"](area.r);
-  nwr["amenity"~"^(nightclub|theatre|arts_centre)$"]["live_music"="yes"](area.r);
+  nwr["amenity"~"^(nightclub|theatre|arts_centre)$"](area.r);
   nwr["amenity"~"^(bar|pub|cafe)$"]["live_music"="yes"](area.r);`;
+
+/** Tipo del catálogo según la etiqueta de OSM: teatros, discotecas y centros culturales también programan directo. */
+export function tipoDeOsm(amenity: string | undefined): string {
+  switch (amenity) {
+    case 'nightclub': return 'discoteca';
+    case 'theatre': return 'teatro';
+    case 'arts_centre': return 'centro_cultural';
+    case 'bar': case 'pub': case 'cafe': return 'bar';
+    default: return 'sala';
+  }
+}
 
 const areaDe = (region: string) => `area["ISO3166-2"="${region.replace(/[^A-Z0-9-]/g, '')}"]->.r;`;
 
@@ -99,7 +110,7 @@ export function salaDesdeOsm(el: ElementoOsm): CamposPublicosSala | null {
     ciudad,
     region: regionDeCodigoPostal(t['addr:postcode']) ?? textoPublico(t['addr:state'] ?? t['addr:province'], 60),
     direccion,
-    tipo: t.amenity === 'nightclub' ? 'discoteca' : ['bar', 'pub', 'cafe'].includes(t.amenity ?? '') ? 'bar' : 'sala',
+    tipo: tipoDeOsm(t.amenity),
     aforo: aforoDe(t.capacity),
     genero: textoPublico(t['music:genre'] ?? t.genre, 80),
     website: urlPublica(etiqueta(t, 'website', 'contact:website', 'url')),

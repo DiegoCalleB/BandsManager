@@ -237,7 +237,7 @@ export function leadDesdeSala(s: SalaGuardada, idLead: string, bandId: string): 
     region: s.region ?? '',
     direccion: s.direccion ?? undefined,
     // En el catálogo un bar con directo se distingue para filtrar; en la agenda de la banda sigue siendo una sala donde tocar.
-    tipo: s.tipo === 'bar' ? 'sala' : s.tipo,
+    tipo: s.tipo === 'bar' || s.tipo === 'centro_cultural' ? 'sala' : s.tipo,
     aforo: s.aforo ?? 0,
     genero: s.genero ?? '',
     website: s.website ?? undefined,
