@@ -25,6 +25,7 @@ _Sin dependencias salientes directas._
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[agent_scout|Scout Discovery Agent]] *(from #agent)*
 - [[server_utils_emailsDeAyuntamiento|server/utils/emailsDeAyuntamiento.ts]] *(from #service)*
+- [[server_utils_webOficial|server/utils/webOficial.ts]] *(from #service)*
 
 ---
 

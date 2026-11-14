@@ -8,9 +8,10 @@
  * Primera pasada unos minutos tras arrancar (los despliegues son frecuentes y un temporizador de 24 h nunca llegaría a
  * disparar) y después cada `CATALOGO_SYNC_MS` (24 h por defecto). `CATALOGO_SYNC=false` la apaga.
  */
-import { puertoCatalogoSupabase, puertoEnriquecimientoWebSupabase, puertoGeolocalizacionSupabase, puertoVerificacionSupabase } from "../db/salasCatalogo.js";
+import { puertoBusquedaWebSupabase, puertoCatalogoSupabase, puertoEnriquecimientoWebSupabase, puertoGeolocalizacionSupabase, puertoVerificacionSupabase } from "../db/salasCatalogo.js";
 import { captureError } from "../utils/errorTracking.js";
 import { sincronizarCatalogo, type InformeCatalogo } from "./catalogoSalas.js";
+import { buscarWebsDeSalas, crearBusquedaSerper } from "./buscarWebsDeSalas.js";
 import { crearConsultaMaps } from "./consultaMapsSala.js";
 import { datosDeWebSala } from "../utils/datosDeWebSala.js";
 import { enriquecerSalasDesdeSuWeb } from "./enriquecerSalasDesdeSuWeb.js";
@@ -46,6 +47,7 @@ export async function sincronizarCatalogoAhora(sincronizar: () => Promise<Inform
         `${r.leadsEnlazados} leads enlazados. Verificadas ${r.porNivel.verificada}, probables ${r.porNivel.probable}.`,
     );
     await verificarEnMapsAhora();
+    await buscarWebsAhora();
     await enriquecerDesdeLaWebAhora();
     await geolocalizarAhora();
     return r;
@@ -92,6 +94,24 @@ export async function importarSalasOsmAhora(): Promise<boolean> {
     console.warn("[Catálogo] La importación de OSM falló:", e instanceof Error ? e.message : e);
     captureError(e, { fase: "importarSalasOsm" });
     return false;
+  }
+}
+
+/**
+ * Antes de leer webs, busca en Google (Serper) la web oficial de unas pocas fichas que no la tienen, para que el lector las lea en
+ * esta misma pasada. Solo acepta un dominio con el nombre propio de la ficha. Necesita `SERPER_API_KEY`; `CATALOGO_BUSCAR_WEB=false`
+ * la apaga y `CATALOGO_BUSQUEDAS_POR_PASADA` fija cuántas (40 por defecto). Nunca lanza.
+ */
+export async function buscarWebsAhora(): Promise<void> {
+  const clave = process.env.SERPER_API_KEY;
+  if (!clave || process.env.CATALOGO_BUSCAR_WEB === "false") return;
+  try {
+    const limite = Number(process.env.CATALOGO_BUSQUEDAS_POR_PASADA) || undefined;
+    const r = await buscarWebsDeSalas({ puerto: puertoBusquedaWebSupabase, buscar: crearBusquedaSerper(clave), limite });
+    if (r.buscadas + r.errores > 0) console.log(`[Catálogo] Búsqueda de webs: ${r.buscadas} fichas buscadas, ${r.encontradas} con web oficial, ${r.errores} errores. Ejemplos: ${r.ejemplos.join("; ") || "ninguno"}.`);
+  } catch (e) {
+    console.warn("[Catálogo] La búsqueda de webs falló:", e instanceof Error ? e.message : e);
+    captureError(e, { fase: "buscarWebsDeSalas" });
   }
 }
 

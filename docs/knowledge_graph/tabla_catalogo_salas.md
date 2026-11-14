@@ -13,7 +13,7 @@ tags: ["schema", "tabla", "auto"]
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Tabla de Supabase `catalogo_salas` (33 columnas).
+Tabla de Supabase `catalogo_salas` (34 columnas).
 
 ---
 
@@ -69,8 +69,9 @@ _Sin dependencias salientes directas._
 - `web_revisada_en`
 - `coordenadas_aprox`
 - `geolocalizada_en`
+- `web_buscada_en`
 
-**Definida en:** `supabase_schema.sql`, `supabase/migrations/20261117_sala_web_revisada.sql`, `supabase/migrations/20261118_sala_coordenadas.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migrations/20261117_sala_web_revisada.sql`, `supabase/migrations/20261118_sala_coordenadas.sql`, `supabase/migrations/20261202_catalogo_web_buscada.sql`
 
 ---
 
