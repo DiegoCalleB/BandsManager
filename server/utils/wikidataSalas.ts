@@ -30,10 +30,12 @@ export const consultaWikidata = (tipo: TipoWikidata): string => `SELECT ?item ?i
   FILTER NOT EXISTS { ?item wdt:P3999 [] }
   FILTER NOT EXISTS { ?item wdt:P582 [] }
   OPTIONAL { ?item wdt:P856 ?web }
-  # Un solo salto hacia arriba (municipio → su entidad superior): el camino transitivo hasta la comunidad hacía que
-  # el servicio respondiera 504 todas las noches.
+  # La ciudad es el MUNICIPIO (código INE de 5 cifras, P772; las provincias tienen 2 y las parroquias 11), directo o hasta dos saltos por encima (barrio → distrito → Madrid): un recinto suele estar «en» su barrio o
+  # distrito («Justicia», «Sants-Montjuïc»). El salto opcional (P131?) es barato; el transitivo daba 504 cada noche.
   OPTIONAL {
-    ?item wdt:P131 ?ciudad .
+    ?item wdt:P131/wdt:P131?/wdt:P131? ?ciudad .
+    ?ciudad wdt:P772 ?ine .
+    FILTER(STRLEN(?ine) = 5)
     OPTIONAL { ?ciudad wdt:P131 ?ccaa . }
   }
   OPTIONAL { ?item wdt:P625 ?coord }
@@ -71,7 +73,15 @@ export function fichasDeWikidata(filas: readonly FilaWikidata[], tipo: TipoWikid
     if (!id) continue;
     const previa = porItem.get(id);
     if (!previa) porItem.set(id, { ...f });
-    else for (const [k, v] of Object.entries(f) as Array<[keyof FilaWikidata, { value: string }]>) if (!previa[k]) previa[k] = v;
+    else
+      for (const [k, v] of Object.entries(f) as Array<[keyof FilaWikidata, { value: string }]>) {
+        // Ciudad y comunidad van juntas, de la misma fila: mezclarlas daba «Circo Price, Palos de la Frontera (Arganzuela)».
+        if (k === 'ccaaLabel') continue;
+        if (!previa[k]?.value) {
+          previa[k] = v;
+          if (k === 'ciudadLabel' && f.ccaaLabel) previa.ccaaLabel = f.ccaaLabel;
+        }
+      }
   }
   const fichas: FichaDeFuente[] = [];
   for (const f of porItem.values()) {
