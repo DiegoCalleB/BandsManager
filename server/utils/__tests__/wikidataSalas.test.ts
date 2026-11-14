@@ -32,6 +32,13 @@ describe('fichasDeWikidata', () => {
     expect(r[0].campos.website).toBe('https://moby.es/');
   });
 
+  it('la comunidad viaja con su ciudad, de la misma fila (no se mezclan filas)', () => {
+    const r = fichasDeWikidata([fila({ ciudadLabel: 'Madrid', ccaaLabel: 'Comunidad de Madrid' }), fila({ ciudadLabel: 'Palos de la Frontera', ccaaLabel: 'Arganzuela' })], 'sala');
+    expect(r[0].campos).toMatchObject({ ciudad: 'Madrid', region: 'Comunidad de Madrid' });
+    const s = fichasDeWikidata([fila({ ciudadLabel: '' }), fila({ ciudadLabel: 'Bilbao', ccaaLabel: 'Gran Bilbao' })], 'sala');
+    expect(s[0].campos).toMatchObject({ ciudad: 'Bilbao', region: 'Gran Bilbao' });
+  });
+
   it('descarta una web que no es http(s)', () => {
     expect(fichasDeWikidata([fila({ web: 'javascript:alert(1)' })], 'sala')[0].campos.website).toBeNull();
   });
@@ -55,5 +62,11 @@ describe('consultaWikidata', () => {
     for (const p of ['P576', 'P3999', 'P582']) expect(f).toContain(`FILTER NOT EXISTS { ?item wdt:${p} [] }`);
     expect(consultaWikidata('sala')).toContain('wd:Q8719053');
     expect(consultaWikidata('sala')).not.toContain('wd:Q868557');
+  });
+
+  it('la ciudad es un municipio (INE de 5 cifras), aunque el recinto esté en un barrio o distrito', () => {
+    const q = consultaWikidata('sala');
+    expect(q).toContain('?item wdt:P131/wdt:P131?/wdt:P131? ?ciudad');
+    expect(q).toContain('FILTER(STRLEN(?ine) = 5)');
   });
 });
