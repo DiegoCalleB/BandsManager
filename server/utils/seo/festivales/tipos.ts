@@ -4,7 +4,7 @@
  */
 export type EstiloFestival =
   | 'rock' | 'indie' | 'pop' | 'metal' | 'punk' | 'electronica' | 'folk' | 'jazz' | 'blues' | 'flamenco'
-  | 'urbano' | 'reggaeton' | 'reggae' | 'mundo' | 'clasica' | 'antigua' | 'experimental' | 'emergente';
+  | 'urbano' | 'reggaeton' | 'reggae' | 'mundo' | 'clasica' | 'antigua' | 'experimental' | 'emergente' | 'multigenero';
 
 /** `desconocido` no es `no`: un filtro por «admite independientes» solo devuelve lo que está comprobado. */
 export type Tri = 'si' | 'no' | 'desconocido';
@@ -22,9 +22,10 @@ export interface Festival {
   slug: string;
   nombre: string;
   ciudad: string;
+  /** Provincia o región; fuera de España puede ir vacía. */
   provincia: string;
-  /** Código ISO 3166-1 alfa-2. */
-  pais: 'ES';
+  /** Código ISO 3166-1 alfa-2 (el catálogo guarda «UK» para el Reino Unido). */
+  pais: string;
   estilos: EstiloFestival[];
   /** Web oficial. Si no se ha podido comprobar, se omite en lugar de suponerla. */
   web?: string;
@@ -34,6 +35,8 @@ export interface Festival {
   verificadoEn: string;
   /** Qué es, en una frase y solo con hechos comprobados. */
   descripcion: { es: string; en: string };
+  /** Qué datos de contacto tiene BandManager de este festival. Solo si los tiene, nunca el dato: se da al añadirlo en la app. */
+  enBandManager?: { email: boolean; telefono: boolean; instagram: boolean };
   /** Próxima edición, si está confirmada. */
   edicion?: { inicio: string; fin: string };
   /** Convocatoria para bandas, si la hay. Sin `cierre` solo se enlaza la fuente: no se inventa un plazo. */

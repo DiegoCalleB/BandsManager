@@ -2,7 +2,7 @@
 // Solo lo usa el servidor con la clave de servicio; ninguna ruta de usuario toca estas tablas directamente.
 
 import { getSupabase } from './core.js';
-import { festivalesDeFilas, type FilaConvocatoria, type FilaEdicion, type FilaFestival } from '../utils/seo/festivales/mapeo.js';
+import { festivalesDeFilas, type ContactosDisponibles, type FilaConvocatoria, type FilaEdicion, type FilaFestival } from '../utils/seo/festivales/mapeo.js';
 import type { Festival } from '../utils/seo/festivales/tipos.js';
 
 const PAGINA = 1000;
@@ -24,7 +24,24 @@ export async function festivalesPublicosDeDb(hoy: string = new Date().toISOStrin
     leerTodo<FilaEdicion & { id: string }>('catalogo_festival_ediciones'),
     leerTodo<FilaConvocatoria & { id: string }>('catalogo_festival_convocatorias'),
   ]);
-  return festivalesDeFilas(festivales, ediciones, convocatorias, hoy);
+  return festivalesDeFilas(festivales, ediciones, convocatorias, hoy, await contactosDisponibles(festivales));
+}
+
+/**
+ * Qué contacto tiene el catálogo de salas de cada festival enlazado. Lee email y teléfono SOLO para convertirlos en
+ * booleanos aquí mismo: el dato no sale de esta función. Si falla, las fichas se publican sin el aviso.
+ */
+async function contactosDisponibles(festivales: FilaFestival[]): Promise<ContactosDisponibles> {
+  const ids = [...new Set(festivales.map((f) => f.sala_id).filter((id): id is string => !!id))];
+  const mapa: ContactosDisponibles = new Map();
+  for (let i = 0; i < ids.length; i += 200) {
+    const { data, error } = await getSupabase().from('catalogo_salas').select('id,email_contacto,telefono,instagram').in('id', ids.slice(i, i + 200));
+    if (error) return mapa;
+    for (const s of (data ?? []) as Array<{ id: string; email_contacto: string | null; telefono: string | null; instagram: string | null }>) {
+      mapa.set(s.id, { email: !!s.email_contacto?.trim(), telefono: !!s.telefono?.trim(), instagram: !!s.instagram?.trim() });
+    }
+  }
+  return mapa;
 }
 
 export interface ResumenCarga {

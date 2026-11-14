@@ -3,18 +3,26 @@ import type { IdiomaSeo } from '../rutas.js';
 import type { EstiloFestival } from './tipos.js';
 
 export const ESTILOS: Record<IdiomaSeo, Record<EstiloFestival, string>> = {
-  es: { rock: 'Rock', indie: 'Indie', pop: 'Pop', metal: 'Metal', punk: 'Punk', electronica: 'Electrónica', folk: 'Folk', jazz: 'Jazz', blues: 'Blues', flamenco: 'Flamenco', urbano: 'Urbano', reggaeton: 'Reggaeton y latino', reggae: 'Reggae y ska', mundo: 'Músicas del mundo', clasica: 'Clásica', antigua: 'Música antigua', experimental: 'Experimental', emergente: 'Bandas emergentes' },
-  en: { rock: 'Rock', indie: 'Indie', pop: 'Pop', metal: 'Metal', punk: 'Punk', electronica: 'Electronic', folk: 'Folk', jazz: 'Jazz', blues: 'Blues', flamenco: 'Flamenco', urbano: 'Urban', reggaeton: 'Reggaeton and Latin', reggae: 'Reggae and ska', mundo: 'World music', clasica: 'Classical', antigua: 'Early music', experimental: 'Experimental', emergente: 'Emerging bands' },
+  es: { rock: 'Rock', indie: 'Indie', pop: 'Pop', metal: 'Metal', punk: 'Punk', electronica: 'Electrónica', folk: 'Folk', jazz: 'Jazz', blues: 'Blues', flamenco: 'Flamenco', urbano: 'Urbano', reggaeton: 'Reggaeton y latino', reggae: 'Reggae y ska', mundo: 'Músicas del mundo', clasica: 'Clásica', antigua: 'Música antigua', experimental: 'Experimental', emergente: 'Bandas emergentes', multigenero: 'Multigénero' },
+  en: { rock: 'Rock', indie: 'Indie', pop: 'Pop', metal: 'Metal', punk: 'Punk', electronica: 'Electronic', folk: 'Folk', jazz: 'Jazz', blues: 'Blues', flamenco: 'Flamenco', urbano: 'Urban', reggaeton: 'Reggaeton and Latin', reggae: 'Reggae and ska', mundo: 'World music', clasica: 'Classical', antigua: 'Early music', experimental: 'Experimental', emergente: 'Emerging bands', multigenero: 'Multi-genre' },
 };
 
 export const TEXTOS_FESTIVALES = {
   es: {
     listados: 'Listados',
     titulo: 'Festivales y convocatorias para bandas | BandManager',
-    descripcion: 'Festivales de España que programan bandas, con convocatorias abiertas y plazos. Cada ficha enlaza su fuente y la fecha en que se comprobó.',
+    descripcion: 'Festivales de España y Europa que programan bandas, con convocatorias abiertas y plazos. Cada ficha enlaza su fuente y la fecha en que se comprobó.',
     h1: 'Festivales y convocatorias para bandas',
     intro: 'Un directorio pequeño y cuidado: solo fichas que hemos comprobado contra una fuente y con la fecha de la comprobación a la vista. Una ficha que lleva un año sin revisarse desaparece.',
     abiertas: 'Convocatorias abiertas',
+    aportarTitulo: '¿Sabes algo que no sabemos?', aportarIntro: 'Si conoces la ciudad, las fechas, el contacto de booking o cualquier dato de este festival, cuéntanoslo. Lo revisamos antes de publicarlo.',
+    aportarCampo: 'Qué dato', aportarValor: 'El dato', aportarFuente: 'Dónde lo has visto (enlace, opcional)', aportarContacto: 'Tu email (opcional, por si tenemos dudas)', aportarEnviar: 'Enviar',
+    aportarAviso: 'No publicamos nada sin comprobarlo y no compartimos tu email.', aportarGracias: '¡Gracias! Lo revisaremos contra la fuente antes de publicarlo.', aportarError: 'No se pudo enviar. Inténtalo más tarde.',
+    aportarCampos: { ciudad: 'Ciudad o recinto', fechas: 'Fechas de la próxima edición', web: 'Web oficial', contacto_booking: 'Contacto de booking', convocatoria: 'Convocatoria para bandas', estilo: 'Estilo de música', cerrado: 'Ya no se celebra', otro: 'Otro dato' },
+    chkTitulo: 'Contacto en BandManager', chkEmail: 'Email', chkTelefono: 'Teléfono', chkInstagram: 'Instagram', chkWeb: 'Web oficial', chkEmailCorto: 'email',
+    chkConDatos: 'Tenemos estos datos comprobados en su web. Los ves completos al añadir el festival a tu agenda.', chkSinDatos: 'Aún no tenemos su contacto. Si lo conoces, cuéntanoslo abajo.',
+    ciudadPorConfirmar: 'Ciudad sin especificar', otrasCiudades: 'Ciudad sin especificar', otrasCiudadesTexto: 'Festivales con web oficial comprobada cuya ciudad aún no hemos podido confirmar. En cuanto la confirmemos contra una fuente, pasan a la lista principal.',
+    filtroBuscar: 'Buscar', filtroPais: 'País', filtroEstilo: 'Estilo', filtroMes: 'Mes', filtroTodos: 'Todos', filtroAbierta: 'Solo con convocatoria abierta', filtroResultados: 'festivales',
     todos: 'Todos los festivales',
     sinAbiertas: 'Ahora mismo no hay ninguna convocatoria abierta con plazo confirmado.',
     metodo: 'Cómo mantenemos los datos',
@@ -33,10 +41,18 @@ export const TEXTOS_FESTIVALES = {
   en: {
     listados: 'Directories',
     titulo: 'Festivals and open calls for bands | BandManager',
-    descripcion: 'Festivals in Spain that book bands, with open calls and deadlines. Every listing links its source and the date it was checked.',
+    descripcion: 'Festivals in Spain and across Europe that book bands, with open calls and deadlines. Every listing links its source and the date it was checked.',
     h1: 'Festivals and open calls for bands',
     intro: 'A small, carefully kept directory: only listings we have checked against a source, with the date of the check in plain sight. A listing that has gone a year without review disappears.',
     abiertas: 'Open calls',
+    aportarTitulo: 'Know something we don\'t?', aportarIntro: 'If you know the city, dates, booking contact or anything else about this festival, tell us. We check it before publishing.',
+    aportarCampo: 'What', aportarValor: 'The info', aportarFuente: 'Where you saw it (link, optional)', aportarContacto: 'Your email (optional, in case we have questions)', aportarEnviar: 'Send',
+    aportarAviso: 'We never publish anything unchecked and we never share your email.', aportarGracias: 'Thanks! We will check it against the source before publishing.', aportarError: 'Could not send. Please try again later.',
+    aportarCampos: { ciudad: 'City or venue', fechas: 'Next edition dates', web: 'Official website', contacto_booking: 'Booking contact', convocatoria: 'Open call for bands', estilo: 'Music style', cerrado: 'No longer running', otro: 'Something else' },
+    chkTitulo: 'Contact on BandManager', chkEmail: 'Email', chkTelefono: 'Phone', chkInstagram: 'Instagram', chkWeb: 'Official website', chkEmailCorto: 'email',
+    chkConDatos: 'We have these details, checked on their website. You see them in full when you add the festival to your list.', chkSinDatos: 'We do not have their contact yet. If you know it, tell us below.',
+    ciudadPorConfirmar: 'City not specified', otrasCiudades: 'City not specified', otrasCiudadesTexto: 'Festivals with a checked official website whose city we have not confirmed yet. Once we confirm it against a source, they move to the main list.',
+    filtroBuscar: 'Search', filtroPais: 'Country', filtroEstilo: 'Style', filtroMes: 'Month', filtroTodos: 'All', filtroAbierta: 'Only with an open call', filtroResultados: 'festivals',
     todos: 'All festivals',
     sinAbiertas: 'There is no open call with a confirmed deadline right now.',
     metodo: 'How we keep the data right',

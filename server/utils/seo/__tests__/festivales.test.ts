@@ -102,3 +102,57 @@ describe('rutas y portada de listados', () => {
     expect(html).toContain('href="https://bandmanager.io/directories"');
   });
 });
+
+describe('directorio con varios países', () => {
+  const de = ficha(90, { pais: 'DE', ciudad: 'Mülheim', provincia: 'Alemania', estilos: ['reggae'], edicion: { inicio: '2027-07-03', fin: '2027-07-05' } });
+  const uk = ficha(91, { pais: 'UK', ciudad: 'Pilton', provincia: 'Somerset', estilos: ['rock'] });
+  it('el índice ofrece filtrar por país, estilo y mes, solo con lo que hay', () => {
+    const html = renderizarIndiceFestivales(BASE, 'es', HOY, [ficha(1), de, uk]);
+    expect(html).toContain('id="filtros-festivales"');
+    expect(html).toContain('<option value="DE">Alemania (1)</option>');
+    expect(html).toContain('<option value="UK">Reino Unido (1)</option>');
+    expect(html).toContain('<option value="7">julio</option>');
+    expect(html).toContain('data-pais="DE" data-estilos="reggae" data-mes="7"');
+    expect(html).toContain('Mülheim (Alemania)');
+    expect(html).toContain('Pilton, Somerset (Reino Unido)');
+  });
+  it('con un solo país no muestra el filtro de país', () => {
+    expect(renderizarIndiceFestivales(BASE, 'es', HOY, [ficha(1), ficha(2)])).not.toContain('name="pais"');
+  });
+  it('la ficha de fuera usa el código ISO en los datos estructurados', () => {
+    expect(renderizarFestival({ ...uk, edicion: { inicio: '2027-06-23', fin: '2027-06-27' } }, BASE, 'en', HOY, [uk])).toContain('"addressCountry":"GB"');
+  });
+  it('los festivales sin ciudad salen aparte, en «Ciudad sin especificar», y también se filtran', () => {
+    const sin = ficha(92, { pais: 'FR', ciudad: '', provincia: 'Francia', estilos: ['rock'] });
+    const html = renderizarIndiceFestivales(BASE, 'es', HOY, [ficha(1), de, sin]);
+    expect(html).toContain('<div id="otras-ciudades"><h3>Ciudad sin especificar</h3>');
+    expect(html).toContain('Ciudad sin especificar (Francia)');
+    expect(html.lastIndexOf('Festival 92')).toBeGreaterThan(html.indexOf('<div id="otras-ciudades">'));
+    expect(renderizarIndiceFestivales(BASE, 'es', HOY, [ficha(1), de])).not.toContain('<div id="otras-ciudades">');
+  });
+});
+
+describe('aportaciones del público', () => {
+  it('cada ficha invita a aportar lo que falta, con campo trampa y sin publicar nada solo', () => {
+    const html = renderizarFestival(FESTIVALES[0], BASE, 'es', HOY);
+    expect(html).toContain('id="form-aportar"');
+    expect(html).toContain(`name="ficha_id" value="${FESTIVALES[0].slug}"`);
+    expect(html).toContain('class="trampa"');
+    expect(html).toContain("fetch('/api/public/aportaciones'");
+    expect(renderizarFestival(FESTIVALES[0], BASE, 'en', HOY)).toContain('Know something we don');
+  });
+});
+
+describe('contacto en BandManager', () => {
+  it('la ficha marca qué contacto tenemos con sí/no, sin enseñar nunca el dato', () => {
+    const html = renderizarFestival({ ...FESTIVALES[0], enBandManager: { email: true, telefono: false, instagram: true } }, BASE, 'es', HOY);
+    expect(html).toContain('<li class="si"><span aria-hidden="true">✓</span> Email');
+    expect(html).toContain('<li class="no"><span aria-hidden="true">–</span> Teléfono');
+    expect(html).not.toContain('mailto:');
+    expect(html).toContain('Los ves completos al añadir el festival');
+  });
+  it('el listado avisa de los festivales con email, y sin datos invita a aportarlos', () => {
+    expect(renderizarIndiceFestivales(BASE, 'es', HOY, [ficha(1, { enBandManager: { email: true, telefono: false, instagram: false } })])).toContain('<span class="chk">✓ email</span>');
+    expect(renderizarFestival(FESTIVALES[0], BASE, 'es', HOY)).toContain('Aún no tenemos su contacto');
+  });
+});

@@ -18,7 +18,7 @@ describe('mapeo de filas a ficha pública', () => {
     expect(festivalDeFilas(fila({ estado_revision: 'candidata' }), [edicion()], [conv()], HOY)).toBeNull();
   });
   it('sin fuente, sin fecha de comprobación, sin lugar o sin estilos válidos no se publica', () => {
-    for (const extra of [{ fuente: null }, { verificado_en: null }, { ciudad: null }, { provincia: null }, { generos: [] }, { generos: ['inventado'] }]) {
+    for (const extra of [{ fuente: null }, { verificado_en: null }, { generos: [] }, { generos: ['inventado'] }]) {
       expect(festivalDeFilas(fila(extra), [], [], HOY)).toBeNull();
     }
   });
@@ -111,5 +111,31 @@ describe('carga desde la lista de trabajo', () => {
     const vina = filasDeFichaFija(sinWeb);
     expect(vina.festival).toMatchObject({ estado_revision: 'minima' });
     expect(vina.edicion).toBeUndefined();
+  });
+});
+
+describe('festivales de fuera de España', () => {
+  it('conserva el país y no exige provincia fuera de España', () => {
+    const f = festivalDeFilas(fila({ ciudad: 'Mülheim', provincia: null, pais: 'DE' }), [], [], HOY);
+    expect(f?.pais).toBe('DE');
+    expect(f?.provincia).toBe('Alemania');
+    expect(f?.descripcion.en).toBe('Festival Uno, in Mülheim, Germany.');
+  });
+  it('sin provincia vale la comunidad y, sin ella, el país', () => {
+    expect(festivalDeFilas(fila({ provincia: null, comunidad: 'Castilla y León' }), [], [], HOY)?.provincia).toBe('Castilla y León');
+    expect(festivalDeFilas(fila({ provincia: null }), [], [], HOY)?.provincia).toBe('España');
+  });
+  it('sin ciudad se publica igual, con la ciudad sin especificar y sin inventarla', () => {
+    const f = festivalDeFilas(fila({ ciudad: null, provincia: null }), [], [], HOY);
+    expect(f?.ciudad).toBe('');
+    expect(f?.descripcion.es).toBe('Festival Uno, festival en España.');
+  });
+});
+
+describe('contacto disponible', () => {
+  it('pasa solo los booleanos del contacto de la sala enlazada', () => {
+    const contactos = new Map([['sala-1', { email: true, telefono: false, instagram: true }]]);
+    expect(festivalDeFilas(fila({ sala_id: 'sala-1' }), [], [], HOY, contactos)?.enBandManager).toEqual({ email: true, telefono: false, instagram: true });
+    expect(festivalDeFilas(fila({ sala_id: null }), [], [], HOY, contactos)?.enBandManager).toBeUndefined();
   });
 });

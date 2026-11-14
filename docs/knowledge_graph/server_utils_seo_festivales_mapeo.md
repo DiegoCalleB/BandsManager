@@ -18,6 +18,7 @@ De las filas de Supabase (`catalogo_festivales`, `catalogo_festival_ediciones`, 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[server_utils_seo_festivales_paises|server/utils/seo/festivales/paises.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_seo_festivales_tipos|server/utils/seo/festivales/tipos.ts]] *(Layer: #service, Domain: #system)*
 
 ---

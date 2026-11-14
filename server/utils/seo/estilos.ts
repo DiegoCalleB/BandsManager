@@ -90,4 +90,22 @@ table.tabla tbody tr:nth-child(even) td{background:var(--bg)}
 .calc .campos:has(.casilla){grid-template-columns:1fr}
 .calc label.casilla{display:flex;align-items:center;gap:.7rem;padding:.55rem .7rem;border-radius:12px;background:var(--bg);color:var(--ink);font-size:15px;cursor:pointer}
 .calc label.casilla input{width:22px;min-height:22px;height:22px;flex:none;accent-color:var(--acc)}
+.filtros{display:grid;gap:.7rem;grid-template-columns:repeat(auto-fit,minmax(8.5rem,1fr));background:var(--surface);border-radius:24px;padding:1rem;margin:1rem 0}
+.filtros label{display:grid;gap:.3rem;font-size:14px;color:var(--ink-2)}
+.filtros input[type=search],.filtros select{width:100%;min-height:44px;padding:0 .8rem;border:0;border-radius:12px;background:var(--bg);color:var(--ink);font:inherit;font-size:16px}
+.filtros label.casilla{display:flex;align-items:center;gap:.6rem;align-self:end;min-height:44px;padding:0 .7rem;border-radius:12px;background:var(--bg);color:var(--ink);cursor:pointer}
+.filtros label.casilla input{width:22px;height:22px;accent-color:var(--acc)}
+.filtros .lectura,.filtros label:has(input[type=search]),.filtros label.casilla{grid-column:1/-1}
+.filtros .lectura{margin:0}
+ul.checks{list-style:none;padding:0;margin:.5rem 0 1rem;display:grid;gap:.5rem;grid-template-columns:repeat(auto-fit,minmax(9rem,1fr))}
+ul.checks li{display:flex;align-items:center;gap:.5rem;padding:.6rem .8rem;border-radius:12px;background:var(--surface);color:var(--ink);font-size:15px}
+ul.checks li span[aria-hidden]{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:999px;font-weight:700;background:var(--ok);color:var(--surface)}
+ul.checks li.no{color:var(--ink-2)}
+ul.checks li.no span[aria-hidden]{background:var(--sunken);color:var(--ink-2)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.chk{color:var(--acc-ink);font-weight:600}
+#form-aportar{grid-template-columns:repeat(auto-fit,minmax(14rem,1fr))}
+.filtros .trampa{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.filtros input[type=text],.filtros input[type=url],.filtros input[type=email]{width:100%;min-height:44px;padding:0 .8rem;border:0;border-radius:12px;background:var(--bg);color:var(--ink);font:inherit;font-size:16px}
+.filtros .boton{grid-column:1/-1;justify-self:start}
 `;
