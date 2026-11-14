@@ -25,6 +25,7 @@ Sincronización del catálogo compartido de salas (fase 1).
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_db_salasCatalogo|server/db/salasCatalogo.ts]] *(from #db)*
+- [[server_services_buscarWebsDeSalas|server/services/buscarWebsDeSalas.ts]] *(from #service)*
 - [[server_services_catalogoScheduler|server/services/catalogoScheduler.ts]] *(from #service)*
 - [[server_services_consultaCatalogo|server/services/consultaCatalogo.ts]] *(from #service)*
 - [[server_services_enriquecerSalasDesdeSuWeb|server/services/enriquecerSalasDesdeSuWeb.ts]] *(from #service)*

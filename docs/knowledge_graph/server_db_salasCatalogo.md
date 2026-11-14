@@ -19,6 +19,7 @@ Catálogo compartido de salas (`catalogo_salas`): adaptador de Supabase del puer
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[server_services_buscarWebsDeSalas|server/services/buscarWebsDeSalas.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_catalogoSalas|server/services/catalogoSalas.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_enriquecerSalasDesdeSuWeb|server/services/enriquecerSalasDesdeSuWeb.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_geolocalizarSalas|server/services/geolocalizarSalas.ts]] *(Layer: #service, Domain: #system)*

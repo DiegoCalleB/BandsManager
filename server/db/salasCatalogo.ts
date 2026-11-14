@@ -7,6 +7,7 @@ import type { FilaCoordenadas, PuertoCatalogo, PuertoCoordenadas, SalaAGuardar, 
 import type { PuertoGeolocalizacion } from '../services/geolocalizarSalas.js';
 import type { PuertoVerificacion } from '../services/verificarSalasEnMaps.js';
 import type { PuertoEnriquecimientoWeb } from '../services/enriquecerSalasDesdeSuWeb.js';
+import type { PuertoBusquedaWeb } from '../services/buscarWebsDeSalas.js';
 
 const PAGINA = 1000;
 
@@ -169,5 +170,33 @@ export const puertoEnriquecimientoWebSupabase: PuertoEnriquecimientoWeb = {
   async guardarEnriquecimiento(salaId, campos, en) {
     const { error } = await getSupabase().from('catalogo_salas').update({ ...campos, web_revisada_en: en.toISOString() }).eq('id', salaId);
     if (error) throw new Error(`No se pudo guardar el enriquecimiento de la sala ${salaId}: ${error.message}`);
+  },
+};
+
+export const puertoBusquedaWebSupabase: PuertoBusquedaWeb = {
+  async fichasSinWeb(limite, antesDe) {
+    // Los ayuntamientos ya traen su web de la fuente oficial; las cerradas y las «no contactar» no merecen una búsqueda.
+    const { data, error } = await getSupabase()
+      .from('catalogo_salas')
+      .select('*')
+      .is('website', null)
+      .neq('tipo', 'ayuntamiento')
+      .eq('no_contactar', false)
+      .neq('estado_negocio', 'cerrado_permanente')
+      .or(`web_buscada_en.is.null,web_buscada_en.lt.${antesDe.toISOString()}`)
+      .order('web_buscada_en', { ascending: true, nullsFirst: true })
+      .limit(limite);
+    if (error) throw new Error(`No se pudieron leer las fichas sin web: ${error.message}`);
+    return ((data ?? []) as (FilaSala & { pais?: string | null })[]).map((f) => ({ ...salaDeFila(f), pais: f.pais ?? null }));
+  },
+
+  async guardarBusqueda(salaId, website, en) {
+    // `is('website', null)`: si otra fuente le puso web entretanto, esa se queda.
+    const { error } = await getSupabase()
+      .from('catalogo_salas')
+      .update({ ...(website ? { website } : {}), web_buscada_en: en.toISOString() })
+      .eq('id', salaId)
+      .is('website', null);
+    if (error) throw new Error(`No se pudo guardar la búsqueda de web de la sala ${salaId}: ${error.message}`);
   },
 };
