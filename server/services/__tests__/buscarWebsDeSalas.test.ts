@@ -19,10 +19,10 @@ describe('buscarWebsDeSalas', () => {
       puerto: p,
       buscar: async (q) => {
         if (q.includes('Caída')) throw new Error('503');
-        return [{ link: 'https://labwagon.com/', title: 'LabWagon Madrid' }, { link: 'https://salarock.com/', title: 'Madrid' }];
+        return [{ link: 'https://salawagon.com/', title: 'Sala Wagon Madrid' }, { link: 'https://salarock.com/', title: 'Madrid' }];
       },
     });
-    expect(guardadas).toEqual([['a', 'https://labwagon.com/'], ['b', null]]);
+    expect(guardadas).toEqual([['a', 'https://salawagon.com/'], ['b', null]]);
     expect(informe).toMatchObject({ buscadas: 2, encontradas: 1, errores: 1 });
   });
 

@@ -53,7 +53,7 @@ export async function buscarWebsDeSalas(p: {
       continue;
     }
     informe.buscadas++;
-    const web = elegirWebOficial(resultados, ficha.nombre, ficha.ciudad || null);
+    const web = elegirWebOficial(resultados, ficha.nombre, ficha.ciudad || null, ficha.region || null);
     await p.puerto.guardarBusqueda(ficha.id, web, ahora());
     if (web) {
       informe.encontradas++;

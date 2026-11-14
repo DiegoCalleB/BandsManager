@@ -45,15 +45,36 @@ function marca(host: string): string {
   return dominioRegistrable(host).split('.')[0].replace(/-/g, '');
 }
 
+/** Lo que puede acompañar a un nombre propio en un dominio sin cambiar de quién es: «salajagger», «istar-club», «lafabricaredondela». */
+const ACOMPANANTES = new Set([...GENERICAS, 'la', 'el', 'lo', 'les', 'the', 'de', 'des', 'es', 'cat', 'gal', 'eus', 'bcn', 'mad', 'oficial', 'official', 'web', 'concierto']);
+
+/** «redondela» + «la» + «club»…: el resto de la marca se parte entero en acompañantes. */
+function soloAcompanantes(resto: string, extra: ReadonlySet<string>): boolean {
+  const ok: boolean[] = [true];
+  for (let i = 1; i <= resto.length; i++) {
+    ok[i] = false;
+    for (let j = 0; j < i && !ok[i]; j++) ok[i] = ok[j] && (ACOMPANANTES.has(resto.slice(j, i)) || extra.has(resto.slice(j, i)));
+  }
+  return ok[resto.length];
+}
+
 /** El dominio lleva el nombre propio de la ficha. La ciudad no cuenta como nombre propio («Sunblast Festival Tenerife» → «sunblast»). */
-export function dominioDelNombre(host: string, nombre: string, ciudad: string | null = null): boolean {
+export function dominioDelNombre(host: string, nombre: string, ciudad: string | null = null, region: string | null = null): boolean {
   const etiqueta = marca(host);
   const deCiudad = new Set(tokens(ciudadPrincipal(ciudad ?? '')));
   const propios = tokens(nombre).filter((t) => !GENERICAS.has(t) && !deCiudad.has(t));
   if (propios.length === 0 || etiqueta.length < 3) return false;
   const nucleo = propios.join('');
-  if (nucleo.length >= 5 && etiqueta.includes(nucleo)) return true;
   if (etiqueta === nucleo || etiqueta === compacto(nombre)) return true;
+  if (propios.length === 1) {
+    // Un solo nombre propio («Fotomatón») es una palabra corriente: honeyfotomaton.com es otra empresa. Lo que rodee al nombre en
+    // la marca tiene que ser genérico, artículo, la ciudad o la región.
+    if (nucleo.length < 5 || !etiqueta.includes(nucleo)) return false;
+    const lugar = new Set([...deCiudad, compacto(ciudadPrincipal(ciudad ?? '')), ...tokens(region ?? ''), compacto(region ?? '')].filter(Boolean));
+    const i = etiqueta.indexOf(nucleo);
+    return soloAcompanantes(etiqueta.slice(0, i), lugar) && soloAcompanantes(etiqueta.slice(i + nucleo.length), lugar);
+  }
+  if (nucleo.length >= 5 && etiqueta.includes(nucleo)) return true;
   // «Teatro Circo Murcia» → teatrocircomurcia.es: todos los propios de 5+ letras en la marca.
   const largos = propios.filter((t) => t.length >= 5);
   if (largos.length > 0 && largos.length === propios.length && largos.every((t) => etiqueta.includes(t))) return true;
@@ -67,13 +88,19 @@ function mencionaCiudad(r: ResultadoBusqueda, host: string, ciudad: string): boo
   return marca(host).includes(c) || compacto(`${r.title ?? ''} ${r.snippet ?? ''} ${r.link}`).includes(c);
 }
 
-/** La web oficial (origen, «https://dominio/») o null si ningún resultado lo es con seguridad. Mira solo los primeros resultados. */
-export function elegirWebOficial(resultados: readonly ResultadoBusqueda[], nombre: string, ciudad: string | null): string | null {
+/** Portada o una sección («/», «/es/», «/contacto»): un artículo con ruta larga es de un medio que habla del recinto, no su web. */
+const esPortada = (url: URL) => url.pathname.split('/').filter(Boolean).length <= 1;
+
+/**
+ * La web oficial (origen, «https://dominio/») o null si ningún resultado lo es con seguridad. Mira solo los primeros resultados.
+ * Lleva la región porque «Groove» de Pinto vive en groovemadrid.com.
+ */
+export function elegirWebOficial(resultados: readonly ResultadoBusqueda[], nombre: string, ciudad: string | null, region: string | null = null): string | null {
   for (const r of resultados.slice(0, 6)) {
     const url = urlPublica(r.link);
-    if (!url) continue;
+    if (!url || !esPortada(new URL(url))) continue;
     const host = new URL(url).hostname.toLowerCase().replace(/^www\./, '');
-    if (noOficial(host) || !dominioDelNombre(host, nombre, ciudad)) continue;
+    if (noOficial(host) || !dominioDelNombre(host, nombre, ciudad, region)) continue;
     if (ciudad && !mencionaCiudad(r, host, ciudad)) continue;
     return `${new URL(url).protocol}//${new URL(url).hostname.toLowerCase()}/`;
   }
