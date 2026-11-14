@@ -117,12 +117,14 @@ export async function buscarWebsAhora(): Promise<void> {
 
 /**
  * Tras cada sincronización, completa unas pocas salas con lo que dice su propia web (Instagram, email de rol, teléfono fijo, género):
- * las que más tiempo llevan sin revisarse. Solo rellena huecos. `CATALOGO_ENRIQUECER_WEB=false` la apaga. Nunca lanza.
+ * las que más tiempo llevan sin revisarse. Solo rellena huecos. `CATALOGO_ENRIQUECER_WEB=false` la apaga y `CATALOGO_WEBS_POR_PASADA`
+ * fija cuántas (40 por defecto). Nunca lanza.
  */
 export async function enriquecerDesdeLaWebAhora(): Promise<void> {
   if (process.env.CATALOGO_ENRIQUECER_WEB === "false") return;
   try {
-    const r = await enriquecerSalasDesdeSuWeb({ puerto: puertoEnriquecimientoWebSupabase, leerWeb: leerWebDeSala, extraer: datosDeWebSala, pausaMs: 1000 });
+    const limite = Number(process.env.CATALOGO_WEBS_POR_PASADA) || undefined;
+    const r = await enriquecerSalasDesdeSuWeb({ puerto: puertoEnriquecimientoWebSupabase, leerWeb: leerWebDeSala, extraer: datosDeWebSala, pausaMs: 1000, limite });
     if (r.revisadas > 0) {
       const c = r.camposRellenados;
       console.log(`[Catálogo] Enriquecimiento desde la web: ${r.revisadas} salas revisadas (${r.sinWeb} sin web legible), ${r.completadas} completadas (${c.instagram} Instagram, ${c.email_contacto} email, ${c.telefono} teléfono, ${c.genero} género, ${c.aforo} aforo).`);
