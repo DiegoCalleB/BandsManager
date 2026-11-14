@@ -4,6 +4,31 @@ Las versiones siguen [SemVer](https://semver.org/lang/es/) y este archivo lo gen
 [release-please](https://github.com/googleapis/release-please) a partir de los Conventional Commits.
 Solo recoge lo que nota quien usa la app (novedades, correcciones y rendimiento); la documentación y las refactorizaciones se ven en el historial de git. No lo edites a mano: cada release añade su sección arriba. Las reglas están en [AGENTS.md §7](./AGENTS.md).
 
+## [3.3.0](https://github.com/DiegoCalleB/BandsManager/compare/bandmanager-v3.2.0...bandmanager-v3.3.0) (2026-11-14)
+
+
+### Novedades
+
+* **asesor:** especialista en anuncios y hoja de ruta del estreno ([#484](https://github.com/DiegoCalleB/BandsManager/issues/484)) ([d0d8f07](https://github.com/DiegoCalleB/BandsManager/commit/d0d8f072394b11e51dabd56596d7a35748cf9c47))
+* **asesor:** un bolo que es lo único a la vista se anuncia antes y con más peso ([#483](https://github.com/DiegoCalleB/BandsManager/issues/483)) ([7abab0e](https://github.com/DiegoCalleB/BandsManager/commit/7abab0e09e88e57dec2cadfdd8ffc889a3cc7e94))
+* **calendar:** campo entradas en taquilla/punto fisico al crear/editar concierto ([#488](https://github.com/DiegoCalleB/BandsManager/issues/488)) ([c0320e3](https://github.com/DiegoCalleB/BandsManager/commit/c0320e31539a7ebf395ef8161c8c70678d74271f))
+* **calendar:** campo link de entradas en modales de crear/editar concierto ([#487](https://github.com/DiegoCalleB/BandsManager/issues/487)) ([b6ae5eb](https://github.com/DiegoCalleB/BandsManager/commit/b6ae5eb35af9c4d30aa4449beb1c409c86c89274))
+* **campañas:** email de festivales con énfasis según el tipo de festival ([#494](https://github.com/DiegoCalleB/BandsManager/issues/494)) ([68be5de](https://github.com/DiegoCalleB/BandsManager/commit/68be5dee4bb04e607f5f171e63a384de17c5c21a))
+* **campanas:** plantilla de email por festival (ciudad, estilos, fecha, idioma) y asunto en el pitch ([b6eb7ff](https://github.com/DiegoCalleB/BandsManager/commit/b6eb7ffbe298c5edaed1ace6770ca657b9198be1))
+* **catálogo:** agente que busca la web oficial de las fichas sin web ([#499](https://github.com/DiegoCalleB/BandsManager/issues/499)) ([7a89960](https://github.com/DiegoCalleB/BandsManager/commit/7a89960ba37af4a1dead02e4a9342a2d770fcbbb))
+* **catálogo:** teatros, discotecas y centros culturales de OSM, espejo de Overpass que responde, Wikidata sin 504 y buzones de rol en otros idiomas ([#498](https://github.com/DiegoCalleB/BandsManager/issues/498)) ([b5653d2](https://github.com/DiegoCalleB/BandsManager/commit/b5653d2e41d255654e9680294f4ac522e42c698e))
+* **directorio:** festivales de Europa, filtros, «Ciudad sin especificar», aportaciones del público y checks de contacto ([#497](https://github.com/DiegoCalleB/BandsManager/issues/497)) ([82831f6](https://github.com/DiegoCalleB/BandsManager/commit/82831f69db8cc0c68eb62ae3b003903aeef326da))
+* emails con evidencia, campañas de festivales sin ciudad ni aforo y filtro de contacto ([f7bfe5c](https://github.com/DiegoCalleB/BandsManager/commit/f7bfe5cf18920958e41cd954c07e66624ddc11fd))
+
+
+### Correcciones
+
+* **campanas:** filtro de fechas de festivales por época del año y desde-hasta opcional en la campaña ([d899579](https://github.com/DiegoCalleB/BandsManager/commit/d8995794efb7d9142525d96de2bb9fe6ad7eb69d))
+* **campañas:** guardar desde la app ya no convierte una campaña de festivales en una de salas ([#496](https://github.com/DiegoCalleB/BandsManager/issues/496)) ([78d1d9b](https://github.com/DiegoCalleB/BandsManager/commit/78d1d9bf1e49f8220b303b6291c151d3b2519129))
+* **campañas:** guardar una campaña ya no la desactiva ni pisa las plantillas de email ([#495](https://github.com/DiegoCalleB/BandsManager/issues/495)) ([af865f0](https://github.com/DiegoCalleB/BandsManager/commit/af865f040a50082830861021ac6e9b3253b77754))
+* **catálogo:** el agente de webs ya no confunde prensa ni marcas ajenas ([#500](https://github.com/DiegoCalleB/BandsManager/issues/500)) ([f8481e3](https://github.com/DiegoCalleB/BandsManager/commit/f8481e3a35e01f10247aa31320befcf9f323cc66))
+* **catálogo:** Wikidata pone el municipio como ciudad, no el barrio ni la provincia ([#501](https://github.com/DiegoCalleB/BandsManager/issues/501)) ([5ddef3b](https://github.com/DiegoCalleB/BandsManager/commit/5ddef3b4ed75aa4fefbce2fdf274838f6d5c1b7f))
+
 ## [3.2.0](https://github.com/DiegoCalleB/BandsManager/compare/bandmanager-v3.1.0...bandmanager-v3.2.0) (2026-11-04)
 
 
